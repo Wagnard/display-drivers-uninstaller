@@ -5,6 +5,7 @@
         Dim jobstatus As Boolean
         Dim vendid As String
         Dim provider As String
+
         If ComboBox1.Text = "AMD" Then
             vendid = "@*ven_1002*"
             provider = "Provider: Advanced Micro Devices"
@@ -68,7 +69,7 @@
                 position = Reply.IndexOf(provider, position + 1)
                 part = part.Replace("em", "oem")
                 part = part.Replace(vbNewLine, "")
-                MsgBox(part)
+
 
                 Button1.Enabled = True
                 Button1.Text = "Done."
@@ -91,7 +92,7 @@
                 Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
 
                 TextBox1.Text = TextBox1.Text + Reply2
-                MsgBox(deloem.Arguments)
+
                 jobstatus = True
                 GoTo 5
             End If
