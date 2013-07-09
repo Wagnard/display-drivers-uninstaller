@@ -1,7 +1,8 @@
 ﻿Public Class Form1
    
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim removedriver As New ProcessStartInfo
+        Dim removedisplaydriver As New ProcessStartInfo
+        Dim removehdmidriver As New ProcessStartInfo
         Dim jobstatus As Boolean
         Dim vendid As String
         Dim provider As String
@@ -16,12 +17,18 @@
             provider = "Provider: NVIDIA"
         End If
 
-        'Debut de la disinstallation du driver
-        removedriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-        removedriver.Arguments = "remove =display " & Chr(34) & vendid & Chr(34)
-        removedriver.UseShellExecute = False
-        removedriver.CreateNoWindow = True
-        removedriver.RedirectStandardOutput = True
+        'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
+        removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+        removedisplaydriver.Arguments = "remove =display " & Chr(34) & vendid & Chr(34)
+        removedisplaydriver.UseShellExecute = False
+        removedisplaydriver.CreateNoWindow = True
+        removedisplaydriver.RedirectStandardOutput = True
+
+        removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+        removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & vendid & Chr(34)
+        removehdmidriver.UseShellExecute = False
+        removehdmidriver.CreateNoWindow = True
+        removehdmidriver.RedirectStandardOutput = True
 
         If Button1.Text = "Done." Then
             Close()
@@ -32,11 +39,14 @@
 
             'creation dun process fantome pour le wait on exit.
             Dim proc As New Process
-            proc.StartInfo = removedriver
+            proc.StartInfo = removedisplaydriver
             proc.Start()
             proc.WaitForExit()
 
-            
+            Dim prochdmi As New Process
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
 
             Dim checkoem As New Diagnostics.ProcessStartInfo
 
@@ -100,19 +110,22 @@
         End If
 10:
         If jobstatus = True Then
-            'Debut du scan de nouveau peripherique
+
+            'Scan for new devices...
             Dim scan As New ProcessStartInfo
             scan.FileName = ".\" & Label3.Text & "\devcon.exe"
             scan.Arguments = "rescan"
             scan.UseShellExecute = False
             scan.CreateNoWindow = True
             scan.RedirectStandardOutput = True
+
             'creation dun process fantome pour le wait on exit.
             Dim proc4 As New Process
             proc4.StartInfo = scan
             proc4.Start()
             proc4.WaitForExit()
         End If
+
         Button1.Enabled = True
         Button1.Text = "Done."
     End Sub
