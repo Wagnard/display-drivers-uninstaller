@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Nvidia Driver Uninstaller", "WindowsApplication1\Nvidia Driver Uninstaller.vbproj", "{F1FA2D6F-4667-409B-9AA7-A8483F82A75B}"
+# Visual Studio Express 2012 for Windows Desktop
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Display Driver Uninstaller", "WindowsApplication1\Display Driver Uninstaller.vbproj", "{F1FA2D6F-4667-409B-9AA7-A8483F82A75B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

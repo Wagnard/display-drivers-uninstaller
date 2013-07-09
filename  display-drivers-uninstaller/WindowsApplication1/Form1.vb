@@ -5,7 +5,6 @@
         Dim jobstatus As Boolean
         Dim vendid As String
         Dim provider As String
-
         If ComboBox1.Text = "AMD" Then
             vendid = "@*ven_1002*"
             provider = "Provider: Advanced Micro Devices"
