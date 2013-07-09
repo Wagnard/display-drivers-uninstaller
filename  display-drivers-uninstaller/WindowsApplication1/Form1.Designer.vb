@@ -30,6 +30,8 @@ Partial Class Form1
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.Label7 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'Button1
@@ -73,10 +75,11 @@ Partial Class Form1
         Me.Label4.AutoSize = True
         Me.Label4.Location = New System.Drawing.Point(13, 67)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(371, 26)
+        Me.Label4.Size = New System.Drawing.Size(406, 26)
         Me.Label4.TabIndex = 4
-        Me.Label4.Text = "Note : NVIDIA has nothing to do with this application. If something go wrong, " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "i" & _
-    "t is your responsability. This program contains code from Microsoft WDK 8."
+        Me.Label4.Text = "Note : AMD / NVIDIA has nothing to do with this application. If something go wron" & _
+    "g, " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "it is your responsability. This program contains code from Microsoft WDK 8." & _
+    ""
         '
         'TextBox1
         '
@@ -104,11 +107,32 @@ Partial Class Form1
         Me.Label6.TabIndex = 8
         Me.Label6.Text = "V1.0"
         '
+        'ComboBox1
+        '
+        Me.ComboBox1.DisplayMember = "(none)"
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Items.AddRange(New Object() {"NVIDIA", "AMD"})
+        Me.ComboBox1.Location = New System.Drawing.Point(167, 43)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
+        Me.ComboBox1.TabIndex = 9
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(12, 46)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(114, 13)
+        Me.Label7.TabIndex = 10
+        Me.Label7.Text = "Select Graphic Driver :"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(594, 317)
+        Me.Controls.Add(Me.Label7)
+        Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.TextBox1)
@@ -121,7 +145,7 @@ Partial Class Form1
         Me.MaximizeBox = False
         Me.Name = "Form1"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "NVIDIA Driver Uninstaller by Wagnard"
+        Me.Text = "Display Driver Uninstaller by Wagnard"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -134,5 +158,7 @@ Partial Class Form1
     Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
+    Friend WithEvents Label7 As System.Windows.Forms.Label
 
 End Class
