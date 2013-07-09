@@ -3,10 +3,22 @@
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Dim removedriver As New ProcessStartInfo
         Dim jobstatus As Boolean
+        Dim vendid As String
+        Dim provider As String
+
+        If ComboBox1.Text = "AMD" Then
+            vendid = "@*ven_1002*"
+            provider = "Provider: Advanced Micro Devices"
+        End If
+
+        If ComboBox1.Text = "NVIDIA" Then
+            vendid = "@*ven_10de*"
+            provider = "Provider: NVIDIA"
+        End If
 
         'Debut de la disinstallation du driver
         removedriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-        removedriver.Arguments = "remove =display " & Chr(34) & "@*ven_10de*" & Chr(34)
+        removedriver.Arguments = "remove =display " & Chr(34) & vendid & Chr(34)
         removedriver.UseShellExecute = False
         removedriver.CreateNoWindow = True
         removedriver.RedirectStandardOutput = True
@@ -44,7 +56,7 @@
             Dim Reply As String = proc2.StandardOutput.ReadToEnd
             Dim position As Integer
 
-            position = Reply.IndexOf("Provider: NVIDIA")
+            position = Reply.IndexOf(provider)
 5:
             '  On Error Resume Next
             If position < 0 Then
@@ -53,8 +65,8 @@
 
             Else
 
-                Dim part As String = Reply.Substring(position - 14, 10).Replace("oem", "em")
-                position = Reply.IndexOf("Provider: NVIDIA", position + 1)
+                Dim part As String = Reply.Substring(position - 14, 10).Replace("oem", "em")  'work around...
+                position = Reply.IndexOf(provider, position + 1)
                 part = part.Replace("em", "oem")
                 part = part.Replace(vbNewLine, "")
                 MsgBox(part)
@@ -109,7 +121,7 @@
         Dim version As String
         Dim arch As Boolean
         version = My.Computer.Info.OSVersion
-
+        Me.ComboBox1.SelectedIndex = 0
         If IntPtr.Size = 8 Then
 
             arch = True
