@@ -42,7 +42,7 @@ Partial Class Form1
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(150, 41)
         Me.Button1.TabIndex = 0
-        Me.Button1.Text = "Uninstall The Nvidia Driver."
+        Me.Button1.Text = "Uninstall The Driver."
         Me.Button1.UseVisualStyleBackColor = True
         '
         'Label1
@@ -107,7 +107,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(29, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V1.3"
+        Me.Label6.Text = "V1.4"
         '
         'ComboBox1
         '

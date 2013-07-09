@@ -1,11 +1,14 @@
-﻿Public Class Form1
-   
+﻿Imports System.DirectoryServices
+
+Public Class Form1
+
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Dim removedisplaydriver As New ProcessStartInfo
         Dim removehdmidriver As New ProcessStartInfo
         Dim jobstatus As Boolean
-        Dim vendid As String
-        Dim provider As String
+        Dim vendid As String = ""
+        Dim provider As String = ""
+
 
         If ComboBox1.Text = "AMD" Then
             vendid = "@*ven_1002*"
@@ -50,7 +53,7 @@
 
             Dim checkoem As New Diagnostics.ProcessStartInfo
 
-            'Debut de la disinstallation du driver (du driver store) recherche oem
+            'Check the driver from the driver store  ( oemxx.inf)
             checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
             checkoem.Arguments = "dp_enum"
             checkoem.UseShellExecute = False
@@ -84,7 +87,7 @@
                 Button1.Enabled = True
                 Button1.Text = "Done."
 
-                'Debut de la disinstallation du driver (du driver store) delete oem
+                'Uninstall Driver from sriver store  delete from (oemxx.inf)
                 Dim deloem As New Diagnostics.ProcessStartInfo
 
                 deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
@@ -124,6 +127,53 @@
             proc4.StartInfo = scan
             proc4.Start()
             proc4.WaitForExit()
+
+
+            'Delete left over files.
+            On Error Resume Next
+            If ComboBox1.Text = "AMD" Then
+
+                Dim filePath As String
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\ATI"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\ATI"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                'Not sure if this work on XP
+
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\ATI"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\AMD"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+
+            End If
+
+            If ComboBox1.Text = "NVIDIA" Then
+
+                Dim filePath As String
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\NVIDIA"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                'Not sure if this work on XP
+
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                'Here we delete the Geforce experience / Nvidia update user it created.
+                Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
+                Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
+                AD.Children.Remove(NewUser)
+
+
+            End If
+
+            On Error GoTo 0
+
         End If
 
         Button1.Enabled = True
@@ -133,6 +183,20 @@
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim version As String
         Dim arch As Boolean
+
+        'Dim filepath As String
+        'filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+        'MsgBox(filepath)
+
+
+
+
+
+
+
+
+
+
         version = My.Computer.Info.OSVersion
         Me.ComboBox1.SelectedIndex = 0
         If IntPtr.Size = 8 Then
@@ -180,6 +244,6 @@
 
     End Sub
 
-   
+
 
 End Class
