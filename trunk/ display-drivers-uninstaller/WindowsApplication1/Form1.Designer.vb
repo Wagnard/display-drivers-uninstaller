@@ -73,7 +73,7 @@ Partial Class Form1
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(13, 67)
+        Me.Label4.Location = New System.Drawing.Point(13, 77)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(406, 26)
         Me.Label4.TabIndex = 4
@@ -105,11 +105,12 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(29, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V1.0"
+        Me.Label6.Text = "V1.1"
         '
         'ComboBox1
         '
         Me.ComboBox1.DisplayMember = "(none)"
+        Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Items.AddRange(New Object() {"NVIDIA", "AMD"})
         Me.ComboBox1.Location = New System.Drawing.Point(167, 43)
