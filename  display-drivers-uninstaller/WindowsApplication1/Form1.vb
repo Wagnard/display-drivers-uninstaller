@@ -400,7 +400,7 @@ Public Class Form1
                     ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
                 For Each child As String In regkey.GetSubKeyNames()
 
-                    If child.Contains("B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") Then
+                    If child.Contains("0bbca823-e77d-419e-9a44-5adec2c8eeb0") Then
 
                         regkey.DeleteSubKeyTree(child)
                     End If
