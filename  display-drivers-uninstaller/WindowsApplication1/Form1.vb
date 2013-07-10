@@ -151,10 +151,65 @@ Public Class Form1
 
             If ComboBox1.Text = "NVIDIA" Then
 
+                'STOP nvidia service
+                Dim stopservice As New ProcessStartInfo
+                stopservice.FileName = "cmd.exe"
+                stopservice.Arguments = "sc stop nvsvc"
+                stopservice.UseShellExecute = False
+                stopservice.CreateNoWindow = True
+                stopservice.RedirectStandardOutput = True
+
+                Dim processstopservice As New Process
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+
+                
+                stopservice.Arguments = "sc stop nvUpdatusService"
+
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+
+                'Delete NVIDIA service
+                
+                stopservice.Arguments = "sc delete nvsvc"
+                
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+
+                stopservice.Arguments = "sc delete nvUpdatusService"
+
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+                'Special process kill for Logitech Keyboard holding files in the NVIDIA folders sometimes.
+
+                Dim killpid As New ProcessStartInfo
+                killpid.FileName = "cmd.exe"
+                killpid.Arguments = "taskkill /f /im Lcore.exe"
+                killpid.UseShellExecute = False
+                killpid.CreateNoWindow = True
+                killpid.RedirectStandardOutput = True
+
+                Dim processkillpid As New Process
+                processkillpid.StartInfo = killpid
+                processkillpid.Start()
+                processkillpid.WaitForExit()
+
+
+                'Delete NVIDIA data Folders
                 Dim filePath As String
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\NVIDIA"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "NVIDIA Corporation"
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
                 'Not sure if this work on XP
@@ -185,7 +240,7 @@ Public Class Form1
         Dim arch As Boolean
 
         'Dim filepath As String
-        'filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+        'filepath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + " (x86)"
         'MsgBox(filepath)
 
 
