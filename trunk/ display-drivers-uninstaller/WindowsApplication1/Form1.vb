@@ -87,8 +87,8 @@ Public Class Form1
                 GoTo 10
 
             Else
-
-                Dim part As String = Reply.Substring(position - 14, 10).Replace("oem", "em")  'work around...
+                'work around...
+                Dim part As String = Reply.Substring(position - 14, 10).Replace("oem", "em")
                 position = Reply.IndexOf(provider, position + 1)
                 part = part.Replace("em", "oem")
                 part = part.Replace(vbNewLine, "")
@@ -190,7 +190,8 @@ Public Class Form1
                 processstopservice.WaitForExit()
 
                 System.Threading.Thread.Sleep(1000)
-                'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) holding files in the NVIDIA folders sometimes.
+                'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
+                'holding files in the NVIDIA folders sometimes.
 
                 Dim killpid As New ProcessStartInfo
                 killpid.FileName = "cmd.exe"
@@ -215,22 +216,39 @@ Public Class Form1
 
                 'Delete NVIDIA data Folders
                 Dim filePath As String
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
+
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\NVIDIA"
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.ApplicationData) + "\NVIDIA"
+
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
+
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
+
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
+
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
                 'Not sure if this work on XP
 
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
+
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
+
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
                 'Here we delete the Geforce experience / Nvidia update user it created.
