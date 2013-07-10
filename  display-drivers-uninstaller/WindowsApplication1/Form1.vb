@@ -75,13 +75,13 @@ Public Class Form1
 
             System.Threading.Thread.Sleep(1000)
 
-            'prepare a lire
+            'Preparing to read output.
             Dim Reply As String = proc2.StandardOutput.ReadToEnd
             Dim position As Integer
 
             position = Reply.IndexOf(provider)
 5:
-            '  On Error Resume Next
+
             If position < 0 Then
 
                 GoTo 10
@@ -97,7 +97,7 @@ Public Class Form1
                 Button1.Enabled = True
                 Button1.Text = "Done."
 
-                'Uninstall Driver from sriver store  delete from (oemxx.inf)
+                'Uninstall Driver from driver store  delete from (oemxx.inf)
                 Dim deloem As New Diagnostics.ProcessStartInfo
 
                 deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
@@ -132,25 +132,101 @@ Public Class Form1
             On Error Resume Next
             If ComboBox1.Text = "AMD" Then
 
+                'STOP AMD service
+                Dim stopservice As New ProcessStartInfo
+                stopservice.FileName = "cmd.exe"
+                stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "AMD External Events Utility" & Chr(34)
+                stopservice.UseShellExecute = False
+                stopservice.CreateNoWindow = True
+                stopservice.RedirectStandardOutput = True
+
+                Dim processstopservice As New Process
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+
+                System.Threading.Thread.Sleep(1000)
+
+                'Delete AMD service
+                stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "AMD External Events Utility" & Chr(34)
+
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+
+                System.Threading.Thread.Sleep(1000)
+
+                'kill process CCC.exe / MOM.exe /Clistart.exe (if it exist)
+
+                Dim killpid As New ProcessStartInfo
+                killpid.FileName = "cmd.exe"
+                killpid.Arguments = " /C" & "taskkill /f /im CLIStart.exe"
+                killpid.UseShellExecute = False
+                killpid.CreateNoWindow = True
+                killpid.RedirectStandardOutput = True
+
+                Dim processkillpid As New Process
+                processkillpid.StartInfo = killpid
+                processkillpid.Start()
+                processkillpid.WaitForExit()
+
+                System.Threading.Thread.Sleep(1000)
+
+                killpid.Arguments = " /C" & "taskkill /f /im MOM.exe"
+                processkillpid.StartInfo = killpid
+                processkillpid.Start()
+                processkillpid.WaitForExit()
+
+                System.Threading.Thread.Sleep(1000)
+
+                killpid.Arguments = " /C" & "taskkill /f /im CCC.exe"
+                processkillpid.StartInfo = killpid
+                processkillpid.Start()
+                processkillpid.WaitForExit()
+
+                System.Threading.Thread.Sleep(1000)
+
+                'Delete AMD data Folders
                 Dim filePath As String
+
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\ATI"
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\ATI"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.ProgramFiles) + "\ATI"
+                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                filePath = Environment.GetFolderPath _
+                   (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
                 'Not sure if this work on XP
 
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\ATI"
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\AMD"
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                filePath = Environment.GetFolderPath _
+                   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "AMD AVT"
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                filePath = Environment.GetFolderPath _
+                   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "ATI Technologies"
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
 
             End If
 
             If ComboBox1.Text = "NVIDIA" Then
 
-                'STOP nvidia service
+                'STOP NVIDIA service
                 Dim stopservice As New ProcessStartInfo
                 stopservice.FileName = "cmd.exe"
                 stopservice.Arguments = " /C" & "sc stop nvsvc"
@@ -216,27 +292,27 @@ Public Class Form1
 
                 'Delete NVIDIA data Folders
                 Dim filePath As String
+
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
-
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ApplicationData) + "\NVIDIA"
-
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
-
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
-
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
-
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
@@ -244,11 +320,10 @@ Public Class Form1
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
-
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
-
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
                 'Here we delete the Geforce experience / Nvidia update user it created.
