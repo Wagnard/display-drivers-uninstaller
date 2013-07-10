@@ -1,4 +1,5 @@
 ﻿Imports System.DirectoryServices
+Imports Microsoft.Win32
 
 Public Class Form1
 
@@ -93,10 +94,6 @@ Public Class Form1
                 part = part.Replace("em", "oem")
                 part = part.Replace(vbNewLine, "")
 
-
-                Button1.Enabled = True
-                Button1.Text = "Done."
-
                 'Uninstall Driver from driver store  delete from (oemxx.inf)
                 Dim deloem As New Diagnostics.ProcessStartInfo
 
@@ -126,8 +123,9 @@ Public Class Form1
 10:
         If jobstatus = True Then
 
-           
-            TextBox1.Text = TextBox1.Text + "Deleting " & ComboBox1.Text & " files/Folders/services." + vbNewLine
+
+            TextBox1.Text = TextBox1.Text + "Cleaning " & ComboBox1.Text & _
+                " files/Folders/services/regkey." + vbNewLine
             'Delete left over files.
             On Error Resume Next
             If ComboBox1.Text = "AMD" Then
@@ -250,9 +248,9 @@ Public Class Form1
                 System.Threading.Thread.Sleep(1000)
 
                 'Delete NVIDIA service
-                
+
                 stopservice.Arguments = " /C" & "sc delete nvsvc"
-                
+
                 processstopservice.StartInfo = stopservice
                 processstopservice.Start()
                 processstopservice.WaitForExit()
@@ -331,6 +329,93 @@ Public Class Form1
                 Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
                 AD.Children.Remove(NewUser)
 
+                'Delete NVIDIA regkey
+                Dim count As Int32 = 0
+
+                For Each child As String In My.Computer.Registry.ClassesRoot.GetSubKeyNames()
+
+                    If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
+                       Or child.Contains("NVXD") Or child.Contains("NvXD") Then
+
+                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                Dim regkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
+                       Or child.Contains("NVXD") Or child.Contains("NvXD") Then
+
+                        regkey.DeleteSubKeyTree(child)
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
+                       Or child.Contains("NVXD") Or child.Contains("NvXD") Then
+
+                        regkey.DeleteSubKeyTree(child)
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
+                       Or child.Contains("NVXD") Or child.Contains("NvXD") Then
+
+                        regkey.DeleteSubKeyTree(child)
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") Then
+
+                        regkey.DeleteSubKeyTree(child)
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") Then
+
+                        regkey.DeleteSubKeyTree(child)
+                    End If
+                    count += 1
+                Next
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Run", True)
+                regkey.DeleteValue("Nvtmru")
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
+                regkey.DeleteValue("StereoLinksInstall")
+
+
 
             End If
 
@@ -365,15 +450,7 @@ Public Class Form1
         'Dim filepath As String
         'filepath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + " (x86)"
         'MsgBox(filepath)
-
-
-
-
-
-
-
-
-
+        
 
         version = My.Computer.Info.OSVersion
         Me.ComboBox1.SelectedIndex = 0
