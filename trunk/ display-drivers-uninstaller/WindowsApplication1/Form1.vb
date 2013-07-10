@@ -46,10 +46,14 @@ Public Class Form1
             proc.Start()
             proc.WaitForExit()
 
+            System.Threading.Thread.Sleep(1000)
+
             Dim prochdmi As New Process
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
+
+            System.Threading.Thread.Sleep(1000)
 
             Dim checkoem As New Diagnostics.ProcessStartInfo
 
@@ -65,6 +69,9 @@ Public Class Form1
             proc2.StartInfo = checkoem
             proc2.Start()
             proc2.WaitForExit()
+
+            System.Threading.Thread.Sleep(1000)
+
             'prepare a lire
             Dim Reply As String = proc2.StandardOutput.ReadToEnd
             Dim position As Integer
@@ -102,6 +109,8 @@ Public Class Form1
                 proc3.Start()
                 proc3.WaitForExit()
 
+                System.Threading.Thread.Sleep(1000)
+
                 Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
 
                 TextBox1.Text = TextBox1.Text + Reply2
@@ -114,20 +123,7 @@ Public Class Form1
 10:
         If jobstatus = True Then
 
-            'Scan for new devices...
-            Dim scan As New ProcessStartInfo
-            scan.FileName = ".\" & Label3.Text & "\devcon.exe"
-            scan.Arguments = "rescan"
-            scan.UseShellExecute = False
-            scan.CreateNoWindow = True
-            scan.RedirectStandardOutput = True
-
-            'creation dun process fantome pour le wait on exit.
-            Dim proc4 As New Process
-            proc4.StartInfo = scan
-            proc4.Start()
-            proc4.WaitForExit()
-
+           
 
             'Delete left over files.
             On Error Resume Next
@@ -154,7 +150,7 @@ Public Class Form1
                 'STOP nvidia service
                 Dim stopservice As New ProcessStartInfo
                 stopservice.FileName = "cmd.exe"
-                stopservice.Arguments = "sc stop nvsvc"
+                stopservice.Arguments = " /C" & "sc stop nvsvc"
                 stopservice.UseShellExecute = False
                 stopservice.CreateNoWindow = True
                 stopservice.RedirectStandardOutput = True
@@ -164,31 +160,38 @@ Public Class Form1
                 processstopservice.Start()
                 processstopservice.WaitForExit()
 
-                
-                stopservice.Arguments = "sc stop nvUpdatusService"
+                System.Threading.Thread.Sleep(1000)
+
+                stopservice.Arguments = " /C" & "sc stop nvUpdatusService"
 
                 processstopservice.StartInfo = stopservice
                 processstopservice.Start()
                 processstopservice.WaitForExit()
+
+                System.Threading.Thread.Sleep(1000)
 
                 'Delete NVIDIA service
                 
-                stopservice.Arguments = "sc delete nvsvc"
+                stopservice.Arguments = " /C" & "sc delete nvsvc"
                 
                 processstopservice.StartInfo = stopservice
                 processstopservice.Start()
                 processstopservice.WaitForExit()
 
-                stopservice.Arguments = "sc delete nvUpdatusService"
+                System.Threading.Thread.Sleep(1000)
+
+                stopservice.Arguments = " /C" & "sc delete nvUpdatusService"
 
                 processstopservice.StartInfo = stopservice
                 processstopservice.Start()
                 processstopservice.WaitForExit()
-                'Special process kill for Logitech Keyboard holding files in the NVIDIA folders sometimes.
+
+                System.Threading.Thread.Sleep(1000)
+                'Special process kill NvTmru.exe and for Logitech Keyboard(Lcore.exe) holding files in the NVIDIA folders sometimes.
 
                 Dim killpid As New ProcessStartInfo
                 killpid.FileName = "cmd.exe"
-                killpid.Arguments = "taskkill /f /im Lcore.exe"
+                killpid.Arguments = " /C" & "taskkill /f /im Lcore.exe"
                 killpid.UseShellExecute = False
                 killpid.CreateNoWindow = True
                 killpid.RedirectStandardOutput = True
@@ -198,6 +201,14 @@ Public Class Form1
                 processkillpid.Start()
                 processkillpid.WaitForExit()
 
+                System.Threading.Thread.Sleep(1000)
+
+                killpid.Arguments = " /C" & "taskkill /f /im NvTmru.exe"
+                processkillpid.StartInfo = killpid
+                processkillpid.Start()
+                processkillpid.WaitForExit()
+
+                System.Threading.Thread.Sleep(1000)
 
                 'Delete NVIDIA data Folders
                 Dim filePath As String
@@ -228,6 +239,21 @@ Public Class Form1
             End If
 
             On Error GoTo 0
+            'Scan for new devices...
+            Dim scan As New ProcessStartInfo
+            scan.FileName = ".\" & Label3.Text & "\devcon.exe"
+            scan.Arguments = "rescan"
+            scan.UseShellExecute = False
+            scan.CreateNoWindow = True
+            scan.RedirectStandardOutput = True
+
+            'creation dun process fantome pour le wait on exit.
+            Dim proc4 As New Process
+            proc4.StartInfo = scan
+            proc4.Start()
+            proc4.WaitForExit()
+
+            System.Threading.Thread.Sleep(1000)
 
         End If
 
