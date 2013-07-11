@@ -219,6 +219,89 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
+                'Delete AMD regkey
+                Dim count As Int32 = 0
+
+                Dim regkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("ATI") Then
+
+                        regkey.DeleteSubKeyTree(child)
+
+                    End If
+                    count += 1
+                Next
+                'Here im not deleting the ATI completly for safety until 100% sure
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("ACE") Then
+
+                        regkey.DeleteSubKeyTree(child)
+
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("CBT") Then
+
+                        regkey.DeleteSubKeyTree(child)
+
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies\Install", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("ATI Catalyst") Or child.Contains("ATI MCAT") Or _
+                        child.Contains("AVT") Or child.Contains("ccc") Or _
+                        child.Contains("Packages") Or child.Contains("WirelessDisplay") Then
+
+                        regkey.DeleteSubKeyTree(child)
+
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("ATI") Then
+
+                        regkey.DeleteSubKeyTree(child)
+
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("02270E3B-09BD-9606-F587-9D3E96F1A795") Or _
+                        child.Contains("2005F611-65E4-3132-9DEF-C8C5044B46D6") Or _
+                        child.Contains("C62150B2-D4EE-A87D-F2AF-94E94F71AB6A") Or _
+                        child.Contains("CA7F85FB-D785-E251-8EE3-8AA714881409") Then
+
+                        regkey.DeleteSubKeyTree(child)
+                    End If
+                    count += 1
+                Next
 
             End If
 
