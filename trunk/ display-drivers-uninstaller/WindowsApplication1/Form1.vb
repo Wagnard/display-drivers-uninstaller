@@ -168,21 +168,28 @@ Public Class Form1
                 processkillpid.Start()
                 processkillpid.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
 
                 killpid.Arguments = " /C" & "taskkill /f /im MOM.exe"
                 processkillpid.StartInfo = killpid
                 processkillpid.Start()
                 processkillpid.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
+
+                killpid.Arguments = " /C" & "taskkill /f /im CLI.exe"
+                processkillpid.StartInfo = killpid
+                processkillpid.Start()
+                processkillpid.WaitForExit()
+
+                System.Threading.Thread.Sleep(100)
 
                 killpid.Arguments = " /C" & "taskkill /f /im CCC.exe"
                 processkillpid.StartInfo = killpid
                 processkillpid.Start()
                 processkillpid.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
 
                 'Delete AMD data Folders
                 Dim filePath As String
@@ -210,19 +217,34 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
                 filePath = Environment.GetFolderPath _
-                   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "AMD AVT"
+                   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
                 filePath = Environment.GetFolderPath _
-                   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "ATI Technologies"
+                   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
                 'Delete AMD regkey
                 Dim count As Int32 = 0
 
-                Dim regkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
+
+                Dim regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                    ("Directory\background\shellex\ContextMenuHandlers", True)
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("ACE") Then
+
+                        regkey.DeleteSubKeyTree(child)
+
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
                 For Each child As String In regkey.GetSubKeyNames()
 
                     If child.Contains("ATI") Then
@@ -232,6 +254,7 @@ Public Class Form1
                     End If
                     count += 1
                 Next
+
                 'Here im not deleting the ATI completly for safety until 100% sure
                 count = 0
 
@@ -302,6 +325,10 @@ Public Class Form1
                     End If
                     count += 1
                 Next
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
+                regkey.DeleteValue("StartCCC")
 
             End If
 
