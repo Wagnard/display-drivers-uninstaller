@@ -312,16 +312,22 @@ Public Class Form1
 
                 count = 0
 
+                Dim subregkey As RegistryKey
+                Dim wantedvalue As String = Nothing
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
                 For Each child As String In regkey.GetSubKeyNames()
+                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
 
-                    If child.Contains("02270E3B-09BD-9606-F587-9D3E96F1A795") Or _
-                        child.Contains("2005F611-65E4-3132-9DEF-C8C5044B46D6") Or _
-                        child.Contains("C62150B2-D4EE-A87D-F2AF-94E94F71AB6A") Or _
-                        child.Contains("CA7F85FB-D785-E251-8EE3-8AA714881409") Then
+                    wantedvalue = subregkey.GetValue("DisplayName")
+                    If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                        wantedvalue.Contains("ccc-utility") Or _
+                        wantedvalue.Contains("AMD Accelerated Video") And Not Nothing Then
+                        MsgBox(wantedvalue)
+                        MsgBox(child)
+                        ' regkey.DeleteSubKeyTree(child)
 
-                        regkey.DeleteSubKeyTree(child)
                     End If
                     count += 1
                 Next
@@ -329,6 +335,30 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
                 regkey.DeleteValue("StartCCC")
+
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products", True)
+
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+        ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\" & child & _
+        "\InstallProperties", True)
+
+
+                    wantedvalue = subregkey.GetValue("DisplayName")
+                    If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
+                        wantedvalue.Contains("Catalyst Control Center") Or _
+                        wantedvalue.Contains("AMD Catalyst Install Manager") Then
+
+                        regkey.DeleteSubKeyTree(child)
+
+                    End If
+
+                    count += 1
+                Next
 
             End If
 
@@ -560,7 +590,6 @@ Public Class Form1
         'Dim filepath As String
         'filepath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + " (x86)"
         'MsgBox(filepath)
-        
 
         version = My.Computer.Info.OSVersion
         Me.ComboBox1.SelectedIndex = 0
@@ -581,20 +610,20 @@ Public Class Form1
 
         End If
 
-        If version >= "5.1" Then
+        If Version >= "5.1" Then
             Label2.Text = "Windows XP or Server 2003"
         End If
 
-        If version >= "6.0" Then
+        If Version >= "6.0" Then
             Label2.Text = "Windows Vista or Server 2008"
         End If
 
-        If version >= "6.1" Then
+        If Version >= "6.1" Then
             Label2.Text = "Windows 7 or Server 2008r2"
 
         End If
 
-        If version >= "6.2" Then
+        If Version >= "6.2" Then
             Label2.Text = "Windows 8 or Server 2012"
 
         End If
