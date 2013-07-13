@@ -798,6 +798,28 @@ Public Class Form1
                     End If
                     count += 1
                 Next
+                count = 0
+
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                    ("Installer\Products", True)
+
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+        ("Installer\Products\" & child , True)
+
+                    If subregkey IsNot Nothing Then
+                        wantedvalue = subregkey.GetValue("ProductName")
+                        If wantedvalue IsNot Nothing Then
+                            If wantedvalue.Contains("NVIDIA") Then
+
+                                regkey.DeleteSubKeyTree(child)
+
+                            End If
+                        End If
+                    End If
+                    count += 1
+                Next
 
             End If
 
