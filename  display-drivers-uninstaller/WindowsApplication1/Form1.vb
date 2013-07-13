@@ -127,7 +127,7 @@ Public Class Form1
             TextBox1.Text = TextBox1.Text + "Cleaning " & ComboBox1.Text & _
                 " files/Folders/services/regkey." + vbNewLine
             'Delete left over files.
-            On Error Resume Next
+
             If ComboBox1.Text = "AMD" Then
 
                 'STOP AMD service
@@ -192,41 +192,82 @@ Public Class Form1
                 System.Threading.Thread.Sleep(100)
 
                 'Delete AMD data Folders
-                On Error GoTo 0
+
                 Dim filePath As String
 
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\ATI"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\ATI"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + "\ATI"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 filePath = Environment.GetFolderPath _
                    (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 'Not sure if this work on XP
 
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\ATI"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\AMD"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 If IntPtr.Size = 8 Then
                     filePath = Environment.GetFolderPath _
                        (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    End Try
 
                     filePath = Environment.GetFolderPath _
                        (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    End Try
                 End If
 
                 'Delete AMD regkey
@@ -235,75 +276,21 @@ Public Class Form1
 
                 Dim regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                     ("Directory\background\shellex\ContextMenuHandlers", True)
-                For Each child As String In regkey.GetSubKeyNames()
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
 
-                    If child.Contains("ACE") Then
+                        If child.Contains("ACE") Then
 
-                        regkey.DeleteSubKeyTree(child)
+                            regkey.DeleteSubKeyTree(child)
 
-                    End If
-                    count += 1
-                Next
-
+                        End If
+                        count += 1
+                    Next
+                End If
                 count = 0
 
                 regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
-                For Each child As String In regkey.GetSubKeyNames()
-
-                    If child.Contains("ATI") Then
-
-                        regkey.DeleteSubKeyTree(child)
-
-                    End If
-                    count += 1
-                Next
-
-                'Here im not deleting the ATI completly for safety until 100% sure
-                count = 0
-
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI", True)
-                For Each child As String In regkey.GetSubKeyNames()
-
-                    If child.Contains("ACE") Then
-
-                        regkey.DeleteSubKeyTree(child)
-
-                    End If
-                    count += 1
-                Next
-
-                count = 0
-
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies", True)
-                For Each child As String In regkey.GetSubKeyNames()
-
-                    If child.Contains("CBT") Then
-
-                        regkey.DeleteSubKeyTree(child)
-
-                    End If
-                    count += 1
-                Next
-
-                count = 0
-
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies\Install", True)
-                For Each child As String In regkey.GetSubKeyNames()
-
-                    If child.Contains("ATI Catalyst") Or child.Contains("ATI MCAT") Or _
-                        child.Contains("AVT") Or child.Contains("ccc") Or _
-                        child.Contains("Packages") Or child.Contains("WirelessDisplay") Then
-
-                        regkey.DeleteSubKeyTree(child)
-
-                    End If
-                    count += 1
-                Next
-
-                count = 0
-
-                If IntPtr.Size = 8 Then
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
 
                         If child.Contains("ATI") Then
@@ -313,7 +300,68 @@ Public Class Form1
                         End If
                         count += 1
                     Next
+                End If
+                'Here im not deleting the ATI completly for safety until 100% sure
+                count = 0
 
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+
+                        If child.Contains("ACE") Then
+
+                            regkey.DeleteSubKeyTree(child)
+
+                        End If
+                        count += 1
+                    Next
+                End If
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+
+                        If child.Contains("CBT") Then
+
+                            regkey.DeleteSubKeyTree(child)
+
+                        End If
+                        count += 1
+                    Next
+                End If
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies\Install", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+
+                        If child.Contains("ATI Catalyst") Or child.Contains("ATI MCAT") Or _
+                            child.Contains("AVT") Or child.Contains("ccc") Or _
+                            child.Contains("Packages") Or child.Contains("WirelessDisplay") Then
+
+                            regkey.DeleteSubKeyTree(child)
+
+                        End If
+                        count += 1
+                    Next
+                End If
+                count = 0
+
+                If IntPtr.Size = 8 Then
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+
+                            If child.Contains("ATI") Then
+
+                                regkey.DeleteSubKeyTree(child)
+
+                            End If
+
+                            count += 1
+                        Next
+                    End If
                 End If
                 count = 0
 
@@ -324,15 +372,15 @@ Public Class Form1
                 For Each child As String In regkey.GetSubKeyNames()
                     subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                    If subregkey IsNot Nothing Then
+                        wantedvalue = subregkey.GetValue("DisplayName")
+                        If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                            wantedvalue.Contains("ccc-utility") Or _
+                            wantedvalue.Contains("AMD Accelerated Video") And Not Nothing Then
 
-                    wantedvalue = subregkey.GetValue("DisplayName")
-                    If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                        wantedvalue.Contains("ccc-utility") Or _
-                        wantedvalue.Contains("AMD Accelerated Video") And Not Nothing Then
-                        MsgBox(wantedvalue)
-                        MsgBox(child)
-                        ' regkey.DeleteSubKeyTree(child)
+                            regkey.DeleteSubKeyTree(child)
 
+                        End If
                     End If
                     count += 1
                 Next
@@ -345,17 +393,15 @@ Public Class Form1
                     For Each child As String In regkey.GetSubKeyNames()
                         subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                         ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                        If subregkey IsNot Nothing Then
+                            wantedvalue = subregkey.GetValue("DisplayName")
+                            If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                wantedvalue.Contains("ccc-utility") Or _
+                                wantedvalue.Contains("AMD Accelerated Video") Then
+                                regkey.DeleteSubKeyTree(child)
 
-                        wantedvalue = subregkey.GetValue("DisplayName")
-                        If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                            wantedvalue.Contains("ccc-utility") Or _
-                            wantedvalue.Contains("AMD Accelerated Video") And Not Nothing Then
-                            MsgBox(wantedvalue)
-                            MsgBox(child)
-                            ' regkey.DeleteSubKeyTree(child)
-
+                            End If
                         End If
-
                         count += 1
                     Next
                 End If
@@ -364,7 +410,9 @@ Public Class Form1
                 If IntPtr.Size = 8 Then
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                         ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
-                    regkey.DeleteValue("StartCCC")
+                    If regkey IsNot Nothing Then
+                        regkey.DeleteValue("StartCCC")
+                    End If
                 End If
 
                 count = 0
@@ -378,16 +426,16 @@ Public Class Form1
         ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\" & child & _
         "\InstallProperties", True)
 
+                    If subregkey IsNot Nothing Then
+                        wantedvalue = subregkey.GetValue("DisplayName")
+                        If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
+                            wantedvalue.Contains("Catalyst Control Center") Or _
+                            wantedvalue.Contains("AMD Catalyst Install Manager") Then
 
-                    wantedvalue = subregkey.GetValue("DisplayName")
-                    If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
-                        wantedvalue.Contains("Catalyst Control Center") Or _
-                        wantedvalue.Contains("AMD Catalyst Install Manager") Then
+                            regkey.DeleteSubKeyTree(child)
 
-                        regkey.DeleteSubKeyTree(child)
-
+                        End If
                     End If
-
                     count += 1
                 Next
 
@@ -464,87 +512,104 @@ Public Class Form1
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ApplicationData) + "\NVIDIA"
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 If IntPtr.Size = 8 Then
                     filePath = Environment.GetFolderPath _
                         (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    End Try
+
                 End If
 
                 'Not sure if this work on XP
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
-                My.Computer.FileSystem.DeleteDirectory(filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 'Here we delete the Geforce experience / Nvidia update user it created.
                 Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
                 Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
-                AD.Children.Remove(NewUser)
+                Try
+                    AD.Children.Remove(NewUser)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
 
                 'Delete NVIDIA regkey
                 Dim count As Int32 = 0
+                Dim regkey As RegistryKey
+                Dim wantedvalue As String
+                Dim subregkey As RegistryKey
+                regkey = My.Computer.Registry.ClassesRoot
+                If regkey IsNot Nothing Then
+                    For Each child As String In My.Computer.Registry.ClassesRoot.GetSubKeyNames()
 
-                For Each child As String In My.Computer.Registry.ClassesRoot.GetSubKeyNames()
+                        If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
+                           Or child.Contains("NVXD") Or child.Contains("NvXD") Then
 
-                    If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
-                       Or child.Contains("NVXD") Or child.Contains("NvXD") Then
-
-                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
-                    End If
-                    count += 1
-                Next
-
+                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
+                        End If
+                        count += 1
+                    Next
+                End If
                 count = 0
 
-                Dim regkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
-                For Each child As String In regkey.GetSubKeyNames()
-
-                    If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
-                       Or child.Contains("NVXD") Or child.Contains("NvXD") Then
-
-                        regkey.DeleteSubKeyTree(child)
-                    End If
-                    count += 1
-                Next
-
-                count = 0
-
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
-                For Each child As String In regkey.GetSubKeyNames()
-
-                    If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
-                       Or child.Contains("NVXD") Or child.Contains("NvXD") Then
-
-                        regkey.DeleteSubKeyTree(child)
-                    End If
-                    count += 1
-                Next
-
-                count = 0
-
-                If IntPtr.Size = 8 Then
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
+                If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
 
                         If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
@@ -554,49 +619,119 @@ Public Class Form1
                         End If
                         count += 1
                     Next
+                End If
 
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+
+                        If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
+                           Or child.Contains("NVXD") Or child.Contains("NvXD") Then
+
+                            regkey.DeleteSubKeyTree(child)
+                        End If
+                        count += 1
+                    Next
+                End If
+                count = 0
+
+                If IntPtr.Size = 8 Then
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+
+                            If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
+                               Or child.Contains("NVXD") Or child.Contains("NvXD") Then
+
+                                regkey.DeleteSubKeyTree(child)
+                            End If
+                            count += 1
+                        Next
+                    End If
                 End If
                 count = 0
 
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                For Each child As String In regkey.GetSubKeyNames()
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
 
-                    If child.Contains("B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") Then
+                        If child.Contains("B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") Then
 
-                        regkey.DeleteSubKeyTree(child)
-                    End If
-                    count += 1
-                Next
+                            regkey.DeleteSubKeyTree(child)
+                        End If
+                        count += 1
+                    Next
+                End If
 
+                If IntPtr.Size = 8 Then
+                    
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                        ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+                    For Each child As String In regkey.GetSubKeyNames()
+                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                        ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                        If subregkey IsNot Nothing Then
+                            wantedvalue = subregkey.GetValue("DisplayName")
+                            If wantedvalue.Contains("NVIDIA") Then
+                                regkey.DeleteSubKeyTree(child)
+
+                            End If
+                        End If
+                        count += 1
+                    Next
+                End If
 
                 count = 0
 
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
+                        ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
                 For Each child As String In regkey.GetSubKeyNames()
+                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                    If subregkey IsNot Nothing Then
+                        wantedvalue = subregkey.GetValue("DisplayName")
+                        If wantedvalue.Contains("NVIDIA") Then
+                            regkey.DeleteSubKeyTree(child)
 
-                    If child.Contains("0bbca823-e77d-419e-9a44-5adec2c8eeb0") Then
-
-                        regkey.DeleteSubKeyTree(child)
+                        End If
                     End If
                     count += 1
                 Next
 
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+
+                        If child.Contains("0bbca823-e77d-419e-9a44-5adec2c8eeb0") Then
+
+                            regkey.DeleteSubKeyTree(child)
+                        End If
+                        count += 1
+                    Next
+                End If
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Microsoft\Windows\CurrentVersion\Run", True)
-                regkey.DeleteValue("Nvtmru")
+                If regkey IsNot Nothing Then
+                    regkey.DeleteValue("Nvtmru")
+                End If
 
                 If IntPtr.Size = 8 Then
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                         ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
-                    regkey.DeleteValue("StereoLinksInstall")
+                    If regkey IsNot Nothing Then
+                        regkey.DeleteValue("StereoLinksInstall")
+                    End If
                 End If
 
 
             End If
 
-            On Error GoTo 0
+
             TextBox1.Text = TextBox1.Text + "Scanning for new device..." + vbNewLine
             'Scan for new devices...
             Dim scan As New ProcessStartInfo
@@ -624,10 +759,6 @@ Public Class Form1
         Dim version As String
         Dim arch As Boolean
 
-        'Dim filepath As String
-        'filepath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + " (x86)"
-        'MsgBox(filepath)
-
         version = My.Computer.Info.OSVersion
         Me.ComboBox1.SelectedIndex = 0
         If IntPtr.Size = 8 Then
@@ -647,20 +778,20 @@ Public Class Form1
 
         End If
 
-        If Version >= "5.1" Then
+        If version >= "5.1" Then
             Label2.Text = "Windows XP or Server 2003"
         End If
 
-        If Version >= "6.0" Then
+        If version >= "6.0" Then
             Label2.Text = "Windows Vista or Server 2008"
         End If
 
-        If Version >= "6.1" Then
+        If version >= "6.1" Then
             Label2.Text = "Windows 7 or Server 2008r2"
 
         End If
 
-        If Version >= "6.2" Then
+        If version >= "6.2" Then
             Label2.Text = "Windows 8 or Server 2012"
 
         End If
