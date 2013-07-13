@@ -634,10 +634,11 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 End Try
 
-                'Here we delete the Geforce experience / Nvidia update user it created.
-                Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
-                Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
+                'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
                 Try
+                    Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
+                    Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
+
                     AD.Children.Remove(NewUser)
                 Catch ex As Exception
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
@@ -726,7 +727,7 @@ Public Class Form1
                 count = 0
 
                 If IntPtr.Size = 8 Then
-                    
+
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                         ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
 
@@ -833,7 +834,7 @@ Public Class Form1
                 For Each child As String In regkey.GetSubKeyNames()
 
                     subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-        ("Installer\Products\" & child , True)
+        ("Installer\Products\" & child, True)
 
                     If subregkey IsNot Nothing Then
                         wantedvalue = subregkey.GetValue("ProductName")
