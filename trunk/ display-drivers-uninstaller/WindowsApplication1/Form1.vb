@@ -124,8 +124,7 @@ Public Class Form1
         If jobstatus = True Then
 
 
-            TextBox1.Text = TextBox1.Text + "Cleaning " & ComboBox1.Text & _
-                " files/Folders/services/regkey." + vbNewLine
+            TextBox1.Text = TextBox1.Text + "Cleaning process/services" + vbNewLine
             'Delete left over files.
 
             If ComboBox1.Text = "AMD" Then
@@ -192,7 +191,7 @@ Public Class Form1
                 System.Threading.Thread.Sleep(100)
 
                 'Delete AMD data Folders
-
+                TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine
                 Dim filePath As String
 
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\ATI"
@@ -270,6 +269,7 @@ Public Class Form1
                     End Try
                 End If
 
+                TextBox1.Text = TextBox1.Text + "Cleaning Regkeys" + vbNewLine
                 'Delete AMD regkey
                 Dim count As Int32 = 0
 
@@ -374,12 +374,14 @@ Public Class Form1
                     ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
                     If subregkey IsNot Nothing Then
                         wantedvalue = subregkey.GetValue("DisplayName")
-                        If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                            wantedvalue.Contains("ccc-utility") Or _
-                            wantedvalue.Contains("AMD Accelerated Video") And Not Nothing Then
+                        If wantedvalue IsNot Nothing Then
+                            If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                wantedvalue.Contains("ccc-utility") Or _
+                                wantedvalue.Contains("AMD Accelerated Video") And Not Nothing Then
 
-                            regkey.DeleteSubKeyTree(child)
+                                regkey.DeleteSubKeyTree(child)
 
+                            End If
                         End If
                     End If
                     count += 1
@@ -395,11 +397,13 @@ Public Class Form1
                         ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
                         If subregkey IsNot Nothing Then
                             wantedvalue = subregkey.GetValue("DisplayName")
-                            If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                wantedvalue.Contains("ccc-utility") Or _
-                                wantedvalue.Contains("AMD Accelerated Video") Then
-                                regkey.DeleteSubKeyTree(child)
+                            If wantedvalue IsNot Nothing Then
+                                If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                    wantedvalue.Contains("ccc-utility") Or _
+                                    wantedvalue.Contains("AMD Accelerated Video") Then
+                                    regkey.DeleteSubKeyTree(child)
 
+                                End If
                             End If
                         End If
                         count += 1
@@ -411,7 +415,11 @@ Public Class Form1
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                         ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
                     If regkey IsNot Nothing Then
-                        regkey.DeleteValue("StartCCC")
+                        Try
+                            regkey.DeleteValue("StartCCC")
+                        Catch ex As Exception
+                            TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        End Try
                     End If
                 End If
 
@@ -428,12 +436,14 @@ Public Class Form1
 
                     If subregkey IsNot Nothing Then
                         wantedvalue = subregkey.GetValue("DisplayName")
-                        If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
-                            wantedvalue.Contains("Catalyst Control Center") Or _
-                            wantedvalue.Contains("AMD Catalyst Install Manager") Then
+                        If wantedvalue IsNot Nothing Then
+                            If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
+                                wantedvalue.Contains("Catalyst Control Center") Or _
+                                wantedvalue.Contains("AMD Catalyst Install Manager") Then
 
-                            regkey.DeleteSubKeyTree(child)
+                                regkey.DeleteSubKeyTree(child)
 
+                            End If
                         End If
                     End If
                     count += 1
@@ -466,6 +476,14 @@ Public Class Form1
 
                 System.Threading.Thread.Sleep(1000)
 
+                stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "Stereo Service" & Chr(34)
+
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+
+                System.Threading.Thread.Sleep(1000)
+
                 'Delete NVIDIA service
 
                 stopservice.Arguments = " /C" & "sc delete nvsvc"
@@ -477,6 +495,14 @@ Public Class Form1
                 System.Threading.Thread.Sleep(1000)
 
                 stopservice.Arguments = " /C" & "sc delete nvUpdatusService"
+
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+
+                System.Threading.Thread.Sleep(1000)
+
+                stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "Stereo Service" & Chr(34)
 
                 processstopservice.StartInfo = stopservice
                 processstopservice.Start()
@@ -507,6 +533,7 @@ Public Class Form1
 
                 System.Threading.Thread.Sleep(1000)
 
+                TextBox1.Text = TextBox1.Text + "Cleaning Diectory" + vbNewLine
                 'Delete NVIDIA data Folders
                 Dim filePath As String
 
@@ -589,11 +616,14 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 End Try
 
+                TextBox1.Text = TextBox1.Text + "Cleaning Regkeys" + vbNewLine
                 'Delete NVIDIA regkey
+                TextBox1.Text = TextBox1.Text + "Starting reg cleanUP" + vbNewLine
                 Dim count As Int32 = 0
                 Dim regkey As RegistryKey
-                Dim wantedvalue As String
+                Dim wantedvalue As String = Nothing
                 Dim subregkey As RegistryKey
+
                 regkey = My.Computer.Registry.ClassesRoot
                 If regkey IsNot Nothing Then
                     For Each child As String In My.Computer.Registry.ClassesRoot.GetSubKeyNames()
@@ -601,7 +631,7 @@ Public Class Form1
                         If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
                            Or child.Contains("NVXD") Or child.Contains("NvXD") Then
 
-                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
+                            regkey.DeleteSubKeyTree(child)
                         End If
                         count += 1
                     Next
@@ -666,18 +696,24 @@ Public Class Form1
                     Next
                 End If
 
+                count = 0
+
                 If IntPtr.Size = 8 Then
                     
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                         ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+
                     For Each child As String In regkey.GetSubKeyNames()
                         subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                         ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
                         If subregkey IsNot Nothing Then
                             wantedvalue = subregkey.GetValue("DisplayName")
-                            If wantedvalue.Contains("NVIDIA") Then
-                                regkey.DeleteSubKeyTree(child)
+                            If wantedvalue IsNot Nothing Then
+                                If wantedvalue.Contains("NVIDIA") Then
 
+                                    regkey.DeleteSubKeyTree(child)
+
+                                End If
                             End If
                         End If
                         count += 1
@@ -692,10 +728,13 @@ Public Class Form1
                     subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
                     If subregkey IsNot Nothing Then
-                        wantedvalue = subregkey.GetValue("DisplayName")
-                        If wantedvalue.Contains("NVIDIA") Then
-                            regkey.DeleteSubKeyTree(child)
 
+                        wantedvalue = subregkey.GetValue("DisplayName")
+                        If wantedvalue IsNot Nothing Then
+                            If wantedvalue.Contains("NVIDIA") Then
+                                regkey.DeleteSubKeyTree(child)
+
+                            End If
                         End If
                     End If
                     count += 1
@@ -717,17 +756,48 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Microsoft\Windows\CurrentVersion\Run", True)
                 If regkey IsNot Nothing Then
-                    regkey.DeleteValue("Nvtmru")
+                    Try
+                        regkey.DeleteValue("Nvtmru")
+                    Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    End Try
                 End If
 
                 If IntPtr.Size = 8 Then
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                         ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
                     If regkey IsNot Nothing Then
-                        regkey.DeleteValue("StereoLinksInstall")
+                        Try
+                            regkey.DeleteValue("StereoLinksInstall")
+                        Catch ex As Exception
+                            TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        End Try
                     End If
                 End If
 
+                count = 0
+
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products", True)
+
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+        ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\" & child & _
+        "\InstallProperties", True)
+
+                    If subregkey IsNot Nothing Then
+                        wantedvalue = subregkey.GetValue("DisplayName")
+                        If wantedvalue IsNot Nothing Then
+                            If wantedvalue.Contains("NVIDIA") Then
+
+                                regkey.DeleteSubKeyTree(child)
+
+                            End If
+                        End If
+                    End If
+                    count += 1
+                Next
 
             End If
 
