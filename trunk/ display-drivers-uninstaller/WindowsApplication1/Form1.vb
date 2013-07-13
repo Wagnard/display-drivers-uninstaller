@@ -439,7 +439,34 @@ Public Class Form1
                         If wantedvalue IsNot Nothing Then
                             If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
                                 wantedvalue.Contains("Catalyst Control Center") Or _
-                                wantedvalue.Contains("AMD Catalyst Install Manager") Then
+                                wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                wantedvalue.Contains("ccc-utility") Then
+
+                                regkey.DeleteSubKeyTree(child)
+
+                            End If
+                        End If
+                    End If
+                    count += 1
+                Next
+
+                count = 0
+
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                    ("Installer\Products", True)
+
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+        ("Installer\Products\" & child, True)
+
+                    If subregkey IsNot Nothing Then
+                        wantedvalue = subregkey.GetValue("ProductName")
+                        If wantedvalue IsNot Nothing Then
+                            If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
+                                wantedvalue.Contains("Catalyst Control Center") Or _
+                                wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                wantedvalue.Contains("ccc-utility") Then
 
                                 regkey.DeleteSubKeyTree(child)
 
@@ -466,7 +493,7 @@ Public Class Form1
                 processstopservice.Start()
                 processstopservice.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
 
                 stopservice.Arguments = " /C" & "sc stop nvUpdatusService"
 
@@ -474,7 +501,7 @@ Public Class Form1
                 processstopservice.Start()
                 processstopservice.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
 
                 stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "Stereo Service" & Chr(34)
 
@@ -482,7 +509,7 @@ Public Class Form1
                 processstopservice.Start()
                 processstopservice.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
 
                 'Delete NVIDIA service
 
@@ -492,7 +519,7 @@ Public Class Form1
                 processstopservice.Start()
                 processstopservice.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
 
                 stopservice.Arguments = " /C" & "sc delete nvUpdatusService"
 
@@ -500,7 +527,7 @@ Public Class Form1
                 processstopservice.Start()
                 processstopservice.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
 
                 stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "Stereo Service" & Chr(34)
 
@@ -508,7 +535,7 @@ Public Class Form1
                 processstopservice.Start()
                 processstopservice.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
                 'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
                 'holding files in the NVIDIA folders sometimes.
 
@@ -524,14 +551,14 @@ Public Class Form1
                 processkillpid.Start()
                 processkillpid.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
 
                 killpid.Arguments = " /C" & "taskkill /f /im NvTmru.exe"
                 processkillpid.StartInfo = killpid
                 processkillpid.Start()
                 processkillpid.WaitForExit()
 
-                System.Threading.Thread.Sleep(1000)
+                System.Threading.Thread.Sleep(100)
 
                 TextBox1.Text = TextBox1.Text + "Cleaning Diectory" + vbNewLine
                 'Delete NVIDIA data Folders
