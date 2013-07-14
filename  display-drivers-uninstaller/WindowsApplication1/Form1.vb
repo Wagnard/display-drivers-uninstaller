@@ -113,7 +113,7 @@ Public Class Form1
                 Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
 
                 TextBox1.Text = TextBox1.Text + Reply2
-                TextBox1.Text = TextBox1.Text + "Removed " & ComboBox1.Text & " from the driver store." + vbNewLine
+                TextBox1.Text = TextBox1.Text + "Removing " & ComboBox1.Text & " from the driver store..." + vbNewLine
 
                 GoTo 5
             End If
@@ -187,7 +187,14 @@ Public Class Form1
             processkillpid.Start()
             processkillpid.WaitForExit()
 
-            System.Threading.Thread.Sleep(100)
+            TextBox1.Text = TextBox1.Text + "Killing Explorer.exe" + vbNewLine
+
+            killpid.Arguments = " /C" & "taskkill /f /im explorer.exe"
+            processkillpid.StartInfo = killpid
+            processkillpid.Start()
+            processkillpid.WaitForExit()
+
+            System.Threading.Thread.Sleep(1000)
 
             'Delete AMD data Folders
             TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine
@@ -479,6 +486,9 @@ Public Class Form1
                 End If
                 count += 1
             Next
+
+            Dim processInfo As New ProcessStartInfo("Explorer.exe")
+            Process.Start(processInfo)
 
         End If
 
