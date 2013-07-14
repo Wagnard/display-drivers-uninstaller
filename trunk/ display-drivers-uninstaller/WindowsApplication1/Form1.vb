@@ -377,7 +377,8 @@ Public Class Form1
                         If wantedvalue IsNot Nothing Then
                             If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
                                 wantedvalue.Contains("ccc-utility") Or _
-                                wantedvalue.Contains("AMD Accelerated Video") And Not Nothing Then
+                                wantedvalue.Contains("AMD Accelerated Video") Or _
+                                wantedvalue.Contains("AMD Wireless Display") Then
 
                                 regkey.DeleteSubKeyTree(child)
 
@@ -400,7 +401,10 @@ Public Class Form1
                             If wantedvalue IsNot Nothing Then
                                 If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
                                     wantedvalue.Contains("ccc-utility") Or _
-                                    wantedvalue.Contains("AMD Accelerated Video") Then
+                                    wantedvalue.Contains("AMD Accelerated Video") Or _
+                                    wantedvalue.Contains("AMD Wireless Display") Or _
+                                    wantedvalue.Contains("Catalyst Control Center") Or _
+                                    wantedvalue.Contains("CCC Help") Then
                                     regkey.DeleteSubKeyTree(child)
 
                                 End If
