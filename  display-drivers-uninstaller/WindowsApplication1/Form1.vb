@@ -19,8 +19,8 @@ Public Class Form1
             vendid = "@*ven_10de*"
             provider = "Provider: NVIDIA"
         End If
-        TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver if found." + vbNewLine
-
+        TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver ..." + vbNewLine
+        TextBox1.Text = TextBox1.Text + "Executing DEVCON Remove" + vbNewLine
         'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
         removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
         removedisplaydriver.Arguments = "remove =display " & Chr(34) & vendid & Chr(34)
@@ -42,24 +42,29 @@ Public Class Form1
             Button1.Text = "Uninstalling..."
 
             'creation dun process fantome pour le wait on exit.
-            Dim proc As New Process
-            proc.StartInfo = removedisplaydriver
-            proc.Start()
-            proc.WaitForExit()
-
+            Try
+                Dim proc As New Process
+                proc.StartInfo = removedisplaydriver
+                proc.Start()
+                proc.WaitForExit()
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                MsgBox("Cannot find DEVCON in " & Label3.Text & " folder")
+                Exit Sub
+            End Try
             System.Threading.Thread.Sleep(1000)
-
+            TextBox1.Text = TextBox1.Text + "DEVCON Remove Display Complete" + vbNewLine
             Dim prochdmi As New Process
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
 
             System.Threading.Thread.Sleep(1000)
-
+            TextBox1.Text = TextBox1.Text + "DEVCON Remove Audio/hdmi Complete" + vbNewLine
             Dim checkoem As New Diagnostics.ProcessStartInfo
 
 
-
+            TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP..." + vbNewLine
             'Check the driver from the driver store  ( oemxx.inf)
             checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
             checkoem.Arguments = "dp_enum"
@@ -120,10 +125,11 @@ Public Class Form1
 
         End If
 10:
+        TextBox1.Text = TextBox1.Text + "Driver Store cleanUP complete." + vbNewLine
 
 
 
-        TextBox1.Text = TextBox1.Text + "Cleaning process/services" + vbNewLine
+        TextBox1.Text = TextBox1.Text + "Cleaning process/services..." + vbNewLine
         'Delete left over files.
 
         If ComboBox1.Text = "AMD" Then
@@ -152,7 +158,7 @@ Public Class Form1
 
             System.Threading.Thread.Sleep(1000)
 
-            'kill process CCC.exe / MOM.exe /Clistart.exe (if it exist)
+            'kill process CCC.exe / MOM.exe /Clistart.exe HydraDM/HydraDM64(if it exist)
 
             Dim killpid As New ProcessStartInfo
             killpid.FileName = "cmd.exe"
@@ -186,6 +192,50 @@ Public Class Form1
             processkillpid.StartInfo = killpid
             processkillpid.Start()
             processkillpid.WaitForExit()
+
+            System.Threading.Thread.Sleep(100)
+
+            killpid.Arguments = " /C" & "taskkill /f /im HydraDM.exe"
+            processkillpid.StartInfo = killpid
+            processkillpid.Start()
+            processkillpid.WaitForExit()
+
+            System.Threading.Thread.Sleep(100)
+
+            killpid.Arguments = " /C" & "taskkill /f /im HydraDM64.exe"
+            processkillpid.StartInfo = killpid
+            processkillpid.Start()
+            processkillpid.WaitForExit()
+
+            System.Threading.Thread.Sleep(100)
+
+            killpid.Arguments = " /C" & "taskkill /f /im HydraGrd.exe"
+            processkillpid.StartInfo = killpid
+            processkillpid.Start()
+            processkillpid.WaitForExit()
+
+            System.Threading.Thread.Sleep(100)
+
+            killpid.Arguments = " /C" & "taskkill /f /im Grid64.exe"
+            processkillpid.StartInfo = killpid
+            processkillpid.Start()
+            processkillpid.WaitForExit()
+
+            System.Threading.Thread.Sleep(100)
+
+            killpid.Arguments = " /C" & "taskkill /f /im HydraMD64.exe"
+            processkillpid.StartInfo = killpid
+            processkillpid.Start()
+            processkillpid.WaitForExit()
+
+            System.Threading.Thread.Sleep(100)
+
+            killpid.Arguments = " /C" & "taskkill /f /im HydraMD.exe"
+            processkillpid.StartInfo = killpid
+            processkillpid.Start()
+            processkillpid.WaitForExit()
+
+            System.Threading.Thread.Sleep(100)
 
             TextBox1.Text = TextBox1.Text + "Killing Explorer.exe" + vbNewLine
 
@@ -275,7 +325,7 @@ Public Class Form1
                 End Try
             End If
 
-            TextBox1.Text = TextBox1.Text + "Cleaning Regkeys" + vbNewLine
+            TextBox1.Text = TextBox1.Text + "Cleaning known Regkeys..." + vbNewLine
             'Delete AMD regkey
             Dim count As Int32 = 0
 
@@ -307,6 +357,21 @@ Public Class Form1
                     count += 1
                 Next
             End If
+
+            count = 0
+
+            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Run", True)
+            If regkey IsNot Nothing Then
+                Try
+                    regkey.DeleteValue("HydraVisionDesktopManager")
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
+
+            End If
+            count += 1
+
+
             'Here im not deleting the ATI completly for safety until 100% sure
             count = 0
 
