@@ -368,6 +368,18 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 End Try
 
+                Try
+                    regkey.DeleteValue("Grid")
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
+
+                Try
+                    regkey.DeleteValue("HydraVisionMDEngine")
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
+
             End If
             count += 1
 
