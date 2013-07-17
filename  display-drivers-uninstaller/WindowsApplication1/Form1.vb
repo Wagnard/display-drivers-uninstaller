@@ -66,7 +66,7 @@ Public Class Form1
             Dim checkoem As New Diagnostics.ProcessStartInfo
 
 
-            TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP..." + vbNewLine
+            TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(find OEM)..." + vbNewLine
             'Check the driver from the driver store  ( oemxx.inf)
             checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
             checkoem.Arguments = "dp_enum"
@@ -99,7 +99,7 @@ Public Class Form1
                 position = Reply.IndexOf(provider, position + 1)
                 part = part.Replace("em", "oem")
                 part = part.Replace(vbNewLine, "")
-
+                TextBox1.Text = TextBox1.Text + part + " found" + vbNewLine
                 'Uninstall Driver from driver store  delete from (oemxx.inf)
                 Dim deloem As New Diagnostics.ProcessStartInfo
 
@@ -110,7 +110,7 @@ Public Class Form1
                 deloem.RedirectStandardOutput = True
                 'creation dun process fantome pour le wait on exit.
                 Dim proc3 As New Diagnostics.Process
-
+                TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine
                 proc3.StartInfo = deloem
                 proc3.Start()
                 proc3.WaitForExit()
