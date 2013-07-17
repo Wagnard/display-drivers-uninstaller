@@ -50,6 +50,8 @@ Public Class Form1
             Catch ex As Exception
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 MsgBox("Cannot find DEVCON in " & Label3.Text & " folder")
+                Button1.Text = "Done."
+                Button1.Enabled = True
                 Exit Sub
             End Try
             System.Threading.Thread.Sleep(1000)
