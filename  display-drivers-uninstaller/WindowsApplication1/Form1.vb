@@ -71,19 +71,20 @@ Public Class Form1
             checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
             checkoem.Arguments = "dp_enum"
             checkoem.UseShellExecute = False
-            checkoem.CreateNoWindow = True
+            checkoem.CreateNoWindow = False
             checkoem.RedirectStandardOutput = True
 
             'creation dun process fantome pour le wait on exit.
             Dim proc2 As New Diagnostics.Process
             proc2.StartInfo = checkoem
             proc2.Start()
+            Dim Reply As String = proc2.StandardOutput.ReadToEnd
             proc2.WaitForExit()
 
             System.Threading.Thread.Sleep(1000)
 
             'Preparing to read output.
-            Dim Reply As String = proc2.StandardOutput.ReadToEnd
+
             Dim position As Integer
 
             position = Reply.IndexOf(provider)
@@ -114,10 +115,10 @@ Public Class Form1
                 proc3.StartInfo = deloem
                 proc3.Start()
                 proc3.WaitForExit()
-
+                Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
                 System.Threading.Thread.Sleep(1000)
 
-                Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
+
 
                 TextBox1.Text = TextBox1.Text + Reply2
                 TextBox1.Text = TextBox1.Text + "Removing " & ComboBox1.Text & " from the driver store..." + vbNewLine
