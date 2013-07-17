@@ -534,7 +534,25 @@ Public Class Form1
                                 wantedvalue.Contains("AMD Wireless Display") Then
 
                             regkey.DeleteSubKeyTree(child)
+                            'okay .. important part here to fixed the famous AMD yellow mark.
+                            'The yellow mark in this case is really stupid imo and shouldn't even
+                            'be thrown as a warning to the end user... it has not bad effect.
+                            'But im gona fix this b'cause im a 'PROFESSIONAL' :)
 
+                            Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                             ("Installer\UpgradeCodes", True)
+
+                            For Each child2 As String In superregkey.GetSubKeyNames()
+                                Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                         ("Installer\UpgradeCodes\" & child2, True)
+                                If subsuperregkey IsNot Nothing Then
+                                    For Each wantedstring In subsuperregkey.GetValueNames()
+                                        If wantedstring.Contains(child) Then
+                                            superregkey.DeleteSubKeyTree(child2)
+                                        End If
+                                    Next
+                                End If
+                            Next
                         End If
                     End If
                 End If
@@ -582,6 +600,24 @@ Public Class Form1
                 End If
             Next
             count = 0
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
+            For Each child As String In regkey.GetValueNames()
+                If child.Contains("ATI\CIM\") Or child.Contains("AMD AVT") Or _
+                    child.Contains("ATI\CIM\") Then
+                    If regkey IsNot Nothing Then
+                        Try
+                            regkey.DeleteValue(child)
+                        Catch ex As Exception
+                            TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        End Try
+                    End If
+
+                End If
+            Next
+            count = 0
+
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                 ("Installer\Products", True)
 
