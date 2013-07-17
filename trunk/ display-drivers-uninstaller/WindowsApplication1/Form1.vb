@@ -540,6 +540,45 @@ Public Class Form1
 
             count = 0
 
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+               ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
+
+            For Each child As String In regkey.GetSubKeyNames()
+
+                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child, True)
+                For Each wantedstring In subregkey.GetValueNames()
+                    If subregkey IsNot Nothing Then
+                        wantedvalue = subregkey.GetValue(wantedstring)
+                        If wantedvalue IsNot Nothing Then
+                            If wantedvalue.Contains("ATI\CIM\") Then
+
+                                regkey.DeleteSubKeyTree(child)
+
+                            End If
+                        End If
+                    End If
+                    count += 1
+                Next
+            Next
+
+            count = 0
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+            For Each child As String In regkey.GetValueNames()
+                If child.Contains("ATI\CIM\") Then
+                    If regkey IsNot Nothing Then
+                        Try
+                            regkey.DeleteValue(child)
+                        Catch ex As Exception
+                            TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        End Try
+                    End If
+
+                End If
+            Next
+            count = 0
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                 ("Installer\Products", True)
 
@@ -564,6 +603,7 @@ Public Class Form1
                 count += 1
             Next
 
+            System.Threading.Thread.Sleep(2000)
             Dim processInfo As New ProcessStartInfo("Explorer.exe")
             Process.Start(processInfo)
 
@@ -942,7 +982,7 @@ Public Class Form1
 
         End If
 
-
+        System.Threading.Thread.Sleep(1000)
         TextBox1.Text = TextBox1.Text + "Scanning for new device..." + vbNewLine
         'Scan for new devices...
         Dim scan As New ProcessStartInfo
