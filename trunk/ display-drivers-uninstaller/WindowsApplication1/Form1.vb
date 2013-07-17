@@ -71,7 +71,7 @@ Public Class Form1
             checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
             checkoem.Arguments = "dp_enum"
             checkoem.UseShellExecute = False
-            checkoem.CreateNoWindow = False
+            checkoem.CreateNoWindow = True
             checkoem.RedirectStandardOutput = True
 
             'creation dun process fantome pour le wait on exit.
