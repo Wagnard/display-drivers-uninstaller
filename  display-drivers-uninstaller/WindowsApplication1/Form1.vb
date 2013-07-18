@@ -780,14 +780,12 @@ Public Class Form1
                 ("CLSID", True)
 
             For Each child As String In regkey.GetSubKeyNames()
-                Try
-                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-        ("CLSID\" & child, True)
-                Catch ex As Exception
 
-                End Try
+                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+    ("CLSID\" & child, False)
+
                 If subregkey IsNot Nothing Then
-                    wantedvalue = subregkey.GetValue("(Default)")
+                    wantedvalue = subregkey.GetValue("")
                     If wantedvalue IsNot Nothing Then
                         If wantedvalue.Contains("SteadyVideoBHO") Then
 
@@ -806,14 +804,11 @@ Public Class Form1
                 ("Interface", True)
 
             For Each child As String In regkey.GetSubKeyNames()
-                Try
-                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-        ("Interface\" & child, True)
-                Catch ex As Exception
+                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+        ("Interface\" & child, False)
 
-                End Try
                 If subregkey IsNot Nothing Then
-                    wantedvalue = subregkey.GetValue("(Default)")
+                    wantedvalue = subregkey.GetValue("")
                     If wantedvalue IsNot Nothing Then
                         If wantedvalue.Contains("SteadyVideoBHO") Then
 
@@ -824,7 +819,7 @@ Public Class Form1
                 End If
                 count += 1
             Next
-            
+
             count = 0
 
 
@@ -835,12 +830,12 @@ Public Class Form1
                 For Each child As String In regkey.GetSubKeyNames()
                     Try
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-            ("Wow6432Node\CLSID\" & child, True)
+            ("Wow6432Node\CLSID\" & child, False)
                     Catch ex As Exception
 
                     End Try
                     If subregkey IsNot Nothing Then
-                        wantedvalue = subregkey.GetValue("(Default)")
+                        wantedvalue = subregkey.GetValue("")
                         If wantedvalue IsNot Nothing Then
                             If wantedvalue.Contains("SteadyVideoBHO") Then
 
@@ -853,7 +848,7 @@ Public Class Form1
                 Next
             End If
             count = 0
-            
+
 
 
             If IntPtr.Size = 8 Then
@@ -864,12 +859,12 @@ Public Class Form1
                 For Each child As String In regkey.GetSubKeyNames()
                     Try
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-            ("Wow6432Node\Interface\" & child, True)
+            ("Wow6432Node\Interface\" & child, False)
                     Catch ex As Exception
 
                     End Try
                     If subregkey IsNot Nothing Then
-                        wantedvalue = subregkey.GetValue("(Default)")
+                        wantedvalue = subregkey.GetValue("")
                         If wantedvalue IsNot Nothing Then
                             If wantedvalue.Contains("SteadyVideoBHO") Then
 
@@ -882,7 +877,7 @@ Public Class Form1
                 Next
             End If
             count = 0
-           
+
 
             System.Threading.Thread.Sleep(2000)
             Dim processInfo As New ProcessStartInfo("Explorer.exe")
