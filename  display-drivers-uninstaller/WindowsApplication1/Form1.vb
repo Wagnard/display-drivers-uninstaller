@@ -99,7 +99,8 @@ Public Class Form1
                 'work around...
                 Dim part As String = Reply.Substring(position - 14, 10).Replace("oem", "em")
                 position = Reply.IndexOf(provider, position + 1)
-                part = part.Replace("em", "oem")
+                part = part.Replace("em", "m")
+                part = part.Replace("m", "oem")
                 part = part.Replace(vbNewLine, "")
                 TextBox1.Text = TextBox1.Text + part + " found" + vbNewLine
                 'Uninstall Driver from driver store  delete from (oemxx.inf)
@@ -107,23 +108,23 @@ Public Class Form1
 
                 deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
                 deloem.Arguments = ("dp_delete " & part)
+                MsgBox(deloem.Arguments)
                 deloem.UseShellExecute = False
-                deloem.CreateNoWindow = True
+                deloem.CreateNoWindow = False
                 deloem.RedirectStandardOutput = True
                 'creation dun process fantome pour le wait on exit.
                 Dim proc3 As New Diagnostics.Process
                 TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine
                 proc3.StartInfo = deloem
                 proc3.Start()
-		Dim Reply2 As String = proc3.StandardOutput.ReadToEnd                
-		proc3.WaitForExit()
-                
+                proc3.WaitForExit()
+                Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
                 System.Threading.Thread.Sleep(1000)
 
 
 
-                TextBox1.Text = TextBox1.Text + Reply2
-                TextBox1.Text = TextBox1.Text + "Removing " & ComboBox1.Text & " from the driver store..." + vbNewLine
+                TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine
+
 
                 GoTo 5
             End If
