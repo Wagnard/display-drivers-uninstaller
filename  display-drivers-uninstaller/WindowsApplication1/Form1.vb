@@ -1,5 +1,6 @@
 ﻿Imports System.DirectoryServices
 Imports Microsoft.Win32
+Imports System.IO
 
 Public Class Form1
 
@@ -281,6 +282,15 @@ Public Class Form1
             End Try
 
             filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo\resources"
+            Try
+                Dim attribute As System.IO.FileAttributes = FileAttributes.Normal
+                File.SetAttributes(filePath + "\AMD_SV_bar_middle.png", attribute)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+            End Try
+
+            filePath = Environment.GetFolderPath _
                 (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
@@ -288,6 +298,7 @@ Public Class Form1
             Catch ex As Exception
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
             End Try
+
 
             filePath = Environment.GetFolderPath _
                (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
@@ -354,6 +365,25 @@ Public Class Form1
                 Catch ex As Exception
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 End Try
+
+                filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo\resources"
+                Try
+                    Dim attribute As System.IO.FileAttributes = FileAttributes.Normal
+                    File.SetAttributes(filePath + "\AMD_SV_bar_middle.png", attribute)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
+
+                filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
+
 
             End If
 
@@ -483,7 +513,7 @@ Public Class Form1
             End If
             count = 0
 
-            
+
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                 ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
             For Each child As String In regkey.GetSubKeyNames()
@@ -549,7 +579,7 @@ Public Class Form1
 
                         End If
                     End If
-                        count += 1
+                    count += 1
 
                 End If
             Next
