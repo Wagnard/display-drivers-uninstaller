@@ -307,6 +307,15 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
             End Try
 
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies\Multimedia"
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+            End Try
+
             If IntPtr.Size = 8 Then
                 filePath = Environment.GetFolderPath _
                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
@@ -326,6 +335,17 @@ Public Class Form1
                 Catch ex As Exception
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 End Try
+
+                filePath = Environment.GetFolderPath _
+                   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
+
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                End Try
+
             End If
 
             TextBox1.Text = TextBox1.Text + "Cleaning known Regkeys..." + vbNewLine
