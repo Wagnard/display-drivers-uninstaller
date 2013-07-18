@@ -115,8 +115,9 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine
                 proc3.StartInfo = deloem
                 proc3.Start()
-                proc3.WaitForExit()
-                Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
+		Dim Reply2 As String = proc3.StandardOutput.ReadToEnd                
+		proc3.WaitForExit()
+                
                 System.Threading.Thread.Sleep(1000)
 
 
