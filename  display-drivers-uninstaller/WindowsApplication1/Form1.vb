@@ -485,12 +485,15 @@ Public Class Form1
                     If subregkey IsNot Nothing Then
                         wantedvalue = subregkey.GetValue("DisplayName")
                         If wantedvalue IsNot Nothing Then
-                            If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                wantedvalue.Contains("ccc-utility") Or _
-                                wantedvalue.Contains("AMD Accelerated Video") Or _
+                            If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
+                            wantedvalue.Contains("Catalyst Control Center") Or _
+                            wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                            wantedvalue.Contains("ccc-utility") Or _
                                 wantedvalue.Contains("AMD Wireless Display") Or _
-                                wantedvalue.Contains("Catalyst Control Center") Or _
-                                wantedvalue.Contains("CCC Help") Then
+                                wantedvalue.Contains("AMD MEDIA Foundation") Or _
+                                wantedvalue.Contains("HydraVision") Or _
+                                wantedvalue.Contains("AMD Drag and Drop") Or _
+                                wantedvalue.Contains("AMD APP SDK") Then
                                 regkey.DeleteSubKeyTree(child)
 
                             End If
@@ -531,7 +534,11 @@ Public Class Form1
                             wantedvalue.Contains("Catalyst Control Center") Or _
                             wantedvalue.Contains("AMD Catalyst Install Manager") Or _
                             wantedvalue.Contains("ccc-utility") Or _
-                                wantedvalue.Contains("AMD Wireless Display") Then
+                                wantedvalue.Contains("AMD Wireless Display") Or _
+                                wantedvalue.Contains("AMD MEDIA Foundation") Or _
+                                wantedvalue.Contains("HydraVision") Or _
+                                wantedvalue.Contains("AMD Drag and Drop") Or _
+                                wantedvalue.Contains("AMD APP SDK") Then
 
                             regkey.DeleteSubKeyTree(child)
                             'okay .. important part here to fixed the famous AMD yellow mark.
