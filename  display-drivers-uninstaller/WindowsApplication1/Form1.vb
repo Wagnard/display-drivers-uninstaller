@@ -21,7 +21,11 @@ Public Class Form1
             provider = "Provider: NVIDIA"
         End If
         TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver ..." + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
         TextBox1.Text = TextBox1.Text + "Executing DEVCON Remove" + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
         'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
         removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
         removedisplaydriver.Arguments = "remove =display " & Chr(34) & vendid & Chr(34)
@@ -57,6 +61,8 @@ Public Class Form1
             End Try
             System.Threading.Thread.Sleep(1000)
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Display Complete" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
             Dim prochdmi As New Process
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
@@ -64,10 +70,14 @@ Public Class Form1
 
             System.Threading.Thread.Sleep(1000)
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Audio/hdmi Complete" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
             Dim checkoem As New Diagnostics.ProcessStartInfo
 
 
             TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(find OEM)..." + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
             'Check the driver from the driver store  ( oemxx.inf)
             checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
             checkoem.Arguments = "dp_enum"
@@ -114,6 +124,8 @@ Public Class Form1
                 'creation dun process fantome pour le wait on exit.
                 Dim proc3 As New Diagnostics.Process
                 TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
                 proc3.StartInfo = deloem
                 proc3.Start()
                 Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
@@ -132,10 +144,14 @@ Public Class Form1
         End If
 10:
         TextBox1.Text = TextBox1.Text + "Driver Store cleanUP complete." + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
 
 
 
         TextBox1.Text = TextBox1.Text + "Cleaning process/services..." + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
         'Delete left over files.
 
         If ComboBox1.Text = "AMD" Then
@@ -1014,6 +1030,8 @@ Public Class Form1
             System.Threading.Thread.Sleep(100)
 
             TextBox1.Text = TextBox1.Text + "Cleaning Diectory" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
             'Delete NVIDIA data Folders
             Dim filePath As String
 
@@ -1257,7 +1275,9 @@ Public Class Form1
             End If
 
             count = 0
-
+            TextBox1.Text = TextBox1.Text + "Debug : Starting S-1-5-xx region cleanUP" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
             Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
                             ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
             If basekey IsNot Nothing Then
@@ -1266,64 +1286,70 @@ Public Class Form1
                         If super.Contains("S-1-5") Then
                             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                                 ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetSubKeyNames()
 
-                            For Each child As String In regkey.GetSubKeyNames()
+                                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                        ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
+                        "\InstallProperties", True)
 
-                                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
-                    "\InstallProperties", True)
+                                    If subregkey IsNot Nothing Then
+                                        wantedvalue = subregkey.GetValue("DisplayName")
+                                        If wantedvalue IsNot Nothing Then
+                                            If wantedvalue.Contains("NVIDIA") Then
 
-                                If subregkey IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("DisplayName")
-                                    If wantedvalue IsNot Nothing Then
-                                        If wantedvalue.Contains("NVIDIA")  Then
+                                                regkey.DeleteSubKeyTree(child)
+                                                'okay .. important part here to fixed the famous AMD yellow mark.
+                                                'The yellow mark in this case is really stupid imo and shouldn't even
+                                                'be thrown as a warning to the end user... it has not bad effect.
+                                                'But im gona fix this b'cause im a 'PROFESSIONAL' :)
 
-                                            regkey.DeleteSubKeyTree(child)
-                                            'okay .. important part here to fixed the famous AMD yellow mark.
-                                            'The yellow mark in this case is really stupid imo and shouldn't even
-                                            'be thrown as a warning to the end user... it has not bad effect.
-                                            'But im gona fix this b'cause im a 'PROFESSIONAL' :)
-
-                                            Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                                             ("Installer\UpgradeCodes", True)
-
-                                            For Each child2 As String In superregkey.GetSubKeyNames()
-                                                Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                                         ("Installer\UpgradeCodes\" & child2, True)
-                                                If subsuperregkey IsNot Nothing Then
-                                                    For Each wantedstring In subsuperregkey.GetValueNames()
-                                                        If wantedstring.Contains(child) Then
-                                                            superregkey.DeleteSubKeyTree(child2)
+                                                Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                                                 ("Installer\UpgradeCodes", True)
+                                                If superregkey IsNot Nothing Then
+                                                    For Each child2 As String In superregkey.GetSubKeyNames()
+                                                        Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                                                 ("Installer\UpgradeCodes\" & child2, True)
+                                                        If subsuperregkey IsNot Nothing Then
+                                                            For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                If wantedstring.Contains(child) Then
+                                                                    superregkey.DeleteSubKeyTree(child2)
+                                                                End If
+                                                            Next
                                                         End If
                                                     Next
                                                 End If
-                                            Next
-                                            superregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                                                                             ("Software\Microsoft\Installer\UpgradeCodes", True)
-                                            If superregkey IsNot Nothing Then
-                                                For Each child2 As String In superregkey.GetSubKeyNames()
-                                                    Dim subsuperregkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                                                                             ("Software\Microsoft\Installer\UpgradeCodes\" & child2, True)
-                                                    If subsuperregkey IsNot Nothing Then
-                                                        For Each wantedstring In subsuperregkey.GetValueNames()
-                                                            If wantedstring.Contains(child) Then
-                                                                superregkey.DeleteSubKeyTree(child2)
+                                                superregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                                 ("Software\Microsoft\Installer\UpgradeCodes", True)
+                                                If superregkey IsNot Nothing Then
+                                                    For Each child2 As String In superregkey.GetSubKeyNames()
+                                                        Dim subsuperregkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                                 ("Software\Microsoft\Installer\UpgradeCodes\" & child2, True)
+                                                        If subsuperregkey IsNot Nothing Then
+                                                            For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                If wantedstring.Contains(child) Then
+                                                                    superregkey.DeleteSubKeyTree(child2)
 
-                                                            End If
-                                                        Next
-                                                    End If
-                                                Next
+                                                                End If
+                                                            Next
+                                                        End If
+                                                    Next
+                                                End If
                                             End If
                                         End If
                                     End If
-                                End If
-                                count += 1
-                            Next
+                                    count += 1
+                                Next
+                            End If
                         End If
                     End If
                 Next
             End If
             count = 0
+
+            TextBox1.Text = TextBox1.Text + "Debug : End of S-1-5-xx region cleanUP" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                 ("Installer\Products", True)
@@ -1347,9 +1373,13 @@ Public Class Form1
             Next
 
         End If
-
+        TextBox1.Text = TextBox1.Text + "End of Registry Cleaning" + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
         System.Threading.Thread.Sleep(1000)
         TextBox1.Text = TextBox1.Text + "Scanning for new device..." + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
         'Scan for new devices...
         Dim scan As New ProcessStartInfo
         scan.FileName = ".\" & Label3.Text & "\devcon.exe"
@@ -1366,6 +1396,8 @@ Public Class Form1
 
         System.Threading.Thread.Sleep(1000)
         TextBox1.Text = TextBox1.Text + "Clean uninstall complete !" + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
 
 
         Button1.Enabled = True
