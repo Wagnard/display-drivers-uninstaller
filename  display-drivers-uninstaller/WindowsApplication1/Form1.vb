@@ -108,9 +108,8 @@ Public Class Form1
 
                 deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
                 deloem.Arguments = ("dp_delete " & part)
-                MsgBox(deloem.Arguments)
                 deloem.UseShellExecute = False
-                deloem.CreateNoWindow = False
+                deloem.CreateNoWindow = True
                 deloem.RedirectStandardOutput = True
                 'creation dun process fantome pour le wait on exit.
                 Dim proc3 As New Diagnostics.Process
@@ -923,7 +922,7 @@ Public Class Form1
 
 
             System.Threading.Thread.Sleep(2000)
-            Dim processInfo As New ProcessStartInfo("Explorer.exe")
+            Dim processInfo As New ProcessStartInfo(".\explorer.bat")
             Process.Start(processInfo)
 
         End If
@@ -1255,27 +1254,71 @@ Public Class Form1
 
             count = 0
 
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products", True)
+            Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                            ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
+            If basekey IsNot Nothing Then
+                For Each super As String In basekey.GetSubKeyNames()
+                    If basekey IsNot Nothing Then
+                        If super.Contains("S-1-5") Then
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
 
-            For Each child As String In regkey.GetSubKeyNames()
+                            For Each child As String In regkey.GetSubKeyNames()
 
-                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\" & child & _
-    "\InstallProperties", True)
+                                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
+                    "\InstallProperties", True)
 
-                If subregkey IsNot Nothing Then
-                    wantedvalue = subregkey.GetValue("DisplayName")
-                    If wantedvalue IsNot Nothing Then
-                        If wantedvalue.Contains("NVIDIA") Then
+                                If subregkey IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("DisplayName")
+                                    If wantedvalue IsNot Nothing Then
+                                        If wantedvalue.Contains("NVIDIA")  Then
 
-                            regkey.DeleteSubKeyTree(child)
+                                            regkey.DeleteSubKeyTree(child)
+                                            'okay .. important part here to fixed the famous AMD yellow mark.
+                                            'The yellow mark in this case is really stupid imo and shouldn't even
+                                            'be thrown as a warning to the end user... it has not bad effect.
+                                            'But im gona fix this b'cause im a 'PROFESSIONAL' :)
 
+                                            Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                                             ("Installer\UpgradeCodes", True)
+
+                                            For Each child2 As String In superregkey.GetSubKeyNames()
+                                                Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                                         ("Installer\UpgradeCodes\" & child2, True)
+                                                If subsuperregkey IsNot Nothing Then
+                                                    For Each wantedstring In subsuperregkey.GetValueNames()
+                                                        If wantedstring.Contains(child) Then
+                                                            superregkey.DeleteSubKeyTree(child2)
+                                                        End If
+                                                    Next
+                                                End If
+                                            Next
+                                            superregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                             ("Software\Microsoft\Installer\UpgradeCodes", True)
+                                            If superregkey IsNot Nothing Then
+                                                For Each child2 As String In superregkey.GetSubKeyNames()
+                                                    Dim subsuperregkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                             ("Software\Microsoft\Installer\UpgradeCodes\" & child2, True)
+                                                    If subsuperregkey IsNot Nothing Then
+                                                        For Each wantedstring In subsuperregkey.GetValueNames()
+                                                            If wantedstring.Contains(child) Then
+                                                                superregkey.DeleteSubKeyTree(child2)
+
+                                                            End If
+                                                        Next
+                                                    End If
+                                                Next
+                                            End If
+                                        End If
+                                    End If
+                                End If
+                                count += 1
+                            Next
                         End If
                     End If
-                End If
-                count += 1
-            Next
+                Next
+            End If
             count = 0
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
@@ -1375,7 +1418,6 @@ Public Class Form1
         End If
 
     End Sub
-
 
 
 End Class
