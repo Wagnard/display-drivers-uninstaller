@@ -121,12 +121,7 @@
     <value>True</value>
   </metadata>
   <data name="Label8.Text" xml:space="preserve">
-    <value>It is HIGHLY recomended that you turn OFF your network connection
-to avoid Windows to search a driver on Windows update automatically.
-Even If you set Windows Update to not install update automatically,
-Windows will still go Online and install a driver if he find one and we 
-don't want that.
-You can turn it back ON after installing your updated 
-(previously downloaded) driver from AMD / NVIDIA.</value>
+    <value>It is HIGHLY recomended that you turn OFF your network connection to avoid Windows to search a driver online
+automatically. You can turn it back ON after installing your updated (previously downloaded) driver from AMD / NVIDIA.</value>
   </data>
 </root>

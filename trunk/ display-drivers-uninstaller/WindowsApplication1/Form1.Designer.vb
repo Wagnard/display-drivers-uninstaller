@@ -38,7 +38,7 @@ Partial Class Form1
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(114, 118)
+        Me.Button1.Location = New System.Drawing.Point(230, 91)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(150, 41)
         Me.Button1.TabIndex = 0
@@ -75,9 +75,10 @@ Partial Class Form1
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(13, 77)
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(93, 176)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(406, 26)
+        Me.Label4.Size = New System.Drawing.Size(401, 26)
         Me.Label4.TabIndex = 4
         Me.Label4.Text = "Note : AMD / NVIDIA has nothing to do with this application. If something go wron" & _
     "g, " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "it is your responsability. This program contains code from Microsoft WDK 8." & _
@@ -85,30 +86,30 @@ Partial Class Form1
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(406, 139)
+        Me.TextBox1.Location = New System.Drawing.Point(48, 205)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TextBox1.Size = New System.Drawing.Size(176, 166)
+        Me.TextBox1.Size = New System.Drawing.Size(534, 134)
         Me.TextBox1.TabIndex = 6
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(403, 123)
+        Me.Label5.Location = New System.Drawing.Point(12, 208)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(25, 13)
+        Me.Label5.Size = New System.Drawing.Size(31, 13)
         Me.Label5.TabIndex = 7
-        Me.Label5.Text = "Log"
+        Me.Label5.Text = "Log :"
         '
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(13, 292)
+        Me.Label6.Location = New System.Drawing.Point(12, 326)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(29, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V2.5"
+        Me.Label6.Text = "V2.6"
         '
         'ComboBox1
         '
@@ -133,11 +134,11 @@ Partial Class Form1
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label8.ForeColor = System.Drawing.Color.Red
-        Me.Label8.Location = New System.Drawing.Point(13, 175)
+        Me.Label8.Location = New System.Drawing.Point(12, 135)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(387, 105)
+        Me.Label8.Size = New System.Drawing.Size(567, 26)
         Me.Label8.TabIndex = 11
         Me.Label8.Text = resources.GetString("Label8.Text")
         '
@@ -145,7 +146,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(594, 317)
+        Me.ClientSize = New System.Drawing.Size(594, 348)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.ComboBox1)
