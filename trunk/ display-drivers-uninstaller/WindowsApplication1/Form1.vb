@@ -244,11 +244,14 @@ Public Class Form1
 
             TextBox1.Text = TextBox1.Text + "Killing Explorer.exe" + vbNewLine
 
-            killpid.Arguments = " /C" & "taskkill /f /im explorer.exe"
-            processkillpid.StartInfo = killpid
-            processkillpid.Start()
-            processkillpid.WaitForExit()
-
+            'killpid.Arguments = " /C" & "taskkill /f /im explorer.exe"
+            'processkillpid.StartInfo = killpid
+            'processkillpid.Start()
+            'processkillpid.WaitForExit()
+            Dim proc = Process.GetProcessesByName("explorer")
+            For i As Integer = 0 To proc.Count - 1
+                proc(i).Kill()
+            Next i
             System.Threading.Thread.Sleep(1000)
 
             'Delete AMD data Folders
@@ -921,9 +924,9 @@ Public Class Form1
             count = 0
 
 
-            System.Threading.Thread.Sleep(2000)
-            Dim processInfo As New ProcessStartInfo("Explorer.exe")
-            Process.Start(processInfo)
+            'System.Threading.Thread.Sleep(2000)
+            'Dim processInfo As New ProcessStartInfo("Explorer.exe")
+            'Process.Start(processInfo)
 
         End If
 
