@@ -922,7 +922,7 @@ Public Class Form1
 
 
             System.Threading.Thread.Sleep(2000)
-            Dim processInfo As New ProcessStartInfo(".\explorer.bat")
+            Dim processInfo As New ProcessStartInfo("Explorer.exe")
             Process.Start(processInfo)
 
         End If
