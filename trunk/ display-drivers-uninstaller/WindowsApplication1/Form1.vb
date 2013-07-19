@@ -670,69 +670,71 @@ Public Class Form1
                         If super.Contains("S-1-5") Then
                             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                                 ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetSubKeyNames()
 
-                            For Each child As String In regkey.GetSubKeyNames()
+                                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                        ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
+                        "\InstallProperties", True)
 
-                                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
-                    "\InstallProperties", True)
+                                    If subregkey IsNot Nothing Then
+                                        wantedvalue = subregkey.GetValue("DisplayName")
+                                        If wantedvalue IsNot Nothing Then
+                                            If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
+                                                wantedvalue.Contains("Catalyst Control Center") Or _
+                                                wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                                wantedvalue.Contains("ccc-utility") Or _
+                                                    wantedvalue.Contains("AMD Wireless Display") Or _
+                                                    wantedvalue.Contains("AMD Media Foundation") Or _
+                                                    wantedvalue.Contains("HydraVision") Or _
+                                                    wantedvalue.Contains("AMD Drag and Drop") Or _
+                                                    wantedvalue.Contains("AMD APP SDK") Or _
+                                                    wantedvalue.Contains("AMD Steady") Or _
+                                                    wantedvalue.Contains("ATI AVIVO") Then
 
-                                If subregkey IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("DisplayName")
-                                    If wantedvalue IsNot Nothing Then
-                                        If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
-                                            wantedvalue.Contains("Catalyst Control Center") Or _
-                                            wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                            wantedvalue.Contains("ccc-utility") Or _
-                                                wantedvalue.Contains("AMD Wireless Display") Or _
-                                                wantedvalue.Contains("AMD Media Foundation") Or _
-                                                wantedvalue.Contains("HydraVision") Or _
-                                                wantedvalue.Contains("AMD Drag and Drop") Or _
-                                                wantedvalue.Contains("AMD APP SDK") Or _
-                                                wantedvalue.Contains("AMD Steady") Or _
-                                                wantedvalue.Contains("ATI AVIVO") Then
+                                                regkey.DeleteSubKeyTree(child)
+                                                'okay .. important part here to fixed the famous AMD yellow mark.
+                                                'The yellow mark in this case is really stupid imo and shouldn't even
+                                                'be thrown as a warning to the end user... it has not bad effect.
+                                                'But im gona fix this b'cause im a 'PROFESSIONAL' :)
 
-                                            regkey.DeleteSubKeyTree(child)
-                                            'okay .. important part here to fixed the famous AMD yellow mark.
-                                            'The yellow mark in this case is really stupid imo and shouldn't even
-                                            'be thrown as a warning to the end user... it has not bad effect.
-                                            'But im gona fix this b'cause im a 'PROFESSIONAL' :)
-
-                                            Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                                             ("Installer\UpgradeCodes", True)
-
-                                            For Each child2 As String In superregkey.GetSubKeyNames()
-                                                Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                                         ("Installer\UpgradeCodes\" & child2, True)
-                                                If subsuperregkey IsNot Nothing Then
-                                                    For Each wantedstring In subsuperregkey.GetValueNames()
-                                                        If wantedstring.Contains(child) Then
-                                                            superregkey.DeleteSubKeyTree(child2)
+                                                Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                                                 ("Installer\UpgradeCodes", True)
+                                                If superregkey IsNot Nothing Then
+                                                    For Each child2 As String In superregkey.GetSubKeyNames()
+                                                        Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                                                 ("Installer\UpgradeCodes\" & child2, True)
+                                                        If subsuperregkey IsNot Nothing Then
+                                                            For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                If wantedstring.Contains(child) Then
+                                                                    superregkey.DeleteSubKeyTree(child2)
+                                                                End If
+                                                            Next
                                                         End If
                                                     Next
                                                 End If
-                                            Next
-                                            superregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                                                                             ("Software\Microsoft\Installer\UpgradeCodes", True)
-                                            If superregkey IsNot Nothing Then
-                                                For Each child2 As String In superregkey.GetSubKeyNames()
-                                                    Dim subsuperregkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                                                                             ("Software\Microsoft\Installer\UpgradeCodes\" & child2, True)
-                                                    If subsuperregkey IsNot Nothing Then
-                                                        For Each wantedstring In subsuperregkey.GetValueNames()
-                                                            If wantedstring.Contains(child) Then
-                                                                superregkey.DeleteSubKeyTree(child2)
+                                                superregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                                 ("Software\Microsoft\Installer\UpgradeCodes", True)
+                                                If superregkey IsNot Nothing Then
+                                                    For Each child2 As String In superregkey.GetSubKeyNames()
+                                                        Dim subsuperregkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                                 ("Software\Microsoft\Installer\UpgradeCodes\" & child2, True)
+                                                        If subsuperregkey IsNot Nothing Then
+                                                            For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                If wantedstring.Contains(child) Then
+                                                                    superregkey.DeleteSubKeyTree(child2)
 
-                                                            End If
-                                                        Next
-                                                    End If
-                                                Next
+                                                                End If
+                                                            Next
+                                                        End If
+                                                    Next
+                                                End If
                                             End If
                                         End If
                                     End If
-                                End If
-                                count += 1
-                            Next
+                                    count += 1
+                                Next
+                            End If
                         End If
                     End If
                 Next
