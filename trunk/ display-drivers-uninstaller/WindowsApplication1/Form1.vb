@@ -1663,7 +1663,7 @@ Public Class Form1
             Label2.Text = "Windows 8 or Server 2012"
 
         End If
-        log(Label2.Text)
+        log("OS : " + Label2.Text)
 
 
 
@@ -1704,7 +1704,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
-        If CheckBox2.Checked = False Then
+        If CheckBox2.Checked = False Or Button1.Text <> "Done." Then
             Module1.wlog.Dispose()
             My.Computer.FileSystem.DeleteFile(Module1.location)
         End If
