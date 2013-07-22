@@ -157,7 +157,7 @@ Partial Class Form1
         'CheckBox2
         '
         Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(322, 69)
+        Me.CheckBox2.Location = New System.Drawing.Point(323, 69)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(159, 17)
         Me.CheckBox2.TabIndex = 13
