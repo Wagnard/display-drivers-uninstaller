@@ -44,7 +44,7 @@ Public Class Form1
             Close()
             Exit Sub
         Else
-            MsgBox("For SLI users, it is recommended that you disable it before continuing or a black screen may occur.")
+            MsgBox("For SLI users, it is recommended that you disable it before continuing or a black screen may occur.", MsgBoxStyle.Information)
             Button1.Enabled = False
             CheckBox2.Enabled = False
             Button1.Text = "Uninstalling..."
@@ -60,7 +60,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
-                MsgBox("Cannot find DEVCON in " & Label3.Text & " folder")
+                MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                 Button1.Text = "Done."
                 Button1.Enabled = True
                 Exit Sub
@@ -1703,10 +1703,32 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
-        If CheckBox2.Checked = False Or Button1.Text <> "Done." Then
+        'If Button1.Text = "Done." Then
+        '  Module1.wlog.Dispose()
+        '   My.Computer.FileSystem.DeleteFile(Module1.location)
+        'End If
+        'I've commented this out because even if you have logging enabled and you want to see your logs, if the button was "Done." then it would delete it. Add it back if you want, but I think it needs to be worked on or left unused.
+        If CheckBox2.Checked = False Then
             Module1.wlog.Dispose()
             My.Computer.FileSystem.DeleteFile(Module1.location)
+            Cleanup(Application.StartupPath & "\Logs", 2) 'Deletes all older logs, instead only the most recent one.
         End If
+    End Sub
+    Private Sub Cleanup(ByVal directory As String, ByVal KeepDur As Integer)
+        'Code taken from my CoDUO FoV Changer program, thus why it uses a keepdur, it's supposed to delete logs older than whatever days. I set it to 2 seconds instead of modifying the code. Lol
+        Try
+            Dim logdir As New System.IO.DirectoryInfo(directory)
+            For Each file As System.IO.FileInfo In logdir.GetFiles
+                If (Now - file.CreationTime).Seconds > KeepDur Then
+                    file.Delete()
+                End If
+
+            Next
+        Catch ex As Exception
+            log("")
+            log("!! ERROR: " & ex.Message)
+            log("")
+        End Try
     End Sub
 
     Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
