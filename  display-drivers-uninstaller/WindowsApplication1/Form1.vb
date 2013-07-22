@@ -1600,16 +1600,25 @@ Public Class Form1
         proc4.WaitForExit()
 
         System.Threading.Thread.Sleep(1000)
-        TextBox1.Text = TextBox1.Text + "Clean uninstall complete !" + vbNewLine
+        TextBox1.Text = TextBox1.Text + "Clean uninstall completed!" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
 
 
         Button1.Enabled = True
         Button1.Text = "Done."
+        log("Finished.")
+        log(TextBox1.Text)
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If My.Settings.logbox = "" Or My.Settings.logbox = "dontlog" Then
+            CheckBox2.Checked = False
+        Else
+            CheckBox2.Checked = True
+        End If
+
+
         Dim version As String
         Dim arch As Boolean
 
@@ -1629,7 +1638,7 @@ Public Class Form1
 
             Label2.Text = "Unsupported OS"
             Button1.Text = "Done."
-
+            log("Unsupported OS.")
         End If
 
         If version >= "5.1" Then
@@ -1649,6 +1658,7 @@ Public Class Form1
             Label2.Text = "Windows 8 or Server 2012"
 
         End If
+        log(Label2.Text)
 
 
 
@@ -1657,6 +1667,7 @@ Public Class Form1
         Else
             Label3.Text = "x86"
         End If
+        log("Architecture: " & Label3.Text)
 
     End Sub
 
@@ -1667,6 +1678,7 @@ Public Class Form1
                 System.IO.File.SetAttributes(filename, IO.FileAttributes.Normal)
             Next
         Catch ex As Exception
+            log("!! ERROR !! " & ex.Message)
         End Try
         Try
             For Each FolderPath As String In My.Computer.FileSystem.GetDirectories(folder)
@@ -1674,6 +1686,7 @@ Public Class Form1
                 oDir.Attributes = oDir.Attributes And Not IO.FileAttributes.ReadOnly
             Next
         Catch ex As Exception
+            log("!! ERROR !! " & ex.Message)
         End Try
         ' Recursively call this routine on all subfolders
         Try
@@ -1681,7 +1694,15 @@ Public Class Form1
                 RemoveReadOnlyAttributes(foldername)
             Next
         Catch ex As Exception
+            log("!! ERROR !! " & ex.Message)
         End Try
     End Sub
 
+    Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
+        If CheckBox2.Checked = True Then
+            My.Settings.logbox = "log"
+        Else
+            My.Settings.logbox = "dontlog"
+        End If
+    End Sub
 End Class
