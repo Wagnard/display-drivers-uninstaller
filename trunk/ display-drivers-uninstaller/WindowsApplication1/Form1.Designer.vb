@@ -36,6 +36,10 @@ Partial Class Form1
         Me.Label8 = New System.Windows.Forms.Label()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Button1
@@ -50,7 +54,7 @@ Partial Class Form1
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(13, 13)
+        Me.Label1.Location = New System.Drawing.Point(13, 28)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(145, 13)
         Me.Label1.TabIndex = 1
@@ -59,7 +63,7 @@ Partial Class Form1
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(164, 13)
+        Me.Label2.Location = New System.Drawing.Point(164, 27)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(10, 13)
         Me.Label2.TabIndex = 2
@@ -68,7 +72,7 @@ Partial Class Form1
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(164, 26)
+        Me.Label3.Location = New System.Drawing.Point(164, 41)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(10, 13)
         Me.Label3.TabIndex = 3
@@ -119,7 +123,7 @@ Partial Class Form1
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Items.AddRange(New Object() {"NVIDIA", "AMD"})
-        Me.ComboBox1.Location = New System.Drawing.Point(167, 43)
+        Me.ComboBox1.Location = New System.Drawing.Point(167, 57)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
         Me.ComboBox1.TabIndex = 9
@@ -127,7 +131,7 @@ Partial Class Form1
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(12, 46)
+        Me.Label7.Location = New System.Drawing.Point(12, 60)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(114, 13)
         Me.Label7.TabIndex = 10
@@ -164,6 +168,29 @@ Partial Class Form1
         Me.CheckBox2.Text = "Save log files in startup path"
         Me.CheckBox2.UseVisualStyleBackColor = True
         '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Dock = System.Windows.Forms.DockStyle.Right
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
+        Me.MenuStrip1.Location = New System.Drawing.Point(564, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(30, 348)
+        Me.MenuStrip1.TabIndex = 14
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem})
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(17, 19)
+        Me.ToolStripMenuItem1.Text = "?"
+        '
+        'AboutToolStripMenuItem
+        '
+        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(107, 22)
+        Me.AboutToolStripMenuItem.Text = "About"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -182,11 +209,15 @@ Partial Class Form1
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.MenuStrip1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.MainMenuStrip = Me.MenuStrip1
         Me.MaximizeBox = False
         Me.Name = "Form1"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Display Driver Uninstaller by Wagnard"
+        Me.Text = "Display Driver Uninstaller (DDU)"
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -204,5 +235,8 @@ Partial Class Form1
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
+    Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
+    Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents AboutToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class
