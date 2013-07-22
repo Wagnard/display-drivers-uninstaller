@@ -1667,14 +1667,14 @@ Public Class Form1
     Public Sub RemoveReadOnlyAttributes(ByVal folder As String)
         'ensure that these folder can be access bu administrator.
         Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
-        MsgBox(UserAccount)
+
         Dim FolderInfo As IO.DirectoryInfo = New IO.DirectoryInfo(folder)
         Dim FolderAcl As New DirectorySecurity
         FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAccount, FileSystemRights.Modify, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
         FolderAcl.SetAccessRuleProtection(True, False) 'uncomment to remove existing permissions
         FolderInfo.SetAccessControl(FolderAcl)
 
-
+        System.Threading.Thread.Sleep(500)
 
         ' Remove attribute on individual files
         Try
