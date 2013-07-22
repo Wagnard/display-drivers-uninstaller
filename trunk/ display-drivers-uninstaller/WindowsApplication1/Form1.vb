@@ -45,6 +45,7 @@ Public Class Form1
             Exit Sub
         Else
             Button1.Enabled = False
+            CheckBox2.Enabled = False
             Button1.Text = "Uninstalling..."
 
             'creation dun process fantome pour le wait on exit.
@@ -1158,7 +1159,7 @@ Public Class Form1
             Next i
             System.Threading.Thread.Sleep(1000)
 
-            
+
             'Delete NVIDIA data Folders
             'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
             TextBox1.Text = TextBox1.Text + "Cleaning UpdatusUser users account if present" + vbNewLine
@@ -1504,10 +1505,6 @@ Public Class Form1
                                             If wantedvalue.Contains("NVIDIA") Then
 
                                                 regkey.DeleteSubKeyTree(child)
-                                                'okay .. important part here to fixed the famous AMD yellow mark.
-                                                'The yellow mark in this case is really stupid imo and shouldn't even
-                                                'be thrown as a warning to the end user... it has not bad effect.
-                                                'But im gona fix this b'cause im a 'PROFESSIONAL' :)
 
                                                 Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                                                                                  ("Installer\UpgradeCodes", True)
@@ -1607,8 +1604,8 @@ Public Class Form1
 
         Button1.Enabled = True
         Button1.Text = "Done."
-        log("Finished.")
         log(TextBox1.Text)
+        log("Finished.")
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -1704,6 +1701,13 @@ Public Class Form1
         Catch ex As Exception
             log("!! ERROR !! " & ex.Message)
         End Try
+    End Sub
+
+    Private Sub Form1_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+        If CheckBox2.Checked = False Then
+            Module1.wlog.Dispose()
+            My.Computer.FileSystem.DeleteFile(Module1.location)
+        End If
     End Sub
 
     Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
