@@ -10,7 +10,7 @@ Public Class Form1
         Dim removehdmidriver As New ProcessStartInfo
         Dim vendid As String = ""
         Dim provider As String = ""
-
+        Dim proc As New Process
 
         If ComboBox1.Text = "AMD" Then
             vendid = "@*ven_1002*"
@@ -44,13 +44,15 @@ Public Class Form1
             Close()
             Exit Sub
         Else
+            MsgBox("For SLI users, it is recommended that you disable it before continuing or a black screen may occur.")
             Button1.Enabled = False
             CheckBox2.Enabled = False
             Button1.Text = "Uninstalling..."
 
             'creation dun process fantome pour le wait on exit.
+
             Try
-                Dim proc As New Process
+
                 proc.StartInfo = removedisplaydriver
                 proc.Start()
                 proc.WaitForExit()
@@ -208,9 +210,9 @@ Public Class Form1
             'processkillpid.StartInfo = killpid
             'processkillpid.Start()
             'processkillpid.WaitForExit()
-            Dim proc = Process.GetProcessesByName("MOM")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            Dim appproc = Process.GetProcessesByName("MOM")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             '  System.Threading.Thread.Sleep(100)
 
@@ -218,9 +220,9 @@ Public Class Form1
             'processkillpid.StartInfo = killpid
             'processkillpid.Start()
             'processkillpid.WaitForExit()
-            proc = Process.GetProcessesByName("CLI")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("CLI")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             '  System.Threading.Thread.Sleep(100)
 
@@ -228,9 +230,9 @@ Public Class Form1
             'processkillpid.StartInfo = killpid
             'processkillpid.Start()
             'processkillpid.WaitForExit()
-            proc = Process.GetProcessesByName("CCC")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("CCC")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             '   System.Threading.Thread.Sleep(100)
 
@@ -238,9 +240,9 @@ Public Class Form1
             'processkillpid.StartInfo = killpid
             'processkillpid.Start()
             'processkillpid.WaitForExit()
-            proc = Process.GetProcessesByName("HydraDM")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("HydraDM")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             '  System.Threading.Thread.Sleep(100)
 
@@ -249,9 +251,9 @@ Public Class Form1
             'processkillpid.StartInfo = killpid
             'processkillpid.Start()
             'processkillpid.WaitForExit()
-            proc = Process.GetProcessesByName("HydraDM64")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("HydraDM64")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
 
             '   System.Threading.Thread.Sleep(100)
@@ -260,9 +262,9 @@ Public Class Form1
             'processkillpid.StartInfo = killpid
             'processkillpid.Start()
             'processkillpid.WaitForExit()
-            proc = Process.GetProcessesByName("HydraGrd")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("HydraGrd")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             '  System.Threading.Thread.Sleep(100)
 
@@ -270,9 +272,9 @@ Public Class Form1
             'processkillpid.StartInfo = killpid
             'processkillpid.Start()
             'processkillpid.WaitForExit()
-            proc = Process.GetProcessesByName("Grid64")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("Grid64")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             '   System.Threading.Thread.Sleep(100)
 
@@ -280,9 +282,9 @@ Public Class Form1
             'processkillpid.StartInfo = killpid
             'processkillpid.Start()
             'processkillpid.WaitForExit()
-            proc = Process.GetProcessesByName("HydraMD64")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("HydraMD64")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             '   System.Threading.Thread.Sleep(100)
 
@@ -290,9 +292,9 @@ Public Class Form1
             'processkillpid.StartInfo = killpid
             'processkillpid.Start()
             'processkillpid.WaitForExit()
-            proc = Process.GetProcessesByName("HydraMD")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("HydraMD")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             '   System.Threading.Thread.Sleep(100)
 
@@ -304,19 +306,19 @@ Public Class Form1
             'processkillpid.StartInfo = killpid
             'processkillpid.Start()
             'processkillpid.WaitForExit()
-            proc = Process.GetProcessesByName("explorer")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("explorer")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             '  System.Threading.Thread.Sleep(100)
-            proc = Process.GetProcessesByName("ThumbnailExtractionHost")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("ThumbnailExtractionHost")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             '    System.Threading.Thread.Sleep(100)
-            proc = Process.GetProcessesByName("jusched")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("jusched")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
 
             '   System.Threading.Thread.Sleep(1000)
@@ -1124,38 +1126,25 @@ Public Class Form1
             'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
             'holding files in the NVIDIA folders sometimes.
 
-            'Dim killpid As New ProcessStartInfo
-            'killpid.FileName = "cmd.exe"
-            'killpid.Arguments = " /C" & "taskkill /f /im Lcore.exe"
-            'killpid.UseShellExecute = False
-            'killpid.CreateNoWindow = True
-            'killpid.RedirectStandardOutput = True
-            Dim proc = Process.GetProcessesByName("Lcore")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            Dim appproc = Process.GetProcessesByName("Lcore")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             System.Threading.Thread.Sleep(100)
-            'Dim processkillpid As New Process
-            'processkillpid.StartInfo = killpid
-            'processkillpid.Start()
-            'processkillpid.WaitForExit()
+            
 
             System.Threading.Thread.Sleep(100)
 
-            'killpid.Arguments = " /C" & "taskkill /f /im NvTmru.exe"
-            'processkillpid.StartInfo = killpid
-            'processkillpid.Start()
-            'processkillpid.WaitForExit()
-            proc = Process.GetProcessesByName("NvTmru")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("NvTmru")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
 
             System.Threading.Thread.Sleep(100)
 
-            proc = Process.GetProcessesByName("dwm")
-            For i As Integer = 0 To proc.Count - 1
-                proc(i).Kill()
+            appproc = Process.GetProcessesByName("dwm")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
             Next i
             System.Threading.Thread.Sleep(1000)
 
@@ -1359,7 +1348,7 @@ Public Class Form1
                 For Each child As String In regkey.GetSubKeyNames()
 
                     If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
-                       Or child.Contains("NVXD") Or child.Contains("NvXD") Then
+                       Or child.Contains("NVXD") Or child.Contains("NvXD") Or child.Contains("AGEIA") Then
 
                         regkey.DeleteSubKeyTree(child)
                     End If
@@ -1374,7 +1363,7 @@ Public Class Form1
                     For Each child As String In regkey.GetSubKeyNames()
 
                         If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
-                           Or child.Contains("NVXD") Or child.Contains("NvXD") Then
+                           Or child.Contains("NVXD") Or child.Contains("NvXD") Or child.Contains("AGEIA") Then
 
                             regkey.DeleteSubKeyTree(child)
                         End If
@@ -1596,7 +1585,6 @@ Public Class Form1
         proc4.Start()
         proc4.WaitForExit()
 
-        System.Threading.Thread.Sleep(1000)
         TextBox1.Text = TextBox1.Text + "Clean uninstall completed!" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
@@ -1677,6 +1665,17 @@ Public Class Form1
     End Sub
 
     Public Sub RemoveReadOnlyAttributes(ByVal folder As String)
+        'ensure that these folder can be access bu administrator.
+        Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+        MsgBox(UserAccount)
+        Dim FolderInfo As IO.DirectoryInfo = New IO.DirectoryInfo(folder)
+        Dim FolderAcl As New DirectorySecurity
+        FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAccount, FileSystemRights.Modify, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
+        FolderAcl.SetAccessRuleProtection(True, False) 'uncomment to remove existing permissions
+        FolderInfo.SetAccessControl(FolderAcl)
+
+
+
         ' Remove attribute on individual files
         Try
             For Each filename As String In My.Computer.FileSystem.GetFiles(folder)
