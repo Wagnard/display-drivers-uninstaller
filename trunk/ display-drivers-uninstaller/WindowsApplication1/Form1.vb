@@ -1158,10 +1158,27 @@ Public Class Form1
             Next i
             System.Threading.Thread.Sleep(1000)
 
+            
+            'Delete NVIDIA data Folders
+            'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
+            TextBox1.Text = TextBox1.Text + "Cleaning UpdatusUser users account if present" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
+            Try
+                Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
+                Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
+
+                AD.Children.Remove(NewUser)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+            End Try
+
             TextBox1.Text = TextBox1.Text + "Cleaning Diectory" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
-            'Delete NVIDIA data Folders
+
             Dim filePath As String
 
             If CheckBox1.Checked = True Then
@@ -1172,7 +1189,6 @@ Public Class Form1
                     End Try
                     System.Threading.Thread.Sleep(100)
                     filePath = "C:\NVIDIA"
-
                     Try
                         My.Computer.FileSystem.DeleteDirectory _
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -1184,6 +1200,32 @@ Public Class Form1
 
                 End If
             End If
+
+            ' here I erase the folders / files of the nvidia GFE / update in users.
+            filePath = Environment.GetEnvironmentVariable("UserProfile")
+            Dim parentPath As String = IO.Path.GetDirectoryName(filePath)
+            filePath = parentPath
+            For Each child As String In Directory.GetDirectories(filePath)
+                If child.Contains("UpdatusUser") Then
+
+                    Try
+                        RemoveReadOnlyAttributes(child)
+                    Catch ex As Exception
+                    End Try
+                    System.Threading.Thread.Sleep(100)
+
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        TextBox1.Select(TextBox1.Text.Length, 0)
+                        TextBox1.ScrollToCaret()
+                    End Try
+                End If
+            Next
+
+
 
             filePath = Environment.GetFolderPath _
                 (Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
@@ -1269,17 +1311,6 @@ Public Class Form1
                 TextBox1.ScrollToCaret()
             End Try
 
-            'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
-            Try
-                Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
-                Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
-
-                AD.Children.Remove(NewUser)
-            Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-            End Try
 
             TextBox1.Text = TextBox1.Text + "Cleaning Regkeys" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
