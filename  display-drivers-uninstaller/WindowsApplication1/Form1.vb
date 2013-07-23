@@ -6,39 +6,7 @@ Imports System.Security.AccessControl
 Public Class Form1
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim removedisplaydriver As New ProcessStartInfo
-        Dim removehdmidriver As New ProcessStartInfo
-        Dim vendid As String = ""
-        Dim provider As String = ""
-        Dim proc As New Process
-
-        If ComboBox1.Text = "AMD" Then
-            vendid = "@*ven_1002*"
-            provider = "Provider: Advanced Micro Devices"
-        End If
-
-        If ComboBox1.Text = "NVIDIA" Then
-            vendid = "@*ven_10de*"
-            provider = "Provider: NVIDIA"
-        End If
-        TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver ..." + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
-        TextBox1.Text = TextBox1.Text + "Executing DEVCON Remove" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
-        'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-        removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-        removedisplaydriver.Arguments = "remove =display " & Chr(34) & vendid & Chr(34)
-        removedisplaydriver.UseShellExecute = False
-        removedisplaydriver.CreateNoWindow = True
-        removedisplaydriver.RedirectStandardOutput = True
-
-        removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-        removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & vendid & Chr(34)
-        removehdmidriver.UseShellExecute = False
-        removehdmidriver.CreateNoWindow = True
-        removehdmidriver.RedirectStandardOutput = True
+        
 
         If Button1.Text = "Done." Then
             Close()
@@ -48,6 +16,41 @@ Public Class Form1
             Button1.Enabled = False
             CheckBox2.Enabled = False
             Button1.Text = "Uninstalling..."
+
+            Dim removedisplaydriver As New ProcessStartInfo
+            Dim removehdmidriver As New ProcessStartInfo
+            Dim vendid As String = ""
+            Dim provider As String = ""
+            Dim proc As New Process
+
+            If ComboBox1.Text = "AMD" Then
+                vendid = "@*ven_1002*"
+                provider = "Provider: Advanced Micro Devices"
+            End If
+
+            If ComboBox1.Text = "NVIDIA" Then
+                vendid = "@*ven_10de*"
+                provider = "Provider: NVIDIA"
+            End If
+            TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver ..." + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
+            TextBox1.Text = TextBox1.Text + "Executing DEVCON Remove" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
+            'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
+            removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+            removedisplaydriver.Arguments = "remove =display " & Chr(34) & vendid & Chr(34)
+            removedisplaydriver.UseShellExecute = False
+            removedisplaydriver.CreateNoWindow = True
+            removedisplaydriver.RedirectStandardOutput = True
+
+            removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & vendid & Chr(34)
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
+            removehdmidriver.RedirectStandardOutput = True
+
 
             'creation dun process fantome pour le wait on exit.
 
@@ -1201,8 +1204,11 @@ Public Class Form1
                     Try
                         RemoveReadOnlyAttributes(child)
                     Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        TextBox1.Select(TextBox1.Text.Length, 0)
+                        TextBox1.ScrollToCaret()
                     End Try
-                    System.Threading.Thread.Sleep(100)
+                    System.Threading.Thread.Sleep(200) 'just to be sure files are not holded anymore.
 
                     Try
                         My.Computer.FileSystem.DeleteDirectory _
@@ -1665,16 +1671,16 @@ Public Class Form1
     End Sub
 
     Public Sub RemoveReadOnlyAttributes(ByVal folder As String)
-        'ensure that these folder can be access bu administrator.
+        'ensure that these folder can be accessed with current user account.
         Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
-
-        Dim FolderInfo As IO.DirectoryInfo = New IO.DirectoryInfo(folder)
+        Dim FolderInfo As System.IO.DirectoryInfo = New System.IO.DirectoryInfo(folder)
         Dim FolderAcl As New DirectorySecurity
-        FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAccount, FileSystemRights.Modify, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
+        FolderAcl = FolderInfo.GetAccessControl()
+        FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAccount, FileSystemRights.Modify, _
+        InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
         FolderAcl.SetAccessRuleProtection(True, False) 'uncomment to remove existing permissions
-        FolderInfo.SetAccessControl(FolderAcl)
+      
 
-        System.Threading.Thread.Sleep(500)
 
         ' Remove attribute on individual files
         Try
@@ -1687,7 +1693,8 @@ Public Class Form1
         Try
             For Each FolderPath As String In My.Computer.FileSystem.GetDirectories(folder)
                 Dim oDir As New System.IO.DirectoryInfo(FolderPath)
-                oDir.Attributes = oDir.Attributes And Not IO.FileAttributes.ReadOnly
+                oDir.Attributes = oDir.Attributes And Not IO.FileAttributes.ReadOnly And Not IO.FileAttributes.Hidden _
+                    And Not IO.FileAttributes.System
             Next
         Catch ex As Exception
             log("!! ERROR !! " & ex.Message)
