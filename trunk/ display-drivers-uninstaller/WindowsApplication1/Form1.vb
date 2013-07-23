@@ -333,7 +333,7 @@ Public Class Form1
 
             If CheckBox1.Checked = True Then
                 Try
-                    RemoveReadOnlyAttributes("C:\AMD")
+                    TestDelete("C:\AMD")
                 Catch ex As Exception
                 End Try
                 System.Threading.Thread.Sleep(100)
@@ -1177,7 +1177,7 @@ Public Class Form1
             If CheckBox1.Checked = True Then
                 If CheckBox1.Checked = True Then
                     Try
-                        RemoveReadOnlyAttributes("C:\NVIDIA")
+                        TestDelete("C:\NVIDIA")
                     Catch ex As Exception
                     End Try
                     System.Threading.Thread.Sleep(100)
@@ -1202,7 +1202,7 @@ Public Class Form1
                 If child.Contains("UpdatusUser") Then
 
                     Try
-                        RemoveReadOnlyAttributes(child)
+                        TestDelete(child)
                     Catch ex As Exception
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
@@ -1670,43 +1670,85 @@ Public Class Form1
 
     End Sub
 
-    Public Sub RemoveReadOnlyAttributes(ByVal folder As String)
-        'ensure that these folder can be accessed with current user account.
+    Public Sub TestDelete(ByVal folder As String)
+        'ensure that this folder can be accessed with current user account.
         Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
-        Dim FolderInfo As System.IO.DirectoryInfo = New System.IO.DirectoryInfo(folder)
+        Dim FolderInfo As IO.DirectoryInfo = New IO.DirectoryInfo(folder)
         Dim FolderAcl As New DirectorySecurity
-        FolderAcl = FolderInfo.GetAccessControl()
-        FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAccount, FileSystemRights.Modify, _
-        InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
-        FolderAcl.SetAccessRuleProtection(True, False) 'uncomment to remove existing permissions
-      
+        FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAccount, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
+        'FolderAcl.SetAccessRuleProtection(True, False) 'uncomment to remove existing permissions
+        FolderInfo.SetAccessControl(FolderAcl)
+        System.Threading.Thread.Sleep(500)
+        'Get an object repesenting the directory path below
+        Dim di As New DirectoryInfo(folder)
+
+        'Traverse all of the child directors in the root; get to the lowest child
+        'and delete all files, working our way back up to the top.  All files
+        'must be deleted in the directory, before the directory itself can be deleted.
+        For Each diChild As DirectoryInfo In di.GetDirectories()
+            TraverseDirectory(diChild)
+        Next
+
+        'Finally, clean all of the files directly in the root directory
+        CleanAllFilesInDirectory(di)
+
+    End Sub
+
+    
+    Private Sub TraverseDirectory(ByVal di As DirectoryInfo)
+
+        'If the current directory has more child directories, then continure
+        'to traverse down until we are at the lowest level and remove
+        'there hidden / readonly / system attribute..  At that point all of the
+        'files will be deleted.
+        For Each diChild As DirectoryInfo In di.GetDirectories()
+            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
+            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
+            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
+            TraverseDirectory(diChild)
+        Next
+
+        'Now that we have no more child directories to traverse, delete all of the files
+        'in the current directory, and then delete the directory itself.
+        CleanAllFilesInDirectory(di)
 
 
-        ' Remove attribute on individual files
-        Try
-            For Each filename As String In My.Computer.FileSystem.GetFiles(folder)
-                System.IO.File.SetAttributes(filename, IO.FileAttributes.Normal)
-            Next
-        Catch ex As Exception
-            log("!! ERROR !! " & ex.Message)
-        End Try
-        Try
-            For Each FolderPath As String In My.Computer.FileSystem.GetDirectories(folder)
-                Dim oDir As New System.IO.DirectoryInfo(FolderPath)
-                oDir.Attributes = oDir.Attributes And Not IO.FileAttributes.ReadOnly And Not IO.FileAttributes.Hidden _
-                    And Not IO.FileAttributes.System
-            Next
-        Catch ex As Exception
-            log("!! ERROR !! " & ex.Message)
-        End Try
-        ' Recursively call this routine on all subfolders
-        Try
-            For Each foldername As String In My.Computer.FileSystem.GetDirectories(folder)
-                RemoveReadOnlyAttributes(foldername)
-            Next
-        Catch ex As Exception
-            log("!! ERROR !! " & ex.Message)
-        End Try
+        'The containing directory can only be deleted if the directory
+        'is now completely empty and all files previously within
+        'were deleted.
+        If di.GetFiles().Count = 0 Then
+            di.Delete()
+        End If
+
+    End Sub
+
+
+    ''' Iterates through all files in the directory passed into
+    ''' method and deletes them.
+    ''' It may be necessary to wrap this call in impersonation or ensure parent directory
+    ''' permissions prior, because delete permissions are not guaranteed.
+
+    Private Sub CleanAllFilesInDirectory(ByVal DirectoryToClean As DirectoryInfo)
+
+        For Each fi As FileInfo In DirectoryToClean.GetFiles()
+            'The following code is NOT required, but shows how some logic can be wrapped
+            'around the deletion of files.  For example, only delete files with
+            'a creation date older than 1 hour from the current time.  If you
+            'always want to delete all of the files regardless, just remove
+            'the next 'If' statement.
+
+            'Read only files can not be deleted, so mark the attribute as 'IsReadOnly = False'
+            fi.IsReadOnly = False
+            fi.Delete()
+
+            'On a rare occasion, files being deleted might be slower than program execution, and upon returning
+            'from this call, attempting to delete the directory will throw an exception stating it is not yet
+            'empty, even though a fraction of a second later it actually is.  Therefore the 'Optional' code below
+            'can stall the process just long enough to ensure the file is deleted before proceeding. The value
+            'can be adjusted as needed from testing and running the process repeatedly.
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+
+        Next
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
