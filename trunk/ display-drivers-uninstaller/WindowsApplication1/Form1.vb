@@ -1150,6 +1150,11 @@ Public Class Form1
                 appproc(i).Kill()
             Next i
 
+            appproc = Process.GetProcessesByName("nvtray")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
             System.Threading.Thread.Sleep(100)
 
             appproc = Process.GetProcessesByName("dwm")
