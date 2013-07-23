@@ -1145,6 +1145,13 @@ Public Class Form1
 
             System.Threading.Thread.Sleep(100)
 
+            appproc = Process.GetProcessesByName("nvxdsync")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            System.Threading.Thread.Sleep(100)
+
             appproc = Process.GetProcessesByName("dwm")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
