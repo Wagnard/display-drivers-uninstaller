@@ -1151,7 +1151,14 @@ Public Class Form1
             Next i
             System.Threading.Thread.Sleep(1000)
 
+            TextBox1.Text = TextBox1.Text + "Killing Explorer.exe" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
 
+            appproc = Process.GetProcessesByName("explorer")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
             'Delete NVIDIA data Folders
             'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
             TextBox1.Text = TextBox1.Text + "Cleaning UpdatusUser users account if present" + vbNewLine
