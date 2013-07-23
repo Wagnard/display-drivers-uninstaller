@@ -1218,6 +1218,24 @@ Public Class Form1
                         TextBox1.Select(TextBox1.Text.Length, 0)
                         TextBox1.ScrollToCaret()
                     End Try
+                    'Yes we do it 2 time. This will workaround a problem on I think is (sybolic link)
+                    Try
+                        TestDelete(child)
+                    Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        TextBox1.Select(TextBox1.Text.Length, 0)
+                        TextBox1.ScrollToCaret()
+                    End Try
+                    System.Threading.Thread.Sleep(200) 'just to be sure files are not holded anymore.
+
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        TextBox1.Select(TextBox1.Text.Length, 0)
+                        TextBox1.ScrollToCaret()
+                    End Try
                 End If
             Next
 
@@ -1685,7 +1703,11 @@ Public Class Form1
         'Traverse all of the child directors in the root; get to the lowest child
         'and delete all files, working our way back up to the top.  All files
         'must be deleted in the directory, before the directory itself can be deleted.
+        'also if there is hidden / readonly / system attribute..  change those attribute.
         For Each diChild As DirectoryInfo In di.GetDirectories()
+            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
+            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
+            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
             TraverseDirectory(diChild)
         Next
 
