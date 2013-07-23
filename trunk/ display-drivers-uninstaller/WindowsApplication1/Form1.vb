@@ -1152,13 +1152,6 @@ Public Class Form1
 
             System.Threading.Thread.Sleep(100)
 
-            appproc = Process.GetProcessesByName("nvtray")
-            For i As Integer = 0 To appproc.Count - 1
-                appproc(i).Kill()
-            Next i
-
-            System.Threading.Thread.Sleep(100)
-
             appproc = Process.GetProcessesByName("dwm")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
@@ -1418,19 +1411,6 @@ Public Class Form1
             End If
             count = 0
 
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-
-                    If child.Contains("B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") Then
-
-                        regkey.DeleteSubKeyTree(child)
-                    End If
-                    count += 1
-                Next
-            End If
-
             count = 0
 
             If IntPtr.Size = 8 Then
@@ -1467,6 +1447,24 @@ Public Class Form1
                     wantedvalue = subregkey.GetValue("DisplayName")
                     If wantedvalue IsNot Nothing Then
                         If wantedvalue.Contains("NVIDIA") Then
+                            regkey.DeleteSubKeyTree(child)
+
+                        End If
+                    End If
+                End If
+                count += 1
+            Next
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
+            For Each child As String In regkey.GetSubKeyNames()
+                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList\" & child, True)
+                If subregkey IsNot Nothing Then
+
+                    wantedvalue = subregkey.GetValue("ProfileImagePath")
+                    If wantedvalue IsNot Nothing Then
+                        If wantedvalue.Contains("UpdatusUser") Then
                             regkey.DeleteSubKeyTree(child)
 
                         End If
