@@ -14,7 +14,10 @@ Public Class Form1
             If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
                 My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
             End If
+            If CheckBox2.Checked = True Then
+                Module1.location = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
 
+            End If
             TextBox1.Text = ("DDU Version " + Label6.Text + vbNewLine)
             log("OS : " + Label2.Text)
             log("Architecture: " & Label3.Text)
