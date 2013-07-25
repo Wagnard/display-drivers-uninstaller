@@ -6,12 +6,19 @@ Imports System.Security.AccessControl
 Public Class Form1
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        
 
         If Button1.Text = "Done." Then
             Close()
             Exit Sub
         Else
+            If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
+                My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
+            End If
+
+            TextBox1.Text = ("DDU Version " + Label6.Text + vbNewLine)
+            log("OS : " + Label2.Text)
+            log("Architecture: " & Label3.Text)
+
             MsgBox("For SLI users, it is recommended that you disable it before continuing or a black screen may occur.", MsgBoxStyle.Information)
             Button1.Enabled = False
             CheckBox2.Enabled = False
@@ -1646,20 +1653,13 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-
-        If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
-            My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
-        Else
-            log("Log directory already exists.")
-        End If
-
-
+        
         If My.Settings.logbox = "" Or My.Settings.logbox = "dontlog" Then
             CheckBox2.Checked = False
         Else
             CheckBox2.Checked = True
         End If
-
+        
 
         Dim version As String
         Dim arch As Boolean
@@ -1716,7 +1716,7 @@ Public Class Form1
             Label2.Text = "Windows 8 or Server 2012"
 
         End If
-        log("OS : " + Label2.Text)
+
 
 
 
@@ -1725,7 +1725,7 @@ Public Class Form1
         Else
             Label3.Text = "x86"
         End If
-        log("Architecture: " & Label3.Text)
+
 
         If arch = True Then
             Try
@@ -1856,11 +1856,11 @@ Public Class Form1
         '   My.Computer.FileSystem.DeleteFile(Module1.location)
         'End If
         'I've commented this out because even if you have logging enabled and you want to see your logs, if the button was "Done." then it would delete it. Add it back if you want, but I think it needs to be worked on or left unused.
-        If CheckBox2.Checked = False Then
-            Module1.wlog.Dispose()
-            My.Computer.FileSystem.DeleteFile(Module1.location)
-            Cleanup(Application.StartupPath & "\Logs", 2) 'Deletes all older logs, instead only the most recent one.
-        End If
+        'If CheckBox2.Checked = False Then
+        '    Module1.wlog.Dispose()
+        '    My.Computer.FileSystem.DeleteFile(Module1.location)
+        '    Cleanup(Application.StartupPath & "\Logs", 2) 'Deletes all older logs, instead only the most recent one.
+        'End If
         Try
             My.Computer.FileSystem.DeleteDirectory(Application.StartupPath & "\x64", FileIO.DeleteDirectoryOption.DeleteAllContents)
         Catch ex As Exception
