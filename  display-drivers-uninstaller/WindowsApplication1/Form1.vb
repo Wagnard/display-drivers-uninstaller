@@ -1646,6 +1646,7 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
         Else
@@ -1668,10 +1669,26 @@ Public Class Form1
         If IntPtr.Size = 8 Then
 
             arch = True
+            Try
+                If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\x64") Then
+                    My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\x64")
+                End If
+            Catch ex As Exception
+                log(ex.Message)
+                TextBox1.AppendText(ex.Message)
+            End Try
 
         ElseIf IntPtr.Size = 4 Then
 
             arch = False
+            Try
+                If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\x86") Then
+                    My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\x86")
+                End If
+            Catch ex As Exception
+                log(ex.Message)
+                TextBox1.AppendText(ex.Message)
+            End Try
 
         End If
 
@@ -1709,6 +1726,42 @@ Public Class Form1
             Label3.Text = "x86"
         End If
         log("Architecture: " & Label3.Text)
+
+        If arch = True Then
+            Try
+                Dim myExe As String = Application.StartupPath & "\x64\devcon.exe"
+                If Not System.IO.File.Exists(myExe) Then
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.devcon64)
+                End If
+            Catch ex As Exception
+                log(ex.Message)
+                TextBox1.AppendText(ex.Message)
+            End Try
+        Else
+            Try
+                Dim myExe As String = Application.StartupPath & "\x86\devcon.exe"
+                If Not System.IO.File.Exists(myExe) Then
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.devcon32)
+                End If
+            Catch ex As Exception
+                log(ex.Message)
+                TextBox1.AppendText(ex.Message)
+            End Try
+        End If
+
+        If arch = True Then
+            If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x64\devcon.exe") Then
+                MsgBox("Unable to find Devcon. Please refer to the log.", MsgBoxStyle.Critical)
+                Button1.Enabled = False
+            End If
+        ElseIf arch = False Then
+            If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x86\devcon.exe") Then
+                MsgBox("Unable to find Devcon. Please refer to the log.", MsgBoxStyle.Critical)
+                Button1.Enabled = False
+            End If
+        End If
+
+
 
     End Sub
 
@@ -1808,6 +1861,11 @@ Public Class Form1
             My.Computer.FileSystem.DeleteFile(Module1.location)
             Cleanup(Application.StartupPath & "\Logs", 2) 'Deletes all older logs, instead only the most recent one.
         End If
+        Try
+            My.Computer.FileSystem.DeleteDirectory(Application.StartupPath & "\x64", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            My.Computer.FileSystem.DeleteDirectory(Application.StartupPath & "\x86", FileIO.DeleteDirectoryOption.DeleteAllContents)
+        Catch ex As Exception
+        End Try
     End Sub
     Private Sub Cleanup(ByVal directory As String, ByVal KeepDur As Integer)
         'Code taken from my CoDUO FoV Changer program, thus why it uses a keepdur, it's supposed to delete logs older than whatever days. I set it to 2 seconds instead of modifying the code. Lol
