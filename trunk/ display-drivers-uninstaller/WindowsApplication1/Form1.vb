@@ -1863,6 +1863,9 @@ Public Class Form1
         End If
         Try
             My.Computer.FileSystem.DeleteDirectory(Application.StartupPath & "\x64", FileIO.DeleteDirectoryOption.DeleteAllContents)
+        Catch ex As Exception
+        End Try
+        Try
             My.Computer.FileSystem.DeleteDirectory(Application.StartupPath & "\x86", FileIO.DeleteDirectoryOption.DeleteAllContents)
         Catch ex As Exception
         End Try
