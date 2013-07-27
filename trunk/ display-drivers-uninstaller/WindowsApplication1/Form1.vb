@@ -404,9 +404,55 @@ Public Class Form1
                     TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
                 End Try
-
+            'delete OpenCL
+            filePath = System.Environment.SystemDirectory
+            Try
+                My.Computer.FileSystem.DeleteFile(filePath + "\amdocl_as64.exe")
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+            End Try
+            Try
+                My.Computer.FileSystem.DeleteFile(filePath + "\amdocl_ld64.exe")
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+            End Try
+            Try
+                My.Computer.FileSystem.DeleteFile(filePath + "\amdpcom64.dll")
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+            End Try
                 If IntPtr.Size = 8 Then
-                    filePath = Environment.GetFolderPath _
+
+                filePath = Environment.GetEnvironmentVariable("windir")
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl_as64.exe")
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                End Try
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl_ld64.exe")
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                End Try
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdpcom64.dll")
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                End Try
+
+                filePath = Environment.GetFolderPath _
                        (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
                     Try
                         My.Computer.FileSystem.DeleteDirectory _
