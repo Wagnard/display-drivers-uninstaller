@@ -47,9 +47,11 @@ Public Class Form1
             TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver ..." + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
+            log("Uninstalling " + ComboBox1.Text + " driver ...")
             TextBox1.Text = TextBox1.Text + "Executing DEVCON Remove" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
+            log("Executing DEVCON Remove")
             'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
             removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
             removedisplaydriver.Arguments = "remove =display " & Chr(34) & vendid & Chr(34)
@@ -75,6 +77,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message)
                 MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                 Button1.Text = "Done."
                 Button1.Enabled = True
@@ -84,6 +87,7 @@ Public Class Form1
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Display Complete" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
+            log("DEVCON Remove Display Complete")
             Dim prochdmi As New Process
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
@@ -93,12 +97,14 @@ Public Class Form1
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Audio/hdmi Complete" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
+            log("DEVCON Remove Audio/HDMI Complete")
             Dim checkoem As New Diagnostics.ProcessStartInfo
 
 
             TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(find OEM)..." + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
+            log("Executing Driver Store cleanUP(Find OEM)...")
             'Check the driver from the driver store  ( oemxx.inf)
             checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
             checkoem.Arguments = "dp_enum"
@@ -135,6 +141,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + part + " found" + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(part + " Found")
                 'Uninstall Driver from driver store  delete from (oemxx.inf)
                 Dim deloem As New Diagnostics.ProcessStartInfo
 
@@ -148,6 +155,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log("Executing Driver Store CleanUP(delete OEM)...")
                 proc3.StartInfo = deloem
                 proc3.Start()
                 Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
@@ -157,22 +165,23 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
-
+                log(Reply2)
 
                 GoTo 5
             End If
 
             End If
 10:
-            TextBox1.Text = TextBox1.Text + "Driver Store cleanUP complete." + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+        TextBox1.Text = TextBox1.Text + "Driver Store cleanUP complete." + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
+        log("Driver Store CleanUP Complete.")
 
 
-
-            TextBox1.Text = TextBox1.Text + "Cleaning process/services..." + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+        TextBox1.Text = TextBox1.Text + "Cleaning process/services..." + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
+        log("Cleaning Process/Services...")
             'Delete left over files.
 
             If ComboBox1.Text = "AMD" Then
@@ -284,7 +293,8 @@ Public Class Form1
                 'Delete AMD data Folders
                 TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+            TextBox1.ScrollToCaret()
+            log("Cleaning Directory")
                 Dim filePath As String
 
                 If CheckBox1.Checked = True Then
@@ -294,116 +304,126 @@ Public Class Form1
                     End Try
                     filePath = "C:\AMD"
 
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
-                    End Try
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message)
+                End Try
 
                 End If
 
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\ATI"
 
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                End Try
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
 
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\ATI"
 
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                End Try
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + "\ATI"
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                End Try
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo\resources"
-                Try
-                    Dim attribute As System.IO.FileAttributes = FileAttributes.Normal
-                    File.SetAttributes(filePath + "\AMD_SV_bar_middle.png", attribute)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                End Try
+            Try
+                Dim attribute As System.IO.FileAttributes = FileAttributes.Normal
+                File.SetAttributes(filePath + "\AMD_SV_bar_middle.png", attribute)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo"
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                End Try
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
 
 
                 filePath = Environment.GetFolderPath _
                    (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                End Try
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
 
                 'Not sure if this work on XP
 
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\ATI"
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                End Try
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
 
                 filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\AMD"
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                End Try
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
 
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies\Multimedia"
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                End Try
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
             'delete OpenCL
             filePath = System.Environment.SystemDirectory
             Try
@@ -412,6 +432,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message)
             End Try
             Try
                 My.Computer.FileSystem.DeleteFile(filePath + "\amdocl_ld64.exe")
@@ -419,6 +440,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message)
             End Try
             Try
                 My.Computer.FileSystem.DeleteFile(filePath + "\amdpcom64.dll")
@@ -426,6 +448,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message)
             End Try
                 If IntPtr.Size = 8 Then
 
@@ -436,6 +459,7 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
+                    log(ex.Message)
                 End Try
                 Try
                     My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl_ld64.exe")
@@ -443,6 +467,7 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
+                    log(ex.Message)
                 End Try
                 Try
                     My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdpcom64.dll")
@@ -450,42 +475,46 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
+                    log(ex.Message)
                 End Try
 
                 filePath = Environment.GetFolderPath _
                        (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
-                    End Try
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message)
+                End Try
 
                     filePath = Environment.GetFolderPath _
                        (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
 
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
-                    End Try
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message)
+                End Try
 
                     filePath = Environment.GetFolderPath _
                        (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
 
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
-                    End Try
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message)
+                End Try
 
                     filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo\resources"
@@ -495,7 +524,8 @@ Public Class Form1
                     Catch ex As Exception
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message)
                     End Try
 
                     filePath = Environment.GetFolderPath _
@@ -506,7 +536,8 @@ Public Class Form1
                     Catch ex As Exception
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message)
                     End Try
 
 
@@ -514,7 +545,8 @@ Public Class Form1
 
                 TextBox1.Text = TextBox1.Text + "Cleaning known Regkeys..." + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+            TextBox1.ScrollToCaret()
+            log("Cleaning known Regkeys")
                 'Delete AMD regkey
                 Dim count As Int32 = 0
                 Dim subregkey As RegistryKey = Nothing
@@ -557,7 +589,8 @@ Public Class Form1
                     Catch ex As Exception
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message)
                     End Try
 
                     Try
@@ -565,7 +598,8 @@ Public Class Form1
                     Catch ex As Exception
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message)
                     End Try
 
                     Try
@@ -574,7 +608,8 @@ Public Class Form1
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
                         TextBox1.ScrollToCaret()
-                    End Try
+                    log(ex.Message)
+                End Try
 
                 End If
                 count += 1
@@ -762,7 +797,8 @@ Public Class Form1
                         Catch ex As Exception
                             TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                             TextBox1.Select(TextBox1.Text.Length, 0)
-                            TextBox1.ScrollToCaret()
+                        TextBox1.ScrollToCaret()
+                        log(ex.Message)
                         End Try
                         Try
 
@@ -771,7 +807,8 @@ Public Class Form1
                         Catch ex As Exception
                             TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                             TextBox1.Select(TextBox1.Text.Length, 0)
-                            TextBox1.ScrollToCaret()
+                        TextBox1.ScrollToCaret()
+                        log(ex.Message)
                         End Try
                     End If
                 End If
@@ -1161,21 +1198,22 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + "Cleaning UpdatusUser users account if present" + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
-                Try
-                    Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
-                    Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
+            log("Cleaning UpdatusUser users account if present")
+            Try
+                Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
+                Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
 
-                    AD.Children.Remove(NewUser)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                End Try
+                AD.Children.Remove(NewUser)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+            End Try
 
                 TextBox1.Text = TextBox1.Text + "Cleaning Diectory" + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
-
+            log("Cleaning Diectory")
                 Dim filePath As String
 
                 If CheckBox1.Checked = True Then
@@ -1329,15 +1367,12 @@ Public Class Form1
                     TextBox1.ScrollToCaret()
                 End Try
 
-
-                TextBox1.Text = TextBox1.Text + "Cleaning Regkeys" + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                'Delete NVIDIA regkey
+            'Delete NVIDIA regkey
                 TextBox1.Text = TextBox1.Text + "Starting reg cleanUP" + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
-                Dim count As Int32 = 0
+            log("Starting reg cleanUP")
+            Dim count As Int32 = 0
                 Dim regkey As RegistryKey
                 Dim wantedvalue As String = Nothing
                 Dim subregkey As RegistryKey
@@ -1505,7 +1540,8 @@ Public Class Form1
                 count = 0
                 TextBox1.Text = TextBox1.Text + "Debug : Starting S-1-5-xx region cleanUP" + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+            TextBox1.ScrollToCaret()
+            log("Debug : Starting S-1-5-xx region cleanUP")
                 Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
                                 ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
                 If basekey IsNot Nothing Then
@@ -1574,7 +1610,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + "Debug : End of S-1-5-xx region cleanUP" + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
-
+            log("Debug : End of S-1-5-xx region cleanUP")
                 regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                     ("Installer\Products", True)
 
@@ -1600,10 +1636,12 @@ Public Class Form1
             TextBox1.Text = TextBox1.Text + "End of Registry Cleaning" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
-            System.Threading.Thread.Sleep(50)
+        log("End of Registry Cleaning")
+        System.Threading.Thread.Sleep(50)
             TextBox1.Text = TextBox1.Text + "Scanning for new device..." + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+        TextBox1.ScrollToCaret()
+        log("Scanning for new device...")
             'Scan for new devices...
             Dim scan As New ProcessStartInfo
             scan.FileName = ".\" & Label3.Text & "\devcon.exe"
@@ -1621,11 +1659,11 @@ Public Class Form1
             TextBox1.Text = TextBox1.Text + "Clean uninstall completed!" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
-
+        log("Clean uninstall completed!")
 
             Button1.Enabled = True
             Button1.Text = "Done."
-            log(TextBox1.Text)
+
             log("Finished.")
     End Sub
 
