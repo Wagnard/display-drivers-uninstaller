@@ -427,6 +427,14 @@ Public Class Form1
             'delete OpenCL
             filePath = System.Environment.SystemDirectory
             Try
+                My.Computer.FileSystem.DeleteFile(filePath + "\amdocl64.dll")
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
+            Try
                 My.Computer.FileSystem.DeleteFile(filePath + "\amdocl_as64.exe")
             Catch ex As Exception
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
@@ -454,7 +462,7 @@ Public Class Form1
 
                 filePath = Environment.GetEnvironmentVariable("windir")
                 Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl_as64.exe")
+                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl.dll")
                 Catch ex As Exception
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
@@ -462,7 +470,7 @@ Public Class Form1
                     log(ex.Message)
                 End Try
                 Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl_ld64.exe")
+                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl_as32.exe")
                 Catch ex As Exception
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
@@ -470,7 +478,15 @@ Public Class Form1
                     log(ex.Message)
                 End Try
                 Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdpcom64.dll")
+                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl_ld32.exe")
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message)
+                End Try
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdpcom32.dll")
                 Catch ex As Exception
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
