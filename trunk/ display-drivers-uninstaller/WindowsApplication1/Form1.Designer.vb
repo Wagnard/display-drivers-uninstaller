@@ -92,11 +92,11 @@ Partial Class Form1
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(48, 205)
+        Me.TextBox1.Location = New System.Drawing.Point(56, 205)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TextBox1.Size = New System.Drawing.Size(534, 134)
+        Me.TextBox1.Size = New System.Drawing.Size(526, 134)
         Me.TextBox1.TabIndex = 6
         '
         'Label5
@@ -113,9 +113,9 @@ Partial Class Form1
         Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(12, 326)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(29, 13)
+        Me.Label6.Size = New System.Drawing.Size(38, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V3.6"
+        Me.Label6.Text = "V3.6.1"
         '
         'ComboBox1
         '

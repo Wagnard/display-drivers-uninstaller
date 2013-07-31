@@ -94,7 +94,7 @@ Public Class Form1
             prochdmi.WaitForExit()
             'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
             removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID9000*" & Chr(34)
+            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000*" & Chr(34)
             removehdmidriver.UseShellExecute = False
             removehdmidriver.CreateNoWindow = True
             removehdmidriver.RedirectStandardOutput = True
