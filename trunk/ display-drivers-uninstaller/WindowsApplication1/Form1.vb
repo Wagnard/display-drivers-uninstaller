@@ -92,7 +92,15 @@ Public Class Form1
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
-
+            'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
+            removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955*" & Chr(34)
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
+            removehdmidriver.RedirectStandardOutput = True
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
 
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Audio/hdmi Complete" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
