@@ -94,7 +94,7 @@ Public Class Form1
             prochdmi.WaitForExit()
             'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
             removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955*" & Chr(34)
+            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID9000*" & Chr(34)
             removehdmidriver.UseShellExecute = False
             removehdmidriver.CreateNoWindow = True
             removehdmidriver.RedirectStandardOutput = True
@@ -1128,56 +1128,68 @@ Public Class Form1
             If ComboBox1.Text = "NVIDIA" Then
 
                 'STOP NVIDIA service
-                Dim stopservice As New ProcessStartInfo
-                stopservice.FileName = "cmd.exe"
-                stopservice.Arguments = " /C" & "sc stop nvsvc"
-                stopservice.UseShellExecute = False
-                stopservice.CreateNoWindow = True
-                stopservice.RedirectStandardOutput = True
+            Dim stopservice As New ProcessStartInfo
+            stopservice.FileName = "cmd.exe"
+            stopservice.Arguments = " /C" & "sc stop nvsvc"
+            stopservice.UseShellExecute = False
+            stopservice.CreateNoWindow = True
+            stopservice.RedirectStandardOutput = True
 
-                Dim processstopservice As New Process
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
+            Dim processstopservice As New Process
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
 
-                System.Threading.Thread.Sleep(50)
+            System.Threading.Thread.Sleep(50)
 
-                stopservice.Arguments = " /C" & "sc stop nvUpdatusService"
+            stopservice.Arguments = " /C" & "sc stop nvUpdatusService"
 
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
 
-                stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "Stereo Service" & Chr(34)
+            stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "Stereo Service" & Chr(34)
 
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+
+            stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "NvStreamSvc" & Chr(34)
+
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
 
                 System.Threading.Thread.Sleep(50)
 
                 'Delete NVIDIA service
 
-                stopservice.Arguments = " /C" & "sc delete nvsvc"
+            stopservice.Arguments = " /C" & "sc delete nvsvc"
 
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-
-
-                stopservice.Arguments = " /C" & "sc delete nvUpdatusService"
-
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
 
 
+            stopservice.Arguments = " /C" & "sc delete nvUpdatusService"
 
-                stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "Stereo Service" & Chr(34)
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
 
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
+
+
+            stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "Stereo Service" & Chr(34)
+
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+
+            stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "NvStreamSvc" & Chr(34)
+
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
 
 
                 'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
