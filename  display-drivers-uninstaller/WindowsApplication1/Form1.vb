@@ -19,6 +19,7 @@ Public Class Form1
 
             End If
             TextBox1.Text = ("DDU Version " + Label6.Text + vbNewLine)
+            log("DDU Version " + Label6.Text)
             log("OS : " + Label2.Text)
             log("Architecture: " & Label3.Text)
 
