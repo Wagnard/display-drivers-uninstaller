@@ -1413,7 +1413,52 @@ Public Class Form1
                 Dim wantedvalue As String = Nothing
                 Dim subregkey As RegistryKey
 
-                regkey = My.Computer.Registry.ClassesRoot
+            'Deleting COM object
+
+
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
+                       Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Then
+
+                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID\" + child, True)
+                        wantedvalue = subregkey.GetValue("AppID")
+                        regkey.DeleteSubKeyTree(child)
+                        Try
+                            regkey.DeleteSubKeyTree(wantedvalue)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                    count += 1
+                Next
+            End If
+            count = 0
+
+            regkey = My.Computer.Registry.ClassesRoot
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
+                       Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
+                       child.Contains("NvCpl") Or child.Contains("NVIDIA.Installer") Then
+
+                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child + "\CLSID", False)
+                        wantedvalue = subregkey.GetValue("")
+                        Try
+                            My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
+                        Catch ex As Exception
+                        End Try
+                        regkey.DeleteSubKeyTree(child)
+                    End If
+                    count += 1
+                Next
+            End If
+            count = 0
+            'end of deleting dcom stuff
+            regkey = My.Computer.Registry.ClassesRoot
                 If regkey IsNot Nothing Then
                     For Each child As String In My.Computer.Registry.ClassesRoot.GetSubKeyNames()
 
