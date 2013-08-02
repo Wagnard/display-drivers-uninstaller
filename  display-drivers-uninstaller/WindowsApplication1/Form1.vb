@@ -74,6 +74,7 @@ Public Class Form1
                 proc.StartInfo = removedisplaydriver
                 proc.Start()
                 proc.WaitForExit()
+                System.Threading.Thread.Sleep(500)  '500 millisecond stall (0.05 Seconds)
             Catch ex As Exception
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
@@ -93,6 +94,7 @@ Public Class Form1
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(500)  '50 millisecond stall (0.05 Seconds)
             'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
             removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000*" & Chr(34)
@@ -102,7 +104,7 @@ Public Class Form1
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
-
+            System.Threading.Thread.Sleep(500)  '500 millisecond stall (0.05 Seconds)
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Audio/hdmi Complete" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
@@ -127,8 +129,9 @@ Public Class Form1
             proc2.Start()
             Dim Reply As String = proc2.StandardOutput.ReadToEnd
             proc2.WaitForExit()
-
-
+            System.Threading.Thread.Sleep(500)  '500 millisecond stall (0.05 Seconds)
+            log("DEVCON DP_ENUM RESULT BELOW")
+            log(Reply)
             'Preparing to read output.
 
             Dim position As Integer
