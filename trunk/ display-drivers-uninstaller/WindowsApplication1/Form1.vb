@@ -5,13 +5,8 @@ Imports System.Security.AccessControl
 Imports System.Threading
 
 Public Class Form1
-    Dim t As Thread
-    
+
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        t = New Thread(AddressOf Me.BackgroundProcess)
-        t.Start()
-    End Sub
-    Private Sub BackgroundProcess()
         If Button1.Text = "Done." Then
             Close()
             Exit Sub
@@ -19,6 +14,7 @@ Public Class Form1
             If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
                 My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
             End If
+
             If CheckBox2.Checked = True Then
                 Module1.location = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
 
@@ -100,9 +96,9 @@ Public Class Form1
             prochdmi.Start()
             prochdmi.WaitForExit()
             System.Threading.Thread.Sleep(500)  '500 millisecond stall (0.05 Seconds)
-            'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
+            'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM) and 3d vision drivers
             removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000*" & Chr(34)
+            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955*" & Chr(34)
             removehdmidriver.UseShellExecute = False
             removehdmidriver.CreateNoWindow = True
             removehdmidriver.RedirectStandardOutput = True
