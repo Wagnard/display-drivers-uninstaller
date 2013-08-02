@@ -1473,7 +1473,8 @@ Public Class Form1
                 For Each child As String In regkey.GetSubKeyNames()
 
                     If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
-                       Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Then
+                       Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
+                       child.Contains("Nv3DV") Or child.Contains("NvXD") Then
 
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID\" + child, True)
                         wantedvalue = subregkey.GetValue("AppID")
@@ -1488,18 +1489,20 @@ Public Class Form1
             End If
             count = 0
 
-            regkey = My.Computer.Registry.ClassesRoot
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\AppID", True)
+
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
 
                     If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
                        Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
-                       child.Contains("NvCpl") Or child.Contains("NVIDIA.Installer") Then
+                       child.Contains("Nv3DV") Or child.Contains("NvXD") Then
 
-                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child + "\CLSID", False)
-                        wantedvalue = subregkey.GetValue("")
+                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\AppID\" + child, False)
+                        wantedvalue = subregkey.GetValue("AppID")
+
                         Try
-                            My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
+                            regkey.DeleteSubKeyTree(wantedvalue)
                         Catch ex As Exception
                         End Try
                         regkey.DeleteSubKeyTree(child)
@@ -1508,6 +1511,100 @@ Public Class Form1
                 Next
             End If
             count = 0
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\AppID", True)
+
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+
+                        If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
+                           Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
+                           child.Contains("Nv3DV") Or child.Contains("NvXD") Then
+
+                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\AppID\" + child, False)
+                            wantedvalue = subregkey.GetValue("AppID")
+
+                            Try
+                                regkey.DeleteSubKeyTree(wantedvalue)
+                            Catch ex As Exception
+                            End Try
+                            regkey.DeleteSubKeyTree(child)
+                        End If
+                        count += 1
+                    Next
+                End If
+                count = 0
+            End If
+
+            regkey = My.Computer.Registry.ClassesRoot
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
+                       Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
+                       child.Contains("NvCpl") Or child.Contains("NVIDIA.Installer") Or _
+                       child.Contains("Nv3DV") Or child.Contains("NvXD") Then
+
+                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child + "\CLSID", False)
+                        wantedvalue = subregkey.GetValue("")
+                        Try
+                            My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
+                        Catch ex As Exception
+                        End Try
+
+                        regkey.DeleteSubKeyTree(child)
+                    End If
+                    count += 1
+                Next
+            End If
+            count = 0
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes", True)
+
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+
+                    If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
+                       Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
+                       child.Contains("Nv3DV") Or child.Contains("NvXD") Then
+
+                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\" + child + "\CLSID", False)
+                        wantedvalue = subregkey.GetValue("")
+
+                        Try
+                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\CLSID", True).DeleteSubKeyTree(wantedvalue)
+                        Catch ex As Exception
+                        End Try
+                        regkey.DeleteSubKeyTree(child)
+                    End If
+                    count += 1
+                Next
+            End If
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes", True)
+
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+
+                        If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
+                           Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
+                           child.Contains("Nv3DV") Or child.Contains("NvXD") Then
+
+                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\" + child + "\CLSID", False)
+                            wantedvalue = subregkey.GetValue("")
+
+                            Try
+                                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\CLSID", True).DeleteSubKeyTree(wantedvalue)
+                            Catch ex As Exception
+                            End Try
+                            regkey.DeleteSubKeyTree(child)
+                        End If
+                        count += 1
+                    Next
+                End If
+            End If
             'end of deleting dcom stuff
             regkey = My.Computer.Registry.ClassesRoot
             If regkey IsNot Nothing Then
@@ -1543,7 +1640,8 @@ Public Class Form1
                 For Each child As String In regkey.GetSubKeyNames()
 
                     If child.Contains("NvCpl") Or child.Contains("NVIDIA") Or child.Contains("Nvvsvc") _
-                       Or child.Contains("NVXD") Or child.Contains("NvXD") Or child.Contains("AGEIA") Then
+                       Or child.Contains("NVXD") Or child.Contains("NvXD") Or child.Contains("AGEIA") Or _
+                       child.Contains("Nv3DV") Then
 
                         regkey.DeleteSubKeyTree(child)
                     End If
