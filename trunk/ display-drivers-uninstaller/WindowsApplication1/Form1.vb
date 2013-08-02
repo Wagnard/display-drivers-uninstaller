@@ -2,11 +2,16 @@
 Imports Microsoft.Win32
 Imports System.IO
 Imports System.Security.AccessControl
+Imports System.Threading
 
 Public Class Form1
-
+    Dim t As Thread
+    
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
+        t = New Thread(AddressOf Me.BackgroundProcess)
+        t.Start()
+    End Sub
+    Private Sub BackgroundProcess()
         If Button1.Text = "Done." Then
             Close()
             Exit Sub
@@ -94,7 +99,7 @@ Public Class Form1
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
-            System.Threading.Thread.Sleep(500)  '50 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(500)  '500 millisecond stall (0.05 Seconds)
             'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
             removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000*" & Chr(34)
@@ -182,7 +187,7 @@ Public Class Form1
                 GoTo 5
             End If
 
-            End If
+        End If
 10:
         TextBox1.Text = TextBox1.Text + "Driver Store cleanUP complete." + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
@@ -194,127 +199,127 @@ Public Class Form1
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Cleaning Process/Services...")
-            'Delete left over files.
+        'Delete left over files.
 
-            If ComboBox1.Text = "AMD" Then
+        If ComboBox1.Text = "AMD" Then
 
-                'STOP AMD service
-                Dim stopservice As New ProcessStartInfo
-                stopservice.FileName = "cmd.exe"
-                stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "AMD External Events Utility" & Chr(34)
-                stopservice.UseShellExecute = False
-                stopservice.CreateNoWindow = True
-                stopservice.RedirectStandardOutput = True
+            'STOP AMD service
+            Dim stopservice As New ProcessStartInfo
+            stopservice.FileName = "cmd.exe"
+            stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "AMD External Events Utility" & Chr(34)
+            stopservice.UseShellExecute = False
+            stopservice.CreateNoWindow = True
+            stopservice.RedirectStandardOutput = True
 
-                Dim processstopservice As New Process
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
+            Dim processstopservice As New Process
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
 
-                System.Threading.Thread.Sleep(100)
+            System.Threading.Thread.Sleep(100)
 
-                'Delete AMD service
-                stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "AMD External Events Utility" & Chr(34)
+            'Delete AMD service
+            stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "AMD External Events Utility" & Chr(34)
 
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-
-
-
-                'kill process CCC.exe / MOM.exe /Clistart.exe HydraDM/HydraDM64(if it exist)
-
-                Dim killpid As New ProcessStartInfo
-                killpid.FileName = "cmd.exe"
-                killpid.Arguments = " /C" & "taskkill /f /im CLIStart.exe"
-                killpid.UseShellExecute = False
-                killpid.CreateNoWindow = True
-                killpid.RedirectStandardOutput = True
-
-                Dim processkillpid As New Process
-                processkillpid.StartInfo = killpid
-                processkillpid.Start()
-                processkillpid.WaitForExit()
-
-                Dim appproc = Process.GetProcessesByName("MOM")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
-
-                appproc = Process.GetProcessesByName("CLI")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
-
-                appproc = Process.GetProcessesByName("CCC")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
-
-                appproc = Process.GetProcessesByName("HydraDM")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
-
-                appproc = Process.GetProcessesByName("HydraDM64")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
-
-                appproc = Process.GetProcessesByName("HydraGrd")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
-
-                appproc = Process.GetProcessesByName("Grid64")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
-
-                appproc = Process.GetProcessesByName("HydraMD64")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
-
-                appproc = Process.GetProcessesByName("HydraMD")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
 
 
-                TextBox1.Text = TextBox1.Text + "Killing Explorer.exe" + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
 
-                appproc = Process.GetProcessesByName("explorer")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
+            'kill process CCC.exe / MOM.exe /Clistart.exe HydraDM/HydraDM64(if it exist)
 
-                appproc = Process.GetProcessesByName("ThumbnailExtractionHost")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
+            Dim killpid As New ProcessStartInfo
+            killpid.FileName = "cmd.exe"
+            killpid.Arguments = " /C" & "taskkill /f /im CLIStart.exe"
+            killpid.UseShellExecute = False
+            killpid.CreateNoWindow = True
+            killpid.RedirectStandardOutput = True
 
-                appproc = Process.GetProcessesByName("jusched")
-                For i As Integer = 0 To appproc.Count - 1
-                    appproc(i).Kill()
-                Next i
+            Dim processkillpid As New Process
+            processkillpid.StartInfo = killpid
+            processkillpid.Start()
+            processkillpid.WaitForExit()
 
-                System.Threading.Thread.Sleep(50)
-                'Delete AMD data Folders
-                TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
+            Dim appproc = Process.GetProcessesByName("MOM")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("CLI")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("CCC")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("HydraDM")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("HydraDM64")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("HydraGrd")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("Grid64")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("HydraMD64")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("HydraMD")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+
+            TextBox1.Text = TextBox1.Text + "Killing Explorer.exe" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
+
+            appproc = Process.GetProcessesByName("explorer")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("ThumbnailExtractionHost")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("jusched")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            System.Threading.Thread.Sleep(50)
+            'Delete AMD data Folders
+            TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Cleaning Directory")
-                Dim filePath As String
+            Dim filePath As String
 
-                If CheckBox1.Checked = True Then
-                    Try
-                        TestDelete("C:\AMD")
-                    Catch ex As Exception
-                    End Try
-                    filePath = "C:\AMD"
+            If CheckBox1.Checked = True Then
+                Try
+                    TestDelete("C:\AMD")
+                Catch ex As Exception
+                End Try
+                filePath = "C:\AMD"
 
                 Try
                     My.Computer.FileSystem.DeleteDirectory _
@@ -326,21 +331,9 @@ Public Class Form1
                     log(ex.Message)
                 End Try
 
-                End If
+            End If
 
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\ATI"
-
-            Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                log(ex.Message)
-            End Try
-
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\ATI"
+            filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\ATI"
 
             Try
                 My.Computer.FileSystem.DeleteDirectory _
@@ -352,8 +345,8 @@ Public Class Form1
                 log(ex.Message)
             End Try
 
-                filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + "\ATI"
+            filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\ATI"
+
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -364,8 +357,20 @@ Public Class Form1
                 log(ex.Message)
             End Try
 
-                filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo\resources"
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + "\ATI"
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message)
+            End Try
+
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo\resources"
             Try
                 Dim attribute As System.IO.FileAttributes = FileAttributes.Normal
                 File.SetAttributes(filePath + "\AMD_SV_bar_middle.png", attribute)
@@ -376,8 +381,8 @@ Public Class Form1
                 log(ex.Message)
             End Try
 
-                filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo"
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -389,8 +394,8 @@ Public Class Form1
             End Try
 
 
-                filePath = Environment.GetFolderPath _
-                   (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
+            filePath = Environment.GetFolderPath _
+               (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -401,9 +406,9 @@ Public Class Form1
                 log(ex.Message)
             End Try
 
-                'Not sure if this work on XP
+            'Not sure if this work on XP
 
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\ATI"
+            filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\ATI"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -414,7 +419,7 @@ Public Class Form1
                 log(ex.Message)
             End Try
 
-                filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\AMD"
+            filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\AMD"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -425,8 +430,8 @@ Public Class Form1
                 log(ex.Message)
             End Try
 
-                filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies\Multimedia"
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies\Multimedia"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -470,7 +475,7 @@ Public Class Form1
                 TextBox1.ScrollToCaret()
                 log(ex.Message)
             End Try
-                If IntPtr.Size = 8 Then
+            If IntPtr.Size = 8 Then
 
                 filePath = Environment.GetEnvironmentVariable("windir")
                 Try
@@ -518,8 +523,8 @@ Public Class Form1
                     log(ex.Message)
                 End Try
 
-                    filePath = Environment.GetFolderPath _
-                       (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
+                filePath = Environment.GetFolderPath _
+                   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
 
                 Try
                     My.Computer.FileSystem.DeleteDirectory _
@@ -531,8 +536,8 @@ Public Class Form1
                     log(ex.Message)
                 End Try
 
-                    filePath = Environment.GetFolderPath _
-                       (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
+                filePath = Environment.GetFolderPath _
+                   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
 
                 Try
                     My.Computer.FileSystem.DeleteDirectory _
@@ -544,38 +549,38 @@ Public Class Form1
                     log(ex.Message)
                 End Try
 
-                    filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo\resources"
-                    Try
-                        Dim attribute As System.IO.FileAttributes = FileAttributes.Normal
-                        File.SetAttributes(filePath + "\AMD_SV_bar_middle.png", attribute)
-                    Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
+                filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo\resources"
+                Try
+                    Dim attribute As System.IO.FileAttributes = FileAttributes.Normal
+                    File.SetAttributes(filePath + "\AMD_SV_bar_middle.png", attribute)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
                     log(ex.Message)
-                    End Try
+                End Try
 
-                    filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
+                filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
                     log(ex.Message)
-                    End Try
+                End Try
 
 
-                End If
+            End If
 
             TextBox1.Text = TextBox1.Text + "Cleaning known Regkeys..." + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Cleaning known Regkeys")
-                'Delete AMD regkey
+            'Delete AMD regkey
             Dim count As Int32 = 0
             Dim subregkey As RegistryKey = Nothing
             Dim wantedvalue As String = Nothing
@@ -1804,16 +1809,16 @@ Public Class Form1
 
         log("Finished.")
     End Sub
-
+    
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        
+
         If My.Settings.logbox = "" Or My.Settings.logbox = "dontlog" Then
             CheckBox2.Checked = False
         Else
             CheckBox2.Checked = True
         End If
-        
+
 
         Dim version As String
         Dim arch As Boolean
@@ -1947,7 +1952,7 @@ Public Class Form1
 
     End Sub
 
-    
+
     Private Sub TraverseDirectory(ByVal di As DirectoryInfo)
 
         'If the current directory has more child directories, then continure
