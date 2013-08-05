@@ -107,6 +107,11 @@ Public Class Form1
             prochdmi.Start()
             prochdmi.WaitForExit()
             System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
+            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000" & Chr(34)
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Audio/hdmi Complete" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
