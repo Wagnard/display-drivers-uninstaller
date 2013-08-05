@@ -1601,6 +1601,34 @@ Public Class Form1
                 End If
             End If
             'end of deleting dcom stuff
+
+            count = 0
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetValueNames()
+                    If child.Contains("NVIDIA Corporation\") Then
+                        If regkey IsNot Nothing Then
+                            Try
+                                regkey.DeleteValue(child)
+                            Catch ex As Exception
+                                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                                TextBox1.Select(TextBox1.Text.Length, 0)
+                                TextBox1.ScrollToCaret()
+                                log(ex.Message + " HKLM..CU\Installer\Folders")
+                            End Try
+                        End If
+
+                    End If
+                Next
+            End If
+            count = 0
+
+
+
+
+
             regkey = My.Computer.Registry.ClassesRoot
             If regkey IsNot Nothing Then
                 For Each child As String In My.Computer.Registry.ClassesRoot.GetSubKeyNames()
@@ -1674,7 +1702,8 @@ Public Class Form1
                     If subregkey IsNot Nothing Then
                         wantedvalue = subregkey.GetValue("DisplayName")
                         If wantedvalue IsNot Nothing Then
-                            If wantedvalue.Contains("NVIDIA") Then
+                            If wantedvalue.Contains("NVIDIA") Or _
+                            wantedvalue.Contains("SHIELD Streaming") Then
 
                                 regkey.DeleteSubKeyTree(child)
 
@@ -1696,7 +1725,8 @@ Public Class Form1
 
                     wantedvalue = subregkey.GetValue("DisplayName")
                     If wantedvalue IsNot Nothing Then
-                        If wantedvalue.Contains("NVIDIA") Then
+                        If wantedvalue.Contains("NVIDIA") Or _
+                            wantedvalue.Contains("SHIELD Streaming") Then
                             regkey.DeleteSubKeyTree(child)
 
                         End If
