@@ -1293,10 +1293,10 @@ Public Class Form1
                 TextBox1.ScrollToCaret()
             End Try
 
-            TextBox1.Text = TextBox1.Text + "Cleaning Diectory" + vbNewLine
+            TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
-            log("Cleaning Diectory")
+            log("Cleaning Directory")
             Dim filePath As String
 
             If CheckBox1.Checked = True Then
@@ -2114,14 +2114,14 @@ Public Class Form1
         '    My.Computer.FileSystem.DeleteFile(Module1.location)
         '    Cleanup(Application.StartupPath & "\Logs", 2) 'Deletes all older logs, instead only the most recent one.
         'End If
-        Try
-            My.Computer.FileSystem.DeleteDirectory(Application.StartupPath & "\x64", FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-        End Try
-        Try
-            My.Computer.FileSystem.DeleteDirectory(Application.StartupPath & "\x86", FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-        End Try
+        'Try
+        '    My.Computer.FileSystem.DeleteDirectory(Application.StartupPath & "\x64", FileIO.DeleteDirectoryOption.DeleteAllContents)
+        'Catch ex As Exception
+        'End Try
+        'Try
+        '    My.Computer.FileSystem.DeleteDirectory(Application.StartupPath & "\x86", FileIO.DeleteDirectoryOption.DeleteAllContents)
+        'Catch ex As Exception
+        'End Try
     End Sub
     Private Sub Cleanup(ByVal directory As String, ByVal KeepDur As Integer)
         'Code taken from my CoDUO FoV Changer program, thus why it uses a keepdur, it's supposed to delete logs older than whatever days. I set it to 2 seconds instead of modifying the code. Lol
