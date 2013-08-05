@@ -144,7 +144,7 @@ Partial Class Form1
         Me.Label8.ForeColor = System.Drawing.Color.Red
         Me.Label8.Location = New System.Drawing.Point(12, 135)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(567, 26)
+        Me.Label8.Size = New System.Drawing.Size(595, 26)
         Me.Label8.TabIndex = 11
         Me.Label8.Text = resources.GetString("Label8.Text")
         '
@@ -172,7 +172,7 @@ Partial Class Form1
         '
         Me.MenuStrip1.Dock = System.Windows.Forms.DockStyle.Right
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
-        Me.MenuStrip1.Location = New System.Drawing.Point(564, 0)
+        Me.MenuStrip1.Location = New System.Drawing.Point(582, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(30, 348)
         Me.MenuStrip1.TabIndex = 14
@@ -195,7 +195,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(594, 348)
+        Me.ClientSize = New System.Drawing.Size(612, 348)
         Me.Controls.Add(Me.CheckBox2)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.Label8)
