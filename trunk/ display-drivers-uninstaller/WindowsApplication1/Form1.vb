@@ -1316,7 +1316,17 @@ Public Class Form1
                     End Try
                     System.Threading.Thread.Sleep(50) 'just to be sure files are not holded anymore.
 
-                    'Yes we do it 2 time. This will workaround a problem on I think is (sybolic/hard link)
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                    (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        TextBox1.Select(TextBox1.Text.Length, 0)
+                        TextBox1.ScrollToCaret()
+                        log(ex.Message + " Updatus directory delete")
+                    End Try
+                    System.Threading.Thread.Sleep(50) 'just to be sure files are not holded anymore.
+                    'Yes we do it 2 time. This will workaround a problem on junction/sybolic/hard link
                     Try
                         TestDelete(child)
                     Catch ex As Exception
@@ -1325,7 +1335,15 @@ Public Class Form1
                         TextBox1.ScrollToCaret()
                         log(ex.Message + " UpdatusUsers second pass")
                     End Try
-                   
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                    (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        TextBox1.Select(TextBox1.Text.Length, 0)
+                        TextBox1.ScrollToCaret()
+                        log(ex.Message + " Updatus directory delete")
+                    End Try
                 End If
             Next
 
