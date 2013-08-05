@@ -59,23 +59,19 @@ Public Class Form1
             removedisplaydriver.Arguments = "remove =display " & Chr(34) & vendid & Chr(34)
             removedisplaydriver.UseShellExecute = False
             removedisplaydriver.CreateNoWindow = True
-            removedisplaydriver.RedirectStandardOutput = True
 
             removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & vendid & Chr(34)
             removehdmidriver.UseShellExecute = False
             removehdmidriver.CreateNoWindow = True
-            removehdmidriver.RedirectStandardOutput = True
+
 
 
             'creation dun process fantome pour le wait on exit.
-
+            proc.StartInfo = removedisplaydriver
             Try
-
-                proc.StartInfo = removedisplaydriver
                 proc.Start()
-                proc.WaitForExit()
-                System.Threading.Thread.Sleep(500)  '500 millisecond stall (0.05 Seconds)
+                
             Catch ex As Exception
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
@@ -86,6 +82,8 @@ Public Class Form1
                 Button1.Enabled = True
                 Exit Sub
             End Try
+            proc.WaitForExit()
+            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
 
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Display Complete" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
@@ -95,17 +93,20 @@ Public Class Form1
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
-            System.Threading.Thread.Sleep(500)  '500 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
             'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM) and 3d vision drivers
-            removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955*" & Chr(34)
-            removehdmidriver.UseShellExecute = False
-            removehdmidriver.CreateNoWindow = True
-            removehdmidriver.RedirectStandardOutput = True
+
+            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
+
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
-            System.Threading.Thread.Sleep(500)  '500 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
+            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_0007" & Chr(34)
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Audio/hdmi Complete" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
@@ -1520,11 +1521,12 @@ Public Class Form1
 
                             subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\AppID\" + child, False)
                             wantedvalue = subregkey.GetValue("AppID")
-
-                            Try
-                                regkey.DeleteSubKeyTree(wantedvalue)
-                            Catch ex As Exception
-                            End Try
+                            If wantedvalue IsNot Nothing Then
+                                Try
+                                    regkey.DeleteSubKeyTree(wantedvalue)
+                                Catch ex As Exception
+                                End Try
+                            End If
                             regkey.DeleteSubKeyTree(child)
                         End If
                         count += 1
@@ -1544,11 +1546,12 @@ Public Class Form1
 
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child + "\CLSID", False)
                         wantedvalue = subregkey.GetValue("")
-                        Try
-                            My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
-                        Catch ex As Exception
-                        End Try
-
+                        If wantedvalue IsNot Nothing Then
+                            Try
+                                My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
+                            Catch ex As Exception
+                            End Try
+                        End If
                         regkey.DeleteSubKeyTree(child)
                     End If
                     count += 1
@@ -1567,11 +1570,12 @@ Public Class Form1
 
                         subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\" + child + "\CLSID", False)
                         wantedvalue = subregkey.GetValue("")
-
-                        Try
-                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\CLSID", True).DeleteSubKeyTree(wantedvalue)
-                        Catch ex As Exception
-                        End Try
+                        If wantedvalue IsNot Nothing Then
+                            Try
+                                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\CLSID", True).DeleteSubKeyTree(wantedvalue)
+                            Catch ex As Exception
+                            End Try
+                        End If
                         regkey.DeleteSubKeyTree(child)
                     End If
                     count += 1
@@ -1590,11 +1594,12 @@ Public Class Form1
 
                             subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\" + child + "\CLSID", False)
                             wantedvalue = subregkey.GetValue("")
-
-                            Try
-                                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\CLSID", True).DeleteSubKeyTree(wantedvalue)
-                            Catch ex As Exception
-                            End Try
+                            If wantedvalue IsNot Nothing Then
+                                Try
+                                    My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\CLSID", True).DeleteSubKeyTree(wantedvalue)
+                                Catch ex As Exception
+                                End Try
+                            End If
                             regkey.DeleteSubKeyTree(child)
                         End If
                         count += 1
