@@ -287,7 +287,7 @@ Public Class Form1
             TextBox1.Text = TextBox1.Text + "Killing Explorer.exe" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
-
+            log("Killing Explorer.exe")
             appproc = Process.GetProcessesByName("explorer")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
@@ -367,22 +367,9 @@ Public Class Form1
             End Try
 
             filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo\resources"
-            Try
-                Dim attribute As System.IO.FileAttributes = FileAttributes.Normal
-                File.SetAttributes(filePath + "\AMD_SV_bar_middle.png", attribute)
-            Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                log(ex.Message)
-            End Try
-
-            filePath = Environment.GetFolderPath _
                 (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo"
             Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                TestDelete(filePath)
             Catch ex As Exception
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
@@ -547,27 +534,14 @@ Public Class Form1
                 End Try
 
                 filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo\resources"
-                Try
-                    Dim attribute As System.IO.FileAttributes = FileAttributes.Normal
-                    File.SetAttributes(filePath + "\AMD_SV_bar_middle.png", attribute)
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
-                End Try
-
-                filePath = Environment.GetFolderPath _
                 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
                 Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    TestDelete(filePath)
                 Catch ex As Exception
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
-                    log(ex.Message)
+                    log(ex.Message + "SteadyVideo testdelete")
                 End Try
 
 
@@ -662,7 +636,7 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
-                    log(ex.Message)
+                    log(ex.Message + " HydraVisionDesktopManager")
                 End Try
 
                 Try
@@ -671,7 +645,7 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
-                    log(ex.Message)
+                    log(ex.Message + " GRID")
                 End Try
 
                 Try
@@ -680,7 +654,7 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
-                    log(ex.Message)
+                    log(ex.Message + " HydraVisionMDEngine")
                 End Try
 
             End If
@@ -870,7 +844,7 @@ Public Class Form1
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
                         TextBox1.ScrollToCaret()
-                        log(ex.Message)
+                        log(ex.Message + " StartCCC")
                     End Try
                     Try
 
@@ -880,7 +854,7 @@ Public Class Form1
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
                         TextBox1.ScrollToCaret()
-                        log(ex.Message)
+                        log(ex.Message + " AMD AVT")
                     End Try
                 End If
             End If
@@ -1006,6 +980,7 @@ Public Class Form1
                                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                                 TextBox1.Select(TextBox1.Text.Length, 0)
                                 TextBox1.ScrollToCaret()
+                                log(ex.Message + " SharedDLLS")
                             End Try
                         End If
 
@@ -1032,6 +1007,7 @@ Public Class Form1
                                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                                 TextBox1.Select(TextBox1.Text.Length, 0)
                                 TextBox1.ScrollToCaret()
+                                log(ex.Message + " HKLM..CU\Installer\Folders")
                             End Try
                         End If
 
@@ -1272,6 +1248,7 @@ Public Class Form1
             TextBox1.Text = TextBox1.Text + "Killing Explorer.exe" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
+            log("Killing Explorer")
 
             appproc = Process.GetProcessesByName("explorer")
             For i As Integer = 0 To appproc.Count - 1
@@ -1292,6 +1269,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message + " UpdatusUser")
             End Try
 
             TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine
@@ -1315,6 +1293,7 @@ Public Class Form1
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
                         TextBox1.ScrollToCaret()
+                        log(ex.Message)
                     End Try
 
                 End If
@@ -1333,17 +1312,10 @@ Public Class Form1
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
                         TextBox1.ScrollToCaret()
+                        log(ex.Message + " UpdatusUser")
                     End Try
                     System.Threading.Thread.Sleep(50) 'just to be sure files are not holded anymore.
 
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
-                    End Try
                     'Yes we do it 2 time. This will workaround a problem on I think is (sybolic/hard link)
                     Try
                         TestDelete(child)
@@ -1351,17 +1323,9 @@ Public Class Form1
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
                         TextBox1.ScrollToCaret()
+                        log(ex.Message + " UpdatusUsers second pass")
                     End Try
-                    System.Threading.Thread.Sleep(50) 'just to be sure files are not holded anymore.
-
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
-                    End Try
+                   
                 End If
             Next
 
@@ -1377,6 +1341,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message)
             End Try
 
             filePath = Environment.GetFolderPath _
@@ -1389,6 +1354,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message)
             End Try
 
             filePath = Environment.GetFolderPath _
@@ -1400,6 +1366,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message)
             End Try
 
             filePath = Environment.GetFolderPath _
@@ -1411,6 +1378,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message)
             End Try
 
             If IntPtr.Size = 8 Then
@@ -1423,6 +1391,7 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
+                    log(ex.Message)
                 End Try
 
             End If
@@ -1438,6 +1407,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message)
             End Try
 
             filePath = Environment.GetFolderPath _
@@ -1449,6 +1419,7 @@ Public Class Form1
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
                 TextBox1.ScrollToCaret()
+                log(ex.Message)
             End Try
 
             'Delete NVIDIA regkey
@@ -1762,6 +1733,7 @@ Public Class Form1
                     TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                     TextBox1.Select(TextBox1.Text.Length, 0)
                     TextBox1.ScrollToCaret()
+                    log(ex.Message + " Nvtmru")
                 End Try
             End If
 
@@ -1775,6 +1747,7 @@ Public Class Form1
                         TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                         TextBox1.Select(TextBox1.Text.Length, 0)
                         TextBox1.ScrollToCaret()
+                        log(ex.Message + " StereoLinksInstall")
                     End Try
                 End If
             End If
