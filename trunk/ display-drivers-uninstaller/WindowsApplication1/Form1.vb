@@ -1,4 +1,4 @@
-﻿Imports System.DirectoryServices
+Imports System.DirectoryServices
 Imports Microsoft.Win32
 Imports System.IO
 Imports System.Security.AccessControl
@@ -1608,7 +1608,7 @@ Public Class Form1
                     ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
-                    If child.Contains("NVIDIA Corporation\") Then
+                    If child.Contains("NVIDIA Corporation\") or child.Contains("AGEIA Technologies\") Then
                         If regkey IsNot Nothing Then
                             Try
                                 regkey.DeleteValue(child)
