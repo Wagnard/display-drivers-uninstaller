@@ -1,10 +1,17 @@
-Imports System.DirectoryServices
+﻿Imports System.DirectoryServices
 Imports Microsoft.Win32
 Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Threading
 
 Public Class Form1
+
+    Dim removedisplaydriver As New ProcessStartInfo
+    Dim removehdmidriver As New ProcessStartInfo
+    Dim vendid As String = ""
+    Dim provider As String = ""
+    Dim proc As New Process
+    Dim prochdmi As New Process
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         If Button1.Text = "Done." Then
@@ -30,12 +37,6 @@ Public Class Form1
             Button1.Enabled = False
             CheckBox2.Enabled = False
             Button1.Text = "Uninstalling..."
-
-            Dim removedisplaydriver As New ProcessStartInfo
-            Dim removehdmidriver As New ProcessStartInfo
-            Dim vendid As String = ""
-            Dim provider As String = ""
-            Dim proc As New Process
 
             If ComboBox1.Text = "AMD" Then
                 vendid = "@*ven_1002*"
@@ -83,17 +84,16 @@ Public Class Form1
                 Exit Sub
             End Try
             proc.WaitForExit()
-            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
 
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Display Complete" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("DEVCON Remove Display Complete")
-            Dim prochdmi As New Process
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
-            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM) and 3d vision drivers
 
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
@@ -101,17 +101,17 @@ Public Class Form1
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
-            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_0007" & Chr(34)
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
-            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000" & Chr(34)
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
-            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             TextBox1.Text = TextBox1.Text + "DEVCON Remove Audio/hdmi Complete" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
@@ -136,7 +136,7 @@ Public Class Form1
             proc2.Start()
             Dim Reply As String = proc2.StandardOutput.ReadToEnd
             proc2.WaitForExit()
-            System.Threading.Thread.Sleep(500)  '500 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
             log("DEVCON DP_ENUM RESULT BELOW")
             log(Reply)
             'Preparing to read output.
@@ -1608,7 +1608,7 @@ Public Class Form1
                     ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
-                    If child.Contains("NVIDIA Corporation\") or child.Contains("AGEIA Technologies\") Then
+                    If child.Contains("NVIDIA Corporation\") Then
                         If regkey IsNot Nothing Then
                             Try
                                 regkey.DeleteValue(child)
@@ -1931,7 +1931,15 @@ Public Class Form1
 
         Button1.Enabled = True
         Button1.Text = "Done."
-
+        System.Threading.Thread.Sleep(250)  '50 millisecond stall (0.05 Seconds)
+        removehdmidriver.Arguments = "restart =display"
+        prochdmi.StartInfo = removehdmidriver
+        prochdmi.Start()
+        prochdmi.WaitForExit()
+        TextBox1.Text = TextBox1.Text + "Restarting Display adapter Complete" + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
+        log("Restarting Display adapter Complete")
         log("Finished.")
     End Sub
     

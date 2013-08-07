@@ -115,7 +115,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(29, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V3.8"
+        Me.Label6.Text = "V3.9"
         '
         'ComboBox1
         '
@@ -151,7 +151,7 @@ Partial Class Form1
         'CheckBox1
         '
         Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(323, 46)
+        Me.CheckBox1.Location = New System.Drawing.Point(343, 46)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(257, 17)
         Me.CheckBox1.TabIndex = 12
@@ -161,7 +161,7 @@ Partial Class Form1
         'CheckBox2
         '
         Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(323, 69)
+        Me.CheckBox2.Location = New System.Drawing.Point(343, 69)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(159, 17)
         Me.CheckBox2.TabIndex = 13
