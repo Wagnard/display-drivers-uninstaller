@@ -430,78 +430,178 @@ Public Class Form1
                 TextBox1.ScrollToCaret()
                 log(ex.Message)
             End Try
+            'Delete driver files
             'delete OpenCL
-            filePath = System.Environment.SystemDirectory
+            Dim driverfiles(124) As String
+            driverfiles(0) = "amdave32.dll"
+            driverfiles(1) = "amdocl32.dll"
+            driverfiles(2) = "amdh232enc32.dll"
+            driverfiles(3) = "amdhcp32.dll"
+            driverfiles(4) = "amdhdl32.dll"
+            driverfiles(5) = "amdhwdecoder_32.dll"
+            driverfiles(6) = "amdmiracast.dll"
+            driverfiles(7) = "amdpcom32.dll"
+            driverfiles(8) = "ati2edxx.dll"
+            driverfiles(9) = "ati2erec.dll"
+            driverfiles(10) = "atiadlxx.dll"
+            driverfiles(11) = "atiadlxy.dll"
+            driverfiles(12) = "atiapfxx.blb"
+            driverfiles(13) = "atiapfxx.exe"
+            driverfiles(14) = "atibtmon.exe"
+            driverfiles(15) = "aticalcl.dll"
+            driverfiles(16) = "aticaldd.dll"
+            driverfiles(17) = "aticalrt.dll"
+            driverfiles(18) = "aticfx32.dll"
+            driverfiles(19) = "aticfx32A.dll"
+            driverfiles(20) = "atidxx32.dll"
+            driverfiles(21) = "atidxx32A.dll"
+            driverfiles(22) = "atiedu32.dll"
+            driverfiles(23) = "atieslxx.exe"
+            driverfiles(24) = "atiesrxx.exe"
+            driverfiles(25) = "atigktxx.dll"
+            driverfiles(26) = "atiglpxx.dll"
+            driverfiles(27) = "atiicdxx.dat"
+            driverfiles(28) = "atimpc32.dll"
+            driverfiles(29) = "atimuixx.dll"
+            driverfiles(30) = "atioglxx.dll"
+            driverfiles(31) = "atioglxxA.dll"
+            driverfiles(32) = "atio6axxB.dll"
+            driverfiles(33) = "atiodcli.exe"
+            driverfiles(34) = "atiode.exe"
+            driverfiles(35) = "atiogl.xml"
+            driverfiles(36) = "atipblag.dat"
+            driverfiles(37) = "atipdlxx.dll"
+            driverfiles(38) = "atipdl32.dll"
+            driverfiles(39) = "atisamu32.dll"
+            driverfiles(40) = "atitmm32.dll"
+            driverfiles(41) = "atitmp32.dll"
+            driverfiles(42) = "atiu9p32.dll"
+            driverfiles(43) = "atiu9pag.dll"
+            driverfiles(44) = "atiuldx6a.cap"
+            driverfiles(45) = "atiuldx6a.dll"
+            driverfiles(46) = "atiuldxva.cap"
+            driverfiles(47) = "atiuldxva.dll"
+            driverfiles(48) = "atiumd6a.cap"
+            driverfiles(49) = "atiumd6a.dll"
+            driverfiles(50) = "atiumd6v.dll"
+            driverfiles(51) = "atiumd64.dll"
+            driverfiles(52) = "atiumd64A.dll"
+            driverfiles(53) = "atiumdag.dll"
+            driverfiles(54) = "atiumdagA.dll"
+            driverfiles(55) = "atiumdmv.dll"
+            driverfiles(56) = "atiumdva.cap"
+            driverfiles(57) = "atiumdva.dll"
+            driverfiles(58) = "atiuxp32.dll"
+            driverfiles(59) = "atiuxpag.dll"
+            driverfiles(60) = "OVDecode32.dll"
+            driverfiles(61) = "OVDecode.dll"
+            driverfiles(62) = "OpenVideo32.dll"
+            driverfiles(63) = "OpenVideo.dll"
+            driverfiles(64) = "OpenCL.dll"
+            driverfiles(65) = "amdave64.dll"
+            driverfiles(66) = "amdocl64.dll"
+            driverfiles(67) = "amdocl_ld.exe"
+            driverfiles(68) = "amdocl_as.exe"
+            driverfiles(69) = "amdocl_ld64.exe"
+            driverfiles(70) = "amdocl_as64.exe"
+            driverfiles(71) = "amdh264enc64.dll"
+            driverfiles(72) = "amdhcp64.dll"
+            driverfiles(73) = "amdhdl64.dll"
+            driverfiles(74) = "amdhwdecoder_64.dll"
+            driverfiles(75) = "amdmiracast.dll"
+            driverfiles(76) = "ati2edxx.dll"
+            driverfiles(77) = "aticaldd64.dll"
+            driverfiles(78) = "aticalrt64.dll"
+            driverfiles(79) = "aticfx64.dll"
+            driverfiles(80) = "aticfx64A.dll"
+            driverfiles(81) = "atidemgx.dll"
+            driverfiles(82) = "atidemgy.dll"
+            driverfiles(83) = "atidxx64.dll"
+            driverfiles(84) = "atidxx64A.dll"
+            driverfiles(85) = "atiedu64.dll"
+            driverfiles(86) = "atieslxx.exe"
+            driverfiles(87) = "atig6txx.dll"
+            driverfiles(88) = "atiicdxx.dat"
+            driverfiles(89) = "atimuixx.dll"
+            driverfiles(90) = "atio6axxA.dll"
+            driverfiles(91) = "atio6axxB.dll"
+            driverfiles(92) = "atisamu64.dll"
+            driverfiles(93) = "atitmm64.dll"
+            driverfiles(94) = "atitmp64.dll"
+            driverfiles(95) = "atiu9p64.dll"
+            driverfiles(96) = "atiu9pag.dll"
+            driverfiles(97) = "atiumdag.dll"
+            driverfiles(98) = "atiumdva.cap"
+            driverfiles(99) = "atiuxpag.dll"
+            driverfiles(100) = "ativvsvl.dat"
+            driverfiles(101) = "ativce02.dat"
+            driverfiles(102) = "ativvaxy_cik_nd.dat"
+            driverfiles(103) = "ativvaxy_cik.dat"
+            driverfiles(104) = "clinfo.exe"
+            driverfiles(105) = "oemdspif.dll"
+            driverfiles(106) = "SlotMaximizerAg.dll"
+            driverfiles(107) = "SlotMaximizerBe.dll"
+            driverfiles(108) = "OVDecode64.dll"
+            driverfiles(109) = "OVDecode.dll"
+            driverfiles(110) = "OpenVideo.dll"
+            driverfiles(111) = "atikmdag.sys"
+            driverfiles(112) = "atiogl.xml"
+            driverfiles(113) = "ativpsrm.bin"
+            driverfiles(114) = "atig6pxx.dll"
+            driverfiles(115) = "atio6axx.dll"
+            driverfiles(116) = "aticalcl64.dll"
+            driverfiles(117) = "atimpc64.dll"
+            driverfiles(118) = "atieclxx.exe"
+            driverfiles(119) = "atiuxp64.dll"
+            driverfiles(120) = "amdpcom64.dll"
+            driverfiles(121) = "atikmpag.sys"
+            driverfiles(122) = "ativpsrm.dll"
+            driverfiles(123) = "AtihdW86.sys"
+            For i As Integer = 0 To 123
+
+                filePath = System.Environment.SystemDirectory
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\" + driverfiles(i))
+                Catch ex As Exception
+                End Try
+
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
+                Catch ex As Exception
+                End Try
+
+                If IntPtr.Size = 8 Then
+
+                    filePath = Environment.GetEnvironmentVariable("windir")
+                    Try
+                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
+                    Catch ex As Exception
+                    End Try
+
+                    Try
+                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
+                    Catch ex As Exception
+                    End Try
+
+                End If
+            Next
+
+            filePath = Environment.GetEnvironmentVariable("windir")
             Try
-                My.Computer.FileSystem.DeleteFile(filePath + "\amdocl64.dll")
+                My.Computer.FileSystem.DeleteFile(filePath + "\atiogl.xml")
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                log(ex.Message)
             End Try
+
+            filePath = Environment.GetEnvironmentVariable("windir")
             Try
-                My.Computer.FileSystem.DeleteFile(filePath + "\amdocl_as64.exe")
+                My.Computer.FileSystem.DeleteFile(filePath + "\ativpsrm.bin")
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                log(ex.Message)
             End Try
-            Try
-                My.Computer.FileSystem.DeleteFile(filePath + "\amdocl_ld64.exe")
-            Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                log(ex.Message)
-            End Try
-            Try
-                My.Computer.FileSystem.DeleteFile(filePath + "\amdpcom64.dll")
-            Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                log(ex.Message)
-            End Try
+
             If IntPtr.Size = 8 Then
 
-                filePath = Environment.GetEnvironmentVariable("windir")
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl.dll")
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
-                End Try
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl_as32.exe")
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
-                End Try
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdocl_ld32.exe")
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
-                End Try
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\amdpcom32.dll")
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
-                End Try
-
                 filePath = Environment.GetFolderPath _
-                       (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
+                           (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
                 Try
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -1937,7 +2037,7 @@ Public Class Form1
         prochdmi.StartInfo = removehdmidriver
         prochdmi.Start()
         prochdmi.WaitForExit()
-        
+
     End Sub
     
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
