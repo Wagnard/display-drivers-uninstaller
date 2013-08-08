@@ -25,11 +25,19 @@ Public Class Form1
             Exit Sub
         ElseIf result = DialogResult.No Then
             reboot = False
-            TextBox1.Text = ("The computer won't restart after cleanUP" + vbNewLine)
+            If CheckBox2.Checked = True Then
+                Module1.location = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
+
+            End If
+            TextBox1.Text = "The computer won't restart after cleanUP" + vbNewLine
             log("The computer won't restart after cleanUP")
         ElseIf result = DialogResult.Yes Then
             reboot = True
-            TextBox1.Text = ("The computer will restart after cleanUP" + vbNewLine)
+            If CheckBox2.Checked = True Then
+                Module1.location = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
+
+            End If
+            TextBox1.Text = "The computer will restart after cleanUP" + vbNewLine
             log("Computer will restart after cleanUP")
         End If
         If Button1.Text = "Done." Then
@@ -37,11 +45,7 @@ Public Class Form1
             Exit Sub
         Else
 
-            If CheckBox2.Checked = True Then
-                Module1.location = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
-
-            End If
-            TextBox1.Text = ("DDU Version " + Label6.Text + vbNewLine)
+            TextBox1.Text = TextBox1.Text + "DDU Version " + Label6.Text + vbNewLine
             log("DDU Version " + Label6.Text)
             log("OS : " + Label2.Text)
             log("Architecture: " & Label3.Text)
