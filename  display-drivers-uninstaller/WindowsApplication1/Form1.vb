@@ -1931,16 +1931,13 @@ Public Class Form1
 
         Button1.Enabled = True
         Button1.Text = "Done."
-        System.Threading.Thread.Sleep(250)  '50 millisecond stall (0.05 Seconds)
-        removehdmidriver.Arguments = "restart =display"
+        log("Restarting Computer in 5 seconds...")
+        System.Threading.Thread.Sleep(5000)  '5000 millisecond stall (5.000 Seconds)
+        removehdmidriver.Arguments = "reboot"
         prochdmi.StartInfo = removehdmidriver
         prochdmi.Start()
         prochdmi.WaitForExit()
-        TextBox1.Text = TextBox1.Text + "Restarting Display adapter Complete" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
-        log("Restarting Display adapter Complete")
-        log("Finished.")
+        
     End Sub
     
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
