@@ -16,6 +16,11 @@ Public Class Form1
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
+        If Button1.Text = "Done." Then
+            Close()
+            Exit Sub
+        End If
+
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
         End If
@@ -40,10 +45,6 @@ Public Class Form1
             TextBox1.Text = "The computer will restart after cleanUP" + vbNewLine
             log("Computer will restart after cleanUP")
         End If
-        If Button1.Text = "Done." Then
-            Close()
-            Exit Sub
-        Else
 
             TextBox1.Text = TextBox1.Text + "DDU Version " + Label6.Text + vbNewLine
             log("DDU Version " + Label6.Text)
@@ -205,7 +206,7 @@ Public Class Form1
                 GoTo 5
             End If
 
-        End If
+
 10:
         TextBox1.Text = TextBox1.Text + "Driver Store cleanUP complete." + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
