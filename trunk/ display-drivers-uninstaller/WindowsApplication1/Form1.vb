@@ -12,15 +12,30 @@ Public Class Form1
     Dim provider As String = ""
     Dim proc As New Process
     Dim prochdmi As New Process
+    Dim reboot As Boolean
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
+            My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
+        End If
+
+        Dim result = MessageBox.Show("IMPORTANT: It is HIGHLY recommended to Restart the computer after CleanUP to avoid being stuck on a Blackscreen or others issues. Would you like to restart after CleanUP?", "Reboot after CleanUP?", MessageBoxButtons.YesNoCancel)
+        If result = DialogResult.Cancel Then
+            Exit Sub
+        ElseIf result = DialogResult.No Then
+            reboot = False
+            TextBox1.Text = ("The computer won't restart after cleanUP" + vbNewLine)
+            log("The computer won't restart after cleanUP")
+        ElseIf result = DialogResult.Yes Then
+            reboot = True
+            TextBox1.Text = ("The computer will restart after cleanUP" + vbNewLine)
+            log("Computer will restart after cleanUP")
+        End If
         If Button1.Text = "Done." Then
             Close()
             Exit Sub
         Else
-            If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
-                My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
-            End If
 
             If CheckBox2.Checked = True Then
                 Module1.location = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
@@ -31,9 +46,6 @@ Public Class Form1
             log("OS : " + Label2.Text)
             log("Architecture: " & Label3.Text)
 
-            If ComboBox1.Text = "NVIDIA" Then
-                MsgBox("For SLI users, it is recommended that you disable it before continuing or a black screen may occur.", MsgBoxStyle.Information)
-            End If
             Button1.Enabled = False
             CheckBox2.Enabled = False
             Button1.Text = "Uninstalling..."
@@ -72,7 +84,7 @@ Public Class Form1
             proc.StartInfo = removedisplaydriver
             Try
                 proc.Start()
-                
+
             Catch ex As Exception
                 TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
                 TextBox1.Select(TextBox1.Text.Length, 0)
@@ -1000,7 +1012,7 @@ Public Class Form1
                                                 'okay .. important part here to fixed the famous AMD yellow mark.
                                                 'The yellow mark in this case is really stupid imo and shouldn't even
                                                 'be thrown as a warning to the end user... it has not bad effect.
-                                                'But im gona fix this b'cause im a 'PROFESSIONAL' :)
+
 
                                                 Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                                                                                  ("Installer\UpgradeCodes", True)
@@ -2031,13 +2043,14 @@ Public Class Form1
 
         Button1.Enabled = True
         Button1.Text = "Done."
-        log("Restarting Computer in 5 seconds...")
-        System.Threading.Thread.Sleep(5000)  '5000 millisecond stall (5.000 Seconds)
-        removehdmidriver.Arguments = "reboot"
-        prochdmi.StartInfo = removehdmidriver
-        prochdmi.Start()
-        prochdmi.WaitForExit()
-
+        If reboot Then
+            log("Restarting Computer in 5 seconds...")
+            System.Threading.Thread.Sleep(5000)  '5000 millisecond stall (5.000 Seconds)
+            removehdmidriver.Arguments = "reboot"
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+        End If
     End Sub
     
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
