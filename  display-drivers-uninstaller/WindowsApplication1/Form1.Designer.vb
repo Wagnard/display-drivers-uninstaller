@@ -39,16 +39,19 @@ Partial Class Form1
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.Button3 = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(230, 91)
+        Me.Button1.Location = New System.Drawing.Point(210, 92)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(150, 41)
+        Me.Button1.Size = New System.Drawing.Size(195, 70)
         Me.Button1.TabIndex = 0
-        Me.Button1.Text = "Uninstall The Driver."
+        Me.Button1.Text = "Uninstall the current and previous drivers and restart the computer" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Highly Reco" & _
+    "mmended)"
         Me.Button1.UseVisualStyleBackColor = True
         '
         'Label1
@@ -82,7 +85,7 @@ Partial Class Form1
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(93, 176)
+        Me.Label4.Location = New System.Drawing.Point(93, 206)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(401, 26)
         Me.Label4.TabIndex = 4
@@ -92,7 +95,7 @@ Partial Class Form1
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(56, 205)
+        Me.TextBox1.Location = New System.Drawing.Point(53, 258)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -102,7 +105,7 @@ Partial Class Form1
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(12, 208)
+        Me.Label5.Location = New System.Drawing.Point(6, 258)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(31, 13)
         Me.Label5.TabIndex = 7
@@ -111,11 +114,11 @@ Partial Class Form1
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(12, 326)
+        Me.Label6.Location = New System.Drawing.Point(6, 379)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(38, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V3.9.1"
+        Me.Label6.Text = "V3.9.2"
         '
         'ComboBox1
         '
@@ -142,7 +145,7 @@ Partial Class Form1
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label8.ForeColor = System.Drawing.Color.Red
-        Me.Label8.Location = New System.Drawing.Point(12, 135)
+        Me.Label8.Location = New System.Drawing.Point(12, 173)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(595, 26)
         Me.Label8.TabIndex = 11
@@ -174,7 +177,7 @@ Partial Class Form1
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
         Me.MenuStrip1.Location = New System.Drawing.Point(582, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(30, 348)
+        Me.MenuStrip1.Size = New System.Drawing.Size(30, 404)
         Me.MenuStrip1.TabIndex = 14
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -191,11 +194,33 @@ Partial Class Form1
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(107, 22)
         Me.AboutToolStripMenuItem.Text = "About"
         '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(9, 92)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(195, 70)
+        Me.Button2.TabIndex = 15
+        Me.Button2.Text = "Uninstall the current and previous drivers and DO NOT restart the computer." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(May" & _
+    " cause issues like blackscreen)"
+        Me.Button2.UseVisualStyleBackColor = True
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(411, 92)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(195, 70)
+        Me.Button3.TabIndex = 16
+        Me.Button3.Text = "Uninstall the current and previous drivers and Shutdown the computer with no resc" & _
+    "an" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(For installing a new graphic card)"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(612, 348)
+        Me.ClientSize = New System.Drawing.Size(612, 404)
+        Me.Controls.Add(Me.Button3)
+        Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.CheckBox2)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.Label8)
@@ -238,5 +263,7 @@ Partial Class Form1
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents AboutToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents Button3 As System.Windows.Forms.Button
 
 End Class
