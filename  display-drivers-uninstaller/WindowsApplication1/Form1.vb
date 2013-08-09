@@ -1549,7 +1549,102 @@ Public Class Form1
                 TextBox1.ScrollToCaret()
                 log(ex.Message)
             End Try
+            'Erase driver file from windows directory
 
+            Dim driverfiles(59) As String
+            driverfiles(0) = "nvapi.dll"
+            driverfiles(1) = "nvapi64.dll"
+            driverfiles(2) = "nvcompiler.dll"
+            driverfiles(3) = "nvcompiler32.dll"
+            driverfiles(4) = "nvcuda.dll"
+            driverfiles(5) = "nvcuda32.dll"
+            driverfiles(6) = "nvcuvenc.dll"
+            driverfiles(7) = "nvcuvenc64.dll"
+            driverfiles(8) = "nvcuvid.dll"
+            driverfiles(9) = "nvcuvid32.dll"
+            driverfiles(10) = "nvd3d9wrap.dll"
+            driverfiles(11) = "nvd3d9wrapx.dll"
+            driverfiles(12) = "nvd3dum.dll"
+            driverfiles(13) = "nvd3dumx.dll"
+            driverfiles(14) = "nvdet.dll"
+            driverfiles(15) = "nvdetx.dll"
+            driverfiles(16) = "nvdispco64.dll"
+            driverfiles(17) = "nvdispgenco64.dll"
+            driverfiles(18) = "nvdrsdb.bin"
+            driverfiles(19) = "nvdxgiwrap.dll"
+            driverfiles(20) = "nvdxgiwrapx.dll"
+            driverfiles(21) = "nvencodeapi.dll"
+            driverfiles(22) = "nvencodeapi64.dll"
+            driverfiles(23) = "nvfbc.dll"
+            driverfiles(24) = "nvfbc64.dll"
+            driverfiles(25) = "nvifr.dll"
+            driverfiles(26) = "nvifr64.dll"
+            driverfiles(27) = "nvinfo.pb"
+            driverfiles(28) = "nvinit.dll"
+            driverfiles(29) = "nvinitx.dll"
+            driverfiles(30) = "nvkflt.sys"
+            driverfiles(31) = "nvlddmkm.sys"
+            driverfiles(32) = "nvml.dll"
+            driverfiles(33) = "nvoglshim32.dll"
+            driverfiles(34) = "nvoglshim64.dll"
+            driverfiles(35) = "nvoglv32.dll"
+            driverfiles(36) = "nvoglv64.dll"
+            driverfiles(37) = "nvopencl.dll"
+            driverfiles(38) = "nvopencl32.dll"
+            driverfiles(39) = "nvpciflt.sys"
+            driverfiles(40) = "nvumdshim.dll"
+            driverfiles(41) = "nvumdshimx.dll"
+            driverfiles(42) = "nvwgf2um.dll"
+            driverfiles(43) = "nvwgf2umx.dll"
+            driverfiles(44) = "opencl.dll"
+            driverfiles(45) = "opencl64.dll"
+            driverfiles(46) = "nvaudcap32v.dll"
+            driverfiles(47) = "nvaudcap64v.dll"
+            driverfiles(48) = "nvvad32v.sys"
+            driverfiles(49) = "nvvad64v.sys"
+            driverfiles(50) = "nvstusb32.sys"
+            driverfiles(51) = "nvstusb64.sys"
+            driverfiles(52) = "nvhda32.sys"
+            driverfiles(53) = "nvhda64.sys"
+            driverfiles(54) = "nvhda32v.sys"
+            driverfiles(55) = "nvhda64v.sys"
+            driverfiles(56) = "nvhdap32.dll"
+            driverfiles(57) = "nvhdap64.dll"
+            driverfiles(58) = "nvcpl.dll"
+            For i As Integer = 0 To 58
+
+                filePath = System.Environment.SystemDirectory
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\" + driverfiles(i))
+                Catch ex As Exception
+                End Try
+
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
+                Catch ex As Exception
+                End Try
+
+                If IntPtr.Size = 8 Then
+
+                    filePath = Environment.GetEnvironmentVariable("windir")
+                    Try
+                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
+                    Catch ex As Exception
+                    End Try
+
+                    Try
+                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
+                    Catch ex As Exception
+                    End Try
+
+                End If
+            Next
+            filePath = Environment.GetEnvironmentVariable("windir")
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                        (filePath + "\Help\nvcpl", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+            End Try
             'Delete NVIDIA regkey
             TextBox1.Text = TextBox1.Text + "Starting reg cleanUP" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
@@ -1730,8 +1825,26 @@ Public Class Form1
             End If
             count = 0
 
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                   ("Software\\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetValueNames()
+                    If child.Contains("NVIDIA Corporation") Then
+                        If regkey IsNot Nothing Then
+                            Try
+                                regkey.DeleteValue(child)
+                            Catch ex As Exception
+                                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                                TextBox1.Select(TextBox1.Text.Length, 0)
+                                TextBox1.ScrollToCaret()
+                                log(ex.Message + " SharedDLLS")
+                            End Try
+                        End If
 
-
+                    End If
+                Next
+            End If
+            count = 0
 
 
             regkey = My.Computer.Registry.ClassesRoot
@@ -2023,11 +2136,15 @@ Public Class Form1
         scan.CreateNoWindow = True
         scan.RedirectStandardOutput = True
         'creation dun process fantome pour le wait on exit.
-        If reboot = False Or shutdown = False Then
+        If reboot = False And shutdown = False Then
             Dim proc4 As New Process
             proc4.StartInfo = scan
             proc4.Start()
             proc4.WaitForExit()
+            Dim appproc = Process.GetProcessesByName("explorer")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
         End If
         TextBox1.Text = TextBox1.Text + "Clean uninstall completed!" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
