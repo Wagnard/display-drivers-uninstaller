@@ -51,7 +51,11 @@ Public Class Form1
             If ComboBox1.Text = "NVIDIA" Then
                 vendid = "@*ven_10de*"
                 provider = "Provider: NVIDIA"
-            End If
+        End If
+        Dim appproc = Process.GetProcessesByName("WWAHost")
+        For i As Integer = 0 To appproc.Count - 1
+            appproc(i).Kill()
+        Next i
             TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver ..." + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
@@ -248,7 +252,7 @@ Public Class Form1
             processkillpid.Start()
             processkillpid.WaitForExit()
 
-            Dim appproc = Process.GetProcessesByName("MOM")
+            appproc = Process.GetProcessesByName("MOM")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
             Next i
@@ -1329,7 +1333,7 @@ Public Class Form1
             'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
             'holding files in the NVIDIA folders sometimes.
 
-            Dim appproc = Process.GetProcessesByName("Lcore")
+            appproc = Process.GetProcessesByName("Lcore")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
             Next i
@@ -1551,7 +1555,7 @@ Public Class Form1
             End Try
             'Erase driver file from windows directory
 
-            Dim driverfiles(59) As String
+            Dim driverfiles(64) As String
             driverfiles(0) = "nvapi.dll"
             driverfiles(1) = "nvapi64.dll"
             driverfiles(2) = "nvcompiler.dll"
@@ -1611,7 +1615,12 @@ Public Class Form1
             driverfiles(56) = "nvhdap32.dll"
             driverfiles(57) = "nvhdap64.dll"
             driverfiles(58) = "nvcpl.dll"
-            For i As Integer = 0 To 58
+            driverfiles(59) = "nvmctray.dll"
+            driverfiles(60) = "nvsvc64.dll"
+            driverfiles(61) = "nvsvcr.dll"
+            driverfiles(62) = "nvvsvc.exe"
+            driverfiles(63) = "nvshext.dll"
+            For i As Integer = 0 To 63
 
                 filePath = System.Environment.SystemDirectory
                 Try
@@ -1638,6 +1647,16 @@ Public Class Form1
                     End Try
 
                 End If
+            Next
+
+            filePath = System.Environment.SystemDirectory
+            Dim files() As String = IO.Directory.GetFiles(filePath, "nvdisp*.*")
+            For i As Integer = 0 To files.Length
+                
+                        Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\" + files(i))
+                        Catch ex As Exception
+                        End Try
             Next
             filePath = Environment.GetEnvironmentVariable("windir")
             Try
@@ -2141,7 +2160,7 @@ Public Class Form1
             proc4.StartInfo = scan
             proc4.Start()
             proc4.WaitForExit()
-            Dim appproc = Process.GetProcessesByName("explorer")
+            appproc = Process.GetProcessesByName("explorer")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
             Next i
