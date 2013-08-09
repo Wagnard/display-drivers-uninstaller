@@ -326,10 +326,6 @@ Public Class Form1
             Dim filePath As String
 
             If CheckBox1.Checked = True Then
-                Try
-                    TestDelete("C:\AMD")
-                Catch ex As Exception
-                End Try
                 filePath = "C:\AMD"
 
                 Try
@@ -1393,24 +1389,17 @@ Public Class Form1
             Dim filePath As String
 
             If CheckBox1.Checked = True Then
-                If CheckBox1.Checked = True Then
-                    Try
-                        TestDelete("C:\NVIDIA")
-                    Catch ex As Exception
-                    End Try
-                    System.Threading.Thread.Sleep(50)
-                    filePath = "C:\NVIDIA"
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
-                        log(ex.Message)
-                    End Try
+                filePath = "C:\NVIDIA"
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message)
+                End Try
 
-                End If
             End If
 
             ' here I erase the folders / files of the nvidia GFE / update in users.
@@ -2172,12 +2161,8 @@ Public Class Form1
         Button1.Enabled = True
         Button1.Text = "Done."
         If reboot Then
-            log("Restarting Computer in 5 seconds...")
-            System.Threading.Thread.Sleep(5000)  '5000 millisecond stall (5.000 Seconds)
-            removehdmidriver.Arguments = "reboot"
-            prochdmi.StartInfo = removehdmidriver
-            prochdmi.Start()
-            prochdmi.WaitForExit()
+            log("Restarting Computer ")
+            System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
         End If
         If shutdown Then
             System.Diagnostics.Process.Start("shutdown", "/s /t 0 /f")
