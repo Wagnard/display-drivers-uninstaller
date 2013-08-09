@@ -12,7 +12,8 @@ Public Class Form1
     Dim provider As String = ""
     Dim proc As New Process
     Dim prochdmi As New Process
-    Dim reboot As Boolean
+    Dim reboot As Boolean = True
+    Dim shutdown As Boolean = False
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
@@ -25,33 +26,20 @@ Public Class Form1
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
         End If
 
-        Dim result = MessageBox.Show("IMPORTANT: It is HIGHLY recommended to Restart the computer after CleanUP to avoid being stuck on a Blackscreen or others issues. Would you like to restart after CleanUP?", "Reboot after CleanUP?", MessageBoxButtons.YesNoCancel)
-        If result = DialogResult.Cancel Then
-            Exit Sub
-        ElseIf result = DialogResult.No Then
-            reboot = False
+       
             If CheckBox2.Checked = True Then
                 Module1.location = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
 
             End If
-            TextBox1.Text = "The computer won't restart after cleanUP" + vbNewLine
-            log("The computer won't restart after cleanUP")
-        ElseIf result = DialogResult.Yes Then
-            reboot = True
-            If CheckBox2.Checked = True Then
-                Module1.location = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
-
-            End If
-            TextBox1.Text = "The computer will restart after cleanUP" + vbNewLine
-            log("Computer will restart after cleanUP")
-        End If
 
             TextBox1.Text = TextBox1.Text + "DDU Version " + Label6.Text + vbNewLine
             log("DDU Version " + Label6.Text)
             log("OS : " + Label2.Text)
             log("Architecture: " & Label3.Text)
 
-            Button1.Enabled = False
+        Button1.Enabled = False
+        Button2.Enabled = False
+        Button3.Enabled = False
             CheckBox2.Enabled = False
             Button1.Text = "Uninstalling..."
 
@@ -2034,13 +2022,13 @@ Public Class Form1
         scan.UseShellExecute = False
         scan.CreateNoWindow = True
         scan.RedirectStandardOutput = True
-
         'creation dun process fantome pour le wait on exit.
-        Dim proc4 As New Process
-        proc4.StartInfo = scan
-        proc4.Start()
-        proc4.WaitForExit()
-
+        If reboot = False Or shutdown = False Then
+            Dim proc4 As New Process
+            proc4.StartInfo = scan
+            proc4.Start()
+            proc4.WaitForExit()
+        End If
         TextBox1.Text = TextBox1.Text + "Clean uninstall completed!" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
@@ -2055,6 +2043,9 @@ Public Class Form1
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
+        End If
+        If shutdown Then
+            System.Diagnostics.Process.Start("shutdown", "/s /t 0 /f")
         End If
     End Sub
     
@@ -2304,5 +2295,16 @@ Public Class Form1
 
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
         about.Show()
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        reboot = False
+        Button1.PerformClick()
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        reboot = False
+        shutdown = True
+        Button1.PerformClick()
     End Sub
 End Class
