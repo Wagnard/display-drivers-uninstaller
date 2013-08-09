@@ -1650,13 +1650,12 @@ Public Class Form1
             Next
 
             filePath = System.Environment.SystemDirectory
-            Dim files() As String = IO.Directory.GetFiles(filePath, "nvdisp*.*")
-            For i As Integer = 0 To files.Length
-                
-                        Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\" + files(i))
-                        Catch ex As Exception
-                        End Try
+            Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
+            For i As Integer = 0 To files.Count - 1
+                Try
+                    My.Computer.FileSystem.DeleteFile(files(i))
+                Catch ex As Exception
+                End Try
             Next
             filePath = Environment.GetEnvironmentVariable("windir")
             Try
