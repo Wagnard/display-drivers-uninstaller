@@ -2170,7 +2170,9 @@ Public Class Form1
     End Sub
     
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        If My.Settings.logbox = "" Then
+            CheckBox2.Checked = True
+        End If
 
         If My.Settings.logbox = "" Or My.Settings.logbox = "dontlog" Then
             CheckBox2.Checked = False
