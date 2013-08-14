@@ -118,44 +118,40 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Label1.Text" xml:space="preserve">
-    <value>Created By Wagnard.
+    <value>Driver Uninstaller (DDU) / Cleaner made for Display Drivers.(NVIDIA/AMD)
 
-Contributor : Shady7557
+Whats it does is removing the Display driver from device manager and removing the current and 
+all precedent driver from the Windows Driver store along with removing services from NVIDIA/AMD.
 
-Thanks to anyone who put their system at risk (special thanks to Dellon132)
+The current effect after you use this tool will be similar as if Windows was in a "Fresh Install" state.
 
-Whats it does is removing the Display driver from device manager
- and removing the current and all precedent driver from the windows Driver store.
+This tool act similar to what Driver sweeper do + the extra mentioned above.
 
-Registry value are clean up correctly for NVIDIA ,for AMD there are still work to be done.
-
-The current effect after you use this tool will be similar as if its the first time you install 
-a new driver (a bit like a fresh install of windows)
-
-WHY USE THIS TOOL:
-
--Maybe help pwople with problem upgrading to newer driver because of some odd 
-corruption / registry error
-
--People who always like it clean.
-
--Avoid known conflict like the recent one with AMD and their OpenCL driver resulting in 
-a crash with some OpenCL application. (This part has not been implemented yet)
+If you have problem installing older driver or newer one, give it a try as there are some reports that it fix 
+those problems.
 
 RECOMMENDED USAGE :
 
-- Make a RESTORE POINT (quite important) just in case...
+- I personally recommend that you disconnect the internet while doing this because sometimes after the 
+uninstall, windows update may be re-installing a driver on its own without authorization...
 
-- I personally recommend that you disconnect the internet while doing this because sometimes 
-after the uninstall, windows update may be re-installing a driver on its own without authorization...
+-The tool can be used in Normal mode but for abolute stability when using DDU, Safemode is 
+always the best.
 
-- I would like to gather feedback from you guys because its the first release so there might 
-be bug and also risk so make a backup or a system restore (but it should normally be pretty safe).
+- I would like to gather feedback from you guys. Tell me if it was success or not. make a 
+backup or a system restore (but it should normally be pretty safe).
 
--For people with driver problem, if this tool gave you any success into fixing some issue you are 
+-For people with driver problem, if this tool gave you any success into fixing some issues your are 
 currently experiencing, please share your result.
 
-AMD / NVIDIA have nothing to do with this application. Thanks for Microsoft for their 
-wonderful tool called "devcon"</value>
+Keep note that NVIDIA/AMD did not have anything to do with this, I do not work at or for NVIDIA/AMD 
+and they should not be held responsible for anything that may go wrong with this application.
+-------------------------------
+
+Created By Wagnard.
+
+Contributor : Shady7557
+
+Thanks to anyone who put their system at risk (special thanks to Dellon132)</value>
   </data>
 </root>

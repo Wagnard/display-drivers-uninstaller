@@ -2323,7 +2323,7 @@ Public Class Form1
                 log("Detected GPU : " + part)
             End If
         End While
-        If TextBox1.Text.Contains("NVIDIA") Then
+        If Reply.Contains("VEN_10DE") Then
             ComboBox1.SelectedIndex = 0
         Else
             ComboBox1.SelectedIndex = 1
