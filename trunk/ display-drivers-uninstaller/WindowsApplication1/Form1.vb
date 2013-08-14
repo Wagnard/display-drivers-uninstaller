@@ -8,12 +8,15 @@ Public Class Form1
 
     Dim removedisplaydriver As New ProcessStartInfo
     Dim removehdmidriver As New ProcessStartInfo
+    Dim checkoem As New Diagnostics.ProcessStartInfo
     Dim vendid As String = ""
     Dim provider As String = ""
     Dim proc As New Process
     Dim prochdmi As New Process
     Dim reboot As Boolean = True
     Dim shutdown As Boolean = False
+    Dim card1 As Integer
+    Dim position2 As Integer
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
@@ -22,20 +25,6 @@ Public Class Form1
             Exit Sub
         End If
 
-        If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
-            My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
-        End If
-
-       
-            If CheckBox2.Checked = True Then
-                Module1.location = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
-
-            End If
-
-            TextBox1.Text = TextBox1.Text + "DDU Version " + Label6.Text + vbNewLine
-            log("DDU Version " + Label6.Text)
-            log("OS : " + Label2.Text)
-            log("Architecture: " & Label3.Text)
 
         Button1.Enabled = False
         Button2.Enabled = False
@@ -125,7 +114,7 @@ Public Class Form1
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("DEVCON Remove Audio/HDMI Complete")
-            Dim checkoem As New Diagnostics.ProcessStartInfo
+
 
 
             TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(find OEM)..." + vbNewLine
@@ -2170,6 +2159,11 @@ Public Class Form1
     End Sub
     
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
+            My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
+        End If
+
         If My.Settings.logbox = "" Then
             CheckBox2.Checked = True
         End If
@@ -2245,7 +2239,7 @@ Public Class Form1
         Else
             Label3.Text = "x86"
         End If
-
+        Label3.Refresh()
 
         If arch = True Then
             Try
@@ -2281,8 +2275,59 @@ Public Class Form1
             End If
         End If
 
+        TextBox1.Text = TextBox1.Text + "DDU Version " + Label6.Text + vbNewLine
+        log("DDU Version " + Label6.Text)
+        log("OS : " + Label2.Text)
+        log("Architecture: " & Label3.Text)
 
+        'Videocard type indentification
+        checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+        checkoem.Arguments = "findall =display"
+        checkoem.UseShellExecute = False
+        checkoem.CreateNoWindow = True
+        checkoem.RedirectStandardOutput = True
 
+        'creation dun process fantome pour le wait on exit.
+        Dim proc2 As New Diagnostics.Process
+        proc2.StartInfo = checkoem
+        proc2.Start()
+        Dim Reply As String = proc2.StandardOutput.ReadToEnd
+        proc2.WaitForExit()
+        log(Reply)
+
+        Dim part As String
+        Dim match As Boolean = False
+        card1 = Reply.IndexOf(":")
+        position2 = Reply.IndexOf("PCI", card1 + 1)
+        If position2 < 0 Then
+            position2 = Reply.IndexOf("matching", card1 + 1)
+            match = True
+        End If
+
+        While card1 > -1
+            If Not match Then
+                part = Reply.Substring(card1 + 2, (position2 - card1 - 3))
+                card1 = Reply.IndexOf(":", card1 + 1)
+                position2 = Reply.IndexOf("PCI", card1 + 1)
+                If position2 < 0 Then
+                    position2 = Reply.IndexOf("matching", card1 + 1)
+                    match = True
+                End If
+                TextBox1.Text = TextBox1.Text + "Detected GPU : " + part + vbNewLine
+                log("Detected GPU : " + part)
+            End If
+            If match Then
+                part = Reply.Substring(card1 + 2, (position2 - card1 - 5))
+                card1 = Reply.IndexOf(":", card1 + 1)
+                TextBox1.Text = TextBox1.Text + "Detected GPU : " + part + vbNewLine
+                log("Detected GPU : " + part)
+            End If
+        End While
+        If TextBox1.Text.Contains("NVIDIA") Then
+            ComboBox1.SelectedIndex = 0
+        Else
+            ComboBox1.SelectedIndex = 1
+        End If
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
