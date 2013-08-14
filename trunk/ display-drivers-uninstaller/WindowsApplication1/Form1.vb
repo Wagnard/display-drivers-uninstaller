@@ -141,51 +141,61 @@ Public Class Form1
 
             Dim position As Integer
 
-            position = Reply.IndexOf(provider)
-5:
-
-            If position < 0 Then
-
-                GoTo 10
-
-            Else
-                'work around...
-                Dim part As String = Reply.Substring(position - 14, 10).Replace("oem", "em")
-                position = Reply.IndexOf(provider, position + 1)
-                part = part.Replace("em", "m")
-                part = part.Replace("m", "oem")
-                part = part.Replace(vbNewLine, "")
-                TextBox1.Text = TextBox1.Text + part + " found" + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                log(part + " Found")
-                'Uninstall Driver from driver store  delete from (oemxx.inf)
-                Dim deloem As New Diagnostics.ProcessStartInfo
-
-                deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
-                deloem.Arguments = ("dp_delete " & part)
-                deloem.UseShellExecute = False
-                deloem.CreateNoWindow = True
-                deloem.RedirectStandardOutput = True
-                'creation dun process fantome pour le wait on exit.
-                Dim proc3 As New Diagnostics.Process
-                TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                log("Executing Driver Store CleanUP(delete OEM)...")
-                proc3.StartInfo = deloem
-                proc3.Start()
-                Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
-                proc3.WaitForExit()
+        Dim oem As Integer = Reply.IndexOf("oem")
+        Dim inf As Integer = Reply.IndexOf(".inf", oem)
+        position = Reply.IndexOf("Provider:", oem)
 
 
-                TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                log(Reply2)
+        While oem > -1
 
-                GoTo 5
+            While Not Reply.Substring(position, 50).Contains(provider)
+                oem = Reply.IndexOf("oem", oem + 1)
+                If oem < 0 Then
+                    Exit While
+                End If
+                inf = Reply.IndexOf(".inf", oem)
+                position = Reply.IndexOf("Provider:", oem)
+                
+            End While
+            If oem < 0 Then
+                Exit While
             End If
+            'work around...
+            Dim part As String = Reply.Substring(oem, inf - oem)
+            oem = Reply.IndexOf("oem", oem + 1)
+            inf = Reply.IndexOf(".inf", oem)
+            position = Reply.IndexOf("Provider:", oem)
+            TextBox1.Text = TextBox1.Text + part + " found" + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
+            log(part + " Found")
+            'Uninstall Driver from driver store  delete from (oemxx.inf)
+            Dim deloem As New Diagnostics.ProcessStartInfo
+            Dim argument As String = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+            deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
+            deloem.Arguments = (argument)
+            deloem.UseShellExecute = False
+            deloem.CreateNoWindow = True
+            deloem.RedirectStandardOutput = True
+            'creation dun process fantome pour le wait on exit.
+            Dim proc3 As New Diagnostics.Process
+            TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
+            log("Executing Driver Store CleanUP(delete OEM)...")
+            proc3.StartInfo = deloem
+            proc3.Start()
+            Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
+            proc3.WaitForExit()
+
+
+            TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
+            log(Reply2)
+
+
+        End While
 
 
 10:
