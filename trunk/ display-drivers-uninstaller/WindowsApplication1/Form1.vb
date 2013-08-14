@@ -20,17 +20,11 @@ Public Class Form1
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        If Button1.Text = "Done." Then
-            Close()
-            Exit Sub
-        End If
-
-
         Button1.Enabled = False
         Button2.Enabled = False
         Button3.Enabled = False
             CheckBox2.Enabled = False
-            Button1.Text = "Uninstalling..."
+
 
             If ComboBox1.Text = "AMD" Then
                 vendid = "@*ven_1002*"
@@ -68,19 +62,20 @@ Public Class Form1
 
             'creation dun process fantome pour le wait on exit.
             proc.StartInfo = removedisplaydriver
-            Try
-                proc.Start()
+        Try
+            proc.Start()
 
-            Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
-                log(ex.Message)
-                MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                Button1.Text = "Done."
-                Button1.Enabled = True
-                Exit Sub
-            End Try
+        Catch ex As Exception
+            TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
+            log(ex.Message)
+            MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+            Button1.Enabled = True
+            Button2.Enabled = True
+            Button3.Enabled = True
+            Exit Sub
+        End Try
             proc.WaitForExit()
             System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
 
@@ -2158,7 +2153,9 @@ Public Class Form1
         log("Clean uninstall completed!")
 
         Button1.Enabled = True
-        Button1.Text = "Done."
+        Button2.Enabled = True
+        Button3.Enabled = True
+
         If reboot Then
             log("Restarting Computer ")
             System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
@@ -2219,7 +2216,6 @@ Public Class Form1
         If version < "5.1" Then
 
             Label2.Text = "Unsupported OS"
-            Button1.Text = "Done."
             log("Unsupported OS.")
         End If
 
@@ -2426,10 +2422,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
-        'If Button1.Text = "Done." Then
-        '  Module1.wlog.Dispose()
-        '   My.Computer.FileSystem.DeleteFile(Module1.location)
-        'End If
+        
         'I've commented this out because even if you have logging enabled and you want to see your logs, if the button was "Done." then it would delete it. Add it back if you want, but I think it needs to be worked on or left unused.
         'If CheckBox2.Checked = False Then
         '    Module1.wlog.Dispose()
