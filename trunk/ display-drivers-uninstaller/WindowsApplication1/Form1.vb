@@ -96,6 +96,18 @@ Public Class Form1
             End If
             card1 = Reply.IndexOf("PCI", card1 + 1)
         End While
+        checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+        checkoem.Arguments = "findall =media"
+        checkoem.UseShellExecute = False
+        checkoem.CreateNoWindow = True
+        checkoem.RedirectStandardOutput = True
+
+        'creation dun process fantome pour le wait on exit.
+
+        proc2.StartInfo = checkoem
+        proc2.Start()
+        Reply = proc2.StandardOutput.ReadToEnd
+        proc2.WaitForExit()
         card1 = Reply.IndexOf("HDAUDIO")
         While card1 > -1
 
