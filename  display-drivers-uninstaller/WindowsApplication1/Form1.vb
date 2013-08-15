@@ -134,23 +134,24 @@ Public Class Form1
             log(Reply)
             'Preparing to read output.
 
-            Dim position As Integer
-
+        Dim position As Integer
+        Dim classs As Integer
         Dim oem As Integer = Reply.IndexOf("oem")
         Dim inf As Integer = Reply.IndexOf(".inf", oem)
         position = Reply.IndexOf("Provider:", oem)
-
-
+        classs = Reply.IndexOf("Class:", oem)
         While oem > -1
 
-            While Not Reply.Substring(position, 50).Contains(provider)
+            While Not Reply.Substring(position, classs - position).Contains(provider)
                 oem = Reply.IndexOf("oem", oem + 1)
                 If oem < 0 Then
                     Exit While
                 End If
                 inf = Reply.IndexOf(".inf", oem)
                 position = Reply.IndexOf("Provider:", oem)
-                
+                classs = Reply.IndexOf("Class:", oem)
+
+
             End While
             If oem < 0 Then
                 Exit While
@@ -158,8 +159,12 @@ Public Class Form1
             'work around...
             Dim part As String = Reply.Substring(oem, inf - oem)
             oem = Reply.IndexOf("oem", oem + 1)
+            If oem < 0 Then
+                Exit While
+            End If
             inf = Reply.IndexOf(".inf", oem)
             position = Reply.IndexOf("Provider:", oem)
+            classs = Reply.IndexOf("Class:", oem)
             TextBox1.Text = TextBox1.Text + part + " found" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
@@ -2164,7 +2169,7 @@ Public Class Form1
             System.Diagnostics.Process.Start("shutdown", "/s /t 0 /f")
         End If
     End Sub
-    
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
@@ -2422,7 +2427,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
-        
+
         'I've commented this out because even if you have logging enabled and you want to see your logs, if the button was "Done." then it would delete it. Add it back if you want, but I think it needs to be worked on or left unused.
         'If CheckBox2.Checked = False Then
         '    Module1.wlog.Dispose()
