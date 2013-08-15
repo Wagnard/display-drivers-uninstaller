@@ -28,12 +28,12 @@ Public Class Form1
 
 
         If ComboBox1.Text = "AMD" Then
-            vendidexpected = "ven_1002"
+            vendidexpected = "VEN_1002"
             provider = "Provider: Advanced Micro Devices"
         End If
 
         If ComboBox1.Text = "NVIDIA" Then
-            vendidexpected = "ven_10de"
+            vendidexpected = "VEN_10DE"
             provider = "Provider: NVIDIA"
         End If
         Dim appproc = Process.GetProcessesByName("WWAHost")
@@ -74,7 +74,7 @@ Public Class Form1
             If vendid.Contains(vendidexpected) Then
                 'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
                 removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                removedisplaydriver.Arguments = "remove =display " & Chr(34) & vendid & Chr(34)
+                removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
                 removedisplaydriver.UseShellExecute = False
                 removedisplaydriver.CreateNoWindow = True
                 proc.StartInfo = removedisplaydriver
@@ -107,7 +107,7 @@ Public Class Form1
             vendid = Reply.Substring(card1, position2 - card1)
             If vendid.Contains(vendidexpected) Then
                 removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & vendid & Chr(34)
+                removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 prochdmi.StartInfo = removehdmidriver
@@ -141,6 +141,8 @@ Public Class Form1
         If ComboBox1.Text = "NVIDIA" Then
             removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             prochdmi.WaitForExit()
