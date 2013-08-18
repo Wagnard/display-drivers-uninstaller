@@ -2332,15 +2332,17 @@ Public Class Form1
                                                                                      ("Installer\UpgradeCodes\" & child2, True)
                                                             If subsuperregkey IsNot Nothing Then
                                                                 For Each wantedstring In subsuperregkey.GetValueNames()
-                                                                    If wantedstring.Contains(child) Then
+                                                                    If wantedstring IsNot Nothing Then
+                                                                        If wantedstring.Contains(child) Then
 
-                                                                        If removephysx Then
-                                                                            superregkey.DeleteSubKeyTree(child2)
-                                                                        Else
-                                                                            If wantedvalue.Contains("PhysX") Then
-                                                                                'do nothing
-                                                                            Else
+                                                                            If removephysx Then
                                                                                 superregkey.DeleteSubKeyTree(child2)
+                                                                            Else
+                                                                                If wantedvalue.Contains("PhysX") Then
+                                                                                    'do nothing
+                                                                                Else
+                                                                                    superregkey.DeleteSubKeyTree(child2)
+                                                                                End If
                                                                             End If
                                                                         End If
                                                                     End If
@@ -2453,6 +2455,37 @@ Public Class Form1
                     count += 1
                 Next
             End If
+
+            If removephysx Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                   ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If child IsNot Nothing Then
+                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child, True)
+                            If subregkey IsNot Nothing Then
+                                For Each wantedstring In subregkey.GetValueNames()
+                                    If wantedstring IsNot Nothing Then
+                                        wantedvalue = subregkey.GetValue(wantedstring)
+                                        If wantedvalue IsNot Nothing Then
+                                            If wantedvalue.Contains("PhysX") Then
+
+                                                regkey.DeleteSubKeyTree(child)
+
+                                            End If
+                                        End If
+                                    End If
+
+                                    count += 1
+                                Next
+                            End If
+                        End If
+                    Next
+                End If
+            End If
+            count = 0
+
 
 
         End If
