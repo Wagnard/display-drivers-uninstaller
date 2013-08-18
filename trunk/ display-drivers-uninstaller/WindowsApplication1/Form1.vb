@@ -19,13 +19,35 @@ Public Class Form1
     Dim card1 As Integer
     Dim position2 As Integer
     Dim removephysx As Boolean = True
+    Dim t As Thread
+    Dim userpth As String = System.Environment.GetEnvironmentVariable("userprofile")
+    Dim time As String = DateAndTime.Now
+    Dim locations As String = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
+    Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
+
+    Public Sub log(ByVal value As String)
+        If Me.CheckBox2.Checked = True Then
+            Dim wlog As New IO.StreamWriter(locations, True)
+            wlog.WriteLine(DateTime.Now & " >> " & value)
+            wlog.Flush()
+            wlog.Dispose()
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds) just to be sure its really released.
+        Else
+
+        End If
+    End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
+        t = New Thread(AddressOf Me.backgroundprocess)
+        t.Start()
+    End Sub
+    Private Sub backgroundprocess()
         Button1.Enabled = False
         Button2.Enabled = False
         Button3.Enabled = False
-            CheckBox2.Enabled = False
+        ComboBox1.Enabled = False
+        CheckBox2.Enabled = False
 
 
         If ComboBox1.Text = "AMD" Then
@@ -41,14 +63,14 @@ Public Class Form1
         For i As Integer = 0 To appproc.Count - 1
             appproc(i).Kill()
         Next i
-            TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver ..." + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
-            log("Uninstalling " + ComboBox1.Text + " driver ...")
-            TextBox1.Text = TextBox1.Text + "Executing DEVCON Remove" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
-            log("Executing DEVCON Remove")
+        TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver ..." + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
+        log("Uninstalling " + ComboBox1.Text + " driver ...")
+        TextBox1.Text = TextBox1.Text + "Executing DEVCON Remove" + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
+        log("Executing DEVCON Remove")
         'find the PCI.... of the videocards.
         checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
         checkoem.Arguments = "findall =display"
@@ -142,7 +164,7 @@ Public Class Form1
         End While
 
         'creation dun process fantome pour le wait on exit.
-        
+
         System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
 
         TextBox1.Text = TextBox1.Text + "DEVCON Remove Display Complete" + vbNewLine
@@ -429,7 +451,7 @@ Public Class Form1
             End Try
 
             filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.ProgramFiles) + "\ATI"
+      (Environment.SpecialFolder.ProgramFiles) + "\ATI"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -441,7 +463,7 @@ Public Class Form1
             End Try
 
             filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo"
+      (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo"
             Try
                 TestDelete(filePath)
             Catch ex As Exception
@@ -453,7 +475,7 @@ Public Class Form1
 
 
             filePath = Environment.GetFolderPath _
-               (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
+     (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -489,7 +511,7 @@ Public Class Form1
             End Try
 
             filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies\Multimedia"
+      (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies\Multimedia"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -778,7 +800,7 @@ Public Class Form1
 
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                    ("Directory\background\shellex\ContextMenuHandlers", True)
+          ("Directory\background\shellex\ContextMenuHandlers", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -913,7 +935,7 @@ Public Class Form1
 
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+      ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -945,7 +967,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                ("Software\Microsoft\Installer\Features", True)
+      ("Software\Microsoft\Installer\Features", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -969,7 +991,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                ("Software\Microsoft\Installer\Products", True)
+      ("Software\Microsoft\Installer\Products", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -1055,7 +1077,7 @@ Public Class Form1
             count = 0
 
             Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
+      ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
             If basekey IsNot Nothing Then
                 For Each super As String In basekey.GetSubKeyNames()
                     If super IsNot Nothing Then
@@ -1143,7 +1165,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-               ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
+     ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -1172,7 +1194,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+          ("Software\\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
                     If child IsNot Nothing Then
@@ -1195,7 +1217,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
+          ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
                     If child IsNot Nothing Then
@@ -1221,7 +1243,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                ("Installer\Products", True)
+      ("Installer\Products", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -1256,7 +1278,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-            ("SOFTWARE\Classes\Installer\Products", True)
+  ("SOFTWARE\Classes\Installer\Products", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -1292,7 +1314,7 @@ Public Class Form1
 
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                ("CLSID", True)
+      ("CLSID", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -1317,7 +1339,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                ("Interface", True)
+      ("Interface", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -1597,8 +1619,8 @@ Public Class Form1
 
 
 
-        filePath = Environment.GetFolderPath _
-            (Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
+            filePath = Environment.GetFolderPath _
+  (Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
 
             If removephysx Then
                 Try
@@ -1619,7 +1641,7 @@ Public Class Form1
             End If
 
             filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.ApplicationData) + "\NVIDIA"
+      (Environment.SpecialFolder.ApplicationData) + "\NVIDIA"
 
             If removephysx Then
                 Try
@@ -1640,7 +1662,7 @@ Public Class Form1
             End If
 
             filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
+      (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 
             If removephysx Then
                 Try
@@ -1661,7 +1683,7 @@ Public Class Form1
             End If
 
             filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
+      (Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
 
             If removephysx Then
                 Try
@@ -1708,7 +1730,7 @@ Public Class Form1
             'Not sure if this work on XP
 
             filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
+      (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
 
             If removephysx Then
                 Try
@@ -1729,7 +1751,7 @@ Public Class Form1
             End If
 
             filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
+      (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
 
             If removephysx Then
                 Try
@@ -2056,7 +2078,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                   ("Software\\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+         ("Software\\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
                     If child IsNot Nothing Then
@@ -2192,7 +2214,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+          ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
             For Each child As String In regkey.GetSubKeyNames()
                 If child IsNot Nothing Then
                     subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -2219,7 +2241,7 @@ Public Class Form1
             Next
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
+          ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
             For Each child As String In regkey.GetSubKeyNames()
                 If child IsNot Nothing Then
                     subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -2237,7 +2259,7 @@ Public Class Form1
             Next
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
+          ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -2262,7 +2284,7 @@ Public Class Form1
             count = 0
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("Software\Microsoft\Windows\CurrentVersion\Run", True)
+      ("Software\Microsoft\Windows\CurrentVersion\Run", True)
             If regkey IsNot Nothing Then
                 Try
                     regkey.DeleteValue("Nvtmru")
@@ -2295,7 +2317,7 @@ Public Class Form1
             TextBox1.ScrollToCaret()
             log("Debug : Starting S-1-5-xx region cleanUP")
             Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                            ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
+                  ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
             If basekey IsNot Nothing Then
                 For Each super As String In basekey.GetSubKeyNames()
                     If super IsNot Nothing Then
@@ -2397,7 +2419,7 @@ Public Class Form1
             log("Debug : End of S-1-5-xx region cleanUP")
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                ("Installer\Products", True)
+      ("Installer\Products", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -2427,7 +2449,7 @@ Public Class Form1
             End If
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("SOFTWARE\Classes\Installer\Products", True)
+      ("SOFTWARE\Classes\Installer\Products", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -2524,7 +2546,8 @@ Public Class Form1
         Button1.Enabled = True
         Button2.Enabled = True
         Button3.Enabled = True
-
+        ComboBox1.Enabled = True
+        CheckBox2.Enabled = True
         If reboot Then
             log("Restarting Computer ")
             System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
@@ -2533,6 +2556,7 @@ Public Class Form1
             System.Diagnostics.Process.Start("shutdown", "/s /t 0 /f")
         End If
     End Sub
+
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -2798,6 +2822,7 @@ Public Class Form1
 
         Next
     End Sub
+
 
     Private Sub Cleanup(ByVal directory As String, ByVal KeepDur As Integer)
         'Code taken from my CoDUO FoV Changer program, thus why it uses a keepdur, it's supposed to delete logs older than whatever days. I set it to 2 seconds instead of modifying the code. Lol
