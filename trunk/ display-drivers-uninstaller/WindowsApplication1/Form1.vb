@@ -25,24 +25,8 @@ Public Class Form1
     Dim locations As String = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
 
-    Public Sub log(ByVal value As String)
-        If Me.CheckBox2.Checked = True Then
-            Dim wlog As New IO.StreamWriter(locations, True)
-            wlog.WriteLine(DateTime.Now & " >> " & value)
-            wlog.Flush()
-            wlog.Dispose()
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds) just to be sure its really released.
-        Else
-
-        End If
-    End Sub
-
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        t = New Thread(AddressOf Me.backgroundprocess)
-        t.Start()
-    End Sub
-    Private Sub backgroundprocess()
         Button1.Enabled = False
         Button2.Enabled = False
         Button3.Enabled = False
@@ -118,6 +102,7 @@ Public Class Form1
                 proc.WaitForExit()
             End If
             card1 = Reply.IndexOf("PCI", card1 + 1)
+            System.Threading.Thread.Sleep(1000) '1 second sleep between removal of videocards.
         End While
         checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
         checkoem.Arguments = "findall =media"
@@ -2110,6 +2095,58 @@ Public Class Form1
                 End If
             End If
             'end of deleting dcom stuff
+            count = 0
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
+
+            If regkey IsNot Nothing Then
+
+                wantedvalue = regkey.GetValue("AppInit_DLLs")
+                        If wantedvalue IsNot Nothing Then
+                    If wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll") Then
+                        wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                        regkey.SetValue("AppInit_DLLs", wantedvalue)
+                    Else
+                        If wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL") Then
+                            wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+                            regkey.SetValue("AppInit_DLLs", wantedvalue)
+                        Else
+                            If wantedvalue.Contains(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll") Then
+                                wantedvalue.Replace(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                                regkey.SetValue("AppInit_DLLs", wantedvalue)
+                            End If
+                        End If
+                    End If
+                End If
+            End If
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                   ("SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Windows", True)
+
+                If regkey IsNot Nothing Then
+
+                    wantedvalue = regkey.GetValue("AppInit_DLLs")
+                    If wantedvalue IsNot Nothing Then
+                        If wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll") Then
+                            wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                            regkey.SetValue("AppInit_DLLs", wantedvalue)
+                        Else
+                            If wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL") Then
+                                wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+                                regkey.SetValue("AppInit_DLLs", wantedvalue)
+                            Else
+                                If wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll") Then
+                                    wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                                    regkey.SetValue("AppInit_DLLs", wantedvalue)
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+            End If
+
+
 
             count = 0
             If removephysx Then
@@ -2966,4 +3003,17 @@ Public Class Form1
             CheckBox3.Visible = False
         End If
     End Sub
+
+    Public Sub log(ByVal value As String)
+        If Me.CheckBox2.Checked = True Then
+            Dim wlog As New IO.StreamWriter(locations, True)
+            wlog.WriteLine(DateTime.Now & " >> " & value)
+            wlog.Flush()
+            wlog.Dispose()
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds) just to be sure its really released.
+        Else
+
+        End If
+    End Sub
+
 End Class
