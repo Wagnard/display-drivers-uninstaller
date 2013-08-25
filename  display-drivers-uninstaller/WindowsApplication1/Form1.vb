@@ -1340,16 +1340,16 @@ Public Class Form1
             ("CLSID\" & child, False)
 
                         If subregkey IsNot Nothing Then
+                            If subregkey.GetValue("") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("").ToString
+                                If wantedvalue IsNot Nothing Then
+                                    If wantedvalue.Contains("SteadyVideoBHO") Then
 
-                            wantedvalue = subregkey.GetValue("")
-                            If wantedvalue IsNot Nothing Then
-                                If wantedvalue.Contains("SteadyVideoBHO") Then
+                                        regkey.DeleteSubKeyTree(child)
 
-                                    regkey.DeleteSubKeyTree(child)
-
+                                    End If
                                 End If
                             End If
-
                         End If
                     End If
                     count += 1
@@ -1367,16 +1367,16 @@ Public Class Form1
             ("Interface\" & child, False)
 
                         If subregkey IsNot Nothing Then
+                            If subregkey.GetValue("") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("").ToString
+                                If wantedvalue IsNot Nothing Then
+                                    If wantedvalue.Contains("SteadyVideoBHO") Then
 
-                            wantedvalue = subregkey.GetValue("")
-                            If wantedvalue IsNot Nothing Then
-                                If wantedvalue.Contains("SteadyVideoBHO") Then
+                                        regkey.DeleteSubKeyTree(child)
 
-                                    regkey.DeleteSubKeyTree(child)
-
+                                    End If
                                 End If
                             End If
-
                         End If
                     End If
                     count += 1
@@ -1394,16 +1394,16 @@ Public Class Form1
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                     ("Wow6432Node\CLSID\" & child, False)
                             If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If wantedvalue IsNot Nothing Then
+                                        If wantedvalue.Contains("SteadyVideoBHO") Then
 
-                                wantedvalue = subregkey.GetValue("")
-                                If wantedvalue IsNot Nothing Then
-                                    If wantedvalue.Contains("SteadyVideoBHO") Then
+                                            regkey.DeleteSubKeyTree(child)
 
-                                        regkey.DeleteSubKeyTree(child)
-
+                                        End If
                                     End If
                                 End If
-
                             End If
                         End If
                         count += 1
@@ -1424,16 +1424,16 @@ Public Class Form1
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                     ("Wow6432Node\Interface\" & child, False)
                             If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If wantedvalue IsNot Nothing Then
+                                        If wantedvalue.Contains("SteadyVideoBHO") Then
 
-                                wantedvalue = subregkey.GetValue("")
-                                If wantedvalue IsNot Nothing Then
-                                    If wantedvalue.Contains("SteadyVideoBHO") Then
+                                            regkey.DeleteSubKeyTree(child)
 
-                                        regkey.DeleteSubKeyTree(child)
-
+                                        End If
                                     End If
                                 End If
-
                             End If
                         End If
                         count += 1
