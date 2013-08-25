@@ -146,6 +146,7 @@ Public Class Form1
                 prochdmi.WaitForExit()
             End If
             card1 = Reply.IndexOf("HDAUDIO", card1 + 1)
+            System.Threading.Thread.Sleep(1000) '1 second sleep between removal of media.
         End While
 
         'creation dun process fantome pour le wait on exit.
@@ -202,7 +203,7 @@ Public Class Form1
         proc2.Start()
         Reply = proc2.StandardOutput.ReadToEnd
         proc2.WaitForExit()
-        System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.05 Seconds)
+        System.Threading.Thread.Sleep(250)  '250 millisecond stall (0.250 Seconds)
         log("DEVCON DP_ENUM RESULT BELOW")
         log(Reply)
         'Preparing to read output.
@@ -1791,7 +1792,7 @@ Public Class Form1
             End If
             'Erase driver file from windows directory
 
-            Dim driverfiles(64) As String
+            Dim driverfiles(72) As String
             driverfiles(0) = "nvapi.dll"
             driverfiles(1) = "nvapi64.dll"
             driverfiles(2) = "nvcompiler.dll"
@@ -1856,7 +1857,16 @@ Public Class Form1
             driverfiles(61) = "nvsvcr.dll"
             driverfiles(62) = "nvvsvc.exe"
             driverfiles(63) = "nvshext.dll"
-            For i As Integer = 0 To 63
+            driverfiles(64) = "dbInstaller.exe"
+            driverfiles(65) = "nvidia-smi.exe"
+            driverfiles(66) = "nvidia-smi.1.pdf"
+            driverfiles(67) = "MCU.exe"
+            driverfiles(68) = "license.txt"
+            driverfiles(69) = "nvdebugdump.exe"
+            driverfiles(70) = "OpenCL.dll"
+            driverfiles(71) = "OpenCL64.dll"
+
+            For i As Integer = 0 To 69
 
                 filePath = System.Environment.SystemDirectory
                 Try
@@ -2095,6 +2105,59 @@ Public Class Form1
                 End If
             End If
             'end of deleting dcom stuff
+
+            Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+            Dim reginfos As RegistryKey = Nothing
+            Dim FolderAcl As New RegistrySecurity
+            For i As Integer = 0 To 71
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
+                If regkey IsNot Nothing Then
+                    For Each child In regkey.GetSubKeyNames()
+                        If child IsNot Nothing Then
+                            If child.Contains(driverfiles(i)) Then
+                                removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                                removehdmidriver.UseShellExecute = False
+                                removehdmidriver.CreateNoWindow = True
+                                prochdmi.StartInfo = removehdmidriver
+                                prochdmi.Start()
+                                prochdmi.WaitForExit()
+                                System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+                                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=Administrators=f"
+                                prochdmi.Start()
+                                prochdmi.WaitForExit()
+                                System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+                                reginfos = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child, True)
+
+                                If reginfos IsNot Nothing Then
+                                    FolderAcl.AddAccessRule(New RegistryAccessRule(UserAccount, RegistryRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
+                                    'FolderAcl.SetAccessRuleProtection(True, False) 'uncomment to remove existing permissions
+                                    reginfos.SetAccessControl(FolderAcl)
+                                    System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+                                    Try
+                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
+                                            ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
+                                    Catch ex As Exception
+                                        log(ex.Message)
+                                    End Try
+
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
+            Next
+            'setting back the registry permission to normal.
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            removehdmidriver.Arguments = "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+
+
             count = 0
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
@@ -2102,7 +2165,7 @@ Public Class Form1
             If regkey IsNot Nothing Then
 
                 wantedvalue = regkey.GetValue("AppInit_DLLs")   'Will need to consider the comma in the future for multiple value
-                        If wantedvalue IsNot Nothing Then
+                If wantedvalue IsNot Nothing Then
                     Select Case True
                         Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
                             wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
@@ -2764,6 +2827,10 @@ Public Class Form1
                 If Not System.IO.File.Exists(myExe) Then
                     System.IO.File.WriteAllBytes(myExe, My.Resources.devcon64)
                 End If
+                myExe = Application.StartupPath & "\x64\subinacl.exe"
+                If Not System.IO.File.Exists(myExe) Then
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl)
+                End If
             Catch ex As Exception
                 log(ex.Message)
                 TextBox1.AppendText(ex.Message)
@@ -2773,6 +2840,10 @@ Public Class Form1
                 Dim myExe As String = Application.StartupPath & "\x86\devcon.exe"
                 If Not System.IO.File.Exists(myExe) Then
                     System.IO.File.WriteAllBytes(myExe, My.Resources.devcon32)
+                End If
+                myExe = Application.StartupPath & "\x86\subinacl.exe"
+                If Not System.IO.File.Exists(myExe) Then
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl)
                 End If
             Catch ex As Exception
                 log(ex.Message)
