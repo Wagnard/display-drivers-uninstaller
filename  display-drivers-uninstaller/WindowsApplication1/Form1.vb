@@ -517,13 +517,13 @@ Public Class Form1
             End Try
             'Delete driver files
             'delete OpenCL
-            Dim driverfiles(124) As String
+            Dim driverfiles(131) As String
             driverfiles(0) = "amdave32.dll"
             driverfiles(1) = "amdocl32.dll"
             driverfiles(2) = "amdh232enc32.dll"
             driverfiles(3) = "amdhcp32.dll"
             driverfiles(4) = "amdhdl32.dll"
-            driverfiles(5) = "amdhwdecoder_32.dll"
+            driverfiles(5) = "AMDhwDecoder_32.dll"
             driverfiles(6) = "amdmiracast.dll"
             driverfiles(7) = "amdpcom32.dll"
             driverfiles(8) = "ati2edxx.dll"
@@ -589,10 +589,10 @@ Public Class Form1
             driverfiles(68) = "amdocl_as.exe"
             driverfiles(69) = "amdocl_ld64.exe"
             driverfiles(70) = "amdocl_as64.exe"
-            driverfiles(71) = "amdh264enc64.dll"
+            driverfiles(71) = "AMDh264Enc64.dll"
             driverfiles(72) = "amdhcp64.dll"
             driverfiles(73) = "amdhdl64.dll"
-            driverfiles(74) = "amdhwdecoder_64.dll"
+            driverfiles(74) = "AMDhwDecoder_64.dll"
             driverfiles(75) = "amdmiracast.dll"
             driverfiles(76) = "ati2edxx.dll"
             driverfiles(77) = "aticaldd64.dll"
@@ -642,7 +642,14 @@ Public Class Form1
             driverfiles(121) = "atikmpag.sys"
             driverfiles(122) = "ativpsrm.dll"
             driverfiles(123) = "AtihdW86.sys"
-            For i As Integer = 0 To 123
+            driverfiles(124) = "amdocl.dll"
+            driverfiles(125) = "amdocl_ld32.exe"
+            driverfiles(126) = "amdocl_as32.exe"
+            driverfiles(127) = "ativvsva.dat"
+            driverfiles(128) = "ATIODCLI.exe"
+            driverfiles(129) = "ATIODE.exe"
+            driverfiles(130) = "AMDh264Enc32.dll"
+            For i As Integer = 0 To 130
 
                 filePath = System.Environment.SystemDirectory
                 Try
@@ -794,6 +801,69 @@ Public Class Form1
                 Next
             End If
             count = 0
+
+            'end of decom?
+
+            'remove opencl registry Khronos
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+            Try
+                regkey.DeleteSubKeyTree("Khronos")
+
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message + " Opencl Khronos")
+            End Try
+
+            Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+            Dim reginfos As RegistryKey = Nothing
+            Dim FolderAcl As New RegistrySecurity
+            'setting permission to registry
+            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAccount & "=f"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            For i As Integer = 0 To 130
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
+                If regkey IsNot Nothing Then
+
+                    For Each child In regkey.GetSubKeyNames()
+                        If child IsNot Nothing Then
+                            If child.Contains(driverfiles(i)) Then
+
+                                Try
+                                    My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
+                                        ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+            Next
+            'setting back the registry permission to normal.
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            removehdmidriver.Arguments = "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAccount
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
 
 
 
@@ -2093,39 +2163,33 @@ Public Class Form1
             Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
             Dim reginfos As RegistryKey = Nothing
             Dim FolderAcl As New RegistrySecurity
+            'setting permission to registry
+            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAccount & "=f"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
             For i As Integer = 0 To 72
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
                 If regkey IsNot Nothing Then
+
                     For Each child In regkey.GetSubKeyNames()
                         If child IsNot Nothing Then
                             If child.Contains(driverfiles(i)) Then
-                                removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
-                                removehdmidriver.UseShellExecute = False
-                                removehdmidriver.CreateNoWindow = True
-                                prochdmi.StartInfo = removehdmidriver
-                                prochdmi.Start()
-                                prochdmi.WaitForExit()
-                                System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-                                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAccount & "=f"
-                                prochdmi.Start()
-                                prochdmi.WaitForExit()
-                                System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-                                reginfos = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child, True)
 
-                                If reginfos IsNot Nothing Then
-                                    FolderAcl.AddAccessRule(New RegistryAccessRule(UserAccount, RegistryRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
-                                    'FolderAcl.SetAccessRuleProtection(True, False) 'uncomment to remove existing permissions
-                                    reginfos.SetAccessControl(FolderAcl)
-                                    System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-                                    Try
-                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
-                                            ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
-                                    Catch ex As Exception
-                                        log(ex.Message)
-                                    End Try
-
-                                End If
+                                Try
+                                    My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
+                                        ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                End Try
                             End If
                         End If
                     Next
@@ -2135,16 +2199,16 @@ Public Class Form1
             removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
             prochdmi.Start()
             prochdmi.WaitForExit()
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
             removehdmidriver.Arguments = "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
             prochdmi.Start()
             prochdmi.WaitForExit()
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
             removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAccount
             prochdmi.Start()
             prochdmi.WaitForExit()
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            '----------------
             count = 0
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
@@ -2218,6 +2282,19 @@ Public Class Form1
                 End If
             End If
             count = 0
+
+            'remove opencl registry Khronos
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+            Try
+                regkey.DeleteSubKeyTree("Khronos")
+
+            Catch ex As Exception
+                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(ex.Message + " Opencl Khronos")
+            End Try
+                       
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
          ("Software\\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
