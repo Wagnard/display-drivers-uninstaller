@@ -517,7 +517,7 @@ Public Class Form1
             End Try
             'Delete driver files
             'delete OpenCL
-            Dim driverfiles(131) As String
+            Dim driverfiles(132) As String
             driverfiles(0) = "amdave32.dll"
             driverfiles(1) = "amdocl32.dll"
             driverfiles(2) = "amdh232enc32.dll"
@@ -628,7 +628,7 @@ Public Class Form1
             driverfiles(107) = "SlotMaximizerBe.dll"
             driverfiles(108) = "OVDecode64.dll"
             driverfiles(109) = "OVDecode.dll"
-            driverfiles(110) = "OpenVideo.dll"
+            driverfiles(110) = "OpenVideo64.dll"
             driverfiles(111) = "atikmdag.sys"
             driverfiles(112) = "atiogl.xml"
             driverfiles(113) = "ativpsrm.bin"
@@ -649,6 +649,7 @@ Public Class Form1
             driverfiles(128) = "ATIODCLI.exe"
             driverfiles(129) = "ATIODE.exe"
             driverfiles(130) = "AMDh264Enc32.dll"
+            driverfiles(131) = "coinst_"
             For i As Integer = 0 To 130
 
                 filePath = System.Environment.SystemDirectory
@@ -716,6 +717,15 @@ Public Class Form1
                     TextBox1.ScrollToCaret()
                     log(ex.Message)
                 End Try
+
+                filePath = System.Environment.SystemDirectory
+                Dim files() As String = IO.Directory.GetFiles(filePath + "\", "coinst_*.*")
+                For i As Integer = 0 To files.Count - 1
+                    Try
+                        My.Computer.FileSystem.DeleteFile(files(i))
+                    Catch ex As Exception
+                    End Try
+                Next
 
                 filePath = Environment.GetFolderPath _
                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
@@ -815,6 +825,18 @@ Public Class Form1
                 TextBox1.ScrollToCaret()
                 log(ex.Message + " Opencl Khronos")
             End Try
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                Try
+                    regkey.DeleteSubKeyTree("Khronos")
+
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message + " Opencl Khronos")
+                End Try
+            End If
 
             Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
             Dim reginfos As RegistryKey = Nothing
@@ -832,7 +854,7 @@ Public Class Form1
             prochdmi.Start()
             prochdmi.WaitForExit()
             System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-            For i As Integer = 0 To 130
+            For i As Integer = 0 To 131
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
                 If regkey IsNot Nothing Then
 
@@ -865,7 +887,137 @@ Public Class Form1
             prochdmi.WaitForExit()
             System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
 
+            'cleaning pnpresources
+            'setting permission to registry
+            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /owner=Administrators"
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAccount & "=f"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            Try
+                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
+            Catch ex As Exception
+                log(ex.Message)
+            End Try
 
+            If IntPtr.Size = 8 Then
+                removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /owner=Administrators"
+                removehdmidriver.UseShellExecute = False
+                removehdmidriver.CreateNoWindow = True
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAccount & "=f"
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                Try
+                    My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
+                Catch ex As Exception
+                    log(ex.Message)
+                End Try
+            End If
+
+            If IntPtr.Size = 8 Then
+                removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE /owner=Administrators"
+                removehdmidriver.UseShellExecute = False
+                removehdmidriver.CreateNoWindow = True
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE /grant=" & UserAccount & "=f"
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                Try
+                    My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
+                Catch ex As Exception
+                    log(ex.Message)
+                End Try
+            End If
+
+            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU /owner=Administrators"
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU /grant=" & UserAccount & "=f"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            Try
+                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
+            Catch ex As Exception
+                log(ex.Message)
+            End Try
+
+            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable /owner=Administrators"
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable /grant=" & UserAccount & "=f"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            Try
+                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
+            Catch ex As Exception
+                log(ex.Message)
+            End Try
+
+            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups /owner=Administrators"
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups /grant=" & UserAccount & "=f"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            Try
+                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
+            Catch ex As Exception
+                log(ex.Message)
+            End Try
+
+            'removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+            'removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies\CBT /owner=Administrators"
+            'removehdmidriver.UseShellExecute = False
+            'removehdmidriver.CreateNoWindow = True
+            'prochdmi.StartInfo = removehdmidriver
+            'prochdmi.Start()
+            'prochdmi.WaitForExit()
+            'System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            'removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies\CBT /grant=" & UserAccount & "=f"
+            'prochdmi.Start()
+            'prochdmi.WaitForExit()
+            'System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            'Try
+            '    My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies\CBT")
+            'Catch ex As Exception
+            '    log(ex.Message)
+            'End Try
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
           ("Directory\background\shellex\ContextMenuHandlers", True)
@@ -1852,7 +2004,7 @@ Public Class Form1
             End If
             'Erase driver file from windows directory
 
-            Dim driverfiles(73) As String
+            Dim driverfiles(77) As String
             driverfiles(0) = "nvapi.dll"
             driverfiles(1) = "nvapi64.dll"
             driverfiles(2) = "nvcompiler.dll"
@@ -1926,8 +2078,11 @@ Public Class Form1
             driverfiles(70) = "OpenCL.dll"
             driverfiles(71) = "OpenCL64.dll"
             driverfiles(72) = "nvStreaming.exe"
-
-            For i As Integer = 0 To 72
+            driverfiles(73) = "nv_disp.inf"
+            driverfiles(74) = "nv_dispi.inf"
+            driverfiles(75) = "nvdisp"
+            driverfiles(76) = "nvhda"
+            For i As Integer = 0 To 76
 
                 filePath = System.Environment.SystemDirectory
                 Try
@@ -2176,7 +2331,7 @@ Public Class Form1
             prochdmi.Start()
             prochdmi.WaitForExit()
             System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-            For i As Integer = 0 To 72
+            For i As Integer = 0 To 76
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
                 If regkey IsNot Nothing Then
 
@@ -2209,7 +2364,68 @@ Public Class Form1
             prochdmi.WaitForExit()
             System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
             '----------------
+
+            'cleaning pnpresources
+            'setting permission to registry
+            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /owner=Administrators"
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAccount & "=f"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            Try
+                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
+            Catch ex As Exception
+                log(ex.Message)
+            End Try
+
+            If IntPtr.Size = 8 Then
+                removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /owner=Administrators"
+                removehdmidriver.UseShellExecute = False
+                removehdmidriver.CreateNoWindow = True
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAccount & "=f"
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                Try
+                    My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
+                Catch ex As Exception
+                    log(ex.Message)
+                End Try
+            End If
+
+            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /owner=Administrators"
+            removehdmidriver.UseShellExecute = False
+            removehdmidriver.CreateNoWindow = True
+            prochdmi.StartInfo = removehdmidriver
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /grant=" & UserAccount & "=f"
+            prochdmi.Start()
+            prochdmi.WaitForExit()
+            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+            Try
+                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
+            Catch ex As Exception
+                log(ex.Message)
+            End Try
+
+
             count = 0
+
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
 
@@ -2294,7 +2510,19 @@ Public Class Form1
                 TextBox1.ScrollToCaret()
                 log(ex.Message + " Opencl Khronos")
             End Try
-                       
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                Try
+                    regkey.DeleteSubKeyTree("Khronos")
+
+                Catch ex As Exception
+                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                    TextBox1.Select(TextBox1.Text.Length, 0)
+                    TextBox1.ScrollToCaret()
+                    log(ex.Message + " Opencl Khronos")
+                End Try
+            End If
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
          ("Software\\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
