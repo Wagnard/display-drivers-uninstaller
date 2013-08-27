@@ -2038,7 +2038,7 @@ Public Class Form1
             driverfiles(21) = "nvEncodeAPI.dll"
             driverfiles(22) = "nvEncodeAPI64.dll"
             driverfiles(23) = "NvFBC.dll"
-            driverfiles(24) = "nvFBC64.dll"
+            driverfiles(24) = "NvFBC64.dll"
             driverfiles(25) = "NvIFR.dll"
             driverfiles(26) = "NvIFR64.dll"
             driverfiles(27) = "nvinfo.pb"
