@@ -75,15 +75,19 @@ Public Class Form1
             proc2.Start()
             Reply = proc2.StandardOutput.ReadToEnd
             proc2.WaitForExit()
-            card1 = Reply.IndexOf("PCI")
+            Try
+                card1 = reply.IndexOf("PCI")
+            Catch ex As Exception
+
+            End Try
             While card1 > -1
 
                 If card1 < 0 Then
                     Exit While
                 End If
 
-                position2 = Reply.IndexOf(":", card1)
-                vendid = Reply.Substring(card1, position2 - card1)
+                position2 = reply.IndexOf(":", card1)
+                vendid = reply.Substring(card1, position2 - card1)
 
                 If vendid.Contains(vendidexpected) Then
                     'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
@@ -108,7 +112,7 @@ Public Class Form1
                     End Try
                     proc.WaitForExit()
                 End If
-                card1 = Reply.IndexOf("PCI", card1 + 1)
+                card1 = reply.IndexOf("PCI", card1 + 1)
                 System.Threading.Thread.Sleep(100) '100ms sleep between removal of videocards.
             End While
         Next
@@ -124,7 +128,12 @@ Public Class Form1
         proc2.Start()
         Reply = proc2.StandardOutput.ReadToEnd
         proc2.WaitForExit()
-        card1 = Reply.IndexOf("HDAUDIO")
+        Try
+            card1 = reply.IndexOf("HDAUDIO")
+        Catch ex As Exception
+
+        End Try
+
         While card1 > -1
 
             If card1 < 0 Then
@@ -219,19 +228,18 @@ Public Class Form1
         Dim position As Integer
         Dim classs As Integer
         Dim oem As Integer = Reply.IndexOf("oem")
-        Dim inf As Integer = Reply.IndexOf(".inf", oem)
-        position = Reply.IndexOf("Provider:", oem)
-        classs = Reply.IndexOf("Class:", oem)
+        Dim inf As Integer = Nothing
+        
         While oem > -1
 
-            While Not Reply.Substring(position, classs - position).Contains(provider)
-                oem = Reply.IndexOf("oem", oem + 1)
+            While Not reply.Substring(position, classs - position).Contains(provider)
+                oem = reply.IndexOf("oem", oem + 1)
                 If oem < 0 Then
                     Exit While
                 End If
-                inf = Reply.IndexOf(".inf", oem)
-                position = Reply.IndexOf("Provider:", oem)
-                classs = Reply.IndexOf("Class:", oem)
+                inf = reply.IndexOf(".inf", oem)
+                position = reply.IndexOf("Provider:", oem)
+                classs = reply.IndexOf("Class:", oem)
 
 
             End While
@@ -239,14 +247,14 @@ Public Class Form1
                 Exit While
             End If
             'work around...
-            Dim part As String = Reply.Substring(oem, inf - oem)
-            oem = Reply.IndexOf("oem", oem + 1)
+            Dim part As String = reply.Substring(oem, inf - oem)
+            oem = reply.IndexOf("oem", oem + 1)
             If oem < 0 Then
                 Exit While
             End If
-            inf = Reply.IndexOf(".inf", oem)
-            position = Reply.IndexOf("Provider:", oem)
-            classs = Reply.IndexOf("Class:", oem)
+            inf = reply.IndexOf(".inf", oem)
+            position = reply.IndexOf("Provider:", oem)
+            classs = reply.IndexOf("Class:", oem)
             TextBox1.Text = TextBox1.Text + part + " found" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
@@ -517,7 +525,7 @@ Public Class Form1
             End Try
             'Delete driver files
             'delete OpenCL
-            Dim driverfiles(132) As String
+            Dim driverfiles(133) As String
             driverfiles(0) = "amdave32.dll"
             driverfiles(1) = "amdocl32.dll"
             driverfiles(2) = "amdh232enc32.dll"
@@ -650,6 +658,7 @@ Public Class Form1
             driverfiles(129) = "ATIODE.exe"
             driverfiles(130) = "AMDh264Enc32.dll"
             driverfiles(131) = "coinst_"
+            driverfiles(132) = "atiilhag"
             For i As Integer = 0 To 130
 
                 filePath = System.Environment.SystemDirectory
@@ -854,7 +863,7 @@ Public Class Form1
             prochdmi.Start()
             prochdmi.WaitForExit()
             System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-            For i As Integer = 0 To 131
+            For i As Integer = 0 To 132
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
                 If regkey IsNot Nothing Then
 
@@ -1302,7 +1311,7 @@ Public Class Form1
             count = 0
 
             Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-      ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
+        ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
             If basekey IsNot Nothing Then
                 For Each super As String In basekey.GetSubKeyNames()
                     If super IsNot Nothing Then
@@ -2026,12 +2035,12 @@ Public Class Form1
             driverfiles(18) = "nvdrsdb.bin"
             driverfiles(19) = "nvdxgiwrap.dll"
             driverfiles(20) = "nvdxgiwrapx.dll"
-            driverfiles(21) = "nvencodeapi.dll"
-            driverfiles(22) = "nvencodeapi64.dll"
-            driverfiles(23) = "nvfbc.dll"
-            driverfiles(24) = "nvfbc64.dll"
-            driverfiles(25) = "nvifr.dll"
-            driverfiles(26) = "nvifr64.dll"
+            driverfiles(21) = "nvEncodeAPI.dll"
+            driverfiles(22) = "nvEncodeAPI64.dll"
+            driverfiles(23) = "NvFBC.dll"
+            driverfiles(24) = "nvFBC64.dll"
+            driverfiles(25) = "NvIFR.dll"
+            driverfiles(26) = "NvIFR64.dll"
             driverfiles(27) = "nvinfo.pb"
             driverfiles(28) = "nvinit.dll"
             driverfiles(29) = "nvinitx.dll"
@@ -3073,20 +3082,20 @@ Public Class Form1
             log("Unsupported OS.")
         End If
 
-        If Version >= "5.1" Then
+        If version >= "5.1" Then
             Label2.Text = "Windows XP or Server 2003"
         End If
 
-        If Version >= "6.0" Then
+        If version >= "6.0" Then
             Label2.Text = "Windows Vista or Server 2008"
         End If
 
-        If Version >= "6.1" Then
+        If version >= "6.1" Then
             Label2.Text = "Windows 7 or Server 2008r2"
 
         End If
 
-        If Version >= "6.2" Then
+        If version >= "6.2" Then
             Label2.Text = "Windows 8 or Server 2012"
 
         End If
@@ -3161,37 +3170,37 @@ Public Class Form1
         proc2.Start()
         reply = proc2.StandardOutput.ReadToEnd
         proc2.WaitForExit()
-        log(Reply)
+        log(reply)
 
         Dim part As String
         Dim match As Boolean = False
-        card1 = Reply.IndexOf(":")
-        position2 = Reply.IndexOf("PCI", card1 + 1)
+        card1 = reply.IndexOf(":")
+        position2 = reply.IndexOf("PCI", card1 + 1)
         If position2 < 0 Then
-            position2 = Reply.IndexOf("matching", card1 + 1)
+            position2 = reply.IndexOf("matching", card1 + 1)
             match = True
         End If
 
         While card1 > -1
             If Not match Then
-                part = Reply.Substring(card1 + 2, (position2 - card1 - 3))
-                card1 = Reply.IndexOf(":", card1 + 1)
-                position2 = Reply.IndexOf("PCI", card1 + 1)
+                part = reply.Substring(card1 + 2, (position2 - card1 - 3))
+                card1 = reply.IndexOf(":", card1 + 1)
+                position2 = reply.IndexOf("PCI", card1 + 1)
                 If position2 < 0 Then
-                    position2 = Reply.IndexOf("matching", card1 + 1)
+                    position2 = reply.IndexOf("matching", card1 + 1)
                     match = True
                 End If
                 TextBox1.Text = TextBox1.Text + "Detected GPU : " + part + vbNewLine
                 log("Detected GPU : " + part)
             End If
             If match Then
-                part = Reply.Substring(card1 + 2, (position2 - card1 - 5))
-                card1 = Reply.IndexOf(":", card1 + 1)
+                part = reply.Substring(card1 + 2, (position2 - card1 - 5))
+                card1 = reply.IndexOf(":", card1 + 1)
                 TextBox1.Text = TextBox1.Text + "Detected GPU : " + part + vbNewLine
                 log("Detected GPU : " + part)
             End If
         End While
-        If Reply.Contains("VEN_10DE") Then
+        If reply.Contains("VEN_10DE") Then
             ComboBox1.SelectedIndex = 0
         Else
             ComboBox1.SelectedIndex = 1
