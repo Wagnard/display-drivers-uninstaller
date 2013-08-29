@@ -2637,6 +2637,9 @@ Public Class Form1
                             regkey.SetValue("AppInit_DLLs", wantedvalue)
                     End Select
                 End If
+                If regkey.GetValue("AppInit_DLLs") = "" Then
+                    regkey.SetValue("LoadAppInit_DLLs", "0", RegistryValueKind.DWord)
+                End If
             End If
 
             If IntPtr.Size = 8 Then
