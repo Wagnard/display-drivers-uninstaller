@@ -2910,7 +2910,7 @@ Public Class Form1
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
                         subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace" & child, False)
+                        ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\" & child, False)
 
                         If subregkey IsNot Nothing Then
                             If subregkey.GetValue("") IsNot Nothing Then
