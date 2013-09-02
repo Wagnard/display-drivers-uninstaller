@@ -3560,8 +3560,10 @@ Public Class Form1
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
         If ComboBox1.Text = "NVIDIA" Then
             CheckBox3.Visible = True
+            PictureBox2.Image = My.Resources.Nvidia_GeForce_Logo
         Else
             CheckBox3.Visible = False
+            PictureBox2.Image = My.Resources.RadeonLogo1
         End If
     End Sub
 
