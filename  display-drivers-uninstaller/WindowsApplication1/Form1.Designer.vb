@@ -39,16 +39,18 @@ Partial Class Form1
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VisitGuru3dNVIDIAThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VisitGuru3dAMDThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.VisitGeforceThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.CheckBox3 = New System.Windows.Forms.CheckBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.VisitGuru3dNVIDIAThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VisitGuru3dAMDThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.VisitGeforceThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Button1
@@ -160,7 +162,7 @@ Partial Class Form1
         'CheckBox1
         '
         Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(208, 104)
+        Me.CheckBox1.Location = New System.Drawing.Point(229, 272)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(229, 17)
         Me.CheckBox1.TabIndex = 12
@@ -170,7 +172,7 @@ Partial Class Form1
         'CheckBox2
         '
         Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(210, 127)
+        Me.CheckBox2.Location = New System.Drawing.Point(229, 297)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(235, 17)
         Me.CheckBox2.TabIndex = 13
@@ -200,6 +202,24 @@ Partial Class Form1
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
         Me.AboutToolStripMenuItem.Text = "About"
         '
+        'VisitGuru3dNVIDIAThreadToolStripMenuItem
+        '
+        Me.VisitGuru3dNVIDIAThreadToolStripMenuItem.Name = "VisitGuru3dNVIDIAThreadToolStripMenuItem"
+        Me.VisitGuru3dNVIDIAThreadToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
+        Me.VisitGuru3dNVIDIAThreadToolStripMenuItem.Text = "Visit Guru3d NVIDIA Thread"
+        '
+        'VisitGuru3dAMDThreadToolStripMenuItem
+        '
+        Me.VisitGuru3dAMDThreadToolStripMenuItem.Name = "VisitGuru3dAMDThreadToolStripMenuItem"
+        Me.VisitGuru3dAMDThreadToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
+        Me.VisitGuru3dAMDThreadToolStripMenuItem.Text = "Visit Guru3d AMD Thread"
+        '
+        'VisitGeforceThreadToolStripMenuItem
+        '
+        Me.VisitGeforceThreadToolStripMenuItem.Name = "VisitGeforceThreadToolStripMenuItem"
+        Me.VisitGeforceThreadToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
+        Me.VisitGeforceThreadToolStripMenuItem.Text = "Visit Geforce Thread"
+        '
         'Button2
         '
         Me.Button2.Location = New System.Drawing.Point(9, 92)
@@ -225,7 +245,7 @@ Partial Class Form1
         Me.CheckBox3.AutoSize = True
         Me.CheckBox3.Checked = True
         Me.CheckBox3.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.CheckBox3.Location = New System.Drawing.Point(208, 81)
+        Me.CheckBox3.Location = New System.Drawing.Point(229, 249)
         Me.CheckBox3.Name = "CheckBox3"
         Me.CheckBox3.Size = New System.Drawing.Size(99, 17)
         Me.CheckBox3.TabIndex = 17
@@ -243,24 +263,6 @@ Partial Class Form1
         Me.Label9.TabIndex = 19
         Me.Label9.Text = "Note: Any damage or errors caused to your PC is  your responsibility."
         '
-        'VisitGuru3dNVIDIAThreadToolStripMenuItem
-        '
-        Me.VisitGuru3dNVIDIAThreadToolStripMenuItem.Name = "VisitGuru3dNVIDIAThreadToolStripMenuItem"
-        Me.VisitGuru3dNVIDIAThreadToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
-        Me.VisitGuru3dNVIDIAThreadToolStripMenuItem.Text = "Visit Guru3d NVIDIA Thread"
-        '
-        'VisitGuru3dAMDThreadToolStripMenuItem
-        '
-        Me.VisitGuru3dAMDThreadToolStripMenuItem.Name = "VisitGuru3dAMDThreadToolStripMenuItem"
-        Me.VisitGuru3dAMDThreadToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
-        Me.VisitGuru3dAMDThreadToolStripMenuItem.Text = "Visit Guru3d AMD Thread"
-        '
-        'VisitGeforceThreadToolStripMenuItem
-        '
-        Me.VisitGeforceThreadToolStripMenuItem.Name = "VisitGeforceThreadToolStripMenuItem"
-        Me.VisitGeforceThreadToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
-        Me.VisitGeforceThreadToolStripMenuItem.Text = "Visit Geforce Thread"
-        '
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.WindowsApplication1.My.Resources.Resources.btn_donate_LG
@@ -271,11 +273,23 @@ Partial Class Form1
         Me.PictureBox1.TabIndex = 18
         Me.PictureBox1.TabStop = False
         '
+        'PictureBox2
+        '
+        Me.PictureBox2.ErrorImage = Nothing
+        Me.PictureBox2.Image = Global.WindowsApplication1.My.Resources.Resources.Nvidia_GeForce_Logo
+        Me.PictureBox2.Location = New System.Drawing.Point(386, 92)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(158, 126)
+        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox2.TabIndex = 20
+        Me.PictureBox2.TabStop = False
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(600, 505)
+        Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.CheckBox3)
@@ -304,6 +318,7 @@ Partial Class Form1
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -332,5 +347,6 @@ Partial Class Form1
     Friend WithEvents VisitGuru3dNVIDIAThreadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents VisitGuru3dAMDThreadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents VisitGeforceThreadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents PictureBox2 As System.Windows.Forms.PictureBox
 
 End Class

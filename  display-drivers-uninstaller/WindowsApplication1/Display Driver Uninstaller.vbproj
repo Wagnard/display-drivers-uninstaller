@@ -126,12 +126,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="settings.Designer.vb">
-      <DependentUpon>settings.vb</DependentUpon>
-    </Compile>
-    <Compile Include="settings.vb">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="about.resx">
@@ -147,9 +141,6 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="settings.resx">
-      <DependentUpon>settings.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +189,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\Release\btn_donate_LG.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AMD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Nvidia-GeForce-Logo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RadeonLogo1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\btn_donate_LG.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
