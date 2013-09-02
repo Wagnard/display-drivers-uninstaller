@@ -53,17 +53,18 @@ Public Class Form1
         For i As Integer = 0 To appproc.Count - 1
             appproc(i).Kill()
         Next i
+
+
+
+        TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver..." + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
+        log("Uninstalling " + ComboBox1.Text + " driver ...")
+        TextBox1.Text = TextBox1.Text + "Executing DEVCON Remove , Please wait(can take up to 1 minute) " + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
+        log("Executing DEVCON Remove")
         For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
-
-
-            TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver..." + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
-            log("Uninstalling " + ComboBox1.Text + " driver ...")
-            TextBox1.Text = TextBox1.Text + "Executing DEVCON Remove , Please wait(can take up to 1 minute) " + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
-            log("Executing DEVCON Remove")
             'find the PCI.... of the videocards.
             checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
             checkoem.Arguments = "findall =display"
@@ -75,7 +76,7 @@ Public Class Form1
 
             proc2.StartInfo = checkoem
             proc2.Start()
-            Reply = proc2.StandardOutput.ReadToEnd
+            reply = proc2.StandardOutput.ReadToEnd
             proc2.WaitForExit()
             Try
                 card1 = reply.IndexOf("PCI")
@@ -84,14 +85,11 @@ Public Class Form1
             End Try
             While card1 > -1
 
-                If card1 < 0 Then
-                    Exit While
-                End If
-
                 position2 = reply.IndexOf(":", card1)
-                vendid = reply.Substring(card1, position2 - card1)
+                vendid = reply.Substring(card1, position2 - card1).Trim
 
                 If vendid.Contains(vendidexpected) Then
+                    log(vendid)
                     'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
                     removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
                     removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
@@ -118,64 +116,63 @@ Public Class Form1
                 System.Threading.Thread.Sleep(100) '100ms sleep between removal of videocards.
             End While
         Next
-        checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
-        checkoem.Arguments = "findall =media"
-        checkoem.UseShellExecute = False
-        checkoem.CreateNoWindow = True
-        checkoem.RedirectStandardOutput = True
+        For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
+            checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+            checkoem.Arguments = "findall =media"
+            checkoem.UseShellExecute = False
+            checkoem.CreateNoWindow = True
+            checkoem.RedirectStandardOutput = True
 
-        'creation dun process fantome pour le wait on exit.
+            'creation dun process fantome pour le wait on exit.
 
-        proc2.StartInfo = checkoem
-        proc2.Start()
-        Reply = proc2.StandardOutput.ReadToEnd
-        proc2.WaitForExit()
-        Try
-            card1 = reply.IndexOf("HDAUDIO")
-        Catch ex As Exception
+            proc2.StartInfo = checkoem
+            proc2.Start()
+            reply = proc2.StandardOutput.ReadToEnd
+            proc2.WaitForExit()
+            Try
+                card1 = reply.IndexOf("HDAUDIO")
+            Catch ex As Exception
 
-        End Try
+            End Try
 
-        While card1 > -1
+            While card1 > -1
 
-            If card1 < 0 Then
-                Exit While
-            End If
+                position2 = reply.IndexOf(":", card1)
+                vendid = reply.Substring(card1, position2 - card1).Trim
+                If vendid.Contains(vendidexpected) Then
+                    log("-" & vendid & "- Audio device found")
+                    removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                    removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
+                    removehdmidriver.UseShellExecute = False
+                    removehdmidriver.CreateNoWindow = True
+                    prochdmi.StartInfo = removehdmidriver
+                    Try
+                        prochdmi.Start()
+                    Catch ex As Exception
+                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                        TextBox1.Select(TextBox1.Text.Length, 0)
+                        TextBox1.ScrollToCaret()
+                        log(ex.Message)
+                        MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                        Button1.Enabled = True
+                        Button2.Enabled = True
+                        Button3.Enabled = True
+                    End Try
+                    prochdmi.WaitForExit()
+                End If
+                card1 = reply.IndexOf("HDAUDIO", card1 + 1)
+                System.Threading.Thread.Sleep(100) '100 ms sleep between removal of media.
+            End While
 
-            position2 = Reply.IndexOf(":", card1)
-            vendid = Reply.Substring(card1, position2 - card1)
-            If vendid.Contains(vendidexpected) Then
-                removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
-                removehdmidriver.UseShellExecute = False
-                removehdmidriver.CreateNoWindow = True
-                prochdmi.StartInfo = removehdmidriver
-                Try
-                    prochdmi.Start()
-                Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
-                    MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                    Button1.Enabled = True
-                    Button2.Enabled = True
-                    Button3.Enabled = True
-                End Try
-                prochdmi.WaitForExit()
-            End If
-            card1 = Reply.IndexOf("HDAUDIO", card1 + 1)
-            System.Threading.Thread.Sleep(100) '100 ms sleep between removal of media.
-        End While
+            'creation dun process fantome pour le wait on exit.
 
-        'creation dun process fantome pour le wait on exit.
-
-        System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-
+            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+        Next
         TextBox1.Text = TextBox1.Text + "DEVCON Remove Display Complete" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("DEVCON Remove Display Complete")
+
         System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
         'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM) and 3d vision drivers
         If ComboBox1.Text = "NVIDIA" Then
@@ -220,18 +217,18 @@ Public Class Form1
 
         proc2.StartInfo = checkoem
         proc2.Start()
-        Reply = proc2.StandardOutput.ReadToEnd
+        reply = proc2.StandardOutput.ReadToEnd
         proc2.WaitForExit()
         System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
         log("DEVCON DP_ENUM RESULT BELOW")
-        log(Reply)
+        log(reply)
         'Preparing to read output.
 
         Dim position As Integer
         Dim classs As Integer
-        Dim oem As Integer = Reply.IndexOf("oem")
+        Dim oem As Integer = reply.IndexOf("oem")
         Dim inf As Integer = Nothing
-        
+
         While oem > -1
 
             While Not reply.Substring(position, classs - position).Contains(provider)
@@ -770,7 +767,7 @@ Public Class Form1
             TextBox1.ScrollToCaret()
             log("Cleaning known Regkeys")
             'Delete AMD regkey
-            Dim count As Int32 = 0
+
             Dim subregkey As RegistryKey = Nothing
             Dim wantedvalue As String = Nothing
             Dim regkey As RegistryKey
@@ -796,10 +793,10 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
             If regkey IsNot Nothing Then
@@ -818,10 +815,10 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             'end of decom?
 
@@ -849,7 +846,7 @@ Public Class Form1
                 End Try
             End If
             If win8higher Then
-                Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+                Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
                 Dim reginfos As RegistryKey = Nothing
                 Dim FolderAcl As New RegistrySecurity
                 'setting permission to registry
@@ -861,7 +858,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAccount & "=f"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -894,7 +891,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAccount
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -909,7 +906,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAccount & "=f"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -928,7 +925,7 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAccount & "=f"
+                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAc & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -948,7 +945,7 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE /grant=" & UserAccount & "=f"
+                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE /grant=" & UserAc & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -967,7 +964,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU /grant=" & UserAccount & "=f"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -985,7 +982,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable /grant=" & UserAccount & "=f"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -1003,7 +1000,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups /grant=" & UserAccount & "=f"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -1021,7 +1018,7 @@ Public Class Form1
                 'prochdmi.Start()
                 'prochdmi.WaitForExit()
                 'System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                'removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies\CBT /grant=" & UserAccount & "=f"
+                'removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies\CBT /grant=" & UserAc & "=f"
                 'prochdmi.Start()
                 'prochdmi.WaitForExit()
                 'System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -1031,13 +1028,13 @@ Public Class Form1
                 '    log(ex.Message)
                 'End Try
             Else
-                Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+                Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
                 Dim reginfos As RegistryKey = Nothing
                 Dim FolderAcl As New RegistrySecurity
                 'setting permission to registry
 
                 removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAccount & "=f"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 prochdmi.StartInfo = removehdmidriver
@@ -1066,7 +1063,7 @@ Public Class Form1
                 Next
                 'setting back the registry permission to normal.
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAccount
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -1082,10 +1079,10 @@ Public Class Form1
 
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
             If regkey IsNot Nothing Then
@@ -1097,11 +1094,11 @@ Public Class Form1
 
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
 
-            count = 0
+
 
             regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Run", True)
             If regkey IsNot Nothing Then
@@ -1133,11 +1130,11 @@ Public Class Form1
                 End Try
 
             End If
-            count += 1
+
 
 
             'Here im not deleting the ATI completly for safety until 100% sure
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI", True)
             If regkey IsNot Nothing Then
@@ -1149,10 +1146,10 @@ Public Class Form1
 
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies", True)
             If regkey IsNot Nothing Then
@@ -1164,10 +1161,10 @@ Public Class Form1
 
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             ' This may not be super safe to do.
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies\Install", True)
@@ -1183,10 +1180,10 @@ Public Class Form1
 
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             If IntPtr.Size = 8 Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
@@ -1199,11 +1196,11 @@ Public Class Form1
 
                             End If
                         End If
-                        count += 1
+
                     Next
                 End If
             End If
-            count = 0
+
 
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -1236,10 +1233,10 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
       ("Software\Microsoft\Installer\Features", True)
@@ -1257,13 +1254,13 @@ Public Class Form1
 
                                     End If
                                 End If
-                                count += 1
+
                             Next
                         End If
                     End If
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
       ("Software\Microsoft\Installer\Products", True)
@@ -1283,7 +1280,7 @@ Public Class Form1
 
                                     End If
                                 End If
-                                count += 1
+
                             End If
                         End If
                     End If
@@ -1319,11 +1316,11 @@ Public Class Form1
                                 End If
                             End If
                         End If
-                        count += 1
+
                     Next
                 End If
             End If
-            count = 0
+
 
             If IntPtr.Size = 8 Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -1351,7 +1348,7 @@ Public Class Form1
                 End If
             End If
 
-            count = 0
+
 
             Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
         ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
@@ -1435,14 +1432,14 @@ Public Class Form1
                                             End If
                                         End If
                                     End If
-                                    count += 1
+
                                 Next
                             End If
                         End If
                     End If
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
      ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
@@ -1464,13 +1461,13 @@ Public Class Form1
                                         End If
                                     End If
                                 End If
-                                count += 1
+
                             Next
                         End If
                     End If
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
           ("Software\\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
@@ -1493,7 +1490,7 @@ Public Class Form1
                     End If
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
           ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
@@ -1519,7 +1516,7 @@ Public Class Form1
                     End If
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
       ("Installer\Products", True)
@@ -1553,10 +1550,10 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
   ("SOFTWARE\Classes\Installer\Products", True)
@@ -1590,10 +1587,10 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
@@ -1617,11 +1614,11 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
 
-            count = 0
+
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
       ("Interface", True)
@@ -1644,10 +1641,10 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
 
             If IntPtr.Size = 8 Then
@@ -1671,11 +1668,11 @@ Public Class Form1
                                 End If
                             End If
                         End If
-                        count += 1
+
                     Next
                 End If
             End If
-            count = 0
+
 
 
 
@@ -1701,11 +1698,11 @@ Public Class Form1
                                 End If
                             End If
                         End If
-                        count += 1
+
                     Next
                 End If
             End If
-            count = 0
+
         End If
 
         If ComboBox1.Text = "NVIDIA" Then
@@ -1815,10 +1812,10 @@ Public Class Form1
             Next i
             'Delete NVIDIA data Folders
             'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
-            TextBox1.Text = TextBox1.Text + "Cleaning UpdatusUser users account if present" + vbNewLine
+            TextBox1.Text = TextBox1.Text + "Cleaning UpdatusUser users ac if present" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
-            log("Cleaning UpdatusUser users account if present")
+            log("Cleaning UpdatusUser users ac if present")
             Try
                 Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
                 Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
@@ -2183,7 +2180,7 @@ Public Class Form1
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Starting reg cleanUP")
-            Dim count As Int32 = 0
+
             Dim regkey As RegistryKey
             Dim wantedvalue As String = Nothing
             Dim subregkey As RegistryKey
@@ -2223,10 +2220,10 @@ Public Class Form1
                             regkey.DeleteSubKeyTree(child)
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\AppID", True)
 
@@ -2263,10 +2260,10 @@ Public Class Form1
                             regkey.DeleteSubKeyTree(child)
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             If IntPtr.Size = 8 Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\AppID", True)
@@ -2304,10 +2301,10 @@ Public Class Form1
                             End If
 
                         End If
-                        count += 1
+
                     Next
                 End If
-                count = 0
+
             End If
 
             regkey = My.Computer.Registry.ClassesRoot
@@ -2351,15 +2348,15 @@ Public Class Form1
 
                                         End If
                                     End If
-                                    End If
                                 End If
-                                regkey.DeleteSubKeyTree(child)
                             End If
+                            regkey.DeleteSubKeyTree(child)
                         End If
-                        count += 1
+                    End If
+
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes", True)
 
@@ -2408,7 +2405,7 @@ Public Class Form1
                             regkey.DeleteSubKeyTree(child)
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
 
@@ -2459,13 +2456,13 @@ Public Class Form1
                                 regkey.DeleteSubKeyTree(child)
                             End If
                         End If
-                        count += 1
+
                     Next
                 End If
             End If
             'end of deleting dcom stuff
             If win8higher Then
-                Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+                Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
                 Dim reginfos As RegistryKey = Nothing
                 Dim FolderAcl As New RegistrySecurity
                 'setting permission to registry
@@ -2477,7 +2474,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAccount & "=f"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -2510,7 +2507,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAccount
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -2526,7 +2523,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAccount & "=f"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -2545,7 +2542,7 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAccount & "=f"
+                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAc & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -2564,7 +2561,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /grant=" & UserAccount & "=f"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -2574,13 +2571,13 @@ Public Class Form1
                     log(ex.Message)
                 End Try
             Else
-                Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+                Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
                 Dim reginfos As RegistryKey = Nothing
                 Dim FolderAcl As New RegistrySecurity
                 'setting permission to registry
 
                 removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAccount & "=f"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 prochdmi.StartInfo = removehdmidriver
@@ -2608,13 +2605,13 @@ Public Class Form1
                 Next
                 'setting back the registry permission to normal.
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAccount
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
             End If
 
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
@@ -2669,7 +2666,7 @@ Public Class Form1
 
 
 
-            count = 0
+
             If removephysx Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                         ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
@@ -2690,7 +2687,7 @@ Public Class Form1
                     Next
                 End If
             End If
-            count = 0
+
 
             'remove opencl registry Khronos
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
@@ -2718,7 +2715,7 @@ Public Class Form1
             End If
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-         ("Software\\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+         ("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
                     If child IsNot Nothing Then
@@ -2735,7 +2732,29 @@ Public Class Form1
                     End If
                 Next
             End If
-            count = 0
+
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+             ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If child IsNot Nothing Then
+                            If child.Contains("NVIDIA Corporation") Then
+                                Try
+                                    regkey.DeleteValue(child)
+                                Catch ex As Exception
+                                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
+                                    TextBox1.Select(TextBox1.Text.Length, 0)
+                                    TextBox1.ScrollToCaret()
+                                    log(ex.Message + " SharedDLLS")
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+
+            End If
 
 
             regkey = My.Computer.Registry.ClassesRoot
@@ -2748,10 +2767,10 @@ Public Class Form1
                             regkey.DeleteSubKeyTree(child)
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
             If regkey IsNot Nothing Then
@@ -2763,11 +2782,11 @@ Public Class Form1
                             regkey.DeleteSubKeyTree(child)
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
 
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
             If regkey IsNot Nothing Then
@@ -2788,10 +2807,10 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
-            count = 0
+
 
             If IntPtr.Size = 8 Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
@@ -2812,13 +2831,13 @@ Public Class Form1
                                 End Try
                             End If
                         End If
-                        count += 1
+
                     Next
                 End If
             End If
-            count = 0
 
-            count = 0
+
+
 
             If IntPtr.Size = 8 Then
 
@@ -2849,11 +2868,11 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
 
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
           ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -2881,7 +2900,7 @@ Public Class Form1
                         End If
                     End If
                 End If
-                count += 1
+
             Next
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -2901,7 +2920,7 @@ Public Class Form1
                         End If
                     End If
                 End If
-                count += 1
+
             Next
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -2925,11 +2944,11 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
 
-            count = 0
+
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
       ("Software\Microsoft\Windows\CurrentVersion\Run", True)
@@ -2959,7 +2978,7 @@ Public Class Form1
                 End If
             End If
 
-            count = 0
+
             TextBox1.Text = TextBox1.Text + "Debug : Starting S-1-5-xx region cleanUP" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
@@ -3054,14 +3073,14 @@ Public Class Form1
                                             End If
                                         End If
                                     End If
-                                    count += 1
+
                                 Next
                             End If
                         End If
                     End If
                 Next
             End If
-            count = 0
+
 
             TextBox1.Text = TextBox1.Text + "Debug : End of S-1-5-xx region cleanUP" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
@@ -3096,7 +3115,7 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
 
@@ -3128,7 +3147,7 @@ Public Class Form1
                             End If
                         End If
                     End If
-                    count += 1
+
                 Next
             End If
 
@@ -3155,14 +3174,14 @@ Public Class Form1
                                         End If
                                     End If
 
-                                    count += 1
+
                                 Next
                             End If
                         End If
                     Next
                 End If
             End If
-            count = 0
+
 
 
 
@@ -3396,11 +3415,11 @@ Public Class Form1
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Deleting some specials folders, it could take some times...")
-        'ensure that this folder can be accessed with current user account.
-        Dim UserAccount As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+        'ensure that this folder can be accessed with current user ac.
+        Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
         Dim FolderInfo As IO.DirectoryInfo = New IO.DirectoryInfo(folder)
         Dim FolderAcl As New DirectorySecurity
-        FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAccount, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
+        FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAc, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
         'FolderAcl.SetAccessRuleProtection(True, False) 'uncomment to remove existing permissions
         FolderInfo.SetAccessControl(FolderAcl)
         System.Threading.Thread.Sleep(50)
