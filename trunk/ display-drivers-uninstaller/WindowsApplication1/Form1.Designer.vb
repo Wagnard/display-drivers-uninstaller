@@ -55,7 +55,7 @@ Partial Class Form1
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(8, 168)
+        Me.Button1.Location = New System.Drawing.Point(12, 92)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(195, 70)
         Me.Button1.TabIndex = 0
@@ -102,18 +102,18 @@ Partial Class Form1
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(39, 320)
+        Me.TextBox1.Location = New System.Drawing.Point(12, 344)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ReadOnly = True
         Me.TextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TextBox1.Size = New System.Drawing.Size(379, 116)
+        Me.TextBox1.Size = New System.Drawing.Size(379, 92)
         Me.TextBox1.TabIndex = 6
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(5, 350)
+        Me.Label5.Location = New System.Drawing.Point(12, 328)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(28, 13)
         Me.Label5.TabIndex = 7
@@ -222,7 +222,7 @@ Partial Class Form1
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(9, 92)
+        Me.Button2.Location = New System.Drawing.Point(12, 168)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(195, 70)
         Me.Button2.TabIndex = 15
@@ -232,7 +232,7 @@ Partial Class Form1
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(8, 244)
+        Me.Button3.Location = New System.Drawing.Point(12, 244)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(195, 70)
         Me.Button3.TabIndex = 16
@@ -277,7 +277,7 @@ Partial Class Form1
         '
         Me.PictureBox2.ErrorImage = Nothing
         Me.PictureBox2.Image = Global.WindowsApplication1.My.Resources.Resources.Nvidia_GeForce_Logo
-        Me.PictureBox2.Location = New System.Drawing.Point(386, 92)
+        Me.PictureBox2.Location = New System.Drawing.Point(333, 92)
         Me.PictureBox2.Name = "PictureBox2"
         Me.PictureBox2.Size = New System.Drawing.Size(158, 126)
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
