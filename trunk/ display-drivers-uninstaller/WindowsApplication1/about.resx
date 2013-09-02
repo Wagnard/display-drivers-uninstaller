@@ -138,19 +138,19 @@ uninstall, windows update may be re-installing a driver on its own without autho
 -The tool can be used in Normal mode but for abolute stability when using DDU, Safemode is 
 always the best.
 
-- I would like to gather feedback from you guys. Tell me if it was success or not. make a 
+- We would like to gather feedback from you guys. Tell us if it was success or not. Make a 
 backup or a system restore (but it should normally be pretty safe).
 
--For people with driver problem, if this tool gave you any success into fixing some issues your are 
+-If you have or had a driver problem, and this tool helpd you with some issues your are 
 currently experiencing, please share your result.
 
-Keep note that NVIDIA/AMD did not have anything to do with this, I do not work at or for NVIDIA/AMD 
-and they should not be held responsible for anything that may go wrong with this application.
+Keep in mind that NVIDIA/AMD did not have anything to do with this, We do not work at or for NVIDIA/AMD 
+and they should not be held responsible for any damage or errors caused to your system.
 -------------------------------
 
 Created By Wagnard.
 
-Contributor : Shady7557
+Co-owner: Shady7557
 
 Thanks to anyone who put their system at risk (special thanks to Dellon132)</value>
   </data>

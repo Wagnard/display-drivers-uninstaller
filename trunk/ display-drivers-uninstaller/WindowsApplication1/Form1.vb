@@ -24,7 +24,7 @@ Public Class Form1
     Dim reply As String = Nothing
     Dim userpth As String = System.Environment.GetEnvironmentVariable("userprofile")
     Dim time As String = DateAndTime.Now
-    Dim locations As String = Application.StartupPath & "\Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
+    Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
     Dim win8higher As Boolean = False
     Dim wantedvalue2 As String = Nothing
@@ -3218,8 +3218,8 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\Logs") Then
-            My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\Logs")
+        If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
+            My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
         End If
 
         If My.Settings.logbox = "dontlog" Then
@@ -3336,9 +3336,9 @@ Public Class Form1
             End If
         End If
 
-        TextBox1.Text = TextBox1.Text + "DDU Version " + Label6.Text + vbNewLine
-        log("DDU Version " + Label6.Text)
-        log("OS : " + Label2.Text)
+        TextBox1.Text = TextBox1.Text + "DDU Version: " + Label6.Text.Replace("V", "") + vbNewLine
+        log("DDU Version: " + Label6.Text.Replace("V", ""))
+        log("OS: " + Label2.Text)
         log("Architecture: " & Label3.Text)
 
         'Videocard type indentification
@@ -3561,5 +3561,21 @@ Public Class Form1
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
         Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
         Process.Start(webAddress)
+    End Sub
+
+    Private Sub VisitGuru3dNVIDIAThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dNVIDIAThreadToolStripMenuItem.Click
+        Process.Start("http://forums.guru3d.com/showthread.php?t=379506")
+    End Sub
+
+    Private Sub VisitGuru3dAMDThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dAMDThreadToolStripMenuItem.Click
+        Process.Start("http://forums.guru3d.com/showthread.php?t=379505")
+    End Sub
+
+    Private Sub VisitGeforceThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGeforceThreadToolStripMenuItem.Click
+        Process.Start("https://forums.geforce.com/default/topic/550192/geforce-drivers/display-driver-uninstaller-ddu-v6-2/")
+    End Sub
+
+    Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs)
+
     End Sub
 End Class
