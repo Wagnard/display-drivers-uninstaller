@@ -48,6 +48,7 @@ Partial Class Form1
         Me.Label9 = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.SVNToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -191,7 +192,7 @@ Partial Class Form1
         '
         'ToolStripMenuItem1
         '
-        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem})
+        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
         Me.ToolStripMenuItem1.Size = New System.Drawing.Size(17, 19)
         Me.ToolStripMenuItem1.Text = "?"
@@ -284,6 +285,12 @@ Partial Class Form1
         Me.PictureBox2.TabIndex = 20
         Me.PictureBox2.TabStop = False
         '
+        'SVNToolStripMenuItem
+        '
+        Me.SVNToolStripMenuItem.Name = "SVNToolStripMenuItem"
+        Me.SVNToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
+        Me.SVNToolStripMenuItem.Text = "Visit SVN Website"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -348,5 +355,6 @@ Partial Class Form1
     Friend WithEvents VisitGuru3dAMDThreadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents VisitGeforceThreadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PictureBox2 As System.Windows.Forms.PictureBox
+    Friend WithEvents SVNToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

@@ -28,6 +28,10 @@ Public Class Form1
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
     Dim win8higher As Boolean = False
     Dim wantedvalue2 As String = Nothing
+    Dim subregkey As RegistryKey = Nothing
+    Dim wantedvalue As String = Nothing
+    Dim regkey As RegistryKey
+    Dim currentdriverversion As String = Nothing
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
@@ -768,9 +772,7 @@ Public Class Form1
             log("Cleaning known Regkeys")
             'Delete AMD regkey
 
-            Dim subregkey As RegistryKey = Nothing
-            Dim wantedvalue As String = Nothing
-            Dim regkey As RegistryKey
+            
             'Deleting COM object
 
 
@@ -2181,285 +2183,206 @@ Public Class Form1
             TextBox1.ScrollToCaret()
             log("Starting reg cleanUP")
 
-            Dim regkey As RegistryKey
-            Dim wantedvalue As String = Nothing
-            Dim subregkey As RegistryKey
 
-            'Deleting COM object
+            'Deleting COM object /classroot
 
-
-            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If child IsNot Nothing Then
-                        If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
-                           Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
-                           child.Contains("Nv3DV") Or child.Contains("NvXD") Or child.Contains("GamesConfigServer") Then
-
-                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID\" + child, True)
-                            If subregkey.GetValue("AppID") IsNot Nothing Then
-                                wantedvalue = subregkey.GetValue("AppID").ToString
-                                If wantedvalue IsNot Nothing Then
-                                    Try
-                                        If removephysx Then
-                                            regkey.DeleteSubKeyTree(wantedvalue)
-                                        Else
-                                            If child.Contains("GamesConfigServer") Then
-                                                'do nothing
-                                            Else
-                                                regkey.DeleteSubKeyTree(wantedvalue)
-                                            End If
-
-                                        End If
-
-                                    Catch ex As Exception
-                                    End Try
-                                End If
-                            End If
-                            regkey.DeleteSubKeyTree(child)
-                        End If
-                    End If
-
-                Next
-            End If
-
-
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\AppID", True)
-
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If child IsNot Nothing Then
-                        If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
-                           Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
-                           child.Contains("Nv3DV") Or child.Contains("NvXD") Or child.Contains("GamesConfigServer") Then
-
-                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\AppID\" + child, False)
-                            If subregkey IsNot Nothing Then
-                                If subregkey.GetValue("AppID") IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("AppID").ToString
-
-                                    If wantedvalue IsNot Nothing Then
-                                        Try
-                                            If removephysx Then
-                                                regkey.DeleteSubKeyTree(wantedvalue)
-                                            Else
-                                                If child.Contains("GamesConfigServer") Then
-                                                    'do nothing
-                                                Else
-                                                    regkey.DeleteSubKeyTree(wantedvalue)
-                                                End If
-
-                                            End If
-
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
-                                End If
-                            End If
-                            regkey.DeleteSubKeyTree(child)
-                        End If
-                    End If
-
-                Next
-            End If
-
-
-            If IntPtr.Size = 8 Then
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\AppID", True)
-
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If child IsNot Nothing Then
-                            If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
-                               Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
-                               child.Contains("Nv3DV") Or child.Contains("NvXD") Or child.Contains("GamesConfigServer") Then
-
-                                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\AppID\" + child, False)
-                                If subregkey IsNot Nothing Then
-                                    If subregkey.GetValue("AppID") IsNot Nothing Then
-                                        wantedvalue = subregkey.GetValue("AppID").ToString
-                                        If wantedvalue IsNot Nothing Then
-                                            Try
-                                                If removephysx Then
-                                                    regkey.DeleteSubKeyTree(wantedvalue)
-                                                Else
-                                                    If child.Contains("GamesConfigServer") Then
-                                                        'do nothing
-                                                    Else
-                                                        regkey.DeleteSubKeyTree(wantedvalue)
-                                                    End If
-
-                                                End If
-
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                    End If
-                                End If
-                                regkey.DeleteSubKeyTree(child)
-                            End If
-
-                        End If
-
-                    Next
-                End If
-
-            End If
 
             regkey = My.Computer.Registry.ClassesRoot
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
-                        If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
-                           Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
-                           child.Contains("NvCpl") Or child.Contains("NVIDIA.Installer") Or _
-                           child.Contains("Nv3DV") Or child.Contains("NvXD") Or child.Contains("GamesConfigServer") Then
-                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child + "\CLSID", False)
-                            If subregkey IsNot Nothing Then
-                                If subregkey.GetValue("") IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("").ToString
-                                    If wantedvalue IsNot Nothing Then
-                                        If removephysx Then
-                                            Try
-                                                wantedvalue2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("").ToString
-                                            Catch ex As Exception
-                                            End Try
-                                            If wantedvalue2 IsNot Nothing Then
-                                                Try
-                                                    regkey.DeleteSubKeyTree("TypeLib\" & wantedvalue2)
-                                                    regkey.DeleteSubKeyTree("Wow6432Node\TypeLib\" & wantedvalue2)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                            Try
-                                                My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
-                                            Catch ex As Exception
-                                            End Try
-                                        Else
-                                            If child.Contains("GamesConfigServer") Then
-                                                'do nothing
-                                            Else
-                                                Try
-                                                    My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
+                        Dim childl As String = child.ToLower
 
+                        If childl.Contains("comupdatus") Or childl.Contains("nv3d") Or _
+                            childl.Contains("nvui") Or childl.Contains("nvvsvc") Or childl.Contains("nvxd") Or _
+                           childl.Contains("gamesconfigserver") Or _
+                          childl.Contains("nvidia.installer") Or childl.Contains("displayserver") Then
+
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID", True)
+                            If subregkey.GetValue("") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("").ToString
+                                If wantedvalue IsNot Nothing Then
+
+                                    If removephysx Then
+                                        If IntPtr.Size = 8 Then
+                                            Try
+                                                Dim appid As String = My.Computer.Registry.ClassesRoot.GetValue("Wow6432Node\CLSID\" & wantedvalue, "AppID").ToString
+                                                Dim typelib As String = My.Computer.Registry.ClassesRoot.GetValue("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib", "").ToString
+                                                If appid IsNot Nothing Then
+                                                    Try
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                                If typelib IsNot Nothing Then
+                                                    Try
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\TypeLib\" & typelib)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\CLSID\" & wantedvalue)
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                        Try
+
+                                            Dim appid As String = My.Computer.Registry.ClassesRoot.GetValue("CLSID\" & wantedvalue, "AppID").ToString
+                                            Dim typelib As String = My.Computer.Registry.ClassesRoot.GetValue("CLSID\" & wantedvalue & "\TypeLib", "").ToString
+
+                                            If appid IsNot Nothing Then
+                                                Try
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                            If typelib IsNot Nothing Then
+                                                Try
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("TypeLib\" & typelib)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("CLSID\" & wantedvalue)
+                                        Catch ex As Exception
+                                        End Try
+                                        Try
+                                            regkey.DeleteSubKeyTree(child)
+                                        Catch ex As Exception
+                                        End Try
+
+                                    Else
+                                        If child.Contains("gamesconfigserver") Then
+                                            'do nothing
+                                        Else
+                                            If IntPtr.Size = 8 Then
+                                                Try
+                                                    Dim appid As String = My.Computer.Registry.ClassesRoot.GetValue("Wow6432Node\CLSID\" & wantedvalue, "AppID").ToString
+                                                    Dim typelib As String = My.Computer.Registry.ClassesRoot.GetValue("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib", "").ToString
+                                                    If appid IsNot Nothing Then
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
+                                                    End If
+                                                    If typelib IsNot Nothing Then
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\TypeLib\" & typelib)
+                                                    End If
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\CLSID\" & wantedvalue)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                            Try
+
+                                                Dim appid As String = My.Computer.Registry.ClassesRoot.GetValue("CLSID\" & wantedvalue, "AppID").ToString
+                                                Dim typelib As String = My.Computer.Registry.ClassesRoot.GetValue("CLSID\" & wantedvalue & "\TypeLib", "").ToString
+
+                                                If appid IsNot Nothing Then
+                                                    Try
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                                If typelib IsNot Nothing Then
+                                                    Try
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("TypeLib\" & typelib)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("CLSID\" & wantedvalue)
+                                            Catch ex As Exception
+                                            End Try
+                                            Try
+                                                regkey.DeleteSubKeyTree(child)
+                                            Catch ex As Exception
+                                            End Try
                                         End If
                                     End If
                                 End If
                             End If
-                            regkey.DeleteSubKeyTree(child)
                         End If
                     End If
 
                 Next
             End If
 
-
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes", True)
-
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
-                        If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
-                           Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
-                           child.Contains("Nv3DV") Or child.Contains("NvXD") Or child.Contains("GamesConfigServer") Then
+                        Dim childl As String = child.ToLower
 
-                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\" + child + "\CLSID", False)
-                            If subregkey IsNot Nothing Then
-                                If subregkey.GetValue("") IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("").ToString
-                                    If wantedvalue IsNot Nothing Then
-                                        If removephysx Then
+                        If childl.Contains("comupdatus") Or childl.Contains("nv3d") Or _
+                            childl.Contains("nvui") Or childl.Contains("nvvsvc") Or childl.Contains("nvxd") Or _
+                           childl.Contains("gamesconfigserver") Or _
+                          childl.Contains("nvidia.installer") Or childl.Contains("displayserver") Then
+
+                            subregkey = regkey.OpenSubKey(child, True)
+                            If subregkey.GetValue("AppID") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("AppID").ToString
+                                If wantedvalue IsNot Nothing Then
+
+                                    If removephysx Then
+                                        If IntPtr.Size = 8 Then
                                             Try
-                                                wantedvalue2 = regkey.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("").ToString
+                                                Dim appid As String = wantedvalue
+                                                If appid IsNot Nothing Then
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
+                                                End If
                                             Catch ex As Exception
                                             End Try
-                                            If wantedvalue2 IsNot Nothing Then
+                                        End If
+                                        Try
+
+                                            Dim appid As String = wantedvalue
+                                            If appid IsNot Nothing Then
                                                 Try
-                                                    regkey.DeleteSubKeyTree("TypeLib\" & wantedvalue2)
-                                                    regkey.DeleteSubKeyTree("Wow6432Node\TypeLib\" & wantedvalue2)
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
                                                 Catch ex As Exception
                                                 End Try
                                             End If
-                                            Try
-                                                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\CLSID", True).DeleteSubKeyTree(wantedvalue)
-                                            Catch ex As Exception
-                                            End Try
+                                        Catch ex As Exception
+                                        End Try
+                                        Try
+                                            regkey.DeleteSubKeyTree(child)
+                                        Catch ex As Exception
+                                        End Try
+
+                                    Else
+                                        If child.Contains("gamesconfigserver") Then
+                                            'do nothing
                                         Else
-                                            If child.Contains("GamesConfigServer") Then
-                                                'do nothing
-                                            Else
+                                            If IntPtr.Size = 8 Then
                                                 Try
-                                                    My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\CLSID", True).DeleteSubKeyTree(wantedvalue)
+                                                    Dim appid As String = wantedvalue
+                                                    If appid IsNot Nothing Then
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
+                                                    End If
                                                 Catch ex As Exception
                                                 End Try
                                             End If
+                                            Try
 
+                                                Dim appid As String = wantedvalue
+                                                If appid IsNot Nothing Then
+                                                    Try
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                            Catch ex As Exception
+                                            End Try
+                                            Try
+                                                regkey.DeleteSubKeyTree(child)
+                                            Catch ex As Exception
+                                            End Try
                                         End If
                                     End If
                                 End If
                             End If
-                            regkey.DeleteSubKeyTree(child)
                         End If
                     End If
 
                 Next
             End If
 
-            If IntPtr.Size = 8 Then
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes", True)
 
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If child IsNot Nothing Then
-                            If child.Contains("ComUpdatus") Or child.Contains("Nv3DVision") Or child.Contains("Nv3DStreaming") _
-                               Or child.Contains("NvUI") Or child.Contains("Nvvsvc") Or child.Contains("NVXD") Or _
-                               child.Contains("Nv3DV") Or child.Contains("NvXD") Or child.Contains("GamesConfigServer") Then
 
-                                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\" + child + "\CLSID", False)
-                                If subregkey IsNot Nothing Then
-                                    If subregkey.GetValue("") IsNot Nothing Then
-                                        wantedvalue = subregkey.GetValue("").ToString
-                                        If wantedvalue IsNot Nothing Then
-                                            If removephysx Then
-                                                Try
-                                                    wantedvalue2 = regkey.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("").ToString
-                                                Catch ex As Exception
-                                                End Try
-                                                If wantedvalue2 IsNot Nothing Then
-                                                    Try
-                                                        regkey.DeleteSubKeyTree("TypeLib\" & wantedvalue2)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                Try
-                                                    My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\CLSID", True).DeleteSubKeyTree(wantedvalue)
-                                                Catch ex As Exception
-                                                End Try
-                                            Else
-                                                If child.Contains("GamesConfigServer") Then
-                                                    'do nothing
-                                                Else
-                                                    Try
-                                                        My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Classes\CLSID", True).DeleteSubKeyTree(wantedvalue)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-
-                                            End If
-                                        End If
-                                    End If
-                                End If
-                                regkey.DeleteSubKeyTree(child)
-                            End If
-                        End If
-
-                    Next
-                End If
-            End If
             'end of deleting dcom stuff
             If win8higher Then
                 Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
@@ -3231,6 +3154,7 @@ Public Class Form1
         End If
         If shutdown Then
             System.Diagnostics.Process.Start("shutdown", "/s /t 0 /f")
+            reboot = True
         End If
     End Sub
 
@@ -3408,6 +3332,10 @@ Public Class Form1
         Else
             ComboBox1.SelectedIndex = 1
         End If
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000")
+        currentdriverversion = regkey.GetValue("DriverVersion").ToString
+        TextBox1.Text = TextBox1.Text + "Current driver version : " + currentdriverversion + vbNewLine
+        log("Current driver version : " + currentdriverversion)
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
@@ -3596,7 +3524,7 @@ Public Class Form1
         Process.Start("https://forums.geforce.com/default/topic/550192/geforce-drivers/display-driver-uninstaller-ddu-v6-2/")
     End Sub
 
-    Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
+    Private Sub SVNToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SVNToolStripMenuItem.Click
+        Process.Start("https://code.google.com/p/display-drivers-uninstaller/source/list")
     End Sub
 End Class
