@@ -2196,7 +2196,7 @@ Public Class Form1
                         If childl.Contains("comupdatus") Or childl.Contains("nv3d") Or _
                             childl.Contains("nvui") Or childl.Contains("nvvsvc") Or childl.Contains("nvxd") Or _
                            childl.Contains("gamesconfigserver") Or _
-                          childl.Contains("nvidia.installer") Or childl.Contains("displayserver") Then
+                          childl.Contains("nvidia.installer") Or childl.Contains("displayserver") Or childl.Contains("workstationserver.") Then
 
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID", True)
                             If subregkey.GetValue("") IsNot Nothing Then
@@ -2206,21 +2206,32 @@ Public Class Form1
                                     If removephysx Then
                                         If IntPtr.Size = 8 Then
                                             Try
-                                                Dim appid As String = My.Computer.Registry.ClassesRoot.GetValue("Wow6432Node\CLSID\" & wantedvalue, "AppID").ToString
-                                                Dim typelib As String = My.Computer.Registry.ClassesRoot.GetValue("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib", "").ToString
+                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue)
+                                                Dim appid As String = subregkey.GetValue("AppID").ToString
+                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib")
+                                                Dim typelib As String = subregkey.GetValue("").ToString
                                                 If appid IsNot Nothing Then
                                                     Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                                                        subregkey.DeleteSubKeyTree(appid)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                    Try
+                                                        'special case for an unusual key configuration nv bug?
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                        subregkey.DeleteSubKeyTree(appid)
                                                     Catch ex As Exception
                                                     End Try
                                                 End If
                                                 If typelib IsNot Nothing Then
                                                     Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\TypeLib\" & typelib)
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
+                                                        subregkey.DeleteSubKeyTree(typelib)
                                                     Catch ex As Exception
                                                     End Try
                                                 End If
-                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\CLSID\" & wantedvalue)
+                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                subregkey.DeleteSubKeyTree(wantedvalue)
                                             Catch ex As Exception
                                             End Try
                                         End If
@@ -2258,10 +2269,16 @@ Public Class Form1
                                                     Dim appid As String = My.Computer.Registry.ClassesRoot.GetValue("Wow6432Node\CLSID\" & wantedvalue, "AppID").ToString
                                                     Dim typelib As String = My.Computer.Registry.ClassesRoot.GetValue("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib", "").ToString
                                                     If appid IsNot Nothing Then
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
+                                                        Try
+                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
+                                                        Catch ex As Exception
+                                                        End Try
                                                     End If
                                                     If typelib IsNot Nothing Then
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\TypeLib\" & typelib)
+                                                        Try
+                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\TypeLib\" & typelib)
+                                                        Catch ex As Exception
+                                                        End Try
                                                     End If
                                                     My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\CLSID\" & wantedvalue)
                                                 Catch ex As Exception
@@ -3333,12 +3350,12 @@ Public Class Form1
             ComboBox1.SelectedIndex = 1
         End If
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000")
-        try        
-        currentdriverversion = regkey.GetValue("DriverVersion").ToString
+        Try
+            currentdriverversion = regkey.GetValue("DriverVersion").ToString
         Catch ex As Exception
-        currentdriverversion = "Unknown"        
+            currentdriverversion = "Unknown"
         End Try
-        TextBox1.Text = TextBox1.Text + "Current driver version : " + currentdriverversion + vbNewLine       
+        TextBox1.Text = TextBox1.Text + "Current driver version : " + currentdriverversion + vbNewLine
         log("Current driver version : " + currentdriverversion)
     End Sub
 
