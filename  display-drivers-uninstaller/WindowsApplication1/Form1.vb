@@ -2197,7 +2197,7 @@ Public Class Form1
                             childl.Contains("nvui") Or childl.Contains("nvvsvc") Or childl.Contains("nvxd") Or _
                            childl.Contains("gamesconfigserver") Or _
                           childl.Contains("nvidia.installer") Or childl.Contains("displayserver") Or childl.Contains("workstationserver.") Or _
-                          childl.Contains("video_tvserver.") Then
+                          childl.Contains("video_tvserver.") Or childl.Contains("stereovisionserver.") Or childl.Contains("mobileserver.") Then
 
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID", True)
                             If subregkey.GetValue("") IsNot Nothing Then
