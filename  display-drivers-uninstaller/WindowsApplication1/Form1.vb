@@ -3336,7 +3336,7 @@ Public Class Form1
         try        
         currentdriverversion = regkey.GetValue("DriverVersion").ToString
         Catch ex As Exception
-        currentdriverversion = Unknown        
+        currentdriverversion = "Unknown"        
         End Try
         TextBox1.Text = TextBox1.Text + "Current driver version : " + currentdriverversion + vbNewLine       
         log("Current driver version : " + currentdriverversion)
