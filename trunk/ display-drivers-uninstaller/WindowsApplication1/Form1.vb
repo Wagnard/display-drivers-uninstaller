@@ -3333,8 +3333,12 @@ Public Class Form1
             ComboBox1.SelectedIndex = 1
         End If
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000")
+        try        
         currentdriverversion = regkey.GetValue("DriverVersion").ToString
-        TextBox1.Text = TextBox1.Text + "Current driver version : " + currentdriverversion + vbNewLine
+        Catch ex As Exception
+        currentdriverversion = Unknown        
+        End Try
+        TextBox1.Text = TextBox1.Text + "Current driver version : " + currentdriverversion + vbNewLine       
         log("Current driver version : " + currentdriverversion)
     End Sub
 
