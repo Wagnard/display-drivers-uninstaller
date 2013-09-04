@@ -38,17 +38,17 @@ Partial Class Form1
         Me.CheckBox2 = New System.Windows.Forms.CheckBox()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SVNToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.VisitGuru3dNVIDIAThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.VisitGuru3dAMDThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.VisitGeforceThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.CheckBox3 = New System.Windows.Forms.CheckBox()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.SVNToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -127,7 +127,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(29, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V6.3"
+        Me.Label6.Text = "V7.0"
         '
         'ComboBox1
         '
@@ -197,11 +197,11 @@ Partial Class Form1
         Me.ToolStripMenuItem1.Size = New System.Drawing.Size(17, 19)
         Me.ToolStripMenuItem1.Text = "?"
         '
-        'AboutToolStripMenuItem
+        'SVNToolStripMenuItem
         '
-        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
-        Me.AboutToolStripMenuItem.Text = "About"
+        Me.SVNToolStripMenuItem.Name = "SVNToolStripMenuItem"
+        Me.SVNToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
+        Me.SVNToolStripMenuItem.Text = "Visit SVN Website"
         '
         'VisitGuru3dNVIDIAThreadToolStripMenuItem
         '
@@ -220,6 +220,12 @@ Partial Class Form1
         Me.VisitGeforceThreadToolStripMenuItem.Name = "VisitGeforceThreadToolStripMenuItem"
         Me.VisitGeforceThreadToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
         Me.VisitGeforceThreadToolStripMenuItem.Text = "Visit Geforce Thread"
+        '
+        'AboutToolStripMenuItem
+        '
+        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
+        Me.AboutToolStripMenuItem.Text = "About"
         '
         'Button2
         '
@@ -284,12 +290,6 @@ Partial Class Form1
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox2.TabIndex = 20
         Me.PictureBox2.TabStop = False
-        '
-        'SVNToolStripMenuItem
-        '
-        Me.SVNToolStripMenuItem.Name = "SVNToolStripMenuItem"
-        Me.SVNToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
-        Me.SVNToolStripMenuItem.Text = "Visit SVN Website"
         '
         'Form1
         '

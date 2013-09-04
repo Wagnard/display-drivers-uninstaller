@@ -2602,6 +2602,9 @@ Public Class Form1
                                 regkey.SetValue("AppInit_DLLs", wantedvalue)
                         End Select
                     End If
+                    If regkey.GetValue("AppInit_DLLs") = "" Then
+                        regkey.SetValue("LoadAppInit_DLLs", "0", RegistryValueKind.DWord)
+                    End If
                 End If
             End If
 
@@ -3245,6 +3248,10 @@ Public Class Form1
             win8higher = True
         End If
 
+        If version >= "6.3" Then
+            Label2.Text = "Windows 8.1"
+            win8higher = True
+        End If
 
 
 
