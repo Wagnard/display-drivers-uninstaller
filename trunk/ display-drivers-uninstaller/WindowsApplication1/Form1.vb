@@ -1866,7 +1866,7 @@ Public Class Form1
                             TextBox1.ScrollToCaret()
                             log(ex.Message + " UpdatusUser")
                         End Try
-                        System.Threading.Thread.Sleep(50) 'just to be sure files are not holded anymore.
+
 
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
@@ -1877,8 +1877,8 @@ Public Class Form1
                             TextBox1.ScrollToCaret()
                             log(ex.Message + " Updatus directory delete")
                         End Try
-                        System.Threading.Thread.Sleep(50) 'just to be sure files are not holded anymore.
-                        'Yes we do it 2 time. This will workaround a problem on junction/sybolic/hard link
+
+                        'Yes we do it 2 times. This will workaround a problem on junction/sybolic/hard link
                         Try
                             TestDelete(child)
                         Catch ex As Exception
@@ -2237,23 +2237,27 @@ Public Class Form1
                                             End Try
                                         End If
                                         Try
-
-                                            Dim appid As String = My.Computer.Registry.ClassesRoot.GetValue("CLSID\" & wantedvalue, "AppID").ToString
-                                            Dim typelib As String = My.Computer.Registry.ClassesRoot.GetValue("CLSID\" & wantedvalue & "\TypeLib", "").ToString
+                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue)
+                                            Dim appid As String = subregkey.GetValue("AppID").ToString
+                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib")
+                                            Dim typelib As String = subregkey.GetValue("").ToString
 
                                             If appid IsNot Nothing Then
                                                 Try
-                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                    subregkey.DeleteSubKeyTree(appid)
                                                 Catch ex As Exception
                                                 End Try
                                             End If
                                             If typelib IsNot Nothing Then
                                                 Try
-                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("TypeLib\" & typelib)
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+                                                    subregkey.DeleteSubKeyTree(typelib)
                                                 Catch ex As Exception
                                                 End Try
                                             End If
-                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("CLSID\" & wantedvalue)
+                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                            subregkey.DeleteSubKeyTree(wantedvalue)
                                         Catch ex As Exception
                                         End Try
                                         Try
@@ -2262,47 +2266,62 @@ Public Class Form1
                                         End Try
 
                                     Else
-                                        If child.Contains("gamesconfigserver") Then
+                                        If child.Contains("gamesconfigserver") Then   'Physx related
                                             'do nothing
                                         Else
                                             If IntPtr.Size = 8 Then
                                                 Try
-                                                    Dim appid As String = My.Computer.Registry.ClassesRoot.GetValue("Wow6432Node\CLSID\" & wantedvalue, "AppID").ToString
-                                                    Dim typelib As String = My.Computer.Registry.ClassesRoot.GetValue("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib", "").ToString
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue)
+                                                    Dim appid As String = subregkey.GetValue("AppID").ToString
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib")
+                                                    Dim typelib As String = subregkey.GetValue("").ToString
                                                     If appid IsNot Nothing Then
                                                         Try
-                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                                                            subregkey.DeleteSubKeyTree(appid)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                        Try
+                                                            'special case for an unusual key configuration nv bug?
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                            subregkey.DeleteSubKeyTree(appid)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
                                                     If typelib IsNot Nothing Then
                                                         Try
-                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\TypeLib\" & typelib)
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
+                                                            subregkey.DeleteSubKeyTree(typelib)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
-                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\CLSID\" & wantedvalue)
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                    subregkey.DeleteSubKeyTree(wantedvalue)
                                                 Catch ex As Exception
                                                 End Try
                                             End If
                                             Try
-
-                                                Dim appid As String = My.Computer.Registry.ClassesRoot.GetValue("CLSID\" & wantedvalue, "AppID").ToString
-                                                Dim typelib As String = My.Computer.Registry.ClassesRoot.GetValue("CLSID\" & wantedvalue & "\TypeLib", "").ToString
+                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue)
+                                                Dim appid As String = subregkey.GetValue("AppID").ToString
+                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib")
+                                                Dim typelib As String = subregkey.GetValue("").ToString
 
                                                 If appid IsNot Nothing Then
                                                     Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                        subregkey.DeleteSubKeyTree(appid)
                                                     Catch ex As Exception
                                                     End Try
                                                 End If
                                                 If typelib IsNot Nothing Then
                                                     Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("TypeLib\" & typelib)
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+                                                        subregkey.DeleteSubKeyTree(typelib)
                                                     Catch ex As Exception
                                                     End Try
                                                 End If
-                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("CLSID\" & wantedvalue)
+                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                subregkey.DeleteSubKeyTree(wantedvalue)
                                             Catch ex As Exception
                                             End Try
                                             Try
@@ -2315,7 +2334,6 @@ Public Class Form1
                             End If
                         End If
                     End If
-
                 Next
             End If
 
@@ -3146,7 +3164,14 @@ Public Class Form1
         scan.UseShellExecute = False
         scan.CreateNoWindow = True
         scan.RedirectStandardOutput = True
-        'creation dun process fantome pour le wait on exit.
+
+        If reboot Then
+            log("Restarting Computer ")
+            System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
+        End If
+        If shutdown Then
+            System.Diagnostics.Process.Start("shutdown", "/s /t 0 /f")
+        End If
         If reboot = False And shutdown = False Then
             Dim proc4 As New Process
             proc4.StartInfo = scan
@@ -3156,6 +3181,7 @@ Public Class Form1
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
             Next i
+            reboot = True
         End If
         TextBox1.Text = TextBox1.Text + "Clean uninstall completed!" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
@@ -3169,14 +3195,6 @@ Public Class Form1
         CheckBox2.Enabled = True
         CheckBox1.Enabled = True
         CheckBox3.Enabled = True
-        If reboot Then
-            log("Restarting Computer ")
-            System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
-        End If
-        If shutdown Then
-            System.Diagnostics.Process.Start("shutdown", "/s /t 0 /f")
-            reboot = True
-        End If
     End Sub
 
 
@@ -3270,7 +3288,7 @@ Public Class Form1
                 End If
                 myExe = Application.StartupPath & "\x64\subinacl.exe"
                 If Not System.IO.File.Exists(myExe) Then
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl)
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl64)
                 End If
             Catch ex As Exception
                 log(ex.Message)
@@ -3284,7 +3302,7 @@ Public Class Form1
                 End If
                 myExe = Application.StartupPath & "\x86\subinacl.exe"
                 If Not System.IO.File.Exists(myExe) Then
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl)
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl32)
                 End If
             Catch ex As Exception
                 log(ex.Message)
@@ -3379,7 +3397,7 @@ Public Class Form1
         FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAc, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
         'FolderAcl.SetAccessRuleProtection(True, False) 'uncomment to remove existing permissions
         FolderInfo.SetAccessControl(FolderAcl)
-        System.Threading.Thread.Sleep(50)
+        System.Threading.Thread.Sleep(10)
         'Get an object repesenting the directory path below
         Dim di As New DirectoryInfo(folder)
 
@@ -3391,12 +3409,15 @@ Public Class Form1
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-            If diChild.ToString.Contains("PhysX") Then
-                'donothing
-            Else
+            If removephysx Then
                 TraverseDirectory(diChild)
+            Else
+                If diChild.ToString.ToLower.Contains("physx") Then
+                    'do nothing
+                Else
+                    TraverseDirectory(diChild)
+                End If
             End If
-
         Next
 
         'Finally, clean all of the files directly in the root directory
@@ -3415,10 +3436,14 @@ Public Class Form1
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-            If diChild.ToString.Contains("PhysX") Then
-                'donothing
-            Else
+            If removephysx Then
                 TraverseDirectory(diChild)
+            Else
+                If diChild.ToString.ToLower.Contains("physx") Then
+                    'do nothing
+                Else
+                    TraverseDirectory(diChild)
+                End If
             End If
         Next
 
@@ -3431,7 +3456,10 @@ Public Class Form1
         'is now completely empty and all files previously within
         'were deleted.
         If di.GetFiles().Count = 0 Then
-            di.Delete()
+            Try
+                di.Delete()
+            Catch ex As Exception
+            End Try
         End If
 
     End Sub
@@ -3452,15 +3480,18 @@ Public Class Form1
             'the next 'If' statement.
 
             'Read only files can not be deleted, so mark the attribute as 'IsReadOnly = False'
-            fi.IsReadOnly = False
-            fi.Delete()
 
+            Try
+                fi.IsReadOnly = False
+                fi.Delete()
+            Catch ex As Exception
+            End Try
             'On a rare occasion, files being deleted might be slower than program execution, and upon returning
             'from this call, attempting to delete the directory will throw an exception stating it is not yet
             'empty, even though a fraction of a second later it actually is.  Therefore the 'Optional' code below
             'can stall the process just long enough to ensure the file is deleted before proceeding. The value
             'can be adjusted as needed from testing and running the process repeatedly.
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            'System.Threading.Thread.Sleep(25)  '50 millisecond stall (0.025 Seconds)
 
         Next
     End Sub

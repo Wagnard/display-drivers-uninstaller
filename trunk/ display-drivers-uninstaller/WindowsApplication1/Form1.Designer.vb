@@ -49,6 +49,7 @@ Partial Class Form1
         Me.Label9 = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -67,7 +68,7 @@ Partial Class Form1
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(5, 27)
+        Me.Label1.Location = New System.Drawing.Point(5, 25)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(142, 13)
         Me.Label1.TabIndex = 1
@@ -76,7 +77,7 @@ Partial Class Form1
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(153, 25)
+        Me.Label2.Location = New System.Drawing.Point(153, 23)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(10, 13)
         Me.Label2.TabIndex = 2
@@ -85,7 +86,7 @@ Partial Class Form1
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(153, 38)
+        Me.Label3.Location = New System.Drawing.Point(153, 36)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(10, 13)
         Me.Label3.TabIndex = 3
@@ -135,7 +136,7 @@ Partial Class Form1
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Items.AddRange(New Object() {"NVIDIA", "AMD"})
-        Me.ComboBox1.Location = New System.Drawing.Point(122, 54)
+        Me.ComboBox1.Location = New System.Drawing.Point(122, 52)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
         Me.ComboBox1.TabIndex = 9
@@ -143,7 +144,7 @@ Partial Class Form1
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(5, 57)
+        Me.Label7.Location = New System.Drawing.Point(5, 55)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(111, 13)
         Me.Label7.TabIndex = 10
@@ -184,9 +185,9 @@ Partial Class Form1
         '
         Me.MenuStrip1.Dock = System.Windows.Forms.DockStyle.Right
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
-        Me.MenuStrip1.Location = New System.Drawing.Point(570, 0)
+        Me.MenuStrip1.Location = New System.Drawing.Point(502, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(30, 505)
+        Me.MenuStrip1.Size = New System.Drawing.Size(98, 505)
         Me.MenuStrip1.TabIndex = 14
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -194,7 +195,7 @@ Partial Class Form1
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(17, 19)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(85, 19)
         Me.ToolStripMenuItem1.Text = "?"
         '
         'SVNToolStripMenuItem
@@ -291,11 +292,22 @@ Partial Class Form1
         Me.PictureBox2.TabIndex = 20
         Me.PictureBox2.TabStop = False
         '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.Location = New System.Drawing.Point(2, 76)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(234, 13)
+        Me.Label10.TabIndex = 21
+        Me.Label10.Text = "Using DDU in safemode is recommended"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(600, 505)
+        Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.PictureBox1)
@@ -356,5 +368,6 @@ Partial Class Form1
     Friend WithEvents VisitGeforceThreadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PictureBox2 As System.Windows.Forms.PictureBox
     Friend WithEvents SVNToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents Label10 As System.Windows.Forms.Label
 
 End Class
