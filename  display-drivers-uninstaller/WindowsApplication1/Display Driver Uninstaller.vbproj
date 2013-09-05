@@ -176,22 +176,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Release\x64\devcon64.exe" />
+    <None Include="Resources\x64\devcon64.exe" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Release\x86\devcon32.exe" />
+    <None Include="Resources\x86\devcon32.exe" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Release\x86\subinacl.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\donate.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Release\btn_donate_LG.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\AMD.png" />
+    <None Include="Resources\x86\subinacl.exe" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Nvidia-GeForce-Logo.jpg" />
@@ -201,6 +192,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\btn_donate_LG.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Release\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\x64\subinacl.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\ddu logo3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
