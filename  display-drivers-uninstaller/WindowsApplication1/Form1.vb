@@ -2196,7 +2196,7 @@ Public Class Form1
                         If childl.Contains("comupdatus") Or childl.Contains("nv3d") Or _
                             childl.Contains("nvui") Or childl.Contains("nvvsvc") Or childl.Contains("nvxd") Or _
                            childl.Contains("gamesconfigserver") Or _
-                          childl.Contains("nvidia.installer") Or childl.Contains("displayserver") Or childl.Contains("workstationserver.") Or _
+                          childl.Contains("nvidia.installer") Or childl.Contains("displayserver.") Or childl.Contains("workstationserver.") Or _
                           childl.Contains("video_tvserver.") Or childl.Contains("stereovisionserver.") Or childl.Contains("mobileserver.") Then
 
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID", True)
@@ -3410,12 +3410,18 @@ Public Class Form1
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
             If removephysx Then
-                TraverseDirectory(diChild)
+                Try
+                    TraverseDirectory(diChild)
+                Catch ex As Exception
+                End Try
             Else
                 If diChild.ToString.ToLower.Contains("physx") Then
                     'do nothing
                 Else
-                    TraverseDirectory(diChild)
+                    Try
+                        TraverseDirectory(diChild)
+                    Catch ex As Exception
+                    End Try
                 End If
             End If
         Next
@@ -3437,12 +3443,18 @@ Public Class Form1
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
             If removephysx Then
-                TraverseDirectory(diChild)
+                Try
+                    TraverseDirectory(diChild)
+                Catch ex As Exception
+                End Try
             Else
                 If diChild.ToString.ToLower.Contains("physx") Then
                     'do nothing
                 Else
-                    TraverseDirectory(diChild)
+                    Try
+                        TraverseDirectory(diChild)
+                    Catch ex As Exception
+                    End Try
                 End If
             End If
         Next
@@ -3483,6 +3495,10 @@ Public Class Form1
 
             Try
                 fi.IsReadOnly = False
+            Catch ex As Exception
+            End Try
+
+            Try
                 fi.Delete()
             Catch ex As Exception
             End Try
