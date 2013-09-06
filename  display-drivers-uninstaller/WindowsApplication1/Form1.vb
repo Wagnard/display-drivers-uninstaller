@@ -1453,17 +1453,18 @@ Public Class Form1
                         If subregkey IsNot Nothing Then
                             For Each wantedstring In subregkey.GetValueNames()
                                 If wantedstring IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue(wantedstring).ToString
-                                    If wantedvalue IsNot Nothing Then
-                                        If wantedvalue.Contains("ATI\CIM\") Or _
-                                            wantedvalue.Contains("ATI.ACE\") Then
+                                    If subregkey.GetValue(wantedstring) IsNot Nothing Then
+                                        wantedvalue = subregkey.GetValue(wantedstring).ToString
+                                        If wantedvalue IsNot Nothing Then
+                                            If wantedvalue.Contains("ATI\CIM\") Or _
+                                                wantedvalue.Contains("ATI.ACE\") Then
 
-                                            regkey.DeleteSubKeyTree(child)
+                                                regkey.DeleteSubKeyTree(child)
 
+                                            End If
                                         End If
                                     End If
                                 End If
-
                             Next
                         End If
                     End If
@@ -2576,26 +2577,28 @@ Public Class Form1
                     ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
 
             If regkey IsNot Nothing Then
+                If regkey.GetValue("AppInit_DLLs") IsNot Nothing Then
+                    wantedvalue = regkey.GetValue("AppInit_DLLs")   'Will need to consider the comma in the future for multiple value
+                    If wantedvalue IsNot Nothing Then
+                        Select Case True
+                            Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
+                                wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                                regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-                wantedvalue = regkey.GetValue("AppInit_DLLs")   'Will need to consider the comma in the future for multiple value
-                If wantedvalue IsNot Nothing Then
-                    Select Case True
-                        Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
-                            wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
-                            regkey.SetValue("AppInit_DLLs", wantedvalue)
+                            Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
+                                wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+                                regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-                        Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
-                            wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
-                            regkey.SetValue("AppInit_DLLs", wantedvalue)
-
-                        Case wantedvalue.Contains(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
-                            wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
-                            regkey.SetValue("AppInit_DLLs", wantedvalue)
-                    End Select
+                            Case wantedvalue.Contains(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
+                                wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                                regkey.SetValue("AppInit_DLLs", wantedvalue)
+                        End Select
+                    End If
                 End If
                 If regkey.GetValue("AppInit_DLLs") = "" Then
                     regkey.SetValue("LoadAppInit_DLLs", "0", RegistryValueKind.DWord)
                 End If
+
             End If
 
             If IntPtr.Size = 8 Then
@@ -2603,22 +2606,23 @@ Public Class Form1
                    ("SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Windows", True)
 
                 If regkey IsNot Nothing Then
+                    If regkey.GetValue("AppInit_DLLs") IsNot Nothing Then
+                        wantedvalue = regkey.GetValue("AppInit_DLLs")
+                        If wantedvalue IsNot Nothing Then
+                            Select Case True
+                                Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
+                                    wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                                    regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-                    wantedvalue = regkey.GetValue("AppInit_DLLs")
-                    If wantedvalue IsNot Nothing Then
-                        Select Case True
-                            Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
-                                wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
-                                regkey.SetValue("AppInit_DLLs", wantedvalue)
+                                Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
+                                    wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+                                    regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-                            Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
-                                wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
-                                regkey.SetValue("AppInit_DLLs", wantedvalue)
-
-                            Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
-                                wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
-                                regkey.SetValue("AppInit_DLLs", wantedvalue)
-                        End Select
+                                Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
+                                    wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                                    regkey.SetValue("AppInit_DLLs", wantedvalue)
+                            End Select
+                        End If
                     End If
                     If regkey.GetValue("AppInit_DLLs") = "" Then
                         regkey.SetValue("LoadAppInit_DLLs", "0", RegistryValueKind.DWord)
@@ -3177,6 +3181,7 @@ Public Class Form1
             proc4.StartInfo = scan
             proc4.Start()
             proc4.WaitForExit()
+            System.Threading.Thread.Sleep(2000)
             appproc = Process.GetProcessesByName("explorer")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
