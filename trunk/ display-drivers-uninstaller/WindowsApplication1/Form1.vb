@@ -24,7 +24,9 @@ Public Class Form1
     Dim reply As String = Nothing
     Dim userpth As String = System.Environment.GetEnvironmentVariable("userprofile")
     Dim time As String = DateAndTime.Now
-    Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
+    Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
+                              & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
+
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
     Dim win8higher As Boolean = False
     Dim wantedvalue2 As String = Nothing
@@ -96,7 +98,7 @@ Public Class Form1
                     log(vendid)
                     'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
                     removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                    removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
+                    removedisplaydriver.Arguments = "disable =display " & Chr(34) & "@" & vendid & Chr(34)
                     removedisplaydriver.UseShellExecute = False
                     removedisplaydriver.CreateNoWindow = True
                     proc.StartInfo = removedisplaydriver
@@ -115,6 +117,12 @@ Public Class Form1
                         Exit Sub
                     End Try
                     proc.WaitForExit()
+                    System.Threading.Thread.Sleep(500)
+                    removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
+                    Try
+                        proc.Start()
+                    Catch ex As Exception
+                    End Try
                 End If
                 card1 = reply.IndexOf("PCI", card1 + 1)
                 System.Threading.Thread.Sleep(100) '100ms sleep between removal of videocards.
@@ -853,14 +861,16 @@ Public Class Form1
                 Dim FolderAcl As New RegistrySecurity
                 'setting permission to registry
                 removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 prochdmi.StartInfo = removehdmidriver
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -885,15 +895,18 @@ Public Class Form1
                     End If
                 Next
                 'setting back the registry permission to normal.
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                removehdmidriver.Arguments = _
+                    "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -901,14 +914,16 @@ Public Class Form1
                 'cleaning pnpresources
                 'setting permission to registry
                 removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /owner=Administrators"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /owner=Administrators"
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 prochdmi.StartInfo = removehdmidriver
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAc & "=f"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -920,14 +935,16 @@ Public Class Form1
 
                 If IntPtr.Size = 8 Then
                     removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /owner=Administrators"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /owner=Administrators"
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
                     prochdmi.StartInfo = removehdmidriver
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAc & "=f"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAc & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -940,14 +957,16 @@ Public Class Form1
 
                 If IntPtr.Size = 8 Then
                     removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE /owner=Administrators"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE /owner=Administrators"
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
                     prochdmi.StartInfo = removehdmidriver
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE /grant=" & UserAc & "=f"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE /grant=" & UserAc & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -959,14 +978,16 @@ Public Class Form1
                 End If
 
                 removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU /owner=Administrators"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU /owner=Administrators"
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 prochdmi.StartInfo = removehdmidriver
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU /grant=" & UserAc & "=f"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -977,14 +998,16 @@ Public Class Form1
                 End Try
 
                 removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable /owner=Administrators"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable /owner=Administrators"
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 prochdmi.StartInfo = removehdmidriver
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable /grant=" & UserAc & "=f"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -1002,7 +1025,8 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups /grant=" & UserAc & "=f"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -1034,42 +1058,46 @@ Public Class Form1
                 Dim reginfos As RegistryKey = Nothing
                 Dim FolderAcl As New RegistrySecurity
                 'setting permission to registry
+                Try
+                    removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
+                    removehdmidriver.UseShellExecute = False
+                    removehdmidriver.CreateNoWindow = True
+                    prochdmi.StartInfo = removehdmidriver
+                    prochdmi.Start()
+                    prochdmi.WaitForExit()
+                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                    For i As Integer = 0 To 132
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
+                        If regkey IsNot Nothing Then
 
-                removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
-                removehdmidriver.UseShellExecute = False
-                removehdmidriver.CreateNoWindow = True
-                prochdmi.StartInfo = removehdmidriver
-                prochdmi.Start()
-                prochdmi.WaitForExit()
-                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                For i As Integer = 0 To 132
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
-                    If regkey IsNot Nothing Then
+                            For Each child In regkey.GetValueNames()
+                                If child IsNot Nothing Then
+                                    child = child.ToLower
+                                    If child.Contains(driverfiles(i).ToLower) Then
 
-                        For Each child In regkey.GetValueNames()
-                            If child IsNot Nothing Then
-                                child = child.ToLower
-                                If child.Contains(driverfiles(i).ToLower) Then
-
-                                    Try
-                                        My.Computer.Registry.LocalMachine.DeleteValue _
-                                            ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
-                                    Catch ex As Exception
-                                        log(ex.Message)
-                                    End Try
+                                        Try
+                                            My.Computer.Registry.LocalMachine.DeleteValue _
+                                                ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
+                                        Catch ex As Exception
+                                            log(ex.Message)
+                                        End Try
+                                    End If
                                 End If
-                            End If
-                        Next
-                    End If
-                Next
+                            Next
+                        End If
+                    Next
                 'setting back the registry permission to normal.
-                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
-                prochdmi.Start()
-                prochdmi.WaitForExit()
-                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
+                    prochdmi.Start()
+                    prochdmi.WaitForExit()
+                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                Catch ex As Exception
+                    log(ex.Message & " We Got a security warning avoided on the subacl Part win7")
+                End Try
             End If
+            
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
           ("Directory\background\shellex\ContextMenuHandlers", True)
             If regkey IsNot Nothing Then
@@ -2459,15 +2487,18 @@ Public Class Form1
                     End If
                 Next
                 'setting back the registry permission to normal.
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                removehdmidriver.Arguments = _
+                    "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -2476,14 +2507,16 @@ Public Class Form1
                 'cleaning pnpresources
                 'setting permission to registry
                 removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /owner=Administrators"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /owner=Administrators"
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 prochdmi.StartInfo = removehdmidriver
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAc & "=f"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -2495,14 +2528,16 @@ Public Class Form1
 
                 If IntPtr.Size = 8 Then
                     removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /owner=Administrators"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /owner=Administrators"
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
                     prochdmi.StartInfo = removehdmidriver
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAc & "=f"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAc & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -2514,14 +2549,16 @@ Public Class Form1
                 End If
 
                 removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /owner=Administrators"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /owner=Administrators"
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 prochdmi.StartInfo = removehdmidriver
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /grant=" & UserAc & "=f"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /grant=" & UserAc & "=f"
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -2537,7 +2574,8 @@ Public Class Form1
                 'setting permission to registry
 
                 removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 prochdmi.StartInfo = removehdmidriver
@@ -2565,7 +2603,8 @@ Public Class Form1
                 Next
                 'setting back the registry permission to normal.
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)

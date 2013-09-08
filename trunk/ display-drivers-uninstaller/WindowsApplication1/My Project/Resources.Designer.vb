@@ -75,8 +75,8 @@ Namespace My.Resources
         '''</summary>
         Friend ReadOnly Property ddu_logo3() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("ddu logo3", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
+                Dim obj As Object = ResourceManager.GetObject("ddu_logo3", resourceCulture)
+                Return CType(obj, System.Drawing.Bitmap)
             End Get
         End Property
         
