@@ -34,6 +34,7 @@ Public Class Form1
     Dim wantedvalue As String = Nothing
     Dim regkey As RegistryKey
     Dim currentdriverversion As String = Nothing
+    Dim deleteservice As Boolean = True
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
@@ -1733,7 +1734,21 @@ Public Class Form1
                     Next
                 End If
             End If
-
+            If deleteservice Then
+                stopservice.Arguments = " /C" & "sc delete amdkmdag"
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+                stopservice.Arguments = " /C" & "sc delete amdkmdap"
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+                stopservice.Arguments = " /C" & "sc delete atikmdag"
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+                stopservice.Arguments = " /C" & "sc delete atikmpag"
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+            End If
         End If
 
         If ComboBox1.Text = "NVIDIA" Then
@@ -2572,42 +2587,45 @@ Public Class Form1
                 Dim reginfos As RegistryKey = Nothing
                 Dim FolderAcl As New RegistrySecurity
                 'setting permission to registry
+                Try
+                    removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
+                    removehdmidriver.UseShellExecute = False
+                    removehdmidriver.CreateNoWindow = True
+                    prochdmi.StartInfo = removehdmidriver
+                    prochdmi.Start()
+                    prochdmi.WaitForExit()
+                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                    For i As Integer = 0 To 77
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
+                        If regkey IsNot Nothing Then
 
-                removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                removehdmidriver.Arguments = _
-                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
-                removehdmidriver.UseShellExecute = False
-                removehdmidriver.CreateNoWindow = True
-                prochdmi.StartInfo = removehdmidriver
-                prochdmi.Start()
-                prochdmi.WaitForExit()
-                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                For i As Integer = 0 To 77
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
-                    If regkey IsNot Nothing Then
+                            For Each child In regkey.GetValueNames()
+                                If child IsNot Nothing Then
+                                    child = child.ToLower
+                                    If child.Contains(driverfiles(i).ToLower) Then
 
-                        For Each child In regkey.GetValueNames()
-                            If child IsNot Nothing Then
-                                child = child.ToLower
-                                If child.Contains(driverfiles(i).ToLower) Then
-
-                                    Try
-                                        regkey.DeleteValue(child)
-                                    Catch ex As Exception
-                                        log(ex.Message)
-                                    End Try
+                                        Try
+                                            regkey.DeleteValue(child)
+                                        Catch ex As Exception
+                                            log(ex.Message)
+                                        End Try
+                                    End If
                                 End If
-                            End If
-                        Next
-                    End If
-                Next
-                'setting back the registry permission to normal.
-                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                removehdmidriver.Arguments = _
-                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
-                prochdmi.Start()
-                prochdmi.WaitForExit()
-                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                            Next
+                        End If
+                    Next
+                    'setting back the registry permission to normal.
+                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
+                    prochdmi.Start()
+                    prochdmi.WaitForExit()
+                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                Catch ex As Exception
+                    log(ex.Message & " We Got a security warning avoided on the subacl Part win7")
+                End Try
             End If
 
 
@@ -2857,8 +2875,9 @@ Public Class Form1
                             If subregkey.GetValue("DisplayName") IsNot Nothing Then
                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
                                 If wantedvalue IsNot Nothing Then
-                                    If wantedvalue.Contains("NVIDIA") Or _
-                                    wantedvalue.Contains("SHIELD Streaming") Then
+                                    If wantedvalue.Contains("NVIDIA") And Not wantedvalue.Contains("3DTV") Or _
+                                    wantedvalue.Contains("SHIELD Streaming") Or _
+                                    wantedvalue.Contains("GeForce Experience") Then
                                         If removephysx Then
                                             regkey.DeleteSubKeyTree(child)
                                         Else
@@ -2889,8 +2908,9 @@ Public Class Form1
                         If subregkey.GetValue("DisplayName") IsNot Nothing Then
                             wantedvalue = subregkey.GetValue("DisplayName").ToString
                             If wantedvalue IsNot Nothing Then
-                                If wantedvalue.Contains("NVIDIA") Or _
-                                    wantedvalue.Contains("SHIELD Streaming") Then
+                                If wantedvalue.Contains("NVIDIA") And Not wantedvalue.Contains("3DTV") Or _
+                                    wantedvalue.Contains("SHIELD Streaming") Or _
+                                    wantedvalue.Contains("GeForce Experience") Then
                                     If removephysx Then
                                         regkey.DeleteSubKeyTree(child)
                                     Else
@@ -2975,9 +2995,6 @@ Public Class Form1
                     Try
                         regkey.DeleteValue("StereoLinksInstall")
                     Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
                         log(ex.Message + " StereoLinksInstall")
                     End Try
                 End If
@@ -3187,7 +3204,15 @@ Public Class Form1
                 End If
             End If
 
-
+            If deleteservice Then
+                stopservice.Arguments = " /C" & "sc delete nvlddmkm"
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+                stopservice.Arguments = " /C" & "sc delete NVHDA"
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+            End If
 
 
         End If
@@ -3646,5 +3671,17 @@ Public Class Form1
 
     Private Sub SVNToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SVNToolStripMenuItem.Click
         Process.Start("https://code.google.com/p/display-drivers-uninstaller/source/list")
+    End Sub
+
+    Private Sub CheckBox4_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox4.CheckedChanged
+        If CheckBox4.Checked = True Then
+            Button2.Enabled = False
+            Button3.Enabled = False
+            deleteservice = True
+        Else
+            Button2.Enabled = True
+            Button3.Enabled = True
+            deleteservice = False
+        End If
     End Sub
 End Class
