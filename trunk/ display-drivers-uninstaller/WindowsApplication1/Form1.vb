@@ -3212,6 +3212,9 @@ Public Class Form1
                 stopservice.Arguments = " /C" & "sc delete NVHDA"
                 processstopservice.Start()
                 processstopservice.WaitForExit()
+                stopservice.Arguments = " /C" & "sc delete nvvad_WaveExtensible"
+                processstopservice.Start()
+                processstopservice.WaitForExit()
             End If
 
 
