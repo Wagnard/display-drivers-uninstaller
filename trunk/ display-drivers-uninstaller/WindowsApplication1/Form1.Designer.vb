@@ -50,6 +50,7 @@ Partial Class Form1
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.Label10 = New System.Windows.Forms.Label()
+        Me.CheckBox4 = New System.Windows.Forms.CheckBox()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -185,9 +186,9 @@ Partial Class Form1
         '
         Me.MenuStrip1.Dock = System.Windows.Forms.DockStyle.Right
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
-        Me.MenuStrip1.Location = New System.Drawing.Point(502, 0)
+        Me.MenuStrip1.Location = New System.Drawing.Point(570, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(98, 505)
+        Me.MenuStrip1.Size = New System.Drawing.Size(30, 505)
         Me.MenuStrip1.TabIndex = 14
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -195,7 +196,7 @@ Partial Class Form1
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(85, 19)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(17, 19)
         Me.ToolStripMenuItem1.Text = "?"
         '
         'SVNToolStripMenuItem
@@ -302,11 +303,24 @@ Partial Class Form1
         Me.Label10.TabIndex = 21
         Me.Label10.Text = "Using DDU in safemode is recommended"
         '
+        'CheckBox4
+        '
+        Me.CheckBox4.AutoSize = True
+        Me.CheckBox4.Checked = True
+        Me.CheckBox4.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.CheckBox4.Location = New System.Drawing.Point(229, 322)
+        Me.CheckBox4.Name = "CheckBox4"
+        Me.CheckBox4.Size = New System.Drawing.Size(221, 17)
+        Me.CheckBox4.TabIndex = 22
+        Me.CheckBox4.Text = "Delete Driver Service (Restart is required)"
+        Me.CheckBox4.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(600, 505)
+        Me.Controls.Add(Me.CheckBox4)
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.Label9)
@@ -369,5 +383,6 @@ Partial Class Form1
     Friend WithEvents PictureBox2 As System.Windows.Forms.PictureBox
     Friend WithEvents SVNToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents CheckBox4 As System.Windows.Forms.CheckBox
 
 End Class
