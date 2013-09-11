@@ -64,11 +64,11 @@ Public Class Form1
 
 
 
-        TextBox1.Text = TextBox1.Text + "Uninstalling " & ComboBox1.Text & " driver..." + vbNewLine
+        TextBox1.Text = TextBox1.Text + "*****  Uninstalling " & ComboBox1.Text & " driver... *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Uninstalling " + ComboBox1.Text + " driver ...")
-        TextBox1.Text = TextBox1.Text + "Executing DEVCON Remove , Please wait(can take up to 1 minute) " + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** Executing DEVCON Remove , Please wait(can take up to 1 minute *****) " + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Executing DEVCON Remove")
@@ -109,9 +109,6 @@ Public Class Form1
                     proc.Start()
 
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
                     log(ex.Message)
                     MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                     Button1.Enabled = True
@@ -172,9 +169,7 @@ Public Class Form1
                 Try
                     prochdmi.Start()
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                   
                     log(ex.Message)
                     MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                     Button1.Enabled = True
@@ -194,9 +189,7 @@ Public Class Form1
                 Try
                     prochdmi.Start()
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                   
                     log(ex.Message)
                     MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                     Button1.Enabled = True
@@ -215,7 +208,7 @@ Public Class Form1
 
         System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
         'Next
-        TextBox1.Text = TextBox1.Text + "DEVCON Remove Display Complete" + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Display Complete *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("DEVCON Remove Display Complete")
@@ -273,14 +266,14 @@ Public Class Form1
             log(reply)
         End If
         System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-        TextBox1.Text = TextBox1.Text + "DEVCON Remove Audio/hdmi Complete" + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Audio/hdmi Complete *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("DEVCON Remove Audio/HDMI Complete")
 
 
 
-        TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(find OEM)..." + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(finding OEM step)... *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Executing Driver Store cleanUP(Find OEM)...")
@@ -332,9 +325,6 @@ Public Class Form1
             inf = reply.IndexOf(".inf", oem)
             position = reply.IndexOf("Provider:", oem)
             classs = reply.IndexOf("Class:", oem)
-            TextBox1.Text = TextBox1.Text + part + " found" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
             log(part + " Found")
             'Uninstall Driver from driver store  delete from (oemxx.inf)
             Dim deloem As New Diagnostics.ProcessStartInfo
@@ -346,7 +336,7 @@ Public Class Form1
             deloem.RedirectStandardOutput = True
             'creation dun process fantome pour le wait on exit.
             Dim proc3 As New Diagnostics.Process
-            TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine
+            TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(Delete OEM)... *****" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Executing Driver Store CleanUP(delete OEM)...")
@@ -365,13 +355,13 @@ Public Class Form1
         End While
 
 
-        TextBox1.Text = TextBox1.Text + "Driver Store cleanUP complete." + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** Driver Store cleanUP complete. *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Driver Store CleanUP Complete.")
 
 
-        TextBox1.Text = TextBox1.Text + "Cleaning process/services..." + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** Cleaning process/services... *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Cleaning Process/Services...")
@@ -472,9 +462,7 @@ Public Class Form1
             Next i
 
 
-            TextBox1.Text = TextBox1.Text + "Killing Explorer.exe" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+            
             log("Killing Explorer.exe")
             appproc = Process.GetProcessesByName("explorer")
             For i As Integer = 0 To appproc.Count - 1
@@ -493,7 +481,7 @@ Public Class Form1
 
             System.Threading.Thread.Sleep(50)
             'Delete AMD data Folders
-            TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine
+            TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Cleaning Directory")
@@ -506,9 +494,6 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
                     log(ex.Message)
                 End Try
 
@@ -520,9 +505,6 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
                 log(ex.Message)
             End Try
 
@@ -532,9 +514,6 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
                 log(ex.Message)
             End Try
 
@@ -544,9 +523,7 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+                
                 log(ex.Message)
             End Try
 
@@ -555,9 +532,7 @@ Public Class Form1
             Try
                 TestDelete(filePath)
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+                
                 log(ex.Message)
             End Try
 
@@ -568,9 +543,7 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+               
                 log(ex.Message)
             End Try
 
@@ -581,9 +554,7 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+            
                 log(ex.Message)
             End Try
 
@@ -592,9 +563,7 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+               
                 log(ex.Message)
             End Try
 
@@ -604,9 +573,7 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+               
                 log(ex.Message)
             End Try
             'Delete driver files
@@ -794,9 +761,7 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                    
                     log(ex.Message)
                 End Try
 
@@ -807,9 +772,7 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                    
                     log(ex.Message)
                 End Try
 
@@ -829,9 +792,7 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                  
                     log(ex.Message)
                 End Try
 
@@ -840,16 +801,14 @@ Public Class Form1
                 Try
                     TestDelete(filePath)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                    
                     log(ex.Message + "SteadyVideo testdelete")
                 End Try
 
 
             End If
 
-            TextBox1.Text = TextBox1.Text + "Cleaning known Regkeys..." + vbNewLine
+            TextBox1.Text = TextBox1.Text + "***** Cleaning known Regkeys... *****" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Cleaning known Regkeys")
@@ -913,9 +872,6 @@ Public Class Form1
                 regkey.DeleteSubKeyTree("Khronos")
 
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
                 log(ex.Message + " Opencl Khronos")
             End Try
             If IntPtr.Size = 8 Then
@@ -924,9 +880,7 @@ Public Class Form1
                     regkey.DeleteSubKeyTree("Khronos")
 
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                    
                     log(ex.Message + " Opencl Khronos")
                 End Try
             End If
@@ -1210,27 +1164,21 @@ Public Class Form1
                 Try
                     regkey.DeleteValue("HydraVisionDesktopManager")
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                   
                     log(ex.Message + " HydraVisionDesktopManager")
                 End Try
 
                 Try
                     regkey.DeleteValue("Grid")
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                   
                     log(ex.Message + " GRID")
                 End Try
 
                 Try
                     regkey.DeleteValue("HydraVisionMDEngine")
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                  
                     log(ex.Message + " HydraVisionMDEngine")
                 End Try
 
@@ -1435,9 +1383,7 @@ Public Class Form1
                         regkey.DeleteValue("StartCCC")
 
                     Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
+                       
                         log(ex.Message + " StartCCC")
                     End Try
                     Try
@@ -1445,9 +1391,7 @@ Public Class Form1
                         regkey.DeleteValue("AMD AVT")
 
                     Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
+                       
                         log(ex.Message + " AMD AVT")
                     End Try
                 End If
@@ -1587,9 +1531,7 @@ Public Class Form1
                             Try
                                 regkey.DeleteValue(child)
                             Catch ex As Exception
-                                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                                TextBox1.Select(TextBox1.Text.Length, 0)
-                                TextBox1.ScrollToCaret()
+                           
                                 log(ex.Message + " SharedDLLS")
                             End Try
                         End If
@@ -1613,9 +1555,7 @@ Public Class Form1
                             Try
                                 regkey.DeleteValue(child)
                             Catch ex As Exception
-                                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                                TextBox1.Select(TextBox1.Text.Length, 0)
-                                TextBox1.ScrollToCaret()
+                             
                                 log(ex.Message + " HKLM..CU\Installer\Folders")
                             End Try
                         End If
@@ -1945,9 +1885,7 @@ Public Class Form1
                 appproc(i).Kill()
             Next i
 
-            TextBox1.Text = TextBox1.Text + "Killing Explorer.exe" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+       
             log("Killing Explorer")
 
             appproc = Process.GetProcessesByName("explorer")
@@ -1956,7 +1894,7 @@ Public Class Form1
             Next i
             'Delete NVIDIA data Folders
             'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
-            TextBox1.Text = TextBox1.Text + "Cleaning UpdatusUser users ac if present" + vbNewLine
+            TextBox1.Text = TextBox1.Text + "***** Cleaning UpdatusUser users ac if present *****" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Cleaning UpdatusUser users ac if present")
@@ -1966,13 +1904,11 @@ Public Class Form1
 
                 AD.Children.Remove(NewUser)
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+             
                 log(ex.Message + " UpdatusUser")
             End Try
 
-            TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine
+            TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Cleaning Directory")
@@ -1984,9 +1920,7 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                 
                     log(ex.Message)
                 End Try
 
@@ -2003,9 +1937,7 @@ Public Class Form1
                         Try
                             TestDelete(child)
                         Catch ex As Exception
-                            TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                            TextBox1.Select(TextBox1.Text.Length, 0)
-                            TextBox1.ScrollToCaret()
+                         
                             log(ex.Message + " UpdatusUser")
                         End Try
 
@@ -2014,9 +1946,7 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory _
                         (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
-                            TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                            TextBox1.Select(TextBox1.Text.Length, 0)
-                            TextBox1.ScrollToCaret()
+                            
                             log(ex.Message + " Updatus directory delete")
                         End Try
 
@@ -2024,18 +1954,14 @@ Public Class Form1
                         Try
                             TestDelete(child)
                         Catch ex As Exception
-                            TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                            TextBox1.Select(TextBox1.Text.Length, 0)
-                            TextBox1.ScrollToCaret()
+                          
                             log(ex.Message + " UpdatusUsers second pass")
                         End Try
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
                         (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
-                            TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                            TextBox1.Select(TextBox1.Text.Length, 0)
-                            TextBox1.ScrollToCaret()
+                           
                             log(ex.Message + " Updatus directory delete")
                         End Try
                     End If
@@ -2052,10 +1978,8 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
+                
+                    log(ex.Message & "local application data \Ndidia")
                 End Try
             Else
                 Try
@@ -2073,10 +1997,8 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
+                  
+                    log(ex.Message & "application data \Nvidia")
                 End Try
             Else
                 Try
@@ -2094,10 +2016,8 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
+                 
+                    log(ex.Message & "program files\nvidia corporation")
                 End Try
             Else
                 Try
@@ -2115,10 +2035,8 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
+                   
+                    log(ex.Message & "common programfiles\Nvidia corporation")
                 End Try
             Else
                 Try
@@ -2137,10 +2055,8 @@ Public Class Form1
                         My.Computer.FileSystem.DeleteDirectory _
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
-                        TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                        TextBox1.Select(TextBox1.Text.Length, 0)
-                        TextBox1.ScrollToCaret()
-                        log(ex.Message)
+                       
+                        log(ex.Message & "programfiles x86\nvidia corporation")
                     End Try
                 Else
                     Try
@@ -2162,10 +2078,8 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
+                   
+                    log(ex.Message & "common application data\nvidia")
                 End Try
             Else
                 Try
@@ -2183,10 +2097,8 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
-                    log(ex.Message)
+                    
+                    log(ex.Message & "common application data\Nvidia corporation")
                 End Try
             Else
                 Try
@@ -2320,7 +2232,7 @@ Public Class Form1
             Catch ex As Exception
             End Try
             'Delete NVIDIA regkey
-            TextBox1.Text = TextBox1.Text + "Starting reg cleanUP" + vbNewLine
+            TextBox1.Text = TextBox1.Text + "***** Starting reg cleanUP *****" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Starting reg cleanUP")
@@ -2592,7 +2504,7 @@ Public Class Form1
                                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
                                             ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
                                     Catch ex As Exception
-                                        log(ex.Message)
+                                        log(ex.Message & "pnplockdownfiles")
                                     End Try
                                 End If
                             End If
@@ -2636,7 +2548,7 @@ Public Class Form1
                 Try
                     My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
                 Catch ex As Exception
-                    log(ex.Message)
+                    log(ex.Message & "pnp resources khronos")
                 End Try
 
                 If IntPtr.Size = 8 Then
@@ -2657,7 +2569,7 @@ Public Class Form1
                     Try
                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
                     Catch ex As Exception
-                        log(ex.Message)
+                        log(ex.Message & "pnpresources wow6432node khronos")
                     End Try
                 End If
 
@@ -2678,7 +2590,7 @@ Public Class Form1
                 Try
                     My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
                 Catch ex As Exception
-                    log(ex.Message)
+                    log(ex.Message & "pnp ressources")
                 End Try
             Else
                 Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
@@ -2707,7 +2619,7 @@ Public Class Form1
                                         Try
                                             regkey.DeleteValue(child)
                                         Catch ex As Exception
-                                            log(ex.Message)
+                                            log(ex.Message & "pnplockdownfiles")
                                         End Try
                                     End If
                                 End If
@@ -2798,9 +2710,7 @@ Public Class Form1
                                 Try
                                     regkey.DeleteValue(child)
                                 Catch ex As Exception
-                                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                                    TextBox1.Select(TextBox1.Text.Length, 0)
-                                    TextBox1.ScrollToCaret()
+                                 
                                     log(ex.Message + " HKLM..CU\Installer\Folders")
                                 End Try
                             End If
@@ -2816,9 +2726,7 @@ Public Class Form1
                 regkey.DeleteSubKeyTree("Khronos")
 
             Catch ex As Exception
-                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+              
                 log(ex.Message + " Opencl Khronos")
             End Try
 
@@ -2828,9 +2736,7 @@ Public Class Form1
                     regkey.DeleteSubKeyTree("Khronos")
 
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+              
                     log(ex.Message + " Opencl Khronos")
                 End Try
             End If
@@ -2844,9 +2750,7 @@ Public Class Form1
                             Try
                                 regkey.DeleteValue(child)
                             Catch ex As Exception
-                                TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                                TextBox1.Select(TextBox1.Text.Length, 0)
-                                TextBox1.ScrollToCaret()
+                              
                                 log(ex.Message + " SharedDLLS")
                             End Try
                         End If
@@ -2865,9 +2769,7 @@ Public Class Form1
                                 Try
                                     regkey.DeleteValue(child)
                                 Catch ex As Exception
-                                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                                    TextBox1.Select(TextBox1.Text.Length, 0)
-                                    TextBox1.ScrollToCaret()
+                                 
                                     log(ex.Message + " SharedDLLS")
                                 End Try
                             End If
@@ -3079,9 +2981,7 @@ Public Class Form1
                 Try
                     regkey.DeleteValue("Nvtmru")
                 Catch ex As Exception
-                    TextBox1.Text = TextBox1.Text + ex.Message + vbNewLine
-                    TextBox1.Select(TextBox1.Text.Length, 0)
-                    TextBox1.ScrollToCaret()
+                  
                     log(ex.Message + " Nvtmru")
                 End Try
             End If
@@ -3099,7 +2999,7 @@ Public Class Form1
             End If
 
 
-            TextBox1.Text = TextBox1.Text + "Debug : Starting S-1-5-xx region cleanUP" + vbNewLine
+            TextBox1.Text = TextBox1.Text + "***** Debug : Starting S-1-5-xx region cleanUP *****" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Debug : Starting S-1-5-xx region cleanUP")
@@ -3202,7 +3102,7 @@ Public Class Form1
             End If
 
 
-            TextBox1.Text = TextBox1.Text + "Debug : End of S-1-5-xx region cleanUP" + vbNewLine
+            TextBox1.Text = TextBox1.Text + "***** Debug : End of S-1-5-xx region cleanUP *****" + vbNewLine
             TextBox1.Select(TextBox1.Text.Length, 0)
             TextBox1.ScrollToCaret()
             log("Debug : End of S-1-5-xx region cleanUP")
@@ -3317,12 +3217,12 @@ Public Class Form1
 
 
         End If
-        TextBox1.Text = TextBox1.Text + "End of Registry Cleaning" + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** End of Registry Cleaning *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("End of Registry Cleaning")
         System.Threading.Thread.Sleep(50)
-        TextBox1.Text = TextBox1.Text + "Scanning for new device..." + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** Scanning for new device... *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Scanning for new device...")
@@ -3353,7 +3253,7 @@ Public Class Form1
             Next i
             reboot = True
         End If
-        TextBox1.Text = TextBox1.Text + "Clean uninstall completed!" + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** Clean uninstall completed! *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Clean uninstall completed!")
