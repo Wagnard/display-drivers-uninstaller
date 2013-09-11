@@ -310,9 +310,9 @@ Partial Class Form1
         Me.CheckBox4.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CheckBox4.Location = New System.Drawing.Point(229, 322)
         Me.CheckBox4.Name = "CheckBox4"
-        Me.CheckBox4.Size = New System.Drawing.Size(221, 17)
+        Me.CheckBox4.Size = New System.Drawing.Size(293, 17)
         Me.CheckBox4.TabIndex = 22
-        Me.CheckBox4.Text = "Delete Driver Service (Restart is required)"
+        Me.CheckBox4.Text = "Delete Driver Service (Restart is HIGHLY recommended)"
         Me.CheckBox4.UseVisualStyleBackColor = True
         '
         'Form1
