@@ -120,7 +120,7 @@ Public Class Form1
                 proc.WaitForExit()
                 log(reply2)
                 
-                System.Threading.Thread.Sleep(500)
+                System.Threading.Thread.Sleep(50)
                 removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
                 Try
                     proc.Start()
@@ -131,7 +131,7 @@ Public Class Form1
                 log(reply2)
             End If
             card1 = reply.IndexOf("PCI", card1 + 1)
-            System.Threading.Thread.Sleep(100) '100ms sleep between removal of videocards.
+            System.Threading.Thread.Sleep(50) '100ms sleep between removal of videocards.
         End While
         'Next
         'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
@@ -179,7 +179,7 @@ Public Class Form1
                 reply2 = prochdmi.StandardOutput.ReadToEnd
                 prochdmi.WaitForExit()
                 log(reply2)
-                System.Threading.Thread.Sleep(500)
+                System.Threading.Thread.Sleep(50)
 
                 removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
                 removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
@@ -201,7 +201,7 @@ Public Class Form1
                 log(reply2)
             End If
             card1 = reply.IndexOf("HDAUDIO", card1 + 1)
-            System.Threading.Thread.Sleep(100) '100 ms sleep between removal of media.
+            System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
         End While
 
         'creation dun process fantome pour le wait on exit.
@@ -270,6 +270,72 @@ Public Class Form1
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("DEVCON Remove Audio/HDMI Complete")
+        'removing monitor and hidden monitor
+        TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Monitor mai take more than a minute *****" + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
+        log("DEVCON Remove Monitor started")
+
+        checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+        checkoem.Arguments = "findall =monitor"
+        checkoem.UseShellExecute = False
+        checkoem.CreateNoWindow = True
+        checkoem.RedirectStandardOutput = True
+
+        'creation dun process fantome pour le wait on exit.
+
+        proc2.StartInfo = checkoem
+        proc2.Start()
+        reply = proc2.StandardOutput.ReadToEnd
+        proc2.WaitForExit()
+        Try
+            card1 = reply.IndexOf("DISPLAY\")
+        Catch ex As Exception
+
+        End Try
+        While card1 > -1
+
+            position2 = reply.IndexOf(":", card1)
+            vendid = reply.Substring(card1, position2 - card1).Trim
+
+
+            log("-" & vendid & "- GPU id found")
+            'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
+            removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+            removedisplaydriver.Arguments = "disable =monitor " & Chr(34) & "@" & vendid & Chr(34)
+            removedisplaydriver.UseShellExecute = False
+            removedisplaydriver.CreateNoWindow = True
+            removedisplaydriver.RedirectStandardOutput = True
+            proc.StartInfo = removedisplaydriver
+            Try
+                proc.Start()
+
+            Catch ex As Exception
+                log(ex.Message)
+                MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                Button1.Enabled = True
+                Button2.Enabled = True
+                Button3.Enabled = True
+                Exit Sub
+            End Try
+            reply2 = proc.StandardOutput.ReadToEnd
+            proc.WaitForExit()
+            log(reply2)
+
+            System.Threading.Thread.Sleep(20)
+            removedisplaydriver.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
+            Try
+                proc.Start()
+            Catch ex As Exception
+            End Try
+            reply2 = proc.StandardOutput.ReadToEnd
+            proc.WaitForExit()
+            log(reply2)
+
+            card1 = reply.IndexOf("DISPLAY\", card1 + 1)
+
+        End While
+
 
 
 
