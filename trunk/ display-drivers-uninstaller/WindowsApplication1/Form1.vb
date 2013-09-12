@@ -120,7 +120,7 @@ Public Class Form1
                 proc.WaitForExit()
                 log(reply2)
                 
-                System.Threading.Thread.Sleep(50)
+                ' System.Threading.Thread.Sleep(50)
                 removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
                 Try
                     proc.Start()
@@ -131,7 +131,7 @@ Public Class Form1
                 log(reply2)
             End If
             card1 = reply.IndexOf("PCI", card1 + 1)
-            System.Threading.Thread.Sleep(50) '100ms sleep between removal of videocards.
+            'System.Threading.Thread.Sleep(50) '100ms sleep between removal of videocards.
         End While
         'Next
         'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
@@ -179,7 +179,7 @@ Public Class Form1
                 reply2 = prochdmi.StandardOutput.ReadToEnd
                 prochdmi.WaitForExit()
                 log(reply2)
-                System.Threading.Thread.Sleep(50)
+                ' System.Threading.Thread.Sleep(50)
 
                 removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
                 removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
@@ -201,19 +201,19 @@ Public Class Form1
                 log(reply2)
             End If
             card1 = reply.IndexOf("HDAUDIO", card1 + 1)
-            System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
+            ' System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
         End While
 
         'creation dun process fantome pour le wait on exit.
 
-        System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+        ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
         'Next
         TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Display Complete *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("DEVCON Remove Display Complete")
 
-        System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+        '  System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
         'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM) and 3d vision drivers
         If ComboBox1.Text = "NVIDIA" Then
             removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
@@ -226,7 +226,7 @@ Public Class Form1
             reply = prochdmi.StandardOutput.ReadToEnd
             prochdmi.WaitForExit()
             log(reply)
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
             removehdmidriver.UseShellExecute = False
@@ -236,28 +236,28 @@ Public Class Form1
             reply = prochdmi.StandardOutput.ReadToEnd
             prochdmi.WaitForExit()
             log(reply)
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "usb\vid_0955&PID_0007" & Chr(34)
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             reply = prochdmi.StandardOutput.ReadToEnd
             prochdmi.WaitForExit()
             log(reply)
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            '  System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_0007" & Chr(34)
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             reply = prochdmi.StandardOutput.ReadToEnd
             prochdmi.WaitForExit()
             log(reply)
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000" & Chr(34)
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
             reply = prochdmi.StandardOutput.ReadToEnd
             prochdmi.WaitForExit()
             log(reply)
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000" & Chr(34)
             prochdmi.StartInfo = removehdmidriver
             prochdmi.Start()
@@ -265,7 +265,7 @@ Public Class Form1
             prochdmi.WaitForExit()
             log(reply)
         End If
-        System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+        ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
         TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Audio/hdmi Complete *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
@@ -299,7 +299,7 @@ Public Class Form1
             vendid = reply.Substring(card1, position2 - card1).Trim
 
 
-            log("-" & vendid & "- GPU id found")
+            log("-" & vendid & "- Monitor id found")
             'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
             removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
             removedisplaydriver.Arguments = "disable =monitor " & Chr(34) & "@" & vendid & Chr(34)
@@ -322,7 +322,7 @@ Public Class Form1
             proc.WaitForExit()
             log(reply2)
 
-            System.Threading.Thread.Sleep(20)
+            ' System.Threading.Thread.Sleep(20)
             removedisplaydriver.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
             Try
                 proc.Start()
@@ -356,15 +356,16 @@ Public Class Form1
         proc2.Start()
         reply = proc2.StandardOutput.ReadToEnd
         proc2.WaitForExit()
-        System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+        ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
         log("DEVCON DP_ENUM RESULT BELOW")
         log(reply)
         'Preparing to read output.
 
-        Dim position As Integer
-        Dim classs As Integer
+
         Dim oem As Integer = reply.IndexOf("oem")
-        Dim inf As Integer = Nothing
+        Dim position As Integer = reply.IndexOf("Provider:", oem)
+        Dim classs As Integer = reply.IndexOf("Class:", oem)
+        Dim inf As Integer = reply.IndexOf(".inf", oem)
 
         While oem > -1
 
@@ -448,7 +449,7 @@ Public Class Form1
             processstopservice.Start()
             processstopservice.WaitForExit()
 
-            System.Threading.Thread.Sleep(50)
+            'System.Threading.Thread.Sleep(50)
 
             'Delete AMD service
             stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "AMD External Events Utility" & Chr(34)
