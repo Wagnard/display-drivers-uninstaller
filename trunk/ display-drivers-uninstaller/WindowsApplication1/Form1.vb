@@ -73,6 +73,7 @@ Public Class Form1
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Executing DEVCON Remove")
+        Application.DoEvents()
         'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
         'find the PCI.... of the videocards.
         checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
@@ -120,12 +121,13 @@ Public Class Form1
                 reply2 = proc.StandardOutput.ReadToEnd
                 proc.WaitForExit()
                 log(reply2)
-                Application.DoEvents()
-                ' System.Threading.Thread.Sleep(50)
+
+
             End If
             card1 = reply.IndexOf("PCI", card1 + 1)
         End While
-        'System.Threading.Thread.Sleep(200) 'give 200 secs to the disable of disaply.
+        Application.DoEvents()
+
         Try
             card1 = reply.IndexOf("PCI")
         Catch ex As Exception
@@ -149,11 +151,13 @@ Public Class Form1
                 reply2 = proc.StandardOutput.ReadToEnd
                 proc.WaitForExit()
                 log(reply2)
-                Application.DoEvents()
+
             End If
             card1 = reply.IndexOf("PCI", card1 + 1)
-            'System.Threading.Thread.Sleep(50) '100ms sleep between removal of videocards.
+            System.Threading.Thread.Sleep(100)
+
         End While
+        Application.DoEvents()
         'Next
         'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
         checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
@@ -200,12 +204,13 @@ Public Class Form1
                 reply2 = prochdmi.StandardOutput.ReadToEnd
                 prochdmi.WaitForExit()
                 log(reply2)
-                Application.DoEvents()
+
                 ' System.Threading.Thread.Sleep(50)
             End If
             card1 = reply.IndexOf("HDAUDIO", card1 + 1)
             ' System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
         End While
+        Application.DoEvents()
         'System.Threading.Thread.Sleep(200) '200 ms sleep between removal of media.
         Try
             card1 = reply.IndexOf("HDAUDIO")
@@ -278,7 +283,7 @@ Public Class Form1
             reply = prochdmi.StandardOutput.ReadToEnd
             prochdmi.WaitForExit()
             log(reply)
-            System.Threading.Thread.Sleep(200)  '200 millisecond stall
+            System.Threading.Thread.Sleep(100)  '100 millisecond stall
             removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
             removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
             removehdmidriver.UseShellExecute = False
@@ -401,57 +406,46 @@ Public Class Form1
             oem = reply.IndexOf("oem")
         Catch ex As Exception
         End Try
-        Dim position As Integer = reply.IndexOf("Provider:", oem)
-        Dim classs As Integer = reply.IndexOf("Class:", oem)
-        Dim inf As Integer = reply.IndexOf(".inf", oem)
+        
 
         While oem > -1 And oem <> Nothing
+            Dim position As Integer = reply.IndexOf("Provider:", oem)
+            Dim classs As Integer = reply.IndexOf("Class:", oem)
+            Dim inf As Integer = reply.IndexOf(".inf", oem)
 
-            While Not reply.Substring(position, classs - position).Contains(provider)
-                oem = reply.IndexOf("oem", oem + 1)
-                inf = reply.IndexOf(".inf", oem)
-                position = reply.IndexOf("Provider:", oem)
-                classs = reply.IndexOf("Class:", oem)
-                If oem < 0 Then
-                    Exit While
-                End If
-            End While
+            If reply.Substring(position, classs - position).Contains(provider) Then
 
-            If oem < 0 Then
-                Exit While
+                Dim part As String = reply.Substring(oem, inf - oem)
+
+                'Uninstall Driver from driver store  delete from (oemxx.inf)
+                Dim deloem As New Diagnostics.ProcessStartInfo
+                Dim argument As String = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+                deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
+                deloem.Arguments = (argument)
+                deloem.UseShellExecute = False
+                deloem.CreateNoWindow = True
+                deloem.RedirectStandardOutput = True
+                'creation dun process fantome pour le wait on exit.
+                Dim proc3 As New Diagnostics.Process
+                TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(Delete OEM)... *****" + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log("Executing Driver Store CleanUP(delete OEM)...")
+                proc3.StartInfo = deloem
+                proc3.Start()
+                Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
+                proc3.WaitForExit()
+
+
+                TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine
+                TextBox1.Select(TextBox1.Text.Length, 0)
+                TextBox1.ScrollToCaret()
+                log(Reply2)
+
             End If
 
-            Dim part As String = reply.Substring(oem, inf - oem)
-
-            'Uninstall Driver from driver store  delete from (oemxx.inf)
-            Dim deloem As New Diagnostics.ProcessStartInfo
-            Dim argument As String = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
-            deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
-            deloem.Arguments = (argument)
-            deloem.UseShellExecute = False
-            deloem.CreateNoWindow = True
-            deloem.RedirectStandardOutput = True
-            'creation dun process fantome pour le wait on exit.
-            Dim proc3 As New Diagnostics.Process
-            TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(Delete OEM)... *****" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
-            log("Executing Driver Store CleanUP(delete OEM)...")
-            proc3.StartInfo = deloem
-            proc3.Start()
-            Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
-            proc3.WaitForExit()
-
-
-            TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
-            log(Reply2)
-
             oem = reply.IndexOf("oem", oem + 1)
-            inf = reply.IndexOf(".inf", oem)
-            position = reply.IndexOf("Provider:", oem)
-            classs = reply.IndexOf("Class:", oem)
+
         End While
 
 
