@@ -409,28 +409,20 @@ Public Class Form1
 
             While Not reply.Substring(position, classs - position).Contains(provider)
                 oem = reply.IndexOf("oem", oem + 1)
-                If oem < 0 Then
-                    Exit While
-                End If
                 inf = reply.IndexOf(".inf", oem)
                 position = reply.IndexOf("Provider:", oem)
                 classs = reply.IndexOf("Class:", oem)
-
-
+                If oem < 0 Then
+                    Exit While
+                End If
             End While
+
             If oem < 0 Then
                 Exit While
             End If
-            'work around...
+
             Dim part As String = reply.Substring(oem, inf - oem)
-            oem = reply.IndexOf("oem", oem + 1)
-            If oem < 0 Then
-                Exit While
-            End If
-            inf = reply.IndexOf(".inf", oem)
-            position = reply.IndexOf("Provider:", oem)
-            classs = reply.IndexOf("Class:", oem)
-            log(part + " Found")
+
             'Uninstall Driver from driver store  delete from (oemxx.inf)
             Dim deloem As New Diagnostics.ProcessStartInfo
             Dim argument As String = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
@@ -456,7 +448,10 @@ Public Class Form1
             TextBox1.ScrollToCaret()
             log(Reply2)
 
-
+            oem = reply.IndexOf("oem", oem + 1)
+            inf = reply.IndexOf(".inf", oem)
+            position = reply.IndexOf("Provider:", oem)
+            classs = reply.IndexOf("Class:", oem)
         End While
 
 
@@ -999,6 +994,7 @@ Public Class Form1
                     "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
+                removehdmidriver.RedirectStandardOutput = False
                 prochdmi.StartInfo = removehdmidriver
                 prochdmi.Start()
                 prochdmi.WaitForExit()
@@ -1503,7 +1499,7 @@ Public Class Form1
             End If
 
 
-
+            log("Debug : Starting S-1-5-xx region cleanUP")
             Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
         ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
             If basekey IsNot Nothing Then
@@ -1594,7 +1590,7 @@ Public Class Form1
                 Next
             End If
 
-
+            log("Debug : End S-1-5-xx region cleanUP")
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
      ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
             If regkey IsNot Nothing Then
