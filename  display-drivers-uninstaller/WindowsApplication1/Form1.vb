@@ -41,6 +41,8 @@ Public Class Form1
     Dim threadended As Boolean = False
     Dim stopme As Boolean = False
 
+
+
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         CheckForIllegalCrossThreadCalls = True
         Button1.Enabled = False
@@ -53,6 +55,10 @@ Public Class Form1
         CheckBox4.Enabled = False
         threadended = False
         stopme = False
+        Dim text As String
+        text = ComboBox1.Text
+
+
         If ComboBox1.Text = "AMD" Then
             vendidexpected = "VEN_1002"
             provider = "Provider: Advanced Micro Devices"
@@ -62,6 +68,7 @@ Public Class Form1
             vendidexpected = "VEN_10DE"
             provider = "Provider: NVIDIA"
         End If
+
         Dim appproc = Process.GetProcessesByName("WWAHost")
         For i As Integer = 0 To appproc.Count - 1
             appproc(i).Kill()
@@ -78,18 +85,11 @@ Public Class Form1
         TextBox1.ScrollToCaret()
         log("Executing DEVCON Remove")
 
-        ThreadPool.QueueUserWorkItem(AddressOf test)
+        BackgroundWorker1.RunWorkerAsync()
 
-        While threadended = False
-            Application.DoEvents()
-            System.Threading.Thread.Sleep(50)
-            If stopme = True Then
-                Application.Exit()
-                Exit Sub
-            End If
-        End While
+    End Sub
 
-
+    Public Sub otherwork()
 
         TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(finding OEM step)... *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
@@ -238,7 +238,7 @@ Public Class Form1
             processkillpid.Start()
             processkillpid.WaitForExit()
 
-            appproc = Process.GetProcessesByName("MOM")
+            Dim appproc = Process.GetProcessesByName("MOM")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
             Next i
@@ -1720,7 +1720,7 @@ Public Class Form1
             'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
             'holding files in the NVIDIA folders sometimes.
 
-            appproc = Process.GetProcessesByName("Lcore")
+            Dim appproc = Process.GetProcessesByName("Lcore")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
             Next i
@@ -3138,7 +3138,7 @@ Public Class Form1
             proc4.Start()
             proc4.WaitForExit()
             System.Threading.Thread.Sleep(2000)
-            appproc = Process.GetProcessesByName("explorer")
+            Dim appproc = Process.GetProcessesByName("explorer")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
             Next i
@@ -3158,7 +3158,11 @@ Public Class Form1
         CheckBox3.Enabled = True
         CheckBox4.Enabled = True
     End Sub
-
+    Private Sub Form1_close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
+        If Button1.Enabled = False Then
+            e.Cancel = True
+        End If
+    End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -3575,7 +3579,9 @@ Public Class Form1
             deleteservice = False
         End If
     End Sub
-    Private Sub test(stateInfo As Object)
+    Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
+                     ByVal e As System.ComponentModel.DoWorkEventArgs) _
+                     Handles BackgroundWorker1.DoWork
         Try
             'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
             'find the PCI.... of the videocards.
@@ -3757,17 +3763,13 @@ Public Class Form1
 
             ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             'Next
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Display Complete *****" + vbNewLine)
-            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-            Invoke(Sub() TextBox1.ScrollToCaret())
+
             log("DEVCON Remove Display Complete")
 
             '  System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM) and 3d vision drivers
-            Dim text As String
-            Invoke(Sub() text = ComboBox1.Text)
 
-            If text = "NVIDIA" Then
+            If Text = "NVIDIA" Then
 
                 removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
                 removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
@@ -3816,14 +3818,10 @@ Public Class Form1
                 log(reply)
             End If
             ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Audio/hdmi Complete *****" + vbNewLine)
-            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-            Invoke(Sub() TextBox1.ScrollToCaret())
+
             log("DEVCON Remove Audio/HDMI Complete")
             'removing monitor and hidden monitor
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Monitor. May take more than a minute *****" + vbNewLine)
-            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-            Invoke(Sub() TextBox1.ScrollToCaret())
+
             log("DEVCON Remove Monitor started")
 
             checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
@@ -3887,10 +3885,37 @@ Public Class Form1
             End While
             threadended = True
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.Message & ex.StackTrace)
             MsgBox("An error occured. Send the .log to the devs, Application will exit", MsgBoxStyle.Critical)
             stopme = True
         End Try
     End Sub
-    
+    Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object, _
+                             ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+                             Handles BackgroundWorker1.RunWorkerCompleted
+        If stopme = True Then
+            'Scan for new hardware to not let users into a non working state.
+            Button1.Enabled = True
+            Try
+                Dim scan As New ProcessStartInfo
+                scan.FileName = ".\" & Label3.Text & "\devcon.exe"
+                scan.Arguments = "rescan"
+                scan.UseShellExecute = False
+                scan.CreateNoWindow = True
+                scan.RedirectStandardOutput = True
+                Dim proc4 As New Process
+                proc4.StartInfo = scan
+                proc4.Start()
+                proc4.WaitForExit()
+            Catch ex As Exception
+            End Try
+            'then quit
+            Application.Exit()
+            Exit Sub
+        End If
+        TextBox1.Text = TextBox1.Text + "***** DEVCON Remove complete *****" + vbNewLine
+        TextBox1.Select(TextBox1.Text.Length, 0)
+        TextBox1.ScrollToCaret()
+        otherwork()
+    End Sub
 End Class
