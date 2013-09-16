@@ -4,6 +4,7 @@ Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Threading
 
+
 Public Class Form1
 
     Dim removedisplaydriver As New ProcessStartInfo
@@ -37,9 +38,11 @@ Public Class Form1
     Dim subregkey2 As RegistryKey = Nothing
     Dim currentdriverversion As String = Nothing
     Dim deleteservice As Boolean = True
+    Dim threadended As Boolean = False
+    Dim stopme As Boolean = False
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
+        CheckForIllegalCrossThreadCalls = True
         Button1.Enabled = False
         Button2.Enabled = False
         Button3.Enabled = False
@@ -48,7 +51,8 @@ Public Class Form1
         CheckBox1.Enabled = False
         CheckBox3.Enabled = False
         CheckBox4.Enabled = False
-
+        threadended = False
+        stopme = False
         If ComboBox1.Text = "AMD" Then
             vendidexpected = "VEN_1002"
             provider = "Provider: Advanced Micro Devices"
@@ -73,310 +77,17 @@ Public Class Form1
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Executing DEVCON Remove")
-        Application.DoEvents()
-        'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
-        'find the PCI.... of the videocards.
-        checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
-        checkoem.Arguments = "findall =display"
-        checkoem.UseShellExecute = False
-        checkoem.CreateNoWindow = True
-        checkoem.RedirectStandardOutput = True
 
-        'creation dun process fantome pour le wait on exit.
+        ThreadPool.QueueUserWorkItem(AddressOf test)
 
-        proc2.StartInfo = checkoem
-        proc2.Start()
-        reply = proc2.StandardOutput.ReadToEnd
-        proc2.WaitForExit()
-        Try
-            card1 = reply.IndexOf("PCI")
-        Catch ex As Exception
-
-        End Try
-        While card1 > -1
-
-            position2 = reply.IndexOf(":", card1)
-            vendid = reply.Substring(card1, position2 - card1).Trim
-
-            If vendid.Contains(vendidexpected) Then
-                log("-" & vendid & "- GPU id found")
-                'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                removedisplaydriver.Arguments = "disable =display " & Chr(34) & "@" & vendid & Chr(34)
-                removedisplaydriver.UseShellExecute = False
-                removedisplaydriver.CreateNoWindow = True
-                removedisplaydriver.RedirectStandardOutput = True
-                proc.StartInfo = removedisplaydriver
-                Try
-                    proc.Start()
-
-                Catch ex As Exception
-                    log(ex.Message)
-                    MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                    Button1.Enabled = True
-                    Button2.Enabled = True
-                    Button3.Enabled = True
-                    Exit Sub
-                End Try
-                reply2 = proc.StandardOutput.ReadToEnd
-                proc.WaitForExit()
-                log(reply2)
-
-
-            End If
-            card1 = reply.IndexOf("PCI", card1 + 1)
-        End While
-        Application.DoEvents()
-
-        Try
-            card1 = reply.IndexOf("PCI")
-        Catch ex As Exception
-
-        End Try
-        While card1 > -1
-            position2 = reply.IndexOf(":", card1)
-            vendid = reply.Substring(card1, position2 - card1).Trim
-
-            If vendid.Contains(vendidexpected) Then
-                removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
-                removedisplaydriver.UseShellExecute = False
-                removedisplaydriver.CreateNoWindow = True
-                removedisplaydriver.RedirectStandardOutput = True
-                proc.StartInfo = removedisplaydriver
-                Try
-                    proc.Start()
-                Catch ex As Exception
-                End Try
-                reply2 = proc.StandardOutput.ReadToEnd
-                proc.WaitForExit()
-                log(reply2)
-
-            End If
-            card1 = reply.IndexOf("PCI", card1 + 1)
-            System.Threading.Thread.Sleep(100)
-
-        End While
-        Application.DoEvents()
-        'Next
-        'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
-        checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
-        checkoem.Arguments = "findall =media"
-        checkoem.UseShellExecute = False
-        checkoem.CreateNoWindow = True
-        checkoem.RedirectStandardOutput = True
-
-        'creation dun process fantome pour le wait on exit.
-
-        proc2.StartInfo = checkoem
-        proc2.Start()
-        reply = proc2.StandardOutput.ReadToEnd
-        proc2.WaitForExit()
-        Try
-            card1 = reply.IndexOf("HDAUDIO")
-        Catch ex As Exception
-
-        End Try
-
-        While card1 > -1
-
-            position2 = reply.IndexOf(":", card1)
-            vendid = reply.Substring(card1, position2 - card1).Trim
-            If vendid.Contains(vendidexpected) Then
-                log("-" & vendid & "- Audio device found")
-
-                removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
-                removehdmidriver.UseShellExecute = False
-                removehdmidriver.CreateNoWindow = True
-                removehdmidriver.RedirectStandardOutput = True
-                prochdmi.StartInfo = removehdmidriver
-                Try
-                    prochdmi.Start()
-                Catch ex As Exception
-
-                    log(ex.Message)
-                    MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                    Button1.Enabled = True
-                    Button2.Enabled = True
-                    Button3.Enabled = True
-                End Try
-                reply2 = prochdmi.StandardOutput.ReadToEnd
-                prochdmi.WaitForExit()
-                log(reply2)
-
-                ' System.Threading.Thread.Sleep(50)
-            End If
-            card1 = reply.IndexOf("HDAUDIO", card1 + 1)
-            ' System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
-        End While
-        Application.DoEvents()
-        'System.Threading.Thread.Sleep(200) '200 ms sleep between removal of media.
-        Try
-            card1 = reply.IndexOf("HDAUDIO")
-        Catch ex As Exception
-
-        End Try
-
-        While card1 > -1
-
-            position2 = reply.IndexOf(":", card1)
-            vendid = reply.Substring(card1, position2 - card1).Trim
-            If vendid.Contains(vendidexpected) Then
-
-                removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
-                removehdmidriver.UseShellExecute = False
-                removehdmidriver.CreateNoWindow = True
-                prochdmi.StartInfo = removehdmidriver
-                Try
-                    prochdmi.Start()
-                Catch ex As Exception
-
-                    log(ex.Message)
-                    MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                    Button1.Enabled = True
-                    Button2.Enabled = True
-                    Button3.Enabled = True
-                End Try
-                reply2 = prochdmi.StandardOutput.ReadToEnd
-                prochdmi.WaitForExit()
-                log(reply2)
-                Application.DoEvents()
-            End If
-            card1 = reply.IndexOf("HDAUDIO", card1 + 1)
-            ' System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
-        End While
-
-        'creation dun process fantome pour le wait on exit.
-
-        ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-        'Next
-        TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Display Complete *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
-        log("DEVCON Remove Display Complete")
-
-        '  System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-        'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM) and 3d vision drivers
-        If ComboBox1.Text = "NVIDIA" Then
-            removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-            removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
-            removehdmidriver.UseShellExecute = False
-            removehdmidriver.CreateNoWindow = True
-            removehdmidriver.RedirectStandardOutput = True
-            prochdmi.StartInfo = removehdmidriver
-            prochdmi.Start()
-            reply = prochdmi.StandardOutput.ReadToEnd
-            prochdmi.WaitForExit()
-            log(reply)
-            ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-            removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "usb\vid_0955&PID_0007" & Chr(34)
-            prochdmi.StartInfo = removehdmidriver
-            prochdmi.Start()
-            reply = prochdmi.StandardOutput.ReadToEnd
-            prochdmi.WaitForExit()
-            log(reply)
-            removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000" & Chr(34)
-            prochdmi.StartInfo = removehdmidriver
-            prochdmi.Start()
-            reply = prochdmi.StandardOutput.ReadToEnd
-            prochdmi.WaitForExit()
-            log(reply)
-            System.Threading.Thread.Sleep(100)  '100 millisecond stall
-            removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
-            removehdmidriver.UseShellExecute = False
-            removehdmidriver.CreateNoWindow = True
-            prochdmi.StartInfo = removehdmidriver
-            prochdmi.Start()
-            reply = prochdmi.StandardOutput.ReadToEnd
-            prochdmi.WaitForExit()
-            log(reply)
-            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_0007" & Chr(34)
-            prochdmi.StartInfo = removehdmidriver
-            prochdmi.Start()
-            reply = prochdmi.StandardOutput.ReadToEnd
-            prochdmi.WaitForExit()
-            log(reply)
-            removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000" & Chr(34)
-            prochdmi.StartInfo = removehdmidriver
-            prochdmi.Start()
-            reply = prochdmi.StandardOutput.ReadToEnd
-            prochdmi.WaitForExit()
-            log(reply)
-        End If
-        ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-        TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Audio/hdmi Complete *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
-        log("DEVCON Remove Audio/HDMI Complete")
-        'removing monitor and hidden monitor
-        TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Monitor. May take more than a minute *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
-        log("DEVCON Remove Monitor started")
-
-        checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
-        checkoem.Arguments = "findall =monitor"
-        checkoem.UseShellExecute = False
-        checkoem.CreateNoWindow = True
-        checkoem.RedirectStandardOutput = True
-
-        'creation dun process fantome pour le wait on exit.
-
-        proc2.StartInfo = checkoem
-        proc2.Start()
-        reply = proc2.StandardOutput.ReadToEnd
-        proc2.WaitForExit()
-        Try
-            card1 = reply.IndexOf("DISPLAY\")
-        Catch ex As Exception
-
-        End Try
-        While card1 > -1
-
-            position2 = reply.IndexOf(":", card1)
-            vendid = reply.Substring(card1, position2 - card1).Trim
-
-
-            log("-" & vendid & "- Monitor id found")
-            'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-            removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-            removedisplaydriver.Arguments = "disable =monitor " & Chr(34) & "@" & vendid & Chr(34)
-            removedisplaydriver.UseShellExecute = False
-            removedisplaydriver.CreateNoWindow = True
-            removedisplaydriver.RedirectStandardOutput = True
-            proc.StartInfo = removedisplaydriver
-            Try
-                proc.Start()
-
-            Catch ex As Exception
-                log(ex.Message)
-                MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                Button1.Enabled = True
-                Button2.Enabled = True
-                Button3.Enabled = True
+        While threadended = False
+            Application.DoEvents()
+            System.Threading.Thread.Sleep(50)
+            If stopme = True Then
+                Application.Exit()
                 Exit Sub
-            End Try
-            reply2 = proc.StandardOutput.ReadToEnd
-            proc.WaitForExit()
-            log(reply2)
-
-            ' System.Threading.Thread.Sleep(20)
-            removedisplaydriver.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
-            Try
-                proc.Start()
-            Catch ex As Exception
-            End Try
-            reply2 = proc.StandardOutput.ReadToEnd
-            proc.WaitForExit()
-            log(reply2)
-
-            card1 = reply.IndexOf("DISPLAY\", card1 + 1)
-
+            End If
         End While
-
 
 
 
@@ -406,20 +117,37 @@ Public Class Form1
             oem = reply.IndexOf("oem")
         Catch ex As Exception
         End Try
-        
+
 
         While oem > -1 And oem <> Nothing
             Dim position As Integer = reply.IndexOf("Provider:", oem)
             Dim classs As Integer = reply.IndexOf("Class:", oem)
             Dim inf As Integer = reply.IndexOf(".inf", oem)
+            Dim searchposition As Integer
+            Dim argument As String = Nothing
+            If reply.IndexOf("oem", classs) < reply.Length And reply.IndexOf("oem", classs) > -1 Then
+                searchposition = reply.IndexOf("oem", classs) - classs
+            Else
+                searchposition = reply.Length - classs
+            End If
 
             If reply.Substring(position, classs - position).Contains(provider) Then
 
-                Dim part As String = reply.Substring(oem, inf - oem)
 
+
+
+                Dim part As String = reply.Substring(oem, inf - oem)
+                log(part + " Found")
                 'Uninstall Driver from driver store  delete from (oemxx.inf)
                 Dim deloem As New Diagnostics.ProcessStartInfo
-                Dim argument As String = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+                If reply.Substring(classs, searchposition).Contains("Display adapters") Or _
+                  reply.Substring(classs, searchposition).Contains("Sound, video") Then
+                    argument = "-f dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+                    log(argument)
+                Else
+                    argument = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+                    log(argument)
+                End If
                 deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
                 deloem.Arguments = (argument)
                 deloem.UseShellExecute = False
@@ -3847,4 +3575,322 @@ Public Class Form1
             deleteservice = False
         End If
     End Sub
+    Private Sub test(stateInfo As Object)
+        Try
+            'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
+            'find the PCI.... of the videocards.
+            checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+            checkoem.Arguments = "findall =display"
+            checkoem.UseShellExecute = False
+            checkoem.CreateNoWindow = True
+            checkoem.RedirectStandardOutput = True
+
+            'creation dun process fantome pour le wait on exit.
+
+            proc2.StartInfo = checkoem
+            proc2.Start()
+            reply = proc2.StandardOutput.ReadToEnd
+            proc2.WaitForExit()
+            Try
+                card1 = reply.IndexOf("PCI")
+            Catch ex As Exception
+
+            End Try
+            While card1 > -1
+
+                position2 = reply.IndexOf(":", card1)
+                vendid = reply.Substring(card1, position2 - card1).Trim
+
+                If vendid.Contains(vendidexpected) Then
+                    log("-" & vendid & "- GPU id found")
+                    'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
+                    removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                    removedisplaydriver.Arguments = "disable =display " & Chr(34) & "@" & vendid & Chr(34)
+                    removedisplaydriver.UseShellExecute = False
+                    removedisplaydriver.CreateNoWindow = True
+                    removedisplaydriver.RedirectStandardOutput = True
+                    proc.StartInfo = removedisplaydriver
+                    Try
+                        proc.Start()
+
+                    Catch ex As Exception
+                        log(ex.Message)
+                        MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                        Button1.Enabled = True
+                        Button2.Enabled = True
+                        Button3.Enabled = True
+                        Exit Sub
+                    End Try
+                    reply2 = proc.StandardOutput.ReadToEnd
+                    Application.DoEvents()
+                    System.Threading.Thread.Sleep(400)
+                    proc.WaitForExit()
+                    log(reply2)
+
+
+                End If
+
+                card1 = reply.IndexOf("PCI", card1 + 1)
+            End While
+
+
+            Try
+                card1 = reply.IndexOf("PCI")
+            Catch ex As Exception
+
+            End Try
+            While card1 > -1
+                position2 = reply.IndexOf(":", card1)
+                vendid = reply.Substring(card1, position2 - card1).Trim
+                If vendid.Contains(vendidexpected) Then
+                    removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                    removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
+                    removedisplaydriver.UseShellExecute = False
+                    removedisplaydriver.CreateNoWindow = True
+                    removedisplaydriver.RedirectStandardOutput = True
+                    proc.StartInfo = removedisplaydriver
+                    Try
+                        proc.Start()
+                    Catch ex As Exception
+                    End Try
+                    reply2 = proc.StandardOutput.ReadToEnd
+                    proc.WaitForExit()
+                    log(reply2)
+
+                End If
+                card1 = reply.IndexOf("PCI", card1 + 1)
+
+
+            End While
+
+            'Next
+            'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
+            checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+            checkoem.Arguments = "findall =media"
+            checkoem.UseShellExecute = False
+            checkoem.CreateNoWindow = True
+            checkoem.RedirectStandardOutput = True
+
+            'creation dun process fantome pour le wait on exit.
+
+            proc2.StartInfo = checkoem
+            proc2.Start()
+            reply = proc2.StandardOutput.ReadToEnd
+            proc2.WaitForExit()
+            Try
+                card1 = reply.IndexOf("HDAUDIO")
+            Catch ex As Exception
+
+            End Try
+
+            While card1 > -1
+
+                position2 = reply.IndexOf(":", card1)
+                vendid = reply.Substring(card1, position2 - card1).Trim
+                If vendid.Contains(vendidexpected) Then
+                    log("-" & vendid & "- Audio device found")
+
+                    removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                    removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
+                    removehdmidriver.UseShellExecute = False
+                    removehdmidriver.CreateNoWindow = True
+                    removehdmidriver.RedirectStandardOutput = True
+                    prochdmi.StartInfo = removehdmidriver
+                    Try
+                        prochdmi.Start()
+                    Catch ex As Exception
+
+                        log(ex.Message)
+                        MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                        Button1.Enabled = True
+                        Button2.Enabled = True
+                        Button3.Enabled = True
+                    End Try
+                    reply2 = prochdmi.StandardOutput.ReadToEnd
+                    prochdmi.WaitForExit()
+                    log(reply2)
+
+                    ' System.Threading.Thread.Sleep(50)
+                End If
+                card1 = reply.IndexOf("HDAUDIO", card1 + 1)
+                ' System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
+            End While
+
+            'System.Threading.Thread.Sleep(200) '200 ms sleep between removal of media.
+            Try
+                card1 = reply.IndexOf("HDAUDIO")
+            Catch ex As Exception
+
+            End Try
+
+            While card1 > -1
+
+                position2 = reply.IndexOf(":", card1)
+                vendid = reply.Substring(card1, position2 - card1).Trim
+                If vendid.Contains(vendidexpected) Then
+
+                    removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                    removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
+                    removehdmidriver.UseShellExecute = False
+                    removehdmidriver.CreateNoWindow = True
+                    prochdmi.StartInfo = removehdmidriver
+                    Try
+                        prochdmi.Start()
+                    Catch ex As Exception
+
+                        log(ex.Message)
+                        MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                        Button1.Enabled = True
+                        Button2.Enabled = True
+                        Button3.Enabled = True
+                    End Try
+                    reply2 = prochdmi.StandardOutput.ReadToEnd
+                    prochdmi.WaitForExit()
+                    log(reply2)
+
+                End If
+                card1 = reply.IndexOf("HDAUDIO", card1 + 1)
+                ' System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
+            End While
+
+            'creation dun process fantome pour le wait on exit.
+
+            ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            'Next
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Display Complete *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
+            log("DEVCON Remove Display Complete")
+
+            '  System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM) and 3d vision drivers
+            Dim text As String
+            Invoke(Sub() text = ComboBox1.Text)
+
+            If text = "NVIDIA" Then
+
+                removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
+                removehdmidriver.UseShellExecute = False
+                removehdmidriver.CreateNoWindow = True
+                removehdmidriver.RedirectStandardOutput = True
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                reply = prochdmi.StandardOutput.ReadToEnd
+                prochdmi.WaitForExit()
+                log(reply)
+                ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+                removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "usb\vid_0955&PID_0007" & Chr(34)
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                reply = prochdmi.StandardOutput.ReadToEnd
+                prochdmi.WaitForExit()
+                log(reply)
+                removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000" & Chr(34)
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                reply = prochdmi.StandardOutput.ReadToEnd
+                prochdmi.WaitForExit()
+                log(reply)
+                System.Threading.Thread.Sleep(100)  '100 millisecond stall
+                removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
+                removehdmidriver.UseShellExecute = False
+                removehdmidriver.CreateNoWindow = True
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                reply = prochdmi.StandardOutput.ReadToEnd
+                prochdmi.WaitForExit()
+                log(reply)
+                removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_0007" & Chr(34)
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                reply = prochdmi.StandardOutput.ReadToEnd
+                prochdmi.WaitForExit()
+                log(reply)
+                removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "usb\vid_0955&PID_9000" & Chr(34)
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                reply = prochdmi.StandardOutput.ReadToEnd
+                prochdmi.WaitForExit()
+                log(reply)
+            End If
+            ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Audio/hdmi Complete *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
+            log("DEVCON Remove Audio/HDMI Complete")
+            'removing monitor and hidden monitor
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** DEVCON Remove Monitor. May take more than a minute *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
+            log("DEVCON Remove Monitor started")
+
+            checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+            checkoem.Arguments = "findall =monitor"
+            checkoem.UseShellExecute = False
+            checkoem.CreateNoWindow = True
+            checkoem.RedirectStandardOutput = True
+
+            'creation dun process fantome pour le wait on exit.
+
+            proc2.StartInfo = checkoem
+            proc2.Start()
+            reply = proc2.StandardOutput.ReadToEnd
+            proc2.WaitForExit()
+            Try
+                card1 = reply.IndexOf("DISPLAY\")
+            Catch ex As Exception
+
+            End Try
+            While card1 > -1
+
+                position2 = reply.IndexOf(":", card1)
+                vendid = reply.Substring(card1, position2 - card1).Trim
+
+
+                log("-" & vendid & "- Monitor id found")
+                'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
+                removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                removedisplaydriver.Arguments = "disable =monitor " & Chr(34) & "@" & vendid & Chr(34)
+                removedisplaydriver.UseShellExecute = False
+                removedisplaydriver.CreateNoWindow = True
+                removedisplaydriver.RedirectStandardOutput = True
+                proc.StartInfo = removedisplaydriver
+                Try
+                    proc.Start()
+
+                Catch ex As Exception
+                    log(ex.Message)
+                    MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                    Button1.Enabled = True
+                    Button2.Enabled = True
+                    Button3.Enabled = True
+                    Exit Sub
+                End Try
+                reply2 = proc.StandardOutput.ReadToEnd
+                proc.WaitForExit()
+                log(reply2)
+
+                ' System.Threading.Thread.Sleep(20)
+                removedisplaydriver.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
+                Try
+                    proc.Start()
+                Catch ex As Exception
+                End Try
+                reply2 = proc.StandardOutput.ReadToEnd
+                proc.WaitForExit()
+                log(reply2)
+
+                card1 = reply.IndexOf("DISPLAY\", card1 + 1)
+
+            End While
+            threadended = True
+        Catch ex As Exception
+            log(ex.Message)
+            MsgBox("An error occured. Send the .log to the devs, Application will exit", MsgBoxStyle.Critical)
+            stopme = True
+        End Try
+    End Sub
+    
 End Class
