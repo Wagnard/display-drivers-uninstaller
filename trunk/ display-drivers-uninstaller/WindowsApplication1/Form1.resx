@@ -158,4 +158,7 @@ automatically. You can turn it back ON after installing your updated (previously
         8cgnr/zyzDfP/A1DAL/SFFAIAcD12Gev/fbcd+/99+BnLwQUU0jvE0Top6/++gep9EBAADs=
 </value>
   </data>
+  <metadata name="BackgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>154, 25</value>
+  </metadata>
 </root>
