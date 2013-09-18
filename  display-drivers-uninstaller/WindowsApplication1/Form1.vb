@@ -37,11 +37,7 @@ Public Class Form1
     Dim regkey As RegistryKey
     Dim subregkey2 As RegistryKey = Nothing
     Dim currentdriverversion As String = Nothing
-    Dim deleteservice As Boolean = True
-    Dim threadended As Boolean = False
     Dim stopme As Boolean = False
-
-
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         CheckForIllegalCrossThreadCalls = True
@@ -52,12 +48,6 @@ Public Class Form1
         CheckBox2.Enabled = False
         CheckBox1.Enabled = False
         CheckBox3.Enabled = False
-        CheckBox4.Enabled = False
-        threadended = False
-        stopme = False
-        Dim text As String
-        text = ComboBox1.Text
-
 
         If ComboBox1.Text = "AMD" Then
             vendidexpected = "VEN_1002"
@@ -69,13 +59,6 @@ Public Class Form1
             provider = "Provider: NVIDIA"
         End If
 
-        Dim appproc = Process.GetProcessesByName("WWAHost")
-        For i As Integer = 0 To appproc.Count - 1
-            appproc(i).Kill()
-        Next i
-
-
-
         TextBox1.Text = TextBox1.Text + "*****  Uninstalling " & ComboBox1.Text & " driver... *****" + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
@@ -85,15 +68,15 @@ Public Class Form1
         TextBox1.ScrollToCaret()
         log("Executing DEVCON Remove")
 
-        BackgroundWorker1.RunWorkerAsync()
+        BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
 
     End Sub
 
-    Public Sub otherwork()
+    Private Sub cleandriverstore(ByVal e As String)
 
-        TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(finding OEM step)... *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(finding OEM step)... *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
         log("Executing Driver Store cleanUP(Find OEM)...")
         'Check the driver from the driver store  ( oemxx.inf)
         checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
@@ -155,9 +138,9 @@ Public Class Form1
                 deloem.RedirectStandardOutput = True
                 'creation dun process fantome pour le wait on exit.
                 Dim proc3 As New Diagnostics.Process
-                TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(Delete OEM)... *****" + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+                Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(Delete OEM)... *****" + vbNewLine)
+                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+                Invoke(Sub() TextBox1.ScrollToCaret())
                 log("Executing Driver Store CleanUP(delete OEM)...")
                 proc3.StartInfo = deloem
                 proc3.Start()
@@ -165,9 +148,9 @@ Public Class Form1
                 proc3.WaitForExit()
 
 
-                TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine
-                TextBox1.Select(TextBox1.Text.Length, 0)
-                TextBox1.ScrollToCaret()
+                Invoke(Sub() TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine)
+                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+                Invoke(Sub() TextBox1.ScrollToCaret())
                 log(Reply2)
 
             End If
@@ -177,19 +160,20 @@ Public Class Form1
         End While
 
 
-        TextBox1.Text = TextBox1.Text + "***** Driver Store cleanUP complete. *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Driver Store cleanUP complete. *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
         log("Driver Store CleanUP Complete.")
 
 
-        TextBox1.Text = TextBox1.Text + "***** Cleaning process/services... *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning process/services... *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning Process/Services...")
         'Delete left over files.
-
-        If ComboBox1.Text = "AMD" Then
+    End Sub
+    Private Sub clean(ByVal e As String)
+        If e = "AMD" Then
 
             'STOP AMD service
             Dim stopservice As New ProcessStartInfo
@@ -225,6 +209,84 @@ Public Class Form1
             processstopservice.Start()
             processstopservice.WaitForExit()
             'kill process CCC.exe / MOM.exe /Clistart.exe HydraDM/HydraDM64(if it exist)
+
+
+            stopservice.Arguments = " /C" & "sc delete amdkmdag"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete amdkmdagA"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete amdkmdagB"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete amdkmdagC"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete amdkmdap"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete amdkmdapA"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete amdkmdapB"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete amdkmdapC"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete atikmdag"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete atikmpag"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete AtiHDAudioService"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            'interrogate somehow make windows check another time and remove the flag serviced for removal :D
+            stopservice.Arguments = " /C" & "sc interrogate amdkmdag"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate amdkmdagA"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate amdkmdagB"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate amdkmdagC"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate amdkmdap"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate amdkmdapA"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate amdkmdapB"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate amdkmdapC"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate atikmdag"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate atikmpag"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate AtiHDAudioService"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+
 
             Dim killpid As New ProcessStartInfo
             killpid.FileName = "cmd.exe"
@@ -303,9 +365,9 @@ Public Class Form1
 
             System.Threading.Thread.Sleep(50)
             'Delete AMD data Folders
-            TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
             log("Cleaning Directory")
             Dim filePath As String
 
@@ -630,14 +692,14 @@ Public Class Form1
 
             End If
 
-            TextBox1.Text = TextBox1.Text + "***** Cleaning known Regkeys... *****" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning known Regkeys... *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
             log("Cleaning known Regkeys")
             'Delete AMD regkey
 
 
-            'Deleting COM object
+            'Deleting DCOM object
 
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
@@ -648,13 +710,15 @@ Public Class Form1
                         If child.Contains("amdwdst") Then
                             If child IsNot Nothing Then
                                 subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID\" + child, True)
-                                If subregkey.GetValue("AppID") IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("AppID").ToString
-                                    regkey.DeleteSubKeyTree(child)
-                                    Try
-                                        regkey.DeleteSubKeyTree(wantedvalue)
-                                    Catch ex As Exception
-                                    End Try
+                                If subregkey IsNot Nothing Then
+                                    If subregkey.GetValue("AppID") IsNot Nothing Then
+                                        wantedvalue = subregkey.GetValue("AppID").ToString
+                                        regkey.DeleteSubKeyTree(child)
+                                        Try
+                                            regkey.DeleteSubKeyTree(wantedvalue)
+                                        Catch ex As Exception
+                                        End Try
+                                    End If
                                 End If
                             End If
                         End If
@@ -1425,7 +1489,7 @@ Public Class Form1
 
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-  ("SOFTWARE\Classes\Installer\Products", True)
+    ("SOFTWARE\Classes\Installer\Products", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -1571,86 +1635,11 @@ Public Class Form1
                     Next
                 End If
             End If
-            If deleteservice Then
-                stopservice.Arguments = " /C" & "sc delete amdkmdag"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete amdkmdagA"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete amdkmdagB"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete amdkmdagC"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete amdkmdap"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete amdkmdapA"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete amdkmdapB"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete amdkmdapC"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete atikmdag"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete atikmpag"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete AtiHDAudioService"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                'interrogate somehow make windows check another time and remove the flag serviced for removal :D
-                stopservice.Arguments = " /C" & "sc interrogate amdkmdag"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate amdkmdagA"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate amdkmdagB"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate amdkmdagC"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate amdkmdap"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate amdkmdapA"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate amdkmdapB"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate amdkmdapC"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate atikmdag"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate atikmpag"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate AtiHDAudioService"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-            End If
+
+
         End If
 
-        If ComboBox1.Text = "NVIDIA" Then
+        If e = "NVIDIA" Then
 
             'STOP NVIDIA service
             Dim stopservice As New ProcessStartInfo
@@ -1716,6 +1705,27 @@ Public Class Form1
             processstopservice.Start()
             processstopservice.WaitForExit()
 
+            stopservice.Arguments = " /C" & "sc delete nvlddmkm"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete NVHDA"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc delete nvvad_WaveExtensible"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate nvlddmkm"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate NVHDA"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            stopservice.Arguments = " /C" & "sc interrogate nvvad_WaveExtensible"
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+
 
             'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
             'holding files in the NVIDIA folders sometimes.
@@ -1746,18 +1756,22 @@ Public Class Form1
                 appproc(i).Kill()
             Next i
 
-
-            log("Killing Explorer")
-
-            appproc = Process.GetProcessesByName("explorer")
+            appproc = Process.GetProcessesByName("WWAHost")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
             Next i
+
+            'log("Killing Explorer")
+
+            'appproc = Process.GetProcessesByName("explorer")
+            'For i As Integer = 0 To appproc.Count - 1
+            '    appproc(i).Kill()
+            'Next i
             'Delete NVIDIA data Folders
             'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
-            TextBox1.Text = TextBox1.Text + "***** Cleaning UpdatusUser users ac if present *****" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning UpdatusUser users ac if present *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
             log("Cleaning UpdatusUser users ac if present")
             Try
                 Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
@@ -1769,9 +1783,9 @@ Public Class Form1
                 log(ex.Message + " UpdatusUser")
             End Try
 
-            TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
             log("Cleaning Directory")
             Dim filePath As String
 
@@ -1832,7 +1846,7 @@ Public Class Form1
 
 
             filePath = Environment.GetFolderPath _
-  (Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
+    (Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
 
             If removephysx Then
                 Try
@@ -2093,13 +2107,13 @@ Public Class Form1
             Catch ex As Exception
             End Try
             'Delete NVIDIA regkey
-            TextBox1.Text = TextBox1.Text + "***** Starting reg cleanUP *****" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Starting reg cleanUP *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
             log("Starting reg cleanUP")
 
 
-            'Deleting COM object /classroot
+            'Deleting DCOM object /classroot
 
 
             regkey = My.Computer.Registry.ClassesRoot
@@ -2115,21 +2129,62 @@ Public Class Form1
                           childl.Contains("nvcpl") Then
 
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID")
-                            If subregkey.GetValue("") IsNot Nothing Then
-                                wantedvalue = subregkey.GetValue("").ToString
-                                If wantedvalue IsNot Nothing Then
+                            If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If wantedvalue IsNot Nothing Then
 
-                                    If removephysx Then
-                                        If IntPtr.Size = 8 Then
+                                        If removephysx Then
+                                            If IntPtr.Size = 8 Then
+                                                Try
+                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue)
+                                                    Dim appid As String = Nothing
+                                                    Try
+                                                        appid = subregkey2.GetValue("AppID").ToString
+                                                    Catch ex As Exception
+                                                    End Try
+                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib")
+
+                                                    Dim typelib As String = Nothing
+                                                    Try
+                                                        typelib = subregkey2.GetValue("").ToString
+                                                    Catch ex As Exception
+                                                    End Try
+
+                                                    If appid IsNot Nothing Then
+                                                        Try
+                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                                                            subregkey2.DeleteSubKeyTree(appid)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                        Try
+                                                            'special case for an unusual key configuration nv bug?
+                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                            subregkey2.DeleteSubKeyTree(appid)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                    If typelib IsNot Nothing Then
+                                                        Try
+                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
+                                                            subregkey2.DeleteSubKeyTree(typelib)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                    subregkey2.DeleteSubKeyTree(wantedvalue)
+
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
                                             Try
-                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue)
+                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue)
                                                 Dim appid As String = Nothing
                                                 Try
                                                     appid = subregkey2.GetValue("AppID").ToString
                                                 Catch ex As Exception
                                                 End Try
-                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib")
-
+                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib")
                                                 Dim typelib As String = Nothing
                                                 Try
                                                     typelib = subregkey2.GetValue("").ToString
@@ -2138,12 +2193,6 @@ Public Class Form1
 
                                                 If appid IsNot Nothing Then
                                                     Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                        subregkey2.DeleteSubKeyTree(appid)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                    Try
-                                                        'special case for an unusual key configuration nv bug?
                                                         subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
                                                         subregkey2.DeleteSubKeyTree(appid)
                                                     Catch ex As Exception
@@ -2151,80 +2200,79 @@ Public Class Form1
                                                 End If
                                                 If typelib IsNot Nothing Then
                                                     Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
                                                         subregkey2.DeleteSubKeyTree(typelib)
                                                     Catch ex As Exception
                                                     End Try
                                                 End If
-                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
                                                 subregkey2.DeleteSubKeyTree(wantedvalue)
-
                                             Catch ex As Exception
                                             End Try
-                                        End If
-                                        Try
-                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue)
-                                            Dim appid As String = Nothing
                                             Try
-                                                appid = subregkey2.GetValue("AppID").ToString
-                                            Catch ex As Exception
-                                            End Try
-                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib")
-                                            Dim typelib As String = Nothing
-                                            Try
-                                                typelib = subregkey2.GetValue("").ToString
+                                                regkey.DeleteSubKeyTree(child)
                                             Catch ex As Exception
                                             End Try
 
-                                            If appid IsNot Nothing Then
-                                                Try
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                    subregkey2.DeleteSubKeyTree(appid)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                            If typelib IsNot Nothing Then
-                                                Try
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
-                                                    subregkey2.DeleteSubKeyTree(typelib)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                            subregkey2.DeleteSubKeyTree(wantedvalue)
-                                        Catch ex As Exception
-                                        End Try
-                                        Try
-                                            regkey.DeleteSubKeyTree(child)
-                                        Catch ex As Exception
-                                        End Try
-
-                                    Else
-                                        If child.Contains("gamesconfigserver") Then   'Physx related
-                                            'do nothing
                                         Else
-                                            If IntPtr.Size = 8 Then
+                                            If child.Contains("gamesconfigserver") Then   'Physx related
+                                                'do nothing
+                                            Else
+                                                If IntPtr.Size = 8 Then
+                                                    Try
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue)
+                                                        Dim appid As String = Nothing
+                                                        Try
+                                                            appid = subregkey2.GetValue("AppID").ToString
+                                                        Catch ex As Exception
+                                                        End Try
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib")
+                                                        Dim typelib As String = Nothing
+                                                        Try
+                                                            typelib = subregkey2.GetValue("").ToString
+                                                        Catch ex As Exception
+                                                        End Try
+                                                        If appid IsNot Nothing Then
+                                                            Try
+                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                                                                subregkey.DeleteSubKeyTree(appid)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                            Try
+                                                                'special case for an unusual key configuration nv bug?
+                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                                subregkey.DeleteSubKeyTree(appid)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        End If
+                                                        If typelib IsNot Nothing Then
+                                                            Try
+                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
+                                                                subregkey.DeleteSubKeyTree(typelib)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        End If
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                        subregkey.DeleteSubKeyTree(wantedvalue)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
                                                 Try
-                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue)
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue)
                                                     Dim appid As String = Nothing
                                                     Try
                                                         appid = subregkey2.GetValue("AppID").ToString
                                                     Catch ex As Exception
                                                     End Try
-                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib")
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib")
                                                     Dim typelib As String = Nothing
                                                     Try
                                                         typelib = subregkey2.GetValue("").ToString
                                                     Catch ex As Exception
                                                     End Try
+
                                                     If appid IsNot Nothing Then
                                                         Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                            subregkey.DeleteSubKeyTree(appid)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        Try
-                                                            'special case for an unusual key configuration nv bug?
                                                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
                                                             subregkey.DeleteSubKeyTree(appid)
                                                         Catch ex As Exception
@@ -2232,52 +2280,20 @@ Public Class Form1
                                                     End If
                                                     If typelib IsNot Nothing Then
                                                         Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
                                                             subregkey.DeleteSubKeyTree(typelib)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
-                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
                                                     subregkey.DeleteSubKeyTree(wantedvalue)
                                                 Catch ex As Exception
                                                 End Try
+                                                Try
+                                                    regkey.DeleteSubKeyTree(child)
+                                                Catch ex As Exception
+                                                End Try
                                             End If
-                                            Try
-                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue)
-                                                Dim appid As String = Nothing
-                                                Try
-                                                    appid = subregkey2.GetValue("AppID").ToString
-                                                Catch ex As Exception
-                                                End Try
-                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib")
-                                                Dim typelib As String = Nothing
-                                                Try
-                                                    typelib = subregkey2.GetValue("").ToString
-                                                Catch ex As Exception
-                                                End Try
-
-                                                If appid IsNot Nothing Then
-                                                    Try
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                        subregkey.DeleteSubKeyTree(appid)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                If typelib IsNot Nothing Then
-                                                    Try
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
-                                                        subregkey.DeleteSubKeyTree(typelib)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                subregkey.DeleteSubKeyTree(wantedvalue)
-                                            Catch ex As Exception
-                                            End Try
-                                            Try
-                                                regkey.DeleteSubKeyTree(child)
-                                            Catch ex As Exception
-                                            End Try
                                         End If
                                     End If
                                 End If
@@ -2299,40 +2315,12 @@ Public Class Form1
                           childl.Contains("nvidia.installer") Or childl.Contains("displayserver") Then
 
                             subregkey = regkey.OpenSubKey(child, True)
-                            If subregkey.GetValue("AppID") IsNot Nothing Then
-                                wantedvalue = subregkey.GetValue("AppID").ToString
-                                If wantedvalue IsNot Nothing Then
+                            If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("AppID") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("AppID").ToString
+                                    If wantedvalue IsNot Nothing Then
 
-                                    If removephysx Then
-                                        If IntPtr.Size = 8 Then
-                                            Try
-                                                Dim appid As String = wantedvalue
-                                                If appid IsNot Nothing Then
-                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
-                                                End If
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                        Try
-
-                                            Dim appid As String = wantedvalue
-                                            If appid IsNot Nothing Then
-                                                Try
-                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                        Catch ex As Exception
-                                        End Try
-                                        Try
-                                            regkey.DeleteSubKeyTree(child)
-                                        Catch ex As Exception
-                                        End Try
-
-                                    Else
-                                        If child.Contains("gamesconfigserver") Then
-                                            'do nothing
-                                        Else
+                                        If removephysx Then
                                             If IntPtr.Size = 8 Then
                                                 Try
                                                     Dim appid As String = wantedvalue
@@ -2357,6 +2345,36 @@ Public Class Form1
                                                 regkey.DeleteSubKeyTree(child)
                                             Catch ex As Exception
                                             End Try
+
+                                        Else
+                                            If child.Contains("gamesconfigserver") Then
+                                                'do nothing
+                                            Else
+                                                If IntPtr.Size = 8 Then
+                                                    Try
+                                                        Dim appid As String = wantedvalue
+                                                        If appid IsNot Nothing Then
+                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
+                                                        End If
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                                Try
+
+                                                    Dim appid As String = wantedvalue
+                                                    If appid IsNot Nothing Then
+                                                        Try
+                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                Catch ex As Exception
+                                                End Try
+                                                Try
+                                                    regkey.DeleteSubKeyTree(child)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
                                         End If
                                     End If
                                 End If
@@ -2880,9 +2898,9 @@ Public Class Form1
             End If
 
 
-            TextBox1.Text = TextBox1.Text + "***** Debug : Starting S-1-5-xx region cleanUP *****" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Debug : Starting S-1-5-xx region cleanUP *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
             log("Debug : Starting S-1-5-xx region cleanUP")
             Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
                   ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
@@ -2983,9 +3001,9 @@ Public Class Form1
             End If
 
 
-            TextBox1.Text = TextBox1.Text + "***** Debug : End of S-1-5-xx region cleanUP *****" + vbNewLine
-            TextBox1.Select(TextBox1.Text.Length, 0)
-            TextBox1.ScrollToCaret()
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Debug : End of S-1-5-xx region cleanUP *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
             log("Debug : End of S-1-5-xx region cleanUP")
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
@@ -3083,39 +3101,20 @@ Public Class Form1
                 End If
             End If
 
-            If deleteservice Then
-                stopservice.Arguments = " /C" & "sc delete nvlddmkm"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete NVHDA"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc delete nvvad_WaveExtensible"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate nvlddmkm"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate NVHDA"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                stopservice.Arguments = " /C" & "sc interrogate nvvad_WaveExtensible"
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-            End If
+
 
 
         End If
-        TextBox1.Text = TextBox1.Text + "***** End of Registry Cleaning *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** End of Registry Cleaning *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
         log("End of Registry Cleaning")
         System.Threading.Thread.Sleep(50)
-        TextBox1.Text = TextBox1.Text + "***** Scanning for new device... *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
+    End Sub
+    Private Sub rescan(ByVal e As String)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Scanning for new device... *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
         log("Scanning for new device...")
         'Scan for new devices...
         Dim scan As New ProcessStartInfo
@@ -3144,19 +3143,12 @@ Public Class Form1
             Next i
             reboot = True
         End If
-        TextBox1.Text = TextBox1.Text + "***** Clean uninstall completed! *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Clean uninstall completed! *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
         log("Clean uninstall completed!")
 
-        Button1.Enabled = True
-        Button2.Enabled = True
-        Button3.Enabled = True
-        ComboBox1.Enabled = True
-        CheckBox2.Enabled = True
-        CheckBox1.Enabled = True
-        CheckBox3.Enabled = True
-        CheckBox4.Enabled = True
+
     End Sub
     Private Sub Form1_close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
         If Button1.Enabled = False Then
@@ -3352,9 +3344,9 @@ Public Class Form1
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
-        TextBox1.Text = TextBox1.Text + "Deleting some specials folders, it may take some times..." + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "Deleting some specials folders, it may take some times..." + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
         log("Deleting some specials folders, it could take some times...")
         'ensure that this folder can be accessed with current user ac.
         Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
@@ -3570,15 +3562,6 @@ Public Class Form1
         Process.Start("https://code.google.com/p/display-drivers-uninstaller/source/list")
     End Sub
 
-    Private Sub CheckBox4_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox4.CheckedChanged
-        If CheckBox4.Checked = True Then
-            '  Button2.Enabled = False
-            deleteservice = True
-        Else
-            ' Button2.Enabled = True
-            deleteservice = False
-        End If
-    End Sub
     Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
@@ -3769,7 +3752,8 @@ Public Class Form1
             '  System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
             'ugly code to remove the new NVIDIA Virtual Audio Device (Wave Extensible) (WDM) and 3d vision drivers
 
-            If Text = "NVIDIA" Then
+
+            If DirectCast(e.Argument, String) = "NVIDIA" Then
 
                 removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
                 removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "usb\vid_0955&PID_700*" & Chr(34)
@@ -3883,16 +3867,23 @@ Public Class Form1
                 card1 = reply.IndexOf("DISPLAY\", card1 + 1)
 
             End While
-            threadended = True
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** DEVCON Remove complete *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
+            clean(DirectCast(e.Argument, String))
+            cleandriverstore(DirectCast(e.Argument, String))
+            rescan(DirectCast(e.Argument, String))
         Catch ex As Exception
             log(ex.Message & ex.StackTrace)
             MsgBox("An error occured. Send the .log to the devs, Application will exit", MsgBoxStyle.Critical)
             stopme = True
         End Try
+
     End Sub
     Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object, _
                              ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
                              Handles BackgroundWorker1.RunWorkerCompleted
+
         If stopme = True Then
             'Scan for new hardware to not let users into a non working state.
             Button1.Enabled = True
@@ -3913,9 +3904,13 @@ Public Class Form1
             Application.Exit()
             Exit Sub
         End If
-        TextBox1.Text = TextBox1.Text + "***** DEVCON Remove complete *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
-        otherwork()
+        Button1.Enabled = True
+        Button2.Enabled = True
+        Button3.Enabled = True
+        ComboBox1.Enabled = True
+        CheckBox2.Enabled = True
+        CheckBox1.Enabled = True
+        CheckBox3.Enabled = True
+
     End Sub
 End Class
