@@ -51,6 +51,8 @@ Partial Class Form1
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.CheckForUpdatesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -188,15 +190,15 @@ Partial Class Form1
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
         Me.MenuStrip1.Location = New System.Drawing.Point(570, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(30, 505)
+        Me.MenuStrip1.Size = New System.Drawing.Size(30, 526)
         Me.MenuStrip1.TabIndex = 14
         Me.MenuStrip1.Text = "MenuStrip1"
         '
         'ToolStripMenuItem1
         '
-        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem})
+        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem, Me.CheckForUpdatesToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(17, 19)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(85, 19)
         Me.ToolStripMenuItem1.Text = "?"
         '
         'SVNToolStripMenuItem
@@ -306,11 +308,27 @@ Partial Class Form1
         'BackgroundWorker1
         '
         '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(5, 504)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(117, 13)
+        Me.Label11.TabIndex = 22
+        Me.Label11.Text = "Checking for updates..."
+        '
+        'CheckForUpdatesToolStripMenuItem
+        '
+        Me.CheckForUpdatesToolStripMenuItem.Name = "CheckForUpdatesToolStripMenuItem"
+        Me.CheckForUpdatesToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
+        Me.CheckForUpdatesToolStripMenuItem.Text = "Check for Updates"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(600, 505)
+        Me.ClientSize = New System.Drawing.Size(600, 526)
+        Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.Label9)
@@ -374,5 +392,7 @@ Partial Class Form1
     Friend WithEvents SVNToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
+    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents CheckForUpdatesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class
