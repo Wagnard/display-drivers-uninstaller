@@ -22,6 +22,8 @@ Public Class Form1
     Dim position2 As Integer
     Dim removephysx As Boolean = True
     Dim t As Thread
+    Dim checkupdatethread As Thread
+    Public updates As Boolean
     Dim reply As String = Nothing
     Dim reply2 As String = Nothing
     Dim userpth As String = System.Environment.GetEnvironmentVariable("userprofile")
@@ -38,7 +40,61 @@ Public Class Form1
     Dim subregkey2 As RegistryKey = Nothing
     Dim currentdriverversion As String = Nothing
     Dim stopme As Boolean = False
+    Private Function checkupdates() As Boolean
+        Try
+            Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("https://docs.google.com/uc?export=download&id=0B0nCag_Hp76zZHdjLWNxRy00b00")
+            Dim response2 As System.Net.HttpWebResponse = request2.GetResponse()
 
+            Dim sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
+
+            Dim newestversion2 As String = sr.ReadToEnd()
+            If newestversion2.Contains(Application.ProductVersion) Then
+                Return True
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            Label11.Text = "Unable to Fetch updates!"
+        End Try
+
+
+    End Function
+    Private Sub Checkupdates2()
+        If checkupdates() = False Then
+            updates = False
+        Else
+            updates = True
+        End If
+        AccessUI()
+    End Sub
+    Private Sub AccessUI()
+        If Me.InvokeRequired Then
+            Me.Invoke(New MethodInvoker(AddressOf AccessUI))
+        Else
+            If updates = True Then
+                Label11.Text = ("No Updates found. Program is up to date.")
+
+            Else
+                Label11.Text = ("Updates found! Expect limited support on older versions than the most recent.")
+
+                Dim result = MsgBox("Updates are available! Visit forum thread now?", MsgBoxStyle.YesNoCancel)
+
+                If result = MsgBoxResult.Yes And ComboBox1.SelectedIndex = 0 Then
+                    Process.Start("http://forums.guru3d.com/showthread.php?t=379506")
+                ElseIf result = MsgBoxResult.Yes And ComboBox1.SelectedIndex = 1 Then
+                    Process.Start("http://forums.guru3d.com/showthread.php?t=379505")
+                ElseIf result = MsgBoxResult.No Then
+                    MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.")
+                ElseIf result = MsgBoxResult.Cancel Then
+                    MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.")
+                End If
+
+
+
+                'MsgBox("Updates are available! Visit forum thread now?    Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.", MsgBoxStyle.Information)
+            End If
+        End If
+    End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         CheckForIllegalCrossThreadCalls = True
         Button1.Enabled = False
@@ -3164,6 +3220,10 @@ Public Class Form1
             CheckBox2.Checked = True
         End If
 
+        checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
+        'checkthread.Priority = ThreadPriority.Highest
+        checkupdatethread.Start()
+
 
         Dim version As String
         Dim arch As Boolean
@@ -3908,5 +3968,11 @@ Public Class Form1
         CheckBox1.Enabled = True
         CheckBox3.Enabled = True
 
+    End Sub
+
+    Private Sub CheckForUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheckForUpdatesToolStripMenuItem.Click
+        checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
+        'checkthread.Priority = ThreadPriority.Highest
+        checkupdatethread.Start()
     End Sub
 End Class
