@@ -11,10 +11,14 @@ Todo list..
 
 -Having the Changes logs on the MSGBOX when there is a new update would be cool.
 
--removal of disabled and not connected / present 3d controler
+-removal of disabled and not connected / present 3d controler (Done)
 
--remove / rescan for sandy bridge / pci-e root port (will fix laptop problem with yellow mark)
+-remove / rescan for sandy bridge / pci-e root port (will fix laptop problem with yellow mark)  (Done)
 
 -More log to the .log to help debug when stacktrace is not very precise.
+(WIP)
+
+-A feature to check current windows update service status , remember it and then, stopping the service and disabling it the time of the cleaing procedure and then reenable it back at the end with the last known status
+This is to prevent asking user to cut off their internet connection.
 
 -code cleanup
