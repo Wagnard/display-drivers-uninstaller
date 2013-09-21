@@ -2,11 +2,17 @@
 
 = Introduction =
 
-Todo..
+Todo list..
 
 
 = Details =
 
+-Looking at the auto updating possibility.
+
 -removal of disabled and not connected / present 3d controler
 
 -remove / rescan for sandy bridge / pci-e root port (will fix laptop problem with yellow mark)
+
+-More log to the .log to help debug when stacktrace is not very precise.
+
+-code cleanup
