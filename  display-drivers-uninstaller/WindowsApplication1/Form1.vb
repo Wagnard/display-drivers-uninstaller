@@ -2166,19 +2166,18 @@ Public Class Form1
 
 
             'Deleting DCOM object /classroot
-
-
+            log("Starting dcom/clsid/appid/typelib cleanup")
+            log("Step 1/2")
             regkey = My.Computer.Registry.ClassesRoot
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
-                        Dim childl As String = child.ToLower
-                        If childl.Contains("comupdatus") Or childl.Contains("nv3d") Or _
-                            childl.Contains("nvui") Or childl.Contains("nvvsvc") Or childl.Contains("nvxd") Or _
-                           childl.Contains("gamesconfigserver") Or _
-                          childl.Contains("nvidia.installer") Or childl.Contains("displayserver.") Or childl.Contains("workstationserver.") Or _
-                          childl.Contains("video_tvserver.") Or childl.Contains("stereovisionserver.") Or childl.Contains("mobileserver.") Or _
-                          childl.Contains("nvcpl") Then
+                        If child.ToLower.Contains("comupdatus") Or child.ToLower.Contains("nv3d") Or _
+                            child.ToLower.Contains("nvui") Or child.ToLower.Contains("nvvsvc") Or child.ToLower.Contains("nvxd") Or _
+                           child.ToLower.Contains("gamesconfigserver") Or _
+                          child.ToLower.Contains("nvidia.installer") Or child.ToLower.Contains("displayserver.") Or child.ToLower.Contains("workstationserver.") Or _
+                          child.ToLower.Contains("video_tvserver.") Or child.ToLower.Contains("stereovisionserver.") Or child.ToLower.Contains("mobileserver.") Or _
+                          child.ToLower.Contains("nvcpl") Then
 
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID")
                             If subregkey IsNot Nothing Then
@@ -2262,7 +2261,7 @@ Public Class Form1
                                             Catch ex As Exception
                                             End Try
                                             Try
-                                                regkey.DeleteSubKeyTree(child)
+                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
                                             Catch ex As Exception
                                             End Try
 
@@ -2342,7 +2341,7 @@ Public Class Form1
                                                 Catch ex As Exception
                                                 End Try
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
                                                 Catch ex As Exception
                                                 End Try
                                             End If
@@ -2355,23 +2354,23 @@ Public Class Form1
                 Next
             End If
 
-            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+            log("Step 2/2")
+
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID")
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
-                        Dim childl As String = child.ToLower
 
-                        If childl.Contains("comupdatus") Or childl.Contains("nv3d") Or _
-                            childl.Contains("nvui") Or childl.Contains("nvvsvc") Or childl.Contains("nvxd") Or _
-                           childl.Contains("gamesconfigserver") Or _
-                          childl.Contains("nvidia.installer") Or childl.Contains("displayserver") Then
+                        If child.ToLower.Contains("comupdatus") Or child.ToLower.Contains("nv3d") Or _
+                            child.ToLower.Contains("nvui") Or child.ToLower.Contains("nvvsvc") Or child.ToLower.Contains("nvxd") Or _
+                           child.ToLower.Contains("gamesconfigserver") Or _
+                          child.ToLower.Contains("nvidia.installer") Or child.ToLower.Contains("displayserver") Then
 
-                            subregkey = regkey.OpenSubKey(child, True)
+                            subregkey = regkey.OpenSubKey(child)
                             If subregkey IsNot Nothing Then
                                 If subregkey.GetValue("AppID") IsNot Nothing Then
                                     wantedvalue = subregkey.GetValue("AppID").ToString
                                     If wantedvalue IsNot Nothing Then
-
                                         If removephysx Then
                                             If IntPtr.Size = 8 Then
                                                 Try
@@ -2394,7 +2393,7 @@ Public Class Form1
                                             Catch ex As Exception
                                             End Try
                                             Try
-                                                regkey.DeleteSubKeyTree(child)
+                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & child)
                                             Catch ex As Exception
                                             End Try
 
@@ -2423,7 +2422,7 @@ Public Class Form1
                                                 Catch ex As Exception
                                                 End Try
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & child)
                                                 Catch ex As Exception
                                                 End Try
                                             End If
@@ -2437,7 +2436,7 @@ Public Class Form1
                 Next
             End If
 
-
+            log("Finished dcom/clsid/appid/typelib cleanup")
 
             'end of deleting dcom stuff
             Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
