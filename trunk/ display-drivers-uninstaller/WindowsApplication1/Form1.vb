@@ -3821,11 +3821,32 @@ Public Class Form1
 
                 position2 = reply.IndexOf(":", card1)
                 vendid = reply.Substring(card1, position2 - card1).Trim
-                If vendid.Contains(vendidexpected) Or _
-                    vendid.Contains("USB\VID_0955&PID_9000") Then
+                If vendid.Contains(vendidexpected) Then
 
                     removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
                     removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
+                    removehdmidriver.UseShellExecute = False
+                    removehdmidriver.CreateNoWindow = True
+                    prochdmi.StartInfo = removehdmidriver
+                    Try
+                        prochdmi.Start()
+                    Catch ex As Exception
+
+                        log(ex.Message)
+                        MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                        Button1.Enabled = True
+                        Button2.Enabled = True
+                        Button3.Enabled = True
+                    End Try
+                    reply2 = prochdmi.StandardOutput.ReadToEnd
+                    prochdmi.WaitForExit()
+                    log(reply2)
+
+                End If
+                If vendid.Contains("USB\VID_0955&PID_9000") Then
+
+                    removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                    removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & vendid & Chr(34)
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
                     prochdmi.StartInfo = removehdmidriver
