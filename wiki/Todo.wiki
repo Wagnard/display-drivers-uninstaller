@@ -9,6 +9,8 @@ Todo list..
 
 -Looking at the auto updating possibility.
 
+-Having the Changes logs on the MSGBOX when there is a new update would be cool.
+
 -removal of disabled and not connected / present 3d controler
 
 -remove / rescan for sandy bridge / pci-e root port (will fix laptop problem with yellow mark)
