@@ -168,14 +168,12 @@ Public Class Form1
                 log(part + " Found")
                 Dim deloem As New Diagnostics.ProcessStartInfo
                 deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
+                deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
                 For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
-                    If child.ToLower.Trim.Contains("class=display") Or _
-                        child.ToLower.Trim.Contains("class=media") Or _
-                        child.ToLower.Trim.Contains("class=usb") Then
+                    If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
+                        child.ToLower.Trim.Replace(" ", "").Contains("class=media") Or _
+                        child.ToLower.Trim.Replace(" ", "").Contains("class=usb") Then
                         deloem.Arguments = "-f dp_delete " + Chr(34) + part + ".inf" + Chr(34)
-                    Else
-                        deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
-
                     End If
                 Next
                 'Uninstall Driver from driver store  delete from (oemxx.inf)
