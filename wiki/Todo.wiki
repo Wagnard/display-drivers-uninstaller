@@ -21,4 +21,6 @@ Todo list..
 -A feature to check current windows update service status , remember it and then, stopping the service and disabling it the time of the cleaing procedure and then reenable it back at the end with the last known status
 This is to prevent asking user to cut off their internet connection.
 
+-Check LucidLogic MVP possible bsod.
+
 -code cleanup
