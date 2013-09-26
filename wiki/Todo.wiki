@@ -7,6 +7,11 @@ Todo list..
 
 = Details =
 
+-Port the nvidia clsid/dcom/appid/typeLIB to AMD
+By doing som find the value to be treated by it
+
+-remove amdkmdag from the evenlog.
+
 -Looking at the auto updating possibility.
 
 -Having the Changes logs on the MSGBOX when there is a new update would be cool.
