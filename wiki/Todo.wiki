@@ -10,6 +10,8 @@ Todo list..
 -Port the nvidia clsid/dcom/appid/typeLIB to AMD
 By doing som find the value to be treated by it
 
+-Check if we need to remove the ATIerecord (linked to evenlog)
+
 -remove amdkmdag from the evenlog.
 
 -Looking at the auto updating possibility.
