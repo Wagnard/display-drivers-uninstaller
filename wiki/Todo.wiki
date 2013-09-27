@@ -8,7 +8,7 @@ Todo list..
 = Details =
 
 -Port the nvidia clsid/dcom/appid/typeLIB to AMD
-By doing som find the value to be treated by it
+By doing som find the value to be treated by it  (DONE)
 
 -Check if we need to remove the ATIerecord (linked to evenlog)
 
