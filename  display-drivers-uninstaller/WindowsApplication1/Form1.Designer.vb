@@ -53,6 +53,7 @@ Partial Class Form1
         Me.Label10 = New System.Windows.Forms.Label()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.Label11 = New System.Windows.Forms.Label()
+        Me.Button4 = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -131,7 +132,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(29, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V7.7"
+        Me.Label6.Text = "V7.8"
         '
         'ComboBox1
         '
@@ -323,11 +324,21 @@ Partial Class Form1
         Me.Label11.TabIndex = 22
         Me.Label11.Text = "Checking for updates..."
         '
+        'Button4
+        '
+        Me.Button4.Location = New System.Drawing.Point(397, 374)
+        Me.Button4.Name = "Button4"
+        Me.Button4.Size = New System.Drawing.Size(191, 36)
+        Me.Button4.TabIndex = 23
+        Me.Button4.Text = "Set Windows Update driver installation to default."
+        Me.Button4.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(600, 526)
+        Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.PictureBox2)
@@ -394,5 +405,6 @@ Partial Class Form1
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents CheckForUpdatesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents Button4 As System.Windows.Forms.Button
 
 End Class
