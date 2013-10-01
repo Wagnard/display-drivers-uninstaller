@@ -3445,7 +3445,41 @@ Public Class Form1
                 End If
             End If
 
+            log("Interface CleanUP")
+            'interface cleanup
 
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
+
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
+                        If subregkey IsNot Nothing Then
+                            If subregkey.GetValue("") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("").ToString
+                                If wantedvalue IsNot Nothing Then
+                                    If wantedvalue.ToLower.Contains("ishadowplaysupport") Or _
+                                        wantedvalue.ToLower.Contains("iprocessrunner") Or _
+                                        wantedvalue.ToLower.Contains("iusergate") Or _
+                                       wantedvalue.ToLower.Contains("inv3d") Then
+
+                                        Try
+                                            regkey.DeleteSubKeyTree(child)
+                                        Catch ex As Exception
+                                        End Try
+                                        If IntPtr.Size = 8 Then
+                                            Try
+                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\Interface\" & child)
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        End If
+                    End If
+                Next
+            End If
 
 
 
