@@ -40,6 +40,7 @@ Public Class Form1
     Dim subregkey2 As RegistryKey = Nothing
     Dim currentdriverversion As String = Nothing
     Dim stopme As Boolean = False
+    Dim version As String
     Private Function checkupdates() As Boolean
         Try
             Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("https://docs.google.com/uc?export=download&id=0B0nCag_Hp76zZHdjLWNxRy00b00")
@@ -649,9 +650,10 @@ Public Class Form1
             driverfiles(138) = "atikmdagB.sys"
             driverfiles(139) = "atikmpagA.sys"
             driverfiles(140) = "atioglxxB.dll"
-            driverfiles(141) = "coinst_"
+            driverfiles(141) = "delayapo.dll"
+            driverfiles(142) = "coinst_"
 
-            For i As Integer = 0 To 140
+            For i As Integer = 0 To 141
 
                 filePath = System.Environment.SystemDirectory
                 Try
@@ -1084,7 +1086,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                For i As Integer = 0 To 141
+                For i As Integer = 0 To 142
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
                     If regkey IsNot Nothing Then
 
@@ -1282,7 +1284,7 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    For i As Integer = 0 To 141
+                    For i As Integer = 0 To 142
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                         If regkey IsNot Nothing Then
                             For Each child In regkey.GetValueNames()
@@ -1461,6 +1463,7 @@ Public Class Form1
                                             wantedvalue.Contains("AMD Drag and Drop") Or _
                                             wantedvalue.Contains("AMD APP SDK") Or _
                                             wantedvalue.Contains("AMD Steady") Or _
+                                            wantedvalue.Contains("Application Profiles") Or _
                                             wantedvalue.Contains("ATI AVIVO") Then
 
                                         regkey.DeleteSubKeyTree(child)
@@ -1546,6 +1549,7 @@ Public Class Form1
                                             wantedvalue.Contains("AMD Drag and Drop") Or _
                                             wantedvalue.Contains("AMD APP SDK") Or _
                                             wantedvalue.Contains("AMD Steady") Or _
+                                            wantedvalue.Contains("Application Profiles") Or _
                                             wantedvalue.Contains("ATI AVIVO") Then
                                             regkey.DeleteSubKeyTree(child)
                                         End If
@@ -2417,7 +2421,8 @@ Public Class Form1
             driverfiles(76) = "nvhda"
             driverfiles(77) = "detoured.dll"
             driverfiles(78) = "nvcplsetupeng.exe"
-            For i As Integer = 0 To 78
+            driverfiles(79) = "nvcplsetupint.exe"
+            For i As Integer = 0 To 79
 
                 filePath = System.Environment.SystemDirectory
                 Try
@@ -2759,7 +2764,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                For i As Integer = 0 To 78
+                For i As Integer = 0 To 79
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
                     If regkey IsNot Nothing Then
 
@@ -2878,7 +2883,7 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    For i As Integer = 0 To 78
+                    For i As Integer = 0 To 79
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                         If regkey IsNot Nothing Then
                             For Each child In regkey.GetValueNames()
@@ -3587,7 +3592,7 @@ Public Class Form1
         checkupdatethread.Start()
 
 
-        Dim version As String
+
         Dim arch As Boolean
 
         version = My.Computer.Info.OSVersion
@@ -3759,6 +3764,19 @@ Public Class Form1
         End Try
         TextBox1.Text = TextBox1.Text + "Current driver version : " + currentdriverversion + vbNewLine
         log("Current driver version : " + currentdriverversion)
+
+        'setting the driversearching parameter for win 7+
+        If version >= "6.1" Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
+                If regkey.GetValue("SearchOrderConfig").ToString <> 0 Then
+                    regkey.SetValue("SearchOrderConfig", 0)
+                    MsgBox("DDU has changed a setting that prevent driver to be downloaded automatically with Windows Update. You can set this" _
+                           & " back to default if you want AFTER your new driver installation.")
+                End If
+            Catch ex As Exception
+            End Try
+        End If
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
@@ -4389,5 +4407,20 @@ Public Class Form1
         checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
         'checkthread.Priority = ThreadPriority.Highest
         checkupdatethread.Start()
+    End Sub
+
+    Private Sub RestoreWindowsUpdateDefaultToolStripMenuItem_Click(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        If Version >= "6.1" Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
+                regkey.SetValue("SearchOrderConfig", 1)
+                MsgBox("Done")
+            Catch ex As Exception
+            End Try
+        End If
     End Sub
 End Class
