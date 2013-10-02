@@ -227,7 +227,7 @@ Public Class Form1
             stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "AMD External Events Utility" & Chr(34)
             stopservice.UseShellExecute = False
             stopservice.CreateNoWindow = True
-            stopservice.RedirectStandardOutput = True
+            stopservice.RedirectStandardOutput = False
 
             Dim processstopservice As New Process
             processstopservice.StartInfo = stopservice
@@ -249,12 +249,25 @@ Public Class Form1
             processstopservice.Start()
             processstopservice.WaitForExit()
             System.Threading.Thread.Sleep(50)
+
             stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "ATI External Events Utility" & Chr(34)
 
             processstopservice.StartInfo = stopservice
             processstopservice.Start()
             processstopservice.WaitForExit()
-            'kill process CCC.exe / MOM.exe /Clistart.exe HydraDM/HydraDM64(if it exist)
+
+            stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "AMD FUEL Service" & Chr(34)
+
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+            System.Threading.Thread.Sleep(50)
+
+            stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "AMD FUEL Service" & Chr(34)
+
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
 
 
             stopservice.Arguments = " /C" & "sc delete amdkmdag"
@@ -339,7 +352,7 @@ Public Class Form1
             killpid.Arguments = " /C" & "taskkill /f /im CLIStart.exe"
             killpid.UseShellExecute = False
             killpid.CreateNoWindow = True
-            killpid.RedirectStandardOutput = True
+            killpid.RedirectStandardOutput = False
 
             Dim processkillpid As New Process
             processkillpid.StartInfo = killpid
@@ -347,6 +360,11 @@ Public Class Form1
             processkillpid.WaitForExit()
 
             Dim appproc = Process.GetProcessesByName("MOM")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
+
+            appproc = Process.GetProcessesByName("CLIStart")
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
             Next i
@@ -2004,7 +2022,7 @@ Public Class Form1
             stopservice.Arguments = " /C" & "sc stop nvsvc"
             stopservice.UseShellExecute = False
             stopservice.CreateNoWindow = True
-            stopservice.RedirectStandardOutput = True
+            stopservice.RedirectStandardOutput = False
 
             Dim processstopservice As New Process
             processstopservice.StartInfo = stopservice
@@ -5125,7 +5143,7 @@ Public Class Form1
                 scan.Arguments = "rescan"
                 scan.UseShellExecute = False
                 scan.CreateNoWindow = True
-                scan.RedirectStandardOutput = True
+                scan.RedirectStandardOutput = False
                 Dim proc4 As New Process
                 proc4.StartInfo = scan
                 proc4.Start()
