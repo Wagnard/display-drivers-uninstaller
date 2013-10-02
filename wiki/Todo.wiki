@@ -7,9 +7,6 @@ Todo list..
 
 = Details =
 
--Port the nvidia clsid/dcom/appid/typeLIB to AMD
-By doing som find the value to be treated by it  (DONE)
-
 -Check if we need to remove the ATIerecord (linked to evenlog)
 
 -remove amdkmdag from the evenlog.
@@ -18,16 +15,13 @@ By doing som find the value to be treated by it  (DONE)
 
 -Having the Changes logs on the MSGBOX when there is a new update would be cool.
 
--removal of disabled and not connected / present 3d controler (Done)
-
--remove / rescan for sandy bridge / pci-e root port (will fix laptop problem with yellow mark)  (Done)
+-remove / rescan for sandy bridge / pci-e root port (will fix laptop problem with yellow mark)  (In testing / Done)
 
 -More log to the .log to help debug when stacktrace is not very precise.
 (WIP)
 
--A feature to check current windows update service status , remember it and then, stopping the service and disabling it the time of the cleaing procedure and then reenable it back at the end with the last known status
-This is to prevent asking user to cut off their internet connection.
-
 -Check LucidLogic MVP possible bsod.
+
+-Instead of having everything hard-code, put some code on .cfg or ini files like all files for removal so power-user can configure stuff even if I dont update the program.
 
 -code cleanup
