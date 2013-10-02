@@ -1481,6 +1481,7 @@ Public Class Form1
                                             wantedvalue.Contains("AMD Drag and Drop") Or _
                                             wantedvalue.Contains("AMD APP SDK") Or _
                                             wantedvalue.Contains("AMD Steady") Or _
+                                            wantedvalue.Contains("AMD Fuel") Or _
                                             wantedvalue.Contains("Application Profiles") Or _
                                             wantedvalue.Contains("ATI AVIVO") Then
 
@@ -1567,6 +1568,7 @@ Public Class Form1
                                             wantedvalue.Contains("AMD Drag and Drop") Or _
                                             wantedvalue.Contains("AMD APP SDK") Or _
                                             wantedvalue.Contains("AMD Steady") Or _
+                                            wantedvalue.Contains("AMD Fuel") Or _
                                             wantedvalue.Contains("Application Profiles") Or _
                                             wantedvalue.Contains("ATI AVIVO") Then
                                             regkey.DeleteSubKeyTree(child)
@@ -1635,6 +1637,7 @@ Public Class Form1
                                                             wantedvalue.Contains("AMD Drag and Drop") Or _
                                                             wantedvalue.Contains("AMD APP SDK") Or _
                                                             wantedvalue.Contains("AMD Steady") Or _
+                                                            wantedvalue.Contains("AMD Fuel") Or _
                                                              wantedvalue.Contains("Application Profiles") Or _
                                                             wantedvalue.Contains("ATI AVIVO") Then
 
@@ -2359,7 +2362,7 @@ Public Class Form1
             End If
             'Erase driver file from windows directory
 
-            Dim driverfiles(79) As String
+            Dim driverfiles(83) As String
             driverfiles(0) = "nvapi.dll"
             driverfiles(1) = "nvapi64.dll"
             driverfiles(2) = "nvcompiler.dll"
@@ -2440,7 +2443,11 @@ Public Class Form1
             driverfiles(77) = "detoured.dll"
             driverfiles(78) = "nvcplsetupeng.exe"
             driverfiles(79) = "nvcplsetupint.exe"
-            For i As Integer = 0 To 79
+            driverfiles(80) = "nvclk.nvu"
+            driverfiles(81) = "nvuclock64.exe"
+            driverfiles(82) = "nvcoclk64.dll"
+            driverfiles(83) = "nvoclk64.sys"
+            For i As Integer = 0 To 83
 
                 filePath = System.Environment.SystemDirectory
                 Try
@@ -3525,7 +3532,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                For i As Integer = 0 To 79
+                For i As Integer = 0 To 83
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
                     If regkey IsNot Nothing Then
 
@@ -3644,7 +3651,7 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    For i As Integer = 0 To 79
+                    For i As Integer = 0 To 83
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                         If regkey IsNot Nothing Then
                             For Each child In regkey.GetValueNames()
