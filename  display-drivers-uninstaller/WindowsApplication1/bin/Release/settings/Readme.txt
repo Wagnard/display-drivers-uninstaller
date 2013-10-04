@@ -1,0 +1,3 @@
+If you dont know what you are doing, you should not modify the files under settings folders. You have been warned...
+
+driverfiles.cfg : Is meant for the removal of driver files from Windows\System32\drivers  \System32  \SysWOW64  and the registry location of (pnplockdownfiles)
