@@ -120,7 +120,7 @@ Public Class Form1
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Uninstalling " + ComboBox1.Text + " driver ...")
-        TextBox1.Text = TextBox1.Text + "***** Executing DEVCON Remove , Please wait(can take up to 1 minute *****) " + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** Executing DEVCON Remove , Please wait(can take a few minutes *****) " + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Executing DEVCON Remove")
@@ -526,152 +526,11 @@ Public Class Form1
             End Try
             'Delete driver files
             'delete OpenCL
-            Dim driverfiles(142) As String
-            driverfiles(0) = "amdave32.dll"
-            driverfiles(1) = "amdocl32.dll"
-            driverfiles(2) = "amdh232enc32.dll"
-            driverfiles(3) = "amdhcp32.dll"
-            driverfiles(4) = "amdhdl32.dll"
-            driverfiles(5) = "AMDhwDecoder_32.dll"
-            driverfiles(6) = "amdmiracast.dll"
-            driverfiles(7) = "amdpcom32.dll"
-            driverfiles(8) = "ati2edxx.dll"
-            driverfiles(9) = "ati2erec.dll"
-            driverfiles(10) = "atiadlxx.dll"
-            driverfiles(11) = "atiadlxy.dll"
-            driverfiles(12) = "atiapfxx.blb"
-            driverfiles(13) = "atiapfxx.exe"
-            driverfiles(14) = "atibtmon.exe"
-            driverfiles(15) = "aticalcl.dll"
-            driverfiles(16) = "aticaldd.dll"
-            driverfiles(17) = "aticalrt.dll"
-            driverfiles(18) = "aticfx32.dll"
-            driverfiles(19) = "aticfx32A.dll"
-            driverfiles(20) = "atidxx32.dll"
-            driverfiles(21) = "atidxx32A.dll"
-            driverfiles(22) = "atiedu32.dll"
-            driverfiles(23) = "atieslxx.exe"
-            driverfiles(24) = "atiesrxx.exe"
-            driverfiles(25) = "atigktxx.dll"
-            driverfiles(26) = "atiglpxx.dll"
-            driverfiles(27) = "atiicdxx.dat"
-            driverfiles(28) = "atimpc32.dll"
-            driverfiles(29) = "atimuixx.dll"
-            driverfiles(30) = "atioglxx.dll"
-            driverfiles(31) = "atioglxxA.dll"
-            driverfiles(32) = "atio6axxB.dll"
-            driverfiles(33) = "atiodcli.exe"
-            driverfiles(34) = "atiode.exe"
-            driverfiles(35) = "atiogl.xml"
-            driverfiles(36) = "atipblag.dat"
-            driverfiles(37) = "atipdlxx.dll"
-            driverfiles(38) = "atipdl32.dll"
-            driverfiles(39) = "atisamu32.dll"
-            driverfiles(40) = "atitmm32.dll"
-            driverfiles(41) = "atitmp32.dll"
-            driverfiles(42) = "atiu9p32.dll"
-            driverfiles(43) = "atiu9pag.dll"
-            driverfiles(44) = "atiuldx6a.cap"
-            driverfiles(45) = "atiuldx6a.dll"
-            driverfiles(46) = "atiuldxva.cap"
-            driverfiles(47) = "atiuldxva.dll"
-            driverfiles(48) = "atiumd6a.cap"
-            driverfiles(49) = "atiumd6a.dll"
-            driverfiles(50) = "atiumd6v.dll"
-            driverfiles(51) = "atiumd64.dll"
-            driverfiles(52) = "atiumd64A.dll"
-            driverfiles(53) = "atiumdag.dll"
-            driverfiles(54) = "atiumdagA.dll"
-            driverfiles(55) = "atiumdmv.dll"
-            driverfiles(56) = "atiumdva.cap"
-            driverfiles(57) = "atiumdva.dll"
-            driverfiles(58) = "atiuxp32.dll"
-            driverfiles(59) = "atiuxpag.dll"
-            driverfiles(60) = "OVDecode32.dll"
-            driverfiles(61) = "OVDecode.dll"
-            driverfiles(62) = "OpenVideo32.dll"
-            driverfiles(63) = "OpenVideo.dll"
-            driverfiles(64) = "OpenCL.dll"
-            driverfiles(65) = "amdave64.dll"
-            driverfiles(66) = "amdocl64.dll"
-            driverfiles(67) = "amdocl_ld.exe"
-            driverfiles(68) = "amdocl_as.exe"
-            driverfiles(69) = "amdocl_ld64.exe"
-            driverfiles(70) = "amdocl_as64.exe"
-            driverfiles(71) = "AMDh264Enc64.dll"
-            driverfiles(72) = "amdhcp64.dll"
-            driverfiles(73) = "amdhdl64.dll"
-            driverfiles(74) = "AMDhwDecoder_64.dll"
-            driverfiles(75) = "amdmiracast.dll"
-            driverfiles(76) = "ati2edxx.dll"
-            driverfiles(77) = "aticaldd64.dll"
-            driverfiles(78) = "aticalrt64.dll"
-            driverfiles(79) = "aticfx64.dll"
-            driverfiles(80) = "aticfx64A.dll"
-            driverfiles(81) = "atidemgx.dll"
-            driverfiles(82) = "atidemgy.dll"
-            driverfiles(83) = "atidxx64.dll"
-            driverfiles(84) = "atidxx64A.dll"
-            driverfiles(85) = "atiedu64.dll"
-            driverfiles(86) = "atieslxx.exe"
-            driverfiles(87) = "atig6txx.dll"
-            driverfiles(88) = "atiicdxx.dat"
-            driverfiles(89) = "atimuixx.dll"
-            driverfiles(90) = "atio6axxA.dll"
-            driverfiles(91) = "atio6axxB.dll"
-            driverfiles(92) = "atisamu64.dll"
-            driverfiles(93) = "atitmm64.dll"
-            driverfiles(94) = "atitmp64.dll"
-            driverfiles(95) = "atiu9p64.dll"
-            driverfiles(96) = "atiu9pag.dll"
-            driverfiles(97) = "atiumdag.dll"
-            driverfiles(98) = "atiumdva.cap"
-            driverfiles(99) = "atiuxpag.dll"
-            driverfiles(100) = "ativvsvl.dat"
-            driverfiles(101) = "ativce02.dat"
-            driverfiles(102) = "ativvaxy_cik_nd.dat"
-            driverfiles(103) = "ativvaxy_cik.dat"
-            driverfiles(104) = "clinfo.exe"
-            driverfiles(105) = "oemdspif.dll"
-            driverfiles(106) = "SlotMaximizerAg.dll"
-            driverfiles(107) = "SlotMaximizerBe.dll"
-            driverfiles(108) = "OVDecode64.dll"
-            driverfiles(109) = "OVDecode.dll"
-            driverfiles(110) = "OpenVideo64.dll"
-            driverfiles(111) = "atikmdag.sys"
-            driverfiles(112) = "atiogl.xml"
-            driverfiles(113) = "ativpsrm.bin"
-            driverfiles(114) = "atig6pxx.dll"
-            driverfiles(115) = "atio6axx.dll"
-            driverfiles(116) = "aticalcl64.dll"
-            driverfiles(117) = "atimpc64.dll"
-            driverfiles(118) = "atieclxx.exe"
-            driverfiles(119) = "atiuxp64.dll"
-            driverfiles(120) = "amdpcom64.dll"
-            driverfiles(121) = "atikmpag.sys"
-            driverfiles(122) = "ativpsrm.dll"
-            driverfiles(123) = "AtihdW86.sys"
-            driverfiles(124) = "amdocl.dll"
-            driverfiles(125) = "amdocl_ld32.exe"
-            driverfiles(126) = "amdocl_as32.exe"
-            driverfiles(127) = "ativvsva.dat"
-            driverfiles(128) = "ATIODCLI.exe"
-            driverfiles(129) = "ATIODE.exe"
-            driverfiles(130) = "AMDh264Enc32.dll"
-            driverfiles(131) = "atiumdagB.dll"
-            driverfiles(132) = "atiilhag"
-            driverfiles(133) = "atilau.dll"
-            driverfiles(134) = "atilauA.dll"
-            driverfiles(135) = "atipdl64.dll"
-            driverfiles(136) = "atiumd64B.dll"
-            driverfiles(137) = "atikmdagA.sys"
-            driverfiles(138) = "atikmdagB.sys"
-            driverfiles(139) = "atikmpagA.sys"
-            driverfiles(140) = "atioglxxB.dll"
-            driverfiles(141) = "delayapo.dll"
-            driverfiles(142) = "coinst_"
+            Dim driverfiles() As String
+            Dim tempStr As String = "" '// temp String for result.
+            driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\driverfiles.cfg") '// add each line as String Array.
 
-            For i As Integer = 0 To 141
+            For i As Integer = 0 To driverfiles.Length - 1
 
                 filePath = System.Environment.SystemDirectory
                 Try
@@ -1104,7 +963,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                For i As Integer = 0 To 142
+                For i As Integer = 0 To driverfiles.Length - 1
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
                     If regkey IsNot Nothing Then
 
@@ -1302,7 +1161,7 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    For i As Integer = 0 To 142
+                    For i As Integer = 0 To driverfiles.Length - 1
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                         If regkey IsNot Nothing Then
                             For Each child In regkey.GetValueNames()
@@ -2362,92 +2221,10 @@ Public Class Form1
             End If
             'Erase driver file from windows directory
 
-            Dim driverfiles(83) As String
-            driverfiles(0) = "nvapi.dll"
-            driverfiles(1) = "nvapi64.dll"
-            driverfiles(2) = "nvcompiler.dll"
-            driverfiles(3) = "nvcompiler32.dll"
-            driverfiles(4) = "nvcuda.dll"
-            driverfiles(5) = "nvcuda32.dll"
-            driverfiles(6) = "nvcuvenc.dll"
-            driverfiles(7) = "nvcuvenc64.dll"
-            driverfiles(8) = "nvcuvid.dll"
-            driverfiles(9) = "nvcuvid32.dll"
-            driverfiles(10) = "nvd3d9wrap.dll"
-            driverfiles(11) = "nvd3d9wrapx.dll"
-            driverfiles(12) = "nvd3dum.dll"
-            driverfiles(13) = "nvd3dumx.dll"
-            driverfiles(14) = "nvdet.dll"
-            driverfiles(15) = "nvdetx.dll"
-            driverfiles(16) = "nvdispco64.dll"
-            driverfiles(17) = "nvdispgenco64.dll"
-            driverfiles(18) = "nvdrsdb.bin"
-            driverfiles(19) = "nvdxgiwrap.dll"
-            driverfiles(20) = "nvdxgiwrapx.dll"
-            driverfiles(21) = "nvEncodeAPI.dll"
-            driverfiles(22) = "nvEncodeAPI64.dll"
-            driverfiles(23) = "nvFBC.dll"
-            driverfiles(24) = "nvFBC64.dll"
-            driverfiles(25) = "nvIFR.dll"
-            driverfiles(26) = "nvIFR64.dll"
-            driverfiles(27) = "nvinfo.pb"
-            driverfiles(28) = "nvinit.dll"
-            driverfiles(29) = "nvinitx.dll"
-            driverfiles(30) = "nvkflt.sys"
-            driverfiles(31) = "nvlddmkm.sys"
-            driverfiles(32) = "nvml.dll"
-            driverfiles(33) = "nvoglshim32.dll"
-            driverfiles(34) = "nvoglshim64.dll"
-            driverfiles(35) = "nvoglv32.dll"
-            driverfiles(36) = "nvoglv64.dll"
-            driverfiles(37) = "nvopencl.dll"
-            driverfiles(38) = "nvopencl32.dll"
-            driverfiles(39) = "nvpciflt.sys"
-            driverfiles(40) = "nvumdshim.dll"
-            driverfiles(41) = "nvumdshimx.dll"
-            driverfiles(42) = "nvwgf2um.dll"
-            driverfiles(43) = "nvwgf2umx.dll"
-            driverfiles(44) = "opencl.dll"
-            driverfiles(45) = "opencl64.dll"
-            driverfiles(46) = "nvaudcap32v.dll"
-            driverfiles(47) = "nvaudcap64v.dll"
-            driverfiles(48) = "nvvad32v.sys"
-            driverfiles(49) = "nvvad64v.sys"
-            driverfiles(50) = "nvstusb32.sys"
-            driverfiles(51) = "nvstusb64.sys"
-            driverfiles(52) = "nvhda32.sys"
-            driverfiles(53) = "nvhda64.sys"
-            driverfiles(54) = "nvhda32v.sys"
-            driverfiles(55) = "nvhda64v.sys"
-            driverfiles(56) = "nvhdap32.dll"
-            driverfiles(57) = "nvhdap64.dll"
-            driverfiles(58) = "nvcpl.dll"
-            driverfiles(59) = "nvmctray.dll"
-            driverfiles(60) = "nvsvc64.dll"
-            driverfiles(61) = "nvsvcr.dll"
-            driverfiles(62) = "nvvsvc.exe"
-            driverfiles(63) = "nvshext.dll"
-            driverfiles(64) = "dbInstaller.exe"
-            driverfiles(65) = "nvidia-smi.exe"
-            driverfiles(66) = "nvidia-smi.1.pdf"
-            driverfiles(67) = "mcu.exe"
-            driverfiles(68) = "license.txt"
-            driverfiles(69) = "nvdebugdump.exe"
-            driverfiles(70) = "openCL.dll"
-            driverfiles(71) = "openCL64.dll"
-            driverfiles(72) = "nvStreaming.exe"
-            driverfiles(73) = "nv_disp.inf"
-            driverfiles(74) = "nv_dispi.inf"
-            driverfiles(75) = "nvdisp"
-            driverfiles(76) = "nvhda"
-            driverfiles(77) = "detoured.dll"
-            driverfiles(78) = "nvcplsetupeng.exe"
-            driverfiles(79) = "nvcplsetupint.exe"
-            driverfiles(80) = "nvclk.nvu"
-            driverfiles(81) = "nvuclock64.exe"
-            driverfiles(82) = "nvcoclk64.dll"
-            driverfiles(83) = "nvoclk64.sys"
-            For i As Integer = 0 To 83
+            Dim driverfiles() As String
+            driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg") '// add each line as String Array.
+            
+            For i As Integer = 0 To driverfiles.Length - 1
 
                 filePath = System.Environment.SystemDirectory
                 Try
@@ -3532,7 +3309,7 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                For i As Integer = 0 To 83
+                For i As Integer = 0 To driverfiles.Length - 1
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
                     If regkey IsNot Nothing Then
 
@@ -3651,7 +3428,7 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    For i As Integer = 0 To 83
+                    For i As Integer = 0 To driverfiles.Length - 1
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                         If regkey IsNot Nothing Then
                             For Each child In regkey.GetValueNames()
