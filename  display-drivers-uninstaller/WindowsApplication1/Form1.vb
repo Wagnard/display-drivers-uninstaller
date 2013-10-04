@@ -4545,6 +4545,17 @@ Public Class Form1
             Catch ex As Exception
             End Try
         End If
+        If version >= "6.0" And version < "6.1" Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
+                If regkey.GetValue("DontSearchWindowsUpdate").ToString <> 1 Then
+                    regkey.SetValue("DontSearchWindowsUpdate", 1)
+                    MsgBox("DDU has changed a setting that prevent driver to be downloaded automatically with Windows Update. You can set this" _
+                           & " back to default if you want AFTER your new driver installation.")
+                End If
+            Catch ex As Exception
+            End Try
+        End If
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
@@ -4771,7 +4782,7 @@ Public Class Form1
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
         Try
-            
+
             checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
             checkoem.Arguments = "findall =display"
             checkoem.UseShellExecute = False
@@ -4784,43 +4795,6 @@ Public Class Form1
             proc2.Start()
             reply = proc2.StandardOutput.ReadToEnd
             proc2.WaitForExit()
-            Try
-                card1 = reply.IndexOf("PCI\")
-            Catch ex As Exception
-
-            End Try
-            While card1 > -1
-
-                position2 = reply.IndexOf(":", card1)
-                vendid = reply.Substring(card1, position2 - card1).Trim
-
-                If vendid.Contains(vendidexpected) Then
-                    log("-" & vendid & "- GPU id found")
-                    'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                    removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                    removedisplaydriver.Arguments = "disable =display " & Chr(34) & "@" & vendid & Chr(34)
-                    removedisplaydriver.UseShellExecute = False
-                    removedisplaydriver.CreateNoWindow = True
-                    removedisplaydriver.RedirectStandardOutput = True
-                    proc.StartInfo = removedisplaydriver
-                    Try
-                        proc.Start()
-                        reply2 = proc.StandardOutput.ReadToEnd
-                        proc.WaitForExit()
-                        log(reply2)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                        Button1.Enabled = True
-                        Button2.Enabled = True
-                        Button3.Enabled = True
-                        Exit Sub
-                    End Try
-                End If
-
-                card1 = reply.IndexOf("PCI\", card1 + 1)
-            End While
-
 
             Try
                 card1 = reply.IndexOf("PCI\")
@@ -4842,7 +4816,7 @@ Public Class Form1
                     reply2 = proc.StandardOutput.ReadToEnd
                     proc.WaitForExit()
                     log(reply2)
-                  
+
 
 
                 End If
@@ -4865,45 +4839,6 @@ Public Class Form1
             proc2.Start()
             reply = proc2.StandardOutput.ReadToEnd
             proc2.WaitForExit()
-            Try
-                card1 = reply.IndexOf("HDAUDIO\")
-            Catch ex As Exception
-
-            End Try
-
-            While card1 > -1
-
-                position2 = reply.IndexOf(":", card1)
-                vendid = reply.Substring(card1, position2 - card1).Trim
-                If vendid.Contains(vendidexpected) Then
-                    log("-" & vendid & "- Audio device found")
-
-                    removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                    removehdmidriver.Arguments = "disable =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
-                    removehdmidriver.UseShellExecute = False
-                    removehdmidriver.CreateNoWindow = True
-                    removehdmidriver.RedirectStandardOutput = True
-                    prochdmi.StartInfo = removehdmidriver
-                    Try
-                        prochdmi.Start()
-                        reply2 = prochdmi.StandardOutput.ReadToEnd
-                        prochdmi.WaitForExit()
-                        log(reply2)
-                    Catch ex As Exception
-
-                        log(ex.Message)
-                        MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                        Button1.Enabled = True
-                        Button2.Enabled = True
-                        Button3.Enabled = True
-                    End Try
-                    
-
-                    ' System.Threading.Thread.Sleep(50)
-                End If
-                card1 = reply.IndexOf("HDAUDIO\", card1 + 1)
-                ' System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
-            End While
 
             'System.Threading.Thread.Sleep(200) '200 ms sleep between removal of media.
             Try
@@ -4937,7 +4872,7 @@ Public Class Form1
                         Button2.Enabled = True
                         Button3.Enabled = True
                     End Try
-                    
+
 
                 End If
                 card1 = reply.IndexOf("HDAUDIO\", card1 + 1)
@@ -5001,7 +4936,7 @@ Public Class Form1
                             Button2.Enabled = True
                             Button3.Enabled = True
                         End Try
-                        
+
 
                         ' System.Threading.Thread.Sleep(50)
                     End If
@@ -5088,7 +5023,7 @@ Public Class Form1
                 log("-" & vendid & "- Monitor id found")
                 'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
                 removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
-                removedisplaydriver.Arguments = "disable =monitor " & Chr(34) & "@" & vendid & Chr(34)
+                removedisplaydriver.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
                 removedisplaydriver.UseShellExecute = False
                 removedisplaydriver.CreateNoWindow = True
                 removedisplaydriver.RedirectStandardOutput = True
@@ -5106,18 +5041,6 @@ Public Class Form1
                     Button3.Enabled = True
                     Exit Sub
                 End Try
-                
-
-                ' System.Threading.Thread.Sleep(20)
-                removedisplaydriver.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
-                Try
-                    proc.Start()
-                    reply2 = proc.StandardOutput.ReadToEnd
-                    proc.WaitForExit()
-                    log(reply2)
-                Catch ex As Exception
-                End Try
-                
 
                 card1 = reply.IndexOf("DISPLAY\", card1 + 1)
 
@@ -5186,6 +5109,14 @@ Public Class Form1
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
                 regkey.SetValue("SearchOrderConfig", 1)
+                MsgBox("Done")
+            Catch ex As Exception
+            End Try
+        End If
+        If version >= "6.0" And version < "6.1" Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
+                regkey.SetValue("DontSearchWindowsUpdate", 0)
                 MsgBox("Done")
             Catch ex As Exception
             End Try
