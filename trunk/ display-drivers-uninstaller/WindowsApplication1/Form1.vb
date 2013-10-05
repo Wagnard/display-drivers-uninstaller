@@ -222,129 +222,36 @@ Public Class Form1
         If e = "AMD" Then
 
             'STOP AMD service
-            Dim stopservice As New ProcessStartInfo
-            stopservice.FileName = "cmd.exe"
-            stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "AMD External Events Utility" & Chr(34)
-            stopservice.UseShellExecute = False
-            stopservice.CreateNoWindow = True
-            stopservice.RedirectStandardOutput = False
+            Dim services() As String
+            services = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\services.cfg") '// add each line as String Array.
+            For i As Integer = 0 To services.Length - 1
+                Dim stopservice As New ProcessStartInfo
+                stopservice.FileName = "cmd.exe"
+                stopservice.Arguments = " /Csc stop " & Chr(34) & services(i) & Chr(34)
+                stopservice.UseShellExecute = False
+                stopservice.CreateNoWindow = True
+                stopservice.RedirectStandardOutput = False
 
-            Dim processstopservice As New Process
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
+                Dim processstopservice As New Process
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
 
-            'System.Threading.Thread.Sleep(50)
+                System.Threading.Thread.Sleep(50)
 
-            'Delete AMD service
-            stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "AMD External Events Utility" & Chr(34)
+                stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
 
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
 
-            stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "ATI External Events Utility" & Chr(34)
+                System.Threading.Thread.Sleep(50)
 
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            System.Threading.Thread.Sleep(50)
-
-            stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "ATI External Events Utility" & Chr(34)
-
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-
-            stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "AMD FUEL Service" & Chr(34)
-
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            System.Threading.Thread.Sleep(50)
-
-            stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "AMD FUEL Service" & Chr(34)
-
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-
-
-            stopservice.Arguments = " /C" & "sc delete amdkmdag"
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete amdkmdagA"
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete amdkmdagB"
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete amdkmdagC"
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete amdkmdap"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete amdkmdapA"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete amdkmdapB"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete amdkmdapC"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete atikmdag"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete atikmpag"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete AtiHDAudioService"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            'interrogate somehow make windows check another time and remove the flag serviced for removal :D
-            stopservice.Arguments = " /C" & "sc interrogate amdkmdag"
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate amdkmdagA"
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate amdkmdagB"
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate amdkmdagC"
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate amdkmdap"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate amdkmdapA"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate amdkmdapB"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate amdkmdapC"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate atikmdag"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate atikmpag"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate AtiHDAudioService"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
+                stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+            Next
 
 
             Dim killpid As New ProcessStartInfo
@@ -1130,23 +1037,6 @@ Public Class Form1
                     log(ex.Message)
                 End Try
 
-                'removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                'removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies\CBT /owner=Administrators"
-                'removehdmidriver.UseShellExecute = False
-                'removehdmidriver.CreateNoWindow = True
-                'prochdmi.StartInfo = removehdmidriver
-                'prochdmi.Start()
-                'prochdmi.WaitForExit()
-                'System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                'removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies\CBT /grant=" & UserAc & "=f"
-                'prochdmi.Start()
-                'prochdmi.WaitForExit()
-                'System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                'Try
-                '    My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies\CBT")
-                'Catch ex As Exception
-                '    log(ex.Message)
-                'End Try
             Else
                 Dim reginfos As RegistryKey = Nothing
                 Dim FolderAcl As New RegistrySecurity
@@ -1177,7 +1067,11 @@ Public Class Form1
                             Next
                         End If
                     Next
+
+                    '-----------------------------------------------
                     'setting back the registry permission to normal.
+                    '-----------------------------------------------
+
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
                     removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
                     If UserAc <> "Administrator" Then
@@ -1189,6 +1083,48 @@ Public Class Form1
                     log(ex.Message & " We Got a security warning avoided on the subacl Part win7")
                 End Try
             End If
+
+            '--------------------------------
+            'System environement path cleanup
+            '--------------------------------
+
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Session Manager\Environment", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If child IsNot Nothing Then
+                            If child.Contains("AMDAPPSDKROOT") Then
+                                Try
+                                    regkey.DeleteValue(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                            If child.Contains("Path") Then
+                                wantedvalue = regkey.GetValue(child).ToString()
+                                Try
+                                    Select Case True
+                                        Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\AMD APP\bin\x86_64;")
+                                            wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\AMD APP\bin\x86_64;", "")
+                                            regkey.SetValue(child, wantedvalue)
+
+                                        Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\AMD APP\bin\x86;")
+                                            wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\AMD APP\bin\x86;", "")
+                                            regkey.SetValue(child, wantedvalue)
+
+                                        Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;")
+                                            wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;", "")
+                                            regkey.SetValue(child, wantedvalue)
+                                    End Select
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log("Path section " & ex.Message)
+            End Try
+            'end system environement patch cleanup
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
           ("Directory\background\shellex\ContextMenuHandlers", True)
@@ -1878,91 +1814,37 @@ Public Class Form1
 
         If e = "NVIDIA" Then
 
-            'STOP NVIDIA service
-            Dim stopservice As New ProcessStartInfo
-            stopservice.FileName = "cmd.exe"
-            stopservice.Arguments = " /C" & "sc stop nvsvc"
-            stopservice.UseShellExecute = False
-            stopservice.CreateNoWindow = True
-            stopservice.RedirectStandardOutput = False
+            'STOP / delete / interrogate NVIDIA service
+            Dim services() As String
+            services = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\services.cfg") '// add each line as String Array.
+            For i As Integer = 0 To services.Length - 1
+                Dim stopservice As New ProcessStartInfo
+                stopservice.FileName = "cmd.exe"
+                stopservice.Arguments = " /Csc stop " & Chr(34) & services(i) & Chr(34)
+                stopservice.UseShellExecute = False
+                stopservice.CreateNoWindow = True
+                stopservice.RedirectStandardOutput = False
 
-            Dim processstopservice As New Process
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
+                Dim processstopservice As New Process
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
 
-            System.Threading.Thread.Sleep(50)
+                System.Threading.Thread.Sleep(50)
 
-            stopservice.Arguments = " /C" & "sc stop nvUpdatusService"
+                stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
 
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
 
-            stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "Stereo Service" & Chr(34)
+                System.Threading.Thread.Sleep(50)
 
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-
-            stopservice.Arguments = " /C" & "sc stop " & Chr(34) & "NvStreamSvc" & Chr(34)
-
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-
-            System.Threading.Thread.Sleep(50)
-
-            'Delete NVIDIA service
-
-            stopservice.Arguments = " /C" & "sc delete nvsvc"
-
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-
-
-            stopservice.Arguments = " /C" & "sc delete nvUpdatusService"
-
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-
-
-
-            stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "Stereo Service" & Chr(34)
-
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-
-            stopservice.Arguments = " /C" & "sc delete " & Chr(34) & "NvStreamSvc" & Chr(34)
-
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-
-            stopservice.Arguments = " /C" & "sc delete nvlddmkm"
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete NVHDA"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc delete nvvad_WaveExtensible"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate nvlddmkm"
-            processstopservice.StartInfo = stopservice
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate NVHDA"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-            stopservice.Arguments = " /C" & "sc interrogate nvvad_WaveExtensible"
-            processstopservice.Start()
-            processstopservice.WaitForExit()
-
+                stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+            Next
 
             'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
             'holding files in the NVIDIA folders sometimes.
@@ -2223,7 +2105,7 @@ Public Class Form1
 
             Dim driverfiles() As String
             driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg") '// add each line as String Array.
-            
+
             For i As Integer = 0 To driverfiles.Length - 1
 
                 filePath = System.Environment.SystemDirectory
