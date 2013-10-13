@@ -645,35 +645,40 @@ Public Class Form1
                 Next
             End If
 
+            '-----------------
             'interface cleanup
+            '-----------------
 
+            Dim interfaces() As String
+            interfaces = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\interface.cfg") '// add each line as String Array.
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
-
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If child IsNot Nothing Then
-                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
-                        If subregkey IsNot Nothing Then
-                            If subregkey.GetValue("") IsNot Nothing Then
-                                wantedvalue = subregkey.GetValue("").ToString
-                                If wantedvalue IsNot Nothing Then
-                                    If wantedvalue.Contains("DisplayCplExt") Then
+                    For i As Integer = 0 To interfaces.Length - 1
+                        If child IsNot Nothing Then
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
+                            If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If wantedvalue IsNot Nothing Then
+                                        If wantedvalue.ToLower.Contains(interfaces(i).ToLower) Then
 
-                                        Try
-                                            regkey.DeleteSubKeyTree(child)
-                                        Catch ex As Exception
-                                        End Try
-                                        If IntPtr.Size = 8 Then
                                             Try
-                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\Interface\" & child)
+                                                regkey.DeleteSubKeyTree(child)
                                             Catch ex As Exception
                                             End Try
+                                            If IntPtr.Size = 8 Then
+                                                Try
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\Interface\" & child)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
                                         End If
                                     End If
                                 End If
                             End If
                         End If
-                    End If
+                    Next
                 Next
             End If
 
@@ -1709,35 +1714,6 @@ Public Class Form1
 
                 Next
             End If
-
-
-
-            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-      ("Interface", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If child IsNot Nothing Then
-                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-            ("Interface\" & child, False)
-
-                        If subregkey IsNot Nothing Then
-                            If subregkey.GetValue("") IsNot Nothing Then
-                                wantedvalue = subregkey.GetValue("").ToString
-                                If wantedvalue IsNot Nothing Then
-                                    If wantedvalue.Contains("SteadyVideoBHO") Then
-
-                                        regkey.DeleteSubKeyTree(child)
-
-                                    End If
-                                End If
-                            End If
-                        End If
-                    End If
-
-                Next
-            End If
-
-
 
             If IntPtr.Size = 8 Then
                 regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
