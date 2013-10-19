@@ -43,7 +43,7 @@ Public Class Form1
     Dim version As String
     Private Function checkupdates() As Boolean
         Try
-            Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("https://docs.google.com/uc?export=download&id=0B0nCag_Hp76zZHdjLWNxRy00b00")
+            Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://wagnardmobile.com/DDU/currentversion.txt")
             Dim response2 As System.Net.HttpWebResponse = request2.GetResponse()
 
             Dim sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
@@ -547,10 +547,10 @@ Public Class Form1
             classroot = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\classroot.cfg") '// add each line as String Array.
             regkey = My.Computer.Registry.ClassesRoot
             If regkey IsNot Nothing Then
-                For i As Integer = 0 To classroot.Length - 1
-                    For Each child As String In regkey.GetSubKeyNames()
+                For Each child As String In regkey.GetSubKeyNames()
+                    For i As Integer = 0 To classroot.Length - 1
                         If child IsNot Nothing Then
-                            If child.ToLower.Contains(classroot(i).ToLower) Then
+                            If child.ToLower.StartsWith(classroot(i).ToLower) Then
                                 subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID")
                                 If subregkey IsNot Nothing Then
                                     If subregkey.GetValue("") IsNot Nothing Then
@@ -661,7 +661,7 @@ Public Class Form1
                                 If subregkey.GetValue("") IsNot Nothing Then
                                     wantedvalue = subregkey.GetValue("").ToString
                                     If wantedvalue IsNot Nothing Then
-                                        If wantedvalue.ToLower.Contains(interfaces(i).ToLower) Then
+                                        If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
 
                                             Try
                                                 regkey.DeleteSubKeyTree(child)
@@ -865,13 +865,14 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                For i As Integer = 0 To driverfiles.Length - 1
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
-                    If regkey IsNot Nothing Then
 
-                        For Each child In regkey.GetSubKeyNames()
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
+                If regkey IsNot Nothing Then
+
+                    For Each child In regkey.GetSubKeyNames()
+                        For i As Integer = 0 To driverfiles.Length - 1
                             If child IsNot Nothing Then
-                                If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                                If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
                                     Try
                                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
                                             ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
@@ -881,8 +882,9 @@ Public Class Form1
                                 End If
                             End If
                         Next
-                    End If
-                Next
+                    Next
+                End If
+
                 'setting back the registry permission to normal.
                 removehdmidriver.Arguments = _
                     "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
@@ -1046,12 +1048,13 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    For i As Integer = 0 To driverfiles.Length - 1
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
-                        If regkey IsNot Nothing Then
-                            For Each child In regkey.GetValueNames()
+
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
+                    If regkey IsNot Nothing Then
+                        For Each child In regkey.GetValueNames()
+                            For i As Integer = 0 To driverfiles.Length - 1
                                 If child IsNot Nothing Then
-                                    If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                                    If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
                                         Try
                                             regkey.DeleteValue(child)
                                         Catch ex As Exception
@@ -1060,8 +1063,9 @@ Public Class Form1
                                     End If
                                 End If
                             Next
-                        End If
-                    Next
+                        Next
+                    End If
+
 
                     '-----------------------------------------------
                     'setting back the registry permission to normal.
@@ -2129,10 +2133,10 @@ Public Class Form1
             classroot = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\classroot.cfg") '// add each line as String Array.
             regkey = My.Computer.Registry.ClassesRoot
             If regkey IsNot Nothing Then
-                For i As Integer = 0 To classroot.Length - 1
-                    For Each child As String In regkey.GetSubKeyNames()
+                For Each child As String In regkey.GetSubKeyNames()
+                    For i As Integer = 0 To classroot.Length - 1
                         If child IsNot Nothing Then
-                            If child.ToLower.Contains(classroot(i).ToLower) Then
+                            If child.ToLower.StartsWith(classroot(i).ToLower) Then
                                 subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID")
                                 If subregkey IsNot Nothing Then
                                     If subregkey.GetValue("") IsNot Nothing Then
@@ -2742,8 +2746,8 @@ Public Class Form1
             clsidleftover = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\clsidleftover.cfg") '// add each line as String Array.
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID")
             If regkey IsNot Nothing Then
-                For i As Integer = 0 To clsidleftover.Length - 1
-                    For Each child As String In regkey.GetSubKeyNames()
+                For Each child As String In regkey.GetSubKeyNames()
+                    For i As Integer = 0 To clsidleftover.Length - 1
                         If child IsNot Nothing Then
                             Try
                                 subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\InProcServer32", False)
@@ -2928,7 +2932,7 @@ Public Class Form1
                                 If subregkey.GetValue("") IsNot Nothing Then
                                     wantedvalue = subregkey.GetValue("").ToString
                                     If wantedvalue IsNot Nothing Then
-                                        If wantedvalue.ToLower.Contains(interfaces(i).ToLower) Then
+                                        If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
 
                                             Try
                                                 regkey.DeleteSubKeyTree(child)
@@ -2971,13 +2975,12 @@ Public Class Form1
                 prochdmi.Start()
                 prochdmi.WaitForExit()
                 System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                For i As Integer = 0 To driverfiles.Length - 1
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
-                    If regkey IsNot Nothing Then
-
-                        For Each child In regkey.GetSubKeyNames()
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
+                If regkey IsNot Nothing Then
+                    For Each child In regkey.GetSubKeyNames()
+                        For i As Integer = 0 To driverfiles.Length - 1
                             If child IsNot Nothing Then
-                                If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                                If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
                                     Try
                                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
                                             ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
@@ -2987,8 +2990,9 @@ Public Class Form1
                                 End If
                             End If
                         Next
-                    End If
-                Next
+                    Next
+                End If
+
                 'setting back the registry permission to normal.
                 removehdmidriver.Arguments = _
                     "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
@@ -3090,13 +3094,13 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    For i As Integer = 0 To driverfiles.Length - 1
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
-                        If regkey IsNot Nothing Then
-                            For Each child In regkey.GetValueNames()
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
+                    If regkey IsNot Nothing Then
+                        For Each child In regkey.GetValueNames()
+                            For i As Integer = 0 To driverfiles.Length - 1
                                 If child IsNot Nothing Then
 
-                                    If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                                    If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
 
                                         Try
                                             regkey.DeleteValue(child)
@@ -3106,8 +3110,9 @@ Public Class Form1
                                     End If
                                 End If
                             Next
-                        End If
-                    Next
+                        Next
+                    End If
+
                     'setting back the registry permission to normal.
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
                     removehdmidriver.Arguments = _
@@ -3122,7 +3127,36 @@ Public Class Form1
                 End Try
             End If
 
+            '--------------------------------
+            'System environement path cleanup
+            '--------------------------------
 
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Session Manager\Environment", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If child IsNot Nothing Then
+                            If child.Contains("Path") Then
+                                wantedvalue = regkey.GetValue(child).ToString()
+                                Try
+                                    Select Case True
+                                        Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
+                                            wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\AMD APP\bin\x86_64;", "")
+                                            regkey.SetValue(child, wantedvalue)
+                                    End Select
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log("Path section " & ex.Message)
+            End Try
+
+            '-------------------------------------
+            'end system environement patch cleanup
+            '-------------------------------------
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
@@ -3451,6 +3485,12 @@ Public Class Form1
                 Catch ex As Exception
 
                     log(ex.Message + " Nvtmru")
+                End Try
+                Try
+                    regkey.DeleteValue("ShadowPlay")
+                Catch ex As Exception
+
+                    log(ex.Message + " ShadowPlay")
                 End Try
             End If
 
@@ -3783,7 +3823,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
         End If
@@ -3794,11 +3834,40 @@ Public Class Form1
             CheckBox2.Checked = True
         End If
 
+        '----------------
+        'language section
+        '----------------
+
+        Dim diChild() As String = Directory.GetDirectories(Application.StartupPath & "\settings\Languages")
+        Dim list(diChild.Length - 1) As String
+        For i As Integer = 0 To diChild.Length - 1
+            Dim split As String() = diChild(i).Split("\")
+            Dim parentFolder As String = split(split.Length - 1)
+            list(i) = parentFolder
+        Next
+
+        ComboBox2.Items.AddRange(list)
+        If My.Settings.language = "" Then
+            ComboBox2.SelectedIndex = 0
+        Else
+            ComboBox2.SelectedIndex = ComboBox2.FindString(My.Settings.language)
+
+        End If
+
+        initlanguage(ComboBox2.Text)
+
+        '------------
+        'Check update
+        '------------
+
         checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
         'checkthread.Priority = ThreadPriority.Highest
         checkupdatethread.Start()
 
 
+        '----------------------
+        'check computer/os info
+        '----------------------
 
         Dim arch As Boolean
 
@@ -3834,6 +3903,10 @@ Public Class Form1
 
             Label2.Text = "Unsupported OS"
             log("Unsupported OS.")
+            Button1.Enabled = False
+            Button2.Enabled = False
+            Button3.Enabled = False
+            Button4.Enabled = False
         End If
 
         If version >= "5.1" Then
@@ -3858,7 +3931,14 @@ Public Class Form1
             Label2.Text = "Windows 8.1"
             win8higher = True
         End If
-
+        If version >= "6.4" Then
+            Label2.Text = "Unsupported O.S"
+            win8higher = True
+            Button1.Enabled = False
+            Button2.Enabled = False
+            Button3.Enabled = False
+            Button4.Enabled = False
+        End If
 
 
         If arch = True Then
@@ -4560,5 +4640,52 @@ Public Class Form1
             Catch ex As Exception
             End Try
         End If
+    End Sub
+    Private Sub initlanguage(e As String)
+        Try
+            Dim buttontext() As String
+            Button1.Text = ""
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button1.txt") '// add each line as String Array.
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Button1.Text = Button1.Text & vbNewLine
+                End If
+                Button1.Text = Button1.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button2.txt") '// add each line as String Array.
+            Button2.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Button2.Text = Button2.Text & vbNewLine
+                End If
+                Button2.Text = Button2.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button3.txt") '// add each line as String Array.
+            Button3.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Button3.Text = Button3.Text & vbNewLine
+                End If
+                Button3.Text = Button3.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button4.txt") '// add each line as String Array.
+            Button4.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Button4.Text = Button4.Text & vbNewLine
+                End If
+                Button4.Text = Button4.Text & buttontext(i)
+            Next
+        Catch ex As Exception
+            log(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+        My.Settings.language = ComboBox2.Text
+        initlanguage(ComboBox2.Text)
     End Sub
 End Class
