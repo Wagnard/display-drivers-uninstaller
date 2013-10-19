@@ -1,0 +1,34 @@
+﻿Display Driver Uninstaller (DDU ) / Cleaner fait pour les pilotes d'affichage . (NVIDIA / AMD )
+
+Ce qu'il fait, est de supprimer le pilote d'affichage du gestionnaire de périphérique et en supprimant le courant et
+tous les pilotes précédent dans le magasin de pilotes Windows avec suppression de services de NVIDIA / AMD .
+
+L'effet actuel après avoir utilisé cet outil sera similaire à une nouvelle installation de Windows
+
+Cet outil acte similaire à Driver Sweeper  + le supplément mentionné ci-dessus .
+
+Si vous avez des problèmes pour installer pilote plus ancien ou plus récent , alors DDU est pour vous.
+
+Usage recommandé:
+
+- Cet outil peut être utilisé en mode normal, mais pour la stabilité absolue lors de l'utilisation DDU, le mode 
+sans-echec est toujours le meilleur choix.
+
+- Nous tenons à recueillir les commentaires des utilisateurs. Dites-nous si c'était un succès ou non. faire une
+sauvegarde ou une restauration système (mais il devrait normalement être assez sûr ) .
+
+
+Gardez à l'esprit que NVIDIA / AMD n'avait rien à voir avec cela, nous ne travaillons pas avec et ni pour 
+NVIDIA / AMD et ils ne doivent pas être tenus responsables pour tout dommage ou erreurs causés à 
+votre système par DDU.
+-------------------------------
+
+Créé par Wagnard .
+
+Co -propriétaire: Shady7557
+
+Tester : Dellon132
+
+Logos: juanchacin
+
+Merci à tous ceux qui ont mis leur système à risque ( merci spécial à Dellon132 )

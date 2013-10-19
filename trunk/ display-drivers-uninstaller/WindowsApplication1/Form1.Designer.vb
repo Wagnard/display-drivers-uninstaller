@@ -54,6 +54,8 @@ Partial Class Form1
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Button4 = New System.Windows.Forms.Button()
+        Me.ComboBox2 = New System.Windows.Forms.ComboBox()
+        Me.Label12 = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -65,8 +67,6 @@ Partial Class Form1
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(195, 70)
         Me.Button1.TabIndex = 0
-        Me.Button1.Text = "Uninstall the current and previous drivers and restart the computer" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Highly Reco" & _
-    "mmended)"
         Me.Button1.UseVisualStyleBackColor = True
         '
         'Label1
@@ -132,7 +132,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(29, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V8.1"
+        Me.Label6.Text = "V8.2"
         '
         'ComboBox1
         '
@@ -199,7 +199,7 @@ Partial Class Form1
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckForUpdatesToolStripMenuItem, Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(17, 19)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(85, 19)
         Me.ToolStripMenuItem1.Text = "?"
         '
         'CheckForUpdatesToolStripMenuItem
@@ -244,8 +244,6 @@ Partial Class Form1
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(195, 70)
         Me.Button2.TabIndex = 15
-        Me.Button2.Text = "Uninstall the current and previous drivers and DO NOT restart the computer." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(May" & _
-    " cause issues like blackscreen)"
         Me.Button2.UseVisualStyleBackColor = True
         '
         'Button3
@@ -254,8 +252,6 @@ Partial Class Form1
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(195, 70)
         Me.Button3.TabIndex = 16
-        Me.Button3.Text = "Uninstall the current and previous drivers and Shutdown the computer with no resc" & _
-    "an" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(For installing a new graphic card)"
         Me.Button3.UseVisualStyleBackColor = True
         '
         'CheckBox3
@@ -330,14 +326,33 @@ Partial Class Form1
         Me.Button4.Name = "Button4"
         Me.Button4.Size = New System.Drawing.Size(191, 36)
         Me.Button4.TabIndex = 23
-        Me.Button4.Text = "Set Windows Update driver installation to default."
         Me.Button4.UseVisualStyleBackColor = True
+        '
+        'ComboBox2
+        '
+        Me.ComboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox2.FormattingEnabled = True
+        Me.ComboBox2.Location = New System.Drawing.Point(467, 501)
+        Me.ComboBox2.Name = "ComboBox2"
+        Me.ComboBox2.Size = New System.Drawing.Size(121, 21)
+        Me.ComboBox2.TabIndex = 24
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(402, 504)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(61, 13)
+        Me.Label12.TabIndex = 25
+        Me.Label12.Text = "Language :"
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(600, 526)
+        Me.Controls.Add(Me.Label12)
+        Me.Controls.Add(Me.ComboBox2)
         Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.Label10)
@@ -406,5 +421,7 @@ Partial Class Form1
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents CheckForUpdatesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Button4 As System.Windows.Forms.Button
+    Friend WithEvents ComboBox2 As System.Windows.Forms.ComboBox
+    Friend WithEvents Label12 As System.Windows.Forms.Label
 
 End Class
