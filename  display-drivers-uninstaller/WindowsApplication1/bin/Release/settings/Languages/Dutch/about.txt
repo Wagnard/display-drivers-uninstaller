@@ -1,0 +1,38 @@
+﻿Driver Uninstaller (DDU) / Schoonmaker gemaakt voor Display Drivers.(NVIDIA/AMD)
+
+Wat het doet is het verwijderen van de display driver uit apparaatbeheer en het verwijderen van de huidige en alle precedent driver van de Windows Driver winkel 
+samen met het verwijderen van diensten van NVIDIA / AMD.
+
+De huidige kracht nadat u deze tool gebruikt zal vergelijkbaar zijn alsof Windows was in een "Fresh Install" staat.
+
+Deze programma is vergelijkbaar met wat Driver sweeper doet + het extra bovenvermelde.
+
+Als je problemen hebt met installeren van oudere driver(s) of nieuwere, probeer dan eens dit programma want er zijn enkele meldingen dat het deze problemen repareert.
+
+AANBEVOLEN GEBRUIK:
+
+- Ik adviseer je persoonlijk dat je het internet afsluit als je het programma gebruikt omdat, soms na het verwijderen van je driver, kan windows update automatisch een nieuwe driver installeren
+zonder toestemming.
+
+-De tool kan gebruikt worden in de normale modus van windows, maar voor absolute stabiliteit  bij het gebruik van DDU, 
+gebruik je het liefst in Safe Mode
+
+- We zouden graag feedback krijgen van jullie. Vertel ons als het een succes was of niet.
+Ook als je een nieuwe driver wilt installer maak ALTIJD een restore point, zodat je terug kunt keren als je een probleem hebt met de nieuwe
+driver.
+
+- Als je een probleem hebt, en dit programma je geholpen heeft met jou probleem, deel dit alstublieft.
+
+Hou wel in gedachten dat NVIDIA/AMD niks met deze programma te maken heeft, wij werken niet voor NVIDIA/AMD en zij zijn niet verantwoordelijk voor
+eventuele schade of fouten veroorzaakt op uw systeem.
+-------------------------------
+
+Gemaakt door Wagnard.
+
+CO-eigenaar: Shady7557
+
+Tester: Dellon132
+
+Logos: juanchacin
+
+Bedankt aan iedereen die hun systeem in gevaar brengen voor het testen. (speciale dank aan Dellon132)
