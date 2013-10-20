@@ -1,0 +1,41 @@
+﻿Driver Uninstaller (DDU) / Limpiador hecho para controladores de pantalla.(NVIDIA/AMD)
+
+Lo que este hace, es remover el controlador de pantalla desde el Administrador de dispositivos
+así como también remover cualquier controlador precedente desde el almacén de controladores de Windows junto con los servicios de NVIDIA/AMD.
+
+El efecto actual de esta herramienta es similar al estado de un Windows "Recién instalado"
+
+Esta herramienta actua en similar manera que "Driver Sweeper" incluyendo lo mencionado arriba.
+
+Si tienes problemas instalando tu drivers, ya sea los actuales o viejos, haz una prueba con esta aplicación
+ya que hay usuarios que reportaron haberles ayudado en esas situaciones.
+
+USO RECOMENDADO:
+
+- Yo, personalmente, recomiendo desconectar de Internet al hacer uso de esta aplicación, ya que,
+después de remover los controladores, Windows Update los reinstala (en la mayoría de los casos) sin autorización del usuario...
+
+- Esta herramienta, puede ser usada en modo normal. Pero para mayor estabilidad al usar DDU,
+el "Modo a prueba de fallos" es siempre mejor.
+
+- Nos gustaría recabar opiniones de ustedes. Dinos si haz tenido éxito o no. Haz un
+respaldo o restauración de sistema (pero, esta aplicación es normalmente segura de usar)
+
+- Si tienes o has tenido algún problema de controladores, y esta aplicación te a ayudado
+con algunos de los problemas que experimentas, por favor, comparte tus resultados.
+
+
+Mantén en mente que NVIDIA/AMD no tienen nada que hacer con esto. Nosotros no trabajamos en ni para NVIDIA/AMD
+y ellos no deben ser considerados responsables de cualquier daño o errores causados ​​a tu sistema.
+
+-------------------------------
+
+Creado Por: Wagnard.
+
+Co-propietario: Shady7557
+
+Tester : Dellon132
+
+Logos : juanchacin
+
+Gracias a todos los que ponen su ordenador en riesgo (Gracias especiales a Dellon132)
