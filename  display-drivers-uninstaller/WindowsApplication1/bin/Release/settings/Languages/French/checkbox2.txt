@@ -1,0 +1,1 @@
+Enregistrer les fichiers journaux dans le chemin de démarrage (recommandé)

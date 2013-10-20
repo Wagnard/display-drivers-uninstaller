@@ -33,7 +33,6 @@ Partial Class Form1
         Me.Label6 = New System.Windows.Forms.Label()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.CheckBox2 = New System.Windows.Forms.CheckBox()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
@@ -72,7 +71,7 @@ Partial Class Form1
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(5, 25)
+        Me.Label1.Location = New System.Drawing.Point(5, 23)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(142, 13)
         Me.Label1.TabIndex = 1
@@ -81,7 +80,7 @@ Partial Class Form1
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(153, 23)
+        Me.Label2.Location = New System.Drawing.Point(158, 23)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(10, 13)
         Me.Label2.TabIndex = 2
@@ -90,7 +89,7 @@ Partial Class Form1
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(153, 36)
+        Me.Label3.Location = New System.Drawing.Point(158, 36)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(10, 13)
         Me.Label3.TabIndex = 3
@@ -100,7 +99,7 @@ Partial Class Form1
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(6, 465)
+        Me.Label4.Location = New System.Drawing.Point(6, 453)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(344, 13)
         Me.Label4.TabIndex = 4
@@ -132,7 +131,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(29, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V8.2"
+        Me.Label6.Text = "V9.0"
         '
         'ComboBox1
         '
@@ -140,7 +139,7 @@ Partial Class Form1
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Items.AddRange(New Object() {"NVIDIA", "AMD"})
-        Me.ComboBox1.Location = New System.Drawing.Point(122, 52)
+        Me.ComboBox1.Location = New System.Drawing.Point(159, 52)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
         Me.ComboBox1.TabIndex = 9
@@ -153,17 +152,6 @@ Partial Class Form1
         Me.Label7.Size = New System.Drawing.Size(111, 13)
         Me.Label7.TabIndex = 10
         Me.Label7.Text = "Select Graphic Driver:"
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.ForeColor = System.Drawing.Color.Red
-        Me.Label8.Location = New System.Drawing.Point(5, 439)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(595, 26)
-        Me.Label8.TabIndex = 11
-        Me.Label8.Text = resources.GetString("Label8.Text")
         '
         'CheckBox1
         '
@@ -199,7 +187,7 @@ Partial Class Form1
         '
         Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckForUpdatesToolStripMenuItem, Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(85, 19)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(17, 19)
         Me.ToolStripMenuItem1.Text = "?"
         '
         'CheckForUpdatesToolStripMenuItem
@@ -271,7 +259,7 @@ Partial Class Form1
         '
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(5, 478)
+        Me.Label9.Location = New System.Drawing.Point(6, 471)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(325, 13)
         Me.Label9.TabIndex = 19
@@ -364,7 +352,6 @@ Partial Class Form1
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.CheckBox2)
         Me.Controls.Add(Me.CheckBox1)
-        Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.Label6)
@@ -400,7 +387,6 @@ Partial Class Form1
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
     Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
