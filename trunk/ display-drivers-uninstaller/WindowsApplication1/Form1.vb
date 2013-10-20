@@ -3848,7 +3848,7 @@ Public Class Form1
 
         ComboBox2.Items.AddRange(list)
         If My.Settings.language = "" Then
-            ComboBox2.SelectedIndex = 0
+            ComboBox2.SelectedIndex = ComboBox2.FindString("English")
         Else
             ComboBox2.SelectedIndex = ComboBox2.FindString(My.Settings.language)
 
@@ -3951,13 +3951,10 @@ Public Class Form1
         If arch = True Then
             Try
                 Dim myExe As String = Application.StartupPath & "\x64\devcon.exe"
-                If Not System.IO.File.Exists(myExe) Then
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.devcon64)
-                End If
+                System.IO.File.WriteAllBytes(myExe, My.Resources.devcon64)
+
                 myExe = Application.StartupPath & "\x64\subinacl.exe"
-                If Not System.IO.File.Exists(myExe) Then
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl64)
-                End If
+                System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl64)
             Catch ex As Exception
                 log(ex.Message)
                 TextBox1.AppendText(ex.Message)
@@ -3965,13 +3962,11 @@ Public Class Form1
         Else
             Try
                 Dim myExe As String = Application.StartupPath & "\x86\devcon.exe"
-                If Not System.IO.File.Exists(myExe) Then
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.devcon32)
-                End If
+                System.IO.File.WriteAllBytes(myExe, My.Resources.devcon32)
+
                 myExe = Application.StartupPath & "\x86\subinacl.exe"
-                If Not System.IO.File.Exists(myExe) Then
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl32)
-                End If
+                System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl32)
+
             Catch ex As Exception
                 log(ex.Message)
                 TextBox1.AppendText(ex.Message)
@@ -4678,6 +4673,96 @@ Public Class Form1
                     Button4.Text = Button4.Text & vbNewLine
                 End If
                 Button4.Text = Button4.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label1.txt") '// add each line as String Array.
+            Label1.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Label1.Text = Label1.Text & vbNewLine
+                End If
+                Label1.Text = Label1.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label4.txt") '// add each line as String Array.
+            Label4.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Label4.Text = Label4.Text & vbNewLine
+                End If
+                Label4.Text = Label1.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label5.txt") '// add each line as String Array.
+            Label5.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Label5.Text = Label5.Text & vbNewLine
+                End If
+                Label5.Text = Label5.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label7.txt") '// add each line as String Array.
+            Label7.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Label7.Text = Label7.Text & vbNewLine
+                End If
+                Label7.Text = Label7.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label9.txt") '// add each line as String Array.
+            Label9.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Label9.Text = Label9.Text & vbNewLine
+                End If
+                Label9.Text = Label9.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label10.txt") '// add each line as String Array.
+            Label10.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Label10.Text = Label10.Text & vbNewLine
+                End If
+                Label10.Text = Label10.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label11.txt") '// add each line as String Array.
+            Label11.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Label11.Text = Label11.Text & vbNewLine
+                End If
+                Label11.Text = Label11.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\checkbox1.txt") '// add each line as String Array.
+            CheckBox1.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    CheckBox1.Text = CheckBox1.Text & vbNewLine
+                End If
+                CheckBox1.Text = CheckBox1.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\checkbox2.txt") '// add each line as String Array.
+            CheckBox2.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    CheckBox2.Text = CheckBox2.Text & vbNewLine
+                End If
+                CheckBox2.Text = CheckBox2.Text & buttontext(i)
+            Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\checkbox3.txt") '// add each line as String Array.
+            CheckBox3.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    CheckBox3.Text = CheckBox3.Text & vbNewLine
+                End If
+                CheckBox3.Text = CheckBox3.Text & buttontext(i)
             Next
         Catch ex As Exception
             log(ex.Message)

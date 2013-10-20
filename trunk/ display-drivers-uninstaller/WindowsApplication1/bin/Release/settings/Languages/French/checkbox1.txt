@@ -1,0 +1,1 @@
+Retirez C: \ AMD et ou C: \ dossiers NVIDIA
