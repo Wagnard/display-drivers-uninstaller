@@ -1,0 +1,1 @@
+Remover pastas C:\AMD e ou C:\NVIDIA
