@@ -3141,7 +3141,7 @@ Public Class Form1
                                 Try
                                     Select Case True
                                         Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
-                                            wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\AMD APP\bin\x86_64;", "")
+                                            wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
                                             regkey.SetValue(child, wantedvalue)
                                     End Select
                                 Catch ex As Exception
