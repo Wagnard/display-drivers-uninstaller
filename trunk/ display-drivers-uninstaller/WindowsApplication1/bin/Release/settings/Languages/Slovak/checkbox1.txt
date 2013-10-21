@@ -1,0 +1,1 @@
+Odstrániť priečinky C:\AMD a C:\NVIDIA
