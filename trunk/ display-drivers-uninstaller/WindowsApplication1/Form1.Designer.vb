@@ -156,7 +156,7 @@ Partial Class Form1
         'CheckBox1
         '
         Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(229, 272)
+        Me.CheckBox1.Location = New System.Drawing.Point(222, 272)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(229, 17)
         Me.CheckBox1.TabIndex = 12
@@ -166,7 +166,7 @@ Partial Class Form1
         'CheckBox2
         '
         Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(229, 297)
+        Me.CheckBox2.Location = New System.Drawing.Point(222, 297)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(235, 17)
         Me.CheckBox2.TabIndex = 13
@@ -247,7 +247,7 @@ Partial Class Form1
         Me.CheckBox3.AutoSize = True
         Me.CheckBox3.Checked = True
         Me.CheckBox3.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.CheckBox3.Location = New System.Drawing.Point(229, 249)
+        Me.CheckBox3.Location = New System.Drawing.Point(222, 249)
         Me.CheckBox3.Name = "CheckBox3"
         Me.CheckBox3.Size = New System.Drawing.Size(99, 17)
         Me.CheckBox3.TabIndex = 17
@@ -312,7 +312,7 @@ Partial Class Form1
         '
         Me.Button4.Location = New System.Drawing.Point(397, 374)
         Me.Button4.Name = "Button4"
-        Me.Button4.Size = New System.Drawing.Size(191, 36)
+        Me.Button4.Size = New System.Drawing.Size(191, 62)
         Me.Button4.TabIndex = 23
         Me.Button4.UseVisualStyleBackColor = True
         '
