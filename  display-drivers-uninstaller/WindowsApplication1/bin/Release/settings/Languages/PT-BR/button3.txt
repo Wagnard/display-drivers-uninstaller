@@ -1,2 +1,0 @@
-﻿Desinstalar o driver atual e os anteriores e Desligar o computador sem reescaneamento
-(Para instalação de uma nova placa de video)
