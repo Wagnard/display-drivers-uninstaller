@@ -1,0 +1,1 @@
+Uložiť súbory záznamov v ceste po spustení (odporúčané)
