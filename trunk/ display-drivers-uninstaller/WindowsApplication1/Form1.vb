@@ -1400,7 +1400,7 @@ Public Class Form1
 
             log("Debug : Starting S-1-5-xx region cleanUP")
             Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-        ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
+        ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
             If basekey IsNot Nothing Then
                 For Each super As String In basekey.GetSubKeyNames()
                     If super IsNot Nothing Then
@@ -3433,7 +3433,7 @@ Public Class Form1
             For Each child As String In regkey.GetSubKeyNames()
                 If child IsNot Nothing Then
                     subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList\" & child, True)
+                ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList\" & child, False)
                     If subregkey IsNot Nothing Then
                         If subregkey.GetValue("ProfileImagePath") IsNot Nothing Then
                             wantedvalue = subregkey.GetValue("ProfileImagePath").ToString
@@ -3510,7 +3510,7 @@ Public Class Form1
             Invoke(Sub() TextBox1.ScrollToCaret())
             log("Debug : Starting S-1-5-xx region cleanUP")
             Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                  ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", True)
+                  ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
             If basekey IsNot Nothing Then
                 For Each super As String In basekey.GetSubKeyNames()
                     If super IsNot Nothing Then
@@ -3864,6 +3864,9 @@ Public Class Form1
             ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("sk") Then
                 ComboBox2.SelectedIndex = ComboBox2.FindString("Slovak")
 
+            ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("cs") Then
+                ComboBox2.SelectedIndex = ComboBox2.FindString("Czech")
+
             Else
                 ComboBox2.SelectedIndex = ComboBox2.FindString("English")
             End If
@@ -4057,9 +4060,18 @@ Public Class Form1
         Else
             ComboBox1.SelectedIndex = 1
         End If
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000")
+
         Try
-            currentdriverversion = regkey.GetValue("DriverVersion").ToString
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
+
+            For Each child As String In regkey.GetSubKeyNames
+                If Not child.ToLower.Contains("properties") Then
+                    subregkey = regkey.OpenSubKey(child)
+                    currentdriverversion = subregkey.GetValue("DriverVersion").ToString
+                End If
+
+            Next
+
         Catch ex As Exception
             currentdriverversion = "Unknown"
         End Try
