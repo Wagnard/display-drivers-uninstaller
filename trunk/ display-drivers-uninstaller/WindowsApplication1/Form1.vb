@@ -163,46 +163,46 @@ Public Class Form1
             Dim position As Integer = reply.IndexOf("Provider:", oem)
             Dim classs As Integer = reply.IndexOf("Class:", oem)
             Dim inf As Integer = reply.IndexOf(".inf", oem)
+            If classs > -1 Then 'I saw that sometimes, there could be no class on some oems (winxp)
+                If reply.Substring(position, classs - position).Contains(provider) Then
+                    Dim part As String = reply.Substring(oem, inf - oem)
+                    log(part + " Found")
+                    Dim deloem As New Diagnostics.ProcessStartInfo
+                    deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
+                    deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+                    For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
+                        If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
+                            child.ToLower.Trim.Replace(" ", "").Contains("class=media") Or _
+                            child.ToLower.Trim.Replace(" ", "").Contains("class=usb") Then
+                            deloem.Arguments = "-f dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+                        End If
+                    Next
+                    'Uninstall Driver from driver store  delete from (oemxx.inf)
+                    log(deloem.Arguments)
+                    deloem.UseShellExecute = False
+                    deloem.CreateNoWindow = True
+                    deloem.RedirectStandardOutput = True
+                    'creation dun process fantome pour le wait on exit.
+                    Dim proc3 As New Diagnostics.Process
+                    Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(Delete OEM)... *****" + vbNewLine)
+                    Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+                    Invoke(Sub() TextBox1.ScrollToCaret())
+                    log("Executing Driver Store CleanUP(delete OEM)...")
+                    proc3.StartInfo = deloem
+                    proc3.Start()
+                    Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
+                    proc3.WaitForExit()
 
-            If reply.Substring(position, classs - position).Contains(provider) Then
-                Dim part As String = reply.Substring(oem, inf - oem)
-                log(part + " Found")
-                Dim deloem As New Diagnostics.ProcessStartInfo
-                deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
-                deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
-                For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
-                    If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
-                        child.ToLower.Trim.Replace(" ", "").Contains("class=media") Or _
-                        child.ToLower.Trim.Replace(" ", "").Contains("class=usb") Then
-                        deloem.Arguments = "-f dp_delete " + Chr(34) + part + ".inf" + Chr(34)
-                    End If
-                Next
-                'Uninstall Driver from driver store  delete from (oemxx.inf)
-                log(deloem.Arguments)
-                deloem.UseShellExecute = False
-                deloem.CreateNoWindow = True
-                deloem.RedirectStandardOutput = True
-                'creation dun process fantome pour le wait on exit.
-                Dim proc3 As New Diagnostics.Process
-                Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(Delete OEM)... *****" + vbNewLine)
-                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                Invoke(Sub() TextBox1.ScrollToCaret())
-                log("Executing Driver Store CleanUP(delete OEM)...")
-                proc3.StartInfo = deloem
-                proc3.Start()
-                Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
-                proc3.WaitForExit()
 
+                    Invoke(Sub() TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine)
+                    Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+                    Invoke(Sub() TextBox1.ScrollToCaret())
+                    log(Reply2)
 
-                Invoke(Sub() TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine)
-                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                Invoke(Sub() TextBox1.ScrollToCaret())
-                log(Reply2)
+                End If
 
+                oem = reply.IndexOf("oem", oem + 1)
             End If
-
-            oem = reply.IndexOf("oem", oem + 1)
-
         End While
 
 
