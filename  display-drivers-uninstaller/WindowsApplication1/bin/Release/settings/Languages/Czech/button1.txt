@@ -1,0 +1,2 @@
+﻿Odinstalovat stávající i předchozí ovladače a restartovat počítač
+(Vysoce doporučeno)

@@ -1,0 +1,1 @@
+﻿Odstranit složky C:\AMD a (nebo) C:\NVIDIA
