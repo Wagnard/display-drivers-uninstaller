@@ -1,0 +1,38 @@
+﻿Driver Uninstaller (DDU) / Cleaner made for Display Drivers.(NVIDIA/AMD)
+
+Polega on na usunięciu sterowników graficznych z menadźera urządzeń oraz wszystkich ich pozostałości w systemie
+łącznie z usunięciem usług od NVIDIA/AMD
+
+Efekt jaki uzyskasz po użyciu tego programu będzie podobny do stanu Windowsa po świeżej instalacji.
+
+Program działa podobnie do Driver Sweeper + posiada dodatkowe funkcje wymienione wyżej
+
+Jeśli masz problem z instalacją starszych lub nowszych sterowników, daj szansę temu programowi. Według zgłoszeń
+naprawia on problemy z tym związane.
+
+Zalecany sposób użycia:
+
+- Osobiście zalecam odłączenie się od internetu na czas używania programu ponieważ zdarza się że zaraz po usunięciu sterowników
+Windows Update sam dogrywa sobie je bez naszej wiedzy
+
+- Narzędzie może być używane w trybie standardowym, ale do uzyskania najlepszego efektu zaleca się użycie w trybie awaryjnym.
+
+- Chcemy od was otrzymywać informację. Napisz do nas czy program Wam pomógł czy też nie. Utwórz punkt przywracania
+dla bezpieczeństwa (ale z regóły wszystko powinno przejść bez najmniejszych problemów).
+
+-Jeśli masz albo miałeś jakiś problem, i w jego rozwiązaniu pomógł Ci ten program
+Podziel się z nami swoimi wynikami.
+
+Miej na uwadzę że NVIDIA/AMD nie miało z tym nic wspólnego, Nie pracujemy z/dla NVIDIA/AMD 
+i nie powinni oni ponosić odpowiedzialności za problemy spowodowane twojemu systemowi.
+-------------------------------
+
+Created By Wagnard.
+
+Co-owner: Shady7557
+
+Tester : Dellon132
+
+Logos : juanchacin
+
+Thanks to anyone who put their system at risk (special thanks to Dellon132)

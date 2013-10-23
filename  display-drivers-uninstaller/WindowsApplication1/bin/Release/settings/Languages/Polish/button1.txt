@@ -1,0 +1,2 @@
+﻿Usuń sterowniki oraz ich pozostałości i uruchom komputer ponownie
+(Wysoce zalecane)
