@@ -1,0 +1,1 @@
+Entferne C:\AMD und/oder C:\NVIDIA Ordner

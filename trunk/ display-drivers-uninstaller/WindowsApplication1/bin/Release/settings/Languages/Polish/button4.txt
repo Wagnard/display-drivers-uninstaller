@@ -1,0 +1,1 @@
+﻿Użyj ustawień domyślnych Windows Update do instalacji sterowników.
