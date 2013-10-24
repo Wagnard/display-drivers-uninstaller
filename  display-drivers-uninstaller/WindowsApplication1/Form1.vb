@@ -44,7 +44,13 @@ Public Class Form1
     Private Function checkupdates() As Boolean
         Try
             Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion.txt")
-            Dim response2 As System.Net.HttpWebResponse = request2.GetResponse()
+            Dim response2 As System.Net.HttpWebResponse = Nothing
+            Try
+                response2 = request2.GetResponse()
+            Catch ex As Exception
+                request2 = System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion.txt")
+                response2 = request2.GetResponse()
+            End Try
 
             Dim sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
 
@@ -1776,9 +1782,8 @@ Public Class Form1
                     Next
                 End If
             End If
-
-
         End If
+
 
         If e = "NVIDIA" Then
 
@@ -1973,11 +1978,11 @@ Public Class Form1
             filePath = Environment.GetFolderPath _
       (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 
-            
-                Try
-                    TestDelete(filePath)
-                Catch ex As Exception
-                End Try
+
+            Try
+                TestDelete(filePath)
+            Catch ex As Exception
+            End Try
 
             filePath = Environment.GetFolderPath _
       (Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
@@ -3273,51 +3278,11 @@ Public Class Form1
 
             End If
 
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If child IsNot Nothing And removephysx Then
-                        If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
-                           Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
-                            If Not child.ToLower.Contains("nvidia") Then
-                                regkey.DeleteSubKeyTree(child)
-                            Else
-                                subregkey = regkey.OpenSubKey(child, True)
-                                For Each child2 As String In subregkey.GetSubKeyNames()
-                                    If child2 IsNot Nothing Then
-                                        If Not child2.ToLower.Contains("demos") Then
-                                            subregkey.DeleteSubKeyTree(child2)
-                                        End If
-
-                                    End If
-
-                                Next
-
-
-                            End If
-                        End If
-                    Else
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\NVIDIA Corporation", True)
-                        If regkey IsNot Nothing Then
-                            For Each child3 As String In regkey.GetSubKeyNames()
-                                If child3 IsNot Nothing Then
-                                    If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
-                                        regkey.DeleteSubKeyTree(child3)
-                                    End If
-                                End If
-                            Next
-                        End If
-                    End If
-
-                Next
-            End If
-
-
-            If IntPtr.Size = 8 Then
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If child IsNot Nothing And removephysx Then
+                    If child IsNot Nothing Then
+                        If removephysx Then
                             If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
                                Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
                                 If Not child.ToLower.Contains("nvidia") Then
@@ -3329,12 +3294,18 @@ Public Class Form1
                                             If Not child2.ToLower.Contains("demos") Then
                                                 subregkey.DeleteSubKeyTree(child2)
                                             End If
+
                                         End If
+
                                     Next
+                                    If subregkey.GetSubKeyNames().Length.ToString = 0 Then
+                                        regkey.DeleteSubKeyTree(child)
+                                    End If
+
                                 End If
                             End If
                         Else
-                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\NVIDIA Corporation", True)
+                            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\NVIDIA Corporation", True)
                             If regkey IsNot Nothing Then
                                 For Each child3 As String In regkey.GetSubKeyNames()
                                     If child3 IsNot Nothing Then
@@ -3345,11 +3316,97 @@ Public Class Form1
                                 Next
                             End If
                         End If
+                    End If
+                Next
+            End If
 
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        If removephysx Then
+                            If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
+                               Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
+                                If Not child.ToLower.Contains("nvidia") Then
+                                    regkey.DeleteSubKeyTree(child)
+                                Else
+                                    subregkey = regkey.OpenSubKey(child, True)
+                                    For Each child2 As String In subregkey.GetSubKeyNames()
+                                        If child2 IsNot Nothing Then
+                                            If Not child2.ToLower.Contains("demos") Then
+                                                subregkey.DeleteSubKeyTree(child2)
+                                            End If
+
+                                        End If
+
+                                    Next
+                                    If subregkey.GetSubKeyNames().Length.ToString = 0 Then
+                                        regkey.DeleteSubKeyTree(child)
+                                    End If
+
+                                End If
+                            End If
+                        Else
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\NVIDIA Corporation", True)
+                            If regkey IsNot Nothing Then
+                                For Each child3 As String In regkey.GetSubKeyNames()
+                                    If child3 IsNot Nothing Then
+                                        If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
+                                            regkey.DeleteSubKeyTree(child3)
+                                        End If
+                                    End If
+                                Next
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If child IsNot Nothing Then
+                            If removephysx Then
+                                If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
+                                   Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
+                                    If Not child.ToLower.Contains("nvidia") Then
+                                        regkey.DeleteSubKeyTree(child)
+                                    Else
+                                        subregkey = regkey.OpenSubKey(child, True)
+                                        For Each child2 As String In subregkey.GetSubKeyNames()
+                                            If child2 IsNot Nothing Then
+                                                If Not child2.ToLower.Contains("demos") Then
+                                                    subregkey.DeleteSubKeyTree(child2)
+                                                End If
+
+                                            End If
+
+                                        Next
+                                        If subregkey.GetSubKeyNames().Length.ToString = 0 Then
+                                            regkey.DeleteSubKeyTree(child)
+                                        End If
+
+                                    End If
+                                End If
+                            Else
+                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\NVIDIA Corporation", True)
+                                If regkey IsNot Nothing Then
+                                    For Each child3 As String In regkey.GetSubKeyNames()
+                                        If child3 IsNot Nothing Then
+                                            If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
+                                                regkey.DeleteSubKeyTree(child3)
+                                            End If
+                                        End If
+                                    Next
+                                End If
+                            End If
+                        End If
                     Next
                 End If
             End If
-
 
 
 
@@ -4057,7 +4114,7 @@ Public Class Form1
         Else
             ComboBox1.SelectedIndex = 1
         End If
-
+        
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
 

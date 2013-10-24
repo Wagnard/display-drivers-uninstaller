@@ -1,0 +1,2 @@
+﻿Jelenlegi és előző driverek eltávolítása, de ne indítsa újra a számítógépet.
+(például elsötétült képernyőt okozhat)
