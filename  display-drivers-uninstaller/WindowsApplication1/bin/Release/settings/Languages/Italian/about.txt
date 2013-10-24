@@ -1,0 +1,41 @@
+﻿Driver Uninstaller (DDU) / Cleaner per i driver video. (NVIDIA/AMD)
+
+Rimuove il driver video dalla gestione periferiche eliminando qualsiasi traccia di driver
+dal Driver store di Windows compresi i servizi NVIDIA/AMD.
+
+L'effetto ottenuto sarà simile a una "nuova installazione" di Windows.
+
+Questo programma agisce in modo simile a Driver sweeper + gli extra menzionati sopra.
+
+In caso di problemi durante l'installazione di driver datati o recenti si consiglia di provarlo,
+a dimostrazione delle testimonianze avute finora.
+
+USO RACCOMANDATO :
+
+- Personalmente consiglio la disconnessione da Internet prima dell'utilizzo, poichè alcune volte
+dopo la rimozione, windows update potrebbe reinstallare il driver senza la tua autorizzazione...
+
+- Questo programma può essere usato in modalità normale ma per un'assoluta stabilità, la modalità 
+provvisoria è sempre la più indicata.
+
+- Si consiglia di creare un backup o un punto di ripristino come precauzione, dato che il programma
+in sè è abbastanza sicuro.
+
+- Se hai avuto problemi con un driver video e questo programma ti è stato d'aiuto, puoi condividere
+il risultato nella discussione ufficiale del programma:
+http://forums.guru3d.com/showthread.php?t=379505
+
+Tieni a mente che NVIDIA/AMD non hanno niente a che fare con noi. Non lavoriamo per NVIDIA/AMD e 
+non devono essere ritenuti responsabili per qualunque danno causato al tuo sistema.
+-------------------------------
+
+Created By Wagnard.
+
+Co-owner: Shady7557
+
+Tester : Dellon132
+
+Logos : juanchacin
+
+Grazie a tutti quelli che hanno messo il loro sistema a rischio per rendere DDU stabile.
+(special thanks to Dellon132)
