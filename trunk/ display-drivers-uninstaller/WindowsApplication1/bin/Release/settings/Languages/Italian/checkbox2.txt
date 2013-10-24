@@ -1,0 +1,1 @@
+Salva i file di log nel percorso di avvio (raccomandato)

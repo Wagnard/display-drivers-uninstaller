@@ -1,0 +1,1 @@
+﻿Ripristina l'installazione dei driver su Windows Update alla configurazione di default.
