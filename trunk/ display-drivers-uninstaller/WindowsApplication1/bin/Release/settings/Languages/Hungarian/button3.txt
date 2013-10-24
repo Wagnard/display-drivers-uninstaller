@@ -1,0 +1,2 @@
+﻿Jelenlegi és előző driverek eltávolítása és a számítógép leállítása újraellenőrzés nélkül
+(Új grafikus kártya telepítéséhez)
