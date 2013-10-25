@@ -1,2 +1,2 @@
-﻿Uninstall the current and previous drivers and DO NOT restart the computer.
-(May cause issues like blackscreen)
+﻿Uninstall the current and or previous drivers and do NOT restart the computer.
+(May cause issues like a blackscreen)
