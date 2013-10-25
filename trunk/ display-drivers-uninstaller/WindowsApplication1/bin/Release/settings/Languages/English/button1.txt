@@ -1,2 +1,2 @@
-﻿Uninstall the current and previous drivers and restart the computer
+﻿Uninstall the current and or previous drivers and restart the computer
 (Highly Recommended)

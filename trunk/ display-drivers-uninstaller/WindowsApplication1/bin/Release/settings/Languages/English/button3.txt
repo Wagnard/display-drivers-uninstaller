@@ -1,2 +1,2 @@
-﻿Uninstall the current and previous drivers and Shutdown the computer with no rescan
-(For installing a new graphic card)
+﻿Uninstall the current and or previous drivers and restart the computer with no rescan
+(Useful for installing a new graphics card)
