@@ -23,7 +23,7 @@ Public Class Form1
     Dim removephysx As Boolean = True
     Dim t As Thread
     Dim checkupdatethread As Thread
-    Public updates As Boolean
+    Public updates As Integer
     Dim reply As String = Nothing
     Dim reply2 As String = Nothing
     Dim userpth As String = System.Environment.GetEnvironmentVariable("userprofile")
@@ -41,48 +41,54 @@ Public Class Form1
     Dim currentdriverversion As String = Nothing
     Dim stopme As Boolean = False
     Dim version As String
-    Private Function checkupdates() As Boolean
+    Private Function checkupdates() As Integer
         Try
             Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion.txt")
             Dim response2 As System.Net.HttpWebResponse = Nothing
+
             Try
                 response2 = request2.GetResponse()
             Catch ex As Exception
                 request2 = System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion.txt")
-                response2 = request2.GetResponse()
             End Try
 
+            response2 = request2.GetResponse()
             Dim sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
 
             Dim newestversion2 As String = sr.ReadToEnd()
             If newestversion2 <= (Application.ProductVersion) Then
-                Return True
+                Return 1
             Else
-                Return False
+                Return 2
             End If
-        Catch ex As Exception
-            Label11.Text = "Unable to Fetch updates!"
-            Return True
-        End Try
 
+        Catch ex As Exception
+            Return 3
+        End Try
 
     End Function
     Private Sub Checkupdates2()
-        If checkupdates() = False Then
-            updates = False
-        Else
-            updates = True
+        Dim result As Integer = checkupdates()
+
+        If result = 2 Then
+            updates = 2
+        ElseIf result = 1 Then
+            updates = 1
+        ElseIf result = 3 Then
+            updates = 3
         End If
+
         AccessUI()
     End Sub
     Private Sub AccessUI()
         If Me.InvokeRequired Then
             Me.Invoke(New MethodInvoker(AddressOf AccessUI))
         Else
-            If updates = True Then
+            If updates = 1 Then
                 Label11.Text = ("No Updates found. Program is up to date.")
 
-            Else
+            ElseIf updates = 2 Then
+
                 Label11.Text = ("Updates found! Expect limited support on older versions than the most recent.")
 
                 Dim result = MsgBox("Updates are available! Visit forum thread now?", MsgBoxStyle.YesNoCancel)
@@ -95,11 +101,14 @@ Public Class Form1
                     MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.")
                 ElseIf result = MsgBoxResult.Cancel Then
                     MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.")
-                End If
+                
 
 
 
                 'MsgBox("Updates are available! Visit forum thread now?    Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.", MsgBoxStyle.Information)
+                End If
+            ElseIf updates = 3 Then
+                Label11.Text = "Unable to Fetch updates!"
             End If
         End If
     End Sub
