@@ -2019,15 +2019,17 @@ Public Class Form1
             filePath = Environment.GetFolderPath _
       (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 
+            
+            Try
+                TestDelete(filePath)
+            Catch ex As Exception
+            End Try
+
             If My.Computer.FileSystem.GetDirectories(filePath).Count = 0 Then
                 My.Computer.FileSystem.DeleteDirectory _
                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Else
-                Try
-                    TestDelete(filePath)
-                Catch ex As Exception
-                End Try
             End If
+
             filePath = Environment.GetFolderPath _
       (Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
 
@@ -2051,180 +2053,140 @@ Public Class Form1
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
 
+                Try
+                    TestDelete(filePath)
+                Catch ex As Exception
+                End Try
+
                 If My.Computer.FileSystem.GetDirectories(filePath).Count = 0 Then
                     My.Computer.FileSystem.DeleteDirectory _
                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Else
-
-                    Try
-                        TestDelete(filePath)
-                    Catch ex As Exception
-                    End Try
                 End If
+
             End If
 
-                'Not sure if this work on XP
+            'Not sure if this work on XP
 
-                filePath = Environment.GetFolderPath _
-          (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
+            filePath = Environment.GetFolderPath _
+      (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
 
-                If removephysx Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-
-                        log(ex.Message & "common application data\nvidia")
-                    End Try
-                Else
-                    Try
-                        TestDelete(filePath)
-                    Catch ex As Exception
-                    End Try
-
-                End If
-
-                filePath = Environment.GetFolderPath _
-          (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
-
-                If removephysx Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-
-                        log(ex.Message & "common application data\Nvidia corporation")
-                    End Try
-                Else
-                    Try
-                        TestDelete(filePath)
-                    Catch ex As Exception
-                    End Try
-
-                End If
-                'Erase driver file from windows directory
-
-                Dim driverfiles() As String
-                driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg") '// add each line as String Array.
-
-                For i As Integer = 0 To driverfiles.Length - 1
-
-                    filePath = System.Environment.SystemDirectory
-                    Try
-                        My.Computer.FileSystem.DeleteFile(filePath + "\" + driverfiles(i))
-                    Catch ex As Exception
-                    End Try
-
-                    Try
-                        My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
-                    Catch ex As Exception
-                    End Try
-
-                    If IntPtr.Size = 8 Then
-
-                        filePath = Environment.GetEnvironmentVariable("windir")
-                        Try
-                            My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
-                        Catch ex As Exception
-                        End Try
-
-                        Try
-                            My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
-                        Catch ex As Exception
-                        End Try
-
-                    End If
-                Next
-
-                filePath = System.Environment.SystemDirectory
-                Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
-                For i As Integer = 0 To files.Count - 1
-                    Try
-                        My.Computer.FileSystem.DeleteFile(files(i))
-                    Catch ex As Exception
-                    End Try
-                Next
-                filePath = Environment.GetEnvironmentVariable("windir")
+            If removephysx Then
                 Try
                     My.Computer.FileSystem.DeleteDirectory _
-                            (filePath + "\Help\nvcpl", FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+
+                    log(ex.Message & "common application data\nvidia")
+                End Try
+            Else
+                Try
+                    TestDelete(filePath)
                 Catch ex As Exception
                 End Try
-                'Delete NVIDIA regkey
-                Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Starting reg cleanUP *****" + vbNewLine)
-                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                Invoke(Sub() TextBox1.ScrollToCaret())
-                log("Starting reg cleanUP")
+
+            End If
+
+            filePath = Environment.GetFolderPath _
+      (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
+
+            If removephysx Then
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+
+                    log(ex.Message & "common application data\Nvidia corporation")
+                End Try
+            Else
+                Try
+                    TestDelete(filePath)
+                Catch ex As Exception
+                End Try
+
+            End If
+            'Erase driver file from windows directory
+
+            Dim driverfiles() As String
+            driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg") '// add each line as String Array.
+
+            For i As Integer = 0 To driverfiles.Length - 1
+
+                filePath = System.Environment.SystemDirectory
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\" + driverfiles(i))
+                Catch ex As Exception
+                End Try
+
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
+                Catch ex As Exception
+                End Try
+
+                If IntPtr.Size = 8 Then
+
+                    filePath = Environment.GetEnvironmentVariable("windir")
+                    Try
+                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
+                    Catch ex As Exception
+                    End Try
+
+                    Try
+                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
+                    Catch ex As Exception
+                    End Try
+
+                End If
+            Next
+
+            filePath = System.Environment.SystemDirectory
+            Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
+            For i As Integer = 0 To files.Count - 1
+                Try
+                    My.Computer.FileSystem.DeleteFile(files(i))
+                Catch ex As Exception
+                End Try
+            Next
+            filePath = Environment.GetEnvironmentVariable("windir")
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                        (filePath + "\Help\nvcpl", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+            End Try
+            'Delete NVIDIA regkey
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Starting reg cleanUP *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
+            log("Starting reg cleanUP")
 
 
-                'Deleting DCOM object /classroot
-                log("Starting dcom/clsid/appid/typelib cleanup")
-                log("Step 1/2")
-                Dim classroot() As String
-                classroot = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\classroot.cfg") '// add each line as String Array.
-                regkey = My.Computer.Registry.ClassesRoot
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        For i As Integer = 0 To classroot.Length - 1
-                            If child IsNot Nothing Then
-                                If child.ToLower.StartsWith(classroot(i).ToLower) Then
-                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID")
-                                    If subregkey IsNot Nothing Then
-                                        If subregkey.GetValue("") IsNot Nothing Then
-                                            wantedvalue = subregkey.GetValue("").ToString
-                                            If wantedvalue IsNot Nothing Then
+            'Deleting DCOM object /classroot
+            log("Starting dcom/clsid/appid/typelib cleanup")
+            log("Step 1/2")
+            Dim classroot() As String
+            classroot = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\classroot.cfg") '// add each line as String Array.
+            regkey = My.Computer.Registry.ClassesRoot
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    For i As Integer = 0 To classroot.Length - 1
+                        If child IsNot Nothing Then
+                            If child.ToLower.StartsWith(classroot(i).ToLower) Then
+                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID")
+                                If subregkey IsNot Nothing Then
+                                    If subregkey.GetValue("") IsNot Nothing Then
+                                        wantedvalue = subregkey.GetValue("").ToString
+                                        If wantedvalue IsNot Nothing Then
 
-                                                If removephysx Then
-                                                    If IntPtr.Size = 8 Then
-                                                        Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue)
-                                                            Dim appid As String = Nothing
-                                                            Try
-                                                                appid = subregkey2.GetValue("AppID").ToString
-                                                            Catch ex As Exception
-                                                            End Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib")
-
-                                                            Dim typelib As String = Nothing
-                                                            Try
-                                                                typelib = subregkey2.GetValue("").ToString
-                                                            Catch ex As Exception
-                                                            End Try
-
-                                                            If appid IsNot Nothing Then
-                                                                Try
-                                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                                    subregkey2.DeleteSubKeyTree(appid)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                                Try
-                                                                    'special case for an unusual key configuration nv bug?
-                                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                    subregkey2.DeleteSubKeyTree(appid)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-                                                            If typelib IsNot Nothing Then
-                                                                Try
-                                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
-                                                                    subregkey2.DeleteSubKeyTree(typelib)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                            subregkey2.DeleteSubKeyTree(wantedvalue)
-
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
+                                            If removephysx Then
+                                                If IntPtr.Size = 8 Then
                                                     Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue)
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue)
                                                         Dim appid As String = Nothing
                                                         Try
                                                             appid = subregkey2.GetValue("AppID").ToString
                                                         Catch ex As Exception
                                                         End Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib")
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib")
+
                                                         Dim typelib As String = Nothing
                                                         Try
                                                             typelib = subregkey2.GetValue("").ToString
@@ -2233,6 +2195,12 @@ Public Class Form1
 
                                                         If appid IsNot Nothing Then
                                                             Try
+                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                                                                subregkey2.DeleteSubKeyTree(appid)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                            Try
+                                                                'special case for an unusual key configuration nv bug?
                                                                 subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
                                                                 subregkey2.DeleteSubKeyTree(appid)
                                                             Catch ex As Exception
@@ -2240,79 +2208,80 @@ Public Class Form1
                                                         End If
                                                         If typelib IsNot Nothing Then
                                                             Try
-                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
                                                                 subregkey2.DeleteSubKeyTree(typelib)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
                                                         subregkey2.DeleteSubKeyTree(wantedvalue)
+
                                                     Catch ex As Exception
                                                     End Try
+                                                End If
+                                                Try
+                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue)
+                                                    Dim appid As String = Nothing
                                                     Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
+                                                        appid = subregkey2.GetValue("AppID").ToString
+                                                    Catch ex As Exception
+                                                    End Try
+                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib")
+                                                    Dim typelib As String = Nothing
+                                                    Try
+                                                        typelib = subregkey2.GetValue("").ToString
                                                     Catch ex As Exception
                                                     End Try
 
-                                                Else
-                                                    If child.ToLower.Contains("gamesconfigserver") Then   'Physx related
-                                                        'do nothing
-                                                    Else
-                                                        If IntPtr.Size = 8 Then
-                                                            Try
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue)
-                                                                Dim appid As String = Nothing
-                                                                Try
-                                                                    appid = subregkey2.GetValue("AppID").ToString
-                                                                Catch ex As Exception
-                                                                End Try
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib")
-                                                                Dim typelib As String = Nothing
-                                                                Try
-                                                                    typelib = subregkey2.GetValue("").ToString
-                                                                Catch ex As Exception
-                                                                End Try
-                                                                If appid IsNot Nothing Then
-                                                                    Try
-                                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                                        subregkey.DeleteSubKeyTree(appid)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                    Try
-                                                                        'special case for an unusual key configuration nv bug?
-                                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                        subregkey.DeleteSubKeyTree(appid)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                End If
-                                                                If typelib IsNot Nothing Then
-                                                                    Try
-                                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
-                                                                        subregkey.DeleteSubKeyTree(typelib)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                End If
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                                subregkey.DeleteSubKeyTree(wantedvalue)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
+                                                    If appid IsNot Nothing Then
                                                         Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue)
+                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                            subregkey2.DeleteSubKeyTree(appid)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                    If typelib IsNot Nothing Then
+                                                        Try
+                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+                                                            subregkey2.DeleteSubKeyTree(typelib)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                    subregkey2.DeleteSubKeyTree(wantedvalue)
+                                                Catch ex As Exception
+                                                End Try
+                                                Try
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
+                                                Catch ex As Exception
+                                                End Try
+
+                                            Else
+                                                If child.ToLower.Contains("gamesconfigserver") Then   'Physx related
+                                                    'do nothing
+                                                Else
+                                                    If IntPtr.Size = 8 Then
+                                                        Try
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue)
                                                             Dim appid As String = Nothing
                                                             Try
                                                                 appid = subregkey2.GetValue("AppID").ToString
                                                             Catch ex As Exception
                                                             End Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib")
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib")
                                                             Dim typelib As String = Nothing
                                                             Try
                                                                 typelib = subregkey2.GetValue("").ToString
                                                             Catch ex As Exception
                                                             End Try
-
                                                             If appid IsNot Nothing Then
                                                                 Try
+                                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                                                                    subregkey.DeleteSubKeyTree(appid)
+                                                                Catch ex As Exception
+                                                                End Try
+                                                                Try
+                                                                    'special case for an unusual key configuration nv bug?
                                                                     subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
                                                                     subregkey.DeleteSubKeyTree(appid)
                                                                 Catch ex As Exception
@@ -2320,48 +2289,110 @@ Public Class Form1
                                                             End If
                                                             If typelib IsNot Nothing Then
                                                                 Try
-                                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+                                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
                                                                     subregkey.DeleteSubKeyTree(typelib)
                                                                 Catch ex As Exception
                                                                 End Try
                                                             End If
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
                                                             subregkey.DeleteSubKeyTree(wantedvalue)
                                                         Catch ex As Exception
                                                         End Try
+                                                    End If
+                                                    Try
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue)
+                                                        Dim appid As String = Nothing
                                                         Try
-                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
+                                                            appid = subregkey2.GetValue("AppID").ToString
                                                         Catch ex As Exception
                                                         End Try
-                                                    End If
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib")
+                                                        Dim typelib As String = Nothing
+                                                        Try
+                                                            typelib = subregkey2.GetValue("").ToString
+                                                        Catch ex As Exception
+                                                        End Try
+
+                                                        If appid IsNot Nothing Then
+                                                            Try
+                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                                subregkey.DeleteSubKeyTree(appid)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        End If
+                                                        If typelib IsNot Nothing Then
+                                                            Try
+                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+                                                                subregkey.DeleteSubKeyTree(typelib)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        End If
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                        subregkey.DeleteSubKeyTree(wantedvalue)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                    Try
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
+                                                    Catch ex As Exception
+                                                    End Try
                                                 End If
                                             End If
                                         End If
                                     End If
                                 End If
                             End If
-                        Next
+                        End If
                     Next
-                End If
+                Next
+            End If
 
-                log("Step 2/2")
+            log("Step 2/2")
 
-                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID")
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If child IsNot Nothing Then
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID")
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
 
-                            If child.ToLower.Contains("comupdatus") Or child.ToLower.Contains("nv3d") Or _
-                                child.ToLower.Contains("nvui") Or child.ToLower.Contains("nvvsvc") Or child.ToLower.Contains("nvxd") Or _
-                               child.ToLower.Contains("gamesconfigserver") Or _
-                              child.ToLower.Contains("nvidia.installer") Or child.ToLower.Contains("displayserver") Then
+                        If child.ToLower.Contains("comupdatus") Or child.ToLower.Contains("nv3d") Or _
+                            child.ToLower.Contains("nvui") Or child.ToLower.Contains("nvvsvc") Or child.ToLower.Contains("nvxd") Or _
+                           child.ToLower.Contains("gamesconfigserver") Or _
+                          child.ToLower.Contains("nvidia.installer") Or child.ToLower.Contains("displayserver") Then
 
-                                subregkey = regkey.OpenSubKey(child)
-                                If subregkey IsNot Nothing Then
-                                    If subregkey.GetValue("AppID") IsNot Nothing Then
-                                        wantedvalue = subregkey.GetValue("AppID").ToString
-                                        If wantedvalue IsNot Nothing Then
-                                            If removephysx Then
+                            subregkey = regkey.OpenSubKey(child)
+                            If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("AppID") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("AppID").ToString
+                                    If wantedvalue IsNot Nothing Then
+                                        If removephysx Then
+                                            If IntPtr.Size = 8 Then
+                                                Try
+                                                    Dim appid As String = wantedvalue
+                                                    If appid IsNot Nothing Then
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
+                                                    End If
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                            Try
+
+                                                Dim appid As String = wantedvalue
+                                                If appid IsNot Nothing Then
+                                                    Try
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                            Catch ex As Exception
+                                            End Try
+                                            Try
+                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & child)
+                                            Catch ex As Exception
+                                            End Try
+
+                                        Else
+                                            If child.ToLower.Contains("gamesconfigserver") Then
+                                                'do nothing
+                                            Else
                                                 If IntPtr.Size = 8 Then
                                                     Try
                                                         Dim appid As String = wantedvalue
@@ -2386,54 +2417,197 @@ Public Class Form1
                                                     My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & child)
                                                 Catch ex As Exception
                                                 End Try
-
-                                            Else
-                                                If child.ToLower.Contains("gamesconfigserver") Then
-                                                    'do nothing
-                                                Else
-                                                    If IntPtr.Size = 8 Then
-                                                        Try
-                                                            Dim appid As String = wantedvalue
-                                                            If appid IsNot Nothing Then
-                                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
-                                                            End If
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    Try
-
-                                                        Dim appid As String = wantedvalue
-                                                        If appid IsNot Nothing Then
-                                                            Try
-                                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                    Catch ex As Exception
-                                                    End Try
-                                                    Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & child)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
                                             End If
                                         End If
                                     End If
                                 End If
                             End If
                         End If
+                    End If
 
-                    Next
-                End If
+                Next
+            End If
 
-                log("Extra step")
+            log("Extra step")
 
-                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID")
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID")
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        Try
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\LocalServer32", False)
+                            If subregkey.GetValue("") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("").ToString
+                                If wantedvalue IsNot Nothing And wantedvalue.ToLower.Contains("\nvidia corporation\") Then
+
+                                    If removephysx Then
+                                        If IntPtr.Size = 8 Then
+                                            Try
+                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
+                                                Dim appid As String = Nothing
+                                                Try
+                                                    appid = subregkey2.GetValue("AppID").ToString
+                                                Catch ex As Exception
+                                                End Try
+                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
+
+                                                Dim typelib As String = Nothing
+                                                Try
+                                                    typelib = subregkey2.GetValue("").ToString
+                                                Catch ex As Exception
+                                                End Try
+
+                                                If appid IsNot Nothing Then
+                                                    Try
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                                                        subregkey2.DeleteSubKeyTree(appid)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                    Try
+                                                        'special case for an unusual key configuration nv bug?
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                        subregkey2.DeleteSubKeyTree(appid)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                                If typelib IsNot Nothing Then
+                                                    Try
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
+                                                        subregkey2.DeleteSubKeyTree(typelib)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                subregkey2.DeleteSubKeyTree(child)
+
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                        Try
+                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
+                                            Dim appid As String = Nothing
+                                            Try
+                                                appid = subregkey2.GetValue("AppID").ToString
+                                            Catch ex As Exception
+                                            End Try
+                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
+                                            Dim typelib As String = Nothing
+                                            Try
+                                                typelib = subregkey2.GetValue("").ToString
+                                            Catch ex As Exception
+                                            End Try
+
+                                            If appid IsNot Nothing Then
+                                                Try
+                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                    subregkey2.DeleteSubKeyTree(appid)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                            If typelib IsNot Nothing Then
+                                                Try
+                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+                                                    subregkey2.DeleteSubKeyTree(typelib)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                            subregkey2.DeleteSubKeyTree(child)
+                                        Catch ex As Exception
+                                        End Try
+
+                                    Else
+                                        If child.Contains("gamesconfigserver") Then   'Physx related
+                                            'do nothing
+                                        Else
+                                            If IntPtr.Size = 8 Then
+                                                Try
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
+                                                    Dim appid As String = Nothing
+                                                    Try
+                                                        appid = subregkey2.GetValue("AppID").ToString
+                                                    Catch ex As Exception
+                                                    End Try
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
+                                                    Dim typelib As String = Nothing
+                                                    Try
+                                                        typelib = subregkey2.GetValue("").ToString
+                                                    Catch ex As Exception
+                                                    End Try
+                                                    If appid IsNot Nothing Then
+                                                        Try
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                                                            subregkey.DeleteSubKeyTree(appid)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                        Try
+                                                            'special case for an unusual key configuration nv bug?
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                            subregkey.DeleteSubKeyTree(appid)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                    If typelib IsNot Nothing Then
+                                                        Try
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
+                                                            subregkey.DeleteSubKeyTree(typelib)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                    subregkey.DeleteSubKeyTree(child)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                            Try
+                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
+                                                Dim appid As String = Nothing
+                                                Try
+                                                    appid = subregkey2.GetValue("AppID").ToString
+                                                Catch ex As Exception
+                                                End Try
+                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
+                                                Dim typelib As String = Nothing
+                                                Try
+                                                    typelib = subregkey2.GetValue("").ToString
+                                                Catch ex As Exception
+                                                End Try
+
+                                                If appid IsNot Nothing Then
+                                                    Try
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                        subregkey.DeleteSubKeyTree(appid)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                                If typelib IsNot Nothing Then
+                                                    Try
+                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+                                                        subregkey.DeleteSubKeyTree(typelib)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                subregkey.DeleteSubKeyTree(child)
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        Catch ex As Exception
+                        End Try
+                    End If
+                Next
+            End If
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID")
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
                         If child IsNot Nothing Then
                             Try
-                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\LocalServer32", False)
+                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\LocalServer32", False)
                                 If subregkey.GetValue("") IsNot Nothing Then
                                     wantedvalue = subregkey.GetValue("").ToString
                                     If wantedvalue IsNot Nothing And wantedvalue.ToLower.Contains("\nvidia corporation\") Then
@@ -2598,18 +2772,22 @@ Public Class Form1
                         End If
                     Next
                 End If
+            End If
 
-                If IntPtr.Size = 8 Then
-                    regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID")
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames()
-                            If child IsNot Nothing Then
-                                Try
-                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\LocalServer32", False)
-                                    If subregkey.GetValue("") IsNot Nothing Then
-                                        wantedvalue = subregkey.GetValue("").ToString
-                                        If wantedvalue IsNot Nothing And wantedvalue.ToLower.Contains("\nvidia corporation\") Then
-
+            log("exta step #2")
+            Dim clsidleftover() As String
+            clsidleftover = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\clsidleftover.cfg") '// add each line as String Array.
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID")
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    For i As Integer = 0 To clsidleftover.Length - 1
+                        If child IsNot Nothing Then
+                            Try
+                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\InProcServer32", False)
+                                If subregkey.GetValue("") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If wantedvalue IsNot Nothing Then
+                                        If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
                                             If removephysx Then
                                                 If IntPtr.Size = 8 Then
                                                     Try
@@ -2687,7 +2865,7 @@ Public Class Form1
                                                 End Try
 
                                             Else
-                                                If child.Contains("gamesconfigserver") Then   'Physx related
+                                                If child.ToLower.Contains("gamesconfigserver") Then   'Physx related
                                                     'do nothing
                                                 Else
                                                     If IntPtr.Size = 8 Then
@@ -2765,236 +2943,136 @@ Public Class Form1
                                             End If
                                         End If
                                     End If
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        Next
-                    End If
-                End If
-
-                log("exta step #2")
-                Dim clsidleftover() As String
-                clsidleftover = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\clsidleftover.cfg") '// add each line as String Array.
-                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID")
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        For i As Integer = 0 To clsidleftover.Length - 1
-                            If child IsNot Nothing Then
-                                Try
-                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\InProcServer32", False)
-                                    If subregkey.GetValue("") IsNot Nothing Then
-                                        wantedvalue = subregkey.GetValue("").ToString
-                                        If wantedvalue IsNot Nothing Then
-                                            If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
-                                                If removephysx Then
-                                                    If IntPtr.Size = 8 Then
-                                                        Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
-                                                            Dim appid As String = Nothing
-                                                            Try
-                                                                appid = subregkey2.GetValue("AppID").ToString
-                                                            Catch ex As Exception
-                                                            End Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
-
-                                                            Dim typelib As String = Nothing
-                                                            Try
-                                                                typelib = subregkey2.GetValue("").ToString
-                                                            Catch ex As Exception
-                                                            End Try
-
-                                                            If appid IsNot Nothing Then
-                                                                Try
-                                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                                    subregkey2.DeleteSubKeyTree(appid)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                                Try
-                                                                    'special case for an unusual key configuration nv bug?
-                                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                    subregkey2.DeleteSubKeyTree(appid)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-                                                            If typelib IsNot Nothing Then
-                                                                Try
-                                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
-                                                                    subregkey2.DeleteSubKeyTree(typelib)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                            subregkey2.DeleteSubKeyTree(child)
-
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
-                                                        Dim appid As String = Nothing
-                                                        Try
-                                                            appid = subregkey2.GetValue("AppID").ToString
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
-                                                        Dim typelib As String = Nothing
-                                                        Try
-                                                            typelib = subregkey2.GetValue("").ToString
-                                                        Catch ex As Exception
-                                                        End Try
-
-                                                        If appid IsNot Nothing Then
-                                                            Try
-                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                subregkey2.DeleteSubKeyTree(appid)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        If typelib IsNot Nothing Then
-                                                            Try
-                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
-                                                                subregkey2.DeleteSubKeyTree(typelib)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                        subregkey2.DeleteSubKeyTree(child)
-                                                    Catch ex As Exception
-                                                    End Try
-
-                                                Else
-                                                    If child.ToLower.Contains("gamesconfigserver") Then   'Physx related
-                                                        'do nothing
-                                                    Else
-                                                        If IntPtr.Size = 8 Then
-                                                            Try
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
-                                                                Dim appid As String = Nothing
-                                                                Try
-                                                                    appid = subregkey2.GetValue("AppID").ToString
-                                                                Catch ex As Exception
-                                                                End Try
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
-                                                                Dim typelib As String = Nothing
-                                                                Try
-                                                                    typelib = subregkey2.GetValue("").ToString
-                                                                Catch ex As Exception
-                                                                End Try
-                                                                If appid IsNot Nothing Then
-                                                                    Try
-                                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                                        subregkey.DeleteSubKeyTree(appid)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                    Try
-                                                                        'special case for an unusual key configuration nv bug?
-                                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                        subregkey.DeleteSubKeyTree(appid)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                End If
-                                                                If typelib IsNot Nothing Then
-                                                                    Try
-                                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
-                                                                        subregkey.DeleteSubKeyTree(typelib)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                End If
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                                subregkey.DeleteSubKeyTree(child)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
-                                                            Dim appid As String = Nothing
-                                                            Try
-                                                                appid = subregkey2.GetValue("AppID").ToString
-                                                            Catch ex As Exception
-                                                            End Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
-                                                            Dim typelib As String = Nothing
-                                                            Try
-                                                                typelib = subregkey2.GetValue("").ToString
-                                                            Catch ex As Exception
-                                                            End Try
-
-                                                            If appid IsNot Nothing Then
-                                                                Try
-                                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                    subregkey.DeleteSubKeyTree(appid)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-                                                            If typelib IsNot Nothing Then
-                                                                Try
-                                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
-                                                                    subregkey.DeleteSubKeyTree(typelib)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                            subregkey.DeleteSubKeyTree(child)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                End If
-                                            End If
-                                        End If
-                                    End If
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        Next
+                                End If
+                            Catch ex As Exception
+                            End Try
+                        End If
                     Next
-                End If
+                Next
+            End If
 
-                log("Interface CleanUP")
-                'interface cleanup
-                Dim interfaces() As String
-                interfaces = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\interface.cfg") '// add each line as String Array.
-                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        For i As Integer = 0 To interfaces.Length - 1
-                            If child IsNot Nothing Then
-                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
-                                If subregkey IsNot Nothing Then
-                                    If subregkey.GetValue("") IsNot Nothing Then
-                                        wantedvalue = subregkey.GetValue("").ToString
-                                        If wantedvalue IsNot Nothing Then
-                                            If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
+            log("Interface CleanUP")
+            'interface cleanup
+            Dim interfaces() As String
+            interfaces = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\interface.cfg") '// add each line as String Array.
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    For i As Integer = 0 To interfaces.Length - 1
+                        If child IsNot Nothing Then
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
+                            If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If wantedvalue IsNot Nothing Then
+                                        If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
 
+                                            Try
+                                                regkey.DeleteSubKeyTree(child)
+                                            Catch ex As Exception
+                                            End Try
+                                            If IntPtr.Size = 8 Then
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\Interface\" & child)
                                                 Catch ex As Exception
                                                 End Try
-                                                If IntPtr.Size = 8 Then
-                                                    Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\Interface\" & child)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
                                             End If
                                         End If
                                     End If
+                                End If
+                            End If
+                        End If
+                    Next
+                Next
+            End If
+
+
+            log("Finished dcom/clsid/appid/typelib cleanup")
+
+            'end of deleting dcom stuff
+            Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+            If win8higher Then
+                Dim reginfos As RegistryKey = Nothing
+                Dim FolderAcl As New RegistrySecurity
+                'setting permission to registry
+                removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                removehdmidriver.UseShellExecute = False
+                removehdmidriver.CreateNoWindow = True
+                removehdmidriver.RedirectStandardOutput = False
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
+                If regkey IsNot Nothing Then
+                    For Each child In regkey.GetSubKeyNames()
+                        For i As Integer = 0 To driverfiles.Length - 1
+                            If child IsNot Nothing Then
+                                If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
+                                    Try
+                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
+                                            ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
+                                    Catch ex As Exception
+                                        log(ex.Message & "pnplockdownfiles")
+                                    End Try
                                 End If
                             End If
                         Next
                     Next
                 End If
 
+                'setting back the registry permission to normal.
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                removehdmidriver.Arguments = _
+                    "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
+                If UserAc <> "Administrator" Then
+                    prochdmi.Start()
+                    prochdmi.WaitForExit()
+                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                End If
+                '----------------
 
-                log("Finished dcom/clsid/appid/typelib cleanup")
+                'cleaning pnpresources
+                'setting permission to registry
+                removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /owner=Administrators"
+                removehdmidriver.UseShellExecute = False
+                removehdmidriver.CreateNoWindow = True
+                removehdmidriver.RedirectStandardOutput = False
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAc & "=f"
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                Try
+                    My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
+                Catch ex As Exception
+                    log(ex.Message & "pnp resources khronos")
+                End Try
 
-                'end of deleting dcom stuff
-                Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
-                If win8higher Then
-                    Dim reginfos As RegistryKey = Nothing
-                    Dim FolderAcl As New RegistrySecurity
-                    'setting permission to registry
+                If IntPtr.Size = 8 Then
                     removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /owner=Administrators"
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
                     removehdmidriver.RedirectStandardOutput = False
@@ -3002,19 +3080,63 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAc & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles")
+                    Try
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
+                    Catch ex As Exception
+                        log(ex.Message & "pnpresources wow6432node khronos")
+                    End Try
+                End If
+
+                removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /owner=Administrators"
+                removehdmidriver.UseShellExecute = False
+                removehdmidriver.CreateNoWindow = True
+                removehdmidriver.RedirectStandardOutput = False
+                prochdmi.StartInfo = removehdmidriver
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                removehdmidriver.Arguments = _
+                    "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /grant=" & UserAc & "=f"
+                prochdmi.Start()
+                prochdmi.WaitForExit()
+                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                Try
+                    My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
+                Catch ex As Exception
+                    log(ex.Message & "pnp ressources")
+                End Try
+            Else
+                Dim reginfos As RegistryKey = Nothing
+                Dim FolderAcl As New RegistrySecurity
+                'setting permission to registry
+                Try
+                    removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
+                    removehdmidriver.UseShellExecute = False
+                    removehdmidriver.CreateNoWindow = True
+                    removehdmidriver.RedirectStandardOutput = False
+                    prochdmi.StartInfo = removehdmidriver
+                    prochdmi.Start()
+                    prochdmi.WaitForExit()
+                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                     If regkey IsNot Nothing Then
-                        For Each child In regkey.GetSubKeyNames()
+                        For Each child In regkey.GetValueNames()
                             For i As Integer = 0 To driverfiles.Length - 1
                                 If child IsNot Nothing Then
+
                                     If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
+
                                         Try
-                                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
-                                                ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
+                                            regkey.DeleteValue(child)
                                         Catch ex As Exception
                                             log(ex.Message & "pnplockdownfiles")
                                         End Try
@@ -3025,15 +3147,6 @@ Public Class Form1
                     End If
 
                     'setting back the registry permission to normal.
-                    removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
-                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = _
-                        "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
                     removehdmidriver.Arguments = _
                         "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
@@ -3042,171 +3155,89 @@ Public Class Form1
                         prochdmi.WaitForExit()
                         System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
                     End If
-                    '----------------
+                Catch ex As Exception
+                    log(ex.Message & " We Got a security warning avoided on the subacl Part win7")
+                End Try
+            End If
 
-                    'cleaning pnpresources
-                    'setting permission to registry
-                    removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                    removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /owner=Administrators"
-                    removehdmidriver.UseShellExecute = False
-                    removehdmidriver.CreateNoWindow = True
-                    removehdmidriver.RedirectStandardOutput = False
-                    prochdmi.StartInfo = removehdmidriver
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
-                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos /grant=" & UserAc & "=f"
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
-                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
-                    Catch ex As Exception
-                        log(ex.Message & "pnp resources khronos")
-                    End Try
+            '--------------------------------
+            'System environement path cleanup
+            '--------------------------------
 
-                    If IntPtr.Size = 8 Then
-                        removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                        removehdmidriver.Arguments = _
-                            "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /owner=Administrators"
-                        removehdmidriver.UseShellExecute = False
-                        removehdmidriver.CreateNoWindow = True
-                        removehdmidriver.RedirectStandardOutput = False
-                        prochdmi.StartInfo = removehdmidriver
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
-                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                        removehdmidriver.Arguments = _
-                            "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos /grant=" & UserAc & "=f"
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
-                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                        Try
-                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
-                        Catch ex As Exception
-                            log(ex.Message & "pnpresources wow6432node khronos")
-                        End Try
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Session Manager\Environment", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If child IsNot Nothing Then
+                            If child.Contains("Path") Then
+                                wantedvalue = regkey.GetValue(child).ToString()
+                                Try
+                                    Select Case True
+                                        Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
+                                            wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
+                                            regkey.SetValue(child, wantedvalue)
+                                    End Select
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log("Path section " & ex.Message)
+            End Try
+
+            '-------------------------------------
+            'end system environement patch cleanup
+            '-------------------------------------
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
+
+            If regkey IsNot Nothing Then
+                If regkey.GetValue("AppInit_DLLs") IsNot Nothing Then
+                    wantedvalue = regkey.GetValue("AppInit_DLLs")   'Will need to consider the comma in the future for multiple value
+                    If wantedvalue IsNot Nothing Then
+                        Select Case True
+                            Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
+                                wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                                regkey.SetValue("AppInit_DLLs", wantedvalue)
+
+                            Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
+                                wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+                                regkey.SetValue("AppInit_DLLs", wantedvalue)
+
+                            Case wantedvalue.Contains(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
+                                wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                                regkey.SetValue("AppInit_DLLs", wantedvalue)
+                        End Select
                     End If
-
-                    removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                    removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /owner=Administrators"
-                    removehdmidriver.UseShellExecute = False
-                    removehdmidriver.CreateNoWindow = True
-                    removehdmidriver.RedirectStandardOutput = False
-                    prochdmi.StartInfo = removehdmidriver
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
-                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation /grant=" & UserAc & "=f"
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
-                    System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
-                    Catch ex As Exception
-                        log(ex.Message & "pnp ressources")
-                    End Try
-                Else
-                    Dim reginfos As RegistryKey = Nothing
-                    Dim FolderAcl As New RegistrySecurity
-                    'setting permission to registry
-                    Try
-                        removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                        removehdmidriver.Arguments = _
-                            "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & UserAc & "=f"
-                        removehdmidriver.UseShellExecute = False
-                        removehdmidriver.CreateNoWindow = True
-                        removehdmidriver.RedirectStandardOutput = False
-                        prochdmi.StartInfo = removehdmidriver
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
-                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
-                        If regkey IsNot Nothing Then
-                            For Each child In regkey.GetValueNames()
-                                For i As Integer = 0 To driverfiles.Length - 1
-                                    If child IsNot Nothing Then
-
-                                        If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
-
-                                            Try
-                                                regkey.DeleteValue(child)
-                                            Catch ex As Exception
-                                                log(ex.Message & "pnplockdownfiles")
-                                            End Try
-                                        End If
-                                    End If
-                                Next
-                            Next
-                        End If
-
-                        'setting back the registry permission to normal.
-                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                        removehdmidriver.Arguments = _
-                            "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & UserAc
-                        If UserAc <> "Administrator" Then
-                            prochdmi.Start()
-                            prochdmi.WaitForExit()
-                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                        End If
-                    Catch ex As Exception
-                        log(ex.Message & " We Got a security warning avoided on the subacl Part win7")
-                    End Try
+                End If
+                If regkey.GetValue("AppInit_DLLs") = "" Then
+                    regkey.SetValue("LoadAppInit_DLLs", "0", RegistryValueKind.DWord)
                 End If
 
-                '--------------------------------
-                'System environement path cleanup
-                '--------------------------------
+            End If
 
-                Try
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Session Manager\Environment", True)
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetValueNames()
-                            If child IsNot Nothing Then
-                                If child.Contains("Path") Then
-                                    wantedvalue = regkey.GetValue(child).ToString()
-                                    Try
-                                        Select Case True
-                                            Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
-                                                wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
-                                                regkey.SetValue(child, wantedvalue)
-                                        End Select
-                                    Catch ex As Exception
-                                    End Try
-                                End If
-                            End If
-                        Next
-                    End If
-                Catch ex As Exception
-                    log("Path section " & ex.Message)
-                End Try
-
-                '-------------------------------------
-                'end system environement patch cleanup
-                '-------------------------------------
-
+            If IntPtr.Size = 8 Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
+                   ("SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Windows", True)
 
                 If regkey IsNot Nothing Then
                     If regkey.GetValue("AppInit_DLLs") IsNot Nothing Then
-                        wantedvalue = regkey.GetValue("AppInit_DLLs")   'Will need to consider the comma in the future for multiple value
+                        wantedvalue = regkey.GetValue("AppInit_DLLs")
                         If wantedvalue IsNot Nothing Then
                             Select Case True
-                                Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
-                                    wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                                Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
+                                    wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
                                     regkey.SetValue("AppInit_DLLs", wantedvalue)
 
                                 Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
                                     wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
                                     regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-                                Case wantedvalue.Contains(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
-                                    wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+                                Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
+                                    wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
                                     regkey.SetValue("AppInit_DLLs", wantedvalue)
                             End Select
                         End If
@@ -3214,63 +3245,44 @@ Public Class Form1
                     If regkey.GetValue("AppInit_DLLs") = "" Then
                         regkey.SetValue("LoadAppInit_DLLs", "0", RegistryValueKind.DWord)
                     End If
-
                 End If
+            End If
 
-                If IntPtr.Size = 8 Then
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                       ("SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Windows", True)
 
-                    If regkey IsNot Nothing Then
-                        If regkey.GetValue("AppInit_DLLs") IsNot Nothing Then
-                            wantedvalue = regkey.GetValue("AppInit_DLLs")
-                            If wantedvalue IsNot Nothing Then
-                                Select Case True
-                                    Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
-                                        wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
-                                        regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-                                    Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
-                                        wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
-                                        regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-                                    Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
-                                        wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
-                                        regkey.SetValue("AppInit_DLLs", wantedvalue)
-                                End Select
+            If removephysx Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                        ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If child IsNot Nothing Then
+                            If child.Contains("NVIDIA Corporation\") Then
+                                Try
+                                    regkey.DeleteValue(child)
+                                Catch ex As Exception
+
+                                    log(ex.Message + " HKLM..CU\Installer\Folders")
+                                End Try
                             End If
                         End If
-                        If regkey.GetValue("AppInit_DLLs") = "" Then
-                            regkey.SetValue("LoadAppInit_DLLs", "0", RegistryValueKind.DWord)
-                        End If
-                    End If
+                    Next
                 End If
+            End If
 
 
+            'remove opencl registry Khronos
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+            Try
+                regkey.DeleteSubKeyTree("Khronos")
 
+            Catch ex As Exception
 
-                If removephysx Then
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                            ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetValueNames()
-                            If child IsNot Nothing Then
-                                If child.Contains("NVIDIA Corporation\") Then
-                                    Try
-                                        regkey.DeleteValue(child)
-                                    Catch ex As Exception
+                log(ex.Message + " Opencl Khronos")
+            End Try
 
-                                        log(ex.Message + " HKLM..CU\Installer\Folders")
-                                    End Try
-                                End If
-                            End If
-                        Next
-                    End If
-                End If
-
-
-                'remove opencl registry Khronos
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
                 Try
                     regkey.DeleteSubKeyTree("Khronos")
 
@@ -3278,20 +3290,29 @@ Public Class Form1
 
                     log(ex.Message + " Opencl Khronos")
                 End Try
+            End If
 
-                If IntPtr.Size = 8 Then
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
-                    Try
-                        regkey.DeleteSubKeyTree("Khronos")
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+         ("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetValueNames()
+                    If child IsNot Nothing Then
+                        If child.Contains("NVIDIA Corporation") Then
+                            Try
+                                regkey.DeleteValue(child)
+                            Catch ex As Exception
 
-                    Catch ex As Exception
+                                log(ex.Message + " SharedDLLS")
+                            End Try
+                        End If
+                    End If
+                Next
+            End If
 
-                        log(ex.Message + " Opencl Khronos")
-                    End Try
-                End If
 
+            If IntPtr.Size = 8 Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-             ("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+             ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetValueNames()
                         If child IsNot Nothing Then
@@ -3307,222 +3328,160 @@ Public Class Form1
                     Next
                 End If
 
+            End If
 
-                If IntPtr.Size = 8 Then
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                 ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetValueNames()
-                            If child IsNot Nothing Then
-                                If child.Contains("NVIDIA Corporation") Then
-                                    Try
-                                        regkey.DeleteValue(child)
-                                    Catch ex As Exception
-
-                                        log(ex.Message + " SharedDLLS")
-                                    End Try
-                                End If
-                            End If
-                        Next
-                    End If
-
-                End If
-
-                regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If child IsNot Nothing Then
-                            If removephysx Then
-                                If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
-                                   Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
-                                    If Not child.ToLower.Contains("nvidia") Then
-                                        regkey.DeleteSubKeyTree(child)
-                                    Else
-                                        subregkey = regkey.OpenSubKey(child, True)
-                                        For Each child2 As String In subregkey.GetSubKeyNames()
-                                            If child2 IsNot Nothing Then
-                                                If Not child2.ToLower.Contains("demos") Then
-                                                    subregkey.DeleteSubKeyTree(child2)
-                                                End If
-
-                                            End If
-
-                                        Next
-                                        If subregkey.GetSubKeyNames().Length.ToString = 0 Then
-                                            regkey.DeleteSubKeyTree(child)
-                                        End If
-
-                                    End If
-                                End If
-                            Else
-                                regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\NVIDIA Corporation", True)
-                                If regkey IsNot Nothing Then
-                                    For Each child3 As String In regkey.GetSubKeyNames()
-                                        If child3 IsNot Nothing Then
-                                            If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
-                                                regkey.DeleteSubKeyTree(child3)
-                                            End If
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        End If
-                    Next
-                End If
-
-
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If child IsNot Nothing Then
-                            If removephysx Then
-                                If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
-                                   Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
-                                    If Not child.ToLower.Contains("nvidia") Then
-                                        regkey.DeleteSubKeyTree(child)
-                                    Else
-                                        subregkey = regkey.OpenSubKey(child, True)
-                                        For Each child2 As String In subregkey.GetSubKeyNames()
-                                            If child2 IsNot Nothing Then
-                                                If Not child2.ToLower.Contains("demos") Then
-                                                    subregkey.DeleteSubKeyTree(child2)
-                                                End If
-
-                                            End If
-
-                                        Next
-                                        If subregkey.GetSubKeyNames().Length.ToString = 0 Then
-                                            regkey.DeleteSubKeyTree(child)
-                                        End If
-
-                                    End If
-                                End If
-                            Else
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\NVIDIA Corporation", True)
-                                If regkey IsNot Nothing Then
-                                    For Each child3 As String In regkey.GetSubKeyNames()
-                                        If child3 IsNot Nothing Then
-                                            If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
-                                                regkey.DeleteSubKeyTree(child3)
-                                            End If
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        End If
-                    Next
-                End If
-
-
-                If IntPtr.Size = 8 Then
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames()
-                            If child IsNot Nothing Then
-                                If removephysx Then
-                                    If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
-                                       Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
-                                        If Not child.ToLower.Contains("nvidia") Then
-                                            regkey.DeleteSubKeyTree(child)
-                                        Else
-                                            subregkey = regkey.OpenSubKey(child, True)
-                                            For Each child2 As String In subregkey.GetSubKeyNames()
-                                                If child2 IsNot Nothing Then
-                                                    If Not child2.ToLower.Contains("demos") Then
-                                                        subregkey.DeleteSubKeyTree(child2)
-                                                    End If
-
-                                                End If
-
-                                            Next
-                                            If subregkey.GetSubKeyNames().Length.ToString = 0 Then
-                                                regkey.DeleteSubKeyTree(child)
-                                            End If
-
-                                        End If
-                                    End If
+            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        If removephysx Then
+                            If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
+                               Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
+                                If Not child.ToLower.Contains("nvidia") Then
+                                    regkey.DeleteSubKeyTree(child)
                                 Else
-                                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\NVIDIA Corporation", True)
-                                    If regkey IsNot Nothing Then
-                                        For Each child3 As String In regkey.GetSubKeyNames()
-                                            If child3 IsNot Nothing Then
-                                                If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
-                                                    regkey.DeleteSubKeyTree(child3)
-                                                End If
+                                    subregkey = regkey.OpenSubKey(child, True)
+                                    For Each child2 As String In subregkey.GetSubKeyNames()
+                                        If child2 IsNot Nothing Then
+                                            If Not child2.ToLower.Contains("demos") Then
+                                                subregkey.DeleteSubKeyTree(child2)
                                             End If
-                                        Next
+
+                                        End If
+
+                                    Next
+                                    If subregkey.GetSubKeyNames().Length.ToString = 0 Then
+                                        regkey.DeleteSubKeyTree(child)
                                     End If
+
                                 End If
                             End If
-                        Next
-                    End If
-                End If
-
-
-
-                If IntPtr.Size = 8 Then
-
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
-
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If child IsNot Nothing Then
-                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
-                            If subregkey IsNot Nothing Then
-                                If subregkey.GetValue("DisplayName") IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("DisplayName").ToString
-                                    If wantedvalue IsNot Nothing Then
-                                        If wantedvalue.StartsWith("NVIDIA") And Not wantedvalue.Contains("3DTV") Or _
-                                        wantedvalue.Contains("SHIELD Streaming") Or _
-                                        wantedvalue.Contains("GeForce Experience") Then
-                                            If removephysx Then
-                                                Try
-                                                    My.Computer.FileSystem.DeleteDirectory _
-                              (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                                Catch ex As Exception
-                                                End Try
-                                                regkey.DeleteSubKeyTree(child)
-                                            Else
-                                                If wantedvalue.ToLower.Contains("physx") Then
-                                                    'do nothing
-                                                Else
-                                                    Try
-                                                        My.Computer.FileSystem.DeleteDirectory _
-                              (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                    regkey.DeleteSubKeyTree(child)
-                                                End If
-                                            End If
+                        Else
+                            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\NVIDIA Corporation", True)
+                            If regkey IsNot Nothing Then
+                                For Each child3 As String In regkey.GetSubKeyNames()
+                                    If child3 IsNot Nothing Then
+                                        If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
+                                            regkey.DeleteSubKeyTree(child3)
                                         End If
                                     End If
+                                Next
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        If removephysx Then
+                            If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
+                               Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
+                                If Not child.ToLower.Contains("nvidia") Then
+                                    regkey.DeleteSubKeyTree(child)
+                                Else
+                                    subregkey = regkey.OpenSubKey(child, True)
+                                    For Each child2 As String In subregkey.GetSubKeyNames()
+                                        If child2 IsNot Nothing Then
+                                            If Not child2.ToLower.Contains("demos") Then
+                                                subregkey.DeleteSubKeyTree(child2)
+                                            End If
+
+                                        End If
+
+                                    Next
+                                    If subregkey.GetSubKeyNames().Length.ToString = 0 Then
+                                        regkey.DeleteSubKeyTree(child)
+                                    End If
+
+                                End If
+                            End If
+                        Else
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\NVIDIA Corporation", True)
+                            If regkey IsNot Nothing Then
+                                For Each child3 As String In regkey.GetSubKeyNames()
+                                    If child3 IsNot Nothing Then
+                                        If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
+                                            regkey.DeleteSubKeyTree(child3)
+                                        End If
+                                    End If
+                                Next
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If child IsNot Nothing Then
+                            If removephysx Then
+                                If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
+                                   Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
+                                    If Not child.ToLower.Contains("nvidia") Then
+                                        regkey.DeleteSubKeyTree(child)
+                                    Else
+                                        subregkey = regkey.OpenSubKey(child, True)
+                                        For Each child2 As String In subregkey.GetSubKeyNames()
+                                            If child2 IsNot Nothing Then
+                                                If Not child2.ToLower.Contains("demos") Then
+                                                    subregkey.DeleteSubKeyTree(child2)
+                                                End If
+
+                                            End If
+
+                                        Next
+                                        If subregkey.GetSubKeyNames().Length.ToString = 0 Then
+                                            regkey.DeleteSubKeyTree(child)
+                                        End If
+
+                                    End If
+                                End If
+                            Else
+                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\NVIDIA Corporation", True)
+                                If regkey IsNot Nothing Then
+                                    For Each child3 As String In regkey.GetSubKeyNames()
+                                        If child3 IsNot Nothing Then
+                                            If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
+                                                regkey.DeleteSubKeyTree(child3)
+                                            End If
+                                        End If
+                                    Next
                                 End If
                             End If
                         End If
-
                     Next
                 End If
+            End If
 
 
+
+            If IntPtr.Size = 8 Then
 
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-              ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+                    ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
                         subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                    ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
                         If subregkey IsNot Nothing Then
                             If subregkey.GetValue("DisplayName") IsNot Nothing Then
                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
                                 If wantedvalue IsNot Nothing Then
-                                    If wantedvalue.Contains("NVIDIA") And Not wantedvalue.Contains("3DTV") Or _
-                                        wantedvalue.Contains("SHIELD Streaming") Or _
-                                        wantedvalue.Contains("GeForce Experience") Then
+                                    If wantedvalue.StartsWith("NVIDIA") And Not wantedvalue.Contains("3DTV") Or _
+                                    wantedvalue.Contains("SHIELD Streaming") Or _
+                                    wantedvalue.Contains("GeForce Experience") Then
                                         If removephysx Then
                                             Try
                                                 My.Computer.FileSystem.DeleteDirectory _
-                               (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                          (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                             Catch ex As Exception
                                             End Try
                                             regkey.DeleteSubKeyTree(child)
@@ -3532,7 +3491,7 @@ Public Class Form1
                                             Else
                                                 Try
                                                     My.Computer.FileSystem.DeleteDirectory _
-                               (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                          (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                                 Catch ex As Exception
                                                 End Try
                                                 regkey.DeleteSubKeyTree(child)
@@ -3545,19 +3504,86 @@ Public Class Form1
                     End If
 
                 Next
+            End If
 
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-              ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
+
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+          ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+            For Each child As String In regkey.GetSubKeyNames()
+                If child IsNot Nothing Then
+                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                    If subregkey IsNot Nothing Then
+                        If subregkey.GetValue("DisplayName") IsNot Nothing Then
+                            wantedvalue = subregkey.GetValue("DisplayName").ToString
+                            If wantedvalue IsNot Nothing Then
+                                If wantedvalue.Contains("NVIDIA") And Not wantedvalue.Contains("3DTV") Or _
+                                    wantedvalue.Contains("SHIELD Streaming") Or _
+                                    wantedvalue.Contains("GeForce Experience") Then
+                                    If removephysx Then
+                                        Try
+                                            My.Computer.FileSystem.DeleteDirectory _
+                           (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                        Catch ex As Exception
+                                        End Try
+                                        regkey.DeleteSubKeyTree(child)
+                                    Else
+                                        If wantedvalue.ToLower.Contains("physx") Then
+                                            'do nothing
+                                        Else
+                                            Try
+                                                My.Computer.FileSystem.DeleteDirectory _
+                           (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                            Catch ex As Exception
+                                            End Try
+                                            regkey.DeleteSubKeyTree(child)
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+
+            Next
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+          ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
+            For Each child As String In regkey.GetSubKeyNames()
+                If child IsNot Nothing Then
+                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList\" & child, False)
+                    If subregkey IsNot Nothing Then
+                        If subregkey.GetValue("ProfileImagePath") IsNot Nothing Then
+                            wantedvalue = subregkey.GetValue("ProfileImagePath").ToString
+                            If wantedvalue IsNot Nothing Then
+                                If wantedvalue.Contains("UpdatusUser") Then
+                                    regkey.DeleteSubKeyTree(child)
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+
+            Next
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+          ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
+            If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
                         subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList\" & child, False)
+                        ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\" & child, False)
+
                         If subregkey IsNot Nothing Then
-                            If subregkey.GetValue("ProfileImagePath") IsNot Nothing Then
-                                wantedvalue = subregkey.GetValue("ProfileImagePath").ToString
+                            If subregkey.GetValue("") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("").ToString
                                 If wantedvalue IsNot Nothing Then
-                                    If wantedvalue.Contains("UpdatusUser") Then
+                                    If wantedvalue.Contains("NVIDIA") Then
+
                                         regkey.DeleteSubKeyTree(child)
+
                                     End If
                                 End If
                             End If
@@ -3565,105 +3591,108 @@ Public Class Form1
                     End If
 
                 Next
+            End If
 
+
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+      ("Software\Microsoft\Windows\CurrentVersion\Run", True)
+            If regkey IsNot Nothing Then
+                Try
+                    regkey.DeleteValue("Nvtmru")
+                Catch ex As Exception
+
+                    log(ex.Message + " Nvtmru")
+                End Try
+                Try
+                    regkey.DeleteValue("ShadowPlay")
+                Catch ex As Exception
+
+                    log(ex.Message + " ShadowPlay")
+                End Try
+            End If
+
+            If IntPtr.Size = 8 Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-              ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If child IsNot Nothing Then
-                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                            ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\" & child, False)
-
-                            If subregkey IsNot Nothing Then
-                                If subregkey.GetValue("") IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("").ToString
-                                    If wantedvalue IsNot Nothing Then
-                                        If wantedvalue.Contains("NVIDIA") Then
-
-                                            regkey.DeleteSubKeyTree(child)
-
-                                        End If
-                                    End If
-                                End If
-                            End If
-                        End If
-
-                    Next
-                End If
-
-
-
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-          ("Software\Microsoft\Windows\CurrentVersion\Run", True)
+                    ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
                 If regkey IsNot Nothing Then
                     Try
-                        regkey.DeleteValue("Nvtmru")
+                        regkey.DeleteValue("StereoLinksInstall")
                     Catch ex As Exception
-
-                        log(ex.Message + " Nvtmru")
-                    End Try
-                    Try
-                        regkey.DeleteValue("ShadowPlay")
-                    Catch ex As Exception
-
-                        log(ex.Message + " ShadowPlay")
+                        log(ex.Message + " StereoLinksInstall")
                     End Try
                 End If
-
-                If IntPtr.Size = 8 Then
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
-                    If regkey IsNot Nothing Then
-                        Try
-                            regkey.DeleteValue("StereoLinksInstall")
-                        Catch ex As Exception
-                            log(ex.Message + " StereoLinksInstall")
-                        End Try
-                    End If
-                End If
+            End If
 
 
-                Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Debug : Starting S-1-5-xx region cleanUP *****" + vbNewLine)
-                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                Invoke(Sub() TextBox1.ScrollToCaret())
-                log("Debug : Starting S-1-5-xx region cleanUP")
-                Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                      ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
-                If basekey IsNot Nothing Then
-                    For Each super As String In basekey.GetSubKeyNames()
-                        If super IsNot Nothing Then
-                            If super.Contains("S-1-5") Then
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
-                                If regkey IsNot Nothing Then
-                                    For Each child As String In regkey.GetSubKeyNames()
-                                        If child IsNot Nothing Then
-                                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
-                                "\InstallProperties", True)
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Debug : Starting S-1-5-xx region cleanUP *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
+            log("Debug : Starting S-1-5-xx region cleanUP")
+            Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                  ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
+            If basekey IsNot Nothing Then
+                For Each super As String In basekey.GetSubKeyNames()
+                    If super IsNot Nothing Then
+                        If super.Contains("S-1-5") Then
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetSubKeyNames()
+                                    If child IsNot Nothing Then
+                                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                            ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
+                            "\InstallProperties", True)
 
-                                            If subregkey IsNot Nothing Then
-                                                If subregkey.GetValue("DisplayName") IsNot Nothing Then
-                                                    wantedvalue = subregkey.GetValue("DisplayName").ToString
-                                                    If wantedvalue IsNot Nothing Then
-                                                        If wantedvalue.Contains("NVIDIA") Then
+                                        If subregkey IsNot Nothing Then
+                                            If subregkey.GetValue("DisplayName") IsNot Nothing Then
+                                                wantedvalue = subregkey.GetValue("DisplayName").ToString
+                                                If wantedvalue IsNot Nothing Then
+                                                    If wantedvalue.Contains("NVIDIA") Then
 
-                                                            If removephysx Then
-                                                                regkey.DeleteSubKeyTree(child)
+                                                        If removephysx Then
+                                                            regkey.DeleteSubKeyTree(child)
+                                                        Else
+                                                            If wantedvalue.Contains("PhysX") Then
+                                                                'do nothing
                                                             Else
-                                                                If wantedvalue.Contains("PhysX") Then
-                                                                    'do nothing
-                                                                Else
-                                                                    regkey.DeleteSubKeyTree(child)
-                                                                End If
+                                                                regkey.DeleteSubKeyTree(child)
                                                             End If
+                                                        End If
 
-                                                            Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                                                             ("Installer\UpgradeCodes", True)
-                                                            If superregkey IsNot Nothing Then
-                                                                For Each child2 As String In superregkey.GetSubKeyNames()
-                                                                    Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                                                             ("Installer\UpgradeCodes\" & child2, True)
+                                                        Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                                                         ("Installer\UpgradeCodes", True)
+                                                        If superregkey IsNot Nothing Then
+                                                            For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                                                         ("Installer\UpgradeCodes\" & child2, True)
+                                                                If subsuperregkey IsNot Nothing Then
+                                                                    For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                        If wantedstring IsNot Nothing Then
+                                                                            If wantedstring.Contains(child) Then
+
+                                                                                If removephysx Then
+                                                                                    superregkey.DeleteSubKeyTree(child2)
+                                                                                Else
+                                                                                    If wantedvalue.Contains("PhysX") Then
+                                                                                        'do nothing
+                                                                                    Else
+                                                                                        superregkey.DeleteSubKeyTree(child2)
+                                                                                    End If
+                                                                                End If
+                                                                            End If
+                                                                        End If
+                                                                    Next
+                                                                End If
+                                                            Next
+                                                        End If
+                                                        superregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                                         ("Software\Microsoft\Installer\UpgradeCodes", True)
+                                                        If superregkey IsNot Nothing Then
+                                                            For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                If child2 IsNot Nothing Then
+                                                                    Dim subsuperregkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                                             ("Software\Microsoft\Installer\UpgradeCodes\" & child2, True)
                                                                     If subsuperregkey IsNot Nothing Then
                                                                         For Each wantedstring In subsuperregkey.GetValueNames()
                                                                             If wantedstring IsNot Nothing Then
@@ -3682,159 +3711,132 @@ Public Class Form1
                                                                             End If
                                                                         Next
                                                                     End If
-                                                                Next
-                                                            End If
-                                                            superregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                                                                                             ("Software\Microsoft\Installer\UpgradeCodes", True)
-                                                            If superregkey IsNot Nothing Then
-                                                                For Each child2 As String In superregkey.GetSubKeyNames()
-                                                                    If child2 IsNot Nothing Then
-                                                                        Dim subsuperregkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                                                                                                 ("Software\Microsoft\Installer\UpgradeCodes\" & child2, True)
-                                                                        If subsuperregkey IsNot Nothing Then
-                                                                            For Each wantedstring In subsuperregkey.GetValueNames()
-                                                                                If wantedstring IsNot Nothing Then
-                                                                                    If wantedstring.Contains(child) Then
-
-                                                                                        If removephysx Then
-                                                                                            superregkey.DeleteSubKeyTree(child2)
-                                                                                        Else
-                                                                                            If wantedvalue.Contains("PhysX") Then
-                                                                                                'do nothing
-                                                                                            Else
-                                                                                                superregkey.DeleteSubKeyTree(child2)
-                                                                                            End If
-                                                                                        End If
-                                                                                    End If
-                                                                                End If
-                                                                            Next
-                                                                        End If
-                                                                    End If
-                                                                Next
-                                                            End If
+                                                                End If
+                                                            Next
                                                         End If
                                                     End If
                                                 End If
                                             End If
                                         End If
+                                    End If
 
-                                    Next
-                                End If
+                                Next
                             End If
                         End If
-                    Next
-                End If
+                    End If
+                Next
+            End If
 
 
-                Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Debug : End of S-1-5-xx region cleanUP *****" + vbNewLine)
-                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                Invoke(Sub() TextBox1.ScrollToCaret())
-                log("Debug : End of S-1-5-xx region cleanUP")
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Debug : End of S-1-5-xx region cleanUP *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
+            log("Debug : End of S-1-5-xx region cleanUP")
 
-                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-          ("Installer\Products", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If child IsNot Nothing Then
-                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                ("Installer\Products\" & child, True)
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+      ("Installer\Products", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+            ("Installer\Products\" & child, True)
 
-                            If subregkey IsNot Nothing Then
-                                If subregkey.GetValue("ProductName") IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("ProductName").ToString
-                                    If wantedvalue IsNot Nothing Then
-                                        If wantedvalue.Contains("NVIDIA") Then
+                        If subregkey IsNot Nothing Then
+                            If subregkey.GetValue("ProductName") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("ProductName").ToString
+                                If wantedvalue IsNot Nothing Then
+                                    If wantedvalue.Contains("NVIDIA") Then
 
-                                            If removephysx Then
-                                                regkey.DeleteSubKeyTree(child)
+                                        If removephysx Then
+                                            regkey.DeleteSubKeyTree(child)
+                                        Else
+                                            If wantedvalue.Contains("PhysX") Then
+                                                'do nothing
                                             Else
-                                                If wantedvalue.Contains("PhysX") Then
-                                                    'do nothing
-                                                Else
-                                                    regkey.DeleteSubKeyTree(child)
-                                                End If
+                                                regkey.DeleteSubKeyTree(child)
                                             End If
                                         End If
                                     End If
                                 End If
                             End If
                         End If
+                    End If
 
-                    Next
-                End If
+                Next
+            End If
 
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+      ("SOFTWARE\Classes\Installer\Products", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+            ("SOFTWARE\Classes\Installer\Products\" & child, True)
+
+                        If subregkey IsNot Nothing Then
+                            If subregkey.GetValue("ProductName") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("ProductName").ToString
+                                If wantedvalue IsNot Nothing Then
+                                    If wantedvalue.Contains("NVIDIA") Then
+
+                                        If removephysx Then
+                                            regkey.DeleteSubKeyTree(child)
+                                        Else
+                                            If wantedvalue.Contains("PhysX") Then
+                                                'do nothing
+                                            Else
+                                                regkey.DeleteSubKeyTree(child)
+                                            End If
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        End If
+                    End If
+
+                Next
+            End If
+
+            If removephysx Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-          ("SOFTWARE\Classes\Installer\Products", True)
+                   ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
                         If child IsNot Nothing Then
                             subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("SOFTWARE\Classes\Installer\Products\" & child, True)
-
+                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child, True)
                             If subregkey IsNot Nothing Then
-                                If subregkey.GetValue("ProductName") IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("ProductName").ToString
-                                    If wantedvalue IsNot Nothing Then
-                                        If wantedvalue.Contains("NVIDIA") Then
-
-                                            If removephysx Then
-                                                regkey.DeleteSubKeyTree(child)
-                                            Else
+                                For Each wantedstring In subregkey.GetValueNames()
+                                    If wantedstring IsNot Nothing Then
+                                        If subregkey.GetValue(wantedstring) IsNot Nothing Then
+                                            wantedvalue = subregkey.GetValue(wantedstring).ToString
+                                            If wantedvalue IsNot Nothing Then
                                                 If wantedvalue.Contains("PhysX") Then
-                                                    'do nothing
-                                                Else
+
                                                     regkey.DeleteSubKeyTree(child)
+
                                                 End If
                                             End If
                                         End If
                                     End If
-                                End If
+
+
+                                Next
                             End If
                         End If
-
                     Next
                 End If
-
-                If removephysx Then
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                       ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames()
-                            If child IsNot Nothing Then
-                                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child, True)
-                                If subregkey IsNot Nothing Then
-                                    For Each wantedstring In subregkey.GetValueNames()
-                                        If wantedstring IsNot Nothing Then
-                                            If subregkey.GetValue(wantedstring) IsNot Nothing Then
-                                                wantedvalue = subregkey.GetValue(wantedstring).ToString
-                                                If wantedvalue IsNot Nothing Then
-                                                    If wantedvalue.Contains("PhysX") Then
-
-                                                        regkey.DeleteSubKeyTree(child)
-
-                                                    End If
-                                                End If
-                                            End If
-                                        End If
-
-
-                                    Next
-                                End If
-                            End If
-                        Next
-                    End If
-                End If
-
-
-
-
             End If
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** End of Registry Cleaning *****" + vbNewLine)
-            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-            Invoke(Sub() TextBox1.ScrollToCaret())
-            log("End of Registry Cleaning")
-            System.Threading.Thread.Sleep(50)
+
+
+
+
+        End If
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** End of Registry Cleaning *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
+        log("End of Registry Cleaning")
+        System.Threading.Thread.Sleep(50)
     End Sub
     Private Sub removepcieroot()
         If reboot Or shutdown Then
