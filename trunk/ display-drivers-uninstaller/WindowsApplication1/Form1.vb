@@ -1893,7 +1893,16 @@ Public Class Form1
             For i As Integer = 0 To appproc.Count - 1
                 appproc(i).Kill()
             Next i
+			
+			appproc = Process.GetProcessesByName("nvspcaps64")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
 
+			appproc = Process.GetProcessesByName("nvspcaps")
+            For i As Integer = 0 To appproc.Count - 1
+                appproc(i).Kill()
+            Next i
             'log("Killing Explorer")
 
             'appproc = Process.GetProcessesByName("explorer")
@@ -3192,7 +3201,7 @@ Public Class Form1
             '-------------------------------------
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
+                    ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows",true)
 
             If regkey IsNot Nothing Then
                 If regkey.GetValue("AppInit_DLLs") IsNot Nothing Then
@@ -3221,7 +3230,7 @@ Public Class Form1
 
             If IntPtr.Size = 8 Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                   ("SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Windows", True)
+                   ("SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Windows",true)
 
                 If regkey IsNot Nothing Then
                     If regkey.GetValue("AppInit_DLLs") IsNot Nothing Then
