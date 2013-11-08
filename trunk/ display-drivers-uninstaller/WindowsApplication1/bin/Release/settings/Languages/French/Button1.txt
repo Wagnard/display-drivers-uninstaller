@@ -1,2 +1,2 @@
-﻿Désinstaller les pilotes actuels et antérieurs et redémarrez l'ordinateur
-(Fortement recommandé)
+﻿Nettoyer et redémarrer
+(Hautement Recommendé)
