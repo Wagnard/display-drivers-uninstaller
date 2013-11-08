@@ -1,3 +1,2 @@
-﻿להסיר את הדרייבר הזה והקודמים
-לו ולכבות את המחשב ללא סריקה
-(בישביל החלפת כרטיס מסך)
+﻿Clean and Shutdown
+(For installing a new graphic card)

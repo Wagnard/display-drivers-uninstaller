@@ -1,2 +1,2 @@
-﻿Usuń sterowniki oraz ich pozostałości i uruchom komputer ponownie
-(Wysoce zalecane)
+﻿Clean and restart
+(Highly Recommended)

@@ -1,2 +1,2 @@
-Odinštalovať aktuálne aj predchádzajúce ovládače a NEreštartovať počítač.
-(Môže spôsobiť problémy ako je čierna obrazovka)
+﻿Clean and DO NOT restart.
+(May cause issues like blackscreen)

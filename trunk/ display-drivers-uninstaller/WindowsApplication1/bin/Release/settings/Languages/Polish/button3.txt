@@ -1,2 +1,2 @@
-﻿Usuń sterowniki oraz ich pozostałości i wyłącz komputer bez ponownego skanowania
-(Do instalacji nowej karty graficznej)
+﻿Clean and Shutdown
+(For installing a new graphic card)

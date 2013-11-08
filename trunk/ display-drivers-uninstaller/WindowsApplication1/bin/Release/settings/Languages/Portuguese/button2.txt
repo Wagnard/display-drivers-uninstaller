@@ -1,2 +1,2 @@
-﻿Desinstalar o driver atual e os anteriores e NÃO reiniciar o computador.
-(Pode causar Tela Preta)
+﻿Clean and DO NOT restart.
+(May cause issues like blackscreen)
