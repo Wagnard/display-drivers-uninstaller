@@ -1,1 +1,1 @@
-Figyelem: DDU és készítői semmilyen módon nem állnak kapcsolatban az AMD-vel vagy NVIDIA-val.
+Note: We have recently added a ToS, please read this by clicking "?"
