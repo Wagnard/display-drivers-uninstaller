@@ -22,8 +22,7 @@ provvisoria è sempre la più indicata.
 in sè è abbastanza sicuro.
 
 - Se hai avuto problemi con un driver video e questo programma ti è stato d'aiuto, puoi condividere
-il risultato nella discussione ufficiale del programma:
-http://forums.guru3d.com/showthread.php?t=379505
+il risultato nella discussione ufficiale del programma: http://forums.guru3d.com/showthread.php?t=379505
 
 Tieni a mente che NVIDIA/AMD non hanno niente a che fare con noi. Non lavoriamo per NVIDIA/AMD e 
 non devono essere ritenuti responsabili per qualunque danno causato al tuo sistema.
