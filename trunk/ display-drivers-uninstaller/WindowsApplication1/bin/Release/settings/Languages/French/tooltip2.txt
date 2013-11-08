@@ -1,0 +1,2 @@
+﻿Désinstaller les pilotes actuels et antérieurs et ne PAS redémarrez l'ordinateur.
+(Peut causer un écran noir)

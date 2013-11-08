@@ -1,0 +1,2 @@
+﻿Desinstalar el controlador actual así como el anterior, SIN reiniciar el ordenador.
+(Puede causar pantalla negra)

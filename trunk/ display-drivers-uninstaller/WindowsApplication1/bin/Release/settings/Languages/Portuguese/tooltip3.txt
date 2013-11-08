@@ -1,0 +1,2 @@
+﻿Desinstalar o driver atual e os anteriores e Desligar o computador sem reescan
+(Instalação de nova placa de video)
