@@ -1,2 +1,2 @@
-﻿Désinstaller les pilotes et arrêt de l'ordinateur sans rescan
-(Pour installer une nouvelle carte graphique)
+﻿Nettoyer et éteindre
+(pour l'installation d'une nouvelle carte graphique)
