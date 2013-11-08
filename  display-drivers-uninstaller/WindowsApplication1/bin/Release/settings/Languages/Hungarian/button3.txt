@@ -1,2 +1,2 @@
-﻿Jelenlegi és előző driverek eltávolítása és a számítógép leállítása újraellenőrzés nélkül
-(Új grafikus kártya telepítéséhez)
+﻿Clean and Shutdown
+(For installing a new graphic card)

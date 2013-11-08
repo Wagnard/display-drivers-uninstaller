@@ -1,2 +1,2 @@
-﻿Desinstalar el controlador actual así también como el anterior y luego apagar el ordenador sin hacer re-escaneo.
-(Usado para instalar un nuevo adaptador grafico)
+﻿Clean and Shutdown
+(For installing a new graphic card)

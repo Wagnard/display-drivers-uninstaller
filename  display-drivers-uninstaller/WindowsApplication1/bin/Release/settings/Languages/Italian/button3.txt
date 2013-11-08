@@ -1,2 +1,2 @@
-﻿Rimuovi i driver correnti e precedenti e spegni il computer senza rescan
-(Se devi installare una nuova scheda video)
+﻿Pulisci e Spegni il PC
+(per installare una nuova scheda video)

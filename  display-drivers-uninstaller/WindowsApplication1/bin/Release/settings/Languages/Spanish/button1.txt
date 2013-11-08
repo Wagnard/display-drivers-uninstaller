@@ -1,2 +1,2 @@
-﻿Desinstalar el controlador actual así como el anterior, luego, reiniciar el ordenador
-(Altamente recomendado)
+﻿Clean and restart
+(Highly Recommended)

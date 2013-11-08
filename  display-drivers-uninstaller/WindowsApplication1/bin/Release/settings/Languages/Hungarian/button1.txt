@@ -1,2 +1,2 @@
-﻿Jelenlegi és előző driverek eltávolítása és a számítógép újraindítása
-(Erősen ajánlott)
+﻿Clean and restart
+(Highly Recommended)

@@ -1,2 +1,2 @@
-﻿Rimuovi i driver correnti e precedenti e NON riavviare il computer.
+﻿Pulisci SENZA riavviare.
 (Potrebbe causare problemi come schermate nere)

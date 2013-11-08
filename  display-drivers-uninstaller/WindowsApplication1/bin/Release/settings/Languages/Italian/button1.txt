@@ -1,2 +1,2 @@
-﻿Rimuovi i driver correnti e precedenti e riavvia il computer
+﻿Pulisci e Riavvia
 (Raccomandato)

@@ -1,2 +1,2 @@
-﻿Odinstalovat stávající i předchozí ovladače a vypnout počítač bez znovuvyhledání adaptéru.
-(Před instalací nové grafické karty)
+﻿Clean and Shutdown
+(For installing a new graphic card)
