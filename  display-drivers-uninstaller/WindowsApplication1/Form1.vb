@@ -41,6 +41,8 @@ Public Class Form1
     Dim currentdriverversion As String = Nothing
     Dim stopme As Boolean = False
     Dim version As String
+    Dim toolTip1 As New ToolTip()
+
     Private Function checkupdates() As Integer
         Try
             Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion.txt")
@@ -4855,8 +4857,19 @@ Public Class Form1
         End If
     End Sub
     Private Sub initlanguage(e As String)
+        
         Try
+
             Dim buttontext() As String
+
+
+            toolTip1.AutoPopDelay = 5000
+            toolTip1.InitialDelay = 1000
+            toolTip1.ReshowDelay = 250
+            toolTip1.ShowAlways = True
+
+
+            toolTip1.SetToolTip(Me.Button1, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & e & "\tooltip1.txt")) '// add each line as String Array.)
             Button1.Text = ""
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button1.txt") '// add each line as String Array.
             For i As Integer = 0 To buttontext.Length - 1
@@ -4866,6 +4879,8 @@ Public Class Form1
                 Button1.Text = Button1.Text & buttontext(i)
             Next
 
+
+            toolTip1.SetToolTip(Me.Button2, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & e & "\tooltip2.txt")) '// add each line as String Array.)
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button2.txt") '// add each line as String Array.
             Button2.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
@@ -4875,6 +4890,8 @@ Public Class Form1
                 Button2.Text = Button2.Text & buttontext(i)
             Next
 
+
+            toolTip1.SetToolTip(Me.Button3, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & e & "\tooltip3.txt")) '// add each line as String Array.)
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button3.txt") '// add each line as String Array.
             Button3.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
@@ -4883,6 +4900,7 @@ Public Class Form1
                 End If
                 Button3.Text = Button3.Text & buttontext(i)
             Next
+
 
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button4.txt") '// add each line as String Array.
             Button4.Text = ""

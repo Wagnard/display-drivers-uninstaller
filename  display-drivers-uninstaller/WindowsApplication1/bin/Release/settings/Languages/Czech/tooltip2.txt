@@ -1,0 +1,2 @@
+﻿Odinstalovat stávající i předchozí ovladače a NERESTARTOVAT PC.
+(Může způsobit problémy jako zčernání obrazovky atp.)
