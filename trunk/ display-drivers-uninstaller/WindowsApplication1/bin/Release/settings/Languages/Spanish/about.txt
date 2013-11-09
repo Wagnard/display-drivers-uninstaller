@@ -27,7 +27,6 @@ con algunos de los problemas que experimentas, por favor, comparte tus resultado
 
 Mantén en mente que NVIDIA/AMD no tienen nada que hacer con esto. Nosotros no trabajamos en ni para NVIDIA/AMD
 y ellos no deben ser considerados responsables de cualquier daño o errores causados ​​a tu sistema.
-
 -------------------------------
 
 Creado Por: Wagnard.
