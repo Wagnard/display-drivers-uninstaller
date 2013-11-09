@@ -31,7 +31,7 @@ Partial Class about
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(5, 76)
+        Me.Label1.Location = New System.Drawing.Point(5, 78)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(522, 507)
         Me.Label1.TabIndex = 0
@@ -51,7 +51,7 @@ Partial Class about
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(536, 593)
+        Me.ClientSize = New System.Drawing.Size(537, 615)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.Label1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle

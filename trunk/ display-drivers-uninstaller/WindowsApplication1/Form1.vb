@@ -42,6 +42,7 @@ Public Class Form1
     Dim stopme As Boolean = False
     Dim version As String
     Dim toolTip1 As New ToolTip()
+    Dim tos As String
 
     Private Function checkupdates() As Integer
         Try
@@ -4278,6 +4279,20 @@ Public Class Form1
             Catch ex As Exception
             End Try
         End If
+
+        'This code checks to see which mode Windows has booted up in.
+        Select Case System.Windows.Forms.SystemInformation.BootMode
+            Case BootMode.FailSafe
+                'The computer was booted using only the basic files and drivers.
+                'This is the same as Safe Mode
+            Case BootMode.FailSafeWithNetwork
+                'The computer was booted using the basic files, drivers, and services necessary to start networking.
+                'This is the same as Safe Mode with Networking
+            Case BootMode.Normal
+                MsgBox("DDU has detected that you are NOT in SafeMode... It is NOT recommended to continue")
+                'The computer was booted in Normal mode.
+        End Select
+
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
@@ -5000,6 +5015,7 @@ Public Class Form1
                 End If
                 CheckBox3.Text = CheckBox3.Text & buttontext(i)
             Next
+            tos = IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & e & "\tos.txt")
         Catch ex As Exception
             log(ex.Message)
         End Try
@@ -5008,5 +5024,9 @@ Public Class Form1
     Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
         My.Settings.language = ComboBox2.Text
         initlanguage(ComboBox2.Text)
+    End Sub
+
+    Private Sub ToSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ToSToolStripMenuItem.Click
+        MessageBox.Show(tos, "ToS")
     End Sub
 End Class
