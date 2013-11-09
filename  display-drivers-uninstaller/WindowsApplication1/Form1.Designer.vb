@@ -38,6 +38,7 @@ Partial Class Form1
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.CheckForUpdatesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToSToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SVNToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.VisitGuru3dNVIDIAThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.VisitGuru3dAMDThreadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -131,7 +132,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(29, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V9.3"
+        Me.Label6.Text = "V9.4"
         '
         'ComboBox1
         '
@@ -185,7 +186,7 @@ Partial Class Form1
         '
         'ToolStripMenuItem1
         '
-        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckForUpdatesToolStripMenuItem, Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem})
+        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckForUpdatesToolStripMenuItem, Me.ToSToolStripMenuItem, Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
         Me.ToolStripMenuItem1.Size = New System.Drawing.Size(17, 19)
         Me.ToolStripMenuItem1.Text = "?"
@@ -195,6 +196,12 @@ Partial Class Form1
         Me.CheckForUpdatesToolStripMenuItem.Name = "CheckForUpdatesToolStripMenuItem"
         Me.CheckForUpdatesToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
         Me.CheckForUpdatesToolStripMenuItem.Text = "Check for Updates"
+        '
+        'ToSToolStripMenuItem
+        '
+        Me.ToSToolStripMenuItem.Name = "ToSToolStripMenuItem"
+        Me.ToSToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
+        Me.ToSToolStripMenuItem.Text = "ToS"
         '
         'SVNToolStripMenuItem
         '
@@ -409,5 +416,6 @@ Partial Class Form1
     Friend WithEvents Button4 As System.Windows.Forms.Button
     Friend WithEvents ComboBox2 As System.Windows.Forms.ComboBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents ToSToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class
