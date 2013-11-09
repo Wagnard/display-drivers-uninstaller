@@ -1,1 +1,1 @@
-DDU use Safe Mode is recommended.
+﻿Using DDU in Safe Mode is recommended.
