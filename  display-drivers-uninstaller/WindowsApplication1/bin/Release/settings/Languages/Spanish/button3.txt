@@ -1,2 +1,2 @@
-﻿Clean and Shutdown
-(For installing a new graphic card)
+﻿Limpiar y apagar.
+(Para la instalación de un nuevo dispositivo gráfico)
