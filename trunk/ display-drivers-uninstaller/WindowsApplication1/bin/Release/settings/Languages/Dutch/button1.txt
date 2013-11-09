@@ -1,2 +1,2 @@
-﻿Clean and restart
-(Highly Recommended)
+﻿Verwijder de huidige en de vorige drivers en herstart de computer.
+(Sterk aanbevolen)
