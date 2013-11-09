@@ -1,2 +1,2 @@
-﻿Clean and DO NOT restart.
-(May cause issues like blackscreen)
+﻿清理，但【不要】重啟
+（可能會導致黑屏等問題）

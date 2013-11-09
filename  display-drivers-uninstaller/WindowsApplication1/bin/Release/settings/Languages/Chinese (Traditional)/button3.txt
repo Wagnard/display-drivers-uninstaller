@@ -1,2 +1,2 @@
-﻿Clean and Shutdown
-(For installing a new graphic card)
+﻿清理並關機
+（為了安裝新的顯示卡）
