@@ -1,1 +1,1 @@
-Remover las carpetas C:\AMD y/ó C:\NVIDIA
+﻿Remover las carpetas C:\AMD y/ó C:\NVIDIA
