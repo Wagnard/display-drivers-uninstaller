@@ -1,27 +1,27 @@
 ﻿Driver Uninstaller (DDU) / Cleaner made for Display Drivers.(NVIDIA/AMD)
 
-What it does is removing the Display driver from device manager and removing the current and 
+What it does is remove the display/GPU driver from device manager and remove the current and 
 all precedent driver from the Windows Driver store along with removing services from NVIDIA/AMD.
 
-The current effect after you use this tool will be similar as if Windows was in a "Fresh Install" state.
+The current effect after you use this tool will be similar to if Windows was in a "Fresh Install" state.
 
-This tool act similar to what Driver sweeper do + the extra mentioned above.
+This tool acts much like "Driver Sweeper", and has all the extra mentioned above.
 
-If you have problem installing older driver or newer one, give it a try as there are some reports that it fix 
+If you have any problems installing an older driver or a newer one, give it a try as there are some reports that it fixs 
 those problems.
 
 RECOMMENDED USAGE :
 
-- I personally recommend that you disconnect the internet while doing this because sometimes after the 
-uninstall, windows update may be re-installing a driver on its own without authorization...
+- It is recommended that you disconnect the internet while doing this because sometimes after the 
+uninstall, windows update may attempt to re-install a new driver, without asking you if you want to.
 
--The tool can be used in Normal mode but for absolute stability when using DDU, Safemode is 
+-The tool can be used in Normal mode but for absolute stability when using DDU, Safe Mode is 
 always the best.
 
-- We would like to gather feedback from you guys. Tell us if it was success or not. Make a 
+- We would like to gather feedback from everyone, tell us if it was success or not. Make a 
 backup or a system restore (but it should normally be pretty safe).
 
--If you have or had a driver problem, and this tool helped you with some issues your are 
+-If you have or had a driver problem, and this tool helped you with some issues you were or are
 currently experiencing, please share your result.
 
 Keep in mind that NVIDIA/AMD did not have anything to do with this, We do not work at or for NVIDIA/AMD 
@@ -36,4 +36,4 @@ Tester : Dellon132
 
 Logos : juanchacin
 
-Thanks to anyone who put their system at risk (special thanks to Dellon132)
+Thanks to anyone who put their system at risk. (special thanks to Dellon132)
