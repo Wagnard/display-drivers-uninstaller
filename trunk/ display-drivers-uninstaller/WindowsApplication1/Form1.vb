@@ -1331,11 +1331,18 @@ Public Class Form1
                                         wantedvalue.Contains("Application Profiles") Or _
                                         wantedvalue.Contains("ATI AVIVO") Then
 
-                                    Try
-                                        My.Computer.FileSystem.DeleteDirectory _
-                      (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                    Catch ex As Exception
-                                    End Try
+                                        Try
+                                            If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                My.Computer.FileSystem.DeleteDirectory _
+                                                                      (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                            End If
+                                        Catch ex As Exception
+
+                                        End Try
                                     regkey.DeleteSubKeyTree(child)
 
                                 End If
@@ -1422,11 +1429,18 @@ Public Class Form1
                                         wantedvalue.Contains("AMD Fuel") Or _
                                         wantedvalue.Contains("Application Profiles") Or _
                                         wantedvalue.Contains("ATI AVIVO") Then
-                                        Try
-                                            My.Computer.FileSystem.DeleteDirectory _
-                      (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                        Catch ex As Exception
-                                        End Try
+                                            Try
+                                                If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                    My.Computer.FileSystem.DeleteDirectory _
+                                                                          (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                End If
+                                            Catch ex As Exception
+
+                                            End Try
                                         regkey.DeleteSubKeyTree(child)
                                     End If
                                 End If
@@ -3520,9 +3534,16 @@ Public Class Form1
                                     wantedvalue.Contains("GeForce Experience") Then
                                         If removephysx Then
                                             Try
-                                                My.Computer.FileSystem.DeleteDirectory _
-                          (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                    My.Computer.FileSystem.DeleteDirectory _
+                                                                          (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                End If
                                             Catch ex As Exception
+
                                             End Try
                                             regkey.DeleteSubKeyTree(child)
                                         Else
@@ -3530,9 +3551,16 @@ Public Class Form1
                                                 'do nothing
                                             Else
                                                 Try
-                                                    My.Computer.FileSystem.DeleteDirectory _
-                          (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                    If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
+                                                        Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                        Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                        Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                        Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                        My.Computer.FileSystem.DeleteDirectory _
+                                                                              (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                    End If
                                                 Catch ex As Exception
+
                                                 End Try
                                                 regkey.DeleteSubKeyTree(child)
                                             End If
@@ -3563,9 +3591,16 @@ Public Class Form1
                                     wantedvalue.Contains("GeForce Experience") Then
                                     If removephysx Then
                                         Try
-                                            My.Computer.FileSystem.DeleteDirectory _
-                           (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                            If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                My.Computer.FileSystem.DeleteDirectory _
+                                                                      (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                            End If
                                         Catch ex As Exception
+
                                         End Try
                                         regkey.DeleteSubKeyTree(child)
                                     Else
@@ -3573,9 +3608,16 @@ Public Class Form1
                                             'do nothing
                                         Else
                                             Try
-                                                My.Computer.FileSystem.DeleteDirectory _
-                           (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                    My.Computer.FileSystem.DeleteDirectory _
+                                                                          (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                End If
                                             Catch ex As Exception
+
                                             End Try
                                             regkey.DeleteSubKeyTree(child)
                                         End If
