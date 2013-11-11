@@ -1,2 +1,2 @@
-﻿Clean and DO NOT restart.
-(May cause issues like blackscreen)
+Vyčistiť a NEreštartovať
+(Môže spôsobiť problémy ako čiernu obrazovku)
