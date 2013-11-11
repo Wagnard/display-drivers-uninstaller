@@ -1,2 +1,2 @@
-﻿Clean and Shutdown
-(For installing a new graphic card)
+Vyčistiť a vypnúť
+(Na inštaláciu novej grafickej karty)
