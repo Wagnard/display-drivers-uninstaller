@@ -1352,7 +1352,8 @@ Public Class Form1
                                                 Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
                                                 Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
                                                 Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                Not subregkey.GetSubKeyNames("InstallLocation").ToString.ToLower.Length < 4 Then
                                                 My.Computer.FileSystem.DeleteDirectory _
                                                                       (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                             End If
@@ -1447,10 +1448,11 @@ Public Class Form1
                                             wantedvalue.Contains("ATI AVIVO") Then
                                             Try
                                                 If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                   Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                 Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                 Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                 Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                  Not subregkey.GetSubKeyNames("InstallLocation").ToString.ToLower.Length < 4 Then
                                                     My.Computer.FileSystem.DeleteDirectory _
                                                                           (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                                 End If
@@ -3545,16 +3547,21 @@ Public Class Form1
                             If subregkey.GetValue("DisplayName") IsNot Nothing Then
                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
                                 If wantedvalue IsNot Nothing Then
-                                    If wantedvalue.StartsWith("NVIDIA") And Not wantedvalue.Contains("3DTV") Or _
-                                    wantedvalue.Contains("SHIELD Streaming") Or _
-                                    wantedvalue.Contains("GeForce Experience") Then
+                                    If wantedvalue.ToLower.Contains("nvidia 3d vision") And _
+                                    Not wantedvalue.ToLower.Contains("3dtv") Or _
+                                    wantedvalue.ToLower.Contains("nvidia geforce") Or _
+                                    wantedvalue.ToLower.Contains("nvidia graphics") Or _
+                                    wantedvalue.ToLower.Contains("nvidia physx") Or _
+                                    wantedvalue.ToLower.Contains("nvidia virtual audio") Or _
+                                    wantedvalue.ToLower.Contains("nvidia hd audio") Then
                                         If removephysx Then
                                             Try
                                                 If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                Not subregkey.GetSubKeyNames("InstallLocation").ToString.ToLower.Length < 4 Then
                                                     My.Computer.FileSystem.DeleteDirectory _
                                                                           (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                                 End If
@@ -3568,10 +3575,11 @@ Public Class Form1
                                             Else
                                                 Try
                                                     If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
-                                                        Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                        Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                        Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                        Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                Not subregkey.GetSubKeyNames("InstallLocation").ToString.ToLower.Length < 4 Then
                                                         My.Computer.FileSystem.DeleteDirectory _
                                                                               (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                                     End If
@@ -3602,16 +3610,21 @@ Public Class Form1
                         If subregkey.GetValue("DisplayName") IsNot Nothing Then
                             wantedvalue = subregkey.GetValue("DisplayName").ToString
                             If wantedvalue IsNot Nothing Then
-                                If wantedvalue.Contains("NVIDIA") And Not wantedvalue.Contains("3DTV") Or _
-                                    wantedvalue.Contains("SHIELD Streaming") Or _
-                                    wantedvalue.Contains("GeForce Experience") Then
+                                If wantedvalue.ToLower.Contains("nvidia 3d vision") And _
+                                    Not wantedvalue.ToLower.Contains("3dtv") Or _
+                                    wantedvalue.ToLower.Contains("nvidia geforce") Or _
+                                    wantedvalue.ToLower.Contains("nvidia graphics") Or _
+                                    wantedvalue.ToLower.Contains("nvidia physx") Or _
+                                    wantedvalue.ToLower.Contains("nvidia virtual audio") Or _
+                                    wantedvalue.ToLower.Contains("nvidia hd audio") Then
                                     If removephysx Then
                                         Try
                                             If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
                                                 Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
                                                 Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
                                                 Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                Not subregkey.GetSubKeyNames("InstallLocation").ToString.ToLower.Length < 4 Then
                                                 My.Computer.FileSystem.DeleteDirectory _
                                                                       (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                             End If
@@ -3625,10 +3638,11 @@ Public Class Form1
                                         Else
                                             Try
                                                 If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") Then
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                Not subregkey.GetSubKeyNames("InstallLocation").ToString.ToLower.Length < 4 Then
                                                     My.Computer.FileSystem.DeleteDirectory _
                                                                           (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                                 End If
