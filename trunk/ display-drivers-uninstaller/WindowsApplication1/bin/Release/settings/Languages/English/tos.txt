@@ -6,5 +6,5 @@ By using DDU you agree to not accuse DDU or it's creators, and affiliates, of da
 
 By using DDU you agree to not modify DDU and re-publish it without proper authorization.
 
-By using DDU you acknowledge that NVIDIA ("NVIDIA, GeForce") nor Advanced Micro Devices ("AMD, Radeon") have
-anything to do with this program, and in no way affiliates of DDU or it's creators.
+By using DDU you acknowledge that NVIDIA ("NVIDIA, GeForce") nor Advanced Micro Devices ("AMD, Radeon") nor Microsoft 
+ cannot be held responsible for any damages of any sort to you or your computer and in no way affiliates of DDU or it's creators.

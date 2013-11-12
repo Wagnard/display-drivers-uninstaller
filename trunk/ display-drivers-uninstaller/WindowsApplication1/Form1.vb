@@ -1,4 +1,20 @@
-﻿Imports System.DirectoryServices
+﻿'    Display driver Uninstaller (DDU) a driver uninstaller / Cleaner for Windows
+'    Copyright (C) <2013>  <DDU dev team>
+
+'    This program is free software: you can redistribute it and/or modify
+'    it under the terms of the GNU General Public License as published by
+'    the Free Software Foundation, either version 3 of the License, or
+'    (at your option) any later version.
+
+'    This program is distributed in the hope that it will be useful,
+'    but WITHOUT ANY WARRANTY; without even the implied warranty of
+'    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+'    GNU General Public License for more details.
+
+'    You should have received a copy of the GNU General Public License
+'    along with DDU.  If not, see <http://www.gnu.org/licenses/>.
+
+Imports System.DirectoryServices
 Imports Microsoft.Win32
 Imports System.IO
 Imports System.Security.AccessControl
@@ -138,10 +154,10 @@ Public Class Form1
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
         log("Uninstalling " + ComboBox1.Text + " driver ...")
-        TextBox1.Text = TextBox1.Text + "***** Executing DEVCON Remove , Please wait(can take a few minutes *****) " + vbNewLine
+        TextBox1.Text = TextBox1.Text + "***** Executing ddudr Remove , Please wait(can take a few minutes *****) " + vbNewLine
         TextBox1.Select(TextBox1.Text.Length, 0)
         TextBox1.ScrollToCaret()
-        log("Executing DEVCON Remove")
+        log("Executing ddudr Remove")
 
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
 
@@ -154,7 +170,7 @@ Public Class Form1
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Executing Driver Store cleanUP(Find OEM)...")
         'Check the driver from the driver store  ( oemxx.inf)
-        checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+        checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
         checkoem.Arguments = "dp_enum"
         checkoem.UseShellExecute = False
         checkoem.CreateNoWindow = True
@@ -167,7 +183,7 @@ Public Class Form1
         reply = proc2.StandardOutput.ReadToEnd
         proc2.WaitForExit()
         ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
-        log("DEVCON DP_ENUM RESULT BELOW")
+        log("ddudr DP_ENUM RESULT BELOW")
         log(reply)
         'Preparing to read output.
         Dim oem As Integer = Nothing
@@ -186,7 +202,7 @@ Public Class Form1
                     Dim part As String = reply.Substring(oem, inf - oem)
                     log(part + " Found")
                     Dim deloem As New Diagnostics.ProcessStartInfo
-                    deloem.FileName = ".\" & Label3.Text & "\devcon.exe"
+                    deloem.FileName = ".\" & Label3.Text & "\ddudr.exe"
                     deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
                     For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
                         If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
@@ -1173,123 +1189,27 @@ Public Class Form1
                 log("remove eventviewer stuff " & ex.Message)
             End Try
 
-        '--------------------------------
-        'end of eventviewer stuff removal
-        '--------------------------------
+            '--------------------------------
+            'end of eventviewer stuff removal
+            '--------------------------------
 
-        regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-      ("Directory\background\shellex\ContextMenuHandlers", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    If child.Contains("ACE") Then
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+          ("Directory\background\shellex\ContextMenuHandlers", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        If child.Contains("ACE") Then
 
-                        regkey.DeleteSubKeyTree(child)
+                            regkey.DeleteSubKeyTree(child)
 
+                        End If
                     End If
-                End If
 
-            Next
-        End If
-
-
-        regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    If child.Contains("ATI") Then
-
-                        regkey.DeleteSubKeyTree(child)
-
-                    End If
-                End If
-
-            Next
-        End If
+                Next
+            End If
 
 
-
-        regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Run", True)
-        If regkey IsNot Nothing Then
-            Try
-                regkey.DeleteValue("HydraVisionDesktopManager")
-            Catch ex As Exception
-
-                log(ex.Message + " HydraVisionDesktopManager")
-            End Try
-
-            Try
-                regkey.DeleteValue("Grid")
-            Catch ex As Exception
-
-                log(ex.Message + " GRID")
-            End Try
-
-            Try
-                regkey.DeleteValue("HydraVisionMDEngine")
-            Catch ex As Exception
-
-                log(ex.Message + " HydraVisionMDEngine")
-            End Try
-
-        End If
-
-
-
-        'Here im not deleting the ATI completly for safety until 100% sure
-
-
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    If child.Contains("ACE") Then
-
-                        regkey.DeleteSubKeyTree(child)
-
-                    End If
-                End If
-
-            Next
-        End If
-
-
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    If child.Contains("CBT") Then
-
-                        regkey.DeleteSubKeyTree(child)
-
-                    End If
-                End If
-
-            Next
-        End If
-
-
-        ' This may not be super safe to do.
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies\Install", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    If child.Contains("ATI Catalyst") Or child.Contains("ATI MCAT") Or _
-                        child.Contains("AVT") Or child.Contains("ccc") Or _
-                        child.Contains("Packages") Or child.Contains("WirelessDisplay") Or _
-                        child.Contains("SteadyVideo") Then
-
-                        regkey.DeleteSubKeyTree(child)
-
-                    End If
-                End If
-
-            Next
-        End If
-
-
-        If IntPtr.Size = 8 Then
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
@@ -1302,34 +1222,130 @@ Public Class Form1
 
                 Next
             End If
-        End If
 
 
 
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-  ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
-                    If subregkey IsNot Nothing Then
-                        If subregkey.GetValue("DisplayName") IsNot Nothing Then
+            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Run", True)
+            If regkey IsNot Nothing Then
+                Try
+                    regkey.DeleteValue("HydraVisionDesktopManager")
+                Catch ex As Exception
 
-                            wantedvalue = subregkey.GetValue("DisplayName").ToString
-                            If wantedvalue IsNot Nothing Then
-                                If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                    wantedvalue.Contains("ccc-utility") Or _
-                                    wantedvalue.Contains("AMD Accelerated Video") Or _
-                                    wantedvalue.Contains("AMD Wireless Display") Or _
-                                        wantedvalue.Contains("AMD Media Foundation") Or _
-                                        wantedvalue.Contains("HydraVision") Or _
-                                        wantedvalue.Contains("AMD Drag and Drop") Or _
-                                        wantedvalue.Contains("AMD APP SDK") Or _
-                                        wantedvalue.Contains("AMD Steady") Or _
-                                        wantedvalue.Contains("AMD Fuel") Or _
-                                        wantedvalue.Contains("Application Profiles") Or _
-                                        wantedvalue.Contains("ATI AVIVO") Then
+                    log(ex.Message + " HydraVisionDesktopManager")
+                End Try
+
+                Try
+                    regkey.DeleteValue("Grid")
+                Catch ex As Exception
+
+                    log(ex.Message + " GRID")
+                End Try
+
+                Try
+                    regkey.DeleteValue("HydraVisionMDEngine")
+                Catch ex As Exception
+
+                    log(ex.Message + " HydraVisionMDEngine")
+                End Try
+
+            End If
+
+
+
+            'Here im not deleting the ATI completly for safety until 100% sure
+
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        If child.Contains("ACE") Then
+
+                            regkey.DeleteSubKeyTree(child)
+
+                        End If
+                    End If
+
+                Next
+            End If
+
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        If child.Contains("CBT") Then
+
+                            regkey.DeleteSubKeyTree(child)
+
+                        End If
+                    End If
+
+                Next
+            End If
+
+
+            ' This may not be super safe to do.
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies\Install", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        If child.Contains("ATI Catalyst") Or child.Contains("ATI MCAT") Or _
+                            child.Contains("AVT") Or child.Contains("ccc") Or _
+                            child.Contains("Packages") Or child.Contains("WirelessDisplay") Or _
+                            child.Contains("SteadyVideo") Then
+
+                            regkey.DeleteSubKeyTree(child)
+
+                        End If
+                    End If
+
+                Next
+            End If
+
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If child IsNot Nothing Then
+                            If child.Contains("ATI") Then
+
+                                regkey.DeleteSubKeyTree(child)
+
+                            End If
+                        End If
+
+                    Next
+                End If
+            End If
+
+
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+      ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                        ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                        If subregkey IsNot Nothing Then
+                            If subregkey.GetValue("DisplayName") IsNot Nothing Then
+
+                                wantedvalue = subregkey.GetValue("DisplayName").ToString
+                                If wantedvalue IsNot Nothing Then
+                                    If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                        wantedvalue.Contains("ccc-utility") Or _
+                                        wantedvalue.Contains("AMD Accelerated Video") Or _
+                                        wantedvalue.Contains("AMD Wireless Display") Or _
+                                            wantedvalue.Contains("AMD Media Foundation") Or _
+                                            wantedvalue.Contains("HydraVision") Or _
+                                            wantedvalue.Contains("AMD Drag and Drop") Or _
+                                            wantedvalue.Contains("AMD APP SDK") Or _
+                                            wantedvalue.Contains("AMD Steady") Or _
+                                            wantedvalue.Contains("AMD Fuel") Or _
+                                            wantedvalue.Contains("Application Profiles") Or _
+                                            wantedvalue.Contains("ATI AVIVO") Then
 
                                         Try
                                             If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
@@ -1343,92 +1359,92 @@ Public Class Form1
                                         Catch ex As Exception
 
                                         End Try
-                                    regkey.DeleteSubKeyTree(child)
+                                        regkey.DeleteSubKeyTree(child)
 
+                                    End If
                                 End If
                             End If
                         End If
                     End If
-                End If
 
-            Next
-        End If
-
-
-        regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-  ("Software\Microsoft\Installer\Features", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    subregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                    ("Software\Microsoft\Installer\Features\" & child, True)
-                    If subregkey IsNot Nothing Then
-                        For Each child2 As String In subregkey.GetValueNames()
-                            If child2 IsNot Nothing And subregkey IsNot Nothing Then
-                                If child2.Contains("SteadyVideo") Then
-
-                                    regkey.DeleteSubKeyTree(child)
-
-                                End If
-                            End If
-
-                        Next
-                    End If
-                End If
-            Next
-        End If
+                Next
+            End If
 
 
-        regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-  ("Software\Microsoft\Installer\Products", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    subregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                    ("Software\Microsoft\Installer\Products\" & child, True)
-                    If subregkey IsNot Nothing Then
-                        If subregkey.GetValue("ProductName") IsNot Nothing Then
-                            wantedvalue = subregkey.GetValue("ProductName").ToString
-                            If wantedvalue IsNot Nothing Then
-                                If wantedvalue.Contains("AMD Steady Video") Or _
-                                wantedvalue.Contains("ATI AVIVO") Then
-
-                                    regkey.DeleteSubKeyTree(child)
-
-                                End If
-                            End If
-
-                        End If
-                    End If
-                End If
-            Next
-        End If
-
-        If IntPtr.Size = 8 Then
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+            regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+      ("Software\Microsoft\Installer\Features", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
-                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                        subregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                        ("Software\Microsoft\Installer\Features\" & child, True)
                         If subregkey IsNot Nothing Then
-                            If subregkey.GetValue("DisplayName") IsNot Nothing Then
-                                wantedvalue = subregkey.GetValue("DisplayName").ToString
+                            For Each child2 As String In subregkey.GetValueNames()
+                                If child2 IsNot Nothing And subregkey IsNot Nothing Then
+                                    If child2.Contains("SteadyVideo") Then
+
+                                        regkey.DeleteSubKeyTree(child)
+
+                                    End If
+                                End If
+
+                            Next
+                        End If
+                    End If
+                Next
+            End If
+
+
+            regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+      ("Software\Microsoft\Installer\Products", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        subregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                        ("Software\Microsoft\Installer\Products\" & child, True)
+                        If subregkey IsNot Nothing Then
+                            If subregkey.GetValue("ProductName") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("ProductName").ToString
                                 If wantedvalue IsNot Nothing Then
-                                    If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
-                                    wantedvalue.Contains("Catalyst Control Center") Or _
-                                    wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                    wantedvalue.Contains("ccc-utility") Or _
-                                        wantedvalue.Contains("AMD Wireless Display") Or _
-                                        wantedvalue.Contains("AMD Media Foundation") Or _
-                                        wantedvalue.Contains("HydraVision") Or _
-                                        wantedvalue.Contains("AMD Drag and Drop") Or _
-                                        wantedvalue.Contains("AMD APP SDK") Or _
-                                        wantedvalue.Contains("AMD Steady") Or _
-                                        wantedvalue.Contains("AMD Fuel") Or _
-                                        wantedvalue.Contains("Application Profiles") Or _
-                                        wantedvalue.Contains("ATI AVIVO") Then
+                                    If wantedvalue.Contains("AMD Steady Video") Or _
+                                    wantedvalue.Contains("ATI AVIVO") Then
+
+                                        regkey.DeleteSubKeyTree(child)
+
+                                    End If
+                                End If
+
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If child IsNot Nothing Then
+                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                            ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                            If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("DisplayName") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("DisplayName").ToString
+                                    If wantedvalue IsNot Nothing Then
+                                        If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
+                                        wantedvalue.Contains("Catalyst Control Center") Or _
+                                        wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                        wantedvalue.Contains("ccc-utility") Or _
+                                            wantedvalue.Contains("AMD Wireless Display") Or _
+                                            wantedvalue.Contains("AMD Media Foundation") Or _
+                                            wantedvalue.Contains("HydraVision") Or _
+                                            wantedvalue.Contains("AMD Drag and Drop") Or _
+                                            wantedvalue.Contains("AMD APP SDK") Or _
+                                            wantedvalue.Contains("AMD Steady") Or _
+                                            wantedvalue.Contains("AMD Fuel") Or _
+                                            wantedvalue.Contains("Application Profiles") Or _
+                                            wantedvalue.Contains("ATI AVIVO") Then
                                             Try
                                                 If subregkey.GetValue("InstallLocation").ToString IsNot Nothing And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
@@ -1441,224 +1457,196 @@ Public Class Form1
                                             Catch ex As Exception
 
                                             End Try
-                                        regkey.DeleteSubKeyTree(child)
+                                            regkey.DeleteSubKeyTree(child)
+                                        End If
                                     End If
                                 End If
                             End If
                         End If
-                    End If
 
-                Next
+                    Next
+                End If
             End If
-        End If
 
 
-        If IntPtr.Size = 8 Then
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
-            If regkey IsNot Nothing Then
-                Try
-                    regkey.DeleteValue("StartCCC")
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
+                If regkey IsNot Nothing Then
+                    Try
+                        regkey.DeleteValue("StartCCC")
 
-                Catch ex As Exception
+                    Catch ex As Exception
 
-                    log(ex.Message + " StartCCC")
-                End Try
-                Try
+                        log(ex.Message + " StartCCC")
+                    End Try
+                    Try
 
-                    regkey.DeleteValue("AMD AVT")
+                        regkey.DeleteValue("AMD AVT")
 
-                Catch ex As Exception
+                    Catch ex As Exception
 
-                    log(ex.Message + " AMD AVT")
-                End Try
+                        log(ex.Message + " AMD AVT")
+                    End Try
+                End If
             End If
-        End If
 
 
-        log("Debug : Starting S-1-5-xx region cleanUP")
-        Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
-        If basekey IsNot Nothing Then
-            For Each super As String In basekey.GetSubKeyNames()
-                If super IsNot Nothing Then
-                    If super.Contains("S-1-5") Then
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                            ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetSubKeyNames()
-                                If child IsNot Nothing Then
-                                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
-                        "\InstallProperties", True)
+            log("Debug : Starting S-1-5-xx region cleanUP")
+            Dim basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+        ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
+            If basekey IsNot Nothing Then
+                For Each super As String In basekey.GetSubKeyNames()
+                    If super IsNot Nothing Then
+                        If super.Contains("S-1-5") Then
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetSubKeyNames()
+                                    If child IsNot Nothing Then
+                                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                            ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
+                            "\InstallProperties", True)
 
-                                    If subregkey IsNot Nothing Then
-                                        If subregkey.GetValue("DisplayName") IsNot Nothing Then
-                                            wantedvalue = subregkey.GetValue("DisplayName").ToString
+                                        If subregkey IsNot Nothing Then
+                                            If subregkey.GetValue("DisplayName") IsNot Nothing Then
+                                                wantedvalue = subregkey.GetValue("DisplayName").ToString
 
-                                            If wantedvalue IsNot Nothing Then
-                                                If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
-                                                    wantedvalue.Contains("Catalyst Control Center") Or _
-                                                    wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                                    wantedvalue.Contains("ccc-utility") Or _
-                                                        wantedvalue.Contains("AMD Wireless Display") Or _
-                                                        wantedvalue.Contains("AMD Media Foundation") Or _
-                                                        wantedvalue.Contains("HydraVision") Or _
-                                                        wantedvalue.Contains("AMD Drag and Drop") Or _
-                                                        wantedvalue.Contains("AMD APP SDK") Or _
-                                                        wantedvalue.Contains("AMD Steady") Or _
-                                                        wantedvalue.Contains("AMD Fuel") Or _
-                                                         wantedvalue.Contains("Application Profiles") Or _
-                                                        wantedvalue.Contains("ATI AVIVO") Then
+                                                If wantedvalue IsNot Nothing Then
+                                                    If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
+                                                        wantedvalue.Contains("Catalyst Control Center") Or _
+                                                        wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                                        wantedvalue.Contains("ccc-utility") Or _
+                                                            wantedvalue.Contains("AMD Wireless Display") Or _
+                                                            wantedvalue.Contains("AMD Media Foundation") Or _
+                                                            wantedvalue.Contains("HydraVision") Or _
+                                                            wantedvalue.Contains("AMD Drag and Drop") Or _
+                                                            wantedvalue.Contains("AMD APP SDK") Or _
+                                                            wantedvalue.Contains("AMD Steady") Or _
+                                                            wantedvalue.Contains("AMD Fuel") Or _
+                                                             wantedvalue.Contains("Application Profiles") Or _
+                                                            wantedvalue.Contains("ATI AVIVO") Then
 
-                                                    regkey.DeleteSubKeyTree(child)
-                                                    'okay .. important part here to fixed the famous AMD yellow mark.
-                                                    'The yellow mark in this case is really stupid imo and shouldn't even
-                                                    'be thrown as a warning to the end user... it has not bad effect.
+                                                        regkey.DeleteSubKeyTree(child)
+                                                        'okay .. important part here to fixed the famous AMD yellow mark.
+                                                        'The yellow mark in this case is really stupid imo and shouldn't even
+                                                        'be thrown as a warning to the end user... it has not bad effect.
 
 
-                                                    Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                                                     ("Installer\UpgradeCodes", True)
-                                                    If superregkey IsNot Nothing Then
-                                                        For Each child2 As String In superregkey.GetSubKeyNames()
-                                                            If child2 IsNot Nothing Then
-                                                                Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                                                         ("Installer\UpgradeCodes\" & child2, True)
-                                                                If subsuperregkey IsNot Nothing Then
-                                                                    For Each wantedstring In subsuperregkey.GetValueNames()
-                                                                        If wantedstring IsNot Nothing Then
-                                                                            If wantedstring.Contains(child) Then
-                                                                                superregkey.DeleteSubKeyTree(child2)
+                                                        Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                                                         ("Installer\UpgradeCodes", True)
+                                                        If superregkey IsNot Nothing Then
+                                                            For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                If child2 IsNot Nothing Then
+                                                                    Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                                                             ("Installer\UpgradeCodes\" & child2, True)
+                                                                    If subsuperregkey IsNot Nothing Then
+                                                                        For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                            If wantedstring IsNot Nothing Then
+                                                                                If wantedstring.Contains(child) Then
+                                                                                    superregkey.DeleteSubKeyTree(child2)
+                                                                                End If
                                                                             End If
-                                                                        End If
-                                                                    Next
+                                                                        Next
+                                                                    End If
                                                                 End If
-                                                            End If
-                                                        Next
-                                                    End If
-                                                    superregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                                                                                     ("Software\Microsoft\Installer\UpgradeCodes", True)
-                                                    If superregkey IsNot Nothing Then
-                                                        For Each child2 As String In superregkey.GetSubKeyNames()
-                                                            If child2 IsNot Nothing Then
-                                                                Dim subsuperregkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                                                                                         ("Software\Microsoft\Installer\UpgradeCodes\" & child2, True)
-                                                                If subsuperregkey IsNot Nothing Then
-                                                                    For Each wantedstring In subsuperregkey.GetValueNames()
-                                                                        If wantedstring IsNot Nothing Then
-                                                                            If wantedstring.Contains(child) Then
-                                                                                superregkey.DeleteSubKeyTree(child2)
+                                                            Next
+                                                        End If
+                                                        superregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                                         ("Software\Microsoft\Installer\UpgradeCodes", True)
+                                                        If superregkey IsNot Nothing Then
+                                                            For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                If child2 IsNot Nothing Then
+                                                                    Dim subsuperregkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                                             ("Software\Microsoft\Installer\UpgradeCodes\" & child2, True)
+                                                                    If subsuperregkey IsNot Nothing Then
+                                                                        For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                            If wantedstring IsNot Nothing Then
+                                                                                If wantedstring.Contains(child) Then
+                                                                                    superregkey.DeleteSubKeyTree(child2)
 
+                                                                                End If
                                                                             End If
-                                                                        End If
-                                                                    Next
+                                                                        Next
+                                                                    End If
                                                                 End If
-                                                            End If
-                                                        Next
+                                                            Next
+                                                        End If
                                                     End If
                                                 End If
                                             End If
                                         End If
                                     End If
-                                End If
 
-                            Next
+                                Next
+                            End If
                         End If
                     End If
-                End If
-            Next
-        End If
+                Next
+            End If
 
-        log("Debug : End S-1-5-xx region cleanUP")
-        basekey = My.Computer.Registry.LocalMachine.OpenSubKey _
- ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
-        If basekey IsNot Nothing Then
-            For Each super As String In basekey.GetSubKeyNames()
-                If super IsNot Nothing Then
-                    If super.Contains("S-1-5") Then
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                            ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
+            log("Debug : End S-1-5-xx region cleanUP")
+            basekey = My.Computer.Registry.LocalMachine.OpenSubKey _
+     ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
+            If basekey IsNot Nothing Then
+                For Each super As String In basekey.GetSubKeyNames()
+                    If super IsNot Nothing Then
+                        If super.Contains("S-1-5") Then
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
 
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetSubKeyNames()
-                                If child IsNot Nothing Then
-                                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child, False)
-                                    If subregkey IsNot Nothing Then
-                                        For Each wantedstring In subregkey.GetValueNames()
-                                            If wantedstring IsNot Nothing Then
-                                                If subregkey.GetValue(wantedstring) IsNot Nothing Then
-                                                    wantedvalue = subregkey.GetValue(wantedstring).ToString
-                                                    If wantedvalue IsNot Nothing Then
-                                                        If wantedvalue.Contains("ATI\CIM\") Or _
-                                                            wantedvalue.Contains("ATI Technologies\Multimedia\") Or _
-                                                            wantedvalue.Contains("AMD APP\") Or _
-                                                            wantedvalue.Contains("ATI Technologies\cccutil") Or _
-                                                            wantedvalue.Contains("ATI.ACE\") Then
-                                                            Try
-                                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Installer\Features\" & wantedstring)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                            regkey.DeleteSubKeyTree(child)
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetSubKeyNames()
+                                    If child IsNot Nothing Then
+                                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                            ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child, False)
+                                        If subregkey IsNot Nothing Then
+                                            For Each wantedstring In subregkey.GetValueNames()
+                                                If wantedstring IsNot Nothing Then
+                                                    If subregkey.GetValue(wantedstring) IsNot Nothing Then
+                                                        wantedvalue = subregkey.GetValue(wantedstring).ToString
+                                                        If wantedvalue IsNot Nothing Then
+                                                            If wantedvalue.Contains("ATI\CIM\") Or _
+                                                                wantedvalue.Contains("ATI Technologies\Multimedia\") Or _
+                                                                wantedvalue.Contains("AMD APP\") Or _
+                                                                wantedvalue.Contains("ATI Technologies\cccutil") Or _
+                                                                wantedvalue.Contains("ATI.ACE\") Then
+                                                                Try
+                                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Installer\Features\" & wantedstring)
+                                                                Catch ex As Exception
+                                                                End Try
+                                                                regkey.DeleteSubKeyTree(child)
+                                                            End If
                                                         End If
                                                     End If
                                                 End If
-                                            End If
-                                        Next
+                                            Next
+                                        End If
                                     End If
-                                End If
-                            Next
+                                Next
+                            End If
                         End If
                     End If
-                End If
-            Next
-        End If
+                Next
+            End If
 
 
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-      ("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetValueNames()
-                If child IsNot Nothing Then
-                    If child.Contains("ATI\CIM\") Or _
-                    child.Contains("SteadyVideo") Or _
-                    child.Contains("ATI.ACE") Or _
-                    child.Contains("ATI Technologies\Multimedia") Or _
-                    child.Contains("OpenCL") Or _
-                    child.Contains("OpenVideo") Or _
-                    child.Contains("OVDecode") Or _
-                    child.Contains("amdocl") Or _
-                    child.Contains("clinfo") Or _
-                    child.Contains("SlotMaximizer") Or _
-                    child.Contains("cccutil") Then
-                        Try
-                            regkey.DeleteValue(child)
-                        Catch ex As Exception
-
-                            log(ex.Message + " SharedDLLS")
-                        End Try
-                    End If
-                End If
-            Next
-        End If
-
-        If IntPtr.Size = 8 Then
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-         ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+          ("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
                     If child IsNot Nothing Then
                         If child.Contains("ATI\CIM\") Or _
-                    child.Contains("SteadyVideo") Or _
-                    child.Contains("ATI.ACE") Or _
-                    child.Contains("ATI Technologies\Multimedia") Or _
-                    child.Contains("OpenCL") Or _
-                    child.Contains("OpenVideo") Or _
-                    child.Contains("OVDecode") Or _
-                    child.Contains("amdocl") Or _
-                    child.Contains("clinfo") Or _
-                    child.Contains("SlotMaximizer") Or _
-                    child.Contains("cccutil") Then
+                        child.Contains("SteadyVideo") Or _
+                        child.Contains("ATI.ACE") Or _
+                        child.Contains("ATI Technologies\Multimedia") Or _
+                        child.Contains("OpenCL") Or _
+                        child.Contains("OpenVideo") Or _
+                        child.Contains("OVDecode") Or _
+                        child.Contains("amdocl") Or _
+                        child.Contains("clinfo") Or _
+                        child.Contains("SlotMaximizer") Or _
+                        child.Contains("cccutil") Then
                             Try
                                 regkey.DeleteValue(child)
                             Catch ex As Exception
@@ -1669,149 +1657,121 @@ Public Class Form1
                     End If
                 Next
             End If
-        End If
 
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-      ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetValueNames()
-                If child IsNot Nothing Then
-                    If child.Contains("ATI\CIM\") Or child.Contains("AMD AVT") Or _
-                    child.Contains("ATI\CIM\") Or _
-                    child.Contains("AMD APP\") Or _
-                    child.Contains("AMD\SteadyVideo\") Or _
-                    child.Contains("ATI.ACE\") Or _
-                    child.Contains("HydraVision\") Or _
-                    child.Contains("ATI Technologies\Application Profiles\") Or _
-                    child.Contains("ATI Technologies\Multimedia\") Then
-                        Try
-                            regkey.DeleteValue(child)
-                        Catch ex As Exception
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+             ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If child IsNot Nothing Then
+                            If child.Contains("ATI\CIM\") Or _
+                        child.Contains("SteadyVideo") Or _
+                        child.Contains("ATI.ACE") Or _
+                        child.Contains("ATI Technologies\Multimedia") Or _
+                        child.Contains("OpenCL") Or _
+                        child.Contains("OpenVideo") Or _
+                        child.Contains("OVDecode") Or _
+                        child.Contains("amdocl") Or _
+                        child.Contains("clinfo") Or _
+                        child.Contains("SlotMaximizer") Or _
+                        child.Contains("cccutil") Then
+                                Try
+                                    regkey.DeleteValue(child)
+                                Catch ex As Exception
 
-                            log(ex.Message + " HKLM..CU\Installer\Folders")
-                        End Try
-                    End If
-                End If
-            Next
-        End If
-
-
-        regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-  ("Installer\Products", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-        ("Installer\Products\" & child, True)
-
-                    If subregkey IsNot Nothing Then
-                        If subregkey.GetValue("ProductName") IsNot Nothing Then
-                            wantedvalue = subregkey.GetValue("ProductName").ToString
-                            If wantedvalue IsNot Nothing Then
-                                If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
-                                            wantedvalue.Contains("Catalyst Control Center") Or _
-                                            wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                            wantedvalue.Contains("ccc-utility") Or _
-                                            wantedvalue.Contains("AMD Wireless Display") Or _
-                                            wantedvalue.Contains("AMD Media Foundation") Or _
-                                            wantedvalue.Contains("HydraVision") Or _
-                                            wantedvalue.Contains("AMD Drag and Drop") Or _
-                                            wantedvalue.Contains("AMD APP SDK") Or _
-                                            wantedvalue.Contains("AMD Steady") Or _
-                                            wantedvalue.Contains("ATI AVIVO") Or _
-                                            wantedvalue.Contains("AMD Fuel") Then
-
-                                    regkey.DeleteSubKeyTree(child)
-
-                                End If
+                                    log(ex.Message + " SharedDLLS")
+                                End Try
                             End If
                         End If
-                    End If
+                    Next
                 End If
-            Next
-        End If
+            End If
 
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+          ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetValueNames()
+                    If child IsNot Nothing Then
+                        If child.Contains("ATI\CIM\") Or child.Contains("AMD AVT") Or _
+                        child.Contains("ATI\CIM\") Or _
+                        child.Contains("AMD APP\") Or _
+                        child.Contains("AMD\SteadyVideo\") Or _
+                        child.Contains("ATI.ACE\") Or _
+                        child.Contains("HydraVision\") Or _
+                        child.Contains("ATI Technologies\Application Profiles\") Or _
+                        child.Contains("ATI Technologies\Multimedia\") Then
+                            Try
+                                regkey.DeleteValue(child)
+                            Catch ex As Exception
 
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-("SOFTWARE\Classes\Installer\Products", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-        ("SOFTWARE\Classes\Installer\Products\" & child, True)
-
-                    If subregkey IsNot Nothing Then
-                        If subregkey.GetValue("ProductName") IsNot Nothing Then
-                            wantedvalue = subregkey.GetValue("ProductName").ToString
-                            If wantedvalue IsNot Nothing Then
-                                If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
-                                            wantedvalue.Contains("Catalyst Control Center") Or _
-                                            wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                            wantedvalue.Contains("ccc-utility") Or _
-                                            wantedvalue.Contains("AMD Wireless Display") Or _
-                                            wantedvalue.Contains("AMD Media Foundation") Or _
-                                            wantedvalue.Contains("HydraVision") Or _
-                                            wantedvalue.Contains("AMD Drag and Drop") Or _
-                                            wantedvalue.Contains("AMD APP SDK") Or _
-                                            wantedvalue.Contains("AMD Steady") Or _
-                                            wantedvalue.Contains("ATI AVIVO") Or _
-                                            wantedvalue.Contains("AMD Fuel") Then
-
-                                    regkey.DeleteSubKeyTree(child)
-
-                                End If
-                            End If
+                                log(ex.Message + " HKLM..CU\Installer\Folders")
+                            End Try
                         End If
                     End If
-                End If
-
-            Next
-        End If
+                Next
+            End If
 
 
-
-        regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-  ("CLSID", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If child IsNot Nothing Then
-                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-        ("CLSID\" & child, False)
-
-                    If subregkey IsNot Nothing Then
-                        If subregkey.GetValue("") IsNot Nothing Then
-                            wantedvalue = subregkey.GetValue("").ToString
-                            If wantedvalue IsNot Nothing Then
-                                If wantedvalue.Contains("SteadyVideoBHO") Then
-
-                                    regkey.DeleteSubKeyTree(child)
-
-                                End If
-                            End If
-                        End If
-                    End If
-                End If
-
-            Next
-        End If
-
-        If IntPtr.Size = 8 Then
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                ("Wow6432Node\CLSID", True)
+      ("Installer\Products", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                ("Wow6432Node\CLSID\" & child, False)
+            ("Installer\Products\" & child, True)
+
                         If subregkey IsNot Nothing Then
-                            If subregkey.GetValue("") IsNot Nothing Then
-                                wantedvalue = subregkey.GetValue("").ToString
+                            If subregkey.GetValue("ProductName") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("ProductName").ToString
                                 If wantedvalue IsNot Nothing Then
-                                    If wantedvalue.Contains("AMDWDST") Or _
-                                    wantedvalue.Contains("ATI Transcoder DB Enum") Or _
-                                    wantedvalue.Contains("ATI Transcoder") Or _
-                                   wantedvalue.Contains("ATI Transcoder DB") Or _
-                                   wantedvalue.Contains("SteadyVideoBHO") Then
+                                    If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
+                                                wantedvalue.Contains("Catalyst Control Center") Or _
+                                                wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                                wantedvalue.Contains("ccc-utility") Or _
+                                                wantedvalue.Contains("AMD Wireless Display") Or _
+                                                wantedvalue.Contains("AMD Media Foundation") Or _
+                                                wantedvalue.Contains("HydraVision") Or _
+                                                wantedvalue.Contains("AMD Drag and Drop") Or _
+                                                wantedvalue.Contains("AMD APP SDK") Or _
+                                                wantedvalue.Contains("AMD Steady") Or _
+                                                wantedvalue.Contains("ATI AVIVO") Or _
+                                                wantedvalue.Contains("AMD Fuel") Then
+
+                                        regkey.DeleteSubKeyTree(child)
+
+                                    End If
+                                End If
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+    ("SOFTWARE\Classes\Installer\Products", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If child IsNot Nothing Then
+                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+            ("SOFTWARE\Classes\Installer\Products\" & child, True)
+
+                        If subregkey IsNot Nothing Then
+                            If subregkey.GetValue("ProductName") IsNot Nothing Then
+                                wantedvalue = subregkey.GetValue("ProductName").ToString
+                                If wantedvalue IsNot Nothing Then
+                                    If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
+                                                wantedvalue.Contains("Catalyst Control Center") Or _
+                                                wantedvalue.Contains("AMD Catalyst Install Manager") Or _
+                                                wantedvalue.Contains("ccc-utility") Or _
+                                                wantedvalue.Contains("AMD Wireless Display") Or _
+                                                wantedvalue.Contains("AMD Media Foundation") Or _
+                                                wantedvalue.Contains("HydraVision") Or _
+                                                wantedvalue.Contains("AMD Drag and Drop") Or _
+                                                wantedvalue.Contains("AMD APP SDK") Or _
+                                                wantedvalue.Contains("AMD Steady") Or _
+                                                wantedvalue.Contains("ATI AVIVO") Or _
+                                                wantedvalue.Contains("AMD Fuel") Then
 
                                         regkey.DeleteSubKeyTree(child)
 
@@ -1823,20 +1783,17 @@ Public Class Form1
 
                 Next
             End If
-        End If
 
 
-
-
-        If IntPtr.Size = 8 Then
 
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                ("Wow6432Node\Interface", True)
+      ("CLSID", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If child IsNot Nothing Then
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                ("Wow6432Node\Interface\" & child, False)
+            ("CLSID\" & child, False)
+
                         If subregkey IsNot Nothing Then
                             If subregkey.GetValue("") IsNot Nothing Then
                                 wantedvalue = subregkey.GetValue("").ToString
@@ -1853,7 +1810,66 @@ Public Class Form1
 
                 Next
             End If
-        End If
+
+            If IntPtr.Size = 8 Then
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                    ("Wow6432Node\CLSID", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If child IsNot Nothing Then
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                    ("Wow6432Node\CLSID\" & child, False)
+                            If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If wantedvalue IsNot Nothing Then
+                                        If wantedvalue.Contains("AMDWDST") Or _
+                                        wantedvalue.Contains("ATI Transcoder DB Enum") Or _
+                                        wantedvalue.Contains("ATI Transcoder") Or _
+                                       wantedvalue.Contains("ATI Transcoder DB") Or _
+                                       wantedvalue.Contains("SteadyVideoBHO") Then
+
+                                            regkey.DeleteSubKeyTree(child)
+
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        End If
+
+                    Next
+                End If
+            End If
+
+
+
+
+            If IntPtr.Size = 8 Then
+
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                    ("Wow6432Node\Interface", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If child IsNot Nothing Then
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                    ("Wow6432Node\Interface\" & child, False)
+                            If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If wantedvalue IsNot Nothing Then
+                                        If wantedvalue.Contains("SteadyVideoBHO") Then
+
+                                            regkey.DeleteSubKeyTree(child)
+
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        End If
+
+                    Next
+                End If
+            End If
         End If
 
 
@@ -2066,7 +2082,7 @@ Public Class Form1
             End Try
 
             Try
-			If My.Computer.FileSystem.GetDirectories(filePath).Count = 0 Then
+                If My.Computer.FileSystem.GetDirectories(filePath).Count = 0 Then
                     My.Computer.FileSystem.DeleteDirectory _
                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                 End If
@@ -3924,7 +3940,7 @@ Public Class Form1
         If reboot Or shutdown Then
             log("remove PCI-E Root for sandy / ivy processor (fix laptop issues) if found")
             Dim removepcieroot As New ProcessStartInfo
-            removepcieroot.FileName = ".\" & Label3.Text & "\devcon.exe"
+            removepcieroot.FileName = ".\" & Label3.Text & "\ddudr.exe"
             removepcieroot.Arguments = "findall =system " & Chr(34) & "*VEN_8086&DEV_0151*" & Chr(34)
             removepcieroot.UseShellExecute = False
             removepcieroot.CreateNoWindow = True
@@ -3950,7 +3966,7 @@ Public Class Form1
                 Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
                 Invoke(Sub() TextBox1.ScrollToCaret())
                 'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                removedisplaydriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
                 removedisplaydriver.Arguments = "remove =system " & Chr(34) & "@" & vendid & Chr(34)
                 removedisplaydriver.UseShellExecute = False
                 removedisplaydriver.CreateNoWindow = True
@@ -3963,22 +3979,22 @@ Public Class Form1
                     log(reply2)
                 Catch ex As Exception
                     log(ex.Message)
-                    MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                    MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                     Button1.Enabled = True
                     Button2.Enabled = True
                     Button3.Enabled = True
                     Exit Sub
                 End Try
-                
+
                 card1 = reply.IndexOf("PCI\", card1 + 1)
             End While
         End If
     End Sub
     Private Sub rescan()
-        
+
         'Scan for new devices...
         Dim scan As New ProcessStartInfo
-        scan.FileName = ".\" & Label3.Text & "\devcon.exe"
+        scan.FileName = ".\" & Label3.Text & "\ddudr.exe"
         scan.Arguments = "rescan"
         scan.UseShellExecute = False
         scan.CreateNoWindow = True
@@ -4023,7 +4039,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        
+
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
         End If
@@ -4192,8 +4208,8 @@ Public Class Form1
 
         If arch = True Then
             Try
-                Dim myExe As String = Application.StartupPath & "\x64\devcon.exe"
-                System.IO.File.WriteAllBytes(myExe, My.Resources.devcon64)
+                Dim myExe As String = Application.StartupPath & "\x64\ddudr.exe"
+                System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr64)
 
                 myExe = Application.StartupPath & "\x64\subinacl.exe"
                 System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl64)
@@ -4203,8 +4219,8 @@ Public Class Form1
             End Try
         Else
             Try
-                Dim myExe As String = Application.StartupPath & "\x86\devcon.exe"
-                System.IO.File.WriteAllBytes(myExe, My.Resources.devcon32)
+                Dim myExe As String = Application.StartupPath & "\x86\ddudr.exe"
+                System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr32)
 
                 myExe = Application.StartupPath & "\x86\subinacl.exe"
                 System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl32)
@@ -4216,13 +4232,13 @@ Public Class Form1
         End If
 
         If arch = True Then
-            If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x64\devcon.exe") Then
-                MsgBox("Unable to find Devcon. Please refer to the log.", MsgBoxStyle.Critical)
+            If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x64\ddudr.exe") Then
+                MsgBox("Unable to find ddudr. Please refer to the log.", MsgBoxStyle.Critical)
                 Button1.Enabled = False
             End If
         ElseIf arch = False Then
-            If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x86\devcon.exe") Then
-                MsgBox("Unable to find Devcon. Please refer to the log.", MsgBoxStyle.Critical)
+            If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x86\ddudr.exe") Then
+                MsgBox("Unable to find ddudr. Please refer to the log.", MsgBoxStyle.Critical)
                 Button1.Enabled = False
             End If
         End If
@@ -4233,7 +4249,7 @@ Public Class Form1
         log("Architecture: " & Label3.Text)
 
         'Videocard type indentification
-        checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+        checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
         checkoem.Arguments = "findall =display"
         checkoem.UseShellExecute = False
         checkoem.CreateNoWindow = True
@@ -4280,7 +4296,7 @@ Public Class Form1
         Else
             ComboBox1.SelectedIndex = 1
         End If
-        
+
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
 
@@ -4574,7 +4590,7 @@ Public Class Form1
                      Handles BackgroundWorker1.DoWork
         Try
 
-            checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+            checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
             checkoem.Arguments = "findall =display"
             checkoem.UseShellExecute = False
             checkoem.CreateNoWindow = True
@@ -4596,7 +4612,7 @@ Public Class Form1
                 position2 = reply.IndexOf(":", card1)
                 vendid = reply.Substring(card1, position2 - card1).Trim
                 If vendid.Contains(vendidexpected) Then
-                    removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                    removedisplaydriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
                     removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
                     removedisplaydriver.UseShellExecute = False
                     removedisplaydriver.CreateNoWindow = True
@@ -4615,10 +4631,10 @@ Public Class Form1
 
 
             End While
-            log("DEVCON Remove Display Complete")
+            log("ddudr Remove Display Complete")
             'Next
             'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
-            checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+            checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
             checkoem.Arguments = "findall =media"
             checkoem.UseShellExecute = False
             checkoem.CreateNoWindow = True
@@ -4644,7 +4660,7 @@ Public Class Form1
                 vendid = reply.Substring(card1, position2 - card1).Trim
                 If vendid.Contains(vendidexpected) Then
 
-                    removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                    removehdmidriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
                     removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
@@ -4658,7 +4674,7 @@ Public Class Form1
                     Catch ex As Exception
 
                         log(ex.Message)
-                        MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                        MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                         Button1.Enabled = True
                         Button2.Enabled = True
                         Button3.Enabled = True
@@ -4673,7 +4689,7 @@ Public Class Form1
 
             If DirectCast(e.Argument, String) = "NVIDIA" Then
                 'removing 3DVision USB driver
-                checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+                checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
                 checkoem.Arguments = "findall =USB"
                 checkoem.UseShellExecute = False
                 checkoem.CreateNoWindow = True
@@ -4708,7 +4724,7 @@ Public Class Form1
                         vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
                         log("-" & vendid & "- 3D vision usb controler found")
 
-                        removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                        removehdmidriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
                         removehdmidriver.Arguments = "remove =USB " & Chr(34) & "@" & vendid & Chr(34)
                         removehdmidriver.UseShellExecute = False
                         removehdmidriver.CreateNoWindow = True
@@ -4722,7 +4738,7 @@ Public Class Form1
                         Catch ex As Exception
 
                             log(ex.Message)
-                            MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                            MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                             Button1.Enabled = True
                             Button2.Enabled = True
                             Button3.Enabled = True
@@ -4737,7 +4753,7 @@ Public Class Form1
 
                 'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
 
-                removehdmidriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                removehdmidriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
                 removehdmidriver.Arguments = "findall =media " & Chr(34) & "@*ROOT\*" & Chr(34)
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
@@ -4759,7 +4775,7 @@ Public Class Form1
                     If reply.Substring(position2, reply.Length - position2).Contains("NVIDIA Virtual") Then
 
                         'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                        removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                        removedisplaydriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
                         removedisplaydriver.Arguments = "remove =media " & Chr(34) & "@" & vendid & Chr(34)
                         removedisplaydriver.UseShellExecute = False
                         removedisplaydriver.CreateNoWindow = True
@@ -4772,7 +4788,7 @@ Public Class Form1
                             log(reply2)
                         Catch ex As Exception
                             log(ex.Message)
-                            MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                            MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                             Button1.Enabled = True
                             Button2.Enabled = True
                             Button3.Enabled = True
@@ -4783,12 +4799,12 @@ Public Class Form1
                 End While
             End If
 
-            log("DEVCON Remove Audio/HDMI Complete")
+            log("ddudr Remove Audio/HDMI Complete")
             'removing monitor and hidden monitor
 
-            log("DEVCON Remove Monitor started")
+            log("ddudr Remove Monitor started")
 
-            checkoem.FileName = ".\" & Label3.Text & "\devcon.exe"
+            checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
             checkoem.Arguments = "findall =monitor"
             checkoem.UseShellExecute = False
             checkoem.CreateNoWindow = True
@@ -4813,7 +4829,7 @@ Public Class Form1
 
                 log("-" & vendid & "- Monitor id found")
                 'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                removedisplaydriver.FileName = ".\" & Label3.Text & "\devcon.exe"
+                removedisplaydriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
                 removedisplaydriver.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
                 removedisplaydriver.UseShellExecute = False
                 removedisplaydriver.CreateNoWindow = True
@@ -4826,7 +4842,7 @@ Public Class Form1
                     log(reply2)
                 Catch ex As Exception
                     log(ex.Message)
-                    MsgBox("Cannot find DEVCON in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                    MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                     Button1.Enabled = True
                     Button2.Enabled = True
                     Button3.Enabled = True
@@ -4836,7 +4852,7 @@ Public Class Form1
                 card1 = reply.IndexOf("DISPLAY\", card1 + 1)
 
             End While
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** DEVCON Remove complete *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** ddudr Remove complete *****" + vbNewLine)
             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
             Invoke(Sub() TextBox1.ScrollToCaret())
             clean(DirectCast(e.Argument, String))
@@ -4860,7 +4876,7 @@ Public Class Form1
             Button1.Enabled = True
             Try
                 Dim scan As New ProcessStartInfo
-                scan.FileName = ".\" & Label3.Text & "\devcon.exe"
+                scan.FileName = ".\" & Label3.Text & "\ddudr.exe"
                 scan.Arguments = "rescan"
                 scan.UseShellExecute = False
                 scan.CreateNoWindow = True

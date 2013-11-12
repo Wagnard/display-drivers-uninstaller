@@ -12,9 +12,6 @@ those problems.
 
 RECOMMENDED USAGE :
 
-- It is recommended that you disconnect the internet while doing this because sometimes after the 
-uninstall, windows update may attempt to re-install a new driver, without asking you if you want to.
-
 -The tool can be used in Normal mode but for absolute stability when using DDU, Safe Mode is 
 always the best.
 
@@ -24,8 +21,8 @@ backup or a system restore (but it should normally be pretty safe).
 -If you have or had a driver problem, and this tool helped you with some issues you were or are
 currently experiencing, please share your result.
 
-Keep in mind that NVIDIA/AMD did not have anything to do with this, We do not work at or for NVIDIA/AMD 
-and they should not be held responsible for any damage or errors caused to your system.
+Keep in mind that NVIDIA , AMD or Microsoft cannot be held responsible for any damages of any sort 
+to you or your computer and in no way affiliates of DDU or it's creators.
 -------------------------------
 
 Created By Wagnard.
