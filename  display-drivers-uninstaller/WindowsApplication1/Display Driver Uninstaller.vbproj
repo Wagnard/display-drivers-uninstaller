@@ -104,7 +104,6 @@
     <Compile Include="about.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ApplicationEvents.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -177,12 +176,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\x64\devcon64.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\x86\devcon32.exe" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\x86\subinacl.exe" />
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +195,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\ddu logo3.png" />
+    <None Include="Resources\x86\ddudr.exe" />
+    <None Include="Resources\x64\ddudr.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
