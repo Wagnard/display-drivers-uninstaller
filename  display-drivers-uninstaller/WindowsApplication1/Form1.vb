@@ -4323,6 +4323,7 @@ Public Class Form1
 
         If version >= "6.0" Then
             Label2.Text = "Windows Vista or Server 2008"
+            winxp = False
         End If
 
         If version >= "6.1" Then
