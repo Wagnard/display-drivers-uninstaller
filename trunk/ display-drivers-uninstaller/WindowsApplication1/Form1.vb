@@ -3014,6 +3014,29 @@ Public Class Form1
                 Next
             End If
 
+            clsidleftover = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\clsidleftover.cfg") '// add each line as String Array.
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    For i As Integer = 0 To clsidleftover.Length - 1
+                        If child IsNot Nothing Then
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" + child, False)
+                            If subregkey IsNot Nothing Then
+                                If subregkey.GetValue("") IsNot Nothing Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If wantedvalue IsNot Nothing Then
+                                        If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
+
+                                            regkey.DeleteSubKeyTree(child)
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        End If
+                    Next
+                Next
+            End If
+
             log("Interface CleanUP")
             'interface cleanup
             Dim interfaces() As String
@@ -3222,6 +3245,93 @@ Public Class Form1
                     log(ex.Message & " We Got a security warning avoided on the subacl Part win7")
                 End Try
             End If
+            '----------------------
+            'Firewall entry cleanup
+            '----------------------
+            Try
+                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\", False)
+                If subregkey IsNot Nothing Then
+                    For Each child2 As String In subregkey.GetSubKeyNames()
+                        If child2.ToLower.Contains("controlset") Then
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\SharedAccess\Parameters\FirewallPolicy\FirewallRules", True)
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetValueNames()
+                                    If child IsNot Nothing Then
+                                        If regkey.GetValue(child).ToString() IsNot Nothing Then
+                                            wantedvalue = regkey.GetValue(child).ToString()
+                                        End If
+                                        If wantedvalue.ToLower.ToString.Contains("nvstreamsrv") Or _
+                                           wantedvalue.ToLower.ToString.Contains("nvidia update core") Then
+                                            regkey.DeleteValue(child)
+                                        End If
+                                    End If
+                                Next
+                            End If
+                        End If
+                    Next
+                End If
+
+            Catch ex As Exception
+                log(ex.Message)
+            End Try
+
+            '--------------------------
+            'End Firewall entry cleanup
+            '--------------------------
+
+            '--------------------------
+            'Power Settings CleanUP
+            '--------------------------
+            Try
+                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\", False)
+                If subregkey IsNot Nothing Then
+                    For Each child2 As String In subregkey.GetSubKeyNames()
+                        If child2.ToLower.Contains("controlset") Then
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Power\PowerSettings", True)
+                            If regkey IsNot Nothing Then
+                                For Each childs As String In regkey.GetSubKeyNames()
+                                    If childs IsNot Nothing Then
+                                        For Each child As String In regkey.OpenSubKey(childs).GetValueNames()
+                                            If child IsNot Nothing And child.ToString.ToLower.Contains("description") Then
+                                                If regkey.OpenSubKey(childs).GetValue(child) IsNot Nothing Then
+                                                    wantedvalue = regkey.OpenSubKey(childs).GetValue(child).ToString()
+                                                End If
+                                                If wantedvalue.ToString.ToLower.Contains("nvsvc") Then
+                                                    regkey.DeleteSubKeyTree(childs)
+                                                End If
+                                                If wantedvalue.ToString.ToLower.Contains("video and display power management") Then
+                                                    subregkey2 = regkey.OpenSubKey(childs, True)
+                                                    For Each childinsubregkey2 As String In subregkey2.GetSubKeyNames()
+                                                        If childinsubregkey2 IsNot Nothing Then
+                                                            For Each childinsubregkey2value As String In subregkey2.OpenSubKey(childinsubregkey2).GetValueNames()
+                                                                If childinsubregkey2value IsNot Nothing And childinsubregkey2value.ToString.ToLower.Contains("description") Then
+                                                                    If subregkey2.OpenSubKey(childinsubregkey2).GetValue(childinsubregkey2value) IsNot Nothing Then
+                                                                        wantedvalue2 = subregkey2.OpenSubKey(childinsubregkey2).GetValue(childinsubregkey2value).ToString
+                                                                    End If
+                                                                    If wantedvalue2.ToString.ToLower.Contains("nvsvc") Then
+                                                                        subregkey2.DeleteSubKeyTree(childinsubregkey2)
+                                                                    End If
+                                                                End If
+                                                            Next
+                                                        End If
+                                                    Next
+                                                End If
+                                            End If
+                                        Next
+                                    End If
+                                Next
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.Message)
+            End Try
+
+            '--------------------------
+            'End Power Settings CleanUP
+            '--------------------------
+
 
             '--------------------------------
             'System environement path cleanup
