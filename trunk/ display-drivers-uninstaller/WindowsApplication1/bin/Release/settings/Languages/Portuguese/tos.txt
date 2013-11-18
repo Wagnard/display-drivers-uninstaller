@@ -1,10 +1,10 @@
-Display Driver Uninstaller ("DDU") USER AGREEMENT
+﻿Display Driver Uninstaller ("DDU") USER AGREEMENT 
 
-You become a user of DDU ("User") by using the DDU software. This Agreement takes effect as soon as you use the program to uninstall a driver.
+Você se tornou um usuario do DDU ("Usuario") por ter usado o software DDU. Este acordo tem efeito assim que você utilizar o programa para desinstalação de um driver.
 
-By using DDU you agree to not accuse DDU or it's creators, and affiliates, of damaging or negatively affecting your PC.
+Por estar utilizando DDU você concorda em não acusar DDU os seus criadores, e afiliados, de danificar ou afetar negativamente seu PC.
 
-By using DDU you agree to not modify DDU and re-publish it without proper authorization.
+Por estar utilizando DDU você concorda em não modificar DDU e republicar sem a autorização apropriada.
 
-By using DDU you acknowledge that NVIDIA ("NVIDIA, GeForce") nor Advanced Micro Devices ("AMD, Radeon") have
-anything to do with this program, and in no way affiliates of DDU or it's creators.
+Por estar utilizando DDU você reconhece que NVIDIA ("NVIDIA, GeForce") ou Advanced Micro Devices ("AMD, Radeon") não tem
+nada à haver com este programa, e de maneira nenhuma afiliados do DDU ou seus criadores.
