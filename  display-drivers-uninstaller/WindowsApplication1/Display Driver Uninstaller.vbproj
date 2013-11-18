@@ -195,6 +195,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\ddu logo3.png" />
+    <None Include="Resources\xp32\ddudr.exe" />
     <None Include="Resources\x86\ddudr.exe" />
     <None Include="Resources\x64\ddudr.exe" />
   </ItemGroup>
