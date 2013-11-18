@@ -234,9 +234,8 @@ Public Class Form1
                     log(Reply2)
 
                 End If
-
-                oem = reply.IndexOf("oem", oem + 1)
             End If
+            oem = reply.IndexOf("oem", oem + 1)
         End While
 
 
@@ -4254,11 +4253,17 @@ Public Class Form1
             End Try
         Else
             Try
-                Dim myExe As String = Application.StartupPath & "\x86\ddudr.exe"
-                System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr32)
+                If version.StartsWith("5.1") Then
+                    Dim myExe As String = Application.StartupPath & "\x86\ddudr.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp32)
+                Else
+                    Dim myExe As String = Application.StartupPath & "\x86\ddudr.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr32)
 
-                myExe = Application.StartupPath & "\x86\subinacl.exe"
-                System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl32)
+                    myExe = Application.StartupPath & "\x86\subinacl.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl32)
+                End If
+                
 
             Catch ex As Exception
                 log(ex.Message)
