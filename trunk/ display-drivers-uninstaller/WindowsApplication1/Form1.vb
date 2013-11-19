@@ -907,7 +907,7 @@ Public Class Form1
                         For Each child In regkey.GetSubKeyNames()
                             For i As Integer = 0 To driverfiles.Length - 1
                                 If child IsNot Nothing Then
-                                    If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
+                                    If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                         Try
                                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
                                                 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
@@ -1087,7 +1087,7 @@ Public Class Form1
                             For Each child In regkey.GetValueNames()
                                 For i As Integer = 0 To driverfiles.Length - 1
                                     If child IsNot Nothing Then
-                                        If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
+                                        If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                             Try
                                                 regkey.DeleteValue(child)
                                             Catch ex As Exception
@@ -3080,6 +3080,7 @@ Public Class Form1
             Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
             If UserAc <> "Administrator" Or winxp = False Then  'Reason is because the way I do things here, we must NOT use the Real administrator account
                 If win8higher Then
+
                     Dim reginfos As RegistryKey = Nothing
                     Dim FolderAcl As New RegistrySecurity
                     'setting permission to registry
@@ -3101,7 +3102,7 @@ Public Class Form1
                         For Each child In regkey.GetSubKeyNames()
                             For i As Integer = 0 To driverfiles.Length - 1
                                 If child IsNot Nothing Then
-                                    If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
+                                    If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                         Try
                                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree _
                                                 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child)
@@ -3221,7 +3222,7 @@ Public Class Form1
                                 For i As Integer = 0 To driverfiles.Length - 1
                                     If child IsNot Nothing Then
 
-                                        If child.ToLower.StartsWith(driverfiles(i).ToLower) Then
+                                        If child.ToLower.Contains(driverfiles(i).ToLower) Then
 
                                             Try
                                                 regkey.DeleteValue(child)
