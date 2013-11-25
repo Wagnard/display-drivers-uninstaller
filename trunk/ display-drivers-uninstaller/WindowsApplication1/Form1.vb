@@ -60,6 +60,7 @@ Public Class Form1
     Dim version As String
     Dim toolTip1 As New ToolTip()
     Dim tos As String
+    Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
 
     Private Function checkupdates() As Integer
         Try
@@ -879,7 +880,7 @@ Public Class Form1
                     log(ex.Message + " Opencl Khronos")
                 End Try
             End If
-            Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+
             If UserAc <> "Administrator" Or winxp = False Then  'Reason is because the way I do things here, we must NOT use the Real administrator account
                 If win8higher Then
                     Dim reginfos As RegistryKey = Nothing
@@ -3029,7 +3030,7 @@ Public Class Form1
 
             'end of deleting dcom stuff
 
-            Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+
             If UserAc <> "Administrator" Or winxp = False Then  'Reason is because the way I do things here, we must NOT use the Real administrator account
                 If win8higher Then
 
@@ -3622,7 +3623,8 @@ Public Class Form1
                                     wantedvalue.ToLower.Contains("nvidia install") Or _
                                     wantedvalue.ToLower.Contains("nvidia update") Or _
                                     wantedvalue.ToLower.Contains("nvidia shadowplay") Or _
-                                     wantedvalue.ToLower.Contains("nvidia stereo") Or _
+                                    wantedvalue.ToLower.Contains("nvidia stereo") Or _
+                                    wantedvalue.ToLower.Contains("nvidia optimus") Or _
                                     wantedvalue.ToLower.Contains("nvidia hd audio") Then
                                         If removephysx Then
                                             Try
@@ -3695,6 +3697,7 @@ Public Class Form1
                                     wantedvalue.ToLower.Contains("nvidia update") Or _
                                     wantedvalue.ToLower.Contains("nvidia shadowplay") Or _
                                     wantedvalue.ToLower.Contains("nvidia stereo") Or _
+                                    wantedvalue.ToLower.Contains("nvidia optimus") Or _
                                     wantedvalue.ToLower.Contains("nvidia hd audio") Then
                                     If removephysx Then
                                         Try
@@ -4029,58 +4032,64 @@ Public Class Form1
         log("End of Registry Cleaning")
         System.Threading.Thread.Sleep(50)
     End Sub
-    Private Sub removepcieroot()
-        If reboot Or shutdown Then
-            log("remove PCI-E Root for sandy / ivy processor (fix laptop issues) if found")
-            Dim removepcieroot As New ProcessStartInfo
-            removepcieroot.FileName = ".\" & Label3.Text & "\ddudr.exe"
-            removepcieroot.Arguments = "findall =system " & Chr(34) & "*VEN_8086&DEV_0151*" & Chr(34)
-            removepcieroot.UseShellExecute = False
-            removepcieroot.CreateNoWindow = True
-            removepcieroot.RedirectStandardOutput = True
+    Private Sub checkpcieroot()  'This is for Nvidia Optimus
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                   ("SYSTEM\CurrentControlSet\Enum\PCI")
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetSubKeyNames()
+                If child IsNot Nothing Then
+                    If child.ToLower.Contains("ven_8086") Then
+                        subregkey = regkey.OpenSubKey(child)
+                        For Each childs As String In subregkey.GetSubKeyNames()
+                            If childs IsNot Nothing Then
+                                If subregkey.OpenSubKey(childs).GetValue("UpperFilters") IsNot Nothing Then
+                                    If subregkey.OpenSubKey(childs).GetValue("UpperFilters").ToString.ToLower.Contains("nvpciflt") Then
 
-            proc2.StartInfo = removepcieroot
-            proc2.Start()
-            reply = proc2.StandardOutput.ReadToEnd
-            proc2.WaitForExit()
-            Try
-                card1 = reply.IndexOf("PCI\")
-            Catch ex As Exception
+                                        '-------------------------------------
+                                        'Setting permission to the key region
+                                        '-------------------------------------
 
-            End Try
-            While card1 > -1
+                                        removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                                        removehdmidriver.Arguments = _
+                                            "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /owner=Administrators"
+                                        removehdmidriver.UseShellExecute = False
+                                        removehdmidriver.CreateNoWindow = True
+                                        removehdmidriver.RedirectStandardOutput = False
+                                        prochdmi.StartInfo = removehdmidriver
+                                        prochdmi.Start()
+                                        prochdmi.WaitForExit()
+                                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                                        removehdmidriver.Arguments = _
+                                            "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
+                                        prochdmi.Start()
+                                        prochdmi.WaitForExit()
+                                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
 
-                position2 = reply.IndexOf(":", card1)
-                vendid = reply.Substring(card1, position2 - card1).Trim
+                                        subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
 
 
-                log("-" & vendid & "- PCI-E root id found")
-                Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** System May Freeze for a couple of seconds. Please be Patient it is not. *****" + vbNewLine)
-                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                Invoke(Sub() TextBox1.ScrollToCaret())
-                'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                removedisplaydriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
-                removedisplaydriver.Arguments = "remove =system " & Chr(34) & "@" & vendid & Chr(34)
-                removedisplaydriver.UseShellExecute = False
-                removedisplaydriver.CreateNoWindow = True
-                removedisplaydriver.RedirectStandardOutput = True
-                proc.StartInfo = removedisplaydriver
-                Try
-                    proc.Start()
-                    reply2 = proc.StandardOutput.ReadToEnd
-                    proc.WaitForExit()
-                    log(reply2)
-                Catch ex As Exception
-                    log(ex.Message)
-                    MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                    Button1.Enabled = True
-                    Button2.Enabled = True
-                    Button3.Enabled = True
-                    Exit Sub
-                End Try
 
-                card1 = reply.IndexOf("PCI\", card1 + 1)
-            End While
+                                        '---------------------------------
+                                        'Setting permission back to normal 
+                                        '---------------------------------
+                                        removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                                        removehdmidriver.Arguments = _
+                                          "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /revoke=" & Chr(34) & UserAc & Chr(34)
+                                        removehdmidriver.UseShellExecute = False
+                                        removehdmidriver.CreateNoWindow = True
+                                        removehdmidriver.RedirectStandardOutput = False
+                                        prochdmi.StartInfo = removehdmidriver
+                                        prochdmi.Start()
+                                        prochdmi.WaitForExit()
+                                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+                                    End If
+                                End If
+                            End If
+                        Next
+                    End If
+                End If
+            Next
         End If
     End Sub
     Private Sub rescan()
@@ -4466,7 +4475,6 @@ Public Class Form1
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Deleting some specials folders, it could take some times...")
         'ensure that this folder can be accessed with current user ac.
-        Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
         Dim FolderInfo As IO.DirectoryInfo = New IO.DirectoryInfo(folder)
         Dim FolderAcl As New DirectorySecurity
         FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAc, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
@@ -4970,7 +4978,7 @@ Public Class Form1
 
             clean(DirectCast(e.Argument, String))
             cleandriverstore(DirectCast(e.Argument, String))
-            'removepcieroot()
+            checkpcieroot()
             rescan()
 
         Catch ex As Exception
