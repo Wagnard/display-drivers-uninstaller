@@ -4043,47 +4043,52 @@ Public Class Form1
                         For Each childs As String In subregkey.GetSubKeyNames()
                             If childs IsNot Nothing Then
                                 If subregkey.OpenSubKey(childs).GetValue("UpperFilters") IsNot Nothing Then
-                                    If subregkey.OpenSubKey(childs).GetValue("UpperFilters").ToString.ToLower.Contains("nvpciflt") Then
 
-                                        '-------------------------------------
-                                        'Setting permission to the key region
-                                        '-------------------------------------
+                                    Dim array() As String = subregkey.OpenSubKey(childs).GetValue("UpperFilters")
+                                    For i As Integer = 0 To array.Length - 1
 
-                                        removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                                        removehdmidriver.Arguments = _
-                                            "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /owner=Administrators"
-                                        removehdmidriver.UseShellExecute = False
-                                        removehdmidriver.CreateNoWindow = True
-                                        removehdmidriver.RedirectStandardOutput = False
-                                        prochdmi.StartInfo = removehdmidriver
-                                        prochdmi.Start()
-                                        prochdmi.WaitForExit()
-                                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                                        removehdmidriver.Arguments = _
-                                            "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
-                                        prochdmi.Start()
-                                        prochdmi.WaitForExit()
-                                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                                        If array(i).ToLower.Contains("nvpci") Then
+                                            '-------------------------------------
+                                            'Setting permission to the key region
+                                            '-------------------------------------
 
-                                        subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
+                                            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                                            removehdmidriver.Arguments = _
+                                                "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /owner=Administrators"
+                                            removehdmidriver.UseShellExecute = False
+                                            removehdmidriver.CreateNoWindow = True
+                                            removehdmidriver.RedirectStandardOutput = False
+                                            prochdmi.StartInfo = removehdmidriver
+                                            prochdmi.Start()
+                                            prochdmi.WaitForExit()
+                                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                                            removehdmidriver.Arguments = _
+                                                "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
+                                            prochdmi.Start()
+                                            prochdmi.WaitForExit()
+                                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+                                            subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
 
 
 
-                                        '---------------------------------
-                                        'Setting permission back to normal 
-                                        '---------------------------------
-                                        removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                                        removehdmidriver.Arguments = _
-                                          "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /revoke=" & Chr(34) & UserAc & Chr(34)
-                                        removehdmidriver.UseShellExecute = False
-                                        removehdmidriver.CreateNoWindow = True
-                                        removehdmidriver.RedirectStandardOutput = False
-                                        prochdmi.StartInfo = removehdmidriver
-                                        prochdmi.Start()
-                                        prochdmi.WaitForExit()
-                                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                                            '---------------------------------
+                                            'Setting permission back to normal 
+                                            '---------------------------------
+                                            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                                            removehdmidriver.Arguments = _
+                                              "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /revoke=" & Chr(34) & UserAc & Chr(34)
+                                            removehdmidriver.UseShellExecute = False
+                                            removehdmidriver.CreateNoWindow = True
+                                            removehdmidriver.RedirectStandardOutput = False
+                                            prochdmi.StartInfo = removehdmidriver
+                                            prochdmi.Start()
+                                            prochdmi.WaitForExit()
+                                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
 
-                                    End If
+                                        End If
+                                    Next
+                                    
                                 End If
                             End If
                         Next
