@@ -302,52 +302,52 @@ Public Class Form1
             processkillpid.WaitForExit()
 
             Dim appproc = Process.GetProcessesByName("MOM")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("CLIStart")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("CLI")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("CCC")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("HydraDM")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("HydraDM64")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("HydraGrd")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("Grid64")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("HydraMD64")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("HydraMD")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
@@ -355,17 +355,17 @@ Public Class Form1
 
             log("Killing Explorer.exe")
             appproc = Process.GetProcessesByName("explorer")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("ThumbnailExtractionHost")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("jusched")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
@@ -467,7 +467,7 @@ Public Class Form1
 
             filePath = Environment.GetFolderPath _
       (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies"
-            If Not File.Exists(filePath) Or Not Directory.Exists(filePath) Then
+            If Not Directory.Exists(filePath) Then
                 Try
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -547,7 +547,7 @@ Public Class Form1
 
                 filePath = System.Environment.SystemDirectory
                 Dim files() As String = IO.Directory.GetFiles(filePath + "\", "coinst_*.*")
-                For i As Integer = 0 To files.Count - 1
+                For i As Integer = 0 To files.Length - 1
                     Try
                         My.Computer.FileSystem.DeleteFile(files(i))
                     Catch ex As Exception
@@ -582,13 +582,17 @@ Public Class Form1
                 End Try
 
                 filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\Program Files (x86)" + "\Common Files" + "\ATI Technologies
-                If Not File.Exists(filePath) Or Not Directory.Exists(filePath) Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                    End Try
-                End If
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                Catch ex As Exception
+                End Try
+
                 filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
                 Try
                     My.Computer.FileSystem.DeleteDirectory _
@@ -2091,49 +2095,55 @@ Public Class Form1
             'holding files in the NVIDIA folders sometimes.
 
             Dim appproc = Process.GetProcessesByName("Lcore")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("NvTmru")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
 
             appproc = Process.GetProcessesByName("nvxdsync")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("nvtray")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("dwm")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("WWAHost")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("nvspcaps64")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
             appproc = Process.GetProcessesByName("nvspcaps")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
+
+            appproc = Process.GetProcessesByName("NvBackend")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
+
             'log("Killing Explorer")
 
             'appproc = Process.GetProcessesByName("explorer")
-            'For i As Integer = 0 To appproc.Count - 1
+            'For i As Integer = 0 To appproc.length- 1
             '    appproc(i).Kill()
             'Next i
             'Delete NVIDIA data Folders
@@ -2262,9 +2272,12 @@ Public Class Form1
             End Try
 
             Try
-                If My.Computer.FileSystem.GetDirectories(filePath).Count = 0 Then
-                    My.Computer.FileSystem.DeleteDirectory _
-                           (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
                 End If
             Catch ex As Exception
             End Try
@@ -2297,11 +2310,13 @@ Public Class Form1
                     TestDelete(filePath)
                 Catch ex As Exception
                 End Try
-
                 Try
-                    If My.Computer.FileSystem.GetDirectories(filePath).Count = 0 Then
-                        My.Computer.FileSystem.DeleteDirectory _
-                               (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    If Directory.GetDirectories(filePath).Length = 0 Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
                     End If
                 Catch ex As Exception
                 End Try
@@ -2382,7 +2397,7 @@ Public Class Form1
 
             filePath = System.Environment.SystemDirectory
             Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
-            For i As Integer = 0 To files.Count - 1
+            For i As Integer = 0 To files.Length - 1
                 Try
                     My.Computer.FileSystem.DeleteFile(files(i))
                 Catch ex As Exception
@@ -4357,7 +4372,7 @@ Public Class Form1
             proc4.WaitForExit()
             System.Threading.Thread.Sleep(2000)
             Dim appproc = Process.GetProcessesByName("explorer")
-            For i As Integer = 0 To appproc.Count - 1
+            For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
             reboot = True
@@ -4797,7 +4812,7 @@ Public Class Form1
         'The containing directory can only be deleted if the directory
         'is now completely empty and all files previously within
         'were deleted.
-        If di.GetFiles().Count = 0 Then
+        If di.GetFiles().Length = 0 Then
             Try
                 di.Delete()
             Catch ex As Exception
