@@ -1,34 +1,29 @@
-﻿Display Driver Uninstaller (DDU ) / Cleaner fait pour les pilotes d'affichage . (NVIDIA / AMD )
+Display Driver Uninstaller (DDU) / Utilitaire de désinstallation des pilotes graphiques. (NVIDIA / AMD)
 
-Ce qu'il fait, est de supprimer le pilote d'affichage du gestionnaire de périphérique et en supprimant le courant et
-tous les pilotes précédent dans le magasin de pilotes Windows avec suppression de services de NVIDIA / AMD .
+Son objectif, est de supprimer le pilote d'affichage du Gestionnaire de périphériques, en supprimant le pilote actuel ainsi que tous les pilotes précédents figurant dans le magasin de pilotes Windows (y compris la suppression des services NVIDIA / AMD).
+L'effet apporté par notre utilitaire de désinstallation, sera similaire à une nouvelle installation de Windows.
 
-L'effet actuel après avoir utilisé cet outil sera similaire à une nouvelle installation de Windows
+Notre utilitaire agit de la même façon que Driver Sweeper, comme indiqué ci-dessus.
+Si vous rencontrez des problèmes pour installer un pilote (ancien ou récent), cela signifie que « DDU » est fait pour vous !
 
-Cet outil acte similaire à Driver Sweeper  + le supplément mentionné ci-dessus .
+Usage recommandé :
 
-Si vous avez des problèmes pour installer pilote plus ancien ou plus récent , alors DDU est pour vous.
+- Cet utilitaire peut être utilisé en mode normal, mais pour des raisons de stabilité lors de l'utilisation de « DDU », le mode sans échec est toujours le meilleur choix.
 
-Usage recommandé:
+- Nous tenons à recueillir les commentaires des utilisateurs. Dites-nous si c'était un succès ou non. Par mesure de sécurité, nous vous recommandons d'utiliser la partie "Sauvegarde et Restauration" de Windows (normalement, il ne devrait pas y avoir de problèmes).
 
-- Cet outil peut être utilisé en mode normal, mais pour la stabilité absolue lors de l'utilisation DDU, le mode 
-sans-echec est toujours le meilleur choix.
+Gardez à l'esprit que NVIDIA / AMD n'ont rien à voir avec nous, nous ne travaillons pas avec eux, ainsi, ni NVIDIA, ni AMD, ne pourra être tenu pour responsable de tout dommage causé à votre système par « DDU ».
 
-- Nous tenons à recueillir les commentaires des utilisateurs. Dites-nous si c'était un succès ou non. faire une
-sauvegarde ou une restauration système (mais il devrait normalement être assez sûr ) .
-
-
-Gardez à l'esprit que NVIDIA / AMD n'avait rien à voir avec cela, nous ne travaillons pas avec et ni pour 
-NVIDIA / AMD et ils ne doivent pas être tenus responsables pour tout dommage ou erreurs causés à 
-votre système par DDU.
 -------------------------------
 
-Créé par Wagnard .
+Créé par Wagnard.
 
-Co -propriétaire: Shady7557
+Copropriétaire : Shady7557
 
-Tester : Dellon132
+Testeur : Dellon132
 
-Logos: juanchacin
+Logos : juanchacin
 
-Merci à tous ceux qui ont mis leur système à risque ( merci spécial à Dellon132 )
+Un grand merci à Gamer1291, pour ses nombreux tests.
+
+Merci à tous ceux qui ont mis leur système en danger (un remerciement tout particulier à Dellon132).
