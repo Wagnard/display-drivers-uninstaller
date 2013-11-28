@@ -19,10 +19,14 @@ Imports Microsoft.Win32
 Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Threading
+Imports System.Security.Principal
 
 
 Public Class Form1
 
+    Dim identity = WindowsIdentity.GetCurrent()
+    Dim principal = New WindowsPrincipal(identity)
+    Dim isElevated As Boolean = principal.IsInRole(WindowsBuiltInRole.Administrator)
     Dim removedisplaydriver As New ProcessStartInfo
     Dim removehdmidriver As New ProcessStartInfo
     Dim checkoem As New ProcessStartInfo
@@ -60,7 +64,7 @@ Public Class Form1
     Dim version As String
     Dim toolTip1 As New ToolTip()
     Dim tos As String
-    Dim UserAc As String = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString()
+    Dim UserAc As String = System.Environment.GetEnvironmentVariable("username")
 
     Private Function checkupdates() As Integer
         Try
@@ -122,11 +126,11 @@ Public Class Form1
                     MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.")
                 ElseIf result = MsgBoxResult.Cancel Then
                     MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.")
-                
 
 
 
-                'MsgBox("Updates are available! Visit forum thread now?    Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.", MsgBoxStyle.Information)
+
+                    'MsgBox("Updates are available! Visit forum thread now?    Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.", MsgBoxStyle.Information)
                 End If
             ElseIf updates = 3 Then
                 Label11.Text = "Unable to Fetch updates!"
@@ -474,7 +478,7 @@ Public Class Form1
                 Catch ex As Exception
                 End Try
             End If
-            
+
             'Delete driver files
             'delete OpenCL
             Dim driverfiles() As String
@@ -581,7 +585,7 @@ Public Class Form1
                 Catch ex As Exception
                 End Try
 
-                filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\Program Files (x86)" + "\Common Files" + "\ATI Technologies
+                filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\Program Files (x86)" + "\Common Files" + "\ATI Technologies"
                 Try
                     If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
@@ -798,6 +802,7 @@ Public Class Form1
             End If
 
             If IntPtr.Size = 8 Then
+
                 regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", False)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
@@ -839,6 +844,7 @@ Public Class Form1
                         End If
                     Next
                 End If
+
             End If
 
             'old dcom 
@@ -4333,7 +4339,7 @@ Public Class Form1
 
                                         End If
                                     Next
-                                    
+
                                 End If
                             End If
                         Next
@@ -4716,6 +4722,11 @@ Public Class Form1
         If System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower = "administrator" Then
             MsgBox("DDU has detected that you are using the Real Administrator account. It is not recommended to used it." _
                    & " Please use a normal account that have administrator privilege.")
+        End If
+        log("User Account Name : " & UserAc)
+        If Not isElevated Then
+            MsgBox("You are not using DDU with Administrator priviledge. The application will exit.")
+            Application.Exit()
         End If
     End Sub
 
@@ -5283,7 +5294,7 @@ Public Class Form1
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-        If Version >= "6.1" Then
+        If version >= "6.1" Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
                 regkey.SetValue("SearchOrderConfig", 1)
@@ -5301,7 +5312,7 @@ Public Class Form1
         End If
     End Sub
     Private Sub initlanguage(e As String)
-        
+
         Try
 
             Dim buttontext() As String
