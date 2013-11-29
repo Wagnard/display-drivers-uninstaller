@@ -1070,7 +1070,7 @@ Public Class Form1
                                         Try
                                             regkey.DeleteSubKeyTree(child)
                                         Catch ex As Exception
-                                            log(ex.Message)
+                                            log(ex.Message & " @Pnplockdownfiles")
                                         End Try
                                     End If
                                 End If
@@ -1099,6 +1099,7 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     Try
                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
                     Catch ex As Exception
@@ -1156,7 +1157,7 @@ Public Class Form1
                     Catch ex As Exception
                         log(ex.Message)
                     End Try
-
+                    
                     '-----------------------------------------------
                     'setting back the registry permission to normal.
                     '-----------------------------------------------
@@ -1225,7 +1226,7 @@ Public Class Form1
                                             Try
                                                 regkey.DeleteValue(child)
                                             Catch ex As Exception
-                                                log(ex.Message)
+                                                log(ex.Message & " @Pnplockdownfiles")
                                             End Try
                                         End If
                                     End If
@@ -3418,7 +3419,7 @@ Public Class Form1
                                         Try
                                             regkey.DeleteSubKeyTree(child)
                                         Catch ex As Exception
-                                            log(ex.Message)
+                                            log(ex.Message & " @Pnplockdownfiles")
                                         End Try
                                     End If
                                 End If
@@ -3447,62 +3448,26 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     Try
                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
                     Catch ex As Exception
-                        log(ex.Message)
-                    End Try
-
-                    Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
-                    Catch ex As Exception
-                        log(ex.Message)
-                    End Try
-
-                    Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
-                    Catch ex As Exception
-                        log(ex.Message)
-                    End Try
-
-                    Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
-                    Catch ex As Exception
-                        log(ex.Message)
+                        log(ex.Message & "pnp resources khronos")
                     End Try
 
                     If IntPtr.Size = 8 Then
+
                         Try
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
                         Catch ex As Exception
-                            log(ex.Message)
-                        End Try
-                    End If
-
-                    If IntPtr.Size = 8 Then
-                        Try
-                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
-                        Catch ex As Exception
-                            log(ex.Message)
+                            log(ex.Message & "pnpresources wow6432node khronos")
                         End Try
                     End If
 
                     Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
                     Catch ex As Exception
-                        log(ex.Message)
-                    End Try
-
-                    Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
-                    Catch ex As Exception
-                        log(ex.Message)
-                    End Try
-
-                    Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
-                    Catch ex As Exception
-                        log(ex.Message)
+                        log(ex.Message & "pnp ressources nvidia corporation")
                     End Try
 
                     '-----------------------------------------------
@@ -3573,7 +3538,7 @@ Public Class Form1
                                             Try
                                                 regkey.DeleteValue(child)
                                             Catch ex As Exception
-                                                log(ex.Message & "pnplockdownfiles")
+                                                log(ex.Message & " @pnpclockdownfiles")
                                             End Try
                                         End If
                                     End If
@@ -4453,7 +4418,7 @@ Public Class Form1
                             If childs IsNot Nothing Then
                                 If subregkey.OpenSubKey(childs).GetValue("UpperFilters") IsNot Nothing Then
 
-                                    Dim array() As String = subregkey.OpenSubKey(childs).GetValue("UpperFilters")
+                                    Dim array() As String = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
                                     For i As Integer = 0 To array.Length - 1
 
                                         If array(i).ToLower.Contains("nvpci") Then
@@ -4471,11 +4436,14 @@ Public Class Form1
                                             prochdmi.Start()
                                             prochdmi.WaitForExit()
                                             System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                                            removehdmidriver.Arguments = _
-                                                "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
-                                            prochdmi.Start()
-                                            prochdmi.WaitForExit()
-                                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+                                            If Not winxp Then
+                                                removehdmidriver.Arguments = _
+                                                    "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /grant=" & Chr(34) & "s-1-3-4" & Chr(34) & "=f"
+                                                prochdmi.Start()
+                                                prochdmi.WaitForExit()
+                                                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                                            End If
 
                                             Try
                                                 subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
@@ -4489,7 +4457,7 @@ Public Class Form1
                                             '---------------------------------
                                             removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
                                             removehdmidriver.Arguments = _
-                                              "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /revoke=" & Chr(34) & UserAc & Chr(34)
+                                              "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /revoke=" & Chr(34) & "s-1-3-4" & Chr(34)
                                             removehdmidriver.UseShellExecute = False
                                             removehdmidriver.CreateNoWindow = True
                                             removehdmidriver.RedirectStandardOutput = False
