@@ -7,7 +7,7 @@ The current effect after you use this tool will be similar to if Windows was in 
 
 This tool acts much like "Driver Sweeper", and has all the extra mentioned above.
 
-If you have any problems installing an older driver or a newer one, give it a try as there are some reports that it fixs 
+If you have any problems installing an older driver or a newer one, give it a try as there are some reports that it fix
 those problems.
 
 RECOMMENDED USAGE :

@@ -22,6 +22,8 @@ Imports System.Threading
 Imports System.Security.Principal
 
 
+
+
 Public Class Form1
 
     Dim identity = WindowsIdentity.GetCurrent()
@@ -1037,14 +1039,14 @@ Public Class Form1
             'End of .net ngenservice clean
             '-----------------------------
 
-            If UserAc <> "Administrator" Or winxp = False Then  'Reason is because the way I do things here, we must NOT use the Real administrator account
+            If winxp = False Then
                 If win8higher Then
                     Dim reginfos As RegistryKey = Nothing
                     Dim FolderAcl As New RegistrySecurity
                     'setting permission to registry
                     removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
                     removehdmidriver.RedirectStandardOutput = False
@@ -1053,7 +1055,7 @@ Public Class Form1
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & Chr(34) & "s-1-3-4" & Chr(34) & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -1084,7 +1086,7 @@ Public Class Form1
 
                     removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=Administrators"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
                     removehdmidriver.RedirectStandardOutput = False
@@ -1093,7 +1095,7 @@ Public Class Form1
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /grant=" & Chr(34) & "s-1-3-4" & Chr(34) & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -1159,32 +1161,38 @@ Public Class Form1
                     'setting back the registry permission to normal.
                     '-----------------------------------------------
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=SYSTEM"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /revoke=" & Chr(34) & "s-1-3-4" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+
                     removehdmidriver.Arguments = _
-                        "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=Administrators"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=" & Chr(34) & "s-1-5-18" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /revoke=" & Chr(34) & UserAc & Chr(34)
+                        "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & Chr(34) & "s-1-3-4" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     removehdmidriver.Arguments = _
-                        "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                        "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=" & Chr(34) & "s-1-5-18" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & Chr(34) & UserAc & Chr(34)
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -1199,7 +1207,7 @@ Public Class Form1
                     'setting permission to registry
                     Try
                         removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                        removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
+                        removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & Chr(34) & "s-1-3-4" & Chr(34) & "=f"
                         removehdmidriver.UseShellExecute = False
                         removehdmidriver.CreateNoWindow = True
                         removehdmidriver.RedirectStandardOutput = False
@@ -1231,7 +1239,7 @@ Public Class Form1
                         '-----------------------------------------------
 
                         System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                        removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & Chr(34) & UserAc & Chr(34)
+                        removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & Chr(34) & "s-1-3-4" & Chr(34)
                         prochdmi.Start()
                         prochdmi.WaitForExit()
                         System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -1240,6 +1248,108 @@ Public Class Form1
                     End Try
                 End If
             End If
+
+            '---------------------------------------------
+            'Cleaning of Legacy_AMDKMDAG on win7 and lower
+            '---------------------------------------------
+            If version < "6.2" Then
+                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("SYSTEM")
+                For Each childs As String In subregkey.GetSubKeyNames()
+                    If childs IsNot Nothing Then
+                        If childs.ToLower.Contains("controlset") Then
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                       ("SYSTEM\" & childs & "\Enum\Root")
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetSubKeyNames()
+                                    If child IsNot Nothing Then
+                                        If child.ToLower.Contains("legacy_amdkmdag") Then
+
+                                            '-------------------------------------
+                                            'Setting permission to the key region
+                                            '-------------------------------------
+
+                                            Dim keychild As String = regkey.OpenSubKey(child, False).ToString
+                                            Dim keyroot As String = regkey.ToString
+
+                                            removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
+                                            removehdmidriver.Arguments = _
+                                            "/keyreg " & Chr(34) & keychild & Chr(34) & " /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
+                                            removehdmidriver.UseShellExecute = False
+                                            removehdmidriver.CreateNoWindow = True
+                                            removehdmidriver.RedirectStandardOutput = False
+                                            prochdmi.StartInfo = removehdmidriver
+                                            prochdmi.Start()
+                                            prochdmi.WaitForExit()
+                                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+                                            removehdmidriver.Arguments = _
+                                            "/keyreg " & Chr(34) & keychild & Chr(34) & " /perm"
+                                            prochdmi.Start()
+                                            prochdmi.WaitForExit()
+                                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+                                            removehdmidriver.Arguments = _
+                                            "/keyreg " & Chr(34) & keychild & Chr(34) & " /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
+                                            prochdmi.Start()
+                                            prochdmi.WaitForExit()
+                                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+                                            If Not winxp Then 'no need on winxp
+                                                removehdmidriver.Arguments = _
+                                                "/keyreg " & Chr(34) & keyroot & Chr(34) & " /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
+                                                prochdmi.Start()
+                                                prochdmi.WaitForExit()
+                                                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+
+                                                removehdmidriver.Arguments = _
+                                                "/keyreg " & Chr(34) & keyroot & Chr(34) & " /grant=" & Chr(34) & "s-1-3-4" & Chr(34) & "=f"
+                                                prochdmi.Start()
+                                                prochdmi.WaitForExit()
+                                                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                                            End If
+
+                                            removehdmidriver.Arguments = _
+                                                "/keyreg " & Chr(34) & keyroot & Chr(34) & " /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
+                                            prochdmi.Start()
+                                            prochdmi.WaitForExit()
+                                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+                                            My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & childs & "\Enum\Root", True).DeleteSubKeyTree(child)
+
+                                            'seting permission back to normal
+                                            removehdmidriver.Arguments = _
+                                            "/keyreg " & Chr(34) & keyroot & Chr(34) & " /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
+                                            prochdmi.Start()
+                                            prochdmi.WaitForExit()
+                                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+                                            removehdmidriver.Arguments = _
+                                                "/keyreg " & Chr(34) & keyroot & Chr(34) & " /revoke=" & Chr(34) & UserAc & Chr(34)
+                                            prochdmi.Start()
+                                            prochdmi.WaitForExit()
+                                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+                                            If Not winxp Then
+                                                removehdmidriver.Arguments = _
+                                                "/keyreg " & Chr(34) & keyroot & Chr(34) & " /grant=" & Chr(34) & "s-1-3-4" & Chr(34) & "=a"
+                                                prochdmi.Start()
+                                                prochdmi.WaitForExit()
+                                                System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                                            End If
+                                        End If
+                                    End If
+                                Next
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+            '----------------------------------------------------
+            'End of Cleaning of Legacy_AMDKMDAG on win7 and lower
+            '----------------------------------------------------
+
 
             '--------------------------------
             'System environement path cleanup
@@ -3277,14 +3387,14 @@ Public Class Form1
             'end of deleting dcom stuff
 
 
-            If UserAc <> "Administrator" Or winxp = False Then  'Reason is because the way I do things here, we must NOT use the Real administrator account
+            If winxp = False Then
                 If win8higher Then
-
                     Dim reginfos As RegistryKey = Nothing
                     Dim FolderAcl As New RegistrySecurity
                     'setting permission to registry
                     removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
                     removehdmidriver.RedirectStandardOutput = False
@@ -3292,12 +3402,15 @@ Public Class Form1
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
+                    removehdmidriver.Arguments = _
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & Chr(34) & "s-1-3-4" & Chr(34) & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                     If regkey IsNot Nothing Then
+
                         For i As Integer = 0 To driverfiles.Length - 1
                             For Each child As String In regkey.GetSubKeyNames()
                                 If child IsNot Nothing Then
@@ -3305,7 +3418,7 @@ Public Class Form1
                                         Try
                                             regkey.DeleteSubKeyTree(child)
                                         Catch ex As Exception
-                                            log(ex.Message & "pnplockdownfiles")
+                                            log(ex.Message)
                                         End Try
                                     End If
                                 End If
@@ -3314,13 +3427,14 @@ Public Class Form1
                     End If
 
 
-
-                    '----------------
+                    '-------------------------------
                     'cleaning pnpresources
                     'setting permission to registry
+                    '-------------------------------
+
                     removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=Administrators"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
                     removehdmidriver.RedirectStandardOutput = False
@@ -3329,61 +3443,104 @@ Public Class Form1
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /grant=" & Chr(34) & "s-1-3-4" & Chr(34) & "=f"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
                     Try
                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
                     Catch ex As Exception
-                        log(ex.Message & "pnp resources khronos")
+                        log(ex.Message)
+                    End Try
+
+                    Try
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
+                    Catch ex As Exception
+                        log(ex.Message)
+                    End Try
+
+                    Try
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
+                    Catch ex As Exception
+                        log(ex.Message)
+                    End Try
+
+                    Try
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
+                    Catch ex As Exception
+                        log(ex.Message)
                     End Try
 
                     If IntPtr.Size = 8 Then
-
                         Try
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
                         Catch ex As Exception
-                            log(ex.Message & "pnpresources wow6432node khronos")
+                            log(ex.Message)
+                        End Try
+                    End If
+
+                    If IntPtr.Size = 8 Then
+                        Try
+                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
+                        Catch ex As Exception
+                            log(ex.Message)
                         End Try
                     End If
 
                     Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
                     Catch ex As Exception
-                        log(ex.Message & "pnp ressources")
+                        log(ex.Message)
                     End Try
 
-                    '------------------------------------------------------------------------------------------
-                    'setting back the registry permission to normal for both pnplockdownfiles and pnpresources.
-                    '------------------------------------------------------------------------------------------
+                    Try
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
+                    Catch ex As Exception
+                        log(ex.Message)
+                    End Try
+
+                    Try
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
+                    Catch ex As Exception
+                        log(ex.Message)
+                    End Try
+
+                    '-----------------------------------------------
+                    'setting back the registry permission to normal.
+                    '-----------------------------------------------
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=SYSTEM"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /revoke=" & Chr(34) & "s-1-3-4" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
+
                     removehdmidriver.Arguments = _
-                        "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=Administrators"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=" & Chr(34) & "s-1-5-18" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /revoke=" & Chr(34) & UserAc & Chr(34)
+                        "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=SYSTEM"
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & Chr(34) & "s-1-3-4" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     removehdmidriver.Arguments = _
-                        "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=Administrators"
+                        "/keyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=" & Chr(34) & "s-1-5-18" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                     removehdmidriver.Arguments = _
-                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & Chr(34) & UserAc & Chr(34)
+                        "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
@@ -3392,14 +3549,13 @@ Public Class Form1
                     'End setting permission to normal
                     '--------------------------------
 
-                Else    'Windows vista up to 7 version of the pnplockdownfiles cleaning
+                Else   'Older windows  (windows vista and 7 run here)
                     Dim reginfos As RegistryKey = Nothing
                     Dim FolderAcl As New RegistrySecurity
                     'setting permission to registry
                     Try
                         removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
-                        removehdmidriver.Arguments = _
-                            "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & Chr(34) & UserAc & Chr(34) & "=f"
+                        removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /grant=" & Chr(34) & "s-1-3-4" & Chr(34) & "=f"
                         removehdmidriver.UseShellExecute = False
                         removehdmidriver.CreateNoWindow = True
                         removehdmidriver.RedirectStandardOutput = False
@@ -3407,6 +3563,7 @@ Public Class Form1
                         prochdmi.Start()
                         prochdmi.WaitForExit()
                         System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                         If regkey IsNot Nothing Then
                             For i As Integer = 0 To driverfiles.Length - 1
@@ -3424,15 +3581,16 @@ Public Class Form1
                             Next
                         End If
 
+
+                        '-----------------------------------------------
                         'setting back the registry permission to normal.
+                        '-----------------------------------------------
+
                         System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                        removehdmidriver.Arguments = _
-                            "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & Chr(34) & UserAc & Chr(34)
-                        If UserAc <> "Administrator" Then
-                            prochdmi.Start()
-                            prochdmi.WaitForExit()
-                            System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                        End If
+                        removehdmidriver.Arguments = "/subkeyreg HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles /revoke=" & Chr(34) & "s-1-3-4" & Chr(34)
+                        prochdmi.Start()
+                        prochdmi.WaitForExit()
+                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
                     Catch ex As Exception
                         log(ex.Message & " We Got a security warning avoided on the subacl Part win7")
                     End Try
@@ -4305,7 +4463,7 @@ Public Class Form1
 
                                             removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
                                             removehdmidriver.Arguments = _
-                                                "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /owner=Administrators"
+                                                "/keyreg " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " /owner=" & Chr(34) & "s-1-5-32-544" & Chr(34)
                                             removehdmidriver.UseShellExecute = False
                                             removehdmidriver.CreateNoWindow = True
                                             removehdmidriver.RedirectStandardOutput = False
@@ -4319,8 +4477,11 @@ Public Class Form1
                                             prochdmi.WaitForExit()
                                             System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
 
-                                            subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
-
+                                            Try
+                                                subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
+                                            Catch ex As Exception
+                                                log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing vieocard")
+                                            End Try
 
 
                                             '---------------------------------
@@ -4585,6 +4746,9 @@ Public Class Form1
                 If version.StartsWith("5.1") Then
                     Dim myExe As String = Application.StartupPath & "\x86\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp32)
+
+                    myExe = Application.StartupPath & "\x86\subinacl.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl32)
                 Else
                     Dim myExe As String = Application.StartupPath & "\x86\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr32)
@@ -4719,10 +4883,7 @@ Public Class Form1
                 MsgBox("DDU has detected that you are NOT in SafeMode... It is NOT recommended to continue")
                 'The computer was booted in Normal mode.
         End Select
-        If System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString().ToLower = "administrator" Then
-            MsgBox("DDU has detected that you are using the Real Administrator account. It is not recommended to used it." _
-                   & " Please use a normal account that have administrator privilege.")
-        End If
+
         log("User Account Name : " & UserAc)
         If Not isElevated Then
             MsgBox("You are not using DDU with Administrator priviledge. The application will exit.")
