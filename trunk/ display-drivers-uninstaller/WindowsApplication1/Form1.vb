@@ -67,6 +67,8 @@ Public Class Form1
     Dim toolTip1 As New ToolTip()
     Dim tos As String
     Dim UserAc As String = System.Environment.GetEnvironmentVariable("username")
+    Dim keyroot As String
+    Dim keychild As String
 
     Private Function checkupdates() As Integer
         Try
@@ -958,8 +960,10 @@ Public Class Form1
                         If subregkey IsNot Nothing Then
                             For Each childs As String In subregkey.GetSubKeyNames()
                                 If childs IsNot Nothing Then
-                                    If subregkey.OpenSubKey(childs, False).GetValue("Assembly").ToString.ToLower.Contains("aticccom") Then
-                                        regkey.DeleteSubKeyTree(child)
+                                    If subregkey.OpenSubKey(childs, False).GetValue("Assembly") IsNot Nothing Then
+                                        If subregkey.OpenSubKey(childs, False).GetValue("Assembly").ToString.ToLower.Contains("aticccom") Then
+                                            regkey.DeleteSubKeyTree(child)
+                                        End If
                                     End If
                                 End If
                             Next
@@ -1270,8 +1274,8 @@ Public Class Form1
                                             'Setting permission to the key region
                                             '-------------------------------------
 
-                                            Dim keychild As String = regkey.OpenSubKey(child, False).ToString
-                                            Dim keyroot As String = regkey.ToString
+                                            keychild = regkey.OpenSubKey(child, False).ToString
+                                            keyroot = regkey.ToString
 
                                             removehdmidriver.FileName = ".\" & Label3.Text & "\subinacl.exe"
                                             removehdmidriver.Arguments = _
@@ -1316,8 +1320,12 @@ Public Class Form1
                                             prochdmi.Start()
                                             prochdmi.WaitForExit()
                                             System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                                            Try
+                                                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & childs & "\Enum\Root", True).DeleteSubKeyTree(child)
+                                            Catch ex As Exception
+                                                log(ex.Message & " Legacy_AMDKMDAG   (This error is ok)")
+                                            End Try
 
-                                            My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & childs & "\Enum\Root", True).DeleteSubKeyTree(child)
 
                                             'seting permission back to normal
                                             removehdmidriver.Arguments = _
