@@ -4775,7 +4775,7 @@ Public Class Form1
         Dim part As String
         Dim match As Boolean = False
         card1 = reply.IndexOf(":")
-        position2 = reply.IndexOf("PCI", card1 + 1)
+        position2 = reply.IndexOf("PCI\", card1 + 1)
         If position2 < 0 Then
             position2 = reply.IndexOf("matching", card1 + 1)
             match = True
@@ -4785,7 +4785,7 @@ Public Class Form1
             If Not match Then
                 part = reply.Substring(card1 + 2, (position2 - card1 - 3))
                 card1 = reply.IndexOf(":", card1 + 1)
-                position2 = reply.IndexOf("PCI", card1 + 1)
+                position2 = reply.IndexOf("PCI\", card1 + 1)
                 If position2 < 0 Then
                     position2 = reply.IndexOf("matching", card1 + 1)
                     match = True
