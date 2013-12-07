@@ -91,7 +91,7 @@
     <Import Include="System.Drawing" />
     <Import Include="System.Diagnostics" />
     <Import Include="System.Windows.Forms" />
-      </ItemGroup>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="about.Designer.vb">
       <DependentUpon>about.vb</DependentUpon>
@@ -171,6 +171,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\win7\pnpldf.bkp" />
+    <None Include="Resources\win8\pnpldf.bkp" />
     <None Include="Resources\x86\subinacl.exe" />
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +192,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\ddu logo3.png" />
+    <None Include="Resources\x86\SetACL.exe" />
+    <None Include="Resources\x64\SetACL.exe" />
     <None Include="Resources\xp32\ddudr.exe" />
     <None Include="Resources\x86\ddudr.exe" />
     <None Include="Resources\x64\ddudr.exe" />
