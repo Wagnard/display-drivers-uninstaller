@@ -145,4 +145,16 @@
   <data name="ddudrxp32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\xp32\ddudr.exe;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="setacl64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\x64\SetACL.exe;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="setacl32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\x86\SetACL.exe;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pnpldfwin7vista" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\win7\pnpldf.bkp;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pnpldfwin8" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\win8\pnpldf.bkp;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
