@@ -2369,7 +2369,7 @@ Public Class Form1
 
 
 
-                If IntPtr.Size = 8 Then
+            If IntPtr.Size = 8 Then
                 Try
                     regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                         ("Wow6432Node\Interface", True)
@@ -2785,7 +2785,6 @@ Public Class Form1
                                         If subregkey.GetValue("") IsNot Nothing Then
                                             wantedvalue = subregkey.GetValue("").ToString
                                             If wantedvalue IsNot Nothing Then
-
                                                 If removephysx Then
                                                     If IntPtr.Size = 8 Then
                                                         Try
@@ -2812,7 +2811,9 @@ Public Class Form1
                                                                 Try
                                                                     'special case for an unusual key configuration nv bug?
                                                                     subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                    subregkey2.DeleteSubKeyTree(appid)
+                                                                    If subregkey2 IsNot Nothing Then
+                                                                        subregkey2.DeleteSubKeyTree(appid)
+                                                                    End If
                                                                 Catch ex As Exception
                                                                 End Try
                                                             End If
@@ -3041,7 +3042,6 @@ Public Class Form1
                                 End If
                             End If
                         End If
-
                     Next
                 End If
             Catch ex As Exception
@@ -3061,187 +3061,7 @@ Public Class Form1
                                 Continue For
                             End Try
                             Try
-                                If subregkey.GetValue("") IsNot Nothing Then
-                                    wantedvalue = subregkey.GetValue("").ToString
-                                    If wantedvalue IsNot Nothing And wantedvalue.ToLower.Contains("\nvidia corporation\") Then
-
-                                        If removephysx Then
-                                            If IntPtr.Size = 8 Then
-                                                Try
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
-                                                    Dim appid As String = Nothing
-                                                    Try
-                                                        appid = subregkey2.GetValue("AppID").ToString
-                                                    Catch ex As Exception
-                                                    End Try
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
-
-                                                    Dim typelib As String = Nothing
-                                                    Try
-                                                        typelib = subregkey2.GetValue("").ToString
-                                                    Catch ex As Exception
-                                                    End Try
-
-                                                    If appid IsNot Nothing Then
-                                                        Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                            subregkey2.DeleteSubKeyTree(appid)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        Try
-                                                            'special case for an unusual key configuration nv bug?
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                            subregkey2.DeleteSubKeyTree(appid)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    If typelib IsNot Nothing Then
-                                                        Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
-                                                            subregkey2.DeleteSubKeyTree(typelib)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                    subregkey2.DeleteSubKeyTree(child)
-
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                            Try
-                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
-                                                Dim appid As String = Nothing
-                                                Try
-                                                    appid = subregkey2.GetValue("AppID").ToString
-                                                Catch ex As Exception
-                                                End Try
-                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
-                                                Dim typelib As String = Nothing
-                                                Try
-                                                    typelib = subregkey2.GetValue("").ToString
-                                                Catch ex As Exception
-                                                End Try
-
-                                                If appid IsNot Nothing Then
-                                                    Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                        subregkey2.DeleteSubKeyTree(appid)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                If typelib IsNot Nothing Then
-                                                    Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
-                                                        subregkey2.DeleteSubKeyTree(typelib)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                subregkey2.DeleteSubKeyTree(child)
-                                            Catch ex As Exception
-                                            End Try
-
-                                        Else
-                                            If child.Contains("gamesconfigserver") Then   'Physx related
-                                                'do nothing
-                                            Else
-                                                If IntPtr.Size = 8 Then
-                                                    Try
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
-                                                        Dim appid As String = Nothing
-                                                        Try
-                                                            appid = subregkey2.GetValue("AppID").ToString
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
-                                                        Dim typelib As String = Nothing
-                                                        Try
-                                                            typelib = subregkey2.GetValue("").ToString
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        If appid IsNot Nothing Then
-                                                            Try
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                                subregkey.DeleteSubKeyTree(appid)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                            Try
-                                                                'special case for an unusual key configuration nv bug?
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                subregkey.DeleteSubKeyTree(appid)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        If typelib IsNot Nothing Then
-                                                            Try
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
-                                                                subregkey.DeleteSubKeyTree(typelib)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                        subregkey.DeleteSubKeyTree(child)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                Try
-                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
-                                                    Dim appid As String = Nothing
-                                                    Try
-                                                        appid = subregkey2.GetValue("AppID").ToString
-                                                    Catch ex As Exception
-                                                    End Try
-                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
-                                                    Dim typelib As String = Nothing
-                                                    Try
-                                                        typelib = subregkey2.GetValue("").ToString
-                                                    Catch ex As Exception
-                                                    End Try
-
-                                                    If appid IsNot Nothing Then
-                                                        Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                            subregkey.DeleteSubKeyTree(appid)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    If typelib IsNot Nothing Then
-                                                        Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
-                                                            subregkey.DeleteSubKeyTree(typelib)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                    subregkey.DeleteSubKeyTree(child)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                        End If
-                                    End If
-                                End If
-                            Catch ex As Exception
-                            End Try
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                log(ex.StackTrace)
-            End Try
-
-            If IntPtr.Size = 8 Then
-                Try
-                    regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID")
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames()
-                            If child IsNot Nothing Then
-                                Try
-                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\LocalServer32", False)
-                                Catch ex As Exception
-                                    Continue For
-                                End Try
-
-                                Try
+                                If subregkey IsNot Nothing Then
                                     If subregkey.GetValue("") IsNot Nothing Then
                                         wantedvalue = subregkey.GetValue("").ToString
                                         If wantedvalue IsNot Nothing And wantedvalue.ToLower.Contains("\nvidia corporation\") Then
@@ -3401,6 +3221,190 @@ Public Class Form1
                                             End If
                                         End If
                                     End If
+                                End If
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.StackTrace)
+            End Try
+
+            If IntPtr.Size = 8 Then
+                Try
+                    regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID")
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If child IsNot Nothing Then
+                                Try
+                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\LocalServer32", False)
+                                Catch ex As Exception
+                                    Continue For
+                                End Try
+
+                                Try
+                                    If subregkey IsNot Nothing Then
+                                        If subregkey.GetValue("") IsNot Nothing Then
+                                            wantedvalue = subregkey.GetValue("").ToString
+                                            If wantedvalue IsNot Nothing And wantedvalue.ToLower.Contains("\nvidia corporation\") Then
+
+                                                If removephysx Then
+                                                    If IntPtr.Size = 8 Then
+                                                        Try
+                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
+                                                            Dim appid As String = Nothing
+                                                            Try
+                                                                appid = subregkey2.GetValue("AppID").ToString
+                                                            Catch ex As Exception
+                                                            End Try
+                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
+
+                                                            Dim typelib As String = Nothing
+                                                            Try
+                                                                typelib = subregkey2.GetValue("").ToString
+                                                            Catch ex As Exception
+                                                            End Try
+
+                                                            If appid IsNot Nothing Then
+                                                                Try
+                                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                                                                    subregkey2.DeleteSubKeyTree(appid)
+                                                                Catch ex As Exception
+                                                                End Try
+                                                                Try
+                                                                    'special case for an unusual key configuration nv bug?
+                                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                                    subregkey2.DeleteSubKeyTree(appid)
+                                                                Catch ex As Exception
+                                                                End Try
+                                                            End If
+                                                            If typelib IsNot Nothing Then
+                                                                Try
+                                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
+                                                                    subregkey2.DeleteSubKeyTree(typelib)
+                                                                Catch ex As Exception
+                                                                End Try
+                                                            End If
+                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                            subregkey2.DeleteSubKeyTree(child)
+
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                    Try
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
+                                                        Dim appid As String = Nothing
+                                                        Try
+                                                            appid = subregkey2.GetValue("AppID").ToString
+                                                        Catch ex As Exception
+                                                        End Try
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
+                                                        Dim typelib As String = Nothing
+                                                        Try
+                                                            typelib = subregkey2.GetValue("").ToString
+                                                        Catch ex As Exception
+                                                        End Try
+
+                                                        If appid IsNot Nothing Then
+                                                            Try
+                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                                subregkey2.DeleteSubKeyTree(appid)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        End If
+                                                        If typelib IsNot Nothing Then
+                                                            Try
+                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+                                                                subregkey2.DeleteSubKeyTree(typelib)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        End If
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                        subregkey2.DeleteSubKeyTree(child)
+                                                    Catch ex As Exception
+                                                    End Try
+
+                                                Else
+                                                    If child.Contains("gamesconfigserver") Then   'Physx related
+                                                        'do nothing
+                                                    Else
+                                                        If IntPtr.Size = 8 Then
+                                                            Try
+                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
+                                                                Dim appid As String = Nothing
+                                                                Try
+                                                                    appid = subregkey2.GetValue("AppID").ToString
+                                                                Catch ex As Exception
+                                                                End Try
+                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
+                                                                Dim typelib As String = Nothing
+                                                                Try
+                                                                    typelib = subregkey2.GetValue("").ToString
+                                                                Catch ex As Exception
+                                                                End Try
+                                                                If appid IsNot Nothing Then
+                                                                    Try
+                                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                                                                        subregkey.DeleteSubKeyTree(appid)
+                                                                    Catch ex As Exception
+                                                                    End Try
+                                                                    Try
+                                                                        'special case for an unusual key configuration nv bug?
+                                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                                        subregkey.DeleteSubKeyTree(appid)
+                                                                    Catch ex As Exception
+                                                                    End Try
+                                                                End If
+                                                                If typelib IsNot Nothing Then
+                                                                    Try
+                                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
+                                                                        subregkey.DeleteSubKeyTree(typelib)
+                                                                    Catch ex As Exception
+                                                                    End Try
+                                                                End If
+                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                                subregkey.DeleteSubKeyTree(child)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        End If
+                                                        Try
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
+                                                            Dim appid As String = Nothing
+                                                            Try
+                                                                appid = subregkey2.GetValue("AppID").ToString
+                                                            Catch ex As Exception
+                                                            End Try
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
+                                                            Dim typelib As String = Nothing
+                                                            Try
+                                                                typelib = subregkey2.GetValue("").ToString
+                                                            Catch ex As Exception
+                                                            End Try
+
+                                                            If appid IsNot Nothing Then
+                                                                Try
+                                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+                                                                    subregkey.DeleteSubKeyTree(appid)
+                                                                Catch ex As Exception
+                                                                End Try
+                                                            End If
+                                                            If typelib IsNot Nothing Then
+                                                                Try
+                                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+                                                                    subregkey.DeleteSubKeyTree(typelib)
+                                                                Catch ex As Exception
+                                                                End Try
+                                                            End If
+                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                            subregkey.DeleteSubKeyTree(child)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                End If
+                                            End If
+                                        End If
+                                    End If
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -3420,13 +3424,13 @@ Public Class Form1
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
                         If child IsNot Nothing Then
-                            If child IsNot Nothing Then
-                                Try
-                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\InProcServer32", False)
-                                Catch ex As Exception
-                                    Continue For
-                                End Try
-                                Try
+                            Try
+                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\InProcServer32", False)
+                            Catch ex As Exception
+                                Continue For
+                            End Try
+                            Try
+                                If subregkey IsNot Nothing Then
                                     If subregkey.GetValue("") IsNot Nothing Then
                                         wantedvalue = subregkey.GetValue("").ToString
                                         If wantedvalue IsNot Nothing Then
@@ -3589,9 +3593,9 @@ Public Class Form1
                                             Next
                                         End If
                                     End If
-                                Catch ex As Exception
-                                End Try
-                            End If
+                                End If
+                            Catch ex As Exception
+                            End Try
                         End If
                     Next
                 End If
@@ -3881,7 +3885,7 @@ Public Class Form1
                         Next
                     End If
                 End If
-                    Catch ex As Exception
+            Catch ex As Exception
                 log(ex.Message)
             End Try
 
