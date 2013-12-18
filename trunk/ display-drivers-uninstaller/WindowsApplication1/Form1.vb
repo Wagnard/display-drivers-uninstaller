@@ -131,14 +131,12 @@ Public Class Form1
                 ElseIf result = MsgBoxResult.Yes And ComboBox1.SelectedIndex = 1 Then
                     Process.Start("http://forums.guru3d.com/showthread.php?t=379505")
                 ElseIf result = MsgBoxResult.No Then
-                    MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.")
+                    MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them." & _
+                           "Do not report bugs from older versions unless they have not been fixed yet.")
                 ElseIf result = MsgBoxResult.Cancel Then
-                    MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.")
+                    MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them." & _
+                           "Do not report bugs from older versions unless they have not been fixed yet.")
 
-
-
-
-                    'MsgBox("Updates are available! Visit forum thread now?    Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them. Do not report bugs from older versions unless they have not been fixed yet.", MsgBoxStyle.Information)
                 End If
             ElseIf updates = 3 Then
                 Label11.Text = "Unable to Fetch updates!"
@@ -935,7 +933,7 @@ Public Class Form1
                     For Each child As String In regkey.GetSubKeyNames()
                         If child IsNot Nothing Then
                             Try
-                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" + child, False)
+                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child, False)
                             Catch ex As Exception
                                 Continue For
                             End Try
@@ -1091,7 +1089,8 @@ Public Class Form1
             'end of decom?
 
             Try
-                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers", True).DeleteSubKeyTree("ATIACE")
+                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" & _
+                                                             "Display\shellex\PropertySheetHandlers", True).DeleteSubKeyTree("ATIACE")
             Catch ex As Exception
             End Try
 
@@ -1147,7 +1146,7 @@ Public Class Form1
                         'setting permission to registry
                         removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
                         removehdmidriver.Arguments = _
-                            "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
+"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
                         removehdmidriver.UseShellExecute = False
                         removehdmidriver.CreateNoWindow = True
                         removehdmidriver.RedirectStandardOutput = False
@@ -4862,7 +4861,7 @@ Public Class Form1
         log("End of Registry Cleaning")
         System.Threading.Thread.Sleep(50)
     End Sub
-    Private Sub checkpcieroot()  'This is for Nvidia Optimus
+    Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                    ("SYSTEM\CurrentControlSet\Enum\PCI")
         If regkey IsNot Nothing Then
@@ -5491,7 +5490,8 @@ Public Class Form1
 
 
     Private Sub Cleanup(ByVal directory As String, ByVal KeepDur As Integer)
-        'Code taken from my CoDUO FoV Changer program, thus why it uses a keepdur, it's supposed to delete logs older than whatever days. I set it to 2 seconds instead of modifying the code. Lol
+        'Code taken from my CoDUO FoV Changer program, thus why it uses a keepdur, 
+        'it's supposed to delete logs older than whatever days. I set it to 2 seconds instead of modifying the code. Lol
         Try
             Dim logdir As New System.IO.DirectoryInfo(directory)
             For Each file As System.IO.FileInfo In logdir.GetFiles
