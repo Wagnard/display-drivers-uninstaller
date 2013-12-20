@@ -4905,7 +4905,7 @@ Public Class Form1
                         End Try
                         For Each childs As String In subregkey.GetSubKeyNames()
                             If String.IsNullOrEmpty(childs) = False Then
-                                If String.IsNullOrEmpty(subregkey.OpenSubKey(childs).GetValue("UpperFilters")) = False Then
+                                If subregkey.OpenSubKey(childs).GetValue("UpperFilters") IsNot Nothing Then
                                     Dim array() As String = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
                                     For i As Integer = 0 To array.Length - 1
 
