@@ -32,6 +32,8 @@ Testeur : Dellon132
 
 Logos : juanchacin
 
+Merci à Helge Klein (http://helgeklein.com/setacl/) : pour m'avoir donné la permission d'utiliser son programme « SetACL », avec « DDU ».
+
 Un grand merci à Gamer1291, pour ses nombreux tests.
 
 Merci à tous ceux qui ont mis leur système en danger (un remerciement tout particulier à Dellon132).
