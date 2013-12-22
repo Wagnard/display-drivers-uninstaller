@@ -101,20 +101,23 @@ Public Class Form1
     End Sub
     Private Function checkupdates() As Integer
         Try
-            Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion.txt")
+            Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt")
             Dim response2 As System.Net.HttpWebResponse = Nothing
 
             Try
                 response2 = request2.GetResponse()
             Catch ex As Exception
-                request2 = System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion.txt")
+                request2 = System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion2.txt")
             End Try
 
             response2 = request2.GetResponse()
             Dim sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
 
             Dim newestversion2 As String = sr.ReadToEnd()
-            If newestversion2 <= (Application.ProductVersion) Then
+            Dim newestversion2int As Integer = newestversion2.Replace(".", "")
+            Dim applicationversion As Integer = Application.ProductVersion.Replace(".", "")
+
+            If newestversion2int <= applicationversion Then
                 Return 1
             Else
                 Return 2
@@ -137,6 +140,23 @@ Public Class Form1
         End If
 
         AccessUI()
+    End Sub
+    Private Sub regfullfordelete(ByVal key As String)
+        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+        removehdmidriver.Arguments = _
+"-on " & Chr(34) & key & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
+        removehdmidriver.UseShellExecute = False
+        removehdmidriver.CreateNoWindow = True
+        removehdmidriver.RedirectStandardOutput = False
+        prochdmi.StartInfo = removehdmidriver
+        prochdmi.Start()
+        prochdmi.WaitForExit()
+
+        removehdmidriver.Arguments = _
+"-on " & Chr(34) & key & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
+        prochdmi.StartInfo = removehdmidriver
+        prochdmi.Start()
+        prochdmi.WaitForExit()
     End Sub
     Private Sub AccessUI()
         If Me.InvokeRequired Then
@@ -1218,43 +1238,48 @@ Public Class Form1
                         'setting permission to registry
                         '-------------------------------
 
-                        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
-                        removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
-                        removehdmidriver.UseShellExecute = False
-                        removehdmidriver.CreateNoWindow = True
-                        removehdmidriver.RedirectStandardOutput = False
-                        prochdmi.StartInfo = removehdmidriver
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
+                        '                        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                        '                        removehdmidriver.Arguments = _
+                        '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
+                        '                        removehdmidriver.UseShellExecute = False
+                        '                        removehdmidriver.CreateNoWindow = True
+                        '                        removehdmidriver.RedirectStandardOutput = False
+                        '                        prochdmi.StartInfo = removehdmidriver
+                        '                        prochdmi.Start()
+                        '                        prochdmi.WaitForExit()
 
-                        removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
-                        prochdmi.StartInfo = removehdmidriver
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
+                        '                        removehdmidriver.Arguments = _
+                        '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
+                        '                        prochdmi.StartInfo = removehdmidriver
+                        '                        prochdmi.Start()
+                        '                        prochdmi.WaitForExit()
                         Try
+                            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
                         Catch ex As Exception
                         End Try
 
                         Try
+                            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
                         Catch ex As Exception
                         End Try
 
                         Try
+                            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
                         Catch ex As Exception
                         End Try
 
                         Try
+                            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
                         Catch ex As Exception
                         End Try
 
                         If IntPtr.Size = 8 Then
                             Try
+                                regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
                                 My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
                             Catch ex As Exception
                             End Try
@@ -1262,45 +1287,49 @@ Public Class Form1
 
                         If IntPtr.Size = 8 Then
                             Try
+                                regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
                                 My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
                             Catch ex As Exception
                             End Try
                         End If
 
                         Try
+                            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
                         Catch ex As Exception
                         End Try
 
                         Try
+                            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
                         Catch ex As Exception
                         End Try
 
                         Try
+                            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
                         Catch ex As Exception
                         End Try
 
-                        '-----------------------------------------------
-                        'setting back the registry permission to normal.
-                        '-----------------------------------------------
-                        removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
-                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                        '                        '-----------------------------------------------
+                        '                        'setting back the registry permission to normal.
+                        '                        '-----------------------------------------------
+                        '                        removehdmidriver.Arguments = _
+                        '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
+                        '                        prochdmi.Start()
+                        '                        prochdmi.WaitForExit()
+                        '                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
 
-                        removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-18"
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
-                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                        removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:s-1-5-32-544"
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
-                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                        '                        removehdmidriver.Arguments = _
+                        '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-18"
+                        '                        prochdmi.Start()
+                        '                        prochdmi.WaitForExit()
+                        '                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                        '                        removehdmidriver.Arguments = _
+                        '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:s-1-5-32-544"
+                        '                        prochdmi.Start()
+                        '                        prochdmi.WaitForExit()
+                        '                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
 
                         removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & Label3.Text & "\pnpldf.bkp"
@@ -3757,27 +3786,28 @@ Public Class Form1
                         End If
 
 
-                        '-------------------------------
-                        'cleaning pnpresources
-                        'setting permission to registry
-                        '-------------------------------
+                        '                        '-------------------------------
+                        '                        'cleaning pnpresources
+                        '                        'setting permission to registry
+                        '                        '-------------------------------
 
-                        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
-                        removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
-                        removehdmidriver.UseShellExecute = False
-                        removehdmidriver.CreateNoWindow = True
-                        removehdmidriver.RedirectStandardOutput = False
-                        prochdmi.StartInfo = removehdmidriver
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
+                        '                        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                        '                        removehdmidriver.Arguments = _
+                        '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
+                        '                        removehdmidriver.UseShellExecute = False
+                        '                        removehdmidriver.CreateNoWindow = True
+                        '                        removehdmidriver.RedirectStandardOutput = False
+                        '                        prochdmi.StartInfo = removehdmidriver
+                        '                        prochdmi.Start()
+                        '                        prochdmi.WaitForExit()
 
-                        removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
-                        prochdmi.StartInfo = removehdmidriver
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
+                        '                        removehdmidriver.Arguments = _
+                        '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
+                        '                        prochdmi.StartInfo = removehdmidriver
+                        '                        prochdmi.Start()
+                        '                        prochdmi.WaitForExit()
                         Try
+                            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
                         Catch ex As Exception
                             log(ex.Message & "pnp resources khronos")
@@ -3786,6 +3816,7 @@ Public Class Form1
                         If IntPtr.Size = 8 Then
 
                             Try
+                                regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
                                 My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
                             Catch ex As Exception
                                 log(ex.Message & "pnpresources wow6432node khronos")
@@ -3793,30 +3824,31 @@ Public Class Form1
                         End If
 
                         Try
+                            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
                         Catch ex As Exception
                             log(ex.Message & "pnp ressources nvidia corporation")
                         End Try
 
-                        '-----------------------------------------------
-                        'setting back the registry permission to normal.
-                        '-----------------------------------------------
-                        removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
-                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                        '                        '-----------------------------------------------
+                        '                        'setting back the registry permission to normal.
+                        '                        '-----------------------------------------------
+                        '                        removehdmidriver.Arguments = _
+                        '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
+                        '                        prochdmi.Start()
+                        '                        prochdmi.WaitForExit()
+                        '                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
 
-                        removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-18"
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
-                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
-                        removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:s-1-5-32-544"
-                        prochdmi.Start()
-                        prochdmi.WaitForExit()
-                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                        '                        removehdmidriver.Arguments = _
+                        '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-18"
+                        '                        prochdmi.Start()
+                        '                        prochdmi.WaitForExit()
+                        '                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
+                        '                        removehdmidriver.Arguments = _
+                        '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:s-1-5-32-544"
+                        '                        prochdmi.Start()
+                        '                        prochdmi.WaitForExit()
+                        '                        System.Threading.Thread.Sleep(25)  '25 millisecond stall (0.025 Seconds)
 
                         removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & Label3.Text & "\pnpldf.bkp"
@@ -4909,7 +4941,7 @@ Public Class Form1
                                     Dim array() As String = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
                                     For i As Integer = 0 To array.Length - 1
 
-                                        If array(i).ToLower.Contains("nvpci") Then
+                                        If array(i).ToLower.Contains("nvpciflt") Then
                                             '-------------------------------------
                                             'Setting permission to the key region
                                             '-------------------------------------
