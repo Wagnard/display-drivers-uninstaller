@@ -142,7 +142,7 @@ Public Class Form1
         AccessUI()
     End Sub
     Private Sub regfullfordelete(ByVal key As String)
-        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+        removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
         removehdmidriver.Arguments = _
 "-on " & Chr(34) & key & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
         removehdmidriver.UseShellExecute = False
@@ -227,7 +227,7 @@ Public Class Form1
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Executing Driver Store cleanUP(Find OEM)...")
         'Check the driver from the driver store  ( oemxx.inf)
-        checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
+        checkoem.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
         checkoem.Arguments = "dp_enum"
         checkoem.UseShellExecute = False
         checkoem.CreateNoWindow = True
@@ -259,7 +259,7 @@ Public Class Form1
                     Dim part As String = reply.Substring(oem, inf - oem)
                     log(part + " Found")
                     Dim deloem As New Diagnostics.ProcessStartInfo
-                    deloem.FileName = ".\" & Label3.Text & "\ddudr.exe"
+                    deloem.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
                     deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
                     For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
                         If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
@@ -1193,7 +1193,7 @@ Public Class Form1
                         Dim reginfos As RegistryKey = Nothing
                         Dim FolderAcl As New RegistrySecurity
                         'setting permission to registry
-                        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                        removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
                         removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
                         removehdmidriver.UseShellExecute = False
@@ -1238,7 +1238,7 @@ Public Class Form1
                         'setting permission to registry
                         '-------------------------------
 
-                        '                        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                        '                        removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
                         '                        removehdmidriver.Arguments = _
                         '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
                         '                        removehdmidriver.UseShellExecute = False
@@ -1346,7 +1346,7 @@ Public Class Form1
                         Dim reginfos As RegistryKey = Nothing
                         Dim FolderAcl As New RegistrySecurity
                         'setting permission to registry
-                        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                        removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
                         removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
                         removehdmidriver.UseShellExecute = False
@@ -1422,7 +1422,7 @@ Public Class Form1
                                                     '-------------------------------------
 
 
-                                                    removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                                                    removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
                                                     removehdmidriver.Arguments = _
     "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\" & childs & "\Enum\Root\" & child & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & UserAc & Chr(34)
                                                     removehdmidriver.UseShellExecute = False
@@ -1806,7 +1806,7 @@ Public Class Form1
                             If subregkey IsNot Nothing Then
                                 If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then
                                     wantedvalue = subregkey.GetValue("DisplayName").ToString
-                                    If String.IsNullOrEmpty(wantedvalue) = False Then
+                                    If String.IsNullOrEmpty(Trim(wantedvalue)) = False Then
                                         If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
                                             wantedvalue.Contains("ccc-utility") Or _
                                             wantedvalue.Contains("AMD Accelerated Video") Or _
@@ -1821,11 +1821,15 @@ Public Class Form1
                                                 wantedvalue.Contains("ATI AVIVO") Then
 
                                             Try
-                                                If String.IsNullOrEmpty(subregkey.GetValue("InstallLocation")) = False And _
+                                                If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
                                                     My.Computer.FileSystem.DeleteDirectory _
                                                                           (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -1929,7 +1933,7 @@ Public Class Form1
                                 If subregkey IsNot Nothing Then
                                     If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then
                                         wantedvalue = subregkey.GetValue("DisplayName").ToString
-                                        If String.IsNullOrEmpty(wantedvalue) = False Then
+                                        If String.IsNullOrEmpty(Trim(wantedvalue)) = False Then
                                             If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
                                             wantedvalue.Contains("Catalyst Control Center") Or _
                                             wantedvalue.Contains("AMD Catalyst Install Manager") Or _
@@ -1944,12 +1948,16 @@ Public Class Form1
                                                 wantedvalue.Contains("Application Profiles") Or _
                                                 wantedvalue.Contains("ATI AVIVO") Then
                                                 Try
-                                                    If String.IsNullOrEmpty(subregkey.GetValue("InstallLocation")) = False And _
-                                                       Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
-                                                      Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
+                                                    If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
                                                         My.Computer.FileSystem.DeleteDirectory _
                                                                               (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                                     End If
@@ -3746,7 +3754,7 @@ Public Class Form1
                         Dim reginfos As RegistryKey = Nothing
                         Dim FolderAcl As New RegistrySecurity
                         'setting permission to registry
-                        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                        removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
                         removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
                         removehdmidriver.UseShellExecute = False
@@ -3791,7 +3799,7 @@ Public Class Form1
                         '                        'setting permission to registry
                         '                        '-------------------------------
 
-                        '                        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                        '                        removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
                         '                        removehdmidriver.Arguments = _
                         '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
                         '                        removehdmidriver.UseShellExecute = False
@@ -3865,7 +3873,7 @@ Public Class Form1
                         Dim reginfos As RegistryKey = Nothing
                         Dim FolderAcl As New RegistrySecurity
                         'setting permission to registry
-                        removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                        removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
                         removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
                         removehdmidriver.UseShellExecute = False
@@ -4401,7 +4409,7 @@ Public Class Form1
                             If subregkey IsNot Nothing Then
                                 If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then  'we dont want to clean the 3dtv as some user have licenses..
                                     wantedvalue = subregkey.GetValue("DisplayName").ToString
-                                    If String.IsNullOrEmpty(wantedvalue) = False Then
+                                    If String.IsNullOrEmpty(Trim(wantedvalue)) = False Then
                                         If wantedvalue.ToLower.Contains("nvidia 3d vision") And _
                                         Not wantedvalue.ToLower.Contains("3dtv") Or _
                                         wantedvalue.ToLower.Contains("nvidia geforce") Or _
@@ -4421,11 +4429,15 @@ Public Class Form1
                                         wantedvalue.ToLower.Contains("nvidia hd audio") Then
                                             If removephysx Then
                                                 Try
-                                                    If String.IsNullOrEmpty(subregkey.GetValue("InstallLocation")) = False And _
+                                                    If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
                                                         My.Computer.FileSystem.DeleteDirectory _
                                                                               (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -4441,11 +4453,15 @@ Public Class Form1
                                                     'do nothing
                                                 Else
                                                     Try
-                                                        If String.IsNullOrEmpty(subregkey.GetValue("InstallLocation")) = False And _
+                                                        If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
                                                             My.Computer.FileSystem.DeleteDirectory _
                                                                                   (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -4483,7 +4499,7 @@ Public Class Form1
                         If subregkey IsNot Nothing Then
                             If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then
                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
-                                If String.IsNullOrEmpty(wantedvalue) = False Then
+                                If String.IsNullOrEmpty(Trim(wantedvalue)) = False Then
                                     If wantedvalue.ToLower.Contains("nvidia 3d vision") And _
                                         Not wantedvalue.ToLower.Contains("3dtv") Or _
                                         wantedvalue.ToLower.Contains("nvidia geforce") Or _
@@ -4503,11 +4519,15 @@ Public Class Form1
                                         wantedvalue.ToLower.Contains("nvidia hd audio") Then
                                         If removephysx Then
                                             Try
-                                                If String.IsNullOrEmpty(subregkey.GetValue("InstallLocation")) = False And _
+                                                If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
                                                     My.Computer.FileSystem.DeleteDirectory _
                                                                           (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -4523,11 +4543,15 @@ Public Class Form1
                                                 'do nothing
                                             Else
                                                 Try
-                                                    If String.IsNullOrEmpty(subregkey.GetValue("InstallLocation")) = False And _
+                                                    If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
+                                                    Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
                                                     Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
                                                         My.Computer.FileSystem.DeleteDirectory _
                                                                               (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -4946,7 +4970,7 @@ Public Class Form1
                                             'Setting permission to the key region
                                             '-------------------------------------
 
-                                            removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                                            removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
                                             removehdmidriver.Arguments = _
 "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & UserAc & Chr(34)
                                             removehdmidriver.UseShellExecute = False
@@ -4975,7 +4999,7 @@ Public Class Form1
                                             '---------------------------------
                                             'Setting permission back to normal 
                                             '---------------------------------
-                                            removehdmidriver.FileName = ".\" & Label3.Text & "\setacl.exe"
+                                            removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
                                             removehdmidriver.Arguments = _
 "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
                                             removehdmidriver.UseShellExecute = False
@@ -5005,7 +5029,7 @@ Public Class Form1
 
         'Scan for new devices...
         Dim scan As New ProcessStartInfo
-        scan.FileName = ".\" & Label3.Text & "\ddudr.exe"
+        scan.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
         scan.Arguments = "rescan"
         scan.UseShellExecute = False
         scan.CreateNoWindow = True
@@ -5303,7 +5327,7 @@ Public Class Form1
         log("Architecture: " & Label3.Text)
 
         'Videocard type indentification
-        checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
+        checkoem.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
         checkoem.Arguments = "findall =display"
         checkoem.UseShellExecute = False
         checkoem.CreateNoWindow = True
@@ -5401,7 +5425,21 @@ Public Class Form1
                 'The computer was booted using the basic files, drivers, and services necessary to start networking.
                 'This is the same as Safe Mode with Networking
             Case BootMode.Normal
-                MsgBox("DDU has detected that you are NOT in SafeMode... It is NOT recommended to continue")
+                If MsgBox("DDU has detected that you are NOT in SafeMode... For a better CleanUP without issues, would you like to reboot the computer into SafeMode now?", MsgBoxStyle.YesNo, "Reboot into SafeMode?") = MsgBoxResult.Yes Then
+                    Dim setbcdedit As New ProcessStartInfo
+                    setbcdedit.FileName = "cmd.exe"
+                    setbcdedit.Arguments = " /Cbcdedit /set {current} safeboot Minimal"
+                    setbcdedit.UseShellExecute = False
+                    setbcdedit.CreateNoWindow = True
+                    setbcdedit.RedirectStandardOutput = False
+                    Dim processstopservice As New Process
+                    processstopservice.StartInfo = setbcdedit
+                    processstopservice.Start()
+                    processstopservice.WaitForExit()
+                    System.Diagnostics.Process.Start("REG", " ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce /v " & Chr(34) & "*UndoSB" & Chr(34) & " /t REG_SZ /d " & Chr(34) & "bcdedit /deletevalue {current} safeboot" & Chr(34))
+                    System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
+                    Exit Sub
+                End If
                 'The computer was booted in Normal mode.
         End Select
 
@@ -5656,7 +5694,7 @@ Public Class Form1
 
         Try
 
-            checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
+            checkoem.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
             checkoem.Arguments = "findall =display"
             checkoem.UseShellExecute = False
             checkoem.CreateNoWindow = True
@@ -5678,7 +5716,7 @@ Public Class Form1
                 position2 = reply.IndexOf(":", card1)
                 vendid = reply.Substring(card1, position2 - card1).Trim
                 If vendid.Contains(vendidexpected) Then
-                    removedisplaydriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
+                    removedisplaydriver.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
                     removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
                     removedisplaydriver.UseShellExecute = False
                     removedisplaydriver.CreateNoWindow = True
@@ -5700,7 +5738,7 @@ Public Class Form1
             log("ddudr Remove Display Complete")
             'Next
             'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
-            checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
+            checkoem.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
             checkoem.Arguments = "findall =media"
             checkoem.UseShellExecute = False
             checkoem.CreateNoWindow = True
@@ -5726,7 +5764,7 @@ Public Class Form1
                 vendid = reply.Substring(card1, position2 - card1).Trim
                 If vendid.Contains(vendidexpected) Then
 
-                    removehdmidriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
+                    removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
                     removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
@@ -5755,7 +5793,7 @@ Public Class Form1
 
             If DirectCast(e.Argument, String) = "NVIDIA" Then
                 'removing 3DVision USB driver
-                checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
+                checkoem.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
                 checkoem.Arguments = "findall =USB"
                 checkoem.UseShellExecute = False
                 checkoem.CreateNoWindow = True
@@ -5790,7 +5828,7 @@ Public Class Form1
                         vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
                         log("-" & vendid & "- 3D vision usb controler found")
 
-                        removehdmidriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
+                        removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
                         removehdmidriver.Arguments = "remove =USB " & Chr(34) & "@" & vendid & Chr(34)
                         removehdmidriver.UseShellExecute = False
                         removehdmidriver.CreateNoWindow = True
@@ -5819,7 +5857,7 @@ Public Class Form1
 
                 'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
 
-                removehdmidriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
+                removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
                 removehdmidriver.Arguments = "findall =media " & Chr(34) & "@*ROOT\*" & Chr(34)
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
@@ -5841,7 +5879,7 @@ Public Class Form1
                     If reply.Substring(position2, reply.Length - position2).Contains("NVIDIA Virtual") Then
 
                         'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                        removedisplaydriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
+                        removedisplaydriver.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
                         removedisplaydriver.Arguments = "remove =media " & Chr(34) & "@" & vendid & Chr(34)
                         removedisplaydriver.UseShellExecute = False
                         removedisplaydriver.CreateNoWindow = True
@@ -5870,7 +5908,7 @@ Public Class Form1
 
             log("ddudr Remove Monitor started")
 
-            checkoem.FileName = ".\" & Label3.Text & "\ddudr.exe"
+            checkoem.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
             checkoem.Arguments = "findall =monitor"
             checkoem.UseShellExecute = False
             checkoem.CreateNoWindow = True
@@ -5895,7 +5933,7 @@ Public Class Form1
 
                 log("-" & vendid & "- Monitor id found")
                 'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                removedisplaydriver.FileName = ".\" & Label3.Text & "\ddudr.exe"
+                removedisplaydriver.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
                 removedisplaydriver.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
                 removedisplaydriver.UseShellExecute = False
                 removedisplaydriver.CreateNoWindow = True
@@ -5943,7 +5981,7 @@ Public Class Form1
             Button1.Enabled = True
             Try
                 Dim scan As New ProcessStartInfo
-                scan.FileName = ".\" & Label3.Text & "\ddudr.exe"
+                scan.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
                 scan.Arguments = "rescan"
                 scan.UseShellExecute = False
                 scan.CreateNoWindow = True
