@@ -47,7 +47,6 @@ Partial Class Form1
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.CheckBox3 = New System.Windows.Forms.CheckBox()
-        Me.Label9 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.Label11 = New System.Windows.Forms.Label()
@@ -139,7 +138,7 @@ Partial Class Form1
         Me.ComboBox1.DisplayMember = "(none)"
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Items.AddRange(New Object() {"NVIDIA", "AMD"})
+        Me.ComboBox1.Items.AddRange(New Object() {"NVIDIA", "AMD", "INTEL"})
         Me.ComboBox1.Location = New System.Drawing.Point(171, 52)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
@@ -262,16 +261,6 @@ Partial Class Form1
         Me.CheckBox3.UseVisualStyleBackColor = True
         Me.CheckBox3.Visible = False
         '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(6, 471)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(325, 13)
-        Me.Label9.TabIndex = 19
-        Me.Label9.Text = "Note: Any damage or errors caused to your PC is  your responsibility."
-        '
         'Label10
         '
         Me.Label10.AutoSize = True
@@ -352,7 +341,6 @@ Partial Class Form1
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.PictureBox2)
-        Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.CheckBox3)
         Me.Controls.Add(Me.Button3)
@@ -403,7 +391,6 @@ Partial Class Form1
     Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents CheckBox3 As System.Windows.Forms.CheckBox
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
-    Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents VisitGuru3dNVIDIAThreadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents VisitGuru3dAMDThreadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents VisitGeforceThreadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
