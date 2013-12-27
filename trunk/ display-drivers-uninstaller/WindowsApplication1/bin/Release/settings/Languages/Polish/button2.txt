@@ -1,2 +1,2 @@
-﻿Clean and DO NOT restart.
-(May cause issues like blackscreen)
+﻿Wyczyść i NIE Restartuj
+(Może powodować problemy jak czarny ekran)
