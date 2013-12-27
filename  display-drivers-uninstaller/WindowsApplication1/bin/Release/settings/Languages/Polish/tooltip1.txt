@@ -1,2 +1,2 @@
-﻿Usuń sterowniki oraz ich pozostałości i uruchom komputer ponownie
-(Wysoce zalecane)
+﻿Odinstaluj obecne i poprzednie sterowniki i uruchom ponownie komputer
+(Wysoce Zalecane)

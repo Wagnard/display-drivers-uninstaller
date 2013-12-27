@@ -1,1 +1,1 @@
-﻿Użyj ustawień domyślnych Windows Update do instalacji sterowników.
+﻿Przywróć domyślne ustawienia aktualizacji sterowników z Windows Update.

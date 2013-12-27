@@ -1,2 +1,2 @@
-﻿Clean and Shutdown
-(For installing a new graphic card)
+﻿Wyczyść i Zamknij System
+(W przypadku instalowania nowej karty)

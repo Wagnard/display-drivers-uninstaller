@@ -1,2 +1,2 @@
-﻿Usuń sterowniki oraz ich pozostałości i wyłącz komputer bez ponownego skanowania
-(Do instalacji nowej karty graficznej)
+﻿Odinstaluj obecne i poprzednie sterowniki i Wyłącz komputer bez ponownego skanowania
+(W przypadku instalowania nowej karty)

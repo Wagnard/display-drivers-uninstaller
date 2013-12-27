@@ -1,38 +1,40 @@
-﻿Driver Uninstaller (DDU) / Cleaner made for Display Drivers.(NVIDIA/AMD)
+﻿ Driver Uninstaller (DDU) / Program Usuwający Sterowniki Graficzne.(NVIDIA/AMD)
 
-Polega on na usunięciu sterowników graficznych z menadźera urządzeń oraz wszystkich ich pozostałości w systemie
-łącznie z usunięciem usług od NVIDIA/AMD
+Ten program służy do usuwania sterowników graficznych/monitora z Menedżera Urządzeń i usuwania obecnych
+i poprzednich sterowników z magazynu Windows Driver Store, jak i do usuwania usług od NVIDIA/AMD.
 
-Efekt jaki uzyskasz po użyciu tego programu będzie podobny do stanu Windowsa po świeżej instalacji.
+Efekt działania programu będzie podobny do tego, jakby system Windows był "świeżo" zainstalowany
+na komputerze.
 
-Program działa podobnie do Driver Sweeper + posiada dodatkowe funkcje wymienione wyżej
+To narzędzie działa podobnie jak program "Driver Sweeper" i posiada dodatki wspomniane wyżej.
 
-Jeśli masz problem z instalacją starszych lub nowszych sterowników, daj szansę temu programowi. Według zgłoszeń
-naprawia on problemy z tym związane.
+Jeśli masz jakiekolwiek problemy podczas instalacji starszych lub nowszych sterowników wypróbuj ten
+program gdyż użytkownicy donoszą, że program te problemy rozwiązuje.
 
-Zalecany sposób użycia:
+ZALECANE UŻYCIE:
 
-- Osobiście zalecam odłączenie się od internetu na czas używania programu ponieważ zdarza się że zaraz po usunięciu sterowników
-Windows Update sam dogrywa sobie je bez naszej wiedzy
+- To narzędzie może być użyte w Normalnym trybie pracy Windows, jednak dla absolutnej stabilności
+podczas pracy DDU najlepiej uruchomić Windows w Trybie Awaryjnym.
 
-- Narzędzie może być używane w trybie standardowym, ale do uzyskania najlepszego efektu zaleca się użycie w trybie awaryjnym.
+- Chcielibyśmy zebrać opinie od wszystkich, powiedz nam czy odniosłeś sukces czy nie. Stwórz kopię
+zapasową lub utwórz punkt przywracania (jednakże użycie programu powinno być w miarę bezpieczne).
 
-- Chcemy od was otrzymywać informację. Napisz do nas czy program Wam pomógł czy też nie. Utwórz punkt przywracania
-dla bezpieczeństwa (ale z regóły wszystko powinno przejść bez najmniejszych problemów).
+- Jeśli masz lub miałeś problem ze sterownikami, a to narzędzie pomogło z obecnym problemem lub kiedyś
+przedtem, proszę podziel się swoim wynikiem.
 
--Jeśli masz albo miałeś jakiś problem, i w jego rozwiązaniu pomógł Ci ten program
-Podziel się z nami swoimi wynikami.
-
-Miej na uwadzę że NVIDIA/AMD nie miało z tym nic wspólnego, Nie pracujemy z/dla NVIDIA/AMD 
-i nie powinni oni ponosić odpowiedzialności za problemy spowodowane twojemu systemowi.
+Miej na uwadze, że NVIDIA, AMD a także Microsoft nie mogą być odpowiedzialni za jakiekolwiek zniszczenia
+dokonane tobie lub twojemu komputerowi oraz w żaden sposób te firmy nie współpracują z DDU ani z twórcami
+tego programu.
 -------------------------------
 
-Created By Wagnard.
+Program Stworzony Przez Wagnard.
 
-Co-owner: Shady7557
+Współwłaściciel: Shady7557
 
-Tester : Dellon132
+Testujący: Dellon132
 
-Logos : juanchacin
+Loga: juanchacin
 
-Thanks to anyone who put their system at risk (special thanks to Dellon132)
+Wielkie Podziękowania za poświęcony czas dla: Gamer1291
+
+Podziękowania dla wszystkich, którzy ryzykowali swoim systemem. (specjalne podziękowania dla Dellon132)
