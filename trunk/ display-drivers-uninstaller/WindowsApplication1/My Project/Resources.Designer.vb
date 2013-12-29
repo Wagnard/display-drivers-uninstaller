@@ -113,6 +113,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property intel_logo() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("intel_logo", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property Nvidia_GeForce_Logo() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Nvidia_GeForce_Logo", resourceCulture)
@@ -126,7 +136,7 @@ Namespace My.Resources
         Friend ReadOnly Property pnpldfwin7vista() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("pnpldfwin7vista", resourceCulture)
-                Return CType(obj, Byte())
+                Return CType(obj,Byte())
             End Get
         End Property
         

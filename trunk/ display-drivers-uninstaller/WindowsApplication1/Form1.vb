@@ -3665,6 +3665,17 @@ Public Class Form1
                                 If String.IsNullOrEmpty(wantedvalue) = False Then
                                     For i As Integer = 0 To interfaces.Length - 1
                                         If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
+                                            If subregkey.OpenSubKey("Typelib", False) IsNot Nothing Then
+                                                If String.IsNullOrEmpty(Trim(subregkey.OpenSubKey("TypeLib", False).GetValue(""))) = False Then
+                                                    typelib = subregkey.OpenSubKey("TypeLib", False).GetValue("")
+                                                    If String.IsNullOrEmpty(Trim(typelib)) = False Then
+                                                        Try
+                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                End If
+                                            End If
                                             Try
                                                 regkey.DeleteSubKeyTree(child)
                                             Catch ex As Exception
@@ -4369,6 +4380,7 @@ Public Class Form1
                                     wantedvalue.ToLower.Contains("nvidia shadowplay") Or _
                                     wantedvalue.ToLower.Contains("nvidia stereo") Or _
                                     wantedvalue.ToLower.Contains("nvidia optimus") Or _
+                                    wantedvalue.ToLower.Contains("nvidia network service") Or _
                                     wantedvalue.ToLower.Contains("nvidia hd audio") Then
                                         If removephysx Then
                                             Try
@@ -4459,6 +4471,7 @@ Public Class Form1
                                     wantedvalue.ToLower.Contains("nvidia shadowplay") Or _
                                     wantedvalue.ToLower.Contains("nvidia stereo") Or _
                                     wantedvalue.ToLower.Contains("nvidia optimus") Or _
+                                    wantedvalue.ToLower.Contains("nvidia network service") Or _
                                     wantedvalue.ToLower.Contains("nvidia hd audio") Then
                                     If removephysx Then
                                         Try
@@ -5314,8 +5327,12 @@ Public Class Form1
         End While
         If reply.Contains("VEN_10DE") Then
             ComboBox1.SelectedIndex = 0
-        Else
+        End If
+        If reply.Contains("VEN_1002") Then
             ComboBox1.SelectedIndex = 1
+        End If
+        If reply.Contains("VEN_8086") Then
+            ComboBox1.SelectedIndex = 2
         End If
 
         Try
@@ -5593,9 +5610,14 @@ Public Class Form1
         If ComboBox1.Text = "NVIDIA" Then
             CheckBox3.Visible = True
             PictureBox2.Image = My.Resources.Nvidia_GeForce_Logo
-        Else
+        End If
+        If ComboBox1.Text = "AMD" Then
             CheckBox3.Visible = False
             PictureBox2.Image = My.Resources.RadeonLogo1
+        End If
+        If ComboBox1.Text = "INTEL" Then
+            CheckBox3.Visible = False
+            PictureBox2.Image = My.Resources.intel_logo
         End If
     End Sub
 
