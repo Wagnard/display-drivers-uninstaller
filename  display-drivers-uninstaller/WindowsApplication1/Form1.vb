@@ -74,6 +74,7 @@ Public Class Form1
     Dim superregkey As RegistryKey = Nothing
     Dim currentdriverversion As String = Nothing
     Dim classroot() As String = Nothing
+    Dim safemode As Boolean = False
 
     Private Function checkupdates() As Integer
         Try
@@ -387,12 +388,14 @@ Public Class Form1
         Next i
 
 
+        If Not safemode Then
+            log("Killing Explorer.exe")
+            appproc = Process.GetProcessesByName("explorer")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
+        End If
 
-        log("Killing Explorer.exe")
-        appproc = Process.GetProcessesByName("explorer")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
 
         appproc = Process.GetProcessesByName("ThumbnailExtractionHost")
         For i As Integer = 0 To appproc.Length - 1
@@ -2500,12 +2503,6 @@ Public Class Form1
             appproc(i).Kill()
         Next i
 
-        'log("Killing Explorer")
-
-        'appproc = Process.GetProcessesByName("explorer")
-        'For i As Integer = 0 To appproc.length- 1
-        '    appproc(i).Kill()
-        'Next i
         'Delete NVIDIA data Folders
         'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning UpdatusUser users ac if present *****" + vbNewLine)
@@ -4592,6 +4589,33 @@ Public Class Form1
             log(ex.Message)
         End Try
 
+        log("ngenservice Clean")
+
+        '----------------------
+        '.net ngenservice clean
+        '----------------------
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        If child.ToLower.Contains("gfexperience.exe") Then
+                            Try
+                                regkey.DeleteSubKeyTree(child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+        '-----------------------------
+        'End of .net ngenservice clean
+        '-----------------------------
+
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
       ("Software\Microsoft\Windows\CurrentVersion\Run", True)
@@ -5010,10 +5034,13 @@ Public Class Form1
             proc4.Start()
             proc4.WaitForExit()
             System.Threading.Thread.Sleep(2000)
-            Dim appproc = Process.GetProcessesByName("explorer")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
+            If Not safemode Then
+                Dim appproc = Process.GetProcessesByName("explorer")
+                For i As Integer = 0 To appproc.Length - 1
+                    appproc(i).Kill()
+                Next i
+            End If
+
             reboot = True
         End If
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Clean uninstall completed! *****" + vbNewLine)
@@ -5376,15 +5403,19 @@ Public Class Form1
             End Try
         End If
 
+
         'This code checks to see which mode Windows has booted up in.
         Select Case System.Windows.Forms.SystemInformation.BootMode
             Case BootMode.FailSafe
                 'The computer was booted using only the basic files and drivers.
                 'This is the same as Safe Mode
+                safemode = True
             Case BootMode.FailSafeWithNetwork
                 'The computer was booted using the basic files, drivers, and services necessary to start networking.
                 'This is the same as Safe Mode with Networking
+                safemode = True
             Case BootMode.Normal
+                safemode = False
                 If winxp = False Then
                     If MsgBox("DDU has detected that you are NOT in SafeMode... For a better CleanUP without issues, would you like to reboot the computer into SafeMode now?", MsgBoxStyle.YesNo, "Reboot into SafeMode?") = MsgBoxResult.Yes Then
                         Dim setbcdedit As New ProcessStartInfo
@@ -5397,8 +5428,16 @@ Public Class Form1
                         processstopservice.StartInfo = setbcdedit
                         processstopservice.Start()
                         processstopservice.WaitForExit()
-                        System.Diagnostics.Process.Start("REG", " ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce /v " & Chr(34) & "*UndoSB" & Chr(34) & " /t REG_SZ /d " & Chr(34) & "bcdedit /deletevalue {current} safeboot" & Chr(34))
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+                        If regkey IsNot Nothing Then
+                            Try
+                                regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Application.StartupPath & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
+                                regkey.SetValue("*UndoSM", "bcdedit /deletevalue {current} safeboot")
+                            Catch ex As Exception
+                            End Try
+                        End If
                         System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
+                        Application.Exit()
                         Exit Sub
                     End If
                 Else
@@ -5413,7 +5452,7 @@ Public Class Form1
             MsgBox("You are not using DDU with Administrator priviledge. The application will exit.")
             Application.Exit()
         End If
-        MsgBox("Please make a BACKUP or a System Restore point before using DDU. We take no resposibilities if something goes wrong.")
+        MsgBox("Please make a BACKUP or a System Restore point before using DDU. We take no responsibilities if something goes wrong.")
 
     End Sub
 
