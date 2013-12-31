@@ -5229,13 +5229,17 @@ Public Class Form1
         End If
         Label3.Refresh()
 
+        If version.StartsWith("5.1") And arch = True Then  'XP32
+            Dim myExe As String = Application.StartupPath & "\x64\ddudr.exe"
+            System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp64)
+            myExe = Application.StartupPath & "\x64\setacl.exe"
+            System.IO.File.WriteAllBytes(myExe, My.Resources.setacl64)
+        End If
+
         If arch = True Then
             Try
                 Dim myExe As String = Application.StartupPath & "\x64\ddudr.exe"
                 System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr64)
-
-                myExe = Application.StartupPath & "\x64\subinacl.exe"
-                System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl64)
 
                 myExe = Application.StartupPath & "\x64\setacl.exe"
                 System.IO.File.WriteAllBytes(myExe, My.Resources.setacl64)
@@ -5258,19 +5262,13 @@ Public Class Form1
                     Dim myExe As String = Application.StartupPath & "\x86\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp32)
 
-                    myExe = Application.StartupPath & "\x86\subinacl.exe"
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl32)
-
                     myExe = Application.StartupPath & "\x86\setacl.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.setacl32)
 
 
-                Else 'oll other but 32 bits
+                Else 'all other 32 bits
                     Dim myExe As String = Application.StartupPath & "\x86\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr32)
-
-                    myExe = Application.StartupPath & "\x86\subinacl.exe"
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.subinacl32)
 
                     myExe = Application.StartupPath & "\x86\setacl.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.setacl32)
@@ -5296,11 +5294,17 @@ Public Class Form1
             If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x64\ddudr.exe") Then
                 MsgBox("Unable to find ddudr. Please refer to the log.", MsgBoxStyle.Critical)
                 Button1.Enabled = False
+                Button2.Enabled = False
+                Button3.Enabled = False
+                Exit Sub
             End If
         ElseIf arch = False Then
             If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x86\ddudr.exe") Then
                 MsgBox("Unable to find ddudr. Please refer to the log.", MsgBoxStyle.Critical)
                 Button1.Enabled = False
+                Button2.Enabled = False
+                Button3.Enabled = False
+                Exit Sub
             End If
         End If
 
