@@ -75,6 +75,7 @@ Public Class Form1
     Dim currentdriverversion As String = Nothing
     Dim classroot() As String = Nothing
     Dim safemode As Boolean = False
+    Dim myExe As String
 
     Private Function checkupdates() As Integer
         Try
@@ -5188,27 +5189,30 @@ Public Class Form1
             Button4.Enabled = False
         End If
 
-        If version >= "5.1" Then
+        If version.StartsWith("5.1") Then
             Label2.Text = "Windows XP or Server 2003"
             winxp = True
         End If
 
-        If version >= "6.0" Then
+        If version.StartsWith("5.2") Then
+            Label2.Text = "Windows XP or Server 2003"
+            winxp = True
+        End If
+
+        If version.StartsWith("6.0") Then
             Label2.Text = "Windows Vista or Server 2008"
-            winxp = False
         End If
 
-        If version >= "6.1" Then
+        If version.StartsWith("6.1") Then
             Label2.Text = "Windows 7 or Server 2008r2"
-
         End If
 
-        If version >= "6.2" Then
+        If version.StartsWith("6.2") Then
             Label2.Text = "Windows 8 or Server 2012"
             win8higher = True
         End If
 
-        If version >= "6.3" Then
+        If version.StartsWith("6.3") Then
             Label2.Text = "Windows 8.1"
             win8higher = True
         End If
@@ -5229,21 +5233,23 @@ Public Class Form1
         End If
         Label3.Refresh()
 
-        If version.StartsWith("5.1") And arch = True Then  'XP32
-            Dim myExe As String = Application.StartupPath & "\x64\ddudr.exe"
-            System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp64)
-            myExe = Application.StartupPath & "\x64\setacl.exe"
-            System.IO.File.WriteAllBytes(myExe, My.Resources.setacl64)
-        End If
 
         If arch = True Then
             Try
-                Dim myExe As String = Application.StartupPath & "\x64\ddudr.exe"
-                System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr64)
 
-                myExe = Application.StartupPath & "\x64\setacl.exe"
-                System.IO.File.WriteAllBytes(myExe, My.Resources.setacl64)
+                If winxp Then  'XP64
+                    myExe = Application.StartupPath & "\x64\ddudr.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp64)
+                    myExe = Application.StartupPath & "\x64\setacl.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.setacl64)
+                Else
 
+                    myExe = Application.StartupPath & "\x64\ddudr.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr64)
+
+                    myExe = Application.StartupPath & "\x64\setacl.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.setacl64)
+                End If
                 If version.StartsWith("6.2") Or version.StartsWith("6.3") Then
                     myExe = Application.StartupPath & "\x64\pnpldf.bkp"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.pnpldfwin8)
@@ -5258,8 +5264,8 @@ Public Class Form1
             End Try
         Else
             Try
-                If version.StartsWith("5.1") Then  'XP32
-                    Dim myExe As String = Application.StartupPath & "\x86\ddudr.exe"
+                If winxp Then  'XP32
+                    myExe = Application.StartupPath & "\x86\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp32)
 
                     myExe = Application.StartupPath & "\x86\setacl.exe"
@@ -5267,7 +5273,7 @@ Public Class Form1
 
 
                 Else 'all other 32 bits
-                    Dim myExe As String = Application.StartupPath & "\x86\ddudr.exe"
+                    myExe = Application.StartupPath & "\x86\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr32)
 
                     myExe = Application.StartupPath & "\x86\setacl.exe"

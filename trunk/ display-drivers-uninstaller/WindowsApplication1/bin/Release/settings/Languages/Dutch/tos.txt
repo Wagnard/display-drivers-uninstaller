@@ -7,4 +7,4 @@ Door het gebruik van DDU gaat u akkoord met het niet beschuldigen van DDU of zij
 Door het gebruik van DDU gaat u akkoord met het niet wijzigen van DDU en het opnieuw te publiceren zonder toestemming.
 
 Door het gebruik van DDU erkent u dat NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices ("AMD, Radeon")
-iets te maken hebben met dit programma, en op geen enkele wijze filialen van DDU of zijn makers.
+ (Intel) iets te maken hebben met dit programma, en op geen enkele wijze filialen van DDU of zijn makers.
