@@ -20,6 +20,7 @@ Imports System.Text
 Public Class about
 
     Private Sub about_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
         Try
             Dim oFS() As String
             oFS = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & Form1.ComboBox2.Text & "\about.txt") '// add each line as String Array.
@@ -30,6 +31,8 @@ Public Class about
                 End If
                 Label1.Text = Label1.Text & oFS(i)
             Next
+            Me.Size = New System.Drawing.Size(Label1.Width + 5, Label1.Height + 83)
+            PictureBox1.Location = New System.Drawing.Size((Me.Size.Width / 2) - (PictureBox1.Size.Width / 2), PictureBox1.Location.Y)
         Catch ex As Exception
         End Try
     End Sub
