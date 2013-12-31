@@ -1,13 +1,13 @@
- Driver Uninstaller (DDU) / Cleaner made for Display Drivers.(NVIDIA/AMD)
+Display Driver Uninstaller (DDU) / Cleaner made for Display (GPU) Drivers.(NVIDIA/AMD)
 
 What it does is remove the display/GPU driver from device manager and remove the current and 
-all precedent driver from the Windows Driver store along with removing services from NVIDIA/AMD.
+all precedent driver(s) from the Windows Driver store along with removing services from NVIDIA/AMD.
 
 The current effect after you use this tool will be similar to if Windows was in a "Fresh Install" state.
 
-This tool acts much like "Driver Sweeper", and has all the extra mentioned above.
+This tool acts much like "Driver Sweeper"*, and has all the extra mentioned above.
 
-If you have any problems installing an older driver or a newer one, give it a try as there are some reports that it fix 
+If you have any problems installing an older driver or a newer one, give it a try as there are some reports that it fixes
 those problems.
 
 RECOMMENDED USAGE :
@@ -15,14 +15,15 @@ RECOMMENDED USAGE :
 -The tool can be used in Normal mode but for absolute stability when using DDU, Safe Mode is 
 always the best.
 
-- We would like to gather feedback from everyone, tell us if it was success or not. Make a 
-backup or a system restore (but it should normally be pretty safe).
+- We would like to gather feedback from everyone, tell us if it was successful or not. 
+
+- Make a backup or a system restore. (but it should normally be pretty safe.)
 
 -If you have or had a driver problem, and this tool helped you with some issues you were or are
 currently experiencing, please share your result.
 
-Keep in mind that NVIDIA , AMD or Microsoft cannot be held responsible for any damages of any sort 
-to you or your computer and in no way affiliates of DDU or it's creators.
+Keep in mind that NVIDIA, AMD, nor Microsoft can be held responsible for any damages 
+to you or your computer and are in no way affiliates of DDU, or it's creators.
 -------------------------------
 
 Created By Wagnard.
@@ -38,3 +39,5 @@ Thanks to Helge Klein (http://helgeklein.com/setacl/) : for the permission to us
 Huge Thanks for his time for testing: Gamer1291
 
 Thanks to anyone who put their system at risk. (special thanks to Dellon132)
+
+*DDU, it's creators and affiliates are in no way affiliated with Driver Sweeper, or it's creators.
