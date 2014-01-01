@@ -4,6 +4,4 @@ Poprzez użycie programu DDU stajesz się użytkownikiem DDU ("Użytkownik"). Ta
 
 Poprzez użycie DDU zgadzasz się nie oskarżać DDU lub jego autorów, ani ich współpracowników o zniszczenie lub negatywny wpływ na działanie komputera.
 
-Poprzez użycie DDU zgadzasz się nie modyfikować DDU ani ponownie go wydawać bez odpowiedniej zgody autorów.
-
 Poprzez użycie DDU przyjmujesz do wiadomości, że NVIDIA ("NVIDIA, GeForce") jak i Advanced Micro Devices ("AMD, Radeon"), jak i Microsoft nie mogą być odpowiedzialni za jakiekolwiek zniszczenia twojego komputera, oraz że nie współpracują przy DDU ani z twórcami tego programu.

@@ -1,10 +1,8 @@
-Display Driver Uninstaller ("DDU") - UŽIVATEĽSKÁ ZMLUVA
+﻿Display Driver Uninstaller ("DDU") - UŽIVATEĽSKÁ ZMLUVA
 
 Použitím DDU softvéru sa stávate jeho užívateľom. Táto zmluva vstupuje do platnosti hneď, ako použijete program na odinštaláciu ovládača.
 
 Použitím DDU súhlasíte, že nebudete obviňovať DDU alebo jeho tvorcov a spolutvorcov, z pokazenia alebo negatívneho ovplvynenia vášho PC.
-
-Použitím DDU súhlasíte, že nebudete bez povolenia DDU upravovať ani publikovať.
 
 Použitím DDU beriete na vedomie, že NVIDIA ("NVIDIA, GeForce") ani Advanced Micro Devices ("AMD, Radeon") nemajú
 nič spoločné s týmto programom a v žiadnom prípade nespolupracujú s DDU a jeho tvorcami.
