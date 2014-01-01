@@ -4,8 +4,5 @@ Diventerai un utente di DDU ("User") non appena avrai utilizzato il software DDU
 
 Utilizzando DDU accetti di non accusare DDU o i suoi creatori, e affiliati, di danni o di qualsiasi cosa che possa influenzare negativamente il tuo PC.
 
-
-Utilizzando DDU accetti di non modificare DDU o di ripubblicarlo senza autorizzazione.
-
 Utilizzando DDU riconosci che nè NVIDIA ("NVIDIA, GeForce") nè Advanced Micro Devices ("AMD, Radeon") hanno niente a che vedere con questo programma,
 e che non sono in alcun modo affiliati a DDU o ai suoi creatori.
