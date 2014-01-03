@@ -5441,10 +5441,11 @@ Public Class Form1
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
                         If regkey IsNot Nothing Then
                             Try
-                                regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Application.StartupPath & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
+                                regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
                                 regkey.SetValue("*UndoSM", "bcdedit /deletevalue {current} safeboot")
                             Catch ex As Exception
                             End Try
+
                         End If
                         System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
                         Application.Exit()
