@@ -31,7 +31,7 @@ Public Class about
                 End If
                 Label1.Text = Label1.Text & oFS(i)
             Next
-            Me.Size = New System.Drawing.Size(Label1.Width + 5, Label1.Height + 83)
+            Me.Size = New System.Drawing.Size(Label1.Width + 10, Label1.Height + 88)
             PictureBox1.Location = New System.Drawing.Size((Me.Size.Width / 2) - (PictureBox1.Size.Width / 2), PictureBox1.Location.Y)
         Catch ex As Exception
         End Try
