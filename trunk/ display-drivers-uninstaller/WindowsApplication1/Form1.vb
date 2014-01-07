@@ -203,14 +203,14 @@ Public Class Form1
 
     End Sub
 
-    Private Sub cleandriverstore(ByVal e As String)
+    Private Sub cleandriverstore()
 
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(finding OEM step)... *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Executing Driver Store cleanUP(Find OEM)...")
         'Check the driver from the driver store  ( oemxx.inf)
-        checkoem.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
+        checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
         checkoem.Arguments = "dp_enum"
         checkoem.UseShellExecute = False
         checkoem.CreateNoWindow = True
@@ -242,15 +242,19 @@ Public Class Form1
                     Dim part As String = reply.Substring(oem, inf - oem)
                     log(part + " Found")
                     Dim deloem As New Diagnostics.ProcessStartInfo
-                    deloem.FileName = application.startuppath & "\" & label3.Text & "\ddudr.exe"
+                    deloem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
                     deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
-                    For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
-                        If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
-                            child.ToLower.Trim.Replace(" ", "").Contains("class=media") Or _
-                            child.ToLower.Trim.Replace(" ", "").Contains("class=usb") Then
-                            deloem.Arguments = "-f dp_delete " + Chr(34) + part + ".inf" + Chr(34)
-                        End If
-                    Next
+                    Try
+                        For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
+                            If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
+                                child.ToLower.Trim.Replace(" ", "").Contains("class=media") Or _
+                                child.ToLower.Trim.Replace(" ", "").Contains("class=usb") Then
+                                deloem.Arguments = "-f dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+                            End If
+                        Next
+                    Catch ex As Exception
+                    End Try
+
                     'Uninstall Driver from driver store  delete from (oemxx.inf)
                     log(deloem.Arguments)
                     deloem.UseShellExecute = False
@@ -3745,32 +3749,20 @@ Public Class Form1
                         Next
                     End If
 
+                    'Cleaning PNPRessources.
 
-                    '                        '-------------------------------
-                    '                        'cleaning pnpresources
-                    '                        'setting permission to registry
-                    '                        '-------------------------------
-
-                    '                        removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
-                    '                        removehdmidriver.Arguments = _
-                    '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
-                    '                        removehdmidriver.UseShellExecute = False
-                    '                        removehdmidriver.CreateNoWindow = True
-                    '                        removehdmidriver.RedirectStandardOutput = False
-                    '                        prochdmi.StartInfo = removehdmidriver
-                    '                        prochdmi.Start()
-                    '                        prochdmi.WaitForExit()
-
-                    '                        removehdmidriver.Arguments = _
-                    '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
-                    '                        prochdmi.StartInfo = removehdmidriver
-                    '                        prochdmi.Start()
-                    '                        prochdmi.WaitForExit()
                     Try
                         regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
                     Catch ex As Exception
                         log(ex.Message & "pnp resources khronos")
+                    End Try
+
+                    Try
+                        regfullfordelete("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
+                    Catch ex As Exception
+                        log(ex.Message & "pnp resources cpl extension")
                     End Try
 
                     If IntPtr.Size = 8 Then
@@ -3790,26 +3782,10 @@ Public Class Form1
                         log(ex.Message & "pnp ressources nvidia corporation")
                     End Try
 
-                    '                        '-----------------------------------------------
-                    '                        'setting back the registry permission to normal.
-                    '                        '-----------------------------------------------
-                    '                        removehdmidriver.Arguments = _
-                    '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
-                    '                        prochdmi.Start()
-                    '                        prochdmi.WaitForExit()
-                    '                        System.Threading.Thread.sleep(10)  '25 millisecond stall (0.025 Seconds)
-
-                    '                        removehdmidriver.Arguments = _
-                    '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-18"
-                    '                        prochdmi.Start()
-                    '                        prochdmi.WaitForExit()
-                    '                        System.Threading.Thread.sleep(10)  '25 millisecond stall (0.025 Seconds)
-                    '                        removehdmidriver.Arguments = _
-                    '"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources" & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:s-1-5-32-544"
-                    '                        prochdmi.Start()
-                    '                        prochdmi.WaitForExit()
-                    '                        System.Threading.Thread.sleep(10)  '25 millisecond stall (0.025 Seconds)
-
+                    '-----------------------------------------------
+                    'setting back the registry permission to normal.                       
+                    '-----------------------------------------------
+                    
                     removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & Label3.Text & "\pnpldf.bkp"
                     prochdmi.StartInfo = removehdmidriver
@@ -3907,7 +3883,7 @@ Public Class Form1
                 End If
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         '--------------------------
@@ -3974,7 +3950,7 @@ Public Class Form1
                 End If
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         '--------------------------
@@ -4020,7 +3996,7 @@ Public Class Form1
                 Next
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         '-------------------------------------
@@ -4056,7 +4032,7 @@ Public Class Form1
                 End If
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4092,7 +4068,7 @@ Public Class Form1
                 End If
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
 
@@ -4116,7 +4092,7 @@ Public Class Form1
                 End If
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         'remove opencl registry Khronos
@@ -4159,7 +4135,7 @@ Public Class Form1
                 Next
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4181,7 +4157,7 @@ Public Class Form1
                 End If
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4241,7 +4217,7 @@ Public Class Form1
                 Next
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4290,7 +4266,7 @@ Public Class Form1
                 Next
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4341,7 +4317,7 @@ Public Class Form1
                 End If
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4365,7 +4341,7 @@ Public Class Form1
                                     If wantedvalue.ToLower.Contains("nvidia 3d vision") And _
                                     Not wantedvalue.ToLower.Contains("3dtv") Or _
                                     wantedvalue.ToLower.Contains("nvidia geforce") Or _
-                                    wantedvalue.ToLower.Contains("nvidia graphics") Or _
+                                    wantedvalue.ToLower.Contains("nvidia gra") Or _
                                     wantedvalue.ToLower.Contains("nvidia physx") Or _
                                     wantedvalue.ToLower.Contains("nvidia virtual audio") Or _
                                     wantedvalue.ToLower.Contains("nvidia control panel") Or _
@@ -4435,7 +4411,7 @@ Public Class Form1
                 Next
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4456,7 +4432,7 @@ Public Class Form1
                                 If wantedvalue.ToLower.Contains("nvidia 3d vision") And _
                                     Not wantedvalue.ToLower.Contains("3dtv") Or _
                                     wantedvalue.ToLower.Contains("nvidia geforce") Or _
-                                    wantedvalue.ToLower.Contains("nvidia graphics") Or _
+                                    wantedvalue.ToLower.Contains("nvidia gra") Or _
                                     wantedvalue.ToLower.Contains("nvidia physx") Or _
                                     wantedvalue.ToLower.Contains("nvidia virtual audio") Or _
                                     wantedvalue.ToLower.Contains("nvidia control panel") Or _
@@ -4525,7 +4501,7 @@ Public Class Form1
                 End If
             Next
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4555,7 +4531,7 @@ Public Class Form1
                 End If
             Next
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4587,7 +4563,7 @@ Public Class Form1
                 Next
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         log("ngenservice Clean")
@@ -4639,7 +4615,7 @@ Public Class Form1
                 End Try
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4655,7 +4631,7 @@ Public Class Form1
                 End If
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Debug : Starting S-1-5-xx region cleanUP *****" + vbNewLine)
@@ -4792,7 +4768,7 @@ Public Class Form1
             Invoke(Sub() TextBox1.ScrollToCaret())
             log("Debug : End of S-1-5-xx region cleanUP")
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4836,7 +4812,7 @@ Public Class Form1
                 Next
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4880,7 +4856,7 @@ Public Class Form1
                 Next
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
         Try
@@ -4918,10 +4894,37 @@ Public Class Form1
                 End If
             End If
         Catch ex As Exception
-            log(ex.Message)
+            log(ex.StackTrace)
         End Try
 
+        '-------------
+        'control/video
+        '-------------
+        Try
 
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", False)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        subregkey = regkey.OpenSubKey(child & "\Video", False)
+                        If subregkey IsNot Nothing Then
+                            If String.IsNullOrEmpty(Trim(subregkey.GetValue("Service")).ToString) = False Then
+                                If subregkey.GetValue("Service").ToString.ToLower = "nvlddmkm" Then
+                                    regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Video\" & child)
+                                    Try
+                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** End of Registry Cleaning *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
@@ -5328,40 +5331,20 @@ Public Class Form1
 
         'creation dun process fantome pour le wait on exit.
 
+        '------------------------------------------------------------------
+        'Detection of the current and leftover videocard for the textboxlog
+        '------------------------------------------------------------------
         proc2.StartInfo = checkoem
         proc2.Start()
         reply = proc2.StandardOutput.ReadToEnd
         proc2.WaitForExit()
         log(reply)
+        Dim TextLines() As String = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
+        For i As Integer = 0 To TextLines.Length - 2  'reason of -2 instead of -1 , we dont want the last line of ddudr.
+            TextBox1.Text = TextBox1.Text + "Detected GPU : " + TextLines(i).Substring(TextLines(i).IndexOf(":") + 1) + vbNewLine
+        Next
 
-        Dim part As String
-        Dim match As Boolean = False
-        card1 = reply.IndexOf(":")
-        position2 = reply.IndexOf("PCI\", card1 + 1)
-        If position2 < 0 Then
-            position2 = reply.IndexOf("matching", card1 + 1)
-            match = True
-        End If
-
-        While card1 > -1
-            If Not match Then
-                part = reply.Substring(card1 + 2, (position2 - card1 - 3))
-                card1 = reply.IndexOf(":", card1 + 1)
-                position2 = reply.IndexOf("PCI\", card1 + 1)
-                If position2 < 0 Then
-                    position2 = reply.IndexOf("matching", card1 + 1)
-                    match = True
-                End If
-                TextBox1.Text = TextBox1.Text + "Detected GPU : " + part + vbNewLine
-                log("Detected GPU : " + part)
-            End If
-            If match Then
-                part = reply.Substring(card1 + 2, (position2 - card1 - 5))
-                card1 = reply.IndexOf(":", card1 + 1)
-                TextBox1.Text = TextBox1.Text + "Detected GPU : " + part + vbNewLine
-                log("Detected GPU : " + part)
-            End If
-        End While
+        'Trying to autoselect the right GPU cleanup option. 
         If reply.Contains("VEN_10DE") Then
             ComboBox1.SelectedIndex = 0
         End If
@@ -5377,17 +5360,22 @@ Public Class Form1
 
             For Each child As String In regkey.GetSubKeyNames
                 If Not child.ToLower.Contains("properties") Then
-                    subregkey = regkey.OpenSubKey(child)
-                    currentdriverversion = subregkey.GetValue("DriverVersion").ToString
+                    Try
+                        subregkey = regkey.OpenSubKey(child)
+                    Catch ex As Exception
+                        Continue For
+                    End Try
+                    If subregkey IsNot Nothing Then
+                        If Not String.IsNullOrEmpty(subregkey.GetValue("DriverVersion").ToString) Then
+                            currentdriverversion = subregkey.GetValue("DriverVersion").ToString
+                            TextBox1.Text = TextBox1.Text + "Detected Driver(s) Version(s) : " + currentdriverversion + vbNewLine
+                        End If
+                    End If
                 End If
-
             Next
-
         Catch ex As Exception
-            currentdriverversion = "Unknown"
         End Try
-        TextBox1.Text = TextBox1.Text + "Current driver version : " + currentdriverversion + vbNewLine
-        log("Current driver version : " + currentdriverversion)
+        log("Driver Version : " + currentdriverversion)
 
         'setting the driversearching parameter for win 7+
         If version >= "6.1" Then
@@ -5985,7 +5973,7 @@ Public Class Form1
             If DirectCast(e.Argument, String) = "INTEL" Then
                 ' Cleanintel()
             End If
-            cleandriverstore(DirectCast(e.Argument, String))
+            cleandriverstore()
             checkpcieroot()
             rescan()
 
