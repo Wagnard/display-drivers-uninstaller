@@ -69,8 +69,8 @@ Public Class Form1
     Dim superkey As RegistryKey = Nothing
     Dim regkey As RegistryKey = Nothing
     Dim subregkey2 As RegistryKey = Nothing
-    Dim basekey As RegistryKey = Nothing
     Dim subsuperregkey As RegistryKey = Nothing
+    Dim basekey As RegistryKey = Nothing
     Dim superregkey As RegistryKey = Nothing
     Dim currentdriverversion As String = Nothing
     Dim classroot() As String = Nothing
@@ -1178,8 +1178,6 @@ Public Class Form1
         Try
             If winxp = False Then
                 If win8higher Then
-                    Dim reginfos As RegistryKey = Nothing
-                    Dim FolderAcl As New RegistrySecurity
                     'setting permission to registry
                     removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
                     removehdmidriver.Arguments = _
@@ -1295,8 +1293,6 @@ Public Class Form1
                     '--------------------------------
 
                 Else   'Older windows  (windows vista and 7 run here)
-                    Dim reginfos As RegistryKey = Nothing
-                    Dim FolderAcl As New RegistrySecurity
                     'setting permission to registry
                     removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
                     removehdmidriver.Arguments = _
@@ -1503,7 +1499,7 @@ Public Class Form1
         '-----------------------
         log("Remove eventviewer stuff")
         Try
-            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\", False)
+            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
             If subregkey IsNot Nothing Then
                 For Each child2 As String In subregkey.GetSubKeyNames()
                     If String.IsNullOrEmpty(child2) = False Then
@@ -2018,6 +2014,7 @@ Public Class Form1
                                                             For Each child2 As String In superregkey.GetSubKeyNames()
                                                                 If String.IsNullOrEmpty(child2) = False Then
                                                                     Try
+
                                                                         subsuperregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                                                                         ("Installer\UpgradeCodes\" & child2, False)
                                                                     Catch ex As Exception
@@ -2624,26 +2621,109 @@ Public Class Form1
 
         End If
 
-        filePath = Environment.GetFolderPath _
-  (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
-
-
         Try
-            TestDelete(filePath)
+            filePath = Environment.GetFolderPath _
+      (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
+
+            For Each child As String In Directory.GetDirectories(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("control panel client") Or _
+                       child.ToLower.Contains("display") Or _
+                       child.ToLower.Contains("drs") Or _
+                       child.ToLower.Contains("nvsmi") Or _
+                       child.ToLower.Contains("opencl") Or _
+                       child.ToLower.Contains("3d vision") Or _
+                       child.ToLower.Contains("led visualizer") Or _
+                       child.ToLower.Contains("netservice") Or _
+                       child.ToLower.Contains("nvidia geforce experience") Or _
+                       child.ToLower.Contains("nvstreamc") Or _
+                       child.ToLower.Contains("nvstreamsrv") Or _
+                       child.ToLower.Contains("physx") Or _
+                       child.ToLower.Contains("nvstreamsrv") Or _
+                       child.ToLower.Contains("shadowplay") Or _
+                       child.ToLower.Contains("installer2") Or _
+                       child.ToLower.Contains("update core") Then
+
+                        If child.ToLower.Contains("installer2") Then
+                            For Each child2 As String In Directory.GetDirectories(child)
+                                If String.IsNullOrEmpty(Trim(child2)) = False Then
+                                    If child2.ToLower.Contains("display.3dvision") Or _
+                                       child2.ToLower.Contains("display.controlpanel") Or _
+                                       child2.ToLower.Contains("display.driver") Or _
+                                       child2.ToLower.Contains("display.gfexperience") Or _
+                                       child2.ToLower.Contains("display.nvirusb") Or _
+                                       child2.ToLower.Contains("display.physx") Or _
+                                       child2.ToLower.Contains("display.update") Or _
+                                       child2.ToLower.Contains("gfexperience") Or _
+                                       child2.ToLower.Contains("installer2\installer") Or _
+                                       child2.ToLower.Contains("network.service") Or _
+                                       child2.ToLower.Contains("shadowplay") Or _
+                                       child2.ToLower.Contains("update.core") Or _
+                                       child2.ToLower.Contains("virtualaudio.driver") Or _
+                                       child2.ToLower.Contains("hdaudio.driver") Then
+                                        If removephysx Then
+                                            Try
+                                                My.Computer.FileSystem.DeleteDirectory _
+                                                (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                            Catch ex As Exception
+                                            End Try
+                                        Else
+                                            If child2.ToLower.Contains("physx") Then
+                                                'do nothing
+                                            Else
+                                                Try
+                                                    My.Computer.FileSystem.DeleteDirectory _
+                                                    (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                        End If
+                                    End If
+                                End If
+                            Next
+                            Try
+                                If Directory.GetDirectories(child).Length = 0 Then
+                                    Try
+                                        My.Computer.FileSystem.DeleteDirectory _
+                                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            Catch ex As Exception
+                            End Try
+                        End If
+                        If removephysx And Not child.ToLower.Contains("installer2") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory _
+                                (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                            End Try
+                        Else
+                            If child.ToLower.Contains("physx") Or child.ToLower.Contains("installer2") Then
+                                'do nothing
+                            Else
+                                Try
+                                    My.Computer.FileSystem.DeleteDirectory _
+                                    (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
         Catch ex As Exception
         End Try
-
-        Try
-            If Directory.GetDirectories(filePath).Length = 0 Then
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                End Try
-            End If
-        Catch ex As Exception
-        End Try
-
 
         filePath = Environment.GetFolderPath _
   (Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
@@ -2664,26 +2744,53 @@ Public Class Form1
 
         End If
 
-        If IntPtr.Size = 8 Then
-            filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
-
-            Try
-                TestDelete(filePath)
-            Catch ex As Exception
-            End Try
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                    End Try
-                End If
-            Catch ex As Exception
-            End Try
-        End If
-
+        Try
+            If IntPtr.Size = 8 Then
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
+                For Each child As String In Directory.GetDirectories(filePath)
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        If child.ToLower.Contains("3d vision") Or _
+                           child.ToLower.Contains("led visualizer") Or _
+                           child.ToLower.Contains("netservice") Or _
+                           child.ToLower.Contains("nvidia geforce experience") Or _
+                           child.ToLower.Contains("nvstreamc") Or _
+                           child.ToLower.Contains("nvstreamsrv") Or _
+                           child.ToLower.Contains("physx") Or _
+                           child.ToLower.Contains("update core") Then
+                            If removephysx Then
+                                Try
+                                    My.Computer.FileSystem.DeleteDirectory _
+                                    (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                Catch ex As Exception
+                                End Try
+                            Else
+                                If child.ToLower.Contains("physx") Then
+                                    'do nothing
+                                Else
+                                    Try
+                                        My.Computer.FileSystem.DeleteDirectory _
+                                        (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            End If
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                Catch ex As Exception
+                End Try
+            End If
+        Catch ex As Exception
+        End Try
         'Not sure if this work on XP
 
         filePath = Environment.GetFolderPath _
@@ -3707,8 +3814,6 @@ Public Class Form1
         Try
             If winxp = False Then
                 If win8higher Then
-                    Dim reginfos As RegistryKey = Nothing
-                    Dim FolderAcl As New RegistrySecurity
                     'setting permission to registry
                     removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
                     removehdmidriver.Arguments = _
@@ -3785,7 +3890,7 @@ Public Class Form1
                     '-----------------------------------------------
                     'setting back the registry permission to normal.                       
                     '-----------------------------------------------
-                    
+
                     removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & Label3.Text & "\pnpldf.bkp"
                     prochdmi.StartInfo = removehdmidriver
@@ -3798,8 +3903,6 @@ Public Class Form1
                     '--------------------------------
 
                 Else   'Older windows  (windows vista and 7 run here)
-                    Dim reginfos As RegistryKey = Nothing
-                    Dim FolderAcl As New RegistrySecurity
                     'setting permission to registry
                     removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
                     removehdmidriver.Arguments = _
@@ -3963,7 +4066,7 @@ Public Class Form1
         '--------------------------------
         log("System environement CleanUP")
         Try
-            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\", False)
+            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
             If subregkey IsNot Nothing Then
                 For Each child2 As String In subregkey.GetSubKeyNames()
                     If child2.ToLower.Contains("controlset") Then
@@ -4118,6 +4221,7 @@ Public Class Form1
             End Try
         End If
         log("SharedDlls CleanUP")
+
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
          ("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
@@ -4164,53 +4268,26 @@ Public Class Form1
             regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If String.IsNullOrEmpty(Trim(child)) = False Then
-                        If removephysx Then
-                            If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
-                               Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
-                                If Not child.ToLower.Contains("nvidia") Then
-                                    regkey.DeleteSubKeyTree(child)
-                                Else
-                                    Try
-                                        subregkey = regkey.OpenSubKey(child, True)
-                                    Catch ex As Exception
-                                        Continue For
-                                    End Try
-                                    If subregkey IsNot Nothing Then
-                                        For Each child2 As String In subregkey.GetSubKeyNames()
-                                            If String.IsNullOrEmpty(child2) = False Then
-                                                If Not child2.ToLower.Contains("demos") Then
-                                                    Try
-                                                        subregkey.DeleteSubKeyTree(child2)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-
-                                            End If
-
-                                        Next
-                                        If subregkey.GetSubKeyNames().Length.ToString = 0 Then
-                                            Try
-                                                regkey.DeleteSubKeyTree(child)
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
+                    If String.IsNullOrEmpty(child) = False Then
+                        If child.ToLower.Contains("nvidia corporation") Then
+                            For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+                                If String.IsNullOrEmpty(child2) = False Then
+                                    If child2.ToLower.Contains("global") Or _
+                                       child2.ToLower.Contains("nvbackend") Or _
+                                        child2.ToLower.Contains("nvcontrolpanel2") Or _
+                                        child2.ToLower.Contains("nvidia control panel") Then
+                                        Try
+                                            regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                        Catch ex As Exception
+                                        End Try
                                     End If
                                 End If
-                            End If
-                        Else
-                            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\NVIDIA Corporation", True)
-                            If regkey IsNot Nothing Then
-                                For Each child3 As String In regkey.GetSubKeyNames()
-                                    If String.IsNullOrEmpty(child3) = False Then
-                                        If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
-                                            Try
-                                                regkey.DeleteSubKeyTree(child3)
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                    End If
-                                Next
+                            Next
+                            If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
                             End If
                         End If
                     End If
@@ -4225,41 +4302,35 @@ Public Class Form1
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If String.IsNullOrEmpty(Trim(child)) = False Then
-                        If removephysx Then
-                            If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
-                               Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
-                                If Not child.ToLower.Contains("nvidia") Then
-                                    regkey.DeleteSubKeyTree(child)
-                                Else
-                                    Try
-                                        subregkey = regkey.OpenSubKey(child, True)
-                                    Catch ex As Exception
-                                        Continue For
-                                    End Try
-                                    If subregkey IsNot Nothing Then
-                                        For Each child2 As String In subregkey.GetSubKeyNames()
-                                            If String.IsNullOrEmpty(child2) = False Then
-                                                If Not child2.ToLower.Contains("demos") Then
-                                                    subregkey.DeleteSubKeyTree(child2)
-                                                End If
-                                            End If
-                                        Next
-                                        If subregkey.GetSubKeyNames().Length.ToString = 0 Then
-                                            regkey.DeleteSubKeyTree(child)
-                                        End If
+                        If child.ToLower.Contains("ageia technologies") Then
+                            If removephysx Then
+                                regkey.DeleteSubKeyTree(child)
+                            End If
+                        End If
+                        If child.ToLower.Contains("nvidia corporation") Then
+                            For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+                                If String.IsNullOrEmpty(child2) = False Then
+                                    If child2.ToLower.Contains("global") Or _
+                                       child2.ToLower.Contains("installer") Or _
+                                        child2.ToLower.Contains("installer2") Or _
+                                        child2.ToLower.Contains("nvcontrolpanel") Or _
+                                        child2.ToLower.Contains("nvcontrolpanel2") Or _
+                                        child2.ToLower.Contains("nvstream") Or _
+                                        child2.ToLower.Contains("nvstreamc") Or _
+                                        child2.ToLower.Contains("nvstreamsrv") Or _
+                                        child2.ToLower.Contains("nvtray") Then
+                                        Try
+                                            regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                        Catch ex As Exception
+                                        End Try
                                     End If
                                 End If
-                            End If
-                        Else
-                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\NVIDIA Corporation", True)
-                            If regkey IsNot Nothing Then
-                                For Each child3 As String In regkey.GetSubKeyNames()
-                                    If String.IsNullOrEmpty(child3) = False Then
-                                        If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
-                                            regkey.DeleteSubKeyTree(child3)
-                                        End If
-                                    End If
-                                Next
+                            Next
+                            If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
                             End If
                         End If
                     End If
@@ -4274,42 +4345,37 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
-                        If String.IsNullOrEmpty(Trim(child)) = False Then
-                            If removephysx Then
-                                If child.ToLower.Contains("nvcpl") Or child.ToLower.Contains("nvidia") Or child.ToLower.Contains("nvvsvc") _
-                                   Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("nvxd") Or child.ToLower.Contains("ageia") Then
-                                    If Not child.ToLower.Contains("nvidia") Then
-                                        regkey.DeleteSubKeyTree(child)
-                                    Else
-                                        Try
-                                            subregkey = regkey.OpenSubKey(child, True)
-                                        Catch ex As Exception
-                                            Continue For
-                                        End Try
-                                        If subregkey IsNot Nothing Then
-                                            For Each child2 As String In subregkey.GetSubKeyNames()
-                                                If String.IsNullOrEmpty(child2) = False Then
-                                                    If Not child2.ToLower.Contains("demos") Then
-                                                        subregkey.DeleteSubKeyTree(child2)
-                                                    End If
+                       If String.IsNullOrEmpty(Trim(child)) = False Then
+                            If child.ToLower.Contains("ageia technologies") Then
+                                If removephysx Then
+                                    regkey.DeleteSubKeyTree(child)
+                                End If
+                            End If
+                            If child.ToLower.Contains("nvidia corporation") Then
+                                For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+                                    If String.IsNullOrEmpty(child2) = False Then
+                                        If child2.ToLower.Contains("global") Or _
+                                           child2.ToLower.Contains("physx") Then
+                                            If removephysx Then
+                                                Try
+                                                    regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                                Catch ex As Exception
+                                                End Try
+                                            Else
+                                                If child2.ToLower.Contains("physx") Then
+                                                    'do nothing
+                                                Else
+                                                    regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
                                                 End If
-                                            Next
-                                            If subregkey.GetSubKeyNames().Length.ToString = 0 Then
-                                                regkey.DeleteSubKeyTree(child)
                                             End If
                                         End If
                                     End If
-                                End If
-                            Else
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\NVIDIA Corporation", True)
-                                If regkey IsNot Nothing Then
-                                    For Each child3 As String In regkey.GetSubKeyNames()
-                                        If String.IsNullOrEmpty(child3) = False Then
-                                            If Not child3.ToLower.Contains("physx") And Not child3.ToLower.Contains("demos") Then
-                                                regkey.DeleteSubKeyTree(child3)
-                                            End If
-                                        End If
-                                    Next
+                                Next
+                                If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+                                    Try
+                                        regkey.DeleteSubKeyTree(child)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
                         End If
@@ -4328,87 +4394,51 @@ Public Class Form1
 
                 For Each child As String In regkey.GetSubKeyNames()
                     If String.IsNullOrEmpty(Trim(child)) = False Then
-                        Try
-                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
-                        If subregkey IsNot Nothing Then
-                            If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then  'we dont want to clean the 3dtv as some user have licenses..
-                                wantedvalue = subregkey.GetValue("DisplayName").ToString
-                                If String.IsNullOrEmpty(Trim(wantedvalue)) = False Then
-                                    If wantedvalue.ToLower.Contains("nvidia 3d vision") And _
-                                    Not wantedvalue.ToLower.Contains("3dtv") Or _
-                                    wantedvalue.ToLower.Contains("nvidia geforce") Or _
-                                    wantedvalue.ToLower.Contains("nvidia gra") Or _
-                                    wantedvalue.ToLower.Contains("nvidia physx") Or _
-                                    wantedvalue.ToLower.Contains("nvidia virtual audio") Or _
-                                    wantedvalue.ToLower.Contains("nvidia control panel") Or _
-                                    wantedvalue.ToLower.Contains("nvidia update") Or _
-                                    wantedvalue.ToLower.Contains("nvidia led") Or _
-                                    wantedvalue.ToLower.Contains("geforce experience") Or _
-                                    wantedvalue.ToLower.Contains("shield streaming") Or _
-                                    wantedvalue.ToLower.Contains("nvidia install") Or _
-                                    wantedvalue.ToLower.Contains("nvidia update") Or _
-                                    wantedvalue.ToLower.Contains("nvidia shadowplay") Or _
-                                    wantedvalue.ToLower.Contains("nvidia stereo") Or _
-                                    wantedvalue.ToLower.Contains("nvidia optimus") Or _
-                                    wantedvalue.ToLower.Contains("nvidia network service") Or _
-                                    wantedvalue.ToLower.Contains("nvidia hd audio") Then
-                                        If removephysx Then
-                                            Try
-                                                If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
-                                                    My.Computer.FileSystem.DeleteDirectory _
-                                                                          (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                                End If
-                                            Catch ex As Exception
-                                            End Try
-                                            Try
-                                                regkey.DeleteSubKeyTree(child)
-                                            Catch ex As Exception
-                                            End Try
-                                        Else
-                                            If wantedvalue.ToLower.Contains("physx") Then
-                                                'do nothing
-                                            Else
-                                                Try
-                                                    If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
-                                                        My.Computer.FileSystem.DeleteDirectory _
-                                                                              (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                                    End If
-                                                Catch ex As Exception
-                                                End Try
-                                                Try
-                                                    regkey.DeleteSubKeyTree(child)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                        End If
-                                    End If
+                        If child.ToLower.Contains("display.3dvision") And _
+                            Not child.ToLower.Contains("3dtv") Or _
+                            child.ToLower.Contains("_display.controlpanel") Or _
+                            child.ToLower.Contains("_display.driver") Or _
+                            child.ToLower.Contains("_display.gfexperience") Or _
+                            child.ToLower.Contains("_display.nvirusb") Or _
+                            child.ToLower.Contains("_display.physx") Or _
+                            child.ToLower.Contains("_display.update") Or _
+                            child.ToLower.Contains("_gfexperience.") Or _
+                            child.ToLower.Contains("_hdaudio.driver") Or _
+                            child.ToLower.Contains("_installer") Or _
+                            child.ToLower.Contains("_network.service") Or _
+                            child.ToLower.Contains("_shadowplay") Or _
+                            child.ToLower.Contains("_update.core") Or _
+                            child.ToLower.Contains("nvidiastereo") Or _
+                            child.ToLower.Contains("_virtualaudio.driver") Then
+                            If removephysx Then
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
+                            Else
+                                If child.ToLower.Contains("physx") Then
+                                    'do nothing
+                                Else
+                                    Try
+                                        regkey.DeleteSubKeyTree(child)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
                         End If
                     End If
                 Next
+                If removephysx Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If String.IsNullOrEmpty(Trim(child)) = False Then
+                            If String.IsNullOrEmpty(Trim(regkey.OpenSubKey(child).GetValue("DisplayName"))) = False Then
+                                If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
+                                    regkey.DeleteSubKeyTree(child)
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
             End If
         Catch ex As Exception
             log(ex.StackTrace)
@@ -4417,84 +4447,37 @@ Public Class Form1
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
           ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-            For Each child As String In regkey.GetSubKeyNames()
+                For Each child As String In regkey.GetSubKeyNames()
                 If String.IsNullOrEmpty(Trim(child)) = False Then
-                    Try
-                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
-                    Catch ex As Exception
-                        Continue For
-                    End Try
-                    If subregkey IsNot Nothing Then
-                        If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then
-                            wantedvalue = subregkey.GetValue("DisplayName").ToString
-                            If String.IsNullOrEmpty(Trim(wantedvalue)) = False Then
-                                If wantedvalue.ToLower.Contains("nvidia 3d vision") And _
-                                    Not wantedvalue.ToLower.Contains("3dtv") Or _
-                                    wantedvalue.ToLower.Contains("nvidia geforce") Or _
-                                    wantedvalue.ToLower.Contains("nvidia gra") Or _
-                                    wantedvalue.ToLower.Contains("nvidia physx") Or _
-                                    wantedvalue.ToLower.Contains("nvidia virtual audio") Or _
-                                    wantedvalue.ToLower.Contains("nvidia control panel") Or _
-                                    wantedvalue.ToLower.Contains("nvidia update") Or _
-                                    wantedvalue.ToLower.Contains("nvidia led") Or _
-                                    wantedvalue.ToLower.Contains("geforce experience") Or _
-                                    wantedvalue.ToLower.Contains("shield streaming") Or _
-                                    wantedvalue.ToLower.Contains("nvidia install") Or _
-                                    wantedvalue.ToLower.Contains("nvidia update") Or _
-                                    wantedvalue.ToLower.Contains("nvidia shadowplay") Or _
-                                    wantedvalue.ToLower.Contains("nvidia stereo") Or _
-                                    wantedvalue.ToLower.Contains("nvidia optimus") Or _
-                                    wantedvalue.ToLower.Contains("nvidia network service") Or _
-                                    wantedvalue.ToLower.Contains("nvidia hd audio") Then
-                                    If removephysx Then
-                                        Try
-                                            If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
-                                                My.Computer.FileSystem.DeleteDirectory _
-                                                                      (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                            End If
-                                        Catch ex As Exception
-                                        End Try
-                                        Try
-                                            regkey.DeleteSubKeyTree(child)
-                                        Catch ex As Exception
-                                        End Try
-                                    Else
-                                        If wantedvalue.ToLower.Contains("physx") Then
-                                            'do nothing
-                                        Else
-                                            Try
-                                                If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
-                                                    My.Computer.FileSystem.DeleteDirectory _
-                                                                          (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                                End If
-                                            Catch ex As Exception
-                                            End Try
-                                            Try
-                                                regkey.DeleteSubKeyTree(child)
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                    End If
-                                End If
+                    If child.ToLower.Contains("display.3dvision") And _
+                        Not child.ToLower.Contains("3dtv") Or _
+                        child.ToLower.Contains("_display.controlpanel") Or _
+                        child.ToLower.Contains("_display.driver") Or _
+                        child.ToLower.Contains("_display.gfexperience") Or _
+                        child.ToLower.Contains("_display.nvirusb") Or _
+                        child.ToLower.Contains("_display.physx") Or _
+                        child.ToLower.Contains("_display.update") Or _
+                        child.ToLower.Contains("_gfexperience.") Or _
+                        child.ToLower.Contains("_hdaudio.driver") Or _
+                        child.ToLower.Contains("_installer") Or _
+                        child.ToLower.Contains("_network.service") Or _
+                        child.ToLower.Contains("_shadowplay") Or _
+                        child.ToLower.Contains("_update.core") Or _
+                        child.ToLower.Contains("nvidiastereo") Or _
+                        child.ToLower.Contains("_virtualaudio.driver") Then
+                        If removephysx Then
+                            Try
+                                regkey.DeleteSubKeyTree(child)
+                            Catch ex As Exception
+                            End Try
+                        Else
+                            If child.ToLower.Contains("physx") Then
+                                'do nothing
+                            Else
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
                             End If
                         End If
                     End If
@@ -4657,7 +4640,7 @@ Public Class Form1
                                         Try
                                             subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                                 ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
-                                "\InstallProperties", True)
+                                "\InstallProperties")
                                         Catch ex As Exception
                                             Continue For
                                         End Try
@@ -4665,41 +4648,38 @@ Public Class Form1
                                             If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then
                                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
                                                 If String.IsNullOrEmpty(wantedvalue) = False Then
-                                                    If wantedvalue.Contains("NVIDIA") Then
-
+                                                    If wantedvalue.ToLower.Contains("nvidia") Then
                                                         If removephysx Then
                                                             regkey.DeleteSubKeyTree(child)
                                                         Else
-                                                            If wantedvalue.Contains("PhysX") Then
+                                                            If wantedvalue.ToLower.Contains("physx") Then
                                                                 'do nothing
                                                             Else
                                                                 regkey.DeleteSubKeyTree(child)
                                                             End If
                                                         End If
-
-                                                        Dim superregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                                                         ("Installer\UpgradeCodes", True)
+                                                        Dim superregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                                         ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
                                                         If superregkey IsNot Nothing Then
                                                             For Each child2 As String In superregkey.GetSubKeyNames()
-                                                                If String.IsNullOrEmpty(child2) = False Then
+                                                                If String.IsNullOrEmpty(Trim(child2)) = False Then
                                                                     Try
-                                                                        Dim subsuperregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                                    ("Installer\UpgradeCodes\" & child2, True)
+                                                                        subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2)
                                                                     Catch ex As Exception
                                                                         Continue For
                                                                     End Try
                                                                     If subsuperregkey IsNot Nothing Then
-                                                                        For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                        For Each wantedstring As String In subsuperregkey.GetValueNames()
                                                                             If String.IsNullOrEmpty(wantedstring) = False Then
                                                                                 If wantedstring.Contains(child) Then
-
                                                                                     If removephysx Then
                                                                                         Try
                                                                                             superregkey.DeleteSubKeyTree(child2)
                                                                                         Catch ex As Exception
                                                                                         End Try
                                                                                     Else
-                                                                                        If wantedvalue.Contains("PhysX") Then
+                                                                                        If wantedvalue.ToLower.Contains("physx") Then
                                                                                             'do nothing
                                                                                         Else
                                                                                             Try
@@ -4723,7 +4703,7 @@ Public Class Form1
                                                                 For Each child2 As String In superregkey.GetSubKeyNames()
                                                                     If String.IsNullOrEmpty(child2) = False Then
                                                                         Try
-                                                                            Dim subsuperregkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey _
+                                                                            subsuperregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
                                                                         ("Software\Microsoft\Installer\UpgradeCodes\" & child2)
                                                                         Catch ex As Exception
                                                                             Continue For
@@ -4736,7 +4716,7 @@ Public Class Form1
                                                                                         If removephysx Then
                                                                                             superregkey.DeleteSubKeyTree(child2)
                                                                                         Else
-                                                                                            If wantedvalue.Contains("PhysX") Then
+                                                                                            If wantedvalue.ToLower.Contains("physx") Then
                                                                                                 'do nothing
                                                                                             Else
                                                                                                 superregkey.DeleteSubKeyTree(child2)
@@ -4771,6 +4751,8 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
+
+
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
       ("Installer\Products", True)
@@ -4787,7 +4769,7 @@ Public Class Form1
                             If String.IsNullOrEmpty(subregkey.GetValue("ProductName")) = False Then
                                 wantedvalue = subregkey.GetValue("ProductName").ToString
                                 If String.IsNullOrEmpty(wantedvalue) = False Then
-                                    If wantedvalue.Contains("NVIDIA") Then
+                                    If wantedvalue.ToLower.Contains("nvidia") Then
 
                                         If removephysx Then
                                             Try
@@ -4795,7 +4777,7 @@ Public Class Form1
                                             Catch ex As Exception
                                             End Try
                                         Else
-                                            If wantedvalue.Contains("PhysX") Then
+                                            If wantedvalue.ToLower.Contains("physx") Then
                                                 'do nothing
                                             Else
                                                 Try
@@ -4878,7 +4860,8 @@ Public Class Form1
                                         If String.IsNullOrEmpty(subregkey.GetValue(wantedstring)) = False Then
                                             wantedvalue = subregkey.GetValue(wantedstring).ToString
                                             If String.IsNullOrEmpty(wantedvalue) = False Then
-                                                If wantedvalue.Contains("PhysX") Then
+                                                If wantedvalue.ToLower.Contains("physx") Or _
+                                                    wantedvalue.ToLower.Contains("ageia") Then
                                                     Try
                                                         regkey.DeleteSubKeyTree(child)
                                                     Catch ex As Exception
