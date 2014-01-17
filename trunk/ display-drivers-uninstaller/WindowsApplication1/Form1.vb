@@ -176,6 +176,7 @@ Public Class Form1
         CheckBox2.Enabled = False
         CheckBox1.Enabled = False
         CheckBox3.Enabled = False
+        CheckBox4.Enabled = False
         If ComboBox1.Text = "AMD" Then
             vendidexpected = "VEN_1002"
             provider = "Provider: Advanced Micro Devices"
@@ -543,7 +544,7 @@ Public Class Form1
                 If String.IsNullOrEmpty(Trim(child)) = False Then
                     If child.ToLower.Contains(driverfiles(i)) Then
                         Try
-                            My.Computer.FileSystem.DeleteFile(filePath + "\Prefetch\" + child)
+                            My.Computer.FileSystem.DeleteFile(child)
                         Catch ex As Exception
                         End Try
                     End If
@@ -2866,7 +2867,7 @@ Public Class Form1
                 If String.IsNullOrEmpty(Trim(child)) = False Then
                     If child.ToLower.Contains(driverfiles(i)) Then
                         Try
-                            My.Computer.FileSystem.DeleteFile(filePath + "\Prefetch\" + child)
+                            My.Computer.FileSystem.DeleteFile(child)
                         Catch ex As Exception
                         End Try
                     End If
@@ -4945,6 +4946,10 @@ Public Class Form1
                 My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("WMVFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
             Catch ex As Exception
             End Try
+            Try
+                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AVIFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
+            Catch ex As Exception
+            End Try
         End If
 
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** End of Registry Cleaning *****" + vbNewLine)
@@ -5669,14 +5674,17 @@ Public Class Form1
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
         If ComboBox1.Text = "NVIDIA" Then
             CheckBox3.Visible = True
+            CheckBox4.Visible = True
             PictureBox2.Image = My.Resources.Nvidia_GeForce_Logo
         End If
         If ComboBox1.Text = "AMD" Then
             CheckBox3.Visible = False
+            CheckBox4.Visible = False
             PictureBox2.Image = My.Resources.RadeonLogo1
         End If
         If ComboBox1.Text = "INTEL" Then
             CheckBox3.Visible = False
+            CheckBox4.Visible = False
             PictureBox2.Image = My.Resources.intel_logo
         End If
     End Sub
