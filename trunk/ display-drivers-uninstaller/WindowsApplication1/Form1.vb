@@ -45,6 +45,7 @@ Public Class Form1
     Dim winxp As Boolean = False
     Dim stopme As Boolean = False
     Dim removephysx As Boolean = True
+    Dim remove3dtvplay As Boolean = True
     Dim userpth As String = System.Environment.GetEnvironmentVariable("userprofile")
     Dim time As String = DateAndTime.Now
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
@@ -536,6 +537,18 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
             Catch ex As Exception
             End Try
+
+            filePath = Environment.GetEnvironmentVariable("windir")
+            For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains(driverfiles(i)) Then
+                        Try
+                            My.Computer.FileSystem.DeleteFile(filePath + "\Prefetch\" + child)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
 
             If IntPtr.Size = 8 Then
 
@@ -2848,6 +2861,19 @@ Public Class Form1
             Catch ex As Exception
             End Try
 
+            filePath = Environment.GetEnvironmentVariable("windir")
+            For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains(driverfiles(i)) Then
+                        Try
+                            My.Computer.FileSystem.DeleteFile(filePath + "\Prefetch\" + child)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+
+
             If IntPtr.Size = 8 Then
 
                 filePath = Environment.GetEnvironmentVariable("windir")
@@ -4345,7 +4371,7 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
-                       If String.IsNullOrEmpty(Trim(child)) = False Then
+                        If String.IsNullOrEmpty(Trim(child)) = False Then
                             If child.ToLower.Contains("ageia technologies") Then
                                 If removephysx Then
                                     regkey.DeleteSubKeyTree(child)
@@ -4394,8 +4420,8 @@ Public Class Form1
 
                 For Each child As String In regkey.GetSubKeyNames()
                     If String.IsNullOrEmpty(Trim(child)) = False Then
-                        If child.ToLower.Contains("display.3dvision") And _
-                            Not child.ToLower.Contains("3dtv") Or _
+                        If child.ToLower.Contains("display.3dvision") Or _
+                            child.ToLower.Contains("3dtv") Or _
                             child.ToLower.Contains("_display.controlpanel") Or _
                             child.ToLower.Contains("_display.driver") Or _
                             child.ToLower.Contains("_display.gfexperience") Or _
@@ -4410,21 +4436,16 @@ Public Class Form1
                             child.ToLower.Contains("_update.core") Or _
                             child.ToLower.Contains("nvidiastereo") Or _
                             child.ToLower.Contains("_virtualaudio.driver") Then
-                            If removephysx Then
-                                Try
-                                    regkey.DeleteSubKeyTree(child)
-                                Catch ex As Exception
-                                End Try
-                            Else
-                                If child.ToLower.Contains("physx") Then
-                                    'do nothing
-                                Else
-                                    Try
-                                        regkey.DeleteSubKeyTree(child)
-                                    Catch ex As Exception
-                                    End Try
-                                End If
+                            If removephysx = False And child.ToLower.Contains("physx") Then
+                                Continue For
                             End If
+                            If remove3dtvplay = False And child.ToLower.Contains("3dtv") Then
+                                Continue For
+                            End If
+                            Try
+                                regkey.DeleteSubKeyTree(child)
+                            Catch ex As Exception
+                            End Try
                         End If
                     End If
                 Next
@@ -4447,10 +4468,10 @@ Public Class Form1
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
           ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                For Each child As String In regkey.GetSubKeyNames()
+            For Each child As String In regkey.GetSubKeyNames()
                 If String.IsNullOrEmpty(Trim(child)) = False Then
-                    If child.ToLower.Contains("display.3dvision") And _
-                        Not child.ToLower.Contains("3dtv") Or _
+                    If child.ToLower.Contains("display.3dvision") Or _
+                        child.ToLower.Contains("3dtv") Or _
                         child.ToLower.Contains("_display.controlpanel") Or _
                         child.ToLower.Contains("_display.driver") Or _
                         child.ToLower.Contains("_display.gfexperience") Or _
@@ -4465,24 +4486,30 @@ Public Class Form1
                         child.ToLower.Contains("_update.core") Or _
                         child.ToLower.Contains("nvidiastereo") Or _
                         child.ToLower.Contains("_virtualaudio.driver") Then
-                        If removephysx Then
-                            Try
-                                regkey.DeleteSubKeyTree(child)
-                            Catch ex As Exception
-                            End Try
-                        Else
-                            If child.ToLower.Contains("physx") Then
-                                'do nothing
-                            Else
-                                Try
-                                    regkey.DeleteSubKeyTree(child)
-                                Catch ex As Exception
-                                End Try
-                            End If
+                        If removephysx = False And child.ToLower.Contains("physx") Then
+                            Continue For
                         End If
+                        If remove3dtvplay = False And child.ToLower.Contains("3dtv") Then
+                            Continue For
+                        End If
+                        Try
+                            regkey.DeleteSubKeyTree(child)
+                        Catch ex As Exception
+                        End Try
                     End If
                 End If
             Next
+            If removephysx Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        If String.IsNullOrEmpty(Trim(regkey.OpenSubKey(child).GetValue("DisplayName"))) = False Then
+                            If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
+                                regkey.DeleteSubKeyTree(child)
+                            End If
+                        End If
+                    End If
+                Next
+            End If
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
@@ -4908,6 +4935,18 @@ Public Class Form1
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
+
+        If remove3dtvplay Then
+            Try
+                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("mpegfile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
+            Catch ex As Exception
+            End Try
+            Try
+                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("WMVFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
+            Catch ex As Exception
+            End Try
+        End If
+
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** End of Registry Cleaning *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
@@ -6177,5 +6216,13 @@ Public Class Form1
 
     Private Sub ToSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ToSToolStripMenuItem.Click
         MessageBox.Show(tos, "ToS")
+    End Sub
+
+    Private Sub CheckBox4_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox4.CheckedChanged
+        If CheckBox4.Checked = True Then
+            remove3dtvplay = True
+        Else
+            remove3dtvplay = False
+        End If
     End Sub
 End Class
