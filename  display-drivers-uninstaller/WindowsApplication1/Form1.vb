@@ -500,7 +500,7 @@ Public Class Form1
                 (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies"
             For Each child As String In Directory.GetDirectories(filePath)
                 If String.IsNullOrEmpty(Trim(child)) = False Then
-                    If child.ToLower.Contains("Multimedia") Then
+                    If child.ToLower.Contains("multimedia") Then
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
                             (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
