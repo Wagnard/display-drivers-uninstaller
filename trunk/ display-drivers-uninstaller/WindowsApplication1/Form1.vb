@@ -1769,36 +1769,20 @@ Public Class Form1
                             If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then
                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
                                 If String.IsNullOrEmpty(Trim(wantedvalue)) = False Then
-                                    If wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                        wantedvalue.Contains("ccc-utility") Or _
-                                        wantedvalue.Contains("AMD Accelerated Video") Or _
-                                        wantedvalue.Contains("AMD Wireless Display") Or _
-                                            wantedvalue.Contains("AMD Media Foundation") Or _
-                                            wantedvalue.Contains("HydraVision") Or _
-                                            wantedvalue.Contains("AMD Drag and Drop") Or _
-                                            wantedvalue.Contains("AMD APP SDK") Or _
-                                            wantedvalue.Contains("AMD Steady") Or _
-                                            wantedvalue.Contains("AMD Fuel") Or _
-                                            wantedvalue.Contains("Application Profiles") Or _
-                                            wantedvalue.Contains("ATI AVIVO") Then
-
-                                        Try
-                                            If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
-                                                My.Computer.FileSystem.DeleteDirectory _
-                                                                      (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                            End If
-                                        Catch ex As Exception
-
-                                        End Try
+                                    If wantedvalue.ToLower.Contains("amd catalyst install manager") Or _
+                                        wantedvalue.ToLower.Contains("ccc-utility") Or _
+                                        wantedvalue.ToLower.Contains("amd accelerated video") Or _
+                                        wantedvalue.ToLower.Contains("amd wireless display") Or _
+                                            wantedvalue.ToLower.Contains("amd media foundation") Or _
+                                            wantedvalue.ToLower.Contains("hydravision") Or _
+                                            wantedvalue.ToLower.Contains("amd drag and drop") Or _
+                                            wantedvalue.ToLower.Contains("amd app sdk") Or _
+                                            wantedvalue.ToLower.Contains("amd steady") Or _
+                                            wantedvalue.ToLower.Contains("amd fuel") Or _
+                                            wantedvalue.ToLower.Contains("ccc help") Or _
+                                            wantedvalue.ToLower.Contains("catalyst control center") Or _
+                                            wantedvalue.ToLower.Contains("application profiles") Or _
+                                            wantedvalue.ToLower.Contains("ati avivo") Then
                                         Try
                                             regkey.DeleteSubKeyTree(child)
                                         Catch ex As Exception
@@ -1896,35 +1880,20 @@ Public Class Form1
                                 If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then
                                     wantedvalue = subregkey.GetValue("DisplayName").ToString
                                     If String.IsNullOrEmpty(Trim(wantedvalue)) = False Then
-                                        If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
-                                        wantedvalue.Contains("Catalyst Control Center") Or _
-                                        wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                        wantedvalue.Contains("ccc-utility") Or _
-                                            wantedvalue.Contains("AMD Wireless Display") Or _
-                                            wantedvalue.Contains("AMD Media Foundation") Or _
-                                            wantedvalue.Contains("HydraVision") Or _
-                                            wantedvalue.Contains("AMD Drag and Drop") Or _
-                                            wantedvalue.Contains("AMD APP SDK") Or _
-                                            wantedvalue.Contains("AMD Steady") Or _
-                                            wantedvalue.Contains("AMD Fuel") Or _
-                                            wantedvalue.Contains("Application Profiles") Or _
-                                            wantedvalue.Contains("ATI AVIVO") Then
-                                            Try
-                                                If String.IsNullOrEmpty(Trim(subregkey.GetValue("InstallLocation").ToString)) = False And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("files (x86)\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~1\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.EndsWith("progra~2\") And _
-                                                Not subregkey.GetValue("InstallLocation").ToString.ToLower.Length < 4 Then
-                                                    My.Computer.FileSystem.DeleteDirectory _
-                                                                          (subregkey.GetValue("InstallLocation").ToString, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                                End If
-                                            Catch ex As Exception
-                                            End Try
+                                        If wantedvalue.ToLower.Contains("amd catalyst install manager") Or _
+                                            wantedvalue.ToLower.Contains("ccc-utility") Or _
+                                            wantedvalue.ToLower.Contains("amd accelerated video") Or _
+                                            wantedvalue.ToLower.Contains("amd wireless display") Or _
+                                                wantedvalue.ToLower.Contains("amd media foundation") Or _
+                                                wantedvalue.ToLower.Contains("hydravision") Or _
+                                                wantedvalue.ToLower.Contains("amd drag and drop") Or _
+                                                wantedvalue.ToLower.Contains("amd app sdk") Or _
+                                                wantedvalue.ToLower.Contains("amd steady") Or _
+                                                wantedvalue.ToLower.Contains("amd fuel") Or _
+                                                wantedvalue.ToLower.Contains("ccc help") Or _
+                                                wantedvalue.ToLower.Contains("catalyst control center") Or _
+                                                wantedvalue.ToLower.Contains("application profiles") Or _
+                                                wantedvalue.ToLower.Contains("ati avivo") Then
                                             Try
                                                 regkey.DeleteSubKeyTree(child)
                                             Catch ex As Exception
