@@ -879,6 +879,35 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
+        '-------------
+        'control/video
+        '-------------
+        Try
+
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", False)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        subregkey = regkey.OpenSubKey(child & "\Video", False)
+                        If subregkey IsNot Nothing Then
+                            If String.IsNullOrEmpty(Trim(subregkey.GetValue("Service")).ToString) = False Then
+                                If subregkey.GetValue("Service").ToString.ToLower = "amdkmdap" Then
+                                    regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Video\" & child)
+                                    Try
+                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
         log("ActiveMovie Filter Class Manager cleanUP")
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", False)
