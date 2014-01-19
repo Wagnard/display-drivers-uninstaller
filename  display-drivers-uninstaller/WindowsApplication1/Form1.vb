@@ -4300,6 +4300,7 @@ Public Class Form1
                                 If String.IsNullOrEmpty(child2) = False Then
                                     If child2.ToLower.Contains("global") Or _
                                        child2.ToLower.Contains("nvbackend") Or _
+                                       child2.ToLower.Contains("nvidia update core") Or _
                                         child2.ToLower.Contains("nvcontrolpanel2") Or _
                                         child2.ToLower.Contains("nvidia control panel") Then
                                         Try
@@ -4339,6 +4340,7 @@ Public Class Form1
                                     If child2.ToLower.Contains("global") Or _
                                        child2.ToLower.Contains("installer") Or _
                                         child2.ToLower.Contains("installer2") Or _
+                                        child2.ToLower.Contains("nvidia update core") Or _
                                         child2.ToLower.Contains("nvcontrolpanel") Or _
                                         child2.ToLower.Contains("nvcontrolpanel2") Or _
                                         child2.ToLower.Contains("nvstream") Or _
@@ -4478,6 +4480,7 @@ Public Class Form1
                         child.ToLower.Contains("_display.nvirusb") Or _
                         child.ToLower.Contains("_display.physx") Or _
                         child.ToLower.Contains("_display.update") Or _
+                        child.ToLower.Contains("_nvidia.update") Or _
                         child.ToLower.Contains("_gfexperience.") Or _
                         child.ToLower.Contains("_hdaudio.driver") Or _
                         child.ToLower.Contains("_installer") Or _
