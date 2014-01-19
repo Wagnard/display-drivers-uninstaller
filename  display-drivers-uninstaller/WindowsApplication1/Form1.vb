@@ -77,6 +77,7 @@ Public Class Form1
     Dim classroot() As String = Nothing
     Dim safemode As Boolean = False
     Dim myExe As String
+    Dim interfaces() As String
 
     Private Function checkupdates() As Integer
         Try
@@ -434,91 +435,6 @@ Public Class Form1
 
         End If
 
-        filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\ATI"
-
-        Try
-            My.Computer.FileSystem.DeleteDirectory _
-                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-            log(ex.Message)
-        End Try
-
-        filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\ATI"
-
-        Try
-            My.Computer.FileSystem.DeleteDirectory _
-                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-            log(ex.Message)
-        End Try
-
-        filePath = Environment.GetFolderPath _
-  (Environment.SpecialFolder.ProgramFiles) + "\ATI"
-        Try
-            My.Computer.FileSystem.DeleteDirectory _
-                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-
-            log(ex.Message)
-        End Try
-
-        filePath = Environment.GetFolderPath _
-  (Environment.SpecialFolder.ProgramFiles) + "\AMD\SteadyVideo"
-        Try
-            TestDelete(filePath)
-        Catch ex As Exception
-
-            log(ex.Message)
-        End Try
-
-
-        filePath = Environment.GetFolderPath _
- (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
-        Try
-            My.Computer.FileSystem.DeleteDirectory _
-                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-
-            log(ex.Message)
-        End Try
-
-        'Not sure if this work on XP
-
-        filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\ATI"
-        Try
-            My.Computer.FileSystem.DeleteDirectory _
-                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-
-            log(ex.Message)
-        End Try
-
-        filePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\AMD"
-        Try
-            My.Computer.FileSystem.DeleteDirectory _
-                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-
-            log(ex.Message)
-        End Try
-
-        filePath = Environment.GetFolderPath _
-  (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies\Multimedia"
-        Try
-            My.Computer.FileSystem.DeleteDirectory _
-                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-        End Try
-
-        filePath = Environment.GetFolderPath _
-  (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies"
-        If Not Directory.Exists(filePath) Then
-            Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-            End Try
-        End If
 
         'Delete driver files
         'delete OpenCL
@@ -579,6 +495,114 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
+        Try
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies"
+            For Each child As String In Directory.GetDirectories(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("Multimedia") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        Catch ex As Exception
+        End Try
+
+        Try
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
+            For Each child As String In Directory.GetFiles(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("cccutil") Then
+                        Try
+                            My.Computer.FileSystem.DeleteFile(child)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 And _
+                    Directory.GetFiles(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        Catch ex As Exception
+        End Try
+
+        Try
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + "\ATI"
+            For Each child As String In Directory.GetDirectories(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("cim") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        Catch ex As Exception
+        End Try
+
+        Try
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + "\AMD"
+            For Each child As String In Directory.GetDirectories(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("amdkmpfd") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        Catch ex As Exception
+        End Try
+
         If IntPtr.Size = 8 Then
 
             filePath = Environment.GetFolderPath _
@@ -587,19 +611,34 @@ Public Class Form1
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
-
                 log(ex.Message)
             End Try
 
-            filePath = Environment.GetFolderPath _
-               (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
-
             Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
+                For Each child As String In Directory.GetDirectories(filePath)
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        If child.ToLower.Contains("ati.ace") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory _
+                                (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
-
-                log(ex.Message)
             End Try
 
             filePath = System.Environment.SystemDirectory
@@ -627,7 +666,6 @@ Public Class Form1
             Try
                 TestDelete(filePath)
             Catch ex As Exception
-
                 log(ex.Message + "SteadyVideo testdelete")
             End Try
 
@@ -651,6 +689,13 @@ Public Class Form1
             End Try
 
             filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+            End Try
+
+            filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -783,8 +828,8 @@ Public Class Form1
         'interface cleanup
         '-----------------
         log("Interface CleanUP")
+
         Try
-            Dim interfaces() As String
             interfaces = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\interface.cfg") '// add each line as String Array.
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
             If regkey IsNot Nothing Then
@@ -801,6 +846,17 @@ Public Class Form1
                                 If String.IsNullOrEmpty(wantedvalue) = False Then
                                     For i As Integer = 0 To interfaces.Length - 1
                                         If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
+                                            If subregkey.OpenSubKey("Typelib", False) IsNot Nothing Then
+                                                If String.IsNullOrEmpty(Trim(subregkey.OpenSubKey("TypeLib", False).GetValue(""))) = False Then
+                                                    typelib = subregkey.OpenSubKey("TypeLib", False).GetValue("")
+                                                    If String.IsNullOrEmpty(Trim(typelib)) = False Then
+                                                        Try
+                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                End If
+                                            End If
                                             Try
                                                 regkey.DeleteSubKeyTree(child)
                                             Catch ex As Exception
@@ -1254,6 +1310,12 @@ Public Class Form1
                     Try
                         regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
+                    Catch ex As Exception
+                    End Try
+
+                    Try
+                        regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\amdkmdap")
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\amdkmdap")
                     Catch ex As Exception
                     End Try
 
@@ -3751,7 +3813,7 @@ Public Class Form1
 
         log("Interface CleanUP")
         'interface cleanup
-        Dim interfaces() As String
+
         Try
             interfaces = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\interface.cfg") '// add each line as String Array.
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
