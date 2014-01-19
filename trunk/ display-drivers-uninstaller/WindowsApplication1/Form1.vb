@@ -2525,14 +2525,14 @@ Public Class Form1
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning UpdatusUser users ac if present")
+
+        Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName.ToString())
+        Dim users As DirectoryEntries = AD.Children
+        Dim newuser As DirectoryEntry = Nothing
         Try
-            Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName + ",computer")
-            Dim NewUser As DirectoryEntry = AD.Children.Find("UpdatusUser")
-
-            AD.Children.Remove(NewUser)
+            newuser = users.Find("UpdatusUser")
+            users.Remove(newuser)
         Catch ex As Exception
-
-            log(ex.Message + " UpdatusUser")
         End Try
 
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine)
@@ -2559,15 +2559,12 @@ Public Class Form1
         filePath = parentPath
         For Each child As String In Directory.GetDirectories(filePath)
             If String.IsNullOrEmpty(Trim(child)) = False Then
-                If child.Contains("UpdatusUser") Then
-
+                If child.ToLower.Contains("updatususer") Then
                     Try
                         TestDelete(child)
                     Catch ex As Exception
-
-                        log(ex.Message + " UpdatusUser")
+                        log(ex.Message + ex.StackTrace + " UpdatusUser")
                     End Try
-
 
                     Try
                         My.Computer.FileSystem.DeleteDirectory _
@@ -2581,7 +2578,6 @@ Public Class Form1
                     Try
                         TestDelete(child)
                     Catch ex As Exception
-
                         log(ex.Message + " UpdatusUsers second pass")
                     End Try
                     Try
@@ -2656,6 +2652,7 @@ Public Class Form1
                        child.ToLower.Contains("nvstreamsrv") Or _
                        child.ToLower.Contains("shadowplay") Or _
                        child.ToLower.Contains("installer2") Or _
+                       child.ToLower.Contains("update common") Or _
                        child.ToLower.Contains("update core") Then
 
                         If child.ToLower.Contains("installer2") Then
@@ -2669,6 +2666,7 @@ Public Class Form1
                                        child2.ToLower.Contains("display.physx") Or _
                                        child2.ToLower.Contains("display.update") Or _
                                        child2.ToLower.Contains("gfexperience") Or _
+                                       child2.ToLower.Contains("nvidia.update") Or _
                                        child2.ToLower.Contains("installer2\installer") Or _
                                        child2.ToLower.Contains("network.service") Or _
                                        child2.ToLower.Contains("shadowplay") Or _
@@ -2770,6 +2768,7 @@ Public Class Form1
                            child.ToLower.Contains("nvidia geforce experience") Or _
                            child.ToLower.Contains("nvstreamc") Or _
                            child.ToLower.Contains("nvstreamsrv") Or _
+                           child.ToLower.Contains("update common") Or _
                            child.ToLower.Contains("physx") Or _
                            child.ToLower.Contains("update core") Then
                             If removephysx Then
@@ -3892,7 +3891,7 @@ Public Class Form1
 
                     Try
                         regfullfordelete("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
                     Catch ex As Exception
                         log(ex.Message & "pnp resources cpl extension")
                     End Try
