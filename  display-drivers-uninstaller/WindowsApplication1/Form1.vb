@@ -420,7 +420,7 @@ Public Class Form1
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
-        log("Cleaning Directory")
+        log("Cleaning Directory (Please Wait...)")
         Dim filePath As String
 
         If CheckBox1.Checked = True Then
@@ -445,10 +445,16 @@ Public Class Form1
         For i As Integer = 0 To driverfiles.Length - 1
 
             filePath = System.Environment.SystemDirectory
-            Try
-                My.Computer.FileSystem.DeleteFile(filePath + "\" + driverfiles(i))
-            Catch ex As Exception
-            End Try
+            For Each child As String In My.Computer.FileSystem.GetFiles(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                        Try
+                            My.Computer.FileSystem.DeleteFile(child)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
 
             Try
                 My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
@@ -458,7 +464,7 @@ Public Class Form1
             filePath = Environment.GetEnvironmentVariable("windir")
             For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
                 If String.IsNullOrEmpty(Trim(child)) = False Then
-                    If child.ToLower.Contains(driverfiles(i)) Then
+                    If child.ToLower.Contains(driverfiles(i).ToLower) Then
                         Try
                             My.Computer.FileSystem.DeleteFile(child)
                         Catch ex As Exception
@@ -468,12 +474,18 @@ Public Class Form1
             Next
 
             If IntPtr.Size = 8 Then
-
                 filePath = Environment.GetEnvironmentVariable("windir")
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
-                Catch ex As Exception
-                End Try
+                For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\SysWOW64")
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                            Try
+                                My.Computer.FileSystem.DeleteFile(child)
+                            Catch ex As Exception
+                                MsgBox(ex.Message)
+                            End Try
+                        End If
+                    End If
+                Next
 
                 Try
                     My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
@@ -669,47 +681,121 @@ Public Class Form1
                 log(ex.Message + "SteadyVideo testdelete")
             End Try
 
-            filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\Program Files (x86)" + "\Common Files" + "\ATI Technologies\Multimedia"
             Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-            End Try
-
-            filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\Program Files (x86)" + "\Common Files" + "\ATI Technologies"
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                    End Try
-                End If
-            Catch ex As Exception
-            End Try
-
-            filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
-            Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-            End Try
-
-            filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
-            Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.CommonProgramFiles) + " (x86)" + "\ATI Technologies"
+                For Each child As String In Directory.GetDirectories(filePath)
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        If child.ToLower.Contains("multimedia") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory _
+                                (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
             End Try
         End If
+
+        filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
+        Try
+            My.Computer.FileSystem.DeleteDirectory _
+                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+        Catch ex As Exception
+        End Try
+
+        filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
+        Try
+            My.Computer.FileSystem.DeleteDirectory _
+                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+        Catch ex As Exception
+        End Try
+        filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\ATI"
+        For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+            If String.IsNullOrEmpty(Trim(child)) = False Then
+                If child.ToLower.Contains("ace") Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
+            End If
+        Next
+        Try
+            If Directory.GetDirectories(filePath).Length = 0 Then
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                End Try
+            End If
+        Catch ex As Exception
+        End Try
+
+        filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\ATI"
+        For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+            If String.IsNullOrEmpty(Trim(child)) = False Then
+                If child.ToLower.Contains("ace") Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
+            End If
+        Next
+        Try
+            If Directory.GetDirectories(filePath).Length = 0 Then
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                End Try
+            End If
+        Catch ex As Exception
+        End Try
+
+        filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\ATI"
+        For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+            If String.IsNullOrEmpty(Trim(child)) = False Then
+                If child.ToLower.Contains("ace") Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
+            End If
+        Next
+        Try
+            If Directory.GetDirectories(filePath).Length = 0 Then
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                End Try
+            End If
+        Catch ex As Exception
+        End Try
+
 
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning known Regkeys... May take a minute or two. *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning known Regkeys")
+
+
         'Delete AMD regkey
-
-
         'Deleting DCOM object
         Try
             log("Starting dcom/clsid/appid/typelib cleanup")
@@ -1701,14 +1787,18 @@ Public Class Form1
                     If String.IsNullOrEmpty(Trim(child)) = False Then
                         If child.ToLower.Contains("ace") Or _
                            child.ToLower.Contains("install") Then
-
-                            regkey.DeleteSubKeyTree(child)
-
+                            Try
+                                regkey.DeleteSubKeyTree(child)
+                            Catch ex As Exception
+                            End Try
                         End If
                     End If
                 Next
-                If regkey.SubKeyCount.ToString = 0 Then
-                    My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("ATI")
+                If regkey.SubKeyCount = 0 Then
+                    Try
+                        My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("ATI")
+                    Catch ex As Exception
+                    End Try
                 End If
             End If
         Catch ex As Exception
@@ -1720,37 +1810,42 @@ Public Class Form1
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If String.IsNullOrEmpty(Trim(child)) = False Then
-                        If child.ToLower.Contains("cbt") Or _
-                           child.ToLower.Contains("install") Then
-
-                            regkey.DeleteSubKeyTree(child)
-
+                        If child.ToLower.Contains("cbt") Then
+                            Try
+                                regkey.DeleteSubKeyTree(child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                        If child.ToLower.Contains("install") Then
+                            For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+                                If child2.ToLower.Contains("ati catalyst") Or _
+                                    child2.ToLower.Contains("ati mcat") Or _
+                                    child2.ToLower.Contains("avt") Or _
+                                    child2.ToLower.Contains("ccc") Or _
+                                    child2.ToLower.Contains("packages") Or _
+                                    child2.ToLower.Contains("wirelessdisplay") Or _
+                                    child2.ToLower.Contains("steadyvideo") Then
+                                    Try
+                                        regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            Next
+                            If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
                         End If
                     End If
                 Next
-                If regkey.SubKeyCount.ToString = 0 Then
-                    My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("ATI Technologies")
+                If regkey.SubKeyCount = 0 Then
+                    Try
+                        My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("ATI Technologies")
+                    Catch ex As Exception
+                    End Try
                 End If
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
-        Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies\Install", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If String.IsNullOrEmpty(Trim(child)) = False Then
-                        If child.Contains("ATI Catalyst") Or child.Contains("ATI MCAT") Or _
-                            child.Contains("AVT") Or child.Contains("ccc") Or _
-                            child.Contains("Packages") Or child.Contains("WirelessDisplay") Or _
-                            child.Contains("SteadyVideo") Then
-
-                            regkey.DeleteSubKeyTree(child)
-
-                        End If
-                    End If
-                Next
             End If
         Catch ex As Exception
             log(ex.StackTrace)
@@ -1763,14 +1858,18 @@ Public Class Form1
                     If String.IsNullOrEmpty(Trim(child)) = False Then
                         If child.ToLower.Contains("eeu") Or
                            child.ToLower.Contains("mftvdecoder") Then
-
-                            regkey.DeleteSubKeyTree(child)
-
+                            Try
+                                regkey.DeleteSubKeyTree(child)
+                            Catch ex As Exception
+                            End Try
                         End If
                     End If
                 Next
-                If regkey.SubKeyCount.ToString = 0 Then
-                    My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("AMD")
+                If regkey.SubKeyCount = 0 Then
+                    Try
+                        My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("AMD")
+                    Catch ex As Exception
+                    End Try
                 End If
             End If
         Catch ex As Exception
@@ -1779,17 +1878,24 @@ Public Class Form1
 
         If IntPtr.Size = 8 Then
             Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\ATI", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
                         If String.IsNullOrEmpty(Trim(child)) = False Then
-                            If child.Contains("ATI") Then
-
-                                regkey.DeleteSubKeyTree(child)
-
+                            If child.ToLower.Contains("ace") Then
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
                             End If
                         End If
                     Next
+                    If regkey.SubKeyCount = 0 Then
+                        Try
+                            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True).DeleteSubKeyTree("ATI")
+                        Catch ex As Exception
+                        End Try
+                    End If
                 End If
 
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\AMD", True)
@@ -1804,13 +1910,61 @@ Public Class Form1
                             End If
                         End If
                     Next
-                    If regkey.SubKeyCount.ToString = 0 Then
+                    If regkey.SubKeyCount = 0 Then
                         My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True).DeleteSubKeyTree("AMD")
                     End If
                 End If
             Catch ex As Exception
                 log(ex.StackTrace)
             End Try
+
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\ATI Technologies", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If String.IsNullOrEmpty(Trim(child)) = False Then
+                            If child.ToLower.Contains("system wide settings") Then
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                            If child.ToLower.Contains("install") Then
+                                For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+                                    If child2.ToLower.Contains("ati catalyst") Or _
+                                        child2.ToLower.Contains("ati mcat") Or _
+                                        child2.ToLower.Contains("avt") Or _
+                                        child2.ToLower.Contains("ccc") Or _
+                                        child2.ToLower.Contains("packages") Or _
+                                        child2.ToLower.Contains("wirelessdisplay") Or _
+                                        child2.ToLower.Contains("steadyvideo") Then
+                                        Try
+                                            regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                        Catch ex As Exception
+                                        End Try
+                                    End If
+                                Next
+                                If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+                                    Try
+                                        regkey.DeleteSubKeyTree(child)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            End If
+                        End If
+                    Next
+                    If regkey.SubKeyCount = 0 Then
+                        Try
+                            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True).DeleteSubKeyTree("ATI Technologies")
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Catch ex As Exception
+                log(ex.StackTrace)
+            End Try
+
+
         End If
 
         Try
@@ -2924,7 +3078,7 @@ Public Class Form1
             filePath = Environment.GetEnvironmentVariable("windir")
             For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
                 If String.IsNullOrEmpty(Trim(child)) = False Then
-                    If child.ToLower.Contains(driverfiles(i)) Then
+                    If child.ToLower.Contains(driverfiles(i).ToLower) Then
                         Try
                             My.Computer.FileSystem.DeleteFile(child)
                         Catch ex As Exception
@@ -5541,7 +5695,6 @@ Public Class Form1
             Application.Exit()
         End If
         MsgBox("Please make a BACKUP or a System Restore point before using DDU. We take no responsibilities if something goes wrong.")
-
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
