@@ -481,7 +481,6 @@ Public Class Form1
                             Try
                                 My.Computer.FileSystem.DeleteFile(child)
                             Catch ex As Exception
-                                MsgBox(ex.Message)
                             End Try
                         End If
                     End If
@@ -683,7 +682,7 @@ Public Class Form1
 
             Try
                 filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.CommonProgramFiles) + " (x86)" + "\ATI Technologies"
+                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
                 For Each child As String In Directory.GetDirectories(filePath)
                     If String.IsNullOrEmpty(Trim(child)) = False Then
                         If child.ToLower.Contains("multimedia") Then
@@ -722,72 +721,87 @@ Public Class Form1
                 (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
         Catch ex As Exception
         End Try
+
+
         filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\ATI"
-        For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-            If String.IsNullOrEmpty(Trim(child)) = False Then
-                If child.ToLower.Contains("ace") Then
+        Try
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("ace") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                     End Try
                 End If
-            End If
-        Next
-        Try
-            If Directory.GetDirectories(filePath).Length = 0 Then
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                End Try
-            End If
+            Catch ex As Exception
+            End Try
         Catch ex As Exception
+            log(ex.Message)
         End Try
+
 
         filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\ATI"
-        For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-            If String.IsNullOrEmpty(Trim(child)) = False Then
-                If child.ToLower.Contains("ace") Then
+        Try
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("ace") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                     End Try
                 End If
-            End If
-        Next
-        Try
-            If Directory.GetDirectories(filePath).Length = 0 Then
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                End Try
-            End If
+            Catch ex As Exception
+            End Try
         Catch ex As Exception
+            log(ex.Message)
         End Try
+
 
         filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\ATI"
-        For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-            If String.IsNullOrEmpty(Trim(child)) = False Then
-                If child.ToLower.Contains("ace") Then
+        Try
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("ace") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                     End Try
                 End If
-            End If
-        Next
-        Try
-            If Directory.GetDirectories(filePath).Length = 0 Then
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                End Try
-            End If
+            Catch ex As Exception
+            End Try
         Catch ex As Exception
+            log(ex.Message)
         End Try
-
 
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning known Regkeys... May take a minute or two. *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
@@ -2213,19 +2227,20 @@ Public Class Form1
                                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
 
                                                 If String.IsNullOrEmpty(wantedvalue) = False Then
-                                                    If wantedvalue.Contains("CCC Help") Or wantedvalue.Contains("AMD Accelerated") Or _
-                                                       wantedvalue.Contains("Catalyst Control Center") Or _
-                                                       wantedvalue.Contains("AMD Catalyst Install Manager") Or _
-                                                       wantedvalue.Contains("ccc-utility") Or _
-                                                       wantedvalue.Contains("AMD Wireless Display") Or _
-                                                       wantedvalue.Contains("AMD Media Foundation") Or _
-                                                       wantedvalue.Contains("HydraVision") Or _
-                                                       wantedvalue.Contains("AMD Drag and Drop") Or _
-                                                       wantedvalue.Contains("AMD APP SDK") Or _
-                                                       wantedvalue.Contains("AMD Steady") Or _
-                                                       wantedvalue.Contains("AMD Fuel") Or _
-                                                       wantedvalue.Contains("Application Profiles") Or _
-                                                       wantedvalue.Contains("ATI AVIVO") Then
+                                                    If wantedvalue.ToLower.Contains("ccc help") Or _
+                                                       wantedvalue.ToLower.Contains("amd accelerated") Or _
+                                                       wantedvalue.ToLower.Contains("catalyst control center") Or _
+                                                       wantedvalue.ToLower.Contains("amd catalyst install manager") Or _
+                                                       wantedvalue.ToLower.Contains("ccc-utility") Or _
+                                                       wantedvalue.ToLower.Contains("amd wireless display") Or _
+                                                       wantedvalue.ToLower.Contains("amd media foundation") Or _
+                                                       wantedvalue.ToLower.Contains("hydravision") Or _
+                                                       wantedvalue.ToLower.Contains("amd drag and drop") Or _
+                                                       wantedvalue.ToLower.Contains("amd app sdk") Or _
+                                                       wantedvalue.ToLower.Contains("amd steady") Or _
+                                                       wantedvalue.ToLower.Contains("amd fuel") Or _
+                                                       wantedvalue.ToLower.Contains("application profiles") Or _
+                                                       wantedvalue.ToLower.Contains("ati avivo") Then
                                                         Try
                                                             regkey.DeleteSubKeyTree(child)
                                                         Catch ex As Exception
@@ -2235,6 +2250,10 @@ Public Class Form1
                                                         'The yellow mark in this case is really stupid imo and shouldn't even
                                                         'be thrown as a warning to the end user... it has not bad effect.
 
+                                                        Try
+                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Installer\Features\" & child)
+                                                        Catch ex As Exception
+                                                        End Try
 
                                                         superregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                                                                                          ("Installer\UpgradeCodes", True)
@@ -2245,6 +2264,62 @@ Public Class Form1
 
                                                                         subsuperregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
                                                                         ("Installer\UpgradeCodes\" & child2, False)
+                                                                    Catch ex As Exception
+                                                                        Continue For
+                                                                    End Try
+
+                                                                    If subsuperregkey IsNot Nothing Then
+                                                                        For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                            If String.IsNullOrEmpty(wantedstring) = False Then
+                                                                                If wantedstring.Contains(child) Then
+                                                                                    Try
+                                                                                        superregkey.DeleteSubKeyTree(child2)
+                                                                                    Catch ex As Exception
+                                                                                    End Try
+                                                                                End If
+                                                                            End If
+                                                                        Next
+                                                                    End If
+                                                                End If
+                                                            Next
+                                                        End If
+
+                                                        superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                                         ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
+                                                        If superregkey IsNot Nothing Then
+                                                            For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                If String.IsNullOrEmpty(child2) = False Then
+                                                                    Try
+                                                                        subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                        ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, False)
+                                                                    Catch ex As Exception
+                                                                        Continue For
+                                                                    End Try
+
+                                                                    If subsuperregkey IsNot Nothing Then
+                                                                        For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                            If String.IsNullOrEmpty(wantedstring) = False Then
+                                                                                If wantedstring.Contains(child) Then
+                                                                                    Try
+                                                                                        superregkey.DeleteSubKeyTree(child2)
+                                                                                    Catch ex As Exception
+                                                                                    End Try
+                                                                                End If
+                                                                            End If
+                                                                        Next
+                                                                    End If
+                                                                End If
+                                                            Next
+                                                        End If
+
+                                                        superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                             ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
+                                                        If superregkey IsNot Nothing Then
+                                                            For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                If String.IsNullOrEmpty(child2) = False Then
+                                                                    Try
+                                                                        subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                        ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child2, False)
                                                                     Catch ex As Exception
                                                                         Continue For
                                                                     End Try

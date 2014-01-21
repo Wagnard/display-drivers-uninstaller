@@ -1,2 +1,2 @@
-﻿Clean and Shutdown
-(For installing a new graphic card)
+﻿Tisztítás és leállítás
+(Új videókártya beüzemeléséhez)
