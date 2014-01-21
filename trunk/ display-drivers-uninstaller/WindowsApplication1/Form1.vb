@@ -634,6 +634,7 @@ Public Class Form1
                             Try
                                 My.Computer.FileSystem.DeleteDirectory _
                                 (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
                             Catch ex As Exception
                             End Try
                         End If
@@ -644,6 +645,8 @@ Public Class Form1
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
                                 (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue("C:\Program Files (x86)\ATI Technologies\")
+
                         Catch ex As Exception
                         End Try
                     End If
@@ -682,13 +685,14 @@ Public Class Form1
 
             Try
                 filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
+                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies"
                 For Each child As String In Directory.GetDirectories(filePath)
                     If String.IsNullOrEmpty(Trim(child)) = False Then
                         If child.ToLower.Contains("multimedia") Then
                             Try
                                 My.Computer.FileSystem.DeleteDirectory _
                                 (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
                             Catch ex As Exception
                             End Try
                         End If
@@ -699,6 +703,8 @@ Public Class Form1
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
                                 (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            'on success, do this
+                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue("C:\Program Files (x86)\Common Files\ATI Technologies\")
                         Catch ex As Exception
                         End Try
                     End If
