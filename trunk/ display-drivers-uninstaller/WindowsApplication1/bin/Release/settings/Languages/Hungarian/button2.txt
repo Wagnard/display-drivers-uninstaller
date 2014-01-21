@@ -1,2 +1,2 @@
-﻿Clean and DO NOT restart.
-(May cause issues like blackscreen)
+﻿Tisztítás újraindítás NÉLKÜL
+(Hibákat okozhat, például fekete képernyőt)
