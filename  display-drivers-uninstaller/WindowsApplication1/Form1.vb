@@ -1379,6 +1379,53 @@ Public Class Form1
         'End of .net ngenservice clean
         '-----------------------------
 
+        '-----------------------------
+        'Shell extensions\aprouved
+        '-----------------------------
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetValueNames()
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        If regkey.GetValue(child).ToString.ToLower.Contains("catalyst context menu extension") Or _
+                            regkey.GetValue(child).ToString.ToLower.Contains("display cpl extension") Then
+                            Try
+                                regkey.DeleteValue(child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+        If IntPtr.Size = 8 Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If String.IsNullOrEmpty(Trim(child)) = False Then
+                            If regkey.GetValue(child).ToString.ToLower.Contains("catalyst context menu extension") Or _
+                                regkey.GetValue(child).ToString.ToLower.Contains("display cpl extension") Then
+                                Try
+                                    regkey.DeleteValue(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.StackTrace)
+            End Try
+        End If
+        '-----------------------------
+        'End Shell extensions\aprouved
+        '-----------------------------
+
+
         log("Pnplockdownfiles region cleanUP")
         Try
             If winxp = False Then
