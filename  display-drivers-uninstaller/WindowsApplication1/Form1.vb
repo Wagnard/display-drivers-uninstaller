@@ -445,22 +445,19 @@ Public Class Form1
         For i As Integer = 0 To driverfiles.Length - 1
 
             filePath = System.Environment.SystemDirectory
-            For Each child As String In My.Computer.FileSystem.GetFiles(filePath)
-                If String.IsNullOrEmpty(Trim(child)) = False Then
-                    If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                        Try
-                            My.Computer.FileSystem.DeleteFile(child)
-                        Catch ex As Exception
-                        End Try
-                    End If
-                End If
-            Next
+            
+            Try
+                My.Computer.FileSystem.DeleteFile(filePath & "\" & driverfiles(i))
+            Catch ex As Exception
+            End Try
 
             Try
                 My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
             Catch ex As Exception
             End Try
+        Next
 
+        For i As Integer = 0 To driverfiles.Length - 1
             filePath = Environment.GetEnvironmentVariable("windir")
             For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
                 If String.IsNullOrEmpty(Trim(child)) = False Then
@@ -472,8 +469,10 @@ Public Class Form1
                     End If
                 End If
             Next
+        Next
 
-            If IntPtr.Size = 8 Then
+        If IntPtr.Size = 8 Then
+            For i As Integer = 0 To driverfiles.Length - 1
                 filePath = Environment.GetEnvironmentVariable("windir")
                 For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\SysWOW64", FileIO.SearchOption.SearchTopLevelOnly, "*.log")
                     If String.IsNullOrEmpty(Trim(child)) = False Then
@@ -495,9 +494,8 @@ Public Class Form1
                     My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
                 Catch ex As Exception
                 End Try
-
-            End If
-        Next
+            Next
+        End If
 
         filePath = Environment.GetEnvironmentVariable("windir")
         Try
