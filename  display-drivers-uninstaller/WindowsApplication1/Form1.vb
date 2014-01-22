@@ -475,7 +475,7 @@ Public Class Form1
 
             If IntPtr.Size = 8 Then
                 filePath = Environment.GetEnvironmentVariable("windir")
-                For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\SysWOW64")
+                For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\SysWOW64", FileIO.SearchOption.SearchTopLevelOnly, "*.log")
                     If String.IsNullOrEmpty(Trim(child)) = False Then
                         If child.ToLower.Contains(driverfiles(i).ToLower) Then
                             Try
@@ -488,6 +488,11 @@ Public Class Form1
 
                 Try
                     My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
+                Catch ex As Exception
+                End Try
+
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
                 Catch ex As Exception
                 End Try
 
