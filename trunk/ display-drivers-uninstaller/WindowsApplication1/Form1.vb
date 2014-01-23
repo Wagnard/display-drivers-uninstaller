@@ -2941,40 +2941,101 @@ Public Class Form1
         filePath = Environment.GetFolderPath _
 (Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
 
-        If removephysx Then
+        Try
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("nvbackend") Or _
+                        child.ToLower.Contains("gfexperience") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
             Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-
-                log(ex.Message & "local application data \Ndidia")
-            End Try
-        Else
-            Try
-                TestDelete(filePath)
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
             Catch ex As Exception
             End Try
-
-        End If
+        Catch ex As Exception
+        End Try
 
         filePath = Environment.GetFolderPath _
-  (Environment.SpecialFolder.ApplicationData) + "\NVIDIA"
+(Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA Corporation"
 
-        If removephysx Then
+        Try
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("ledvisualizer") Or _
+                        child.ToLower.Contains("shadowplay") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
             Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
             Catch ex As Exception
-
-                log(ex.Message & "application data \Nvidia")
             End Try
-        Else
+        Catch ex As Exception
+        End Try
+
+        filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
+
+        Try
+            If Directory.GetDirectories(filePath).Length = 0 Then
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                End Try
+            End If
+        Catch ex As Exception
+        End Try
+
+        filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
+        Try
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If String.IsNullOrEmpty(Trim(child)) = False Then
+                    If child.ToLower.Contains("drs") Or _
+                        child.ToLower.Contains("geforce experience") Or _
+                        child.ToLower.Contains("netservice") Or _
+                        child.ToLower.Contains("shadowplay") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
             Try
-                TestDelete(filePath)
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                    End Try
+                End If
             Catch ex As Exception
             End Try
-
-        End If
+        Catch ex As Exception
+        End Try
 
         Try
             filePath = Environment.GetFolderPath _
@@ -3082,25 +3143,6 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        filePath = Environment.GetFolderPath _
-  (Environment.SpecialFolder.CommonProgramFiles) + "\NVIDIA Corporation"
-
-        If removephysx Then
-            Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-
-                log(ex.Message & "common programfiles\Nvidia corporation")
-            End Try
-        Else
-            Try
-                TestDelete(filePath)
-            Catch ex As Exception
-            End Try
-
-        End If
-
         Try
             If IntPtr.Size = 8 Then
                 filePath = Environment.GetFolderPath _
@@ -3151,43 +3193,6 @@ Public Class Form1
         End Try
         'Not sure if this work on XP
 
-        filePath = Environment.GetFolderPath _
-  (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
-
-        If removephysx Then
-            Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-
-                log(ex.Message & "common application data\nvidia")
-            End Try
-        Else
-            Try
-                TestDelete(filePath)
-            Catch ex As Exception
-            End Try
-
-        End If
-
-        filePath = Environment.GetFolderPath _
-  (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
-
-        If removephysx Then
-            Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-
-                log(ex.Message & "common application data\Nvidia corporation")
-            End Try
-        Else
-            Try
-                TestDelete(filePath)
-            Catch ex As Exception
-            End Try
-
-        End If
         'Erase driver file from windows directory
 
         Dim driverfiles() As String
