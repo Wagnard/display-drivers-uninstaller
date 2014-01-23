@@ -3045,6 +3045,7 @@ Public Class Form1
                 If String.IsNullOrEmpty(Trim(child)) = False Then
                     If child.ToLower.Contains("control panel client") Or _
                        child.ToLower.Contains("display") Or _
+                       child.ToLower.Contains("coprocmanager") Or _
                        child.ToLower.Contains("drs") Or _
                        child.ToLower.Contains("nvsmi") Or _
                        child.ToLower.Contains("opencl") Or _
@@ -3150,6 +3151,7 @@ Public Class Form1
                 For Each child As String In Directory.GetDirectories(filePath)
                     If String.IsNullOrEmpty(Trim(child)) = False Then
                         If child.ToLower.Contains("3d vision") Or _
+                           child.ToLower.Contains("coprocmanager") Or _
                            child.ToLower.Contains("led visualizer") Or _
                            child.ToLower.Contains("netservice") Or _
                            child.ToLower.Contains("nvidia geforce experience") Or _
