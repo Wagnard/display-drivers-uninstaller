@@ -5377,8 +5377,8 @@ Public Class Form1
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
                     If String.IsNullOrEmpty(Trim(child)) = False Then
-                        If regkey.GetValue(child).ToString.ToLower.Contains("NvCpl DesktopContext Class") Or _
-                           regkey.GetValue(child).ToString.ToLower.Contains("NVIDIA Play On My TV Context Menu Extension") Then
+                        If regkey.GetValue(child).ToString.ToLower.Contains("nvcpl desktopcontext class") Or _
+                           regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context menu extension") Then
                             Try
                                 regkey.DeleteValue(child)
                             Catch ex As Exception
