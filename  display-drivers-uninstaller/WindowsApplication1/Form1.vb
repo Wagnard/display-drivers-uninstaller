@@ -20,6 +20,7 @@ Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Threading
 Imports System.Security.Principal
+Imports System.Text
 
 
 
@@ -79,6 +80,7 @@ Public Class Form1
     Dim myExe As String
     Dim interfaces() As String
 
+
     Private Function checkupdates() As Integer
         Try
             Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt")
@@ -108,6 +110,7 @@ Public Class Form1
         End Try
 
     End Function
+
     Private Sub Checkupdates2()
         Dim result As Integer = checkupdates()
 
@@ -122,7 +125,7 @@ Public Class Form1
         AccessUI()
     End Sub
     Private Sub regfullfordelete(ByVal key As String)
-        removehdmidriver.FileName = application.startuppath & "\" & label3.Text & "\setacl.exe"
+        removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
         removehdmidriver.Arguments = _
 "-on " & Chr(34) & key & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
         removehdmidriver.UseShellExecute = False
@@ -445,7 +448,7 @@ Public Class Form1
         For i As Integer = 0 To driverfiles.Length - 1
 
             filePath = System.Environment.SystemDirectory
-            
+
             Try
                 My.Computer.FileSystem.DeleteFile(filePath & "\" & driverfiles(i))
             Catch ex As Exception
@@ -5458,9 +5461,10 @@ Public Class Form1
 "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & UserAc & Chr(34)
                                             removehdmidriver.UseShellExecute = False
                                             removehdmidriver.CreateNoWindow = True
-                                            removehdmidriver.RedirectStandardOutput = False
+                                            removehdmidriver.RedirectStandardOutput = True
                                             prochdmi.StartInfo = removehdmidriver
                                             prochdmi.Start()
+                                            reply = proc2.StandardOutput.ReadToEnd
                                             prochdmi.WaitForExit()
                                             System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
 
@@ -5476,6 +5480,7 @@ Public Class Form1
                                                 subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
                                             Catch ex As Exception
                                                 log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing vieocard")
+                                                log(reply)
                                             End Try
 
 
@@ -5917,7 +5922,7 @@ Public Class Form1
                     If MsgBox("DDU has detected that you are NOT in SafeMode... For a better CleanUP without issues, would you like to reboot the computer into SafeMode now?", MsgBoxStyle.YesNo, "Reboot into SafeMode?") = MsgBoxResult.Yes Then
                         Dim setbcdedit As New ProcessStartInfo
                         setbcdedit.FileName = "cmd.exe"
-                        setbcdedit.Arguments = " /Cbcdedit /set {current} safeboot Minimal"
+                        setbcdedit.Arguments = " /Cbcdedit /set {current} safeboot network"
                         setbcdedit.UseShellExecute = False
                         setbcdedit.CreateNoWindow = True
                         setbcdedit.RedirectStandardOutput = False
@@ -6193,12 +6198,14 @@ Public Class Form1
         Process.Start("https://code.google.com/p/display-drivers-uninstaller/source/list")
     End Sub
 
+
     Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
 
-        Try
+        'make a system restore point if possible
 
+        Try
             checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
             checkoem.Arguments = "findall =display"
             checkoem.UseShellExecute = False
