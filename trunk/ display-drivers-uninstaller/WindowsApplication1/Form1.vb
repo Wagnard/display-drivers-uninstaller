@@ -6301,7 +6301,7 @@ Public Class Form1
                 ' System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
             End While
 
-
+            'Here I remove 3dVision USB Adapter.
             If DirectCast(e.Argument, String) = "NVIDIA" Then
                 'removing 3DVision USB driver
                 checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
@@ -6413,6 +6413,54 @@ Public Class Form1
                     card1 = reply.IndexOf("ROOT\", card1 + 1)
                 End While
             End If
+
+            '----------------------------------------------
+            'Here I remove AMD HD Audio bus (System device)
+            '----------------------------------------------
+
+            If DirectCast(e.Argument, String) = "AMD" Then
+                'removing 3DVision USB driver
+                checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                checkoem.Arguments = "hwids =SYSTEM"
+                checkoem.UseShellExecute = False
+                checkoem.CreateNoWindow = True
+                checkoem.RedirectStandardOutput = True
+
+                'creation dun process fantome pour le wait on exit.
+
+                proc2.StartInfo = checkoem
+                proc2.Start()
+                reply = proc2.StandardOutput.ReadToEnd
+                proc2.WaitForExit()
+
+                Dim test() As String = reply.Split
+                For i = 0 To test.Length - 1
+                    If test(i).Trim = ("PCI\VEN_1002&CC_0403") Then
+                        log("-" & vendid & "- High Definition Audio Bus Found !")
+
+                        removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                        removehdmidriver.Arguments = "remove =SYSTEM " & Chr(34) & test(i) & Chr(34)
+                        removehdmidriver.UseShellExecute = False
+                        removehdmidriver.CreateNoWindow = True
+                        removehdmidriver.RedirectStandardOutput = True
+                        prochdmi.StartInfo = removehdmidriver
+                        Try
+                            prochdmi.Start()
+                            reply2 = prochdmi.StandardOutput.ReadToEnd
+                            prochdmi.WaitForExit()
+                            log(reply2)
+                        Catch ex As Exception
+
+                            log(ex.Message)
+                            MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                            Button1.Enabled = True
+                            Button2.Enabled = True
+                            Button3.Enabled = True
+                        End Try
+                    End If
+                Next
+            End If
+
 
             log("ddudr Remove Audio/HDMI Complete")
             'removing monitor and hidden monitor
