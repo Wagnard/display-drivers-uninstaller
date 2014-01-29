@@ -73,6 +73,9 @@
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>DDU.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -192,6 +195,7 @@
     <None Include="Resources\x64\subinacl.exe" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DDU.ico" />
     <Content Include="Resources\ddu logo3.png" />
     <None Include="Resources\xp64\ddudr.exe" />
     <None Include="Resources\intel_logo.png" />
