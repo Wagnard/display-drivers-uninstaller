@@ -132,7 +132,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(35, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V11.2"
+        Me.Label6.Text = "V11.3"
         '
         'ComboBox1
         '
