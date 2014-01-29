@@ -20,7 +20,6 @@ Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Threading
 Imports System.Security.Principal
-Imports System.Text
 
 
 
@@ -5766,7 +5765,7 @@ Public Class Form1
                     System.IO.File.WriteAllBytes(myExe, My.Resources.pnpldfwin7vista)
                 End If
             Catch ex As Exception
-                log(ex.Message)
+                log(ex.Message & ex.StackTrace)
                 TextBox1.AppendText(ex.Message)
             End Try
         Else
@@ -5798,7 +5797,7 @@ Public Class Form1
 
 
             Catch ex As Exception
-                log(ex.Message)
+                log(ex.Message & ex.StackTrace)
                 TextBox1.AppendText(ex.Message)
             End Try
         End If
@@ -5936,6 +5935,7 @@ Public Class Form1
                                 regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
                                 regkey.SetValue("*UndoSM", "bcdedit /deletevalue {current} safeboot")
                             Catch ex As Exception
+                                log(ex.Message & ex.StackTrace)
                             End Try
 
                         End If
@@ -6203,7 +6203,6 @@ Public Class Form1
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
 
-        'make a system restore point if possible
 
         Try
             checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
