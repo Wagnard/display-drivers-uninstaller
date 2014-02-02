@@ -243,7 +243,8 @@ Public Class Form1
             Dim classs As Integer = reply.IndexOf("Class:", oem)
             Dim inf As Integer = reply.IndexOf(".inf", oem)
             If classs > -1 Then 'I saw that sometimes, there could be no class on some oems (winxp)
-                If reply.Substring(position, classs - position).Contains(provider) Then
+                If reply.Substring(position, classs - position).Contains(provider) Or _
+                    reply.Substring(position, classs - position).Contains("AMD") Then
                     Dim part As String = reply.Substring(oem, inf - oem)
                     log(part + " Found")
                     Dim deloem As New Diagnostics.ProcessStartInfo
@@ -994,30 +995,45 @@ Public Class Form1
         'control/video
         '-------------
         Try
-
-
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", False)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames
                     If String.IsNullOrEmpty(Trim(child)) = False Then
-                        subregkey = regkey.OpenSubKey(child & "\Video", False)
-                        If subregkey IsNot Nothing Then
-                            If String.IsNullOrEmpty(Trim(subregkey.GetValue("Service")).ToString) = False Then
-                                If subregkey.GetValue("Service").ToString.ToLower = "amdkmdap" Then
-                                    regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Video\" & child)
-                                    Try
-                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
-                                    Catch ex As Exception
-                                    End Try
-                                End If
-                            End If
-                        End If
+                        regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Video\" & child)
+                        Try
+                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
+                        Catch ex As Exception
+                        End Try
                     End If
                 Next
             End If
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
+
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                        Try
+                            regkey.DeleteSubKeyTree(child)
+                        Catch ex As Exception
+                            MsgBox(ex.Message & child)
+                        End Try
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+
+
+        '-----------------
+        'end control/video
+        '-----------------
 
         log("ActiveMovie Filter Class Manager cleanUP")
         Try
@@ -5327,30 +5343,41 @@ Public Class Form1
         'control/video
         '-------------
         Try
-
-
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", False)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames
                     If String.IsNullOrEmpty(Trim(child)) = False Then
-                        subregkey = regkey.OpenSubKey(child & "\Video", False)
-                        If subregkey IsNot Nothing Then
-                            If String.IsNullOrEmpty(Trim(subregkey.GetValue("Service")).ToString) = False Then
-                                If subregkey.GetValue("Service").ToString.ToLower = "nvlddmkm" Then
-                                    regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Video\" & child)
-                                    Try
-                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
-                                    Catch ex As Exception
-                                    End Try
-                                End If
-                            End If
-                        End If
+                        regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Video\" & child)
+                        Try
+                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
+                        Catch ex As Exception
+                        End Try
                     End If
                 Next
             End If
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
+
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                        Try
+                            regkey.DeleteSubKeyTree(child)
+                        Catch ex As Exception
+                            MsgBox(ex.Message & child)
+                        End Try
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+
 
         '-----------------
         'end control/video
@@ -6202,9 +6229,55 @@ Public Class Form1
     Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
-
-
         Try
+            '----------------------------------------------
+            'Here I remove AMD HD Audio bus (System device)
+            '----------------------------------------------
+
+            If DirectCast(e.Argument, String) = "AMD" Then
+                'removing 3DVision USB driver
+                checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                checkoem.Arguments = "hwids =SYSTEM"
+                checkoem.UseShellExecute = False
+                checkoem.CreateNoWindow = True
+                checkoem.RedirectStandardOutput = True
+
+                'creation dun process fantome pour le wait on exit.
+
+                proc2.StartInfo = checkoem
+                proc2.Start()
+                reply = proc2.StandardOutput.ReadToEnd
+                proc2.WaitForExit()
+
+                Dim test() As String = reply.Split
+                For i = 0 To test.Length - 1
+                    If Trim(test(i)) = ("PCI\VEN_1002&CC_0403") Then
+                        log("-" & Trim(test(i)) & "- High Definition Audio Bus Found !")
+
+                        removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                        removehdmidriver.Arguments = "remove =SYSTEM " & Chr(34) & test(i) & Chr(34)
+                        removehdmidriver.UseShellExecute = False
+                        removehdmidriver.CreateNoWindow = True
+                        removehdmidriver.RedirectStandardOutput = True
+                        prochdmi.StartInfo = removehdmidriver
+                        Try
+                            prochdmi.Start()
+                            reply2 = prochdmi.StandardOutput.ReadToEnd
+                            prochdmi.WaitForExit()
+                            log(reply2)
+                        Catch ex As Exception
+
+                            log(ex.Message)
+                            MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                            Button1.Enabled = True
+                            Button2.Enabled = True
+                            Button3.Enabled = True
+                        End Try
+                    End If
+                Next
+            End If
+
+
             checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
             checkoem.Arguments = "findall =display"
             checkoem.UseShellExecute = False
@@ -6414,54 +6487,6 @@ Public Class Form1
                 End While
             End If
 
-            '----------------------------------------------
-            'Here I remove AMD HD Audio bus (System device)
-            '----------------------------------------------
-
-            If DirectCast(e.Argument, String) = "AMD" Then
-                'removing 3DVision USB driver
-                checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
-                checkoem.Arguments = "hwids =SYSTEM"
-                checkoem.UseShellExecute = False
-                checkoem.CreateNoWindow = True
-                checkoem.RedirectStandardOutput = True
-
-                'creation dun process fantome pour le wait on exit.
-
-                proc2.StartInfo = checkoem
-                proc2.Start()
-                reply = proc2.StandardOutput.ReadToEnd
-                proc2.WaitForExit()
-
-                Dim test() As String = reply.Split
-                For i = 0 To test.Length - 1
-                    If test(i).Trim = ("PCI\VEN_1002&CC_0403") Then
-                        log("-" & vendid & "- High Definition Audio Bus Found !")
-
-                        removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
-                        removehdmidriver.Arguments = "remove =SYSTEM " & Chr(34) & test(i) & Chr(34)
-                        removehdmidriver.UseShellExecute = False
-                        removehdmidriver.CreateNoWindow = True
-                        removehdmidriver.RedirectStandardOutput = True
-                        prochdmi.StartInfo = removehdmidriver
-                        Try
-                            prochdmi.Start()
-                            reply2 = prochdmi.StandardOutput.ReadToEnd
-                            prochdmi.WaitForExit()
-                            log(reply2)
-                        Catch ex As Exception
-
-                            log(ex.Message)
-                            MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                            Button1.Enabled = True
-                            Button2.Enabled = True
-                            Button3.Enabled = True
-                        End Try
-                    End If
-                Next
-            End If
-
-
             log("ddudr Remove Audio/HDMI Complete")
             'removing monitor and hidden monitor
 
@@ -6543,8 +6568,11 @@ Public Class Form1
                              ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
                              Handles BackgroundWorker1.RunWorkerCompleted
 
+
         If stopme = True Then
             'Scan for new hardware to not let users into a non working state.
+
+
             Button1.Enabled = True
             Try
                 Dim scan As New ProcessStartInfo
