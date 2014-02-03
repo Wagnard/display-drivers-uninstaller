@@ -1,1 +1,1 @@
-Selecione o Driver de Video :
+Selecione o Driver Grafico :

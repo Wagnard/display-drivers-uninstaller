@@ -1,39 +1,45 @@
-﻿Desinstalador de Driver (DDU) / Feito para Limpeza de Drivers de Video.(NVIDIA/AMD)
+﻿Desinstalador de Driver (DDU) / Construido para limpeza de drivers de video.(NVIDIA/AMD)
 
-Faz a remoção de drivers de video do gerenciador de dispositivo e remove o atual e todos drivers 
-precedente do Armazenamento de Drivers do Windows junto a remoção de serviços da NVIDIA/AMD.
+O que a ferramenta faz? Faz a remoção de drivers de video do gerenciador de dispositivo e remove o atual 
+e todos os drivers precedente do Armazenamento de Drivers do Windows(Windows Driver Store) e tambem a remoção 
+de serviços da NVIDIA/AMD.
 
 O efeito atual apos você ter usado essa ferramento será similar a uma "Nova Instalação" do Windows.
 
-Esta ferramenta atua similiar ao que o Driver Sweeper faz, + o extra mencionado acima.
+Esta ferramenta atua similiar ao que o Driver Sweeper faz, tambem o extra mencionado acima.
 
 Caso você estiver com problemas de instalação de novos ou antigos drivers, 
-Tente poís há informação de que o DDU corrige esses problemas.
+tente poís há informação de que o DDU corrige esses problemas.
 
 RECOMENDAÇÂO DE USO :
-
-- Eu pessoalmente recomendo que voce desconecte da internet quando você estiver utilizando DDU, 
-porque após a remoção, o Windows Update pode tentar reinstalar o driver sem a autorização do usuario.
 
 - A ferramenta pode ser usada no modo Normal mas para estabilidade absoluta no uso do DDU, 
 Modo de Segurança é sempre melhor.
 
-- Gostariamos de reunir o feedback de vocês. Diga-nos se você obteve sucesso ou não. Faça um
-backup ou crie um ponto de restauração do sistema (mas normalmente é bem seguro)
+- Gostariamos de reunir o feedback de vocês. Diga-nos se você obteve sucesso ou não. 
+
+- Faça um backup ou crie um ponto de restauração do sistema (mas normalmente é bem seguro).
 
 - Se voce esta ou tinha problemas com drivers, e essa ferramenta ajudou com algum dos problemas 
 que você esta experenciando atualmente, por favor compartilhe seu resultado.
 
-Lembre-se que não temos nenhuma relação com NVIDIA/AMD, Nós não trabalhamos na ou para NVIDIA/AMD
-e não devem ser responsabilizados por nenhum dano ou erros causados a seu sistema.
+Lembre-se que a NVIDIA, AMD, ou Microsoft não podem ser responsibilizadas por qualquer dano á 
+você ou seu computador e de maneira alguma os afiliados do DDU, ou seus criadores.
+
 -------------------------------
 
-Criado Por Wagnard.
+Created By Wagnard.
 
-Co-proprietario: Shady7557
+Co-owner: Shady7557
 
-Testador : Dellon132
+Tester : Dellon132
 
 Logos : juanchacin
 
-Obrigado a todos que colocam seu sistema em risco (Obrigado especial para Dellon123)
+Thanks to Helge Klein (http://helgeklein.com/setacl/) : for the permission to use his Program with DDU "SetAcl"
+
+Huge Thanks for his time for testing: Gamer1291
+
+Thanks to anyone who put their system at risk. (special thanks to Dellon132)
+
+*DDU, seus criadores e afiliados não estão afiliados com driver sweeper, ou seus criadores.
