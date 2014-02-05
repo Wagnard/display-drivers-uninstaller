@@ -4636,6 +4636,7 @@ Public Class Form1
                                         child2.ToLower.Contains("nvstream") Or _
                                         child2.ToLower.Contains("nvstreamc") Or _
                                         child2.ToLower.Contains("nvstreamsrv") Or _
+                                        child2.ToLower.Contains("uxd") Or _
                                         child2.ToLower.Contains("nvtray") Then
                                         Try
                                             regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
