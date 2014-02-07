@@ -1,0 +1,7 @@
+﻿Display Driver Uninstaller ("DDU") ANVÄNDARAVTAL
+
+Du betecknas automatiskt som "Användare" genom att använda DDU-mjukvaran. Detta avtal börjar gälla i samma stund som du använder programmet till att avinstallera en drivrutin.
+
+Genom att använda DDU förbinder du dig att inte anklaga DDU eller dess skapare och/eller dotterbolag, för skador eller negativa effekter på din dator.
+
+Genom att använda DDU medger du kännedom om att NVIDIA ("NVIDIA, GeForce") och/eller Advanced Micro Devices ("AMD, Radeon") inte har någonting med detta program att göra, ej heller med DDU eller dess skapare.

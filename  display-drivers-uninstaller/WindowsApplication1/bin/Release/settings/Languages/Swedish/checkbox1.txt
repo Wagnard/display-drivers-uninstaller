@@ -1,0 +1,1 @@
+﻿Ta bort mapparna C:\AMD och/eller C:\NVIDIA
