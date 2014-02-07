@@ -1,0 +1,39 @@
+﻿Display Driver Uninstaller (DDU) / Rensningsverktyg för grafikdrivrutiner.(NVIDIA/AMD)
+
+Programmet tar bort installerade, aktuella och tidigare skärm-/grafikdrivrutiner från Enhetshanteraren och från Windows Driver-mappen tillsammans med systemtjänster från NVIDIA/AMD.
+
+Den omedelbara effekten av att använda detta verktyg, blir att Windows återgår till "nyinstallerat" skick vad gäller grafiken.
+
+Verktyget fungera ungefär som "Driver Sweeper"*, plus nämnda extrafunktioner.
+
+Har du problem att upp-/nerdatera dina grafikdrivrutiner, kan du prova att köra DDU först.
+
+REKOMMENDERAD ANVÄNDNING:
+
+- Verktyget kan köras i normalläge men för absolut stabilitet är felsäkert läge alltid det bästa.
+
+- Vi vill gärna få återkoppling från alla användare, så berätta gärna om din erfarenhet av programmet. 
+
+- Skapa  för säkerhets skull en säkerhetskopia eller systemåterställningspunkt före körning. (normalt skall programmet vara säkert.)
+
+- Om du har eller har haft drivrutinsproblem, och det här programmet hjälpte dig lösa problemen, så dela gärna din lösning.
+
+Kom ihåg att varken NVIDIA, AMD, eller Microsoft kan hållas ansvariga för eventuella skador eller fel 
+på din dator, inte heller DDU, dess skapare eller samarbetspartners  kan göras ansvariga.
+-------------------------------
+
+Created By Wagnard.
+
+Co-owner: Shady7557
+
+Tester : Dellon132
+
+Logos : juanchacin
+
+Thanks to Helge Klein (http://helgeklein.com/setacl/) : for the permission to use his Program with DDU "SetAcl"
+
+Huge Thanks for his time for testing: Gamer1291
+
+Thanks to anyone who put their system at risk. (special thanks to Dellon132)
+
+*DDU, it's creators and affiliates are in no way affiliated with Driver Sweeper, or it's creators.
