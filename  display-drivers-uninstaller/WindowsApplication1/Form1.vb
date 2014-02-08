@@ -1352,16 +1352,50 @@ Public Class Form1
         'remove opencl registry Khronos
 
         Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
-            regkey.DeleteSubKeyTree("Khronos")
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Khronos\OpenCL\Vendors", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetValueNames()
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        If child.ToLower.Contains("amdocl") Then
+                            Try
+                                regkey.DeleteValue(child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+                If regkey.GetValueNames().Length = 0 Then
+                    Try
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("Software\Khronos")
+                    Catch ex As Exception
+                    End Try
+                End If
+            End If
         Catch ex As Exception
         End Try
 
         If IntPtr.Size = 8 Then
 
             Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
-                regkey.DeleteSubKeyTree("Khronos")
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Khronos\OpenCL\Vendors", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If String.IsNullOrEmpty(Trim(child)) = False Then
+                            If child.ToLower.Contains("amdocl") Then
+                                Try
+                                    regkey.DeleteValue(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                    If regkey.GetValueNames().Length = 0 Then
+                        Try
+                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("Software\Wow6432Node\Khronos")
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
             Catch ex As Exception
             End Try
         End If
@@ -4524,24 +4558,50 @@ Public Class Form1
 
         'remove opencl registry Khronos
         Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
-
-            regkey.DeleteSubKeyTree("Khronos")
-
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Khronos\OpenCL\Vendors", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetValueNames()
+                    If String.IsNullOrEmpty(Trim(child)) = False Then
+                        If child.ToLower.Contains("nvopencl") Then
+                            Try
+                                regkey.DeleteValue(child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+                If regkey.GetValueNames().Length = 0 Then
+                    Try
+                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("Software\Khronos")
+                    Catch ex As Exception
+                    End Try
+                End If
+            End If
         Catch ex As Exception
-
-            log(ex.Message + " Opencl Khronos")
         End Try
 
         If IntPtr.Size = 8 Then
             Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
-
-                regkey.DeleteSubKeyTree("Khronos")
-
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Khronos\OpenCL\Vendors", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If String.IsNullOrEmpty(Trim(child)) = False Then
+                            If child.ToLower.Contains("nvopencl") Then
+                                Try
+                                    regkey.DeleteValue(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                    If regkey.GetValueNames().Length = 0 Then
+                        Try
+                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("Software\Wow6432Node\Khronos")
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
             Catch ex As Exception
-
-                log(ex.Message + " Opencl Khronos")
             End Try
         End If
         log("SharedDlls CleanUP")
@@ -5560,6 +5620,8 @@ Public Class Form1
             ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("ru") Then
                 ComboBox2.SelectedIndex = ComboBox2.FindString("Russian")
 
+            ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("sv") Then
+                ComboBox2.SelectedIndex = ComboBox2.FindString("Swedish")
             Else
                 ComboBox2.SelectedIndex = ComboBox2.FindString("English")
             End If
