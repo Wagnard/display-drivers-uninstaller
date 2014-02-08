@@ -543,19 +543,19 @@ Public Class Form1
         Try
             filePath = Environment.GetFolderPath _
                 (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
-            For Each child As String In Directory.GetFiles(filePath)
+            For Each child As String In Directory.GetDirectories(filePath)
                 If String.IsNullOrEmpty(Trim(child)) = False Then
-                    If child.ToLower.Contains("cccutil") Then
+                    If child.ToLower.Contains("ati.ace") Then
                         Try
-                            My.Computer.FileSystem.DeleteFile(child)
+                            My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                         End Try
                     End If
                 End If
             Next
             Try
-                If Directory.GetDirectories(filePath).Length = 0 And _
-                    Directory.GetFiles(filePath).Length = 0 Then
+                If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
                         My.Computer.FileSystem.DeleteDirectory _
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -1856,6 +1856,7 @@ Public Class Form1
                                     child2.ToLower.Contains("packages") Or _
                                     child2.ToLower.Contains("wirelessdisplay") Or _
                                     child2.ToLower.Contains("hydravision") Or _
+                                    child2.ToLower.Contains("avivo") Or _
                                     child2.ToLower.Contains("steadyvideo") Then
                                     Try
                                         regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
@@ -1970,6 +1971,8 @@ Public Class Form1
                                         child2.ToLower.Contains("packages") Or _
                                         child2.ToLower.Contains("wirelessdisplay") Or _
                                         child2.ToLower.Contains("hydravision") Or _
+                                        child2.ToLower.Contains("dndtranscoding64") Or _
+                                        child2.ToLower.Contains("avivo") Or _
                                         child2.ToLower.Contains("steadyvideo") Then
                                         Try
                                             regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
@@ -2058,6 +2061,7 @@ Public Class Form1
                                             wantedvalue.ToLower.Contains("ccc help") Or _
                                             wantedvalue.ToLower.Contains("catalyst control center") Or _
                                             wantedvalue.ToLower.Contains("application profiles") Or _
+                                            wantedvalue.ToLower.Contains("amd avivo") Or _
                                             wantedvalue.ToLower.Contains("ati avivo") Then
                                         Try
                                             regkey.DeleteSubKeyTree(child)
@@ -2169,6 +2173,7 @@ Public Class Form1
                                                 wantedvalue.ToLower.Contains("ccc help") Or _
                                                 wantedvalue.ToLower.Contains("catalyst control center") Or _
                                                 wantedvalue.ToLower.Contains("application profiles") Or _
+                                                wantedvalue.ToLower.Contains("amd avivo") Or _
                                                 wantedvalue.ToLower.Contains("ati avivo") Then
                                             Try
                                                 regkey.DeleteSubKeyTree(child)
@@ -2226,11 +2231,12 @@ Public Class Form1
                                                        wantedvalue.ToLower.Contains("amd app sdk") Or _
                                                        wantedvalue.ToLower.Contains("amd steady") Or _
                                                        wantedvalue.ToLower.Contains("amd fuel") Or _
+                                                       wantedvalue.ToLower.Contains("amd avivo") Or _
                                                        wantedvalue.ToLower.Contains("application profiles") Or _
                                                        wantedvalue.ToLower.Contains("ati avivo") Then
-                                                        
+
                                                         regkey.DeleteSubKeyTree(child)
-                                                          
+
                                                         superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                                                                                          ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
                                                         If superregkey IsNot Nothing Then
@@ -2334,6 +2340,7 @@ Public Class Form1
                                                         wantedvalue.ToLower.Contains("amd steady") Or _
                                                         wantedvalue.ToLower.Contains("amd fuel") Or _
                                                         wantedvalue.ToLower.Contains("application profiles") Or _
+                                                        wantedvalue.ToLower.Contains("amd avivo") Or _
                                                         wantedvalue.ToLower.Contains("ati avivo") Then
                                         Try
                                             regkey.DeleteSubKeyTree(child)
@@ -2410,6 +2417,7 @@ Public Class Form1
                                                        wantedvalue.ToLower.Contains("amd steady") Or _
                                                        wantedvalue.ToLower.Contains("amd fuel") Or _
                                                        wantedvalue.ToLower.Contains("application profiles") Or _
+                                                       wantedvalue.ToLower.Contains("amd avivo") Or _
                                                        wantedvalue.ToLower.Contains("ati avivo") Then
 
                                         If removephysx Then
