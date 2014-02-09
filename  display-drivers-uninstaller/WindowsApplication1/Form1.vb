@@ -79,6 +79,7 @@ Public Class Form1
     Dim safemode As Boolean = False
     Dim myExe As String
     Dim interfaces() As String
+    Dim driverfiles() As String
 
 
     Private Function checkupdates() As Integer
@@ -302,7 +303,7 @@ Public Class Form1
         log("Cleaning Process/Services...")
         'Delete left over files.
     End Sub
-    Private Sub cleanamd()
+    Private Sub cleanamdserviceprocess()
 
         'STOP AMD service
         Dim services() As String
@@ -399,16 +400,6 @@ Public Class Form1
             appproc(i).Kill()
         Next i
 
-
-        If Not safemode Then
-            log("Killing Explorer.exe")
-            appproc = Process.GetProcessesByName("explorer")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
-        End If
-
-
         appproc = Process.GetProcessesByName("ThumbnailExtractionHost")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
@@ -420,6 +411,8 @@ Public Class Form1
         Next i
 
         System.Threading.Thread.Sleep(50)
+    End Sub
+    Private Sub cleanamdfolders()
         'Delete AMD data Folders
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
@@ -442,7 +435,7 @@ Public Class Form1
 
         'Delete driver files
         'delete OpenCL
-        Dim driverfiles() As String
+
         Dim tempStr As String = "" '// temp String for result.
         driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\driverfiles.cfg") '// add each line as String Array.
 
@@ -573,33 +566,6 @@ Public Class Form1
             For Each child As String In Directory.GetDirectories(filePath)
                 If String.IsNullOrEmpty(Trim(child)) = False Then
                     If child.ToLower.Contains("cim") Then
-                        Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                        Catch ex As Exception
-                        End Try
-                    End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                    End Try
-                End If
-            Catch ex As Exception
-            End Try
-        Catch ex As Exception
-        End Try
-
-        Try
-            filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.ProgramFiles) + "\AMD"
-            For Each child As String In Directory.GetDirectories(filePath)
-                If String.IsNullOrEmpty(Trim(child)) = False Then
-                    If child.ToLower.Contains("amdkmpfd") Then
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
                             (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -816,7 +782,8 @@ Public Class Form1
         Catch ex As Exception
             log(ex.Message)
         End Try
-
+    End Sub
+    Private Sub cleanamd()
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning known Regkeys... May take a minute or two. *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
@@ -1473,7 +1440,7 @@ Public Class Form1
         'End Shell extensions\aprouved
         '-----------------------------
 
-
+        driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\driverfiles.cfg") '// add each line as String Array.
         log("Pnplockdownfiles region cleanUP")
         Try
             If winxp = False Then
@@ -1923,7 +1890,8 @@ Public Class Form1
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If String.IsNullOrEmpty(Trim(child)) = False Then
-                        If child.ToLower.Contains("eeu") Or
+                        If child.ToLower.Contains("eeu") Or _
+                           child.ToLower.Contains("fuel") Or _
                            child.ToLower.Contains("mftvdecoder") Then
                             Try
                                 regkey.DeleteSubKeyTree(child)
@@ -3167,7 +3135,7 @@ Public Class Form1
 
         'Erase driver file from windows directory
 
-        Dim driverfiles() As String
+
         driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg") '// add each line as String Array.
 
         For i As Integer = 0 To driverfiles.Length - 1
@@ -6502,7 +6470,16 @@ Public Class Form1
             Invoke(Sub() TextBox1.ScrollToCaret())
 
             If DirectCast(e.Argument, String) = "AMD" Then
+                cleanamdserviceprocess()
                 cleanamd()
+
+                log("Killing Explorer.exe")
+                Dim appproc = Process.GetProcessesByName("explorer")
+                For i As Integer = 0 To appproc.Length - 1
+                    appproc(i).Kill()
+                Next i
+
+                cleanamdfolders()
             End If
             If DirectCast(e.Argument, String) = "NVIDIA" Then
                 Cleannvidia()
