@@ -82,6 +82,7 @@ Public Class Form1
     Dim interfaces() As String
     Dim driverfiles() As String
     Dim checkupdates As New checkupdate
+    Dim enduro As Boolean = False
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -5397,7 +5398,7 @@ Public Class Form1
                                             Try
                                                 subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
                                             Catch ex As Exception
-                                                log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing vieocard")
+                                                log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
                                                 log(reply)
                                             End Try
 
@@ -5782,6 +5783,10 @@ Public Class Form1
             ComboBox1.SelectedIndex = 2
         End If
 
+        ' -------------------------------------
+        ' Trying to get current driver version
+        ' -------------------------------------
+
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
 
@@ -5804,7 +5809,43 @@ Public Class Form1
         End Try
         log("Driver Version : " + currentdriverversion)
 
-        'setting the driversearching parameter for win 7+
+        ' -------------------------------------
+        ' Check if this is an AMD Enduro system
+        ' -------------------------------------
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+               ("SYSTEM\CurrentControlSet\Enum\PCI")
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("ven_8086") Then
+                            Try
+                                subregkey = regkey.OpenSubKey(child)
+                            Catch ex As Exception
+                                Continue For
+                            End Try
+                            For Each childs As String In subregkey.GetSubKeyNames()
+                                If String.IsNullOrEmpty(childs) = False Then
+                                    If subregkey.OpenSubKey(childs).GetValue("Service") IsNot Nothing Then
+                                        If subregkey.OpenSubKey(childs).GetValue("Service").ToString.ToLower.Contains("amdkmdap") Then
+                                            enduro = True
+                                            TextBox1.Text = TextBox1.Text + "System seems to be an AMD Enduro (Intel)" + vbNewLine
+                                            log("System seems to be an AMD Enduro (Intel)")
+                                        End If
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+
+        ' Setting the driversearching parameter for win 7+
+
+
         If version >= "6.1" Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
@@ -6168,13 +6209,16 @@ Public Class Form1
             Catch ex As Exception
                 log(ex.StackTrace)
             End Try
+
+            ' ----------------------
+            ' Removing the videocard
+            ' ----------------------
+
             checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
             checkoem.Arguments = "findall =display"
             checkoem.UseShellExecute = False
             checkoem.CreateNoWindow = True
             checkoem.RedirectStandardOutput = True
-
-            'creation dun process fantome pour le wait on exit.
 
             proc2.StartInfo = checkoem
             proc2.Start()
@@ -6206,9 +6250,52 @@ Public Class Form1
 
                 End If
                 card1 = reply.IndexOf("PCI\", card1 + 1)
-
-
             End While
+
+            If DirectCast(e.Argument, String) = "AMD" & enduro Then
+                ' ----------------------------------------------------------------------
+                ' (Experimental) Removing the Intel card because of AMD Enduro videocard
+                ' -------------------------------------------------------
+
+                checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                checkoem.Arguments = "findall =display"
+                checkoem.UseShellExecute = False
+                checkoem.CreateNoWindow = True
+                checkoem.RedirectStandardOutput = True
+
+                proc2.StartInfo = checkoem
+                proc2.Start()
+                reply = proc2.StandardOutput.ReadToEnd
+                proc2.WaitForExit()
+
+                Try
+                    card1 = reply.IndexOf("PCI\")
+                Catch ex As Exception
+
+                End Try
+                While card1 > -1
+                    position2 = reply.IndexOf(":", card1)
+                    vendid = reply.Substring(card1, position2 - card1).Trim
+                    If vendid.Contains("VEN_8086") Then
+                        removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                        removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
+                        removedisplaydriver.UseShellExecute = False
+                        removedisplaydriver.CreateNoWindow = True
+                        removedisplaydriver.RedirectStandardOutput = True
+                        proc.StartInfo = removedisplaydriver
+
+                        proc.Start()
+                        reply2 = proc.StandardOutput.ReadToEnd
+                        proc.WaitForExit()
+                        log(reply2)
+
+
+
+                    End If
+                    card1 = reply.IndexOf("PCI\", card1 + 1)
+                End While
+            End If
+
             log("ddudr Remove Display Complete")
             'Next
             'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
