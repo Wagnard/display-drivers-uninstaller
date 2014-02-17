@@ -5352,6 +5352,7 @@ Public Class Form1
         log("End of Registry Cleaning")
         System.Threading.Thread.Sleep(50)
     End Sub
+
     Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                    ("SYSTEM\CurrentControlSet\Enum\PCI")
@@ -5879,14 +5880,27 @@ Public Class Form1
             Case BootMode.FailSafeWithNetwork
                 'The computer was booted using the basic files, drivers, and services necessary to start networking.
                 'This is the same as Safe Mode with Networking
+                'I am also removing the auto go into safemode with bcdedit
                 safemode = True
+                If winxp = False Then
+                    Dim setbcdedit As New ProcessStartInfo
+                    setbcdedit.FileName = "cmd.exe"
+                    setbcdedit.Arguments = " /Cbcdedit /deletevalue safeboot"
+                    setbcdedit.UseShellExecute = False
+                    setbcdedit.CreateNoWindow = True
+                    setbcdedit.RedirectStandardOutput = False
+                    Dim processstopservice As New Process
+                    processstopservice.StartInfo = setbcdedit
+                    processstopservice.Start()
+                    processstopservice.WaitForExit()
+                End If
             Case BootMode.Normal
                 safemode = False
                 If winxp = False Then
                     If MsgBox("DDU has detected that you are NOT in SafeMode... For a better CleanUP without issues, would you like to reboot the computer into SafeMode now?", MsgBoxStyle.YesNo, "Reboot into SafeMode?") = MsgBoxResult.Yes Then
                         Dim setbcdedit As New ProcessStartInfo
                         setbcdedit.FileName = "cmd.exe"
-                        setbcdedit.Arguments = " /Cbcdedit /set {current} safeboot network"
+                        setbcdedit.Arguments = " /Cbcdedit /set safeboot network"
                         setbcdedit.UseShellExecute = False
                         setbcdedit.CreateNoWindow = True
                         setbcdedit.RedirectStandardOutput = False
@@ -5898,7 +5912,7 @@ Public Class Form1
                         If regkey IsNot Nothing Then
                             Try
                                 regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
-                                regkey.SetValue("*UndoSM", "bcdedit /deletevalue {current} safeboot")
+                                'regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
                             Catch ex As Exception
                                 log(ex.Message & ex.StackTrace)
                             End Try
