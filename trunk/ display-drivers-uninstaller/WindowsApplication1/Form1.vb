@@ -2682,7 +2682,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Cleannvidia()
+    Private Sub cleannvidiaserviceprocess()
 
         'STOP / delete / interrogate NVIDIA service
         Dim services() As String
@@ -2765,6 +2765,9 @@ Public Class Form1
             appproc(i).Kill()
         Next i
 
+    End Sub
+
+    Private Sub cleannvidiafolders()
         'Delete NVIDIA data Folders
         'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning UpdatusUser users ac if present *****" + vbNewLine)
@@ -3161,6 +3164,9 @@ Public Class Form1
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Starting reg cleanUP *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
+    End Sub
+
+    Private Sub cleannvidia()
 
         '-----------------
         'Registry Cleaning
@@ -5894,6 +5900,7 @@ Public Class Form1
                     processstopservice.Start()
                     processstopservice.WaitForExit()
                 End If
+
             Case BootMode.Normal
                 safemode = False
                 If winxp = False Then
@@ -6544,12 +6551,21 @@ Public Class Form1
                 For i As Integer = 0 To appproc.Length - 1
                     appproc(i).Kill()
                 Next i
-
                 cleanamdfolders()
             End If
+
             If DirectCast(e.Argument, String) = "NVIDIA" Then
-                Cleannvidia()
+                cleannvidiaserviceprocess()
+                cleannvidia()
+
+                log("Killing Explorer.exe")
+                Dim appproc = Process.GetProcessesByName("explorer")
+                For i As Integer = 0 To appproc.Length - 1
+                    appproc(i).Kill()
+                Next i
+                cleannvidiafolders()
             End If
+
             If DirectCast(e.Argument, String) = "INTEL" Then
                 ' Cleanintel()
             End If
