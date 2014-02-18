@@ -3049,6 +3049,20 @@ Public Class Form1
         End Try
 
         Try
+
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+            End Try
+
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+        Try
             If IntPtr.Size = 8 Then
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
@@ -3096,6 +3110,21 @@ Public Class Form1
                 End Try
             End If
         Catch ex As Exception
+        End Try
+
+        Try
+            If IntPtr.Size = 8 Then
+                filePath = Environment.GetFolderPath _
+                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                End Try
+
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
         End Try
         'Not sure if this work on XP
 
