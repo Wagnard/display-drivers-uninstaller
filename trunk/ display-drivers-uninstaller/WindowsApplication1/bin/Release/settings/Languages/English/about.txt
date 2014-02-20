@@ -36,7 +36,7 @@ Logos : juanchacin
 
 Thanks to Helge Klein (http://helgeklein.com/setacl/) : for the permission to use his Program with DDU "SetAcl"
 
-Huge Thanks for his time for testing: Gamer1291
+Huge Thanks for their time for testing : Gamer1291 (optimus) and Octopuss (Amd Enduro)
 
 Thanks to anyone who put their system at risk. (special thanks to Dellon132)
 
