@@ -5879,6 +5879,12 @@ Public Class Form1
             log(ex.Message + ex.StackTrace)
         End Try
 
+        If enduro Then
+            MsgBox("DDU is not yet compatible with Enduro system, DDU will now exit")
+            Application.Exit()
+            Exit Sub
+        End If
+
         ' Setting the driversearching parameter for win 7+
 
 
@@ -5948,7 +5954,7 @@ Public Class Form1
                         If regkey IsNot Nothing Then
                             Try
                                 regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
-                                'regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+                                regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
                             Catch ex As Exception
                                 log(ex.Message & ex.StackTrace)
                             End Try
