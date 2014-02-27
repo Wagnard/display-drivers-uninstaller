@@ -1,1 +1,1 @@
-﻿Guardar logs a la carpeta principal de inicio (recomendado)
+﻿Guardar archivos de registro en la ruta de arranque (recomendado)

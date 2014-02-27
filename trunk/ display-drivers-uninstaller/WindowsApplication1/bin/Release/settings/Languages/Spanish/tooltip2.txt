@@ -1,2 +1,2 @@
-﻿Desinstalar el controlador actual así como el anterior, SIN reiniciar el ordenador.
-(Puede causar pantalla negra)
+﻿Desinstalar los controladores actuales y anteriores, pero no reiniciar el ordenador.
+(Puede provocar problemas como pantalla en negro, quedarse sin imagen)

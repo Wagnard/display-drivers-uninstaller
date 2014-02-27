@@ -1,2 +1,2 @@
-﻿Desinstalar el controlador actual así también como el anterior y luego apagar el ordenador sin hacer re-escaneo.
-(Usado para instalar un nuevo adaptador grafico)
+﻿Desinstalar los controladores actuales y anteriores y Apagar el ordenador evitando la instalación automática de los mismos por el S.O.
+(Para instalar una nueva tarjeta gráfica)

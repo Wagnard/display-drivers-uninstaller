@@ -1,1 +1,1 @@
-﻿El uso de DDU en "Modo aprueba de errores" es recomendado.
+﻿Se recomienda usar DDU en Modo a Prueba de Fallos.
