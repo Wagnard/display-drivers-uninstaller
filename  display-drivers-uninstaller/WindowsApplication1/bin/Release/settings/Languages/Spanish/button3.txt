@@ -1,2 +1,2 @@
-﻿Limpiar y apagar.
-(Para la instalación de un nuevo dispositivo gráfico)
+﻿Limpiar y Apagar
+(Para instalar una nueva tarjeta gráfica)

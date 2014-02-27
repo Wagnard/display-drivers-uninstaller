@@ -1,1 +1,1 @@
-﻿Configurar la instalación de controlador de Windows Update a su configuración predeterminada.
+﻿Establecer por defecto la Instalación de Controlador Automático de Windows.

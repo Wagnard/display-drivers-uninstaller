@@ -1,7 +1,7 @@
-﻿Display Driver Uninstaller ("DDU") CONDICIONES DE USO
+﻿Display Driver Uninstaller ("DDU") ACUERDO DE USUARIO
 
-Usted se convierte en un usuario de DDU ("Usuario") al usar el software DDU. El presente Acuerdo entra en vigor tan pronto como se utilice el programa para desinstalar el controlador grafico.
+En el momento de utilizar DDU, usted pasa a convertirse en ("Usuario") del software DDU. El presente Acuerdo entra en vigor tan pronto como usted usa el programa para desinstalar un controlador.
 
-ediante el uso de DDU usted acuerda no acusar a DDU, sus creadores y/ó afiliados, de dañar o afectar negativamente su PC.
+Al usar DDU usted accede a no acusar a DDU o a sus creadores, y colaboradores, de dañar o afectar negativamente su PC.
 
-Mediante el uso de DDU usted reconoce que NVIDIA ("NVIDIA, GeForce"), ni Advanced Micro Devices ("AMD Radeon") tienen nada que ver con este programa, y de ninguna manera los afiliados de DDU o sus creadores.
+Al usar DDU usted reconoce que ni NVIDIA ("NVIDIA, Geforce") ni Advanced Micro Devices ("AMD, Radeon") tienen nada que ver con este programa, y que de ningún modo están afiliados a DDU o a sus creadores.

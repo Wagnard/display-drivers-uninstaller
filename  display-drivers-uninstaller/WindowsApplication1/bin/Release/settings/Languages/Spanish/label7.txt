@@ -1,1 +1,1 @@
-﻿Seleccione controlador grafico :
+﻿Elija Controlador de Pantalla:

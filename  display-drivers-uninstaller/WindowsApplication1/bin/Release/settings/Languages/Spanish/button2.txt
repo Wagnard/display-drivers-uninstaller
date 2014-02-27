@@ -1,2 +1,2 @@
-﻿Limpiar y NO reiniciar.
-(Puede causar pantalla negra)
+﻿Limpiar y NO Reiniciar.
+(Puede provocar problemas como pantalla en negro, sin imagen)
