@@ -3207,11 +3207,11 @@ Public Class Form1
                                                                 My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True).DeleteSubKeyTree(appid)
                                                             Catch ex As Exception
                                                             End Try
-                                                            Try
-                                                                'special case for an unusual key configuration nv bug?
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
-                                                            Catch ex As Exception
-                                                            End Try
+                                                            'Try
+                                                            '    'special case for an unusual key configuration nv bug?
+                                                            '    My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
+                                                            'Catch ex As Exception
+                                                            'End Try
                                                         End If
 
                                                         If String.IsNullOrEmpty(typelib) = False Then
@@ -4091,6 +4091,7 @@ Public Class Form1
 
         'end of deleting dcom stuff
         log("Pnplockdownfiles region cleanUP")
+        driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg") '// add each line as String Array.
         Try
             If winxp = False Then
                 If win8higher Then
