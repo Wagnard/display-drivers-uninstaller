@@ -79,6 +79,7 @@ Public Class Form1
     Dim classroot() As String = Nothing
     Dim safemode As Boolean = False
     Dim myExe As String
+    Dim packages() As String
     Dim interfaces() As String
     Dim driverfiles() As String
     Dim checkupdates As New checkupdate
@@ -797,12 +798,6 @@ Public Class Form1
                                                     If String.IsNullOrEmpty(appid) = False Then
                                                         Try
                                                             subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                            subregkey2.DeleteSubKeyTree(appid)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        Try
-                                                            'special case for an unusual key configuration nv bug?
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
                                                             subregkey2.DeleteSubKeyTree(appid)
                                                         Catch ex As Exception
                                                         End Try
@@ -2157,6 +2152,8 @@ Public Class Form1
         End If
 
         Try
+            packages = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\packages.cfg") '// add each line as String Array.
+
             log("Debug : Starting S-1-5-xx region cleanUP")
             basekey = My.Computer.Registry.LocalMachine.OpenSubKey _
                   ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
@@ -2184,78 +2181,65 @@ Public Class Form1
                                             If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then
                                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
                                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                                    If wantedvalue.ToLower.Contains("ccc help") Or _
-                                                       wantedvalue.ToLower.Contains("amd accelerated") Or _
-                                                       wantedvalue.ToLower.Contains("catalyst control center") Or _
-                                                       wantedvalue.ToLower.Contains("amd catalyst install manager") Or _
-                                                       wantedvalue.ToLower.Contains("ccc-utility") Or _
-                                                       wantedvalue.ToLower.Contains("amd wireless display") Or _
-                                                       wantedvalue.ToLower.Contains("amd media foundation") Or _
-                                                       wantedvalue.ToLower.Contains("hydravision") Or _
-                                                       wantedvalue.ToLower.Contains("amd drag and drop") Or _
-                                                       wantedvalue.ToLower.Contains("amd app sdk") Or _
-                                                       wantedvalue.ToLower.Contains("amd steady") Or _
-                                                       wantedvalue.ToLower.Contains("amd fuel") Or _
-                                                       wantedvalue.ToLower.Contains("amd avivo") Or _
-                                                       wantedvalue.ToLower.Contains("application profiles") Or _
-                                                       wantedvalue.ToLower.Contains("ati avivo") Then
+                                                    For i As Integer = 0 To packages.Length - 1
+                                                        If wantedvalue.ToLower.Contains(packages(i)) Then
+                                                            regkey.DeleteSubKeyTree(child)
 
-                                                        regkey.DeleteSubKeyTree(child)
-
-                                                        superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                                                                         ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
-                                                        If superregkey IsNot Nothing Then
-                                                            For Each child2 As String In superregkey.GetSubKeyNames()
-                                                                If checkvariables.isnullorwhitespace(child2) = False Then
-                                                                    Try
-                                                                        subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                                                    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2)
-                                                                    Catch ex As Exception
-                                                                        Continue For
-                                                                    End Try
-                                                                    If subsuperregkey IsNot Nothing Then
-                                                                        For Each wantedstring As String In subsuperregkey.GetValueNames()
-                                                                            If checkvariables.isnullorwhitespace(wantedstring) = False Then
-                                                                                If wantedstring.Contains(child) Then
-                                                                                    Try
-                                                                                        superregkey.DeleteSubKeyTree(child2)
-                                                                                    Catch ex As Exception
-                                                                                    End Try
+                                                            superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                                             ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
+                                                            If superregkey IsNot Nothing Then
+                                                                For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                    If checkvariables.isnullorwhitespace(child2) = False Then
+                                                                        Try
+                                                                            subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                        ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2)
+                                                                        Catch ex As Exception
+                                                                            Continue For
+                                                                        End Try
+                                                                        If subsuperregkey IsNot Nothing Then
+                                                                            For Each wantedstring As String In subsuperregkey.GetValueNames()
+                                                                                If checkvariables.isnullorwhitespace(wantedstring) = False Then
+                                                                                    If wantedstring.Contains(child) Then
+                                                                                        Try
+                                                                                            superregkey.DeleteSubKeyTree(child2)
+                                                                                        Catch ex As Exception
+                                                                                        End Try
+                                                                                    End If
                                                                                 End If
-                                                                            End If
-                                                                        Next
+                                                                            Next
+                                                                        End If
                                                                     End If
-                                                                End If
-                                                            Next
-                                                        End If
-                                                        superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
-                                                        If superregkey IsNot Nothing Then
-                                                            For Each child2 As String In superregkey.GetSubKeyNames()
-                                                                If checkvariables.isnullorwhitespace(child2) = False Then
-                                                                    Try
-                                                                        subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                                                        ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child2, False)
-                                                                    Catch ex As Exception
-                                                                        Continue For
-                                                                    End Try
+                                                                Next
+                                                            End If
+                                                            superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
+                                                            If superregkey IsNot Nothing Then
+                                                                For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                    If checkvariables.isnullorwhitespace(child2) = False Then
+                                                                        Try
+                                                                            subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                            ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child2, False)
+                                                                        Catch ex As Exception
+                                                                            Continue For
+                                                                        End Try
 
-                                                                    If subsuperregkey IsNot Nothing Then
-                                                                        For Each wantedstring In subsuperregkey.GetValueNames()
-                                                                            If checkvariables.isnullorwhitespace(wantedstring) = False Then
-                                                                                If wantedstring.Contains(child) Then
-                                                                                    Try
-                                                                                        superregkey.DeleteSubKeyTree(child2)
-                                                                                    Catch ex As Exception
-                                                                                    End Try
+                                                                        If subsuperregkey IsNot Nothing Then
+                                                                            For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                                If checkvariables.isnullorwhitespace(wantedstring) = False Then
+                                                                                    If wantedstring.Contains(child) Then
+                                                                                        Try
+                                                                                            superregkey.DeleteSubKeyTree(child2)
+                                                                                        Catch ex As Exception
+                                                                                        End Try
+                                                                                    End If
                                                                                 End If
-                                                                            End If
-                                                                        Next
+                                                                            Next
+                                                                        End If
                                                                     End If
-                                                                End If
-                                                            Next
+                                                                Next
+                                                            End If
                                                         End If
-                                                    End If
+                                                    Next
                                                 End If
                                             End If
                                         End If
@@ -5481,10 +5465,12 @@ Public Class Form1
         If reboot Then
             log("Restarting Computer ")
             System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
+            Application.Exit()
             Exit Sub
         End If
         If shutdown Then
             System.Diagnostics.Process.Start("shutdown", "/s /t 0 /f")
+            Application.Exit()
             Exit Sub
         End If
         If reboot = False And shutdown = False Then
