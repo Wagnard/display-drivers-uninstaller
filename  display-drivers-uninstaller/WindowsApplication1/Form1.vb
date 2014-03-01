@@ -1992,6 +1992,7 @@ Public Class Form1
 
         log("Removing known Packages")
 
+        packages = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\packages.cfg") '// add each line as String Array.
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
       ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -2008,26 +2009,14 @@ Public Class Form1
                             If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then
                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                    If wantedvalue.ToLower.Contains("amd catalyst install manager") Or _
-                                        wantedvalue.ToLower.Contains("ccc-utility") Or _
-                                        wantedvalue.ToLower.Contains("amd accelerated video") Or _
-                                        wantedvalue.ToLower.Contains("amd wireless display") Or _
-                                            wantedvalue.ToLower.Contains("amd media foundation") Or _
-                                            wantedvalue.ToLower.Contains("hydravision") Or _
-                                            wantedvalue.ToLower.Contains("amd drag and drop") Or _
-                                            wantedvalue.ToLower.Contains("amd app sdk") Or _
-                                            wantedvalue.ToLower.Contains("amd steady") Or _
-                                            wantedvalue.ToLower.Contains("amd fuel") Or _
-                                            wantedvalue.ToLower.Contains("ccc help") Or _
-                                            wantedvalue.ToLower.Contains("catalyst control center") Or _
-                                            wantedvalue.ToLower.Contains("application profiles") Or _
-                                            wantedvalue.ToLower.Contains("amd avivo") Or _
-                                            wantedvalue.ToLower.Contains("ati avivo") Then
-                                        Try
-                                            regkey.DeleteSubKeyTree(child)
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
+                                    For i As Integer = 0 To packages.Length - 1
+                                        If wantedvalue.ToLower.Contains(packages(i)) Then
+                                            Try
+                                                regkey.DeleteSubKeyTree(child)
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                    Next
                                 End If
                             End If
                         End If
@@ -2104,6 +2093,7 @@ Public Class Form1
         End Try
 
         If IntPtr.Size = 8 Then
+            packages = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\packages.cfg") '// add each line as String Array.
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -2120,26 +2110,14 @@ Public Class Form1
                                 If String.IsNullOrEmpty(subregkey.GetValue("DisplayName")) = False Then
                                     wantedvalue = subregkey.GetValue("DisplayName").ToString
                                     If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                        If wantedvalue.ToLower.Contains("amd catalyst install manager") Or _
-                                            wantedvalue.ToLower.Contains("ccc-utility") Or _
-                                            wantedvalue.ToLower.Contains("amd accelerated video") Or _
-                                            wantedvalue.ToLower.Contains("amd wireless display") Or _
-                                                wantedvalue.ToLower.Contains("amd media foundation") Or _
-                                                wantedvalue.ToLower.Contains("hydravision") Or _
-                                                wantedvalue.ToLower.Contains("amd drag and drop") Or _
-                                                wantedvalue.ToLower.Contains("amd app sdk") Or _
-                                                wantedvalue.ToLower.Contains("amd steady") Or _
-                                                wantedvalue.ToLower.Contains("amd fuel") Or _
-                                                wantedvalue.ToLower.Contains("ccc help") Or _
-                                                wantedvalue.ToLower.Contains("catalyst control center") Or _
-                                                wantedvalue.ToLower.Contains("application profiles") Or _
-                                                wantedvalue.ToLower.Contains("amd avivo") Or _
-                                                wantedvalue.ToLower.Contains("ati avivo") Then
-                                            Try
-                                                regkey.DeleteSubKeyTree(child)
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
+                                        For i As Integer = 0 To packages.Length - 1
+                                            If wantedvalue.ToLower.Contains(packages(i)) Then
+                                                Try
+                                                    regkey.DeleteSubKeyTree(child)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                        Next
                                     End If
                                 End If
                             End If
