@@ -1,0 +1,1 @@
+﻿Snimi izveštaj (log) fajlove u startni direktorijum (preporučljivo)
