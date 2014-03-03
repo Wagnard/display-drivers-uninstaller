@@ -5475,6 +5475,12 @@ Public Class Form1
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Clean uninstall completed!")
+        Dim result = MsgBox("Clean uninstall completed! Would you like to exit now?", MsgBoxStyle.YesNo)
+        If result = MsgBoxResult.No Then
+            'do nothing
+        Else
+            Application.Exit() 'once again, not sure why me.close isn't used
+        End If
 
 
     End Sub
@@ -5845,7 +5851,7 @@ Public Class Form1
         End Try
 
         If enduro Then
-            MsgBox("DDU is not yet compatible with Enduro system, DDU will now exit")
+            MsgBox("DDU is not yet compatible with Enduro systems, DDU will now exit.", MsgBoxStyle.Critical)
             Application.Exit()
             Exit Sub
         End If
@@ -5858,8 +5864,8 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
                 If regkey.GetValue("SearchOrderConfig").ToString <> 0 Then
                     regkey.SetValue("SearchOrderConfig", 0)
-                    MsgBox("DDU has changed a setting that prevent driver to be downloaded automatically with Windows Update. You can set this" _
-                           & " back to default if you want AFTER your new driver installation.")
+                    MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
+                           & " back to default, if you want AFTER your new driver installation.")
                 End If
             Catch ex As Exception
             End Try
@@ -5869,8 +5875,8 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
                 If regkey.GetValue("DontSearchWindowsUpdate").ToString <> 1 Then
                     regkey.SetValue("DontSearchWindowsUpdate", 1)
-                    MsgBox("DDU has changed a setting that prevent driver to be downloaded automatically with Windows Update. You can set this" _
-                           & " back to default if you want AFTER your new driver installation.")
+                    MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
+                           & " back to default, if you want AFTER your new driver installation.")
                 End If
             Catch ex As Exception
             End Try
@@ -5904,7 +5910,13 @@ Public Class Form1
             Case BootMode.Normal
                 safemode = False
                 If winxp = False Then
-                    If MsgBox("DDU has detected that you are NOT in SafeMode... For a better CleanUP without issues, would you like to reboot the computer into SafeMode now?", MsgBoxStyle.YesNo, "Reboot into SafeMode?") = MsgBoxResult.Yes Then
+
+                    Dim resultmsgbox As Integer = MessageBox.Show("DDU has detected that you are NOT in Safe Mode, for a better CleanUP without possible issues, you should probably reboot into Safe Mode, do you want to now?", "Test", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                    If resultmsgbox = DialogResult.Cancel Then
+                        Me.Close()
+                    ElseIf resultmsgbox = DialogResult.No Then
+                        'do nothing and continue without safe mode
+                    ElseIf resultmsgbox = DialogResult.Yes Then
                         Dim setbcdedit As New ProcessStartInfo
                         setbcdedit.FileName = "cmd.exe"
                         setbcdedit.Arguments = " /Cbcdedit /set safeboot network"
@@ -5933,15 +5945,14 @@ Public Class Form1
                     MsgBox("DDU has detected that you are NOT in SafeMode... For a better CleanUP without issues, it is recommended that you reboot into safemode")
                 End If
 
-                'The computer was booted in Normal mode.
         End Select
 
         log("User Account Name : " & UserAc)
         If Not isElevated Then
-            MsgBox("You are not using DDU with Administrator priviledge. The application will exit.")
-            Application.Exit()
+            MsgBox("You are not using DDU with Administrator privileges. The application will exit.", MsgBoxStyle.Critical)
+            Application.Exit() 'is there a reason why me.close isn't used?
         End If
-        MsgBox("Please make a BACKUP or a System Restore point before using DDU. We take no responsibilities if something goes wrong.")
+        MsgBox("If you're worried, please make a backup/system restore point before using DDU. We take no responsibilities if something goes wrong. (Please read the terms of service.)", MsgBoxStyle.Information)
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
