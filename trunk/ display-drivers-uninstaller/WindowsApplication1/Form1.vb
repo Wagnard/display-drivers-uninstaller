@@ -5893,6 +5893,18 @@ Public Class Form1
                 'The computer was booted using only the basic files and drivers.
                 'This is the same as Safe Mode
                 safemode = True
+                If winxp = False Then
+                    Dim setbcdedit As New ProcessStartInfo
+                    setbcdedit.FileName = "cmd.exe"
+                    setbcdedit.Arguments = " /CBCDEDIT /deletevalue {bootmgr} displaybootmenu"
+                    setbcdedit.UseShellExecute = False
+                    setbcdedit.CreateNoWindow = True
+                    setbcdedit.RedirectStandardOutput = False
+                    Dim processstopservice As New Process
+                    processstopservice.StartInfo = setbcdedit
+                    processstopservice.Start()
+                    processstopservice.WaitForExit()
+                End If
             Case BootMode.FailSafeWithNetwork
                 'The computer was booted using the basic files, drivers, and services necessary to start networking.
                 'This is the same as Safe Mode with Networking
