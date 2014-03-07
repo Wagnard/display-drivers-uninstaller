@@ -5563,6 +5563,10 @@ Public Class Form1
 
             ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("el") Then
                 ComboBox2.SelectedIndex = ComboBox2.FindString("Greek")
+
+            ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("sr") Then
+                ComboBox2.SelectedIndex = ComboBox2.FindString("Serbian (Cyrilic)")
+
             Else
                 ComboBox2.SelectedIndex = ComboBox2.FindString("English")
             End If
@@ -5897,7 +5901,7 @@ Public Class Form1
                 If winxp = False Then
                     Dim setbcdedit As New ProcessStartInfo
                     setbcdedit.FileName = "cmd.exe"
-                    setbcdedit.Arguments = " /Cbcdedit /deletevalue safeboot"
+                    setbcdedit.Arguments = " /CBCDEDIT /deletevalue {bootmgr} displaybootmenu"
                     setbcdedit.UseShellExecute = False
                     setbcdedit.CreateNoWindow = True
                     setbcdedit.RedirectStandardOutput = False
@@ -5919,7 +5923,7 @@ Public Class Form1
                     ElseIf resultmsgbox = DialogResult.Yes Then
                         Dim setbcdedit As New ProcessStartInfo
                         setbcdedit.FileName = "cmd.exe"
-                        setbcdedit.Arguments = " /Cbcdedit /set safeboot network"
+                        setbcdedit.Arguments = " /CBCDEDIT /set {bootmgr} displaybootmenu yes"
                         setbcdedit.UseShellExecute = False
                         setbcdedit.CreateNoWindow = True
                         setbcdedit.RedirectStandardOutput = False
@@ -5931,7 +5935,7 @@ Public Class Form1
                         If regkey IsNot Nothing Then
                             Try
                                 regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
-                                regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+                                regkey.SetValue("*UndoSM", "bcdedit /deletevalue {bootmgr} displaybootmenu")
                             Catch ex As Exception
                                 log(ex.Message & ex.StackTrace)
                             End Try
