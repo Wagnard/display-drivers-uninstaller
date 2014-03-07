@@ -5444,12 +5444,14 @@ Public Class Form1
         If reboot Then
             log("Restarting Computer ")
             System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
-            Application.Exit()
+            Invoke(Sub() Button1.Enabled = True)  'doing may sound weird but it is needed as this will reenable the form 1 to be closed. See Form1_close sub
+            Invoke(Sub() Me.Close())
             Exit Sub
         End If
         If shutdown Then
             System.Diagnostics.Process.Start("shutdown", "/s /t 0 /f")
-            Application.Exit()
+            Invoke(Sub() Button1.Enabled = True)
+            Invoke(Sub() Me.Close())
             Exit Sub
         End If
         If reboot = False And shutdown = False Then
@@ -5475,13 +5477,6 @@ Public Class Form1
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Clean uninstall completed!")
-        Dim result = MsgBox("Clean uninstall completed! Would you like to exit now?", MsgBoxStyle.YesNo)
-        If result = MsgBoxResult.No Then
-            'do nothing
-        Else
-            Application.Exit() 'once again, not sure why me.close isn't used
-        End If
-
 
     End Sub
     Private Sub Form1_close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
@@ -5586,6 +5581,7 @@ Public Class Form1
         'checkthread.Priority = ThreadPriority.Highest
         checkupdatethread.Start()
 
+        MsgBox("If you're worried, please make a backup/system restore point before using DDU. We take no responsibilities if something goes wrong. (Please read the terms of service.)", MsgBoxStyle.Information)
 
         '----------------------
         'check computer/os info
@@ -5856,7 +5852,7 @@ Public Class Form1
 
         If enduro Then
             MsgBox("DDU is not yet compatible with Enduro systems, DDU will now exit.", MsgBoxStyle.Critical)
-            Application.Exit()
+            Me.Close()
             Exit Sub
         End If
 
@@ -5954,7 +5950,7 @@ Public Class Form1
 
                         End If
                         System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
-                        Application.Exit()
+                        Me.Close()
                         Exit Sub
                     End If
                 Else
@@ -5966,9 +5962,8 @@ Public Class Form1
         log("User Account Name : " & UserAc)
         If Not isElevated Then
             MsgBox("You are not using DDU with Administrator privileges. The application will exit.", MsgBoxStyle.Critical)
-            Application.Exit() 'is there a reason why me.close isn't used?
+            Me.Close()
         End If
-        MsgBox("If you're worried, please make a backup/system restore point before using DDU. We take no responsibilities if something goes wrong. (Please read the terms of service.)", MsgBoxStyle.Information)
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
@@ -6631,7 +6626,7 @@ Public Class Form1
             Catch ex As Exception
             End Try
             'then quit
-            Application.Exit()
+            Me.Close()
             Exit Sub
         End If
         Button1.Enabled = True
@@ -6641,7 +6636,11 @@ Public Class Form1
         CheckBox2.Enabled = True
         CheckBox1.Enabled = True
         CheckBox3.Enabled = True
-
+        If MsgBox("Clean uninstall completed! Would you like to exit now?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
+            'do nothing
+        Else
+            Me.Close()
+        End If
     End Sub
 
     Private Sub CheckForUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheckForUpdatesToolStripMenuItem.Click
