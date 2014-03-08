@@ -418,19 +418,23 @@ Public Class Form1
             End Try
         Next
 
-        For i As Integer = 0 To driverfiles.Length - 1
-            filePath = Environment.GetEnvironmentVariable("windir")
-            For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                        Try
-                            My.Computer.FileSystem.DeleteFile(child)
-                        Catch ex As Exception
-                        End Try
+        Try
+            For i As Integer = 0 To driverfiles.Length - 1
+                filePath = Environment.GetEnvironmentVariable("windir")
+                For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                            Try
+                                My.Computer.FileSystem.DeleteFile(child)
+                            Catch ex As Exception
+                            End Try
+                        End If
                     End If
-                End If
+                Next
             Next
-        Next
+        Catch ex As Exception
+            log("info: " + ex.Message)
+        End Try
 
         If IntPtr.Size = 8 Then
             For i As Integer = 0 To driverfiles.Length - 1
@@ -3108,18 +3112,21 @@ Public Class Form1
             Catch ex As Exception
             End Try
 
-            filePath = Environment.GetEnvironmentVariable("windir")
-            For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                        Try
-                            My.Computer.FileSystem.DeleteFile(child)
-                        Catch ex As Exception
-                        End Try
+            Try
+                filePath = Environment.GetEnvironmentVariable("windir")
+                For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                            Try
+                                My.Computer.FileSystem.DeleteFile(child)
+                            Catch ex As Exception
+                            End Try
+                        End If
                     End If
-                End If
-            Next
-
+                Next
+            Catch ex As Exception
+                log("Info : " + ex.Message)
+            End Try
 
             If IntPtr.Size = 8 Then
 
