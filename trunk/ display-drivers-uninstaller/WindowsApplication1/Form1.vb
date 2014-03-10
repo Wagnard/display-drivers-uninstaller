@@ -593,7 +593,8 @@ Public Class Form1
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
                                 (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue("C:\Program Files (x86)\ATI Technologies\")
+                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(Environment.GetFolderPath _
+                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies\")
                         Catch ex As Exception
                             log(ex.Message)
                         End Try
@@ -651,7 +652,8 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory _
                                 (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                             'on success, do this
-                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue("C:\Program Files (x86)\Common Files\ATI Technologies\")
+                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(Environment.GetFolderPath _
+                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies\")
                         Catch ex As Exception
                             log(ex.Message)
                         End Try
@@ -1673,6 +1675,10 @@ Public Class Form1
 
                                                     Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;")
                                                         wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static")
+                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static", "")
                                                         regkey.SetValue(child, wantedvalue)
                                                 End Select
                                             Catch ex As Exception
@@ -5991,7 +5997,7 @@ Public Class Form1
                 safemode = False
                 If winxp = False Then
 
-                    Dim resultmsgbox As Integer = MessageBox.Show("DDU has detected that you are NOT in Safe Mode, for a better CleanUP without possible issues, you should probably reboot into Safe Mode, do you want to now?", "Test", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                    Dim resultmsgbox As Integer = MessageBox.Show("DDU has detected that you are NOT in Safe Mode, for a better CleanUP without possible issues, you should probably reboot into Safe Mode, do you want to now?", "Safemode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                     If resultmsgbox = DialogResult.Cancel Then
                         Me.Close()
                     ElseIf resultmsgbox = DialogResult.No Then
