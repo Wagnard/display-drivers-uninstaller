@@ -84,6 +84,7 @@ Public Class Form1
     Dim driverfiles() As String
     Dim checkupdates As New checkupdate
     Dim enduro As Boolean = False
+    Dim preventclose As Boolean = False
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -138,6 +139,7 @@ Public Class Form1
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         CheckForIllegalCrossThreadCalls = True
+        preventclose = True
         Button1.Enabled = False
         Button2.Enabled = False
         Button3.Enabled = False
@@ -261,13 +263,15 @@ Public Class Form1
         log("Driver Store CleanUP Complete.")
 
 
+
+        'Delete left over files.
+    End Sub
+    Private Sub cleanamdserviceprocess()
+
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning process/services... *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning Process/Services...")
-        'Delete left over files.
-    End Sub
-    Private Sub cleanamdserviceprocess()
 
         'STOP AMD service
         Dim services() As String
@@ -2752,6 +2756,7 @@ Public Class Form1
     End Sub
 
     Private Sub cleannvidiafolders()
+
         'Delete NVIDIA data Folders
         'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning UpdatusUser users ac if present *****" + vbNewLine)
@@ -5554,7 +5559,7 @@ Public Class Form1
 
     End Sub
     Private Sub Form1_close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
-        If Button1.Enabled = False Then
+        If preventclose Then
             e.Cancel = True
         End If
     End Sub
@@ -5925,9 +5930,7 @@ Public Class Form1
         End Try
 
         If enduro Then
-            MsgBox("DDU is not yet compatible with Enduro systems, DDU will now exit.", MsgBoxStyle.Critical)
-            Me.Close()
-            Exit Sub
+            MsgBox("DDU detected that you have an AMD switching Laptop (Enduro or equivalent), DDU is not yet compatible with Enduro systems, Use at your own risk.", MsgBoxStyle.Critical)
         End If
 
         ' Setting the driversearching parameter for win 7+
@@ -6010,6 +6013,10 @@ Public Class Form1
                         setbcdedit.CreateNoWindow = True
                         setbcdedit.RedirectStandardOutput = False
                         Dim processstopservice As New Process
+                        processstopservice.StartInfo = setbcdedit
+                        processstopservice.Start()
+                        processstopservice.WaitForExit()
+                        setbcdedit.Arguments = " /CBCDEDIT /set {bootmgr} timeout 30"
                         processstopservice.StartInfo = setbcdedit
                         processstopservice.Start()
                         processstopservice.WaitForExit()
@@ -6369,49 +6376,49 @@ Public Class Form1
                 card1 = reply.IndexOf("PCI\", card1 + 1)
             End While
 
-            If DirectCast(e.Argument, String) = "AMD" & enduro Then
-                ' ----------------------------------------------------------------------
-                ' (Experimental) Removing the Intel card because of AMD Enduro videocard
-                ' -------------------------------------------------------
+            'If DirectCast(e.Argument, String) = "AMD" & enduro Then
+            '    ' ----------------------------------------------------------------------
+            '    ' (Experimental) Removing the Intel card because of AMD Enduro videocard
+            '    ' -------------------------------------------------------
 
-                checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
-                checkoem.Arguments = "findall =display"
-                checkoem.UseShellExecute = False
-                checkoem.CreateNoWindow = True
-                checkoem.RedirectStandardOutput = True
+            '    checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+            '    checkoem.Arguments = "findall =display"
+            '    checkoem.UseShellExecute = False
+            '    checkoem.CreateNoWindow = True
+            '    checkoem.RedirectStandardOutput = True
 
-                proc2.StartInfo = checkoem
-                proc2.Start()
-                reply = proc2.StandardOutput.ReadToEnd
-                proc2.WaitForExit()
+            '    proc2.StartInfo = checkoem
+            '    proc2.Start()
+            '    reply = proc2.StandardOutput.ReadToEnd
+            '    proc2.WaitForExit()
 
-                Try
-                    card1 = reply.IndexOf("PCI\")
-                Catch ex As Exception
+            '    Try
+            '        card1 = reply.IndexOf("PCI\")
+            '    Catch ex As Exception
 
-                End Try
-                While card1 > -1
-                    position2 = reply.IndexOf(":", card1)
-                    vendid = reply.Substring(card1, position2 - card1).Trim
-                    If vendid.Contains("VEN_8086") Then
-                        removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
-                        removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
-                        removedisplaydriver.UseShellExecute = False
-                        removedisplaydriver.CreateNoWindow = True
-                        removedisplaydriver.RedirectStandardOutput = True
-                        proc.StartInfo = removedisplaydriver
+            '    End Try
+            '    While card1 > -1
+            '        position2 = reply.IndexOf(":", card1)
+            '        vendid = reply.Substring(card1, position2 - card1).Trim
+            '        If vendid.Contains("VEN_8086") Then
+            '            removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+            '            removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
+            '            removedisplaydriver.UseShellExecute = False
+            '            removedisplaydriver.CreateNoWindow = True
+            '            removedisplaydriver.RedirectStandardOutput = True
+            '            proc.StartInfo = removedisplaydriver
 
-                        proc.Start()
-                        reply2 = proc.StandardOutput.ReadToEnd
-                        proc.WaitForExit()
-                        log(reply2)
+            '            proc.Start()
+            '            reply2 = proc.StandardOutput.ReadToEnd
+            '            proc.WaitForExit()
+            '            log(reply2)
 
 
 
-                    End If
-                    card1 = reply.IndexOf("PCI\", card1 + 1)
-                End While
-            End If
+            '        End If
+            '        card1 = reply.IndexOf("PCI\", card1 + 1)
+            '    End While
+            'End If
 
             log("ddudr Remove Display Complete")
             'Next
@@ -6454,7 +6461,7 @@ Public Class Form1
                         prochdmi.WaitForExit()
                         log(reply2)
                     Catch ex As Exception
-
+                        preventclose = False
                         log(ex.Message)
                         MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                         Button1.Enabled = True
@@ -6518,7 +6525,7 @@ Public Class Form1
                             prochdmi.WaitForExit()
                             log(reply2)
                         Catch ex As Exception
-
+                            preventclose = False
                             log(ex.Message)
                             MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                             Button1.Enabled = True
@@ -6569,6 +6576,7 @@ Public Class Form1
                             proc.WaitForExit()
                             log(reply2)
                         Catch ex As Exception
+                            preventclose = False
                             log(ex.Message)
                             MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                             Button1.Enabled = True
@@ -6623,6 +6631,7 @@ Public Class Form1
                     proc.WaitForExit()
                     log(reply2)
                 Catch ex As Exception
+                    preventclose = False
                     log(ex.Message)
                     MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
                     Button1.Enabled = True
@@ -6684,8 +6693,7 @@ Public Class Form1
         If stopme = True Then
             'Scan for new hardware to not let users into a non working state.
 
-
-            Button1.Enabled = True
+            preventclose = False
             Try
                 Dim scan As New ProcessStartInfo
                 scan.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
@@ -6703,6 +6711,7 @@ Public Class Form1
             Me.Close()
             Exit Sub
         End If
+        preventclose = False
         Button1.Enabled = True
         Button2.Enabled = True
         Button3.Enabled = True
