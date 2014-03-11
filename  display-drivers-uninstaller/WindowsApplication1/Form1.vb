@@ -5975,7 +5975,7 @@ Public Class Form1
                 If winxp = False Then
                     Dim setbcdedit As New ProcessStartInfo
                     setbcdedit.FileName = "cmd.exe"
-                    setbcdedit.Arguments = " /CBCDEDIT /deletevalue {bootmgr} displaybootmenu"
+                    setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
                     setbcdedit.UseShellExecute = False
                     setbcdedit.CreateNoWindow = True
                     setbcdedit.RedirectStandardOutput = False
@@ -5992,7 +5992,7 @@ Public Class Form1
                 If winxp = False Then
                     Dim setbcdedit As New ProcessStartInfo
                     setbcdedit.FileName = "cmd.exe"
-                    setbcdedit.Arguments = " /CBCDEDIT /deletevalue {bootmgr} displaybootmenu"
+                    setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
                     setbcdedit.UseShellExecute = False
                     setbcdedit.CreateNoWindow = True
                     setbcdedit.RedirectStandardOutput = False
@@ -6006,7 +6006,7 @@ Public Class Form1
                 safemode = False
                 If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
 
-                    Dim resultmsgbox As Integer = MessageBox.Show("DDU has detected that you are NOT in Safe Mode, for a better CleanUP without possible issues, you should probably reboot into Safe Mode, do you want to now?", "Safemode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                    Dim resultmsgbox As Integer = MessageBox.Show("You are not in safe mode. It is highly recommended that you reboot into safe mode to avoid possible issues., Reboot into Safe Mode now?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                     If resultmsgbox = DialogResult.Cancel Then
                         Me.Close()
                     ElseIf resultmsgbox = DialogResult.No Then
@@ -6014,7 +6014,7 @@ Public Class Form1
                     ElseIf resultmsgbox = DialogResult.Yes Then
                         Dim setbcdedit As New ProcessStartInfo
                         setbcdedit.FileName = "cmd.exe"
-                        setbcdedit.Arguments = " /CBCDEDIT /set {bootmgr} displaybootmenu yes"
+                        setbcdedit.Arguments = " /CBCDEDIT /set safeboot network"
                         setbcdedit.UseShellExecute = False
                         setbcdedit.CreateNoWindow = True
                         setbcdedit.RedirectStandardOutput = False
@@ -6022,15 +6022,11 @@ Public Class Form1
                         processstopservice.StartInfo = setbcdedit
                         processstopservice.Start()
                         processstopservice.WaitForExit()
-                        setbcdedit.Arguments = " /CBCDEDIT /set {bootmgr} timeout 30"
-                        processstopservice.StartInfo = setbcdedit
-                        processstopservice.Start()
-                        processstopservice.WaitForExit()
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+                                               regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
                         If regkey IsNot Nothing Then
                             Try
                                 regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
-                                regkey.SetValue("*UndoSM", "bcdedit /deletevalue {bootmgr} displaybootmenu")
+                                regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
                             Catch ex As Exception
                                 log(ex.Message & ex.StackTrace)
                             End Try

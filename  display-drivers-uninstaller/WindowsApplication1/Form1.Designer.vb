@@ -130,9 +130,9 @@ Partial Class Form1
         Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(5, 484)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(35, 13)
+        Me.Label6.Size = New System.Drawing.Size(44, 13)
         Me.Label6.TabIndex = 8
-        Me.Label6.Text = "V12.5"
+        Me.Label6.Text = "V12.5.1"
         '
         'ComboBox1
         '
@@ -374,6 +374,7 @@ Partial Class Form1
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.MenuStrip1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.MaximizeBox = False
         Me.Name = "Form1"
