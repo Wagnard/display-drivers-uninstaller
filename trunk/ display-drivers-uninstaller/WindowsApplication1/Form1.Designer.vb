@@ -121,9 +121,9 @@ Partial Class Form1
         Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(12, 328)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(28, 13)
+        Me.Label5.Size = New System.Drawing.Size(61, 13)
         Me.Label5.TabIndex = 7
-        Me.Label5.Text = "Log:"
+        Me.Label5.Text = "Active Log:"
         '
         'Label6
         '
