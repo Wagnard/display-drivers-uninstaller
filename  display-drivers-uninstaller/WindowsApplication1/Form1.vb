@@ -5576,6 +5576,12 @@ Public Class Form1
             CheckBox2.Checked = True
         End If
 
+        'check for admin before trying to do things, as this could cause errors and message boxes for rebooting into startup without admin are useless because you can't bcdedit without admin rights, however the next messagebox still plays the sound effect, for msgboxstyle.information. Not sure if this can be fixed.
+        If Not isElevated Then
+            MsgBox("You are not using DDU with Administrator privileges. The application will now exit.", MsgBoxStyle.Critical)
+            Me.Close()
+        End If
+
         '----------------
         'language section
         '----------------
@@ -5942,7 +5948,7 @@ Public Class Form1
                 If regkey.GetValue("SearchOrderConfig").ToString <> 0 Then
                     regkey.SetValue("SearchOrderConfig", 0)
                     MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
-                           & " back to default, if you want AFTER your new driver installation.")
+                           & " back to default, if you want AFTER your new driver installation.", MsgBoxStyle.Information)
                 End If
             Catch ex As Exception
             End Try
@@ -5953,7 +5959,7 @@ Public Class Form1
                 If regkey.GetValue("DontSearchWindowsUpdate").ToString <> 1 Then
                     regkey.SetValue("DontSearchWindowsUpdate", 1)
                     MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
-                           & " back to default, if you want AFTER your new driver installation.")
+                           & " back to default, if you want AFTER your new driver installation.", MsgBoxStyle.Information)
                 End If
             Catch ex As Exception
             End Try
@@ -5998,7 +6004,7 @@ Public Class Form1
 
             Case BootMode.Normal
                 safemode = False
-                If winxp = False Then
+                If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
 
                     Dim resultmsgbox As Integer = MessageBox.Show("DDU has detected that you are NOT in Safe Mode, for a better CleanUP without possible issues, you should probably reboot into Safe Mode, do you want to now?", "Safemode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                     If resultmsgbox = DialogResult.Cancel Then
@@ -6041,10 +6047,7 @@ Public Class Form1
         End Select
 
         log("User Account Name : " & UserAc)
-        If Not isElevated Then
-            MsgBox("You are not using DDU with Administrator privileges. The application will exit.", MsgBoxStyle.Critical)
-            Me.Close()
-        End If
+
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
