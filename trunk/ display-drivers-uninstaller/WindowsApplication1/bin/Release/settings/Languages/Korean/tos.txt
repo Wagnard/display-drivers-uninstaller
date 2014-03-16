@@ -1,0 +1,13 @@
+﻿Display Driver Uninstaller ("DDU") 사용자 계약
+
+
+당신은 DDU 소프트웨어를 사용해서 DDU의 '사용자'가 됩니다.
+이 계약은 드라이버를 제거하기 위해 이 프로그램을 사용하는 즉시 효력이 발생합니다.
+
+DDU를 사용함에 있어, 사용자의 PC에 손상이나 부정적인 영향을 끼치는 것에 대해
+DDU 또는 그 제작자 및 계열사를 비난(고발)하지 않을 것에 동의합니다.
+
+DDU를 사용함에 있어,
+NVIDIA ("NVIDIA, GeForce")도 Advanced Micro Devices ("AMD, Radeon")도
+Microsoft도 당신이나 당신의 컴퓨터의 어떠한 종류의 손상에 대해서도
+책임을 지지 않고, DDU의 계열사나 그 제작자에게 물을 방법이 없음을 인정합니다.
