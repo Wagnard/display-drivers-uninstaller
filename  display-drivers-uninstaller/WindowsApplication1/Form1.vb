@@ -85,6 +85,7 @@ Public Class Form1
     Dim checkupdates As New checkupdate
     Dim enduro As Boolean = False
     Dim preventclose As Boolean = False
+    Dim filePath As String
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -195,7 +196,7 @@ Public Class Form1
         proc2.Start()
         reply = proc2.StandardOutput.ReadToEnd
         proc2.WaitForExit()
-        ' System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds)
+
         log("ddudr DP_ENUM RESULT BELOW")
         log(reply)
         'Preparing to read output.
@@ -289,7 +290,7 @@ Public Class Form1
             processstopservice.Start()
             processstopservice.WaitForExit()
 
-            System.Threading.Thread.Sleep(50)
+            System.Threading.Thread.Sleep(10)
 
             stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
 
@@ -297,7 +298,7 @@ Public Class Form1
             processstopservice.Start()
             processstopservice.WaitForExit()
 
-            System.Threading.Thread.Sleep(50)
+            System.Threading.Thread.Sleep(10)
 
             stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
             processstopservice.StartInfo = stopservice
@@ -378,7 +379,7 @@ Public Class Form1
             appproc(i).Kill()
         Next i
 
-        System.Threading.Thread.Sleep(50)
+        System.Threading.Thread.Sleep(10)
     End Sub
     Private Sub cleanamdfolders()
         'Delete AMD data Folders
@@ -386,7 +387,7 @@ Public Class Form1
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning Directory (Please Wait...)")
-        Dim filePath As String
+
 
         If CheckBox1.Checked = True Then
             filePath = "C:\AMD"
@@ -2684,7 +2685,7 @@ Public Class Form1
             processstopservice.Start()
             processstopservice.WaitForExit()
 
-            System.Threading.Thread.Sleep(50)
+            System.Threading.Thread.Sleep(10)
 
             stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
 
@@ -2692,7 +2693,7 @@ Public Class Form1
             processstopservice.Start()
             processstopservice.WaitForExit()
 
-            System.Threading.Thread.Sleep(50)
+            System.Threading.Thread.Sleep(10)
 
             stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
             processstopservice.StartInfo = stopservice
@@ -2773,7 +2774,7 @@ Public Class Form1
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning Directory")
-        Dim filePath As String
+
 
         If CheckBox1.Checked = True Then
             filePath = "C:\NVIDIA"
@@ -5339,7 +5340,7 @@ Public Class Form1
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("End of Registry Cleaning")
-        System.Threading.Thread.Sleep(50)
+        System.Threading.Thread.Sleep(10)
     End Sub
 
     Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
@@ -5558,6 +5559,9 @@ Public Class Form1
 
             ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("sr") Then
                 ComboBox2.SelectedIndex = ComboBox2.FindString("Serbian (Cyrilic)")
+
+            ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("ko") Then
+                ComboBox2.SelectedIndex = ComboBox2.FindString("Korean")
 
             Else
                 ComboBox2.SelectedIndex = ComboBox2.FindString("English")
@@ -6171,7 +6175,7 @@ Public Class Form1
             wlog.WriteLine(DateTime.Now & " >> " & value)
             wlog.Flush()
             wlog.Dispose()
-            System.Threading.Thread.Sleep(50)  '50 millisecond stall (0.05 Seconds) just to be sure its really released.
+            System.Threading.Thread.Sleep(20)  '50 millisecond stall (0.05 Seconds) just to be sure its really released.
         Else
 
         End If
@@ -6202,6 +6206,14 @@ Public Class Form1
     Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
+
+        Try
+            If DirectCast(e.Argument, String) = "NVIDIA" Then
+                temporarynvidiaspeedup()   'we do this If and until nvidia speed up their installer that is impacting "ddudr remove" of the GPU from device manager.
+            End If
+        Catch ex As Exception
+        End Try
+
         Try
             '----------------------------------------------
             'Here I remove AMD HD Audio bus (System device)
@@ -6347,7 +6359,7 @@ Public Class Form1
             reply = proc2.StandardOutput.ReadToEnd
             proc2.WaitForExit()
 
-            'System.Threading.Thread.Sleep(200) '200 ms sleep between removal of media.
+
             Try
                 card1 = reply.IndexOf("HDAUDIO\")
             Catch ex As Exception
@@ -6383,7 +6395,7 @@ Public Class Form1
 
                 End If
                 card1 = reply.IndexOf("HDAUDIO\", card1 + 1)
-                ' System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
+
             End While
 
             'Here I remove 3dVision USB Adapter.
@@ -6445,10 +6457,10 @@ Public Class Form1
                         End Try
 
 
-                        ' System.Threading.Thread.Sleep(50)
+
                     End If
                     card1 = reply.IndexOf("USB\", card1 + 1)
-                    ' System.Threading.Thread.Sleep(50) '100 ms sleep between removal of media.
+
                 End While
 
                 'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
@@ -6828,6 +6840,70 @@ Public Class Form1
         End If
     End Sub
 
+    Private Sub temporarynvidiaspeedup()   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
+        Try
+            filePath = Environment.GetFolderPath _
+      (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
+
+            For Each child As String In Directory.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("installer2") Then
+                        For Each child2 As String In Directory.GetDirectories(child)
+                            If checkvariables.isnullorwhitespace(child2) = False Then
+                                If child2.ToLower.Contains("display.3dvision") Or _
+                                   child2.ToLower.Contains("display.controlpanel") Or _
+                                   child2.ToLower.Contains("display.driver") Or _
+                                   child2.ToLower.Contains("display.gfexperience") Or _
+                                   child2.ToLower.Contains("display.nvirusb") Or _
+                                   child2.ToLower.Contains("display.physx") Or _
+                                   child2.ToLower.Contains("display.update") Or _
+                                   child2.ToLower.Contains("gfexperience") Or _
+                                   child2.ToLower.Contains("nvidia.update") Or _
+                                   child2.ToLower.Contains("installer2\installer") Or _
+                                   child2.ToLower.Contains("network.service") Or _
+                                   child2.ToLower.Contains("shadowplay") Or _
+                                   child2.ToLower.Contains("update.core") Or _
+                                   child2.ToLower.Contains("virtualaudio.driver") Or _
+                                   child2.ToLower.Contains("hdaudio.driver") Then
+                                    If removephysx Then
+                                        Try
+                                            My.Computer.FileSystem.DeleteDirectory _
+                                            (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                        Catch ex As Exception
+                                            log(ex.Message)
+                                        End Try
+                                    Else
+                                        If child2.ToLower.Contains("physx") Then
+                                            'do nothing
+                                        Else
+                                            Try
+                                                My.Computer.FileSystem.DeleteDirectory _
+                                                (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                            Catch ex As Exception
+                                                log(ex.Message)
+                                            End Try
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        Next
+                        Try
+                            If Directory.GetDirectories(child).Length = 0 Then
+                                Try
+                                    My.Computer.FileSystem.DeleteDirectory _
+                                        (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                End Try
+                            End If
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+        End Try
+    End Sub
 
 End Class
 Public Class checkvariables
