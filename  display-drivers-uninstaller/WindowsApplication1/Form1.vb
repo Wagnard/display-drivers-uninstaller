@@ -41,7 +41,7 @@ Public Class Form1
     Dim proc2 As New Process
     Dim prochdmi As New Process
     Dim toolTip1 As New ToolTip()
-    Dim reboot As Boolean = True
+    Dim reboot As Boolean = False
     Dim shutdown As Boolean = False
     Dim win8higher As Boolean = False
     Dim winxp As Boolean = False
@@ -86,6 +86,7 @@ Public Class Form1
     Dim enduro As Boolean = False
     Dim preventclose As Boolean = False
     Dim filePath As String
+    Dim combobox As String = Nothing
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -139,40 +140,9 @@ Public Class Form1
         End If
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        CheckForIllegalCrossThreadCalls = True
-        preventclose = True
-        Button1.Enabled = False
-        Button2.Enabled = False
-        Button3.Enabled = False
-        ComboBox1.Enabled = False
-        CheckBox2.Enabled = False
-        CheckBox1.Enabled = False
-        CheckBox3.Enabled = False
-        CheckBox4.Enabled = False
-        If ComboBox1.Text = "AMD" Then
-            vendidexpected = "VEN_1002"
-            provider = "Provider: Advanced Micro Devices"
-        End If
 
-        If ComboBox1.Text = "NVIDIA" Then
-            vendidexpected = "VEN_10DE"
-            provider = "Provider: NVIDIA"
-        End If
-
-        If ComboBox1.Text = "INTEL" Then
-            vendidexpected = "VEN_8086"
-            provider = "Provider: Intel"
-        End If
-
-        TextBox1.Text = TextBox1.Text + "*****  Uninstalling " & ComboBox1.Text & " driver... *****" + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
-        log("Uninstalling " + ComboBox1.Text + " driver ...")
-        TextBox1.Text = TextBox1.Text + "***** Executing ddudr Remove , Please wait(can take a few minutes *****) " + vbNewLine
-        TextBox1.Select(TextBox1.Text.Length, 0)
-        TextBox1.ScrollToCaret()
-        log("Executing ddudr Remove")
-
+        reboot = True
+        combobox = ComboBox1.Text
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
 
     End Sub
@@ -5463,7 +5433,6 @@ Public Class Form1
                 Next i
             End If
 
-            reboot = True
         End If
         Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Clean uninstall completed! *****" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
@@ -6134,13 +6103,15 @@ Public Class Form1
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         reboot = False
         shutdown = False
-        Button1.PerformClick()
+        combobox = ComboBox1.Text
+        BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         reboot = False
         shutdown = True
-        Button1.PerformClick()
+        combobox = ComboBox1.Text
+        BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
     End Sub
 
     Private Sub CheckBox3_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox3.CheckedChanged
@@ -6167,6 +6138,7 @@ Public Class Form1
             CheckBox4.Visible = False
             PictureBox2.Image = My.Resources.intel_logo
         End If
+        combobox = ComboBox1.Text
     End Sub
 
     Public Sub log(ByVal value As String)
@@ -6206,6 +6178,41 @@ Public Class Form1
     Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
+        CheckForIllegalCrossThreadCalls = True
+
+        preventclose = True
+        Invoke(Sub() Button1.Enabled = False)
+        Invoke(Sub() Button2.Enabled = False)
+        Invoke(Sub() Button3.Enabled = False)
+        Invoke(Sub() ComboBox1.Enabled = False)
+        Invoke(Sub() CheckBox2.Enabled = False)
+        Invoke(Sub() CheckBox1.Enabled = False)
+        Invoke(Sub() CheckBox3.Enabled = False)
+        Invoke(Sub() CheckBox4.Enabled = False)
+        If combobox = "AMD" Then
+            vendidexpected = "VEN_1002"
+            provider = "Provider: Advanced Micro Devices"
+        End If
+
+        If combobox = "NVIDIA" Then
+            vendidexpected = "VEN_10DE"
+            provider = "Provider: NVIDIA"
+        End If
+
+        If combobox = "INTEL" Then
+            vendidexpected = "VEN_8086"
+            provider = "Provider: Intel"
+        End If
+
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "*****  Uninstalling " & ComboBox1.Text & " driver... *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
+        Invoke(Sub() log("Uninstalling " + combobox + " driver ..."))
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing ddudr Remove , Please wait(can take a few minutes *****) " + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
+
+        log("Executing ddudr Remove")
 
         Try
             If DirectCast(e.Argument, String) = "NVIDIA" Then
@@ -6252,11 +6259,13 @@ Public Class Form1
                             End If
                         Next
                     End If
+                    Invoke(Sub() TextBox1.Text = TextBox1.Text + "AMD HD Audio Bus Removed !" + vbNewLine)
+                    Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+                    Invoke(Sub() TextBox1.ScrollToCaret())
                 End If
             Catch ex As Exception
                 log(ex.StackTrace)
             End Try
-
             ' ----------------------
             ' Removing the videocard
             ' ----------------------
@@ -6342,7 +6351,9 @@ Public Class Form1
             '        card1 = reply.IndexOf("PCI\", card1 + 1)
             '    End While
             'End If
-
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "GPU(s) Removed from Device Manager." + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
             log("ddudr Remove Display Complete")
             'Next
             'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
@@ -6397,6 +6408,9 @@ Public Class Form1
                 card1 = reply.IndexOf("HDAUDIO\", card1 + 1)
 
             End While
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "HD audio adapters Removed !" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
 
             'Here I remove 3dVision USB Adapter.
             If DirectCast(e.Argument, String) = "NVIDIA" Then
@@ -6462,7 +6476,9 @@ Public Class Form1
                     card1 = reply.IndexOf("USB\", card1 + 1)
 
                 End While
-
+                Invoke(Sub() TextBox1.Text = TextBox1.Text + "3D Vision USB Adapter Removed from Device Manager." + vbNewLine)
+                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+                Invoke(Sub() TextBox1.ScrollToCaret())
                 'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
 
                 removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
@@ -6510,6 +6526,9 @@ Public Class Form1
                     End If
                     card1 = reply.IndexOf("ROOT\", card1 + 1)
                 End While
+                Invoke(Sub() TextBox1.Text = TextBox1.Text + "NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removed !" + vbNewLine)
+                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+                Invoke(Sub() TextBox1.ScrollToCaret())
             End If
 
             log("ddudr Remove Audio/HDMI Complete")
@@ -6566,6 +6585,9 @@ Public Class Form1
                 card1 = reply.IndexOf("DISPLAY\", card1 + 1)
 
             End While
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "Monitors and Hidden monitors removed !" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
             Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** ddudr Remove complete *****" + vbNewLine)
             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
             Invoke(Sub() TextBox1.ScrollToCaret())
