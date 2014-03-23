@@ -6642,10 +6642,12 @@ Public Class Form1
         CheckBox2.Enabled = True
         CheckBox1.Enabled = True
         CheckBox3.Enabled = True
-        If MsgBox("Clean uninstall completed! Would you like to exit now?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
-            'do nothing
-        Else
-            Me.Close()
+        If Not (reboot Or shutdown) Then
+            If MsgBox("Clean uninstall completed! Would you like to exit now?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
+                'do nothing
+            Else
+                Me.Close()
+            End If
         End If
     End Sub
 
