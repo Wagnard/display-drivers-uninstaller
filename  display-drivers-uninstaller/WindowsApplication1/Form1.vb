@@ -4853,9 +4853,137 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
+        If IntPtr.Size = 8 Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("gfexperience.exe") Then
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.StackTrace)
+            End Try
+        End If
+
         '-----------------------------
         'End of .net ngenservice clean
         '-----------------------------
+
+        '-----------------------------
+        'Mozilla plugins
+        '-----------------------------
+        If IntPtr.Size = 8 Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\MozillaPlugins", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("nvidia.com/3dvision") Then
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.StackTrace)
+            End Try
+        End If
+
+
+        '-----------------------
+        'remove event view stuff
+        '-----------------------
+        log("Remove eventviewer stuff")
+        Try
+            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+            If subregkey IsNot Nothing Then
+                For Each child2 As String In subregkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child2) = False Then
+                        If child2.ToLower.Contains("controlset") Then
+                            Try
+                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog\Application", True)
+                            Catch ex As Exception
+                                Continue For
+                            End Try
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetSubKeyNames()
+                                    If checkvariables.isnullorwhitespace(child) = False Then
+                                        If child.ToLower.Contains("nvidia update core service") Then
+                                            regkey.DeleteSubKeyTree(child)
+                                        End If
+                                    End If
+                                Next
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+
+        '---------------------------
+        'end remove event view stuff
+        '---------------------------
+
+        '---------------------------
+        'virtual store
+        '---------------------------
+        Try
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
+            If regkey IsNot Nothing Then
+                Try
+                    regkey.DeleteSubKeyTree("Global")
+                    If regkey.SubKeyCount = 0 Then
+                        My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE", True).DeleteSubKeyTree("NVIDIA Corporation")
+                    End If
+                Catch ex As Exception
+                End Try
+            End If
+        Catch ex As Exception
+        End Try
+        Try
+            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
+            If regkey IsNot Nothing Then
+                Try
+                    regkey.DeleteSubKeyTree("Global")
+                    If regkey.SubKeyCount = 0 Then
+                        My.Computer.Registry.CurrentUser.OpenSubKey("Software\Classes\VirtualStore\MACHINE\SOFTWARE", True).DeleteSubKeyTree("NVIDIA Corporation")
+                    End If
+                Catch ex As Exception
+                End Try
+            End If
+        Catch ex As Exception
+        End Try
+        Try
+            For Each child As String In My.Computer.Registry.Users.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains("s-1-5") Then
+                        Try
+                            My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True).DeleteSubKeyTree("Global")
+                            If My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", False).SubKeyCount = 0 Then
+                                My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE", True).DeleteSubKeyTree("NVIDIA Corporation")
+                            End If
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -5899,7 +6027,7 @@ Public Class Form1
                     ElseIf resultmsgbox = DialogResult.Yes Then
                         Dim setbcdedit As New ProcessStartInfo
                         setbcdedit.FileName = "cmd.exe"
-                        setbcdedit.Arguments = " /CBCDEDIT /set safeboot network"
+                        setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
                         setbcdedit.UseShellExecute = False
                         setbcdedit.CreateNoWindow = True
                         setbcdedit.RedirectStandardOutput = False
