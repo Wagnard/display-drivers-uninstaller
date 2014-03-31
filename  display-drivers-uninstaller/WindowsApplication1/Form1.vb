@@ -2894,14 +2894,28 @@ Public Class Form1
 (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
 
         Try
-            If Directory.GetDirectories(filePath).Length = 0 Then
-                Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                Catch ex As Exception
-                    log(ex.Message)
-                End Try
-            End If
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("updatus") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        log(ex.Message)
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
         Catch ex As Exception
         End Try
 
@@ -3124,6 +3138,8 @@ Public Class Form1
                 Try
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(Environment.GetFolderPath _
+(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies\")
                 Catch ex As Exception
                 End Try
 
