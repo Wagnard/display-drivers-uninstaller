@@ -1,35 +1,38 @@
-﻿Display Driver Uninstaller (DDU) / Program namenjen za uklanjanje (GPU) drajvera.(NVIDIA/AMD)
+﻿  Display Driver Uninstaller (DDU) / Program namenjen za uklanjanje (GPU) drajvera.(NVIDIA/AMD)
 
-Ono šta ovaj program radi je uklanjanje (GPU) drajvera za grafičku karticu iz Device Manager-a i uklanjanje trenutnih i svih zaostalih drajvera iz Windows Driver store-a zajedno sa svim NVIDIA/AMD-a servisima u vezi sa drajverima za grafičku karticu.
+  Ono šta ovaj program radi je uklanjanje (GPU) drajvera za grafičku karticu iz Device Manager-a i uklanjanje trenutnih i svih
+zaostalih drajvera iz Windows Driver store-a zajedno sa svim NVIDIA/AMD-a servisima u vezi sa drajverima za grafičku karticu.
 
-Trenutni efekat nakon upotrebe ovog programa sličan je kao kada je Windows u "sveže instaliranom" stanju.
-
-
-
-Ovaj program ponaša se vrlo slično programu "Driver Sweeper" i ima sve dodatne pogodnosti pomenute iznad.
+  Trenutni efekat nakon upotrebe ovog programa sličan je kao kada je Windows u "sveže instaliranom" stanju.
 
 
 
-Ako imate nekih problema pri instalaciji starijeg ili nekog novijeg drajvera za NVIDIA/AMD grafičku karticu dajte ovom programu šansu jer ima brojnih potvrda o tome da je ovaj program mnogima rešio probleme sa uklanjanjem starih i instalacijom novih drajvera za grafičku karticu, možda će rešiti i Vaš problem.
-
-
-PREPORUKE ZA UPOTREBU:
+  Ovaj program ponaša se vrlo slično programu "Driver Sweeper" i ima sve dodatne pogodnosti pomenute iznad.
 
 
 
-- Program može biti korišćen u normalnom Windows modu, ali za apsolutnu stabilnost kada koristite DDU Windows-ov Safe Mode je uvek najbolje rešenje.
+  Ako imate nekih problema pri instalaciji starijeg ili nekog novijeg drajvera za NVIDIA/AMD grafičku karticu dajte ovom
+programu šansu jer ima brojnih potvrda o tome da je ovaj program mnogima rešio probleme sa uklanjanjem starih i instalacijom
+novih drajvera za grafičku karticu, možda će rešiti i Vaš problem.
+
+  PREPORUKE ZA UPOTREBU:
 
 
+
+- Program može biti korišćen u normalnom Windows modu, ali za apsolutnu stabilnost kada koristite DDU Windows-ov Safe Mode
+  je uvek najbolje rešenje.
 
 - Želeli bi da dobijemo povratnu informaciju od Vas, javite nam da li je Vaše korišćenje ovog programa bilo uspešno ili nije.
 
-- Pre korišćenja ovog programa poželjno je da napravite Backup ili System Restore (u normalnim okolnostima program DDU je prilično bezbedan).
+- Pre korišćenja ovog programa poželjno je da napravite Backup ili System Restore (u normalnim okolnostima program DDU je
+  prilično bezbedan).
 
 
+- Ako imate ili ste imali problema sa drajverima za NVIDIA/AMD grafičku karticu, a ovaj program Vam je pomogao u rešavanju tih
+  problema u kojima ste bili ili ste trenutno, molimo da podelite Vaše iskustvo sa nama.
 
-- Ako imate ili ste imali problema sa drajverima za NVIDIA/AMD grafičku karticu, a ovaj program Vam je pomogao u rešavanju tih problema u kojima ste bili ili ste trenutno, molimo da podelite Vaše iskustvo sa nama.
-
-Imajte na umu da ni NVIDIA, AMD ili Microsoft ne mogu biti odgovorni za bilo kakvu štetu načinjenu Vama ili Vašem kompjuteru i nisu niukakvoj vezi sa programom DDU ili kreatorima istog.
+  Imajte na umu da ni NVIDIA, AMD ili Microsoft ne mogu biti odgovorni za bilo kakvu štetu načinjenu Vama ili Vašem kompjuteru
+i nisu niukakvoj vezi sa programom DDU ili kreatorima istog.
 
 
 -------------------------------
@@ -38,7 +41,7 @@ Imajte na umu da ni NVIDIA, AMD ili Microsoft ne mogu biti odgovorni za bilo kak
 
 Program kreirao: Wagnard
 
-Suvlasnik: Shady7557
+Suvlasnik: Shady757
 
 
 Tester: Dellon132
@@ -55,4 +58,5 @@ Hvala svima onima koji su svoje kompjutere tokom test-korišćenja ovog programa
 .
 Prevod na srpski jezik (latinica): Crazy_Milojko
 
-*DDU, njegovi kreatori i ostali koji su učestvovali u kreiranju programa nisu niukakvoj vezi sa programom Driver Sweeper ili njegovim kreatorima.
+  *DDU, njegovi kreatori i ostali koji su učestvovali u kreiranju programa nisu niukakvoj vezi sa programom Driver Sweeper ili
+njegovim kreatorima.
