@@ -268,8 +268,6 @@ Public Class Form1
             processstopservice.Start()
             processstopservice.WaitForExit()
 
-            System.Threading.Thread.Sleep(10)
-
             stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
             processstopservice.StartInfo = stopservice
             processstopservice.Start()
@@ -2639,6 +2637,11 @@ Public Class Form1
 
     Private Sub cleannvidiaserviceprocess()
 
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning process/services... *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
+        log("Cleaning Process/Services...")
+
         'STOP / delete / interrogate NVIDIA service
         Dim services() As String
         services = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\services.cfg") '// add each line as String Array.
@@ -2663,8 +2666,6 @@ Public Class Form1
             processstopservice.Start()
             processstopservice.WaitForExit()
 
-            System.Threading.Thread.Sleep(10)
-
             stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
             processstopservice.StartInfo = stopservice
             processstopservice.Start()
@@ -2675,6 +2676,11 @@ Public Class Form1
         'holding files in the NVIDIA folders sometimes.
 
         Dim appproc = Process.GetProcessesByName("Lcore")
+        For i As Integer = 0 To appproc.Length - 1
+            appproc(i).Kill()
+        Next i
+
+        appproc = Process.GetProcessesByName("nvstreamsvc")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
