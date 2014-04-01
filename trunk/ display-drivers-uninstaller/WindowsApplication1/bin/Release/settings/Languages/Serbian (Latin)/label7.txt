@@ -1,1 +1,1 @@
-﻿Odaberi drajver za grafičku karticu :
+﻿Odaberi drajver za graf.karticu:
