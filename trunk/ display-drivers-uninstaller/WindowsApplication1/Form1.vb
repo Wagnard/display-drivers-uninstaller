@@ -5423,13 +5423,35 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Extended Properties", False)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        For Each childs As String In regkey.OpenSubKey(child).GetValueNames()
+                            If Not checkvariables.isnullorwhitespace(childs) Then
+                                If childs.ToLower.Contains("nvcpl.cpl") Then
+                                    Try
+                                        regkey.OpenSubKey(child, True).DeleteValue(childs)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            End If
+                        Next
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
         If IntPtr.Size = 8 Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetValueNames()
                         If checkvariables.isnullorwhitespace(child) = False Then
-                            If regkey.GetValue(child).ToString.ToLower.Contains("NvCpl DesktopContext Class") Then
+                            If regkey.GetValue(child).ToString.ToLower.Contains("nvcpl desktopcontext class") Then
                                 Try
                                     regkey.DeleteValue(child)
                                 Catch ex As Exception
