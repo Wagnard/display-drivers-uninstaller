@@ -56,6 +56,7 @@ Partial Class Form1
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.CheckBox4 = New System.Windows.Forms.CheckBox()
+        Me.VisitDDUHomepageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -178,17 +179,17 @@ Partial Class Form1
         '
         Me.MenuStrip1.Dock = System.Windows.Forms.DockStyle.Right
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
-        Me.MenuStrip1.Location = New System.Drawing.Point(570, 0)
+        Me.MenuStrip1.Location = New System.Drawing.Point(502, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(30, 526)
+        Me.MenuStrip1.Size = New System.Drawing.Size(98, 526)
         Me.MenuStrip1.TabIndex = 14
         Me.MenuStrip1.Text = "MenuStrip1"
         '
         'ToolStripMenuItem1
         '
-        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckForUpdatesToolStripMenuItem, Me.ToSToolStripMenuItem, Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem})
+        Me.ToolStripMenuItem1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckForUpdatesToolStripMenuItem, Me.ToSToolStripMenuItem, Me.VisitDDUHomepageToolStripMenuItem, Me.SVNToolStripMenuItem, Me.VisitGuru3dNVIDIAThreadToolStripMenuItem, Me.VisitGuru3dAMDThreadToolStripMenuItem, Me.VisitGeforceThreadToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(17, 19)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(85, 19)
         Me.ToolStripMenuItem1.Text = "?"
         '
         'CheckForUpdatesToolStripMenuItem
@@ -280,9 +281,8 @@ Partial Class Form1
         Me.Label11.AutoSize = True
         Me.Label11.Location = New System.Drawing.Point(5, 504)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(117, 13)
+        Me.Label11.Size = New System.Drawing.Size(0, 13)
         Me.Label11.TabIndex = 22
-        Me.Label11.Text = "Checking for updates..."
         '
         'Button4
         '
@@ -343,6 +343,12 @@ Partial Class Form1
         Me.CheckBox4.Text = "Remove 3DTV Play"
         Me.CheckBox4.UseVisualStyleBackColor = True
         Me.CheckBox4.Visible = False
+        '
+        'VisitDDUHomepageToolStripMenuItem
+        '
+        Me.VisitDDUHomepageToolStripMenuItem.Name = "VisitDDUHomepageToolStripMenuItem"
+        Me.VisitDDUHomepageToolStripMenuItem.Size = New System.Drawing.Size(219, 22)
+        Me.VisitDDUHomepageToolStripMenuItem.Text = "Visit official DDU Website"
         '
         'Form1
         '
@@ -421,5 +427,6 @@ Partial Class Form1
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents ToSToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CheckBox4 As System.Windows.Forms.CheckBox
+    Friend WithEvents VisitDDUHomepageToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class
