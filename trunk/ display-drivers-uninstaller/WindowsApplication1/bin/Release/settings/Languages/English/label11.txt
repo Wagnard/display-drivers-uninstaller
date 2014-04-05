@@ -1,1 +1,4 @@
 ﻿Checking for updates...
+No Updates found. Program is up to date.
+Updates found! Expect limited support on older versions than the most recent.
+Unable to Fetch updates!

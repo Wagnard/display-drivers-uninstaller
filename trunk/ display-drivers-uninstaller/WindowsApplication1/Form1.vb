@@ -87,6 +87,7 @@ Public Class Form1
     Dim preventclose As Boolean = False
     Dim filePath As String
     Dim combobox As String = Nothing
+    Dim buttontext As String()
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -114,28 +115,43 @@ Public Class Form1
             Me.Invoke(New MethodInvoker(AddressOf AccessUI))
         Else
             If updates = 1 Then
-                Label11.Text = ("No Updates found. Program is up to date.")
+                Try
+                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+                    Label11.Text = ""
+                    Label11.Text = Label11.Text & buttontext("1")
+                Catch ex As Exception
+                    Label11.Text = ("No Updates found. Program is up to date.")
+                End Try
 
             ElseIf updates = 2 Then
 
-                Label11.Text = ("Updates found! Expect limited support on older versions than the most recent.")
+                Try
+                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+                    Label11.Text = ""
+                    Label11.Text = Label11.Text & buttontext("2")
+                Catch ex As Exception
+                    Label11.Text = ("Updates found! Expect limited support on older versions than the most recent.")
+                End Try
 
                 Dim result = MsgBox("Updates are available! Visit forum thread now?", MsgBoxStyle.YesNoCancel)
 
-                If result = MsgBoxResult.Yes And ComboBox1.SelectedIndex = 0 Then
-                    Process.Start("http://forums.guru3d.com/showthread.php?t=379506")
-                ElseIf result = MsgBoxResult.Yes And ComboBox1.SelectedIndex = 1 Then
-                    Process.Start("http://forums.guru3d.com/showthread.php?t=379505")
+                If result = MsgBoxResult.Yes Then
+                    Process.Start("http://www.wagnardmobile.com")
                 ElseIf result = MsgBoxResult.No Then
                     MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them." & _
                            "Do not report bugs from older versions unless they have not been fixed yet.")
                 ElseIf result = MsgBoxResult.Cancel Then
                     MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them." & _
                            "Do not report bugs from older versions unless they have not been fixed yet.")
-
                 End If
             ElseIf updates = 3 Then
-                Label11.Text = "Unable to Fetch updates!"
+                Try
+                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+                    Label11.Text = ""
+                    Label11.Text = Label11.Text & buttontext("3")
+                Catch ex As Exception
+                    Label11.Text = ("Unable to Fetch updates!!")
+                End Try
             End If
         End If
     End Sub
@@ -4596,6 +4612,40 @@ Public Class Form1
         End Try
 
         Try
+            regkey = My.Computer.Registry.Users.OpenSubKey(".DEFAULT\Software", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("nvidia corporation") Then
+                            For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+                                If checkvariables.isnullorwhitespace(child2) = False Then
+                                    If child2.ToLower.Contains("global") Or _
+                                       child2.ToLower.Contains("nvbackend") Or _
+                                       child2.ToLower.Contains("nvidia update core") Or _
+                                        child2.ToLower.Contains("nvcontrolpanel2") Or _
+                                        child2.ToLower.Contains("nvidia control panel") Then
+                                        Try
+                                            regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                        Catch ex As Exception
+                                        End Try
+                                    End If
+                                End If
+                            Next
+                            If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+        Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
@@ -4941,7 +4991,7 @@ Public Class Form1
                             If regkey IsNot Nothing Then
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
-                                        If child.ToLower.Contains("nvidia update core service") Then
+                                        If child.ToLower.Contains("nvidia update") Then
                                             regkey.DeleteSubKeyTree(child)
                                         End If
                                     End If
@@ -5718,6 +5768,13 @@ Public Class Form1
         '------------
         'Check update
         '------------
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+            Label11.Text = ""
+            Label11.Text = Label11.Text & buttontext("0")
+        Catch ex As Exception
+        End Try
+
 
         checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
         'checkthread.Priority = ThreadPriority.Highest
@@ -6346,6 +6403,10 @@ Public Class Form1
         Process.Start("https://code.google.com/p/display-drivers-uninstaller/source/list")
     End Sub
 
+    Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomepageToolStripMenuItem.Click
+        Process.Start("http://www.wagnardmobile.com")
+    End Sub
+
 
     Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
@@ -6387,7 +6448,7 @@ Public Class Form1
         log("Executing ddudr Remove")
 
         Try
-            If DirectCast(e.Argument, String) = "NVIDIA" Then
+            If combobox = "NVIDIA" Then
                 temporarynvidiaspeedup()   'we do this If and until nvidia speed up their installer that is impacting "ddudr remove" of the GPU from device manager.
             End If
         Catch ex As Exception
@@ -6398,7 +6459,7 @@ Public Class Form1
             'Here I remove AMD HD Audio bus (System device)
             '----------------------------------------------
             Try
-                If DirectCast(e.Argument, String) = "AMD" Then
+                If combobox = "AMD" Then
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
                     If regkey IsNot Nothing Then
                         For Each child As String In regkey.GetSubKeyNames()
@@ -6480,7 +6541,7 @@ Public Class Form1
                 card1 = reply.IndexOf("PCI\", card1 + 1)
             End While
 
-            'If DirectCast(e.Argument, String) = "AMD" & enduro Then
+            'If combobox = "AMD" & enduro Then
             '    ' ----------------------------------------------------------------------
             '    ' (Experimental) Removing the Intel card because of AMD Enduro videocard
             '    ' -------------------------------------------------------
@@ -6585,7 +6646,7 @@ Public Class Form1
             Invoke(Sub() TextBox1.ScrollToCaret())
 
             'Here I remove 3dVision USB Adapter.
-            If DirectCast(e.Argument, String) = "NVIDIA" Then
+            If combobox = "NVIDIA" Then
                 'removing 3DVision USB driver
                 checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
                 checkoem.Arguments = "findall =USB"
@@ -6764,7 +6825,7 @@ Public Class Form1
             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
             Invoke(Sub() TextBox1.ScrollToCaret())
 
-            If DirectCast(e.Argument, String) = "AMD" Then
+            If combobox = "AMD" Then
                 cleanamdserviceprocess()
                 cleanamd()
 
@@ -6776,7 +6837,7 @@ Public Class Form1
                 cleanamdfolders()
             End If
 
-            If DirectCast(e.Argument, String) = "NVIDIA" Then
+            If combobox = "NVIDIA" Then
                 cleannvidiaserviceprocess()
                 cleannvidia()
 
@@ -6788,7 +6849,7 @@ Public Class Form1
                 cleannvidiafolders()
             End If
 
-            If DirectCast(e.Argument, String) = "INTEL" Then
+            If combobox = "INTEL" Then
                 ' Cleanintel()
             End If
             cleandriverstore()
@@ -6846,6 +6907,12 @@ Public Class Form1
     End Sub
 
     Private Sub CheckForUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheckForUpdatesToolStripMenuItem.Click
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+            Label11.Text = ""
+            Label11.Text = Label11.Text & buttontext("0")
+        Catch ex As Exception
+        End Try
         checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
         'checkthread.Priority = ThreadPriority.Highest
         checkupdatethread.Start()
@@ -6872,10 +6939,6 @@ Public Class Form1
     Private Sub initlanguage(e As String)
 
         Try
-
-            Dim buttontext() As String
-
-
             toolTip1.AutoPopDelay = 5000
             toolTip1.InitialDelay = 1000
             toolTip1.ReshowDelay = 250
@@ -6924,6 +6987,8 @@ Public Class Form1
                 Button4.Text = Button4.Text & buttontext(i)
             Next
 
+            Label11.Text = ("")
+
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label1.txt") '// add each line as String Array.
             Label1.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
@@ -6967,15 +7032,6 @@ Public Class Form1
                     Label10.Text = Label10.Text & vbNewLine
                 End If
                 Label10.Text = Label10.Text & buttontext(i)
-            Next
-
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label11.txt") '// add each line as String Array.
-            Label11.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    Label11.Text = Label11.Text & vbNewLine
-                End If
-                Label11.Text = Label11.Text & buttontext(i)
             Next
 
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\checkbox1.txt") '// add each line as String Array.
@@ -7115,6 +7171,7 @@ End Class
 
 Public Class checkupdate
     Public Function checkupdates() As Integer
+
         Try
             Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt")
             Dim response2 As System.Net.HttpWebResponse = Nothing
