@@ -1,1 +1,4 @@
 ﻿Buscando actualizaciones...
+No se han encontrado actualizaciones. Su versión es la más reciente.
+¡Actualización encontrada! Tenga presente que el soporte en versiones antiguas es más limitado que en la más reciente.
+¡Error al intentar obtener actualización!
