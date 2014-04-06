@@ -1,1 +1,4 @@
 ﻿Provera da li postoji novija verzija programa...
+Ne postoji novija verzija programa. Koristite trenutno najnoviju verziju.
+Pronađena novija verzija programa! Starije verzije imaju ograničenu podršku uodnosu na novije.
+Neuspešan prelazak na novu verziju programa!
