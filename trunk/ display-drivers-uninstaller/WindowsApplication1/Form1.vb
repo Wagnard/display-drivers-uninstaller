@@ -199,7 +199,7 @@ Public Class Form1
             Dim inf As Integer = reply.IndexOf(".inf", oem)
             If classs > -1 Then 'I saw that sometimes, there could be no class on some oems (winxp)
                 If reply.Substring(position, classs - position).Contains(provider) Or _
-                    reply.Substring(position, classs - position).Contains("AMD") Then
+                    reply.Substring(position, classs - position).ToLower.Contains("amd") Then
                     Dim part As String = reply.Substring(oem, inf - oem)
                     log(part + " Found")
                     Dim deloem As New Diagnostics.ProcessStartInfo
@@ -5670,6 +5670,7 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        CheckForIllegalCrossThreadCalls = True
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
         End If
@@ -6411,7 +6412,6 @@ Public Class Form1
     Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
-        CheckForIllegalCrossThreadCalls = True
 
         preventclose = True
         Invoke(Sub() Button1.Enabled = False)
@@ -6588,6 +6588,9 @@ Public Class Form1
             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
             Invoke(Sub() TextBox1.ScrollToCaret())
             log("ddudr Remove Display Complete")
+
+            cleandriverstore()
+
             'Next
             'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
             checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
@@ -6644,6 +6647,8 @@ Public Class Form1
             Invoke(Sub() TextBox1.Text = TextBox1.Text + "HD audio adapters Removed !" + vbNewLine)
             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
             Invoke(Sub() TextBox1.ScrollToCaret())
+
+            cleandriverstore()
 
             'Here I remove 3dVision USB Adapter.
             If combobox = "NVIDIA" Then
