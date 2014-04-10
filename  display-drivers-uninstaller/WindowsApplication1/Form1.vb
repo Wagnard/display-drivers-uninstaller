@@ -89,12 +89,13 @@ Public Class Form1
     Dim combobox As String = Nothing
     Dim buttontext As String()
     Dim closeapp As String = False
+    Dim ddudrfolder As String
 
     Private Sub Checkupdates2()
         AccessUI()
     End Sub
     Private Sub regfullfordelete(ByVal key As String)
-        removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
+        removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
         removehdmidriver.Arguments = _
 "-on " & Chr(34) & key & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
         removehdmidriver.UseShellExecute = False
@@ -174,7 +175,7 @@ Public Class Form1
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Executing Driver Store cleanUP(Find OEM)...")
         'Check the driver from the driver store  ( oemxx.inf)
-        checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+        checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
         checkoem.Arguments = "dp_enum"
         checkoem.UseShellExecute = False
         checkoem.CreateNoWindow = True
@@ -207,7 +208,7 @@ Public Class Form1
                     Dim part As String = reply.Substring(oem, inf - oem)
                     log(part + " Found")
                     Dim deloem As New Diagnostics.ProcessStartInfo
-                    deloem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                    deloem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                     deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
                     Try
                         For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
@@ -1431,7 +1432,7 @@ Public Class Form1
             If winxp = False Then
                 If win8higher Then
                     'setting permission to registry
-                    removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
+                    removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
                     removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
                     removehdmidriver.UseShellExecute = False
@@ -1540,7 +1541,7 @@ Public Class Form1
                     '--------------------------------
 
                     removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & Label3.Text & "\pnpldf.bkp"
+"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & ddudrfolder & "\pnpldf.bkp"
                     prochdmi.StartInfo = removehdmidriver
                     prochdmi.Start()
                     prochdmi.WaitForExit()
@@ -1552,7 +1553,7 @@ Public Class Form1
 
                 Else   'Older windows  (windows vista and 7 run here)
                     'setting permission to registry
-                    removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
+                    removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
                     removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
                     removehdmidriver.UseShellExecute = False
@@ -1587,7 +1588,7 @@ Public Class Form1
 
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                     removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & Label3.Text & "\pnpldf.bkp"
+"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & ddudrfolder & "\pnpldf.bkp"
 
                     prochdmi.Start()
                     prochdmi.WaitForExit()
@@ -4138,7 +4139,7 @@ Public Class Form1
             If winxp = False Then
                 If win8higher Then
                     'setting permission to registry
-                    removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
+                    removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
                     removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
                     removehdmidriver.UseShellExecute = False
@@ -4222,7 +4223,7 @@ Public Class Form1
                     '-----------------------------------------------
 
                     removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & Label3.Text & "\pnpldf.bkp"
+"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & ddudrfolder & "\pnpldf.bkp"
                     prochdmi.StartInfo = removehdmidriver
                     prochdmi.Start()
                     prochdmi.WaitForExit()
@@ -4234,7 +4235,7 @@ Public Class Form1
 
                 Else   'Older windows  (windows vista and 7 run here)
                     'setting permission to registry
-                    removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
+                    removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
                     removehdmidriver.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
                     removehdmidriver.UseShellExecute = False
@@ -4267,7 +4268,7 @@ Public Class Form1
 
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                     removehdmidriver.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & Label3.Text & "\pnpldf.bkp"
+"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & ddudrfolder & "\pnpldf.bkp"
                     prochdmi.Start()
                     prochdmi.WaitForExit()
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
@@ -5600,7 +5601,7 @@ Public Class Form1
                                             'Setting permission to the key region
                                             '-------------------------------------
 
-                                            removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
+                                            removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
                                             removehdmidriver.Arguments = _
 "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & UserAc & Chr(34)
                                             removehdmidriver.UseShellExecute = False
@@ -5631,7 +5632,7 @@ Public Class Form1
                                             '---------------------------------
                                             'Setting permission back to normal 
                                             '---------------------------------
-                                            removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\setacl.exe"
+                                            removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
                                             removehdmidriver.Arguments = _
 "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
                                             removehdmidriver.UseShellExecute = False
@@ -5661,7 +5662,7 @@ Public Class Form1
 
         'Scan for new devices...
         Dim scan As New ProcessStartInfo
-        scan.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+        scan.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
         scan.Arguments = "rescan"
         scan.UseShellExecute = False
         scan.CreateNoWindow = True
@@ -5727,6 +5728,7 @@ Public Class Form1
         If Not isElevated Then
             MsgBox("You are not using DDU with Administrator privileges. The application will now exit.", MsgBoxStyle.Critical)
             Me.Close()
+            Exit Sub
         End If
 
         '----------------
@@ -5910,7 +5912,7 @@ Public Class Form1
             Label3.Text = "x86"
         End If
         Label3.Refresh()
-
+        ddudrfolder = Label3.Text
 
         If arch = True Then
             Try
@@ -5995,10 +5997,10 @@ Public Class Form1
         TextBox1.Text = TextBox1.Text + "DDU Version: " + Label6.Text.Replace("V", "") + vbNewLine
         log("DDU Version: " + Label6.Text.Replace("V", ""))
         log("OS: " + Label2.Text)
-        log("Architecture: " & Label3.Text)
+        log("Architecture: " & ddudrfolder)
 
         'Videocard type indentification
-        checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+        checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
         checkoem.Arguments = "findall =display"
         checkoem.UseShellExecute = False
         checkoem.CreateNoWindow = True
@@ -6171,6 +6173,7 @@ Public Class Form1
                     Dim resultmsgbox As Integer = MessageBox.Show("You are not in safe mode. It is highly recommended that you reboot into safe mode to avoid possible issues., Reboot into Safe Mode now?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                     If resultmsgbox = DialogResult.Cancel Then
                         Me.Close()
+                        Exit Sub
                     ElseIf resultmsgbox = DialogResult.No Then
                         'do nothing and continue without safe mode
                     ElseIf resultmsgbox = DialogResult.Yes Then
@@ -6459,49 +6462,49 @@ Public Class Form1
     Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
-
-        preventclose = True
-        Invoke(Sub() Button1.Enabled = False)
-        Invoke(Sub() Button2.Enabled = False)
-        Invoke(Sub() Button3.Enabled = False)
-        Invoke(Sub() ComboBox1.Enabled = False)
-        Invoke(Sub() CheckBox2.Enabled = False)
-        Invoke(Sub() CheckBox1.Enabled = False)
-        Invoke(Sub() CheckBox3.Enabled = False)
-        Invoke(Sub() CheckBox4.Enabled = False)
-        If combobox = "AMD" Then
-            vendidexpected = "VEN_1002"
-            provider = "Provider: Advanced Micro Devices"
-        End If
-
-        If combobox = "NVIDIA" Then
-            vendidexpected = "VEN_10DE"
-            provider = "Provider: NVIDIA"
-        End If
-
-        If combobox = "INTEL" Then
-            vendidexpected = "VEN_8086"
-            provider = "Provider: Intel"
-        End If
-
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "*****  Uninstalling " & ComboBox1.Text & " driver... *****" + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
-        Invoke(Sub() log("Uninstalling " + combobox + " driver ..."))
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing ddudr Remove , Please wait(can take a few minutes *****) " + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
-
-        log("Executing ddudr Remove")
-
         Try
-            If combobox = "NVIDIA" Then
-                temporarynvidiaspeedup()   'we do this If and until nvidia speed up their installer that is impacting "ddudr remove" of the GPU from device manager.
+            preventclose = True
+            Invoke(Sub() Button1.Enabled = False)
+            Invoke(Sub() Button2.Enabled = False)
+            Invoke(Sub() Button3.Enabled = False)
+            Invoke(Sub() ComboBox1.Enabled = False)
+            Invoke(Sub() CheckBox2.Enabled = False)
+            Invoke(Sub() CheckBox1.Enabled = False)
+            Invoke(Sub() CheckBox3.Enabled = False)
+            Invoke(Sub() CheckBox4.Enabled = False)
+            If combobox = "AMD" Then
+                vendidexpected = "VEN_1002"
+                provider = "Provider: Advanced Micro Devices"
             End If
-        Catch ex As Exception
-        End Try
 
-        Try
+            If combobox = "NVIDIA" Then
+                vendidexpected = "VEN_10DE"
+                provider = "Provider: NVIDIA"
+            End If
+
+            If combobox = "INTEL" Then
+                vendidexpected = "VEN_8086"
+                provider = "Provider: Intel"
+            End If
+
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "*****  Uninstalling " & ComboBox1.Text & " driver... *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
+            Invoke(Sub() log("Uninstalling " + combobox + " driver ..."))
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing ddudr Remove , Please wait(can take a few minutes *****) " + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
+
+            log("Executing ddudr Remove")
+
+            Try
+                If combobox = "NVIDIA" Then
+                    temporarynvidiaspeedup()   'we do this If and until nvidia speed up their installer that is impacting "ddudr remove" of the GPU from device manager.
+                End If
+            Catch ex As Exception
+            End Try
+
+
             '----------------------------------------------
             'Here I remove AMD HD Audio bus (System device)
             '----------------------------------------------
@@ -6519,7 +6522,7 @@ Public Class Form1
                                                 For i As Integer = 0 To array.Length - 1
                                                     If array(i).ToLower.Contains("amdkmafd") Then
                                                         log("Found an AMD audio controller bus !")
-                                                        removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                                                        removedisplaydriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                                                         removedisplaydriver.Arguments = "remove =system " & Chr(34) & "*" & child & Chr(34)
                                                         removedisplaydriver.UseShellExecute = False
                                                         removedisplaydriver.CreateNoWindow = True
@@ -6550,7 +6553,7 @@ Public Class Form1
             ' Removing the videocard
             ' ----------------------
 
-            checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+            checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
             checkoem.Arguments = "findall =display"
             checkoem.UseShellExecute = False
             checkoem.CreateNoWindow = True
@@ -6570,7 +6573,7 @@ Public Class Form1
                 position2 = reply.IndexOf(":", card1)
                 vendid = reply.Substring(card1, position2 - card1).Trim
                 If vendid.Contains(vendidexpected) Then
-                    removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                    removedisplaydriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                     removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
                     removedisplaydriver.UseShellExecute = False
                     removedisplaydriver.CreateNoWindow = True
@@ -6593,7 +6596,7 @@ Public Class Form1
             '    ' (Experimental) Removing the Intel card because of AMD Enduro videocard
             '    ' -------------------------------------------------------
 
-            '    checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+            '    checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
             '    checkoem.Arguments = "findall =display"
             '    checkoem.UseShellExecute = False
             '    checkoem.CreateNoWindow = True
@@ -6613,7 +6616,7 @@ Public Class Form1
             '        position2 = reply.IndexOf(":", card1)
             '        vendid = reply.Substring(card1, position2 - card1).Trim
             '        If vendid.Contains("VEN_8086") Then
-            '            removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+            '            removedisplaydriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
             '            removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
             '            removedisplaydriver.UseShellExecute = False
             '            removedisplaydriver.CreateNoWindow = True
@@ -6640,7 +6643,7 @@ Public Class Form1
 
             'Next
             'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
-            checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+            checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
             checkoem.Arguments = "findall =media"
             checkoem.UseShellExecute = False
             checkoem.CreateNoWindow = True
@@ -6666,7 +6669,7 @@ Public Class Form1
                 vendid = reply.Substring(card1, position2 - card1).Trim
                 If vendid.Contains(vendidexpected) Then
 
-                    removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                    removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                     removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
                     removehdmidriver.UseShellExecute = False
                     removehdmidriver.CreateNoWindow = True
@@ -6680,7 +6683,7 @@ Public Class Form1
                     Catch ex As Exception
                         preventclose = False
                         log(ex.Message)
-                        MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                        MsgBox("Cannot find ddudr in " & ddudrfolder & " folder", MsgBoxStyle.Critical)
                         Button1.Enabled = True
                         Button2.Enabled = True
                         Button3.Enabled = True
@@ -6700,7 +6703,7 @@ Public Class Form1
             'Here I remove 3dVision USB Adapter.
             If combobox = "NVIDIA" Then
                 'removing 3DVision USB driver
-                checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                 checkoem.Arguments = "findall =USB"
                 checkoem.UseShellExecute = False
                 checkoem.CreateNoWindow = True
@@ -6735,7 +6738,7 @@ Public Class Form1
                         vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
                         log("-" & vendid & "- 3D vision usb controler found")
 
-                        removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                        removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                         removehdmidriver.Arguments = "remove =USB " & Chr(34) & "@" & vendid & Chr(34)
                         removehdmidriver.UseShellExecute = False
                         removehdmidriver.CreateNoWindow = True
@@ -6749,7 +6752,7 @@ Public Class Form1
                         Catch ex As Exception
                             preventclose = False
                             log(ex.Message)
-                            MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                            MsgBox("Cannot find ddudr in " & ddudrfolder & " folder", MsgBoxStyle.Critical)
                             Button1.Enabled = True
                             Button2.Enabled = True
                             Button3.Enabled = True
@@ -6772,7 +6775,7 @@ Public Class Form1
                 Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
                 Invoke(Sub() TextBox1.ScrollToCaret())
                 log("Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!")
-                removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                removedisplaydriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                 removedisplaydriver.Arguments = "remove =media " & Chr(34) & "@ROOT\UNNAMED_DEVICE\0000" & Chr(34)
                 removedisplaydriver.UseShellExecute = False
                 removedisplaydriver.CreateNoWindow = True
@@ -6786,7 +6789,7 @@ Public Class Form1
                 Catch ex As Exception
                     preventclose = False
                     log(ex.Message)
-                    MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                    MsgBox("Cannot find ddudr in " & ddudrfolder & " folder", MsgBoxStyle.Critical)
                     Button1.Enabled = True
                     Button2.Enabled = True
                     Button3.Enabled = True
@@ -6800,7 +6803,7 @@ Public Class Form1
 
             log("ddudr Remove Monitor started")
 
-            checkoem.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+            checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
             checkoem.Arguments = "findall =monitor"
             checkoem.UseShellExecute = False
             checkoem.CreateNoWindow = True
@@ -6825,7 +6828,7 @@ Public Class Form1
 
                 log("-" & vendid & "- Monitor id found")
                 'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                removedisplaydriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                 removedisplaydriver.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
                 removedisplaydriver.UseShellExecute = False
                 removedisplaydriver.CreateNoWindow = True
@@ -6839,7 +6842,7 @@ Public Class Form1
                 Catch ex As Exception
                     preventclose = False
                     log(ex.Message)
-                    MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                    MsgBox("Cannot find ddudr in " & ddudrfolder & " folder", MsgBoxStyle.Critical)
                     Button1.Enabled = True
                     Button2.Enabled = True
                     Button3.Enabled = True
@@ -6905,7 +6908,7 @@ Public Class Form1
             preventclose = False
             Try
                 Dim scan As New ProcessStartInfo
-                scan.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                scan.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                 scan.Arguments = "rescan"
                 scan.UseShellExecute = False
                 scan.CreateNoWindow = True
