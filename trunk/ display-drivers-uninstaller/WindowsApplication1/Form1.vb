@@ -208,8 +208,7 @@ Public Class Form1
                     Try
                         For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
                             If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
-                                child.ToLower.Trim.Replace(" ", "").Contains("class=media") Or _
-                                child.ToLower.Trim.Replace(" ", "").Contains("class=usb") Then
+                                child.ToLower.Trim.Replace(" ", "").Contains("class=media") Then
                                 deloem.Arguments = "-f dp_delete " + Chr(34) + part + ".inf" + Chr(34)
                             End If
                         Next
@@ -381,6 +380,7 @@ Public Class Form1
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
                 log(ex.Message)
+                TestDelete(filePath)
             End Try
 
         End If
@@ -474,6 +474,7 @@ Public Class Form1
                             (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(child)
                         End Try
                     End If
                 End If
@@ -485,6 +486,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -503,6 +505,7 @@ Public Class Form1
                             (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(child)
                         End Try
                     End If
                 End If
@@ -514,6 +517,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -532,6 +536,7 @@ Public Class Form1
                             (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(child)
                         End Try
                     End If
                 End If
@@ -543,6 +548,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -559,6 +565,7 @@ Public Class Form1
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
                 log(ex.Message)
+                TestDelete(filePath)
             End Try
 
             Try
@@ -573,6 +580,7 @@ Public Class Form1
                                 (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                             Catch ex As Exception
                                 log(ex.Message)
+                                TestDelete(child)
                             End Try
                         End If
                     End If
@@ -586,6 +594,7 @@ Public Class Form1
                     (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies\")
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(filePath)
                         End Try
                     End If
                 Catch ex As Exception
@@ -610,6 +619,7 @@ Public Class Form1
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
             Catch ex As Exception
                 log(ex.Message + "AMD APP")
+                TestDelete(filePath)
             End Try
 
             filePath = Environment.GetFolderPath _
@@ -631,6 +641,7 @@ Public Class Form1
                                 (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                             Catch ex As Exception
                                 log(ex.Message)
+                                TestDelete(child)
                             End Try
                         End If
                     End If
@@ -645,6 +656,7 @@ Public Class Form1
                     (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies\")
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(filePath)
                         End Try
                     End If
                 Catch ex As Exception
@@ -658,6 +670,7 @@ Public Class Form1
             My.Computer.FileSystem.DeleteDirectory _
                 (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
         Catch ex As Exception
+            TestDelete(filePath)
         End Try
 
         filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
@@ -665,6 +678,7 @@ Public Class Form1
             My.Computer.FileSystem.DeleteDirectory _
                 (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
         Catch ex As Exception
+            TestDelete(filePath)
         End Try
 
 
@@ -677,6 +691,7 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(child)
                         End Try
                     End If
                 End If
@@ -688,6 +703,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -706,6 +722,7 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(child)
                         End Try
                     End If
                 End If
@@ -717,6 +734,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -735,6 +753,7 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(child)
                         End Try
                     End If
                 End If
@@ -746,6 +765,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -2776,6 +2796,7 @@ Public Class Form1
             Catch ex As Exception
 
                 log(ex.Message)
+                TestDelete(filePath)
             End Try
 
         End If
@@ -2832,6 +2853,7 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(child)
                         End Try
                     End If
                 End If
@@ -2843,6 +2865,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -2862,6 +2885,7 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(child)
                         End Try
                     End If
                 End If
@@ -2873,6 +2897,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -2923,6 +2948,7 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(child)
                         End Try
                     End If
                 End If
@@ -2934,6 +2960,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -2955,6 +2982,7 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(child)
                         End Try
                     End If
                 End If
@@ -2966,6 +2994,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -3022,6 +3051,7 @@ Public Class Form1
                                                 (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                             Catch ex As Exception
                                                 log(ex.Message)
+                                                TestDelete(child2)
                                             End Try
                                         Else
                                             If child2.ToLower.Contains("physx") Then
@@ -3032,6 +3062,7 @@ Public Class Form1
                                                     (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                                 Catch ex As Exception
                                                     log(ex.Message)
+                                                    TestDelete(child2)
                                                 End Try
                                             End If
                                         End If
@@ -3045,6 +3076,7 @@ Public Class Form1
                                             (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                     Catch ex As Exception
                                         log(ex.Message)
+                                        TestDelete(child)
                                     End Try
                                 End If
                             Catch ex As Exception
@@ -3056,6 +3088,7 @@ Public Class Form1
                                 (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                             Catch ex As Exception
                                 log(ex.Message)
+                                TestDelete(child)
                             End Try
                         Else
                             If child.ToLower.Contains("physx") Or child.ToLower.Contains("installer2") Then
@@ -3066,6 +3099,7 @@ Public Class Form1
                                     (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                 Catch ex As Exception
                                     log(ex.Message)
+                                    TestDelete(child)
                                 End Try
                             End If
                         End If
@@ -3079,6 +3113,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -3122,6 +3157,7 @@ Public Class Form1
                                     (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                 Catch ex As Exception
                                     log(ex.Message)
+                                    TestDelete(child)
                                 End Try
                             Else
                                 If child.ToLower.Contains("physx") Then
@@ -3132,6 +3168,7 @@ Public Class Form1
                                         (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                     Catch ex As Exception
                                         log(ex.Message)
+                                        TestDelete(child)
                                     End Try
                                 End If
                             End If
@@ -3145,6 +3182,7 @@ Public Class Form1
                                 (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(filePath)
                         End Try
                     End If
                 Catch ex As Exception
@@ -5781,7 +5819,7 @@ Public Class Form1
         'checkthread.Priority = ThreadPriority.Highest
         checkupdatethread.Start()
 
-        MsgBox("If you're worried, please make a backup/system restore point before using DDU. We take no responsibilities if something goes wrong. (Please read the terms of service.)", MsgBoxStyle.Information)
+        MsgBox("Display Driver Uninstaller (DDU) work a lot and deep withing the registry. PLEASE MAKE A BACKUP OR A SYSTEM RESTORE POINT BEFORE USAGE! You have been warned.", MsgBoxStyle.Information)
 
         '----------------------
         'check computer/os info
@@ -6720,7 +6758,7 @@ Public Class Form1
                 'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
 
                 removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
-                removehdmidriver.Arguments = "findall =media " & Chr(34) & "@*ROOT\*" & Chr(34)
+                removehdmidriver.Arguments = "findall =media " & Chr(34) & "*USB\VID_0955&PID_9000*" & Chr(34)
                 removehdmidriver.UseShellExecute = False
                 removehdmidriver.CreateNoWindow = True
                 removehdmidriver.RedirectStandardOutput = True
@@ -6730,7 +6768,7 @@ Public Class Form1
                 reply = proc2.StandardOutput.ReadToEnd
                 proc2.WaitForExit()
                 Try
-                    card1 = reply.IndexOf("ROOT\")
+                    card1 = reply.IndexOf("ROOT\UNNAMED")
                 Catch ex As Exception
 
                 End Try
@@ -6742,7 +6780,7 @@ Public Class Form1
 
                         'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
                         removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
-                        removedisplaydriver.Arguments = "remove =media " & Chr(34) & "@" & vendid & Chr(34)
+                        removedisplaydriver.Arguments = "remove =media " & Chr(34) & "*USB\VID_0955&PID_9000*" & Chr(34)
                         removedisplaydriver.UseShellExecute = False
                         removedisplaydriver.CreateNoWindow = True
                         removedisplaydriver.RedirectStandardOutput = True
@@ -6762,7 +6800,7 @@ Public Class Form1
                             Exit Sub
                         End Try
                     End If
-                    card1 = reply.IndexOf("ROOT\", card1 + 1)
+                    card1 = reply.IndexOf("ROOT\UNNAMED", card1 + 1)
                 End While
                 Invoke(Sub() TextBox1.Text = TextBox1.Text + "NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removed !" + vbNewLine)
                 Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
@@ -7127,7 +7165,7 @@ Public Class Form1
                                             My.Computer.FileSystem.DeleteDirectory _
                                             (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                         Catch ex As Exception
-                                            log(ex.Message)
+                                            TestDelete(child2)
                                         End Try
                                     Else
                                         If child2.ToLower.Contains("physx") Then
@@ -7138,6 +7176,7 @@ Public Class Form1
                                                 (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                             Catch ex As Exception
                                                 log(ex.Message)
+                                                TestDelete(child2)
                                             End Try
                                         End If
                                     End If
@@ -7151,6 +7190,7 @@ Public Class Form1
                                         (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                 Catch ex As Exception
                                     log(ex.Message)
+                                    TestDelete(child)
                                 End Try
                             End If
                         Catch ex As Exception
