@@ -88,6 +88,7 @@ Public Class Form1
     Dim filePath As String
     Dim combobox As String = Nothing
     Dim buttontext As String()
+    Dim closeapp As String = False
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -137,6 +138,9 @@ Public Class Form1
 
                 If result = MsgBoxResult.Yes Then
                     Process.Start("http://www.wagnardmobile.com")
+                    closeapp = True
+                    Me.Close()
+                    Exit Sub
                 ElseIf result = MsgBoxResult.No Then
                     MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them." & _
                            "Do not report bugs from older versions unless they have not been fixed yet.")
@@ -199,7 +203,7 @@ Public Class Form1
             Dim inf As Integer = reply.IndexOf(".inf", oem)
             If classs > -1 Then 'I saw that sometimes, there could be no class on some oems (winxp)
                 If reply.Substring(position, classs - position).Contains(provider) Or _
-                    reply.Substring(position, classs - position).ToLower.Contains("amd") Then
+                    reply.Substring(position, classs - position).ToLower.Contains("amd ") Then
                     Dim part As String = reply.Substring(oem, inf - oem)
                     log(part + " Found")
                     Dim deloem As New Diagnostics.ProcessStartInfo
@@ -228,14 +232,14 @@ Public Class Form1
                     log("Executing Driver Store CleanUP(delete OEM)...")
                     proc3.StartInfo = deloem
                     proc3.Start()
-                    Dim Reply2 As String = proc3.StandardOutput.ReadToEnd
+                    reply2 = proc3.StandardOutput.ReadToEnd
                     proc3.WaitForExit()
 
 
-                    Invoke(Sub() TextBox1.Text = TextBox1.Text + Reply2 + vbNewLine)
+                    Invoke(Sub() TextBox1.Text = TextBox1.Text + reply2 + vbNewLine)
                     Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
                     Invoke(Sub() TextBox1.ScrollToCaret())
-                    log(Reply2)
+                    log(reply2)
 
                 End If
             End If
@@ -5810,14 +5814,12 @@ Public Class Form1
         Try
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
             Label11.Text = ""
-            Label11.Text = Label11.Text & buttontext("0")
+            Label11.Text = Label11.Text & buttontext(0)
         Catch ex As Exception
         End Try
 
 
-        checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
-        'checkthread.Priority = ThreadPriority.Highest
-        checkupdatethread.Start()
+
 
         MsgBox("Display Driver Uninstaller (DDU) work a lot and deep withing the registry. PLEASE MAKE A BACKUP OR A SYSTEM RESTORE POINT BEFORE USAGE! You have been warned.", MsgBoxStyle.Information)
 
@@ -6119,6 +6121,13 @@ Public Class Form1
         End If
 
 
+        'checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
+        ''checkthread.Priority = ThreadPriority.Highest
+        'checkupdatethread.Start()
+        Checkupdates2()
+        If closeapp Then
+            Exit Sub
+        End If
         'This code checks to see which mode Windows has booted up in.
         Select Case System.Windows.Forms.SystemInformation.BootMode
             Case BootMode.FailSafe
@@ -6752,60 +6761,39 @@ Public Class Form1
                     card1 = reply.IndexOf("USB\", card1 + 1)
 
                 End While
+
                 Invoke(Sub() TextBox1.Text = TextBox1.Text + "3D Vision USB Adapter Removed from Device Manager." + vbNewLine)
                 Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
                 Invoke(Sub() TextBox1.ScrollToCaret())
+
+
                 'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
-
-                removehdmidriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
-                removehdmidriver.Arguments = "findall =media " & Chr(34) & "*USB\VID_0955&PID_9000*" & Chr(34)
-                removehdmidriver.UseShellExecute = False
-                removehdmidriver.CreateNoWindow = True
-                removehdmidriver.RedirectStandardOutput = True
-
-                proc2.StartInfo = removehdmidriver
-                proc2.Start()
-                reply = proc2.StandardOutput.ReadToEnd
-                proc2.WaitForExit()
-                Try
-                    card1 = reply.IndexOf("ROOT\UNNAMED")
-                Catch ex As Exception
-
-                End Try
-                While card1 > -1
-
-                    position2 = reply.IndexOf(":", card1)
-                    vendid = reply.Substring(card1, position2 - card1).Trim
-                    If reply.Substring(position2, reply.Length - position2).Contains("NVIDIA Virtual") Then
-
-                        'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                        removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
-                        removedisplaydriver.Arguments = "remove =media " & Chr(34) & "*USB\VID_0955&PID_9000*" & Chr(34)
-                        removedisplaydriver.UseShellExecute = False
-                        removedisplaydriver.CreateNoWindow = True
-                        removedisplaydriver.RedirectStandardOutput = True
-                        proc.StartInfo = removedisplaydriver
-                        Try
-                            proc.Start()
-                            reply2 = proc.StandardOutput.ReadToEnd
-                            proc.WaitForExit()
-                            log(reply2)
-                        Catch ex As Exception
-                            preventclose = False
-                            log(ex.Message)
-                            MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
-                            Button1.Enabled = True
-                            Button2.Enabled = True
-                            Button3.Enabled = True
-                            Exit Sub
-                        End Try
-                    End If
-                    card1 = reply.IndexOf("ROOT\UNNAMED", card1 + 1)
-                End While
-                Invoke(Sub() TextBox1.Text = TextBox1.Text + "NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removed !" + vbNewLine)
+                Invoke(Sub() TextBox1.Text = TextBox1.Text + "Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!" + vbNewLine)
                 Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
                 Invoke(Sub() TextBox1.ScrollToCaret())
+                log("Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!")
+                removedisplaydriver.FileName = Application.StartupPath & "\" & Label3.Text & "\ddudr.exe"
+                removedisplaydriver.Arguments = "remove =media " & Chr(34) & "@ROOT\UNNAMED_DEVICE\0000" & Chr(34)
+                removedisplaydriver.UseShellExecute = False
+                removedisplaydriver.CreateNoWindow = True
+                removedisplaydriver.RedirectStandardOutput = True
+                proc.StartInfo = removedisplaydriver
+                Try
+                    proc.Start()
+                    reply2 = proc.StandardOutput.ReadToEnd
+                    proc.WaitForExit()
+                    log(reply2)
+                Catch ex As Exception
+                    preventclose = False
+                    log(ex.Message)
+                    MsgBox("Cannot find ddudr in " & Label3.Text & " folder", MsgBoxStyle.Critical)
+                    Button1.Enabled = True
+                    Button2.Enabled = True
+                    Button3.Enabled = True
+                    Exit Sub
+                End Try
             End If
+
 
             log("ddudr Remove Audio/HDMI Complete")
             'removing monitor and hidden monitor
