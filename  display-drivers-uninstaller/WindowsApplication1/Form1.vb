@@ -25,6 +25,7 @@ Imports System.Runtime.InteropServices
 
 
 
+
 Public Class Form1
 
     Dim checkvariables As New checkvariables
@@ -90,6 +91,7 @@ Public Class Form1
     Dim buttontext As String()
     Dim closeapp As String = False
     Dim ddudrfolder As String
+    Dim TextLines() As String
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -143,11 +145,9 @@ Public Class Form1
                     Me.Close()
                     Exit Sub
                 ElseIf result = MsgBoxResult.No Then
-                    MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them." & _
-                           "Do not report bugs from older versions unless they have not been fixed yet.")
+                    MsgBox("Expect limited support on older versions than the most recent. Please check newer version before reporting bugs.")
                 ElseIf result = MsgBoxResult.Cancel Then
-                    MsgBox("Note: Most bugs you find have probably already been fixed in the most recent version, if not please report them." & _
-                           "Do not report bugs from older versions unless they have not been fixed yet.")
+                    MsgBox("Expect limited support on older versions than the most recent. Please check newer version before reporting bugs.")
                 End If
             ElseIf updates = 3 Then
                 Try
@@ -380,6 +380,7 @@ Public Class Form1
         If CheckBox1.Checked = True Then
             filePath = "C:\AMD"
 
+
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -387,9 +388,7 @@ Public Class Form1
                 log(ex.Message)
                 TestDelete(filePath)
             End Try
-
         End If
-
 
         'Delete driver files
         'delete OpenCL
@@ -5816,14 +5815,14 @@ Public Class Form1
         Try
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
             Label11.Text = ""
-            Label11.Text = Label11.Text & buttontext(0)
+            Label11.Text = Label11.Text & buttontext("0")
         Catch ex As Exception
         End Try
 
 
 
 
-        MsgBox("Display Driver Uninstaller (DDU) work a lot and deep withing the registry. PLEASE MAKE A BACKUP OR A SYSTEM RESTORE POINT BEFORE USAGE! You have been warned.", MsgBoxStyle.Information)
+        MsgBox("Display Driver Uninstaller (DDU) is modifying your registry a lot. PLEASE MAKE A BACKUP OR A SYSTEM RESTORE POINT BEFORE USAGE! You have been warned.", MsgBoxStyle.Information)
 
         '----------------------
         'check computer/os info
@@ -6016,21 +6015,22 @@ Public Class Form1
         reply = proc2.StandardOutput.ReadToEnd
         proc2.WaitForExit()
         log(reply)
-        Dim TextLines() As String = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
+        TextLines = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
         For i As Integer = 0 To TextLines.Length - 2  'reason of -2 instead of -1 , we dont want the last line of ddudr.
             TextBox1.Text = TextBox1.Text + "Detected GPU : " + TextLines(i).Substring(TextLines(i).IndexOf(":") + 1) + vbNewLine
         Next
 
         'Trying to autoselect the right GPU cleanup option. 
+        If reply.Contains("VEN_8086") Then
+            ComboBox1.SelectedIndex = 2
+        End If
         If reply.Contains("VEN_10DE") Then
             ComboBox1.SelectedIndex = 0
         End If
         If reply.Contains("VEN_1002") Then
             ComboBox1.SelectedIndex = 1
         End If
-        If reply.Contains("VEN_8086") Then
-            ComboBox1.SelectedIndex = 2
-        End If
+
 
         ' -------------------------------------
         ' Trying to get current driver version
@@ -6093,7 +6093,7 @@ Public Class Form1
         End Try
 
         If enduro Then
-            MsgBox("DDU detected that you have an AMD switching Laptop (Enduro or equivalent), DDU is not yet compatible with Enduro systems, Use at your own risk.", MsgBoxStyle.Critical)
+            MsgBox("DDU detected that you have an AMD switching Laptop (Enduro or equivalent), DDU is not yet fully compatible / tested with Enduro systems, Use at your own risk.", MsgBoxStyle.Critical)
         End If
 
         ' Setting the driversearching parameter for win 7+
@@ -6217,6 +6217,10 @@ Public Class Form1
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Deleting some specials folders, it could take some times...")
         'ensure that this folder can be accessed with current user ac.
+        If Not Directory.Exists(folder) Then
+            log("Folder " + folder + " doesn't exist.")
+            Exit Sub
+        End If
         Dim FolderInfo As IO.DirectoryInfo = New IO.DirectoryInfo(folder)
         Dim FolderAcl As New DirectorySecurity
         FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAc, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
@@ -6261,7 +6265,6 @@ Public Class Form1
 
         'Finally, clean all of the files directly in the root directory
         CleanAllFilesInDirectory(di)
-
     End Sub
 
 
