@@ -1,2 +1,2 @@
-﻿Clean and DO NOT restart.
-(May cause issues like blackscreen)
+﻿לנקות ולא לכבות את המחשב
+(יוכל ליהיות בעיות כמו מסך שחור)
