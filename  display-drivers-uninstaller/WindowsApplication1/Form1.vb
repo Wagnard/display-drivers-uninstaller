@@ -20,10 +20,6 @@ Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Threading
 Imports System.Security.Principal
-Imports System.Runtime.InteropServices
-
-
-
 
 
 Public Class Form1
@@ -32,22 +28,18 @@ Public Class Form1
     Dim identity = WindowsIdentity.GetCurrent()
     Dim principal = New WindowsPrincipal(identity)
     Dim isElevated As Boolean = principal.IsInRole(WindowsBuiltInRole.Administrator)
-    Dim removedisplaydriver As New ProcessStartInfo
-    Dim removehdmidriver As New ProcessStartInfo
-    Dim checkoem As New ProcessStartInfo
+    Dim processinfo As New ProcessStartInfo
+    Dim process As New Process
     Dim vendid As String = ""
     Dim vendidexpected As String = ""
     Dim provider As String = ""
-    Dim proc As New Process
-    Dim proc2 As New Process
-    Dim prochdmi As New Process
     Dim toolTip1 As New ToolTip()
     Dim reboot As Boolean = False
     Dim shutdown As Boolean = False
     Dim win8higher As Boolean = False
     Dim winxp As Boolean = False
     Dim stopme As Boolean = False
-    Dim removephysx As Boolean = True
+    Public removephysx As Boolean = True
     Dim remove3dtvplay As Boolean = True
     Dim userpth As String = System.Environment.GetEnvironmentVariable("userprofile")
     Dim time As String = DateAndTime.Now
@@ -80,14 +72,15 @@ Public Class Form1
     Dim classroot() As String = Nothing
     Dim safemode As Boolean = False
     Dim myExe As String
-    Dim packages() As String
     Dim interfaces() As String
     Dim driverfiles() As String
     Dim checkupdates As New checkupdate
+    Dim registrycleanup As New registrycleanup
     Dim enduro As Boolean = False
     Dim preventclose As Boolean = False
     Dim filePath As String
-    Dim combobox As String = Nothing
+    Dim combobox1value As String = Nothing
+    Dim combobox2value As String = Nothing
     Dim buttontext As String()
     Dim closeapp As String = False
     Dim ddudrfolder As String
@@ -97,21 +90,21 @@ Public Class Form1
         AccessUI()
     End Sub
     Private Sub regfullfordelete(ByVal key As String)
-        removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-        removehdmidriver.Arguments = _
+        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
+        processinfo.Arguments = _
 "-on " & Chr(34) & key & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
-        removehdmidriver.UseShellExecute = False
-        removehdmidriver.CreateNoWindow = True
-        removehdmidriver.RedirectStandardOutput = False
-        prochdmi.StartInfo = removehdmidriver
-        prochdmi.Start()
-        prochdmi.WaitForExit()
+        processinfo.UseShellExecute = False
+        processinfo.CreateNoWindow = True
+        processinfo.RedirectStandardOutput = False
+        process.StartInfo = processinfo
+        process.Start()
+        process.WaitForExit()
 
-        removehdmidriver.Arguments = _
+        processinfo.Arguments = _
 "-on " & Chr(34) & key & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
-        prochdmi.StartInfo = removehdmidriver
-        prochdmi.Start()
-        prochdmi.WaitForExit()
+        process.StartInfo = processinfo
+        process.Start()
+        process.WaitForExit()
     End Sub
     Private Sub AccessUI()
         Dim updates As Integer = checkupdates.checkupdates
@@ -163,33 +156,33 @@ Public Class Form1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
         reboot = True
-        combobox = ComboBox1.Text
+        combobox1value = ComboBox1.Text
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
 
     End Sub
 
     Private Sub cleandriverstore()
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(finding OEM step)... *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Executing Driver Store cleanUP(finding OEM step)..." + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Executing Driver Store cleanUP(Find OEM)...")
         'Check the driver from the driver store  ( oemxx.inf)
-        checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-        checkoem.Arguments = "dp_enum"
-        checkoem.UseShellExecute = False
-        checkoem.CreateNoWindow = True
-        checkoem.RedirectStandardOutput = True
+        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+        processinfo.Arguments = "dp_enum"
+        processinfo.UseShellExecute = False
+        processinfo.CreateNoWindow = True
+        processinfo.RedirectStandardOutput = True
 
         'creation dun process fantome pour le wait on exit.
 
-        proc2.StartInfo = checkoem
-        proc2.Start()
-        reply = proc2.StandardOutput.ReadToEnd
-        proc2.WaitForExit()
+        process.StartInfo = processinfo
+        process.Start()
+        reply = process.StandardOutput.ReadToEnd
+        process.WaitForExit()
 
-        log("ddudr DP_ENUM RESULT BELOW")
-        log(reply)
+        ' log("ddudr DP_ENUM RESULT BELOW")
+        ' log(reply)
         'Preparing to read output.
         Dim oem As Integer = Nothing
         Try
@@ -197,7 +190,9 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Executing Driver Store cleanUP(Delete OEM step)..." + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
         While oem > -1 And oem <> Nothing
             Dim position As Integer = reply.IndexOf("Provider:", oem)
             Dim classs As Integer = reply.IndexOf("Class:", oem)
@@ -227,7 +222,7 @@ Public Class Form1
                     deloem.RedirectStandardOutput = True
                     'creation dun process fantome pour le wait on exit.
                     Dim proc3 As New Diagnostics.Process
-                    Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing Driver Store cleanUP(Delete OEM)... *****" + vbNewLine)
+                    Invoke(Sub() TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine)
                     Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
                     Invoke(Sub() TextBox1.ScrollToCaret())
                     log("Executing Driver Store CleanUP(delete OEM)...")
@@ -248,7 +243,7 @@ Public Class Form1
         End While
 
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Driver Store cleanUP complete. *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Driver Store cleanUP complete." + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Driver Store CleanUP Complete.")
@@ -259,7 +254,7 @@ Public Class Form1
     End Sub
     Private Sub cleanamdserviceprocess()
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning process/services... *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "Cleaning process/services..." + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning Process/Services...")
@@ -371,7 +366,7 @@ Public Class Form1
     End Sub
     Private Sub cleanamdfolders()
         'Delete AMD data Folders
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning Directory (Please Wait...)")
@@ -779,7 +774,7 @@ Public Class Form1
         End Try
     End Sub
     Private Sub cleanamd()
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning known Regkeys... May take a minute or two. *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "Cleaning known Regkeys... May take a minute or two." + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning known Regkeys")
@@ -1431,15 +1426,15 @@ Public Class Form1
             If winxp = False Then
                 If win8higher Then
                     'setting permission to registry
-                    removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-                    removehdmidriver.Arguments = _
+                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
+                    processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
-                    removehdmidriver.UseShellExecute = False
-                    removehdmidriver.CreateNoWindow = True
-                    removehdmidriver.RedirectStandardOutput = False
-                    prochdmi.StartInfo = removehdmidriver
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = False
+                    process.StartInfo = processinfo
+                    process.Start()
+                    process.WaitForExit()
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                     If regkey IsNot Nothing Then
@@ -1447,17 +1442,17 @@ Public Class Form1
                             For Each child As String In regkey.GetSubKeyNames()
                                 If checkvariables.isnullorwhitespace(child) = False Then
                                     If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                                        removehdmidriver.Arguments = _
+                                        processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child & Chr(34) & " -ot reg -actn setowner -ownr n:" & Chr(34) & "s-1-5-32-544" & Chr(34)
-                                        prochdmi.StartInfo = removehdmidriver
-                                        prochdmi.Start()
-                                        prochdmi.WaitForExit()
+                                        process.StartInfo = processinfo
+                                        process.Start()
+                                        process.WaitForExit()
                                         System.Threading.Thread.Sleep(10)  '10 millisecond stall (0.01 Seconds)
-                                        removehdmidriver.Arguments = _
+                                        processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
-                                        prochdmi.StartInfo = removehdmidriver
-                                        prochdmi.Start()
-                                        prochdmi.WaitForExit()
+                                        process.StartInfo = processinfo
+                                        process.Start()
+                                        process.WaitForExit()
                                         System.Threading.Thread.Sleep(10)  '10 millisecond stall (0.01 Seconds)
                                         Try
                                             regkey.DeleteSubKeyTree(child)
@@ -1539,11 +1534,11 @@ Public Class Form1
                     'Setting permission to normal
                     '--------------------------------
 
-                    removehdmidriver.Arguments = _
+                    processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & ddudrfolder & "\pnpldf.bkp"
-                    prochdmi.StartInfo = removehdmidriver
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
+                    process.StartInfo = processinfo
+                    process.Start()
+                    process.WaitForExit()
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
 
                     '--------------------------------
@@ -1552,15 +1547,15 @@ Public Class Form1
 
                 Else   'Older windows  (windows vista and 7 run here)
                     'setting permission to registry
-                    removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-                    removehdmidriver.Arguments = _
+                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
+                    processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
-                    removehdmidriver.UseShellExecute = False
-                    removehdmidriver.CreateNoWindow = True
-                    removehdmidriver.RedirectStandardOutput = False
-                    prochdmi.StartInfo = removehdmidriver
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = False
+                    process.StartInfo = processinfo
+                    process.Start()
+                    process.WaitForExit()
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
 
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
@@ -1586,11 +1581,11 @@ Public Class Form1
                     '-----------------------------------------------
 
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = _
+                    processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & ddudrfolder & "\pnpldf.bkp"
 
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
+                    process.Start()
+                    process.WaitForExit()
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                 End If
             End If
@@ -2022,7 +2017,7 @@ Public Class Form1
         End Try
 
         log("Removing known Packages")
-
+        Dim packages As String()
         packages = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\packages.cfg") '// add each line as String Array.
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -2160,114 +2155,7 @@ Public Class Form1
             End Try
         End If
 
-        Try
-            packages = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\packages.cfg") '// add each line as String Array.
-
-            log("Debug : Starting S-1-5-xx region cleanUP")
-            basekey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                  ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
-            If basekey IsNot Nothing Then
-                For Each super As String In basekey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(super) = False Then
-                        If super.Contains("S-1-5") Then
-                            Try
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetSubKeyNames()
-                                    If checkvariables.isnullorwhitespace(child) = False Then
-                                        Try
-                                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
-                                "\InstallProperties")
-                                        Catch ex As Exception
-                                            Continue For
-                                        End Try
-                                        If subregkey IsNot Nothing Then
-                                            If checkvariables.isnullorwhitespace(subregkey.GetValue("DisplayName")) = False Then
-                                                wantedvalue = subregkey.GetValue("DisplayName").ToString
-                                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                                    For i As Integer = 0 To packages.Length - 1
-                                                        If wantedvalue.ToLower.Contains(packages(i)) Then
-                                                            regkey.DeleteSubKeyTree(child)
-
-                                                            superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                                                                             ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
-                                                            If superregkey IsNot Nothing Then
-                                                                For Each child2 As String In superregkey.GetSubKeyNames()
-                                                                    If checkvariables.isnullorwhitespace(child2) = False Then
-                                                                        Try
-                                                                            subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                                                        ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2)
-                                                                        Catch ex As Exception
-                                                                            Continue For
-                                                                        End Try
-                                                                        If subsuperregkey IsNot Nothing Then
-                                                                            For Each wantedstring As String In subsuperregkey.GetValueNames()
-                                                                                If checkvariables.isnullorwhitespace(wantedstring) = False Then
-                                                                                    If wantedstring.Contains(child) Then
-                                                                                        Try
-                                                                                            superregkey.DeleteSubKeyTree(child2)
-                                                                                        Catch ex As Exception
-                                                                                        End Try
-                                                                                    End If
-                                                                                End If
-                                                                            Next
-                                                                        End If
-                                                                    End If
-                                                                Next
-                                                            End If
-                                                            superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
-                                                            If superregkey IsNot Nothing Then
-                                                                For Each child2 As String In superregkey.GetSubKeyNames()
-                                                                    If checkvariables.isnullorwhitespace(child2) = False Then
-                                                                        Try
-                                                                            subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                                                            ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child2, False)
-                                                                        Catch ex As Exception
-                                                                            Continue For
-                                                                        End Try
-
-                                                                        If subsuperregkey IsNot Nothing Then
-                                                                            For Each wantedstring In subsuperregkey.GetValueNames()
-                                                                                If checkvariables.isnullorwhitespace(wantedstring) = False Then
-                                                                                    If wantedstring.Contains(child) Then
-                                                                                        Try
-                                                                                            superregkey.DeleteSubKeyTree(child2)
-                                                                                        Catch ex As Exception
-                                                                                        End Try
-                                                                                    End If
-                                                                                End If
-                                                                            Next
-                                                                        End If
-                                                                    End If
-                                                                Next
-                                                            End If
-                                                        End If
-                                                    Next
-                                                End If
-                                            End If
-                                        End If
-                                    End If
-                                Next
-                            End If
-                        End If
-                    End If
-                Next
-            End If
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Debug : End of S-1-5-xx region cleanUP *****" + vbNewLine)
-            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-            Invoke(Sub() TextBox1.ScrollToCaret())
-            log("Debug : End of S-1-5-xx region cleanUP")
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
-
+        registrycleanup.installer(IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\packages.cfg"))
 
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
@@ -2677,7 +2565,7 @@ Public Class Form1
 
     Private Sub cleannvidiaserviceprocess()
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning process/services... *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "Cleaning process/services..." + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning Process/Services...")
@@ -2772,7 +2660,7 @@ Public Class Form1
 
         'Delete NVIDIA data Folders
         'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning UpdatusUser users ac if present *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Cleaning UpdatusUser users ac if present" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning UpdatusUser users ac if present")
@@ -2786,7 +2674,7 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Cleaning Directory *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "Cleaning Directory" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Cleaning Directory")
@@ -3278,7 +3166,7 @@ Public Class Form1
         Catch ex As Exception
         End Try
         'Delete NVIDIA regkey
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Starting reg cleanUP *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Starting reg cleanUP" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
     End Sub
@@ -4138,15 +4026,15 @@ Public Class Form1
             If winxp = False Then
                 If win8higher Then
                     'setting permission to registry
-                    removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-                    removehdmidriver.Arguments = _
+                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
+                    processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
-                    removehdmidriver.UseShellExecute = False
-                    removehdmidriver.CreateNoWindow = True
-                    removehdmidriver.RedirectStandardOutput = False
-                    prochdmi.StartInfo = removehdmidriver
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = False
+                    process.StartInfo = processinfo
+                    process.Start()
+                    process.WaitForExit()
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                     If regkey IsNot Nothing Then
@@ -4154,17 +4042,17 @@ Public Class Form1
                             For Each child As String In regkey.GetSubKeyNames()
                                 If checkvariables.isnullorwhitespace(child) = False Then
                                     If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                                        removehdmidriver.Arguments = _
+                                        processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child & Chr(34) & " -ot reg -actn setowner -ownr n:" & Chr(34) & "s-1-5-32-544" & Chr(34)
-                                        prochdmi.StartInfo = removehdmidriver
-                                        prochdmi.Start()
-                                        prochdmi.WaitForExit()
+                                        process.StartInfo = processinfo
+                                        process.Start()
+                                        process.WaitForExit()
                                         System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
-                                        removehdmidriver.Arguments = _
+                                        processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
-                                        prochdmi.StartInfo = removehdmidriver
-                                        prochdmi.Start()
-                                        prochdmi.WaitForExit()
+                                        process.StartInfo = processinfo
+                                        process.Start()
+                                        process.WaitForExit()
                                         System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                                         Try
                                             regkey.DeleteSubKeyTree(child)
@@ -4221,11 +4109,11 @@ Public Class Form1
                     'setting back the registry permission to normal.                       
                     '-----------------------------------------------
 
-                    removehdmidriver.Arguments = _
+                    processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & ddudrfolder & "\pnpldf.bkp"
-                    prochdmi.StartInfo = removehdmidriver
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
+                    process.StartInfo = processinfo
+                    process.Start()
+                    process.WaitForExit()
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
 
                     '--------------------------------
@@ -4234,15 +4122,15 @@ Public Class Form1
 
                 Else   'Older windows  (windows vista and 7 run here)
                     'setting permission to registry
-                    removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-                    removehdmidriver.Arguments = _
+                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
+                    processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
-                    removehdmidriver.UseShellExecute = False
-                    removehdmidriver.CreateNoWindow = True
-                    removehdmidriver.RedirectStandardOutput = False
-                    prochdmi.StartInfo = removehdmidriver
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = False
+                    process.StartInfo = processinfo
+                    process.Start()
+                    process.WaitForExit()
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                     If regkey IsNot Nothing Then
@@ -4266,10 +4154,10 @@ Public Class Form1
                     '-----------------------------------------------
 
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
-                    removehdmidriver.Arguments = _
+                    processinfo.Arguments = _
 "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & ddudrfolder & "\pnpldf.bkp"
-                    prochdmi.Start()
-                    prochdmi.WaitForExit()
+                    process.Start()
+                    process.WaitForExit()
                     System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                 End If
             End If
@@ -5140,130 +5028,7 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Debug : Starting S-1-5-xx region cleanUP *****" + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
-        Try
-            log("Debug : Starting S-1-5-xx region cleanUP")
-            basekey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                  ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
-            If basekey IsNot Nothing Then
-                For Each super As String In basekey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(super) = False Then
-                        If super.Contains("S-1-5") Then
-                            Try
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetSubKeyNames()
-                                    If checkvariables.isnullorwhitespace(child) = False Then
-                                        Try
-                                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
-                                "\InstallProperties")
-                                        Catch ex As Exception
-                                            Continue For
-                                        End Try
-                                        If subregkey IsNot Nothing Then
-                                            If checkvariables.isnullorwhitespace(subregkey.GetValue("DisplayName")) = False Then
-                                                wantedvalue = subregkey.GetValue("DisplayName").ToString
-                                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                                    If wantedvalue.ToLower.Contains("physx") Then
-                                                        If removephysx Then
-                                                            regkey.DeleteSubKeyTree(child)
-                                                        Else
-                                                            If wantedvalue.ToLower.Contains("physx") Then
-                                                                'do nothing
-                                                            Else
-                                                                regkey.DeleteSubKeyTree(child)
-                                                            End If
-                                                        End If
-                                                        superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                                                                         ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
-                                                        If superregkey IsNot Nothing Then
-                                                            For Each child2 As String In superregkey.GetSubKeyNames()
-                                                                If checkvariables.isnullorwhitespace(child2) = False Then
-                                                                    Try
-                                                                        subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                                                    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2)
-                                                                    Catch ex As Exception
-                                                                        Continue For
-                                                                    End Try
-                                                                    If subsuperregkey IsNot Nothing Then
-                                                                        For Each wantedstring As String In subsuperregkey.GetValueNames()
-                                                                            If checkvariables.isnullorwhitespace(wantedstring) = False Then
-                                                                                If wantedstring.Contains(child) Then
-                                                                                    If removephysx Then
-                                                                                        Try
-                                                                                            superregkey.DeleteSubKeyTree(child2)
-                                                                                        Catch ex As Exception
-                                                                                        End Try
-                                                                                    Else
-                                                                                        If wantedvalue.ToLower.Contains("physx") Then
-                                                                                            'do nothing
-                                                                                        Else
-                                                                                            Try
-                                                                                                superregkey.DeleteSubKeyTree(child2)
-                                                                                            Catch ex As Exception
-                                                                                            End Try
-                                                                                        End If
-                                                                                    End If
-                                                                                End If
-                                                                            End If
-                                                                        Next
-                                                                    End If
-                                                                End If
-                                                            Next
-                                                        End If
-                                                        superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
-                                                        If superregkey IsNot Nothing Then
-                                                            For Each child2 As String In superregkey.GetSubKeyNames()
-                                                                If checkvariables.isnullorwhitespace(child2) = False Then
-                                                                    Try
-                                                                        subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                                                        ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child2, False)
-                                                                    Catch ex As Exception
-                                                                        Continue For
-                                                                    End Try
-
-                                                                    If subsuperregkey IsNot Nothing Then
-                                                                        For Each wantedstring In subsuperregkey.GetValueNames()
-                                                                            If checkvariables.isnullorwhitespace(wantedstring) = False Then
-                                                                                If wantedstring.Contains(child) Then
-                                                                                    Try
-                                                                                        superregkey.DeleteSubKeyTree(child2)
-                                                                                    Catch ex As Exception
-                                                                                    End Try
-                                                                                End If
-                                                                            End If
-                                                                        Next
-                                                                    End If
-                                                                End If
-                                                            Next
-                                                        End If
-                                                    End If
-                                                End If
-                                            End If
-                                        End If
-                                    End If
-                                Next
-                            End If
-                        End If
-                    End If
-                Next
-            End If
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Debug : End of S-1-5-xx region cleanUP *****" + vbNewLine)
-            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-            Invoke(Sub() TextBox1.ScrollToCaret())
-            log("Debug : End of S-1-5-xx region cleanUP")
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
+        registrycleanup.installer(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\packages.cfg"))
 
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
@@ -5570,7 +5335,7 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** End of Registry Cleaning *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-End of Registry Cleaning" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("End of Registry Cleaning")
@@ -5578,6 +5343,12 @@ Public Class Form1
     End Sub
 
     Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
+
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Starting the removal of nVidia Optimus UpperFilter if present." + vbNewLine)
+        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        Invoke(Sub() TextBox1.ScrollToCaret())
+
+        log("Starting the removal of nVidia Optimus UpperFilter if present.")
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                    ("SYSTEM\CurrentControlSet\Enum\PCI")
         If regkey IsNot Nothing Then
@@ -5596,27 +5367,37 @@ Public Class Form1
                                     For i As Integer = 0 To array.Length - 1
 
                                         If array(i).ToLower.Contains("nvpciflt") Then
+
+                                            Invoke(Sub() TextBox1.Text = TextBox1.Text + "-nVidia Optimus UpperFilter Found." + vbNewLine)
+                                            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+                                            Invoke(Sub() TextBox1.ScrollToCaret())
+
+                                            log("nVidia Optimus UpperFilter Found.")
+
                                             '-------------------------------------
                                             'Setting permission to the key region
                                             '-------------------------------------
 
-                                            removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-                                            removehdmidriver.Arguments = _
+                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
+                                            processinfo.Arguments = _
 "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & UserAc & Chr(34)
-                                            removehdmidriver.UseShellExecute = False
-                                            removehdmidriver.CreateNoWindow = True
-                                            removehdmidriver.RedirectStandardOutput = True
-                                            prochdmi.StartInfo = removehdmidriver
-                                            prochdmi.Start()
-                                            reply = proc2.StandardOutput.ReadToEnd
-                                            prochdmi.WaitForExit()
+                                            processinfo.UseShellExecute = False
+                                            processinfo.CreateNoWindow = True
+                                            processinfo.RedirectStandardOutput = True
+                                            process.StartInfo = processinfo
+                                            process.Start()
+                                            reply = process.StandardOutput.ReadToEnd
+                                            process.WaitForExit()
+                                            log(reply)
                                             System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
 
                                             If Not winxp Then
-                                                removehdmidriver.Arguments = _
+                                                processinfo.Arguments = _
 "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
-                                                prochdmi.Start()
-                                                prochdmi.WaitForExit()
+                                                process.Start()
+                                                reply = process.StandardOutput.ReadToEnd
+                                                process.WaitForExit()
+                                                log(reply)
                                                 System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                                             End If
 
@@ -5624,28 +5405,27 @@ Public Class Form1
                                                 subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
                                             Catch ex As Exception
                                                 log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
-                                                log(reply)
                                             End Try
 
 
                                             '---------------------------------
                                             'Setting permission back to normal 
                                             '---------------------------------
-                                            removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-                                            removehdmidriver.Arguments = _
+                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
+                                            processinfo.Arguments = _
 "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
-                                            removehdmidriver.UseShellExecute = False
-                                            removehdmidriver.CreateNoWindow = True
-                                            removehdmidriver.RedirectStandardOutput = False
-                                            prochdmi.StartInfo = removehdmidriver
-                                            prochdmi.Start()
-                                            prochdmi.WaitForExit()
+                                            processinfo.UseShellExecute = False
+                                            processinfo.CreateNoWindow = True
+                                            processinfo.RedirectStandardOutput = False
+                                            process.StartInfo = processinfo
+                                            process.Start()
+                                            process.WaitForExit()
                                             System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
-                                            removehdmidriver.Arguments = _
+                                            processinfo.Arguments = _
 "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & "s-1-5-32-544" & Chr(34)
-                                            prochdmi.StartInfo = removehdmidriver
-                                            prochdmi.Start()
-                                            prochdmi.WaitForExit()
+                                            process.StartInfo = processinfo
+                                            process.Start()
+                                            process.WaitForExit()
                                             System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                                         End If
                                     Next
@@ -5681,7 +5461,7 @@ Public Class Form1
             Exit Sub
         End If
         If reboot = False And shutdown = False Then
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Scanning for new device... *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Scanning for new device... " + vbNewLine)
             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
             Invoke(Sub() TextBox1.ScrollToCaret())
             log("Scanning for new device...")
@@ -5698,7 +5478,7 @@ Public Class Form1
             End If
 
         End If
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Clean uninstall completed! *****" + vbNewLine)
+        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Clean uninstall completed!" + vbNewLine)
         Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
         Invoke(Sub() TextBox1.ScrollToCaret())
         log("Clean uninstall completed!")
@@ -5710,7 +5490,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         CheckForIllegalCrossThreadCalls = True
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
@@ -5733,7 +5513,7 @@ Public Class Form1
         '----------------
         'language section
         '----------------
-
+        combobox2value = ComboBox2.Text
         Dim diChild() As String = Directory.GetDirectories(Application.StartupPath & "\settings\Languages")
         Dim list(diChild.Length - 1) As String
         For i As Integer = 0 To diChild.Length - 1
@@ -5807,7 +5587,7 @@ Public Class Form1
 
         End If
 
-        initlanguage(ComboBox2.Text)
+        initlanguage()
 
         '------------
         'Check update
@@ -5999,21 +5779,21 @@ Public Class Form1
         log("Architecture: " & ddudrfolder)
 
         'Videocard type indentification
-        checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-        checkoem.Arguments = "findall =display"
-        checkoem.UseShellExecute = False
-        checkoem.CreateNoWindow = True
-        checkoem.RedirectStandardOutput = True
+        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+        processinfo.Arguments = "findall =display"
+        processinfo.UseShellExecute = False
+        processinfo.CreateNoWindow = True
+        processinfo.RedirectStandardOutput = True
 
         'creation dun process fantome pour le wait on exit.
 
         '------------------------------------------------------------------
         'Detection of the current and leftover videocard for the textboxlog
         '------------------------------------------------------------------
-        proc2.StartInfo = checkoem
-        proc2.Start()
-        reply = proc2.StandardOutput.ReadToEnd
-        proc2.WaitForExit()
+        process.StartInfo = processinfo
+        process.Start()
+        reply = process.StandardOutput.ReadToEnd
+        process.WaitForExit()
         log(reply)
         TextLines = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
         For i As Integer = 0 To TextLines.Length - 2  'reason of -2 instead of -1 , we dont want the last line of ddudr.
@@ -6209,6 +5989,23 @@ Public Class Form1
 
         log("User Account Name : " & UserAc)
 
+        'Check and log the driver from the driver store  ( oemxx.inf)
+        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+        processinfo.Arguments = "dp_enum"
+        processinfo.UseShellExecute = False
+        processinfo.CreateNoWindow = True
+        processinfo.RedirectStandardOutput = True
+
+        'creation dun process fantome pour le wait on exit.
+
+        process.StartInfo = processinfo
+        process.Start()
+        reply = process.StandardOutput.ReadToEnd
+        process.WaitForExit()
+
+        log("ddudr DP_ENUM RESULT BELOW")
+        log(reply)
+
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
@@ -6386,14 +6183,14 @@ Public Class Form1
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         reboot = False
         shutdown = False
-        combobox = ComboBox1.Text
+        combobox1value = ComboBox1.Text
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         reboot = False
         shutdown = True
-        combobox = ComboBox1.Text
+        combobox1value = ComboBox1.Text
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
     End Sub
 
@@ -6421,7 +6218,7 @@ Public Class Form1
             CheckBox4.Visible = False
             PictureBox2.Image = My.Resources.intel_logo
         End If
-        combobox = ComboBox1.Text
+        combobox1value = ComboBox1.Text
     End Sub
 
     Public Sub log(ByVal value As String)
@@ -6475,33 +6272,33 @@ Public Class Form1
             Invoke(Sub() CheckBox1.Enabled = False)
             Invoke(Sub() CheckBox3.Enabled = False)
             Invoke(Sub() CheckBox4.Enabled = False)
-            If combobox = "AMD" Then
+            If combobox1value = "AMD" Then
                 vendidexpected = "VEN_1002"
                 provider = "Provider: Advanced Micro Devices"
             End If
 
-            If combobox = "NVIDIA" Then
+            If combobox1value = "NVIDIA" Then
                 vendidexpected = "VEN_10DE"
                 provider = "Provider: NVIDIA"
             End If
 
-            If combobox = "INTEL" Then
+            If combobox1value = "INTEL" Then
                 vendidexpected = "VEN_8086"
                 provider = "Provider: Intel"
             End If
 
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "*****  Uninstalling " & ComboBox1.Text & " driver... *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Uninstalling " & ComboBox1.Text & " driver... " + vbNewLine)
             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
             Invoke(Sub() TextBox1.ScrollToCaret())
-            Invoke(Sub() log("Uninstalling " + combobox + " driver ..."))
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** Executing ddudr Remove , Please wait(can take a few minutes *****) " + vbNewLine)
+            Invoke(Sub() log("Uninstalling " + combobox1value + " driver ..."))
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Executing ddudr Remove , Please wait(can take a few minutes) " + vbNewLine)
             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
             Invoke(Sub() TextBox1.ScrollToCaret())
 
             log("Executing ddudr Remove")
 
             Try
-                If combobox = "NVIDIA" Then
+                If combobox1value = "NVIDIA" Then
                     temporarynvidiaspeedup()   'we do this If and until nvidia speed up their installer that is impacting "ddudr remove" of the GPU from device manager.
                 End If
             Catch ex As Exception
@@ -6512,7 +6309,7 @@ Public Class Form1
             'Here I remove AMD HD Audio bus (System device)
             '----------------------------------------------
             Try
-                If combobox = "AMD" Then
+                If combobox1value = "AMD" Then
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
                     If regkey IsNot Nothing Then
                         For Each child As String In regkey.GetSubKeyNames()
@@ -6525,16 +6322,16 @@ Public Class Form1
                                                 For i As Integer = 0 To array.Length - 1
                                                     If array(i).ToLower.Contains("amdkmafd") Then
                                                         log("Found an AMD audio controller bus !")
-                                                        removedisplaydriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                                        removedisplaydriver.Arguments = "remove =system " & Chr(34) & "*" & child & Chr(34)
-                                                        removedisplaydriver.UseShellExecute = False
-                                                        removedisplaydriver.CreateNoWindow = True
-                                                        removedisplaydriver.RedirectStandardOutput = True
-                                                        proc.StartInfo = removedisplaydriver
+                                                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                                        processinfo.Arguments = "remove =system " & Chr(34) & "*" & child & Chr(34)
+                                                        processinfo.UseShellExecute = False
+                                                        processinfo.CreateNoWindow = True
+                                                        processinfo.RedirectStandardOutput = True
+                                                        process.StartInfo = processinfo
 
-                                                        proc.Start()
-                                                        reply2 = proc.StandardOutput.ReadToEnd
-                                                        proc.WaitForExit()
+                                                        process.Start()
+                                                        reply2 = process.StandardOutput.ReadToEnd
+                                                        process.WaitForExit()
                                                         log(reply2)
                                                     End If
                                                 Next
@@ -6556,16 +6353,16 @@ Public Class Form1
             ' Removing the videocard
             ' ----------------------
 
-            checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            checkoem.Arguments = "findall =display"
-            checkoem.UseShellExecute = False
-            checkoem.CreateNoWindow = True
-            checkoem.RedirectStandardOutput = True
+            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+            processinfo.Arguments = "findall =display"
+            processinfo.UseShellExecute = False
+            processinfo.CreateNoWindow = True
+            processinfo.RedirectStandardOutput = True
 
-            proc2.StartInfo = checkoem
-            proc2.Start()
-            reply = proc2.StandardOutput.ReadToEnd
-            proc2.WaitForExit()
+            process.StartInfo = processinfo
+            process.Start()
+            reply = process.StandardOutput.ReadToEnd
+            process.WaitForExit()
 
             Try
                 card1 = reply.IndexOf("PCI\")
@@ -6576,16 +6373,16 @@ Public Class Form1
                 position2 = reply.IndexOf(":", card1)
                 vendid = reply.Substring(card1, position2 - card1).Trim
                 If vendid.Contains(vendidexpected) Then
-                    removedisplaydriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                    removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
-                    removedisplaydriver.UseShellExecute = False
-                    removedisplaydriver.CreateNoWindow = True
-                    removedisplaydriver.RedirectStandardOutput = True
-                    proc.StartInfo = removedisplaydriver
+                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                    processinfo.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = True
+                    process.StartInfo = processinfo
 
-                    proc.Start()
-                    reply2 = proc.StandardOutput.ReadToEnd
-                    proc.WaitForExit()
+                    process.Start()
+                    reply2 = process.StandardOutput.ReadToEnd
+                    process.WaitForExit()
                     log(reply2)
 
 
@@ -6594,21 +6391,21 @@ Public Class Form1
                 card1 = reply.IndexOf("PCI\", card1 + 1)
             End While
 
-            'If combobox = "AMD" & enduro Then
+            'If combobox1value= "AMD" & enduro Then
             '    ' ----------------------------------------------------------------------
             '    ' (Experimental) Removing the Intel card because of AMD Enduro videocard
             '    ' -------------------------------------------------------
 
-            '    checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            '    checkoem.Arguments = "findall =display"
-            '    checkoem.UseShellExecute = False
-            '    checkoem.CreateNoWindow = True
-            '    checkoem.RedirectStandardOutput = True
+            '    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+            '    processinfo.Arguments = "findall =display"
+            '    processinfo.UseShellExecute = False
+            '    processinfo.CreateNoWindow = True
+            '    processinfo.RedirectStandardOutput = True
 
-            '    proc2.StartInfo = checkoem
-            '    proc2.Start()
-            '    reply = proc2.StandardOutput.ReadToEnd
-            '    proc2.WaitForExit()
+            '    process.StartInfo = processinfo
+            '    process.Start()
+            '    reply = process.StandardOutput.ReadToEnd
+            '    process.WaitForExit()
 
             '    Try
             '        card1 = reply.IndexOf("PCI\")
@@ -6619,16 +6416,16 @@ Public Class Form1
             '        position2 = reply.IndexOf(":", card1)
             '        vendid = reply.Substring(card1, position2 - card1).Trim
             '        If vendid.Contains("VEN_8086") Then
-            '            removedisplaydriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            '            removedisplaydriver.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
-            '            removedisplaydriver.UseShellExecute = False
-            '            removedisplaydriver.CreateNoWindow = True
-            '            removedisplaydriver.RedirectStandardOutput = True
-            '            proc.StartInfo = removedisplaydriver
+            '            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+            '            processinfo.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
+            '            processinfo.UseShellExecute = False
+            '            processinfo.CreateNoWindow = True
+            '            processinfo.RedirectStandardOutput = True
+            '            process.StartInfo = processinfo
 
-            '            proc.Start()
-            '            reply2 = proc.StandardOutput.ReadToEnd
-            '            proc.WaitForExit()
+            '            process.Start()
+            '            reply2 = process.StandardOutput.ReadToEnd
+            '            process.WaitForExit()
             '            log(reply2)
 
 
@@ -6646,18 +6443,18 @@ Public Class Form1
 
             'Next
             'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
-            checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            checkoem.Arguments = "findall =media"
-            checkoem.UseShellExecute = False
-            checkoem.CreateNoWindow = True
-            checkoem.RedirectStandardOutput = True
+            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+            processinfo.Arguments = "findall =media"
+            processinfo.UseShellExecute = False
+            processinfo.CreateNoWindow = True
+            processinfo.RedirectStandardOutput = True
 
             'creation dun process fantome pour le wait on exit.
 
-            proc2.StartInfo = checkoem
-            proc2.Start()
-            reply = proc2.StandardOutput.ReadToEnd
-            proc2.WaitForExit()
+            process.StartInfo = processinfo
+            process.Start()
+            reply = process.StandardOutput.ReadToEnd
+            process.WaitForExit()
 
 
             Try
@@ -6672,16 +6469,16 @@ Public Class Form1
                 vendid = reply.Substring(card1, position2 - card1).Trim
                 If vendid.Contains(vendidexpected) Then
 
-                    removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                    removehdmidriver.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
-                    removehdmidriver.UseShellExecute = False
-                    removehdmidriver.CreateNoWindow = True
-                    removehdmidriver.RedirectStandardOutput = True
-                    prochdmi.StartInfo = removehdmidriver
+                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                    processinfo.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = True
+                    process.StartInfo = processinfo
                     Try
-                        prochdmi.Start()
-                        reply2 = prochdmi.StandardOutput.ReadToEnd
-                        prochdmi.WaitForExit()
+                        process.Start()
+                        reply2 = process.StandardOutput.ReadToEnd
+                        process.WaitForExit()
                         log(reply2)
                     Catch ex As Exception
                         preventclose = False
@@ -6704,20 +6501,20 @@ Public Class Form1
             cleandriverstore()
 
             'Here I remove 3dVision USB Adapter.
-            If combobox = "NVIDIA" Then
+            If combobox1value = "NVIDIA" Then
                 'removing 3DVision USB driver
-                checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                checkoem.Arguments = "findall =USB"
-                checkoem.UseShellExecute = False
-                checkoem.CreateNoWindow = True
-                checkoem.RedirectStandardOutput = True
+                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                processinfo.Arguments = "findall =USB"
+                processinfo.UseShellExecute = False
+                processinfo.CreateNoWindow = True
+                processinfo.RedirectStandardOutput = True
 
                 'creation dun process fantome pour le wait on exit.
 
-                proc2.StartInfo = checkoem
-                proc2.Start()
-                reply = proc2.StandardOutput.ReadToEnd
-                proc2.WaitForExit()
+                process.StartInfo = processinfo
+                process.Start()
+                reply = process.StandardOutput.ReadToEnd
+                process.WaitForExit()
                 Try
                     card1 = reply.IndexOf("USB\")
                 Catch ex As Exception
@@ -6741,16 +6538,16 @@ Public Class Form1
                         vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
                         log("-" & vendid & "- 3D vision usb controler found")
 
-                        removehdmidriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                        removehdmidriver.Arguments = "remove =USB " & Chr(34) & "@" & vendid & Chr(34)
-                        removehdmidriver.UseShellExecute = False
-                        removehdmidriver.CreateNoWindow = True
-                        removehdmidriver.RedirectStandardOutput = True
-                        prochdmi.StartInfo = removehdmidriver
+                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                        processinfo.Arguments = "remove =USB " & Chr(34) & "@" & vendid & Chr(34)
+                        processinfo.UseShellExecute = False
+                        processinfo.CreateNoWindow = True
+                        processinfo.RedirectStandardOutput = True
+                        process.StartInfo = processinfo
                         Try
-                            prochdmi.Start()
-                            reply2 = prochdmi.StandardOutput.ReadToEnd
-                            prochdmi.WaitForExit()
+                            process.Start()
+                            reply2 = process.StandardOutput.ReadToEnd
+                            process.WaitForExit()
                             log(reply2)
                         Catch ex As Exception
                             preventclose = False
@@ -6778,16 +6575,16 @@ Public Class Form1
                 Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
                 Invoke(Sub() TextBox1.ScrollToCaret())
                 log("Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!")
-                removedisplaydriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                removedisplaydriver.Arguments = "remove =media " & Chr(34) & "@ROOT\UNNAMED_DEVICE\0000" & Chr(34)
-                removedisplaydriver.UseShellExecute = False
-                removedisplaydriver.CreateNoWindow = True
-                removedisplaydriver.RedirectStandardOutput = True
-                proc.StartInfo = removedisplaydriver
+                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                processinfo.Arguments = "remove =media " & Chr(34) & "@ROOT\UNNAMED_DEVICE\0000" & Chr(34)
+                processinfo.UseShellExecute = False
+                processinfo.CreateNoWindow = True
+                processinfo.RedirectStandardOutput = True
+                process.StartInfo = processinfo
                 Try
-                    proc.Start()
-                    reply2 = proc.StandardOutput.ReadToEnd
-                    proc.WaitForExit()
+                    process.Start()
+                    reply2 = process.StandardOutput.ReadToEnd
+                    process.WaitForExit()
                     log(reply2)
                 Catch ex As Exception
                     preventclose = False
@@ -6806,18 +6603,18 @@ Public Class Form1
 
             log("ddudr Remove Monitor started")
 
-            checkoem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            checkoem.Arguments = "findall =monitor"
-            checkoem.UseShellExecute = False
-            checkoem.CreateNoWindow = True
-            checkoem.RedirectStandardOutput = True
+            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+            processinfo.Arguments = "findall =monitor"
+            processinfo.UseShellExecute = False
+            processinfo.CreateNoWindow = True
+            processinfo.RedirectStandardOutput = True
 
             'creation dun process fantome pour le wait on exit.
 
-            proc2.StartInfo = checkoem
-            proc2.Start()
-            reply = proc2.StandardOutput.ReadToEnd
-            proc2.WaitForExit()
+            process.StartInfo = processinfo
+            process.Start()
+            reply = process.StandardOutput.ReadToEnd
+            process.WaitForExit()
             Try
                 card1 = reply.IndexOf("DISPLAY\")
             Catch ex As Exception
@@ -6831,16 +6628,16 @@ Public Class Form1
 
                 log("-" & vendid & "- Monitor id found")
                 'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                removedisplaydriver.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                removedisplaydriver.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
-                removedisplaydriver.UseShellExecute = False
-                removedisplaydriver.CreateNoWindow = True
-                removedisplaydriver.RedirectStandardOutput = True
-                proc.StartInfo = removedisplaydriver
+                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                processinfo.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
+                processinfo.UseShellExecute = False
+                processinfo.CreateNoWindow = True
+                processinfo.RedirectStandardOutput = True
+                process.StartInfo = processinfo
                 Try
-                    proc.Start()
-                    reply2 = proc.StandardOutput.ReadToEnd
-                    proc.WaitForExit()
+                    process.Start()
+                    reply2 = process.StandardOutput.ReadToEnd
+                    process.WaitForExit()
                     log(reply2)
                 Catch ex As Exception
                     preventclose = False
@@ -6858,11 +6655,11 @@ Public Class Form1
             Invoke(Sub() TextBox1.Text = TextBox1.Text + "Monitors and Hidden monitors removed !" + vbNewLine)
             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
             Invoke(Sub() TextBox1.ScrollToCaret())
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "***** ddudr Remove complete *****" + vbNewLine)
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + "'ddudr' Remove complete" + vbNewLine)
             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
             Invoke(Sub() TextBox1.ScrollToCaret())
 
-            If combobox = "AMD" Then
+            If combobox1value = "AMD" Then
                 cleanamdserviceprocess()
                 cleanamd()
 
@@ -6874,7 +6671,7 @@ Public Class Form1
                 cleanamdfolders()
             End If
 
-            If combobox = "NVIDIA" Then
+            If combobox1value = "NVIDIA" Then
                 cleannvidiaserviceprocess()
                 cleannvidia()
 
@@ -6886,7 +6683,7 @@ Public Class Form1
                 cleannvidiafolders()
             End If
 
-            If combobox = "INTEL" Then
+            If combobox1value = "INTEL" Then
                 ' Cleanintel()
             End If
             cleandriverstore()
@@ -6934,6 +6731,7 @@ Public Class Form1
         CheckBox2.Enabled = True
         CheckBox1.Enabled = True
         CheckBox3.Enabled = True
+        CheckBox4.Enabled = True
         If Not reboot And Not shutdown Then
             If MsgBox("Clean uninstall completed! Would you like to exit now?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                 'do nothing
@@ -6973,7 +6771,7 @@ Public Class Form1
             End Try
         End If
     End Sub
-    Private Sub initlanguage(e As String)
+    Private Sub initlanguage()
 
         Try
             toolTip1.AutoPopDelay = 5000
@@ -6982,9 +6780,9 @@ Public Class Form1
             toolTip1.ShowAlways = True
 
 
-            toolTip1.SetToolTip(Me.Button1, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & e & "\tooltip1.txt")) '// add each line as String Array.)
+            toolTip1.SetToolTip(Me.Button1, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & combobox2value & "\tooltip1.txt")) '// add each line as String Array.)
             Button1.Text = ""
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button1.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\button1.txt") '// add each line as String Array.
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
                     Button1.Text = Button1.Text & vbNewLine
@@ -6993,8 +6791,8 @@ Public Class Form1
             Next
 
 
-            toolTip1.SetToolTip(Me.Button2, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & e & "\tooltip2.txt")) '// add each line as String Array.)
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button2.txt") '// add each line as String Array.
+            toolTip1.SetToolTip(Me.Button2, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & combobox2value & "\tooltip2.txt")) '// add each line as String Array.)
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\button2.txt") '// add each line as String Array.
             Button2.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7004,8 +6802,8 @@ Public Class Form1
             Next
 
 
-            toolTip1.SetToolTip(Me.Button3, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & e & "\tooltip3.txt")) '// add each line as String Array.)
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button3.txt") '// add each line as String Array.
+            toolTip1.SetToolTip(Me.Button3, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & combobox2value & "\tooltip3.txt")) '// add each line as String Array.)
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\button3.txt") '// add each line as String Array.
             Button3.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7015,7 +6813,7 @@ Public Class Form1
             Next
 
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\button4.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\button4.txt") '// add each line as String Array.
             Button4.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7026,7 +6824,7 @@ Public Class Form1
 
             Label11.Text = ("")
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label1.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label1.txt") '// add each line as String Array.
             Label1.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7035,7 +6833,7 @@ Public Class Form1
                 Label1.Text = Label1.Text & buttontext(i)
             Next
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label4.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label4.txt") '// add each line as String Array.
             Label4.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7044,7 +6842,7 @@ Public Class Form1
                 Label4.Text = Label4.Text & buttontext(i)
             Next
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label5.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label5.txt") '// add each line as String Array.
             Label5.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7053,7 +6851,7 @@ Public Class Form1
                 Label5.Text = Label5.Text & buttontext(i)
             Next
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label7.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label7.txt") '// add each line as String Array.
             Label7.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7062,7 +6860,7 @@ Public Class Form1
                 Label7.Text = Label7.Text & buttontext(i)
             Next
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\label10.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label10.txt") '// add each line as String Array.
             Label10.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7071,7 +6869,7 @@ Public Class Form1
                 Label10.Text = Label10.Text & buttontext(i)
             Next
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\checkbox1.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox1.txt") '// add each line as String Array.
             CheckBox1.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7080,7 +6878,7 @@ Public Class Form1
                 CheckBox1.Text = CheckBox1.Text & buttontext(i)
             Next
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\checkbox2.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox2.txt") '// add each line as String Array.
             CheckBox2.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7089,7 +6887,7 @@ Public Class Form1
                 CheckBox2.Text = CheckBox2.Text & buttontext(i)
             Next
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\checkbox4.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox4.txt") '// add each line as String Array.
             CheckBox4.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7098,7 +6896,7 @@ Public Class Form1
                 CheckBox4.Text = CheckBox4.Text & buttontext(i)
             Next
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & e & "\checkbox3.txt") '// add each line as String Array.
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3.txt") '// add each line as String Array.
             CheckBox3.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
@@ -7106,19 +6904,19 @@ Public Class Form1
                 End If
                 CheckBox3.Text = CheckBox3.Text & buttontext(i)
             Next
-            tos = IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & e & "\tos.txt")
         Catch ex As Exception
             log(ex.Message)
         End Try
     End Sub
 
     Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
-        My.Settings.language = ComboBox2.Text
-        initlanguage(ComboBox2.Text)
+        combobox2value = ComboBox2.Text
+        My.Settings.language = combobox2value
+        initlanguage()
     End Sub
 
     Private Sub ToSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ToSToolStripMenuItem.Click
-        MessageBox.Show(tos, "ToS")
+        MessageBox.Show(IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & combobox2value & "\tos.txt"), "ToS")
     End Sub
 
     Private Sub CheckBox4_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox4.CheckedChanged
@@ -7195,6 +6993,19 @@ Public Class Form1
         Catch ex As Exception
         End Try
     End Sub
+    Public Sub UpdateTextMethod(ByVal strMessage As String)
+
+        If TextBox1.InvokeRequired Then
+            Invoke(Sub() TextBox1.Text = TextBox1.Text + strMessage + vbNewLine)
+            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            Invoke(Sub() TextBox1.ScrollToCaret())
+        Else
+            TextBox1.Text = TextBox1.Text + strMessage + vbNewLine
+            TextBox1.Select(TextBox1.Text.Length, 0)
+            TextBox1.ScrollToCaret()
+        End If
+
+    End Sub
 
 End Class
 Public Class checkvariables
@@ -7238,4 +7049,126 @@ Public Class checkupdate
             Return 3
         End Try
     End Function
+End Class
+
+Public Class registrycleanup
+
+    Dim checkvariables As New checkvariables
+    Public Sub installer(ByVal packages() As String)
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim regkey As RegistryKey
+        Dim basekey As RegistryKey
+        Dim superregkey As RegistryKey
+        Dim subregkey As RegistryKey
+        Dim subsuperregkey As RegistryKey
+        Dim wantedvalue As String = Nothing
+        Dim removephysx As Boolean = f.removephysx
+
+        f.UpdateTextMethod("-Starting S-1-5-xx region cleanUP")
+
+        Try
+            f.log("-Starting S-1-5-xx region cleanUP")
+            basekey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                  ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
+            If basekey IsNot Nothing Then
+                For Each super As String In basekey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(super) = False Then
+                        If super.Contains("S-1-5") Then
+                            Try
+                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
+                            Catch ex As Exception
+                                Continue For
+                            End Try
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetSubKeyNames()
+                                    If checkvariables.isnullorwhitespace(child) = False Then
+                                        Try
+                                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
+                                "\InstallProperties")
+                                        Catch ex As Exception
+                                            Continue For
+                                        End Try
+                                        If subregkey IsNot Nothing Then
+                                            If checkvariables.isnullorwhitespace(subregkey.GetValue("DisplayName")) = False Then
+                                                wantedvalue = subregkey.GetValue("DisplayName").ToString
+                                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                                    For i As Integer = 0 To packages.Length - 1
+                                                        If wantedvalue.ToLower.Contains(packages(i)) And _
+                                                           (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
+                                                            regkey.DeleteSubKeyTree(child)
+
+                                                            superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                                             ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
+                                                            If superregkey IsNot Nothing Then
+                                                                For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                    If checkvariables.isnullorwhitespace(child2) = False Then
+                                                                        Try
+                                                                            subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                        ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2)
+                                                                        Catch ex As Exception
+                                                                            Continue For
+                                                                        End Try
+                                                                        If subsuperregkey IsNot Nothing Then
+                                                                            For Each wantedstring As String In subsuperregkey.GetValueNames()
+                                                                                If checkvariables.isnullorwhitespace(wantedstring) = False Then
+                                                                                    If wantedstring.Contains(child) Then
+                                                                                        Try
+                                                                                            superregkey.DeleteSubKeyTree(child2)
+                                                                                        Catch ex As Exception
+                                                                                        End Try
+                                                                                    End If
+                                                                                End If
+                                                                            Next
+                                                                        End If
+                                                                    End If
+                                                                Next
+                                                            End If
+                                                            superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
+                                                            If superregkey IsNot Nothing Then
+                                                                For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                    If checkvariables.isnullorwhitespace(child2) = False Then
+                                                                        Try
+                                                                            subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                                            ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child2, False)
+                                                                        Catch ex As Exception
+                                                                            Continue For
+                                                                        End Try
+
+                                                                        If subsuperregkey IsNot Nothing Then
+                                                                            For Each wantedstring In subsuperregkey.GetValueNames()
+                                                                                If checkvariables.isnullorwhitespace(wantedstring) = False Then
+                                                                                    If wantedstring.Contains(child) Then
+                                                                                        Try
+                                                                                            superregkey.DeleteSubKeyTree(child2)
+                                                                                        Catch ex As Exception
+                                                                                        End Try
+                                                                                    End If
+                                                                                End If
+                                                                            Next
+                                                                        End If
+                                                                    End If
+                                                                Next
+                                                            End If
+                                                        End If
+                                                    Next
+                                                End If
+                                            End If
+                                        End If
+                                    End If
+                                Next
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+            f.UpdateTextMethod("-End of S-1-5-xx region cleanUP")
+            f.log("-End of S-1-5-xx region cleanUP")
+        Catch ex As Exception
+            MsgBox("bug")
+            f.log(ex.Message + ex.StackTrace)
+        End Try
+    End Sub
 End Class
