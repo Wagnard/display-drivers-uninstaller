@@ -4941,10 +4941,10 @@ Public Class Form1
                         End Try
                         For Each childs As String In subregkey.GetSubKeyNames()
                             If checkvariables.isnullorwhitespace(childs) = False Then
-                                If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(childs).GetValue("UpperFilters")) Then
-                                    array = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
+                                array = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
+                                If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
                                     For i As Integer = 0 To array.Length - 1
-                                        If array(i).ToLower.Contains("nvpciflt") Then
+                                        If (Not checkvariables.isnullorwhitespace(array(i))) And (array(i).ToLower.Contains("nvpciflt")) Then
                                             Invoke(Sub() TextBox1.Text = TextBox1.Text + "-nVidia Optimus UpperFilter Found." + vbNewLine)
                                             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
                                             Invoke(Sub() TextBox1.ScrollToCaret())
@@ -4957,7 +4957,7 @@ Public Class Form1
 
                                             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
                                             processinfo.Arguments = _
-"-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & UserAc & Chr(34)
+    "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & UserAc & Chr(34)
                                             processinfo.UseShellExecute = False
                                             processinfo.CreateNoWindow = True
                                             processinfo.RedirectStandardOutput = True
@@ -4970,7 +4970,7 @@ Public Class Form1
 
                                             If Not winxp Then
                                                 processinfo.Arguments = _
-"-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
+    "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
                                                 process.Start()
                                                 reply = process.StandardOutput.ReadToEnd
                                                 process.WaitForExit()
@@ -4990,7 +4990,7 @@ Public Class Form1
                                             '---------------------------------
                                             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
                                             processinfo.Arguments = _
-"-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
+    "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
                                             processinfo.UseShellExecute = False
                                             processinfo.CreateNoWindow = True
                                             processinfo.RedirectStandardOutput = False
@@ -4999,7 +4999,7 @@ Public Class Form1
                                             process.WaitForExit()
                                             System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                                             processinfo.Arguments = _
-"-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & "s-1-5-32-544" & Chr(34)
+    "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & "s-1-5-32-544" & Chr(34)
                                             process.StartInfo = processinfo
                                             process.Start()
                                             process.WaitForExit()
@@ -5534,29 +5534,38 @@ Public Class Form1
                     ElseIf resultmsgbox = DialogResult.No Then
                         'do nothing and continue without safe mode
                     ElseIf resultmsgbox = DialogResult.Yes Then
-                        Dim setbcdedit As New ProcessStartInfo
-                        setbcdedit.FileName = "cmd.exe"
-                        setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
-                        setbcdedit.UseShellExecute = False
-                        setbcdedit.CreateNoWindow = True
-                        setbcdedit.RedirectStandardOutput = False
-                        Dim processstopservice As New Process
-                        processstopservice.StartInfo = setbcdedit
-                        processstopservice.Start()
-                        processstopservice.WaitForExit()
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-                        If regkey IsNot Nothing Then
-                            Try
-                                regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
-                                regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
-                            Catch ex As Exception
-                                log(ex.Message & ex.StackTrace)
-                            End Try
+                        Dim resultmsgbox2 As Integer = MessageBox.Show("PLEASE READ!!!! You asked DDU to reboot into safemode automatically it is recommended that you manually do this first to be sure " _
+           & "your system really can boot into safemode. 1 Possibility with the 'DDU auto boot in Safemode feature' is that the computer will 'never ending black screen boot loop'  (not a DDU issue , usually cause by other third party softwares.). If you get stuck in that 'boot loop', check the forum on how to fix it or contact me directly. With this being said, Reboot in safemode now automatically ?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                        If resultmsgbox2 = DialogResult.Cancel Then
+                            Me.Close()
+                            Exit Sub
+                        ElseIf resultmsgbox2 = DialogResult.No Then
+                            'do nothing and continue without safe mode
+                        ElseIf resultmsgbox2 = DialogResult.Yes Then
+                            Dim setbcdedit As New ProcessStartInfo
+                            setbcdedit.FileName = "cmd.exe"
+                            setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
+                            setbcdedit.UseShellExecute = False
+                            setbcdedit.CreateNoWindow = True
+                            setbcdedit.RedirectStandardOutput = False
+                            Dim processstopservice As New Process
+                            processstopservice.StartInfo = setbcdedit
+                            processstopservice.Start()
+                            processstopservice.WaitForExit()
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+                            If regkey IsNot Nothing Then
+                                Try
+                                    regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
+                                    regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+                                Catch ex As Exception
+                                    log(ex.Message & ex.StackTrace)
+                                End Try
 
+                            End If
+                            System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
+                            Me.Close()
+                            Exit Sub
                         End If
-                        System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
-                        Me.Close()
-                        Exit Sub
                     End If
                 Else
                     MsgBox("DDU has detected that you are NOT in SafeMode... For a better CleanUP without issues, it is recommended that you reboot into safemode")
@@ -5883,50 +5892,58 @@ Public Class Form1
 
 
             '----------------------------------------------
-            'Here I remove AMD HD Audio bus (System device)
+            'Here I remove AMD HD Audio bus (System device)   Commenting this out as it causes problems.
             '----------------------------------------------
 
-            Try
-                If combobox1value = "AMD" Then
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames()
-                            If checkvariables.isnullorwhitespace(child) = False Then
-                                If child.ToLower.Contains("ven_1002") Then
-                                    For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-                                        If checkvariables.isnullorwhitespace(child2) = False Then
-                                            If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child & "\" & child2).GetValue("LowerFilters")) Then
-                                                array = regkey.OpenSubKey(child & "\" & child2).GetValue("LowerFilters")
-                                                For i As Integer = 0 To array.Length - 1
-                                                    If array(i).ToLower.Contains("amdkmafd") Then
-                                                        log("Found an AMD audio controller bus !")
-                                                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                                        processinfo.Arguments = "remove =system " & Chr(34) & "*" & child & Chr(34)
-                                                        processinfo.UseShellExecute = False
-                                                        processinfo.CreateNoWindow = True
-                                                        processinfo.RedirectStandardOutput = True
-                                                        process.StartInfo = processinfo
+            'Try
+            '    If combobox1value = "AMD" Then
+            '        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+            '        If regkey IsNot Nothing Then
+            '            For Each child As String In regkey.GetSubKeyNames()
+            '                If checkvariables.isnullorwhitespace(child) = False Then
+            '                    If child.ToLower.Contains("ven_1002") Then
+            '                        For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+            '                            If checkvariables.isnullorwhitespace(child2) = False Then
+            '                                array = regkey.OpenSubKey(child & "\" & child2).GetValue("LowerFilters")
+            '                                If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+            '                                    For i As Integer = 0 To array.Length - 1
+            '                                        If Not checkvariables.isnullorwhitespace(array(i)) Then
+            '                                            If array(i).ToLower.Contains("amdkmafd") Then
+            '                                                log("Found an AMD audio controller bus !")
+            '                                                Try
+            '                                                    log("array result: " + array(i))
+            '                                                Catch ex As Exception
+            '                                                End Try
+            '                                                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+            '                                                processinfo.Arguments = "remove =system " & Chr(34) & "*" & child & Chr(34)
+            '                                                processinfo.UseShellExecute = False
+            '                                                processinfo.CreateNoWindow = True
+            '                                                processinfo.RedirectStandardOutput = True
+            '                                                process.StartInfo = processinfo
 
-                                                        process.Start()
-                                                        reply2 = process.StandardOutput.ReadToEnd
-                                                        process.WaitForExit()
-                                                        log(reply2)
-                                                    End If
-                                                Next
-                                            End If
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        Next
-                    End If
-                    Invoke(Sub() TextBox1.Text = TextBox1.Text + "AMD HD Audio Bus Removed !" + vbNewLine)
-                    Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                    Invoke(Sub() TextBox1.ScrollToCaret())
-                End If
-            Catch ex As Exception
-                log(ex.StackTrace)
-            End Try
+            '                                                process.Start()
+            '                                                reply2 = process.StandardOutput.ReadToEnd
+            '                                                process.WaitForExit()
+            '                                                log(reply2)
+            '                                                log("AMD HD Audio Bus Removed !")
+            '                                            End If
+            '                                        End If
+            '                                    Next
+            '                                End If
+            '                            End If
+            '                        Next
+            '                    End If
+            '                End If
+            '            Next
+            '        End If
+            '        Invoke(Sub() TextBox1.Text = TextBox1.Text + "AMD HD Audio Bus Removed !" + vbNewLine)
+            '        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+            '        Invoke(Sub() TextBox1.ScrollToCaret())
+
+            '    End If
+            'Catch ex As Exception
+            '    log(ex.Message + ex.StackTrace)
+            'End Try
             ' ----------------------
             ' Removing the videocard
             ' ----------------------
@@ -6259,13 +6276,14 @@ Public Class Form1
                     appproc(i).Kill()
                 Next i
                 cleannvidiafolders()
+                checkpcieroot()
             End If
 
             If combobox1value = "INTEL" Then
                 ' Cleanintel()
             End If
             cleandriverstore()
-            checkpcieroot()
+
             rescan()
 
         Catch ex As Exception
@@ -6326,9 +6344,7 @@ Public Class Form1
             Label11.Text = Label11.Text & buttontext("0")
         Catch ex As Exception
         End Try
-        checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
-        'checkthread.Priority = ThreadPriority.Highest
-        checkupdatethread.Start()
+        Checkupdates2()
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
@@ -6603,13 +6619,13 @@ Public Class checkupdate
         Try
             Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt")
             Dim response2 As System.Net.HttpWebResponse = Nothing
-
+            request2.Timeout = 2000
             Try
                 response2 = request2.GetResponse()
             Catch ex As Exception
                 request2 = System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion2.txt")
             End Try
-
+            request2.Timeout = 2000
             response2 = request2.GetResponse()
             Dim sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
 
