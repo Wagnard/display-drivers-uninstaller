@@ -85,6 +85,7 @@ Public Class Form1
     Dim closeapp As String = False
     Dim ddudrfolder As String
     Dim TextLines() As String
+    Dim array() As String = Nothing
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -4048,18 +4049,20 @@ Public Class Form1
                             For Each child As String In regkey.GetValueNames()
                                 If checkvariables.isnullorwhitespace(child) = False Then
                                     If child.Contains("Path") Then
-                                        wantedvalue = regkey.GetValue(child).ToString()
-                                        Try
-                                            Select Case True
-                                                Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
-                                                    wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
-                                                    Try
-                                                        regkey.SetValue(child, wantedvalue)
-                                                    Catch ex As Exception
-                                                    End Try
-                                            End Select
-                                        Catch ex As Exception
-                                        End Try
+                                        If Not checkvariables.isnullorwhitespace(regkey.GetValue(child).ToString()) Then
+                                            wantedvalue = regkey.GetValue(child).ToString()
+                                            Try
+                                                Select Case True
+                                                    Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
+                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
+                                                        Try
+                                                            regkey.SetValue(child, wantedvalue)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                End Select
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
                                     End If
                                 End If
                             Next
@@ -4568,7 +4571,7 @@ Public Class Form1
                             If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
                                 wantedvalue = subregkey.GetValue("").ToString
                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                    If wantedvalue.Contains("NVIDIA") Then
+                                    If wantedvalue.ToLower.Contains("nvidia") Then
                                         Try
                                             regkey.DeleteSubKeyTree(child)
                                         Catch ex As Exception
@@ -4938,12 +4941,10 @@ Public Class Form1
                         End Try
                         For Each childs As String In subregkey.GetSubKeyNames()
                             If checkvariables.isnullorwhitespace(childs) = False Then
-                                If subregkey.OpenSubKey(childs).GetValue("UpperFilters") IsNot Nothing Then
-                                    Dim array() As String = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
+                                If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(childs).GetValue("UpperFilters")) Then
+                                    array = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
                                     For i As Integer = 0 To array.Length - 1
-
                                         If array(i).ToLower.Contains("nvpciflt") Then
-
                                             Invoke(Sub() TextBox1.Text = TextBox1.Text + "-nVidia Optimus UpperFilter Found." + vbNewLine)
                                             Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
                                             Invoke(Sub() TextBox1.ScrollToCaret())
@@ -5431,7 +5432,7 @@ Public Class Form1
                             End Try
                             For Each childs As String In subregkey.GetSubKeyNames()
                                 If checkvariables.isnullorwhitespace(childs) = False Then
-                                    If subregkey.OpenSubKey(childs).GetValue("Service") IsNot Nothing Then
+                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(childs).GetValue("Service")) Then
                                         If subregkey.OpenSubKey(childs).GetValue("Service").ToString.ToLower.Contains("amdkmdap") Then
                                             enduro = True
                                             TextBox1.Text = TextBox1.Text + "System seems to be an AMD Enduro (Intel)" + vbNewLine
@@ -5884,6 +5885,7 @@ Public Class Form1
             '----------------------------------------------
             'Here I remove AMD HD Audio bus (System device)
             '----------------------------------------------
+
             Try
                 If combobox1value = "AMD" Then
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
@@ -5893,8 +5895,8 @@ Public Class Form1
                                 If child.ToLower.Contains("ven_1002") Then
                                     For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
                                         If checkvariables.isnullorwhitespace(child2) = False Then
-                                            If regkey.OpenSubKey(child & "\" & child2).GetValue("LowerFilters") IsNot Nothing Then
-                                                Dim array() As String = regkey.OpenSubKey(child & "\" & child2).GetValue("LowerFilters")    'do a .tostring here?
+                                            If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child & "\" & child2).GetValue("LowerFilters")) Then
+                                                array = regkey.OpenSubKey(child & "\" & child2).GetValue("LowerFilters")
                                                 For i As Integer = 0 To array.Length - 1
                                                     If array(i).ToLower.Contains("amdkmafd") Then
                                                         log("Found an AMD audio controller bus !")
