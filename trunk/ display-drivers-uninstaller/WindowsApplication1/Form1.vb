@@ -4034,46 +4034,47 @@ Public Class Form1
         '--------------------------------
         'System environement path cleanup
         '--------------------------------
-        log("System environement CleanUP")
-        Try
-            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
-            If subregkey IsNot Nothing Then
-                For Each child2 As String In subregkey.GetSubKeyNames()
-                    If child2.ToLower.Contains("controlset") Then
-                        Try
-                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetValueNames()
-                                If checkvariables.isnullorwhitespace(child) = False Then
-                                    If child.Contains("Path") Then
-                                        If Not checkvariables.isnullorwhitespace(regkey.GetValue(child).ToString()) Then
-                                            wantedvalue = regkey.GetValue(child).ToString()
-                                            Try
-                                                Select Case True
-                                                    Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
-                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
-                                                        Try
-                                                            regkey.SetValue(child, wantedvalue)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                End Select
-                                            Catch ex As Exception
-                                            End Try
+        If removephysx Then
+            log("System environement CleanUP")
+            Try
+                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+                If subregkey IsNot Nothing Then
+                    For Each child2 As String In subregkey.GetSubKeyNames()
+                        If child2.ToLower.Contains("controlset") Then
+                            Try
+                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
+                            Catch ex As Exception
+                                Continue For
+                            End Try
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetValueNames()
+                                    If checkvariables.isnullorwhitespace(child) = False Then
+                                        If child.Contains("Path") Then
+                                            If Not checkvariables.isnullorwhitespace(regkey.GetValue(child).ToString()) Then
+                                                wantedvalue = regkey.GetValue(child).ToString()
+                                                Try
+                                                    Select Case True
+                                                        Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
+                                                            wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
+                                                            Try
+                                                                regkey.SetValue(child, wantedvalue)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                    End Select
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
                                         End If
                                     End If
-                                End If
-                            Next
+                                Next
+                            End If
                         End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.StackTrace)
+            End Try
+        End If
         '-------------------------------------
         'end system environement patch cleanup
         '-------------------------------------
@@ -4785,7 +4786,7 @@ Public Class Form1
 
         registrycleanup.installer(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\packages.cfg"))
 
-        
+
 
         '-------------
         'control/video
