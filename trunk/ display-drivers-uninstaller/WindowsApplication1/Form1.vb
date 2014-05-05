@@ -987,7 +987,7 @@ Public Class Form1
         'end control/video
         '-----------------
 
-        log("ActiveMovie Filter Class Manager cleanUP")
+        log("Instance lass cleanUP")
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", False)
             If regkey IsNot Nothing Then
@@ -999,44 +999,38 @@ Public Class Form1
                             Continue For
                         End Try
                         If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
-                                wantedvalue = subregkey.GetValue("").ToString
-                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                    If wantedvalue.Contains("ActiveMovie Filter Class Manager") Then
+                            Try
+                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\Instance", False)
+                            Catch ex As Exception
+                                Continue For
+                            End Try
+                            If subregkey2 IsNot Nothing Then
+                                For Each child2 As String In subregkey2.GetSubKeyNames()
+                                    If checkvariables.isnullorwhitespace(child2) = False Then
                                         Try
-                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\Instance", False)
+                                            superkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\Instance\" & child2)
                                         Catch ex As Exception
                                             Continue For
                                         End Try
-                                        If subregkey2 IsNot Nothing Then
-                                            For Each child2 As String In subregkey2.GetSubKeyNames()
-                                                If checkvariables.isnullorwhitespace(child2) = False Then
+                                        If superkey IsNot Nothing Then
+                                            If checkvariables.isnullorwhitespace(superkey.GetValue("FriendlyName")) = False Then
+                                                wantedvalue2 = superkey.GetValue("FriendlyName").ToString
+                                                If wantedvalue2.ToLower.Contains("ati mpeg") Or _
+                                                    wantedvalue2.ToLower.Contains("amd mjpeg") Or _
+                                                    wantedvalue2.ToLower.Contains("ati ticker") Or _
+                                                    wantedvalue2.ToLower.Contains("mmace softemu") Or _
+                                                    wantedvalue2.ToLower.Contains("mmace deinterlace") Or _
+                                                    wantedvalue2.ToLower.Contains("amd video") Or _
+                                                    wantedvalue2.ToLower.Contains("ati video") Then
                                                     Try
-                                                        superkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\Instance\" & child2)
+                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("CLSID\" & child & "\Instance\" & child2)
                                                     Catch ex As Exception
-                                                        Continue For
                                                     End Try
-                                                    If superkey IsNot Nothing Then
-                                                        If checkvariables.isnullorwhitespace(superkey.GetValue("FriendlyName")) = False Then
-                                                            wantedvalue2 = superkey.GetValue("FriendlyName").ToString
-                                                            If wantedvalue2.Contains("ATI MPEG") Or _
-                                                                wantedvalue2.Contains("AMD MJPEG") Or _
-                                                                wantedvalue2.Contains("ATI Ticker") Or _
-                                                                wantedvalue2.Contains("MMACE SoftEmu") Or _
-                                                                wantedvalue2.Contains("MMACE DeInterlace") Or _
-                                                                wantedvalue2.Contains("ATI Video") Then
-                                                                Try
-                                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("CLSID\" & child & "\Instance\" & child2)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-                                                        End If
-                                                    End If
                                                 End If
-                                            Next
+                                            End If
                                         End If
                                     End If
-                                End If
+                                Next
                             End If
                         End If
                     End If
@@ -1058,40 +1052,38 @@ Public Class Form1
                                 Continue For
                             End Try
                             If subregkey IsNot Nothing Then
-                                If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
-                                    wantedvalue = subregkey.GetValue("").ToString
-                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                        If wantedvalue.Contains("ActiveMovie Filter Class Manager") Then
-                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\Instance", False)
-                                            If subregkey2 IsNot Nothing Then
-                                                For Each child2 As String In subregkey2.GetSubKeyNames()
-                                                    If checkvariables.isnullorwhitespace(child2) = False Then
+                                Try
+                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\Instance", False)
+                                Catch ex As Exception
+                                    Continue For
+                                End Try
+                                If subregkey2 IsNot Nothing Then
+                                    For Each child2 As String In subregkey2.GetSubKeyNames()
+                                        If checkvariables.isnullorwhitespace(child2) = False Then
+                                            Try
+                                                superkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\Instance\" & child2)
+                                            Catch ex As Exception
+                                                Continue For
+                                            End Try
+                                            If superkey IsNot Nothing Then
+                                                If checkvariables.isnullorwhitespace(superkey.GetValue("FriendlyName")) = False Then
+                                                    wantedvalue2 = superkey.GetValue("FriendlyName").ToString
+                                                    If wantedvalue2.ToLower.Contains("ati mpeg") Or _
+                                                    wantedvalue2.ToLower.Contains("amd mjpeg") Or _
+                                                    wantedvalue2.ToLower.Contains("ati ticker") Or _
+                                                    wantedvalue2.ToLower.Contains("mmace softemu") Or _
+                                                    wantedvalue2.ToLower.Contains("mmace deinterlace") Or _
+                                                    wantedvalue2.ToLower.Contains("amd video") Or _
+                                                    wantedvalue2.ToLower.Contains("ati video") Then
                                                         Try
-                                                            superkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\Instance\" & child2)
+                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\CLSID\" & child & "\Instance\" & child2)
                                                         Catch ex As Exception
-                                                            Continue For
                                                         End Try
-                                                        If superkey IsNot Nothing Then
-                                                            If checkvariables.isnullorwhitespace(superkey.GetValue("FriendlyName")) = False Then
-                                                                wantedvalue2 = superkey.GetValue("FriendlyName").ToString
-                                                                If wantedvalue2.Contains("ATI MPEG") Or _
-                                                                   wantedvalue2.Contains("AMD MJPEG") Or _
-                                                                   wantedvalue2.Contains("ATI Ticker") Or _
-                                                                   wantedvalue2.Contains("MMACE SoftEmu") Or _
-                                                                   wantedvalue2.Contains("MMACE DeInterlace") Or _
-                                                                   wantedvalue2.Contains("ATI Video") Then
-                                                                    Try
-                                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\CLSID\" & child & "\Instance\" & child2)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                End If
-                                                            End If
-                                                        End If
                                                     End If
-                                                Next
+                                                End If
                                             End If
                                         End If
-                                    End If
+                                    Next
                                 End If
                             End If
                         End If
