@@ -1,2 +1,0 @@
-Silno odporúčame vypnúť sieťové pripojenie, aby ste zabránili Windowsu v automatickom hľadaní ovládača online. 
-Po inštalácii nového (predtým stiahnutého) ovládača od AMD / NVIDIA môžete pripojenie znovu zapnúť.

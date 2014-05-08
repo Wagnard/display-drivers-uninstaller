@@ -1,2 +1,0 @@
-It is HIGHLY recommended that you turn OFF your network connection to prevent Windows from searching for a driver online
-automatically. You can turn it back ON after installing your updated (previously downloaded) driver from AMD / NVIDIA.

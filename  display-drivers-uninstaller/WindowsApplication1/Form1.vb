@@ -6503,13 +6503,6 @@ Public Class Form1
                 Label7.Text = Label7.Text & buttontext(i)
             Next
 
-            If Not loadinitiated Then           ' to prevent spamming the dynamic log witht the donation message when changing language.
-                buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label8.txt") '// add each line as String Array.
-
-                For i As Integer = 0 To buttontext.Length - 1
-                    UpdateTextMethod(buttontext(i))
-                Next
-            End If
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label10.txt") '// add each line as String Array.
             Label10.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
@@ -6675,13 +6668,13 @@ Public Class checkupdate
         Try
             Dim request2 As System.Net.HttpWebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt")
             Dim response2 As System.Net.HttpWebResponse = Nothing
-            request2.Timeout = 2000
+            request2.Timeout = 2500
             Try
                 response2 = request2.GetResponse()
             Catch ex As Exception
                 request2 = System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion2.txt")
             End Try
-            request2.Timeout = 2000
+            request2.Timeout = 2500
             response2 = request2.GetResponse()
             Dim sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
 
