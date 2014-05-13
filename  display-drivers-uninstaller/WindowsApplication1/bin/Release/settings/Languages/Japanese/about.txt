@@ -37,10 +37,13 @@ Windows Driver store から現在そして過去の全てのドライバーを�
 
 日本語化： DH ◆OmegaWBPUI
 
-Helge Klein (http://helgeklein.com/setacl/) に感謝： 彼のプログラム "SetAcl"のDDUへの使用許可
+AMD 7850を寄贈してくれた Jackalito に多大な感謝を
 
-テストのために時間を割いてくれたGamer1291 (optimus) と Octopuss (Amd Enduro)に大感謝
+Helge Klein (http://helgeklein.com/setacl/) に感謝を ： 彼のプログラム "SetAcl"のDDUへの使用許可
 
-自分のシステムを危険にさらしてテストしてくれた皆さん（特に Dellon132）に感謝
+テストのために時間を割いてくれた Gamer1291 (optimus)、Octopuss (Amd Enduro)、
+nedooo` (デバッグへの協力)、Extraordinary (バグ修正のテスト) に多大な感謝を
+
+自分のシステムを危険にさらしてテストしてくれた皆さん (特に Dellon132) に感謝を
 
 *DDUとそのクリエイター、関係者は、 Driver Sweeperとそのクリエイターとは何ら提携関係にありません
