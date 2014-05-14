@@ -6116,7 +6116,7 @@ Public Class Form1
                         log("-" & vendid & "- 3D vision usb controler found")
 
                         processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                        processinfo.Arguments = "remove =USB " & Chr(34) & "@" & vendid & Chr(34)
+                        processinfo.Arguments = "remove =USB " & Chr(34) & vendid & Chr(34)
                         processinfo.UseShellExecute = False
                         processinfo.CreateNoWindow = True
                         processinfo.RedirectStandardOutput = True
@@ -6153,7 +6153,7 @@ Public Class Form1
                 Invoke(Sub() TextBox1.ScrollToCaret())
                 log("Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!")
                 processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                processinfo.Arguments = "remove =media " & Chr(34) & "@ROOT\UNNAMED_DEVICE\0000" & Chr(34)
+                processinfo.Arguments = "remove =media " & Chr(34) & "USB\VID_0955&PID_9000" & Chr(34)
                 processinfo.UseShellExecute = False
                 processinfo.CreateNoWindow = True
                 processinfo.RedirectStandardOutput = True
@@ -6173,7 +6173,31 @@ Public Class Form1
                     Exit Sub
                 End Try
             End If
-
+            If combobox1value = "INTEL" Then
+                'Removing Intel WIdI bus Enumerator
+                UpdateTextMethod("IWD Bus Enumerator")
+                log("IWD Bus Enumerator")
+                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
+                processinfo.UseShellExecute = False
+                processinfo.CreateNoWindow = True
+                processinfo.RedirectStandardOutput = True
+                process.StartInfo = processinfo
+                Try
+                    process.Start()
+                    reply2 = process.StandardOutput.ReadToEnd
+                    process.WaitForExit()
+                    log(reply2)
+                Catch ex As Exception
+                    preventclose = False
+                    log(ex.Message)
+                    MsgBox("Cannot find ddudr in " & ddudrfolder & " folder", MsgBoxStyle.Critical)
+                    Button1.Enabled = True
+                    Button2.Enabled = True
+                    Button3.Enabled = True
+                    Exit Sub
+                End Try
+            End If
 
             log("ddudr Remove Audio/HDMI Complete")
             'removing monitor and hidden monitor
