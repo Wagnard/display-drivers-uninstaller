@@ -253,43 +253,8 @@ Public Class Form1
     End Sub
     Private Sub cleanamdserviceprocess()
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "Cleaning process/services..." + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
-        log("Cleaning Process/Services...")
 
-        'STOP AMD service
-        Dim services() As String
-        services = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\services.cfg") '// add each line as String Array.
-        For i As Integer = 0 To services.Length - 1
-            If Not checkvariables.isnullorwhitespace(services(i)) Then
-                Dim stopservice As New ProcessStartInfo
-                stopservice.FileName = "cmd.exe"
-                stopservice.Arguments = " /Csc stop " & Chr(34) & services(i) & Chr(34)
-                stopservice.UseShellExecute = False
-                stopservice.CreateNoWindow = True
-                stopservice.RedirectStandardOutput = False
-
-                Dim processstopservice As New Process
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-
-                System.Threading.Thread.Sleep(10)
-
-                stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
-
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-
-                stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-            End If
-        Next
-
+        registrycleanup.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\services.cfg")) '// add each line as String Array.
 
         Dim killpid As New ProcessStartInfo
         killpid.FileName = "cmd.exe"
@@ -2335,42 +2300,7 @@ Public Class Form1
 
     Private Sub cleannvidiaserviceprocess()
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "Cleaning process/services..." + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
-        log("Cleaning Process/Services...")
-
-        'STOP / delete / interrogate NVIDIA service
-        Dim services() As String
-        services = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\services.cfg") '// add each line as String Array.
-        For i As Integer = 0 To services.Length - 1
-            If Not checkvariables.isnullorwhitespace(services(i)) Then
-                Dim stopservice As New ProcessStartInfo
-                stopservice.FileName = "cmd.exe"
-                stopservice.Arguments = " /Csc stop " & Chr(34) & services(i) & Chr(34)
-                stopservice.UseShellExecute = False
-                stopservice.CreateNoWindow = True
-                stopservice.RedirectStandardOutput = False
-
-                Dim processstopservice As New Process
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-
-                System.Threading.Thread.Sleep(10)
-
-                stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
-
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-
-                stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-            End If
-        Next
+        registrycleanup.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\services.cfg"))
 
         'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
         'holding files in the NVIDIA folders sometimes.
@@ -2475,7 +2405,6 @@ Public Class Form1
                     Try
                         TestDelete(child)
                     Catch ex As Exception
-                        log(ex.Message + ex.StackTrace + " UpdatusUser")
                     End Try
 
                     Try
@@ -2496,7 +2425,6 @@ Public Class Form1
                         My.Computer.FileSystem.DeleteDirectory _
                     (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
-
                         log(ex.Message + " Updatus directory delete")
                     End Try
                 End If
@@ -4956,6 +4884,11 @@ Public Class Form1
         log("End of Registry Cleaning")
         System.Threading.Thread.Sleep(10)
     End Sub
+    Private Sub cleanintelserviceprocess()
+
+        registrycleanup.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\services.cfg")) '// add each line as String Array.
+
+    End Sub
 
     Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
 
@@ -6329,7 +6262,7 @@ Public Class Form1
             End If
 
             If combobox1value = "INTEL" Then
-                ' Cleanintel()
+                cleanintelserviceprocess()
             End If
             cleandriverstore()
 
@@ -7025,5 +6958,41 @@ Public Class registrycleanup
         End Try
         f.UpdateTextMethod("-End currentuser ,installer\products cleanup")
     End Sub
+    Public Sub cleanserviceprocess(ByVal services As String())
+        Dim f As Form1 = My.Application.OpenForms("Form1")
 
+        f.UpdateTextMethod("Cleaning process/services...")
+        f.log("Cleaning Process/Services...")
+
+        'STOP AMD service
+        For i As Integer = 0 To services.Length - 1
+            If Not checkvariables.isnullorwhitespace(services(i)) Then
+                Dim stopservice As New ProcessStartInfo
+                stopservice.FileName = "cmd.exe"
+                stopservice.Arguments = " /Csc stop " & Chr(34) & services(i) & Chr(34)
+                stopservice.UseShellExecute = False
+                stopservice.CreateNoWindow = True
+                stopservice.RedirectStandardOutput = False
+
+                Dim processstopservice As New Process
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+
+                System.Threading.Thread.Sleep(10)
+
+                stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
+
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+
+                stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
+                processstopservice.StartInfo = stopservice
+                processstopservice.Start()
+                processstopservice.WaitForExit()
+            End If
+        Next
+        System.Threading.Thread.Sleep(10)
+    End Sub
 End Class
