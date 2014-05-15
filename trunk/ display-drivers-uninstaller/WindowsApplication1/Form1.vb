@@ -2985,6 +2985,7 @@ Public Class Form1
                                        child2.ToLower.Contains("nvbackend") Or _
                                        child2.ToLower.Contains("nvidia update core") Or _
                                         child2.ToLower.Contains("nvcontrolpanel2") Or _
+                                        child2.ToLower.Contains("nvtray") Or _
                                         child2.ToLower.Contains("nvidia control panel") Then
                                         Try
                                             regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
@@ -3285,6 +3286,11 @@ Public Class Form1
                                     If wantedvalue.ToLower.Contains("nvidia") Then
                                         Try
                                             regkey.DeleteSubKeyTree(child)
+                                        Catch ex As Exception
+                                        End Try
+                                        'special case only to nvidia afaik. there i a clsid for a control pannel that link from namespace.
+                                        Try
+                                            My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKey(child)
                                         Catch ex As Exception
                                         End Try
                                     End If
