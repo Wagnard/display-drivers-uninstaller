@@ -3273,24 +3273,20 @@ Public Class Form1
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        Try
-                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\" & child, False)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
                         If subregkey IsNot Nothing Then
                             If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
                                 wantedvalue = subregkey.GetValue("").ToString
                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                    If wantedvalue.ToLower.Contains("nvidia") Then
+                                    If wantedvalue.ToLower.Contains("nvidia control panel") Then
                                         Try
                                             regkey.DeleteSubKeyTree(child)
                                         Catch ex As Exception
                                         End Try
                                         'special case only to nvidia afaik. there i a clsid for a control pannel that link from namespace.
                                         Try
-                                            My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKey(child)
+                                            My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(child)
                                         Catch ex As Exception
                                         End Try
                                     End If
