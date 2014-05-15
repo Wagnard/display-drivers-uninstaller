@@ -69,7 +69,6 @@ Public Class Form1
     Dim packages As String()
     Dim safemode As Boolean = False
     Dim myExe As String
-    Dim interfaces() As String
     Dim driverfiles() As String
     Dim checkupdates As New checkupdate
     Dim CleanupEngine As New CleanupEngine
@@ -744,9 +743,7 @@ Public Class Form1
         End Try
     End Sub
     Private Sub cleanamd()
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "Cleaning known Regkeys... May take a minute or two." + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
+        UpdateTextMethod("Cleaning known Regkeys... May take a minute or two.")
         log("Cleaning known Regkeys")
 
 
@@ -761,59 +758,10 @@ Public Class Form1
         '-----------------
         'interface cleanup
         '-----------------
-        log("Interface CleanUP")
 
-        Try
-            interfaces = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\interface.cfg") '// add each line as String Array.
-            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        Try
-                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
-                        If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
-                                wantedvalue = subregkey.GetValue("").ToString
-                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                    For i As Integer = 0 To interfaces.Length - 1
-                                        If Not checkvariables.isnullorwhitespace(interfaces(i)) Then
-                                            If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
-                                                If subregkey.OpenSubKey("Typelib", False) IsNot Nothing Then
-                                                    If checkvariables.isnullorwhitespace(subregkey.OpenSubKey("TypeLib", False).GetValue("")) = False Then
-                                                        typelib = subregkey.OpenSubKey("TypeLib", False).GetValue("")
-                                                        If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                            Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                    End If
-                                                End If
-                                                Try
-                                                    regkey.DeleteSubKeyTree(child)
-                                                Catch ex As Exception
-                                                End Try
-                                                If IntPtr.Size = 8 Then
-                                                    Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\Interface\" & child)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                            End If
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
+
+
+        CleanupEngine.interfaces(IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\interface.cfg")) '// add each line as String Array.
 
         '-------------
         'control/video
@@ -2567,6 +2515,7 @@ Public Class Form1
         '-----------------
         'Registry Cleaning
         '-----------------
+        UpdateTextMethod("Starting Registry CleanUP")
         log("Starting reg cleanUP... May take a minute or two.")
 
 
@@ -2593,70 +2542,25 @@ Public Class Form1
                            child.ToLower.Contains("gamesconfigserver") Or _
                            child.ToLower.Contains("nvidia.installer") Or _
                            child.ToLower.Contains("displayserver") Then
-                            Try
-                                subregkey = regkey.OpenSubKey(child)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
+                            subregkey = regkey.OpenSubKey(child)
                             If subregkey IsNot Nothing Then
                                 If checkvariables.isnullorwhitespace(subregkey.GetValue("AppID")) = False Then
                                     wantedvalue = subregkey.GetValue("AppID").ToString
                                     If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                        If removephysx Then
-                                            If IntPtr.Size = 8 Then
+                                        Try
+                                            appid = wantedvalue
+                                            If checkvariables.isnullorwhitespace(appid) = False Then
                                                 Try
-                                                    appid = wantedvalue
-                                                    If checkvariables.isnullorwhitespace(appid) = False Then
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
-                                                    End If
+                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
                                                 Catch ex As Exception
                                                 End Try
                                             End If
-                                            Try
-                                                appid = wantedvalue
-                                                If checkvariables.isnullorwhitespace(appid) = False Then
-                                                    Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                            Catch ex As Exception
-                                            End Try
-                                            Try
-                                                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & child)
-                                            Catch ex As Exception
-                                            End Try
-
-                                        Else
-                                            If child.ToLower.Contains("gamesconfigserver") Then
-                                                'do nothing
-                                            Else
-                                                If IntPtr.Size = 8 Then
-                                                    Try
-                                                        appid = wantedvalue
-                                                        If checkvariables.isnullorwhitespace(appid) = False Then
-                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\AppID\" & appid)
-                                                        End If
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                Try
-
-                                                    appid = wantedvalue
-                                                    If checkvariables.isnullorwhitespace(appid) = False Then
-                                                        Try
-                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                Catch ex As Exception
-                                                End Try
-                                                Try
-                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & child)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                        End If
+                                        Catch ex As Exception
+                                        End Try
+                                        Try
+                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & child)
+                                        Catch ex As Exception
+                                        End Try
                                     End If
                                 End If
                             End If
@@ -2667,435 +2571,17 @@ Public Class Form1
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
-
-        log("Extra step")
-
-        Try
-            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID")
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        Try
-                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\LocalServer32", False)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
-                        Try
-                            If subregkey IsNot Nothing Then
-                                If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
-                                    wantedvalue = subregkey.GetValue("").ToString
-                                    If checkvariables.isnullorwhitespace(wantedvalue) = False And wantedvalue.ToLower.Contains("\nvidia corporation\") Then
-
-                                        If removephysx Then
-                                            If IntPtr.Size = 8 Then
-                                                Try
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
-                                                    Dim appid As String = Nothing
-                                                    Try
-                                                        appid = subregkey2.GetValue("AppID").ToString
-                                                    Catch ex As Exception
-                                                    End Try
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
-
-                                                    Dim typelib As String = Nothing
-                                                    Try
-                                                        typelib = subregkey2.GetValue("").ToString
-                                                    Catch ex As Exception
-                                                    End Try
-
-                                                    If checkvariables.isnullorwhitespace(appid) = False Then
-                                                        Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                            subregkey2.DeleteSubKeyTree(appid)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        Try
-                                                            'special case for an unusual key configuration nv bug?
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                            subregkey2.DeleteSubKeyTree(appid)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                        Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
-                                                            subregkey2.DeleteSubKeyTree(typelib)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                    subregkey2.DeleteSubKeyTree(child)
-
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                            Try
-                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
-                                                Dim appid As String = Nothing
-                                                Try
-                                                    appid = subregkey2.GetValue("AppID").ToString
-                                                Catch ex As Exception
-                                                End Try
-                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
-                                                Dim typelib As String = Nothing
-                                                Try
-                                                    typelib = subregkey2.GetValue("").ToString
-                                                Catch ex As Exception
-                                                End Try
-
-                                                If checkvariables.isnullorwhitespace(appid) = False Then
-                                                    Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                        subregkey2.DeleteSubKeyTree(appid)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                    Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
-                                                        subregkey2.DeleteSubKeyTree(typelib)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                subregkey2.DeleteSubKeyTree(child)
-                                            Catch ex As Exception
-                                            End Try
-
-                                        Else
-                                            If child.Contains("gamesconfigserver") Then   'Physx related
-                                                'do nothing
-                                            Else
-                                                If IntPtr.Size = 8 Then
-                                                    Try
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
-                                                        Dim appid As String = Nothing
-                                                        Try
-                                                            appid = subregkey2.GetValue("AppID").ToString
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
-                                                        Dim typelib As String = Nothing
-                                                        Try
-                                                            typelib = subregkey2.GetValue("").ToString
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        If checkvariables.isnullorwhitespace(appid) = False Then
-                                                            Try
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                                subregkey.DeleteSubKeyTree(appid)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                            Try
-                                                                'special case for an unusual key configuration nv bug?
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                subregkey.DeleteSubKeyTree(appid)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                            Try
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
-                                                                subregkey.DeleteSubKeyTree(typelib)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                        subregkey.DeleteSubKeyTree(child)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                Try
-                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
-                                                    Dim appid As String = Nothing
-                                                    Try
-                                                        appid = subregkey2.GetValue("AppID").ToString
-                                                    Catch ex As Exception
-                                                    End Try
-                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
-                                                    Dim typelib As String = Nothing
-                                                    Try
-                                                        typelib = subregkey2.GetValue("").ToString
-                                                    Catch ex As Exception
-                                                    End Try
-
-                                                    If checkvariables.isnullorwhitespace(appid) = False Then
-                                                        Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                            subregkey.DeleteSubKeyTree(appid)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                        Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
-                                                            subregkey.DeleteSubKeyTree(typelib)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                    subregkey.DeleteSubKeyTree(child)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                        End If
-                                    End If
-                                End If
-                            End If
-                        Catch ex As Exception
-                        End Try
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
-        If IntPtr.Size = 8 Then
-            Try
-                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID")
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            Try
-                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\LocalServer32", False)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
-
-                            Try
-                                If subregkey IsNot Nothing Then
-                                    If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
-                                        wantedvalue = subregkey.GetValue("").ToString
-                                        If checkvariables.isnullorwhitespace(wantedvalue) = False And wantedvalue.ToLower.Contains("\nvidia corporation\") Then
-
-                                            If removephysx Then
-                                                If IntPtr.Size = 8 Then
-                                                    Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
-                                                        Dim appid As String = Nothing
-                                                        Try
-                                                            appid = subregkey2.GetValue("AppID").ToString
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
-
-                                                        Dim typelib As String = Nothing
-                                                        Try
-                                                            typelib = subregkey2.GetValue("").ToString
-                                                        Catch ex As Exception
-                                                        End Try
-
-                                                        If checkvariables.isnullorwhitespace(appid) = False Then
-                                                            Try
-                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                                subregkey2.DeleteSubKeyTree(appid)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                            Try
-                                                                'special case for an unusual key configuration nv bug?
-                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                subregkey2.DeleteSubKeyTree(appid)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                            Try
-                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
-                                                                subregkey2.DeleteSubKeyTree(typelib)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                        subregkey2.DeleteSubKeyTree(child)
-
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                                Try
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
-                                                    Dim appid As String = Nothing
-                                                    Try
-                                                        appid = subregkey2.GetValue("AppID").ToString
-                                                    Catch ex As Exception
-                                                    End Try
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
-                                                    Dim typelib As String = Nothing
-                                                    Try
-                                                        typelib = subregkey2.GetValue("").ToString
-                                                    Catch ex As Exception
-                                                    End Try
-
-                                                    If checkvariables.isnullorwhitespace(appid) = False Then
-                                                        Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                            subregkey2.DeleteSubKeyTree(appid)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                        Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
-                                                            subregkey2.DeleteSubKeyTree(typelib)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                    subregkey2.DeleteSubKeyTree(child)
-                                                Catch ex As Exception
-                                                End Try
-
-                                            Else
-                                                If child.Contains("gamesconfigserver") Then   'Physx related
-                                                    'do nothing
-                                                Else
-                                                    If IntPtr.Size = 8 Then
-                                                        Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child)
-                                                            Dim appid As String = Nothing
-                                                            Try
-                                                                appid = subregkey2.GetValue("AppID").ToString
-                                                            Catch ex As Exception
-                                                            End Try
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\TypeLib")
-                                                            Dim typelib As String = Nothing
-                                                            Try
-                                                                typelib = subregkey2.GetValue("").ToString
-                                                            Catch ex As Exception
-                                                            End Try
-                                                            If checkvariables.isnullorwhitespace(appid) = False Then
-                                                                Try
-                                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
-                                                                    subregkey.DeleteSubKeyTree(appid)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                                Try
-                                                                    'special case for an unusual key configuration nv bug?
-                                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                    subregkey.DeleteSubKeyTree(appid)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-                                                            If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                                Try
-                                                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True)
-                                                                    subregkey.DeleteSubKeyTree(typelib)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-                                                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                            subregkey.DeleteSubKeyTree(child)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                    Try
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child)
-                                                        Dim appid As String = Nothing
-                                                        Try
-                                                            appid = subregkey2.GetValue("AppID").ToString
-                                                        Catch ex As Exception
-                                                        End Try
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\TypeLib")
-                                                        Dim typelib As String = Nothing
-                                                        Try
-                                                            typelib = subregkey2.GetValue("").ToString
-                                                        Catch ex As Exception
-                                                        End Try
-
-                                                        If checkvariables.isnullorwhitespace(appid) = False Then
-                                                            Try
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-                                                                subregkey.DeleteSubKeyTree(appid)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                            Try
-                                                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
-                                                                subregkey.DeleteSubKeyTree(typelib)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                        subregkey.DeleteSubKeyTree(child)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                            End If
-                                        End If
-                                    End If
-                                End If
-                            Catch ex As Exception
-                            End Try
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                log(ex.StackTrace)
-            End Try
-        End If
-
-        log("exta step #2")
-
 
         CleanupEngine.clsidleftover(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 
-        log("Interface CleanUP")
+        '-----------------
         'interface cleanup
+        '-----------------
 
-        Try
-            interfaces = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\interface.cfg") '// add each line as String Array.
-            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        Try
-                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
-                        If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
-                                wantedvalue = subregkey.GetValue("").ToString
-                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                    For i As Integer = 0 To interfaces.Length - 1
-                                        If Not checkvariables.isnullorwhitespace(interfaces(i)) Then
-                                            If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
-                                                If subregkey.OpenSubKey("Typelib", False) IsNot Nothing Then
-                                                    If checkvariables.isnullorwhitespace(subregkey.OpenSubKey("TypeLib", False).GetValue("")) = False Then
-                                                        typelib = subregkey.OpenSubKey("TypeLib", False).GetValue("")
-                                                        If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                            Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        End If
-                                                    End If
-                                                End If
-                                                Try
-                                                    regkey.DeleteSubKeyTree(child)
-                                                Catch ex As Exception
-                                                End Try
-                                                If IntPtr.Size = 8 Then
-                                                    Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\Interface\" & child)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
-                                            End If
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
+        CleanupEngine.interfaces(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\interface.cfg")) '// add each line as String Array.
+        
 
-        log("Finished dcom/clsid/appid/typelib cleanup")
+        log("Finished dcom/clsid/appid/typelib/interface cleanup")
 
         'end of deleting dcom stuff
         log("Pnplockdownfiles region cleanUP")
@@ -4225,9 +3711,15 @@ Public Class Form1
     End Sub
     Private Sub cleanintel()
 
+        UpdateTextMethod("Cleaning Registry")
+
+        log("Cleaning registry")
+
         CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
 
         CleanupEngine.classroot(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\classroot.cfg")) '// add each line as String Array.
+
+        CleanupEngine.interfaces(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\interface.cfg")) '// add each line as String Array.
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -6030,9 +5522,10 @@ Public Class CleanupEngine
         Dim regkey As RegistryKey
         Dim subregkey As RegistryKey
         Dim wantedvalue As String = Nothing
-        Dim removephysx = f.removephysx
         Dim appid As String = Nothing
         Dim typelib As String = Nothing
+
+        f.log("Begin classroot CleanUP")
 
         Try
             regkey = My.Computer.Registry.ClassesRoot
@@ -6047,84 +5540,39 @@ Public Class CleanupEngine
                                         If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
                                             wantedvalue = subregkey.GetValue("").ToString
                                             If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                                If removephysx Or Not ((Not removephysx) And child.ToLower.Contains("gamesconfigserver")) Then
-                                                    If IntPtr.Size = 8 Then
-                                                        Try
-
-                                                            Try
-                                                                appid = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue).GetValue("AppID").ToString
-                                                            Catch ex As Exception
-                                                                appid = Nothing
-                                                            End Try
-
-                                                            Try
-                                                                typelib = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & wantedvalue & "\TypeLib").GetValue("").ToString
-                                                            Catch ex As Exception
-                                                                typelib = Nothing
-                                                            End Try
-
-                                                            If checkvariables.isnullorwhitespace(appid) = False Then
-                                                                Try
-                                                                    My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True).DeleteSubKeyTree(appid)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-
-                                                            If checkvariables.isnullorwhitespace(typelib) = False Then
-                                                                Try
-                                                                    My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True).DeleteSubKeyTree(typelib)
-                                                                Catch ex As Exception
-                                                                End Try
-                                                            End If
-
-                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True).DeleteSubKeyTree(wantedvalue)
-
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
+                                                Try
                                                     Try
-
-                                                        Try
+                                                        If Not checkvariables.isnullorwhitespace(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID")) Then
                                                             appid = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID").ToString
-                                                        Catch ex As Exception
-                                                            appid = Nothing
-                                                        End Try
-
-                                                        Try
-                                                            typelib = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("").ToString
-                                                        Catch ex As Exception
-                                                            typelib = Nothing
-                                                        End Try
-
-                                                        If checkvariables.isnullorwhitespace(appid) = False Then
                                                             Try
                                                                 My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
+                                                    Catch ex As Exception
+                                                    End Try
 
-                                                        If checkvariables.isnullorwhitespace(typelib) = False Then
+                                                    Try
+                                                        If Not checkvariables.isnullorwhitespace(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("")) Then
+                                                            typelib = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("").ToString
                                                             Try
                                                                 My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
-
-                                                        My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
-
                                                     Catch ex As Exception
                                                     End Try
 
-                                                    Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
+                                                    My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
+
+                                                Catch ex As Exception
+                                                End Try
                                             End If
                                         End If
                                     Else
                                         My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
                                     End If
+                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
                                 End If
                             End If
                         Next
@@ -6134,6 +5582,7 @@ Public Class CleanupEngine
         Catch ex As Exception
             f.log(ex.Message + ex.StackTrace)
         End Try
+        f.log("End classroot CleanUP")
     End Sub
 
     Public Sub installer(ByVal packages As String())
@@ -6500,6 +5949,8 @@ Public Class CleanupEngine
             End If
         Next
         System.Threading.Thread.Sleep(10)
+        f.UpdateTextMethod("Process/Services CleanUP Complete")
+        f.log("Process/Services CleanUP Complete")
     End Sub
     Public Sub Pnplockdownfiles(ByVal driverfiles As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
@@ -6624,9 +6075,10 @@ Public Class CleanupEngine
         Dim subregkey As RegistryKey
         Dim wantedvalue As String
         Dim subregkey2 As RegistryKey
-        Dim removephysx = f.removephysx
         Dim appid As String = Nothing
         Dim typelib As String = Nothing
+
+        f.log("Begin clsidleftover CleanUP")
 
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID")
@@ -6642,64 +6094,37 @@ Public Class CleanupEngine
                                         For i As Integer = 0 To clsidleftover.Length - 1
                                             If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
                                                 If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
-                                                    If removephysx Or Not ((Not removephysx) And child.ToLower.Contains("gamesconfigserver")) Then
-                                                        If IntPtr.Size = 8 Then
+                                                    Try
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                        If subregkey2 IsNot Nothing Then
+
                                                             Try
-                                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
-                                                                If subregkey2 IsNot Nothing Then
-
-                                                                    If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child).GetValue("AppID").ToString) Then
-                                                                        appid = subregkey2.OpenSubKey(child).GetValue("AppID").ToString
-                                                                        Try
-                                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True).DeleteSubKeyTree(appid)
-                                                                        Catch ex As Exception
-                                                                            f.log(ex.Message + ex.StackTrace)
-                                                                        End Try
-                                                                    End If
-
-                                                                    If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString) Then
-                                                                        typelib = subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString
-                                                                        Try
-                                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True).DeleteSubKeyTree(typelib)
-                                                                        Catch ex As Exception
-                                                                            f.log(ex.Message + ex.StackTrace)
-                                                                        End Try
-                                                                    End If
-
-                                                                    subregkey2.DeleteSubKeyTree(child)
-                                                                End If
-                                                            Catch ex As Exception
-                                                                f.log(ex.Message + ex.StackTrace)
-                                                            End Try
-                                                        End If
-                                                        Try
-                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                            If subregkey2 IsNot Nothing Then
-
-                                                                If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child).GetValue("AppID").ToString) Then
+                                                                If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child).GetValue("AppID")) Then
                                                                     appid = subregkey2.OpenSubKey(child).GetValue("AppID").ToString
                                                                     Try
                                                                         My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
                                                                     Catch ex As Exception
-                                                                        f.log(ex.Message + ex.StackTrace)
                                                                     End Try
                                                                 End If
+                                                            Catch ex As Exception
+                                                            End Try
 
-                                                                If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString) Then
+                                                            Try
+                                                                If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child & "\TypeLib").GetValue("")) Then
                                                                     typelib = subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                                     Try
                                                                         My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
                                                                     Catch ex As Exception
-                                                                        f.log(ex.Message + ex.StackTrace)
                                                                     End Try
                                                                 End If
+                                                            Catch ex As Exception
+                                                            End Try
 
-                                                                subregkey2.DeleteSubKeyTree(child)
-                                                            End If
-                                                        Catch ex As Exception
-                                                            f.log(ex.Message + ex.StackTrace)
-                                                        End Try
-                                                    End If
+                                                            subregkey2.DeleteSubKeyTree(child)
+                                                        End If
+                                                    Catch ex As Exception
+                                                        f.log(ex.Message + ex.StackTrace)
+                                                    End Try
                                                 End If
                                             End If
                                         Next
@@ -6714,5 +6139,298 @@ Public Class CleanupEngine
         Catch ex As Exception
             f.log(ex.StackTrace)
         End Try
+
+        If IntPtr.Size = 8 Then
+            Try
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID")
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\InProcServer32", False)
+                            Try
+                                If subregkey IsNot Nothing Then
+                                    If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
+                                        wantedvalue = subregkey.GetValue("").ToString
+                                        If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                            For i As Integer = 0 To clsidleftover.Length - 1
+                                                If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                                    If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
+                                                        Try
+                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                            If subregkey2 IsNot Nothing Then
+
+                                                                Try
+                                                                    If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child).GetValue("AppID")) Then
+                                                                        appid = subregkey2.OpenSubKey(child).GetValue("AppID").ToString
+                                                                        Try
+                                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True).DeleteSubKeyTree(appid)
+                                                                        Catch ex As Exception
+                                                                        End Try
+                                                                    End If
+                                                                Catch ex As Exception
+                                                                End Try
+
+                                                                Try
+                                                                    If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child & "\TypeLib").GetValue("")) Then
+                                                                        typelib = subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString
+                                                                        Try
+                                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                        Catch ex As Exception
+                                                                        End Try
+                                                                    End If
+                                                                Catch ex As Exception
+                                                                End Try
+
+                                                                subregkey2.DeleteSubKeyTree(child)
+                                                            End If
+                                                        Catch ex As Exception
+                                                            f.log(ex.Message + ex.StackTrace)
+                                                        End Try
+                                                    End If
+                                                End If
+                                            Next
+                                        End If
+                                    End If
+                                End If
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                f.log(ex.StackTrace)
+            End Try
+        End If
+
+        Try
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID")
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\LocalServer32", False)
+                        Try
+                            If subregkey IsNot Nothing Then
+                                If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                        For i As Integer = 0 To clsidleftover.Length - 1
+                                            If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                                If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
+                                                    Try
+                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                        If subregkey2 IsNot Nothing Then
+
+                                                            Try
+                                                                If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child).GetValue("AppID")) Then
+                                                                    appid = subregkey2.OpenSubKey(child).GetValue("AppID").ToString
+                                                                    Try
+                                                                        My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
+                                                                    Catch ex As Exception
+                                                                    End Try
+                                                                End If
+                                                            Catch ex As Exception
+                                                            End Try
+
+                                                            Try
+                                                                If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child & "\TypeLib").GetValue("")) Then
+                                                                    typelib = subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString
+                                                                    Try
+                                                                        My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                    Catch ex As Exception
+                                                                    End Try
+                                                                End If
+                                                            Catch ex As Exception
+                                                            End Try
+
+                                                            subregkey2.DeleteSubKeyTree(child)
+                                                        End If
+                                                    Catch ex As Exception
+                                                        f.log(ex.Message + ex.StackTrace)
+                                                    End Try
+                                                End If
+                                            End If
+                                        Next
+                                    End If
+                                End If
+                            End If
+                        Catch ex As Exception
+                        End Try
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            f.log(ex.StackTrace)
+        End Try
+
+        If IntPtr.Size = 8 Then
+            Try
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID")
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\LocalServer32", False)
+                            Try
+                                If subregkey IsNot Nothing Then
+                                    If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
+                                        wantedvalue = subregkey.GetValue("").ToString
+                                        If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                            For i As Integer = 0 To clsidleftover.Length - 1
+                                                If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                                    If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
+                                                        Try
+                                                            subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
+                                                            If subregkey2 IsNot Nothing Then
+
+                                                                Try
+                                                                    If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child).GetValue("AppID")) Then
+                                                                        appid = subregkey2.OpenSubKey(child).GetValue("AppID").ToString
+                                                                        Try
+                                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True).DeleteSubKeyTree(appid)
+                                                                        Catch ex As Exception
+                                                                        End Try
+                                                                    End If
+                                                                Catch ex As Exception
+                                                                End Try
+
+                                                                Try
+                                                                    If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child & "\TypeLib").GetValue("")) Then
+                                                                        typelib = subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString
+                                                                        Try
+                                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                        Catch ex As Exception
+                                                                        End Try
+                                                                    End If
+                                                                Catch ex As Exception
+                                                                End Try
+
+                                                                subregkey2.DeleteSubKeyTree(child)
+                                                            End If
+                                                        Catch ex As Exception
+                                                            f.log(ex.Message + ex.StackTrace)
+                                                        End Try
+                                                    End If
+                                                End If
+                                            Next
+                                        End If
+                                    End If
+                                End If
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                f.log(ex.StackTrace)
+            End Try
+        End If
+
+        f.log("End clsidleftover CleanUP")
+    End Sub
+
+    Public Sub interfaces(ByVal interfaces As String())
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim regkey As RegistryKey
+        Dim subregkey As RegistryKey
+        Dim wantedvalue As String
+        Dim appid As String = Nothing
+        Dim typelib As String = Nothing
+
+        f.log("Start Interface CleanUP")
+
+        Try
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        Try
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
+                        Catch ex As Exception
+                            Continue For
+                        End Try
+                        If subregkey IsNot Nothing Then
+                            If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
+                                wantedvalue = subregkey.GetValue("").ToString
+                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                    For i As Integer = 0 To interfaces.Length - 1
+                                        If Not checkvariables.isnullorwhitespace(interfaces(i)) Then
+                                            If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
+                                                If subregkey.OpenSubKey("Typelib", False) IsNot Nothing Then
+                                                    If checkvariables.isnullorwhitespace(subregkey.OpenSubKey("TypeLib", False).GetValue("")) = False Then
+                                                        typelib = subregkey.OpenSubKey("TypeLib", False).GetValue("")
+                                                        If checkvariables.isnullorwhitespace(typelib) = False Then
+                                                            Try
+                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        End If
+                                                    End If
+                                                End If
+                                                Try
+                                                    regkey.DeleteSubKeyTree(child)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                        End If
+                                    Next
+                                End If
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            f.log(ex.StackTrace)
+        End Try
+
+        If IntPtr.Size = 8 Then
+
+            Try
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\Interface", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            Try
+                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\Interface\" & child, False)
+                            Catch ex As Exception
+                                Continue For
+                            End Try
+                            If subregkey IsNot Nothing Then
+                                If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
+                                    wantedvalue = subregkey.GetValue("").ToString
+                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                        For i As Integer = 0 To interfaces.Length - 1
+                                            If Not checkvariables.isnullorwhitespace(interfaces(i)) Then
+                                                If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
+                                                    If subregkey.OpenSubKey("Typelib", False) IsNot Nothing Then
+                                                        If checkvariables.isnullorwhitespace(subregkey.OpenSubKey("TypeLib", False).GetValue("")) = False Then
+                                                            typelib = subregkey.OpenSubKey("TypeLib", False).GetValue("")
+                                                            If checkvariables.isnullorwhitespace(typelib) = False Then
+                                                                Try
+                                                                    My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                Catch ex As Exception
+                                                                End Try
+                                                            End If
+                                                        End If
+                                                    End If
+                                                    Try
+                                                        regkey.DeleteSubKeyTree(child)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                            End If
+                                        Next
+                                    End If
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                f.log(ex.StackTrace)
+            End Try
+
+        End If
+
+        f.log("END Interface CleanUP")
     End Sub
 End Class
