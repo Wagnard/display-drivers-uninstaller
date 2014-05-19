@@ -2504,10 +2504,95 @@ Public Class Form1
                     (filePath + "\Help\nvcpl", FileIO.DeleteDirectoryOption.DeleteAllContents)
         Catch ex As Exception
         End Try
-        'Delete NVIDIA regkey
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Starting reg cleanUP" + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
+
+        Try
+            filePath = Environment.GetEnvironmentVariable("windir") + "\Temp\NVIDIA Corporation"
+            For Each child As String In Directory.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("nv_cache") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(child)
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        log(ex.Message)
+                        TestDelete(filePath)
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        Catch ex As Exception
+        End Try
+
+        filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.LocalApplicationData) + "\Temp\NVIDIA Corporation"
+
+        Try
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("nv_cache") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        log(ex.Message)
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        Catch ex As Exception
+        End Try
+
+        filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.LocalApplicationData) + "\Temp\NVIDIA"
+
+        Try
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("geforceexperienceselfupdate") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        log(ex.Message)
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        Catch ex As Exception
+        End Try
+
     End Sub
 
     Private Sub cleannvidia()
