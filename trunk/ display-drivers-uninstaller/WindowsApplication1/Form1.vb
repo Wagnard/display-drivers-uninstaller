@@ -128,7 +128,7 @@ Public Class Form1
                     Label11.Text = ("Updates found! Expect limited support on older versions than the most recent.")
                 End Try
 
-                Dim result = MsgBox("Updates are available! Visit forum thread now?", MsgBoxStyle.YesNoCancel)
+                Dim result = MsgBox("Updates are available! Visit DDU website now?", MsgBoxStyle.YesNoCancel)
 
                 If result = MsgBoxResult.Yes Then
                     Process.Start("http://www.wagnardmobile.com")
@@ -548,6 +548,7 @@ Public Class Form1
                                 log(ex.Message)
                                 TestDelete(child)
                             End Try
+
                         End If
                     End If
                 Next
@@ -2546,6 +2547,7 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(filePath)
                         End Try
                     End If
                 End If
@@ -2557,6 +2559,7 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -2575,6 +2578,7 @@ Public Class Form1
                             My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
+                            TestDelete(filePath)
                         End Try
                     End If
                 End If
@@ -2586,6 +2590,38 @@ Public Class Form1
                             (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                     Catch ex As Exception
                         log(ex.Message)
+                        TestDelete(filePath)
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        Catch ex As Exception
+        End Try
+
+        filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.LocalApplicationData) + "\Temp\Low\NVIDIA Corporation"
+
+        Try
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("nv_cache") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(filePath)
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        log(ex.Message)
+                        TestDelete(filePath)
                     End Try
                 End If
             Catch ex As Exception
@@ -4522,9 +4558,7 @@ Public Class Form1
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "Deleting some specials folders, it may take some times..." + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
+        UpdateTextMethod("Deleting some specials folders, it may take some times...")
         log("Deleting some specials folders, it could take some times...")
         'ensure that this folder can be accessed with current user ac.
         If Not Directory.Exists(folder) Then
