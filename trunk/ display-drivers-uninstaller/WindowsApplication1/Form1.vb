@@ -681,67 +681,68 @@ Public Class Form1
             log(ex.Message)
         End Try
 
-
-        filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\ATI"
-        Try
-            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("ace") Then
+        For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(userpth))
+            filePath = filepaths + "\AppData\Roaming\ATI"
+            Try
+                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("ace") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(child)
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
-                            TestDelete(child)
+                            TestDelete(filePath)
                         End Try
                     End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
+                log(ex.Message)
             End Try
-        Catch ex As Exception
-            log(ex.Message)
-        End Try
 
 
-        filePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\ATI"
-        Try
-            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("ace") Then
+            filePath = filepaths + "\AppData\Local\ATI"
+            Try
+                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("ace") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(child)
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
-                            TestDelete(child)
+                            TestDelete(filePath)
                         End Try
                     End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
+                log(ex.Message)
             End Try
-        Catch ex As Exception
-            log(ex.Message)
-        End Try
+        Next
     End Sub
     Private Sub cleanamd()
         UpdateTextMethod("Cleaning known Regkeys... May take a minute or two.")
@@ -2032,9 +2033,7 @@ Public Class Form1
         End If
 
         ' here I erase the folders / files of the nvidia GFE / update in users.
-        filePath = Environment.GetEnvironmentVariable("UserProfile")
-        Dim parentPath As String = IO.Path.GetDirectoryName(filePath)
-        filePath = parentPath
+        filePath = IO.Path.GetDirectoryName(userpth)
         For Each child As String In Directory.GetDirectories(filePath)
             If checkvariables.isnullorwhitespace(child) = False Then
                 If child.ToLower.Contains("updatususer") Then
@@ -2068,102 +2067,103 @@ Public Class Form1
         Next
 
 
+        For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(userpth))
 
-        filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA"
+            filePath = filepaths + "\AppData\Local\NVIDIA"
 
-        Try
-            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("nvbackend") Or _
-                        child.ToLower.Contains("gfexperience") Then
+            Try
+                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("nvbackend") Or _
+                            child.ToLower.Contains("gfexperience") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(child)
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
-                            TestDelete(child)
+                            TestDelete(filePath)
                         End Try
                     End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
             End Try
-        Catch ex As Exception
-        End Try
 
-        filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.ApplicationData) + "\NVIDIA"
+            filePath = filepaths + "\AppData\Roaming\NVIDIA"
 
-        Try
-            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("computecache") Or _
-                        child.ToLower.Contains("glcache") Then
+            Try
+                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("computecache") Or _
+                            child.ToLower.Contains("glcache") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(child)
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
-                            TestDelete(child)
+                            TestDelete(filePath)
                         End Try
                     End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
             End Try
-        Catch ex As Exception
-        End Try
 
 
-        filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.LocalApplicationData) + "\NVIDIA Corporation"
+            filePath = filepaths + "\AppData\Local\NVIDIA Corporation"
 
-        Try
-            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("ledvisualizer") Or _
-                        child.ToLower.Contains("shadowplay") Or _
-                        child.ToLower.Contains("shield apps") Then
+            Try
+                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("ledvisualizer") Or _
+                            child.ToLower.Contains("shadowplay") Or _
+                            child.ToLower.Contains("shield apps") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                                log(ex.Message)
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
                         End Try
                     End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                    End Try
-                End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
             End Try
-        Catch ex As Exception
-        End Try
+
+
+        Next
 
         filePath = Environment.GetFolderPath _
 (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
@@ -2229,6 +2229,8 @@ Public Class Form1
             End Try
         Catch ex As Exception
         End Try
+
+
 
         Try
             filePath = Environment.GetFolderPath _
@@ -2536,98 +2538,100 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.LocalApplicationData) + "\Temp\NVIDIA Corporation"
 
-        Try
-            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("nv_cache") Then
+
+        For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(userpth))
+
+            filePath = filepaths + "\AppData\Local\Temp\NVIDIA Corporation"
+
+            Try
+                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("nv_cache") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(filePath)
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
                     End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
             End Try
-        Catch ex As Exception
-        End Try
 
-        filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.LocalApplicationData) + "\Temp\NVIDIA"
+            filePath = filepaths + "\AppData\Local\Temp\NVIDIA"
 
-        Try
-            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("geforceexperienceselfupdate") Then
+            Try
+                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("geforceexperienceselfupdate") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(filePath)
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
                     End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
             End Try
-        Catch ex As Exception
-        End Try
 
-        filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.LocalApplicationData) + "\Temp\Low\NVIDIA Corporation"
+            filePath = filepaths + "\AppData\Local\Temp\Low\NVIDIA Corporation"
 
-        Try
-            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("nv_cache") Then
+            Try
+                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("nv_cache") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(filePath)
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
                     End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
             End Try
-        Catch ex As Exception
-        End Try
+        Next
 
     End Sub
 
