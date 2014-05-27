@@ -3835,6 +3835,11 @@ Public Class Form1
 
         CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\services.cfg")) '// add each line as String Array.
 
+        Dim appproc = process.GetProcessesByName("IGFXEM")
+        For i As Integer = 0 To appproc.Length - 1
+            appproc(i).Kill()
+        Next i
+
     End Sub
     Private Sub cleanintel()
 
@@ -3847,6 +3852,8 @@ Public Class Form1
         CleanupEngine.classroot(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\classroot.cfg")) '// add each line as String Array.
 
         CleanupEngine.interfaces(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\interface.cfg")) '// add each line as String Array.
+
+        CleanupEngine.clsidleftover(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -3874,7 +3881,26 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
-        CleanupEngine.clsidleftover(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
+        Try
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+          ("Directory\background\shellex\ContextMenuHandlers", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("igfxcui") Or _
+                           child.ToLower.Contains("igfxosp") Or _
+                            child.ToLower.Contains("igfxdtcm") Then
+
+                            regkey.DeleteSubKeyTree(child)
+
+                        End If
+                    End If
+
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
 
     End Sub
     Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
@@ -5694,8 +5720,6 @@ Public Class CleanupEngine
                                                 End Try
                                             End If
                                         End If
-                                    Else
-                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
                                     End If
                                     My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
                                 End If
