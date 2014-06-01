@@ -197,6 +197,7 @@
   <ItemGroup>
     <Content Include="DDU.ico" />
     <Content Include="Resources\ddu logo3.png" />
+    <None Include="Resources\paexec.exe" />
     <None Include="Resources\xp64\ddudr.exe" />
     <None Include="Resources\intel_logo.png" />
     <None Include="Resources\x86\SetACL.exe" />

@@ -20,10 +20,12 @@ Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Threading
 Imports System.Security.Principal
+Imports System.Management
 
 
 Public Class Form1
 
+    Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
     Dim checkvariables As New checkvariables
     Dim identity = WindowsIdentity.GetCurrent()
     Dim principal = New WindowsPrincipal(identity)
@@ -41,12 +43,11 @@ Public Class Form1
     Dim stopme As Boolean = False
     Public removephysx As Boolean = True
     Dim remove3dtvplay As Boolean = True
-    Dim userpth As String = System.Environment.GetEnvironmentVariable("userprofile")
     Dim time As String = DateAndTime.Now
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
-    Public UserAc As String = System.Environment.GetEnvironmentVariable("username")
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
+    Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory")
     Dim checkupdatethread As Thread = Nothing
     Public updates As Integer = Nothing
     Dim reply As String = Nothing
@@ -87,23 +88,7 @@ Public Class Form1
     Private Sub Checkupdates2()
         AccessUI()
     End Sub
-    Private Sub regfullfordelete(ByVal key As String)
-        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-        processinfo.Arguments = _
-"-on " & Chr(34) & key & Chr(34) & " -ot reg -rec yes -actn setowner -ownr n:s-1-5-32-544"
-        processinfo.UseShellExecute = False
-        processinfo.CreateNoWindow = True
-        processinfo.RedirectStandardOutput = False
-        process.StartInfo = processinfo
-        process.Start()
-        process.WaitForExit()
 
-        processinfo.Arguments = _
-"-on " & Chr(34) & key & Chr(34) & " -ot reg -rec yes -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
-        process.StartInfo = processinfo
-        process.Start()
-        process.WaitForExit()
-    End Sub
     Private Sub AccessUI()
         Dim updates As Integer = checkupdates.checkupdates
         If Me.InvokeRequired Then
@@ -131,7 +116,7 @@ Public Class Form1
                 Dim result = MsgBox("Updates are available! Visit DDU website now?", MsgBoxStyle.YesNoCancel)
 
                 If result = MsgBoxResult.Yes Then
-                    Process.Start("http://www.wagnardmobile.com")
+                    process.Start("http://www.wagnardmobile.com")
                     closeapp = True
                     Me.Close()
                     Exit Sub
@@ -267,62 +252,62 @@ Public Class Form1
         processkillpid.Start()
         processkillpid.WaitForExit()
 
-        Dim appproc = Process.GetProcessesByName("MOM")
+        Dim appproc = process.GetProcessesByName("MOM")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("CLIStart")
+        appproc = process.GetProcessesByName("CLIStart")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("CLI")
+        appproc = process.GetProcessesByName("CLI")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("CCC")
+        appproc = process.GetProcessesByName("CCC")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("HydraDM")
+        appproc = process.GetProcessesByName("HydraDM")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("HydraDM64")
+        appproc = process.GetProcessesByName("HydraDM64")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("HydraGrd")
+        appproc = process.GetProcessesByName("HydraGrd")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("Grid64")
+        appproc = process.GetProcessesByName("Grid64")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("HydraMD64")
+        appproc = process.GetProcessesByName("HydraMD64")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("HydraMD")
+        appproc = process.GetProcessesByName("HydraMD")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("ThumbnailExtractionHost")
+        appproc = process.GetProcessesByName("ThumbnailExtractionHost")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("jusched")
+        appproc = process.GetProcessesByName("jusched")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
@@ -755,7 +740,7 @@ Public Class Form1
         log("Starting dcom/clsid/appid/typelib cleanup")
 
         CleanupEngine.classroot(IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\classroot.cfg")) '// add each line as String Array.
-        
+
 
         '-----------------
         'interface cleanup
@@ -779,10 +764,8 @@ Public Class Form1
                         If subregkey IsNot Nothing Then
                             If checkvariables.isnullorwhitespace(subregkey.GetValue("Service").ToString) = False Then
                                 If subregkey.GetValue("Service").ToString.ToLower = "amdkmdap" Then
-                                    regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Video\" & child)
                                     Try
                                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
-                                        regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
                                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
                                     Catch ex As Exception
                                     End Try
@@ -1148,63 +1131,63 @@ Public Class Form1
         CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\driverfiles.cfg")) '// add each line as String Array.
 
         Try
-            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
         Catch ex As Exception
         End Try
 
         Try
-            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
         Catch ex As Exception
         End Try
 
         Try
-            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
         Catch ex As Exception
         End Try
 
         Try
-            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
         Catch ex As Exception
         End Try
 
         Try
-            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\amdkmdap")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\amdkmdap")
         Catch ex As Exception
         End Try
 
         If IntPtr.Size = 8 Then
             Try
-                regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
+
                 My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
             Catch ex As Exception
             End Try
 
             Try
-                regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
+
                 My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
             Catch ex As Exception
             End Try
         End If
 
         Try
-            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
         Catch ex As Exception
         End Try
 
         Try
-            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
         Catch ex As Exception
         End Try
 
         Try
-            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
         Catch ex As Exception
         End Try
@@ -1234,7 +1217,7 @@ Public Class Form1
                                     For Each child As String In regkey.GetSubKeyNames()
                                         If checkvariables.isnullorwhitespace(child) = False Then
                                             If child.ToLower.Contains("legacy_amdkmdag") Then
-                                                regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\" & childs & "\Enum\Root\" & child)
+
                                                 Try
                                                     My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\" & childs & "\Enum\Root\" & child)
                                                 Catch ex As Exception
@@ -1394,19 +1377,20 @@ Public Class Form1
         End Try
 
         Try
-            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.StartsWith("ATI") Then
-
-                            regkey.DeleteSubKeyTree(child)
-
-                        End If
+            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(users) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child) = False Then
+                                If child.StartsWith("ATI") Then
+                                    regkey.DeleteSubKeyTree(child)
+                                End If
+                            End If
+                        Next
                     End If
-
-                Next
-            End If
+                End If
+            Next
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
@@ -1605,30 +1589,34 @@ Public Class Form1
         End If
 
         Try
-            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Run", True)
-            If regkey IsNot Nothing Then
-                Try
-                    regkey.DeleteValue("HydraVisionDesktopManager")
-                Catch ex As Exception
+            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+                If checkvariables.isnullorwhitespace(users) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Microsoft\Windows\CurrentVersion\Run", True)
+                    If regkey IsNot Nothing Then
+                        Try
+                            regkey.DeleteValue("HydraVisionDesktopManager")
+                        Catch ex As Exception
 
-                    log(ex.Message + " HydraVisionDesktopManager")
-                End Try
+                            log(ex.Message + " HydraVisionDesktopManager")
+                        End Try
 
-                Try
-                    regkey.DeleteValue("Grid")
-                Catch ex As Exception
+                        Try
+                            regkey.DeleteValue("Grid")
+                        Catch ex As Exception
 
-                    log(ex.Message + " GRID")
-                End Try
+                            log(ex.Message + " GRID")
+                        End Try
 
-                Try
-                    regkey.DeleteValue("HydraVisionMDEngine")
-                Catch ex As Exception
+                        Try
+                            regkey.DeleteValue("HydraVisionMDEngine")
+                        Catch ex As Exception
 
-                    log(ex.Message + " HydraVisionMDEngine")
-                End Try
+                            log(ex.Message + " HydraVisionMDEngine")
+                        End Try
 
-            End If
+                    End If
+                End If
+            Next
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
@@ -1943,53 +1931,53 @@ Public Class Form1
         'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
         'holding files in the NVIDIA folders sometimes.
 
-        Dim appproc = Process.GetProcessesByName("Lcore")
+        Dim appproc = process.GetProcessesByName("Lcore")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("nvstreamsvc")
+        appproc = process.GetProcessesByName("nvstreamsvc")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("NvTmru")
+        appproc = process.GetProcessesByName("NvTmru")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
 
-        appproc = Process.GetProcessesByName("nvxdsync")
+        appproc = process.GetProcessesByName("nvxdsync")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("nvtray")
+        appproc = process.GetProcessesByName("nvtray")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("dwm")
+        appproc = process.GetProcessesByName("dwm")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("WWAHost")
+        appproc = process.GetProcessesByName("WWAHost")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("nvspcaps64")
+        appproc = process.GetProcessesByName("nvspcaps64")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("nvspcaps")
+        appproc = process.GetProcessesByName("nvspcaps")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
 
-        appproc = Process.GetProcessesByName("NvBackend")
+        appproc = process.GetProcessesByName("NvBackend")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
         Next i
@@ -2704,7 +2692,7 @@ Public Class Form1
         '-----------------
 
         CleanupEngine.interfaces(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\interface.cfg")) '// add each line as String Array.
-        
+
 
         log("Finished dcom/clsid/appid/typelib/interface cleanup")
 
@@ -2716,21 +2704,21 @@ Public Class Form1
         'Cleaning PNPRessources.
 
         Try
-            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
         Catch ex As Exception
             log(ex.Message & "pnp resources khronos")
         End Try
 
         Try
-            regfullfordelete("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global\CoprocManager\OptimusEnhancements")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global\CoprocManager\OptimusEnhancements")
         Catch ex As Exception
             log(ex.Message & "pnp resources khronos")
         End Try
 
         Try
-            regfullfordelete("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
         Catch ex As Exception
             log(ex.Message & "pnp resources cpl extension")
@@ -2739,7 +2727,7 @@ Public Class Form1
         If IntPtr.Size = 8 Then
 
             Try
-                regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
+
                 My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
             Catch ex As Exception
                 log(ex.Message & "pnpresources wow6432node khronos")
@@ -2747,7 +2735,7 @@ Public Class Form1
         End If
 
         Try
-            regfullfordelete("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
+
             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
         Catch ex As Exception
             log(ex.Message & "pnp ressources nvidia corporation")
@@ -3099,36 +3087,40 @@ Public Class Form1
         End Try
 
         Try
-            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("nvidia corporation") Then
-                            For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-                                If checkvariables.isnullorwhitespace(child2) = False Then
-                                    If child2.ToLower.Contains("global") Or _
-                                       child2.ToLower.Contains("nvbackend") Or _
-                                       child2.ToLower.Contains("nvidia update core") Or _
-                                        child2.ToLower.Contains("nvcontrolpanel2") Or _
-                                        child2.ToLower.Contains("nvtray") Or _
-                                        child2.ToLower.Contains("nvidia control panel") Then
+            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(users) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child) = False Then
+                                If child.ToLower.Contains("nvidia corporation") Then
+                                    For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+                                        If checkvariables.isnullorwhitespace(child2) = False Then
+                                            If child2.ToLower.Contains("global") Or _
+                                               child2.ToLower.Contains("nvbackend") Or _
+                                               child2.ToLower.Contains("nvidia update core") Or _
+                                                child2.ToLower.Contains("nvcontrolpanel2") Or _
+                                                child2.ToLower.Contains("nvtray") Or _
+                                                child2.ToLower.Contains("nvidia control panel") Then
+                                                Try
+                                                    regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                        End If
+                                    Next
+                                    If regkey.OpenSubKey(child).SubKeyCount = 0 Then
                                         Try
-                                            regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                            regkey.DeleteSubKeyTree(child)
                                         Catch ex As Exception
                                         End Try
                                     End If
                                 End If
-                            Next
-                            If regkey.OpenSubKey(child).SubKeyCount = 0 Then
-                                Try
-                                    regkey.DeleteSubKeyTree(child)
-                                Catch ex As Exception
-                                End Try
                             End If
-                        End If
+                        Next
                     End If
-                Next
-            End If
+                End If
+            Next
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
@@ -3549,16 +3541,20 @@ Public Class Form1
         Catch ex As Exception
         End Try
         Try
-            regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
-            If regkey IsNot Nothing Then
-                Try
-                    regkey.DeleteSubKeyTree("Global")
-                    If regkey.SubKeyCount = 0 Then
-                        My.Computer.Registry.CurrentUser.OpenSubKey("Software\Classes\VirtualStore\MACHINE\SOFTWARE", True).DeleteSubKeyTree("NVIDIA Corporation")
+            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(users) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
+                    If regkey IsNot Nothing Then
+                        Try
+                            regkey.DeleteSubKeyTree("Global")
+                            If regkey.SubKeyCount = 0 Then
+                                My.Computer.Registry.Users.OpenSubKey(users & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE", True).DeleteSubKeyTree("NVIDIA Corporation")
+                            End If
+                        Catch ex As Exception
+                        End Try
                     End If
-                Catch ex As Exception
-                End Try
-            End If
+                End If
+            Next
         Catch ex As Exception
         End Try
         Try
@@ -3639,10 +3635,8 @@ Public Class Form1
                         If subregkey IsNot Nothing Then
                             If checkvariables.isnullorwhitespace(subregkey.GetValue("Service").ToString) = False Then
                                 If subregkey.GetValue("Service").ToString.ToLower = "nvlddmkm" Then
-                                    regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Video\" & child)
                                     Try
                                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
-                                        regfullfordelete("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
                                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
                                     Catch ex As Exception
                                     End Try
@@ -3856,6 +3850,91 @@ Public Class Form1
         CleanupEngine.clsidleftover(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
 
         Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Intel", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("igfx") Or _
+                           child.ToLower.Contains("mediasdk") Or _
+                           child.ToLower.Contains("opencl") Or _
+                           child.ToLower.Contains("intel wireless display") Then
+                            Try
+                                regkey.DeleteSubKeyTree(child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+                If regkey.SubKeyCount = 0 Then
+                    Try
+                        My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("Intel")
+                    Catch ex As Exception
+                    End Try
+                End If
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+        Try
+            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(users) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Intel", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child) = False Then
+                                If child.ToLower.Contains("display") Then
+                                    Try
+                                        regkey.DeleteSubKeyTree(child)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            End If
+                        Next
+                        If regkey.SubKeyCount = 0 Then
+                            Try
+                                My.Computer.Registry.Users.OpenSubKey(users & "\Software", True).DeleteSubKeyTree("Intel")
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+        If IntPtr.Size = 8 Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Intel", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("igfx") Or _
+                               child.ToLower.Contains("mediasdk") Or _
+                               child.ToLower.Contains("opencl") Or _
+                               child.ToLower.Contains("intel wireless display") Then
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                    If regkey.SubKeyCount = 0 Then
+                        Try
+                            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True).DeleteSubKeyTree("Intel")
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Catch ex As Exception
+                log(ex.StackTrace)
+            End Try
+        End If
+
+
+        Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
       ("Software\Microsoft\Windows\CurrentVersion\Run", True)
             If regkey IsNot Nothing Then
@@ -3925,65 +4004,15 @@ Public Class Form1
                                 If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
                                     For i As Integer = 0 To array.Length - 1
                                         If (Not checkvariables.isnullorwhitespace(array(i))) AndAlso (array(i).ToLower.Contains("nvpciflt")) Then
-                                            Invoke(Sub() TextBox1.Text = TextBox1.Text + "-nVidia Optimus UpperFilter Found." + vbNewLine)
-                                            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                                            Invoke(Sub() TextBox1.ScrollToCaret())
+                                            UpdateTextMethod("-nVidia Optimus UpperFilter Found." + vbNewLine)
 
                                             log("nVidia Optimus UpperFilter Found.")
-
-                                            '-------------------------------------
-                                            'Setting permission to the key region
-                                            '-------------------------------------
-
-                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-                                            processinfo.Arguments = _
-    "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & UserAc & Chr(34)
-                                            processinfo.UseShellExecute = False
-                                            processinfo.CreateNoWindow = True
-                                            processinfo.RedirectStandardOutput = True
-                                            process.StartInfo = processinfo
-                                            process.Start()
-                                            reply = process.StandardOutput.ReadToEnd
-                                            process.WaitForExit()
-                                            log(reply)
-                                            System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
-
-                                            If Not winxp Then
-                                                processinfo.Arguments = _
-    "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full"
-                                                process.Start()
-                                                reply = process.StandardOutput.ReadToEnd
-                                                process.WaitForExit()
-                                                log(reply)
-                                                System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
-                                            End If
 
                                             Try
                                                 subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
                                             Catch ex As Exception
                                                 log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
                                             End Try
-
-
-                                            '---------------------------------
-                                            'Setting permission back to normal 
-                                            '---------------------------------
-                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-                                            processinfo.Arguments = _
-    "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & UserAc & Chr(34) & ";p:full;m:revoke"
-                                            processinfo.UseShellExecute = False
-                                            processinfo.CreateNoWindow = True
-                                            processinfo.RedirectStandardOutput = False
-                                            process.StartInfo = processinfo
-                                            process.Start()
-                                            process.WaitForExit()
-                                            System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
-                                            processinfo.Arguments = _
-    "-on " & Chr(34) & subregkey.OpenSubKey(childs).ToString & Chr(34) & " -ot reg -rec no -actn setowner -ownr n:" & Chr(34) & "s-1-5-32-544" & Chr(34)
-                                            process.StartInfo = processinfo
-                                            process.Start()
-                                            process.WaitForExit()
-                                            System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                                         End If
                                     Next
                                 End If
@@ -4028,7 +4057,7 @@ Public Class Form1
             proc4.WaitForExit()
             System.Threading.Thread.Sleep(2000)
             If Not safemode Then
-                Dim appproc = Process.GetProcessesByName("explorer")
+                Dim appproc = process.GetProcessesByName("explorer")
                 For i As Integer = 0 To appproc.Length - 1
                     appproc(i).Kill()
                 Next i
@@ -4048,8 +4077,9 @@ Public Class Form1
     End Sub
 
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        Me.TopMost = True
         loadinitiated = False
+
         CheckForIllegalCrossThreadCalls = True
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
@@ -4170,7 +4200,6 @@ Public Class Form1
 
 
 
-        MsgBox("Display Driver Uninstaller (DDU) is modifying your registry a lot. PLEASE MAKE A BACKUP OR A SYSTEM RESTORE POINT BEFORE USAGE! You have been warned.", MsgBoxStyle.Information)
 
         '----------------------
         'check computer/os info
@@ -4269,6 +4298,8 @@ Public Class Form1
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp64)
                     myExe = Application.StartupPath & "\x64\setacl.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.setacl64)
+                    myExe = Application.StartupPath & "\x64\paexec.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
                 Else
 
                     myExe = Application.StartupPath & "\x64\ddudr.exe"
@@ -4276,6 +4307,9 @@ Public Class Form1
 
                     myExe = Application.StartupPath & "\x64\setacl.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.setacl64)
+
+                    myExe = Application.StartupPath & "\x64\paexec.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
                 End If
                 If version.StartsWith("6.2") Or version.StartsWith("6.3") Then
                     myExe = Application.StartupPath & "\x64\pnpldf.bkp"
@@ -4286,8 +4320,6 @@ Public Class Form1
                     System.IO.File.WriteAllBytes(myExe, My.Resources.pnpldfwin7vista)
                 End If
             Catch ex As Exception
-                log(ex.Message & ex.StackTrace)
-                TextBox1.AppendText(ex.Message)
             End Try
         Else
             Try
@@ -4298,13 +4330,17 @@ Public Class Form1
                     myExe = Application.StartupPath & "\x86\setacl.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.setacl32)
 
-
+                    myExe = Application.StartupPath & "\x86\paexec.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
                 Else 'all other 32 bits
                     myExe = Application.StartupPath & "\x86\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr32)
 
                     myExe = Application.StartupPath & "\x86\setacl.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.setacl32)
+
+                    myExe = Application.StartupPath & "\x86\paexec.exe"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
 
                     If version.StartsWith("6.2") Or version.StartsWith("6.3") Then
                         myExe = Application.StartupPath & "\x86\pnpldf.bkp"
@@ -4316,10 +4352,7 @@ Public Class Form1
                     End If
                 End If
 
-
             Catch ex As Exception
-                log(ex.Message & ex.StackTrace)
-                TextBox1.AppendText(ex.Message)
             End Try
         End If
 
@@ -4340,6 +4373,31 @@ Public Class Form1
                 Exit Sub
             End If
         End If
+
+        'here I check if the process is running on system user account.
+
+        If Not MyIdentity.IsSystem Then
+            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\paexec.exe"
+            processinfo.Arguments = "-i -s " & Chr(34) & Application.StartupPath & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34)
+            processinfo.UseShellExecute = False
+            processinfo.CreateNoWindow = True
+            processinfo.RedirectStandardOutput = False
+
+            'creation dun process fantome pour le wait on exit.
+
+            '------------------------------------------------------------------
+            'Detection of the current and leftover videocard for the textboxlog
+            '------------------------------------------------------------------
+            process.StartInfo = processinfo
+            process.Start()
+            Me.Close()
+            Exit Sub
+        End If
+
+
+
+        MsgBox("Display Driver Uninstaller (DDU) is modifying your registry a lot. PLEASE MAKE A BACKUP OR A SYSTEM RESTORE POINT BEFORE USAGE!", MsgBoxStyle.Information)
+
 
         TextBox1.Text = TextBox1.Text + "DDU Version: " + Application.ProductVersion + vbNewLine
         log("DDU Version: " + Application.ProductVersion)
@@ -4528,7 +4586,7 @@ Public Class Form1
                         'do nothing and continue without safe mode
                     ElseIf resultmsgbox = DialogResult.Yes Then
                         Dim resultmsgbox2 As Integer = MessageBox.Show("PLEASE READ!!!! You asked DDU to reboot into safemode automatically it is recommended that you manually do this first to be sure " _
-           & "your system really can boot into safemode. 1 Possibility with the 'DDU auto boot in Safemode feature' is that the computer will 'never ending black screen boot loop'  (not a DDU issue , usually cause by other third party softwares.). If you get stuck in that 'boot loop', check the forum on how to fix it or contact me directly. With this being said, Reboot in safemode now automatically ?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                    & "your system really can boot into safemode. 1 Possibility with the 'DDU auto boot in Safemode feature' is that the computer will 'never ending black screen boot loop'  (not a DDU issue , usually cause by other third party softwares.). If you get stuck in that 'boot loop', check the forum on how to fix it or contact me directly. With this being said, Reboot in safemode now automatically ?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                         If resultmsgbox2 = DialogResult.Cancel Then
                             Me.Close()
                             Exit Sub
@@ -4566,7 +4624,6 @@ Public Class Form1
 
         End Select
 
-        log("User Account Name : " & UserAc)
 
         'Check and log the driver from the driver store  ( oemxx.inf)
         processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
@@ -4595,12 +4652,7 @@ Public Class Form1
             log("Folder " + folder + " doesn't exist.")
             Exit Sub
         End If
-        Dim FolderInfo As IO.DirectoryInfo = New IO.DirectoryInfo(folder)
-        Dim FolderAcl As New DirectorySecurity
-        FolderAcl.AddAccessRule(New FileSystemAccessRule(UserAc, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
-        'FolderAcl.SetAccessRuleProtection(True, False) 'uncomment to remove existing permissions
-        FolderInfo.SetAccessControl(FolderAcl)
-        System.Threading.Thread.Sleep(10)
+
         'Get an object repesenting the directory path below
         Dim di As New DirectoryInfo(folder)
 
@@ -4812,27 +4864,27 @@ Public Class Form1
 
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
         Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-        Process.Start(webAddress)
+        process.Start(webAddress)
     End Sub
 
     Private Sub VisitGuru3dNVIDIAThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dNVIDIAThreadToolStripMenuItem.Click
-        Process.Start("http://forums.guru3d.com/showthread.php?t=379506")
+        process.Start("http://forums.guru3d.com/showthread.php?t=379506")
     End Sub
 
     Private Sub VisitGuru3dAMDThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dAMDThreadToolStripMenuItem.Click
-        Process.Start("http://forums.guru3d.com/showthread.php?t=379505")
+        process.Start("http://forums.guru3d.com/showthread.php?t=379505")
     End Sub
 
     Private Sub VisitGeforceThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGeforceThreadToolStripMenuItem.Click
-        Process.Start("https://forums.geforce.com/default/topic/550192/geforce-drivers/display-driver-uninstaller-ddu-v6-2/")
+        process.Start("https://forums.geforce.com/default/topic/550192/geforce-drivers/display-driver-uninstaller-ddu-v6-2/")
     End Sub
 
     Private Sub SVNToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SVNToolStripMenuItem.Click
-        Process.Start("https://code.google.com/p/display-drivers-uninstaller/source/list")
+        process.Start("https://code.google.com/p/display-drivers-uninstaller/source/list")
     End Sub
 
     Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomepageToolStripMenuItem.Click
-        Process.Start("http://www.wagnardmobile.com")
+        process.Start("http://www.wagnardmobile.com")
     End Sub
 
 
@@ -5271,7 +5323,7 @@ Public Class Form1
                 cleanamd()
 
                 log("Killing Explorer.exe")
-                Dim appproc = Process.GetProcessesByName("explorer")
+                Dim appproc = process.GetProcessesByName("explorer")
                 For i As Integer = 0 To appproc.Length - 1
                     appproc(i).Kill()
                 Next i
@@ -5283,7 +5335,7 @@ Public Class Form1
                 cleannvidia()
 
                 log("Killing Explorer.exe")
-                Dim appproc = Process.GetProcessesByName("explorer")
+                Dim appproc = process.GetProcessesByName("explorer")
                 For i As Integer = 0 To appproc.Length - 1
                     appproc(i).Kill()
                 Next i
@@ -5994,69 +6046,73 @@ Public Class CleanupEngine
         f.UpdateTextMethod("-End localmachine ,installer\products cleanup")
         f.UpdateTextMethod("-Start currentuser ,installer\products cleanup")
         Try
-            regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-      ("Software\Microsoft\Installer\Products", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        Try
-                            subregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-("Software\Microsoft\Installer\Products" & child)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
-                        If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName")) = False Then
-                                wantedvalue = subregkey.GetValue("ProductName").ToString
-                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                    For i As Integer = 0 To packages.Length - 1
-                                        If Not checkvariables.isnullorwhitespace(packages(i)) Then
-                                            If wantedvalue.ToLower.Contains(packages(i)) And _
-                                               (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
-                                                Try
-                                                    regkey.DeleteSubKeyTree(child)
-                                                Catch ex As Exception
-                                                End Try
-                                                Try
-                                                    My.Computer.Registry.CurrentUser.OpenSubKey("Software\Microsoft\Installer\Features", True).DeleteSubKeyTree(child)
-                                                Catch ex As Exception
-                                                End Try
+            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(users) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey _
+              (users & "\Software\Microsoft\Installer\Products", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child) = False Then
+                                Try
+                                    subregkey = My.Computer.Registry.Users.OpenSubKey _
+        (users & "\Software\Microsoft\Installer\Products" & child)
+                                Catch ex As Exception
+                                    Continue For
+                                End Try
+                                If subregkey IsNot Nothing Then
+                                    If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName")) = False Then
+                                        wantedvalue = subregkey.GetValue("ProductName").ToString
+                                        If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                            For i As Integer = 0 To packages.Length - 1
+                                                If Not checkvariables.isnullorwhitespace(packages(i)) Then
+                                                    If wantedvalue.ToLower.Contains(packages(i)) And _
+                                                       (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
+                                                        Try
+                                                            regkey.DeleteSubKeyTree(child)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                        Try
+                                                            My.Computer.Registry.Users.OpenSubKey(users & "\Software\Microsoft\Installer\Features", True).DeleteSubKeyTree(child)
+                                                        Catch ex As Exception
+                                                        End Try
 
-                                                superregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                     ("Software\Microsoft\Installer\UpgradeCodes", True)
-                                                If superregkey IsNot Nothing Then
-                                                    For Each child2 As String In superregkey.GetSubKeyNames()
-                                                        If checkvariables.isnullorwhitespace(child2) = False Then
-                                                            Try
-                                                                subsuperregkey = My.Computer.Registry.CurrentUser.OpenSubKey _
-                                                            ("Software\Microsoft\Installer\UpgradeCodes" & child2)
-                                                            Catch ex As Exception
-                                                                Continue For
-                                                            End Try
-                                                            If subsuperregkey IsNot Nothing Then
-                                                                For Each wantedstring As String In subsuperregkey.GetValueNames()
-                                                                    If checkvariables.isnullorwhitespace(wantedstring) = False Then
-                                                                        If wantedstring.Contains(child) Then
-                                                                            Try
-                                                                                superregkey.DeleteSubKeyTree(child2)
-                                                                            Catch ex As Exception
-                                                                            End Try
-                                                                        End If
+                                                        superregkey = My.Computer.Registry.Users.OpenSubKey _
+                             (users & "\Software\Microsoft\Installer\UpgradeCodes", True)
+                                                        If superregkey IsNot Nothing Then
+                                                            For Each child2 As String In superregkey.GetSubKeyNames()
+                                                                If checkvariables.isnullorwhitespace(child2) = False Then
+                                                                    Try
+                                                                        subsuperregkey = My.Computer.Registry.Users.OpenSubKey _
+                                                                    (users & "\Software\Microsoft\Installer\UpgradeCodes" & child2)
+                                                                    Catch ex As Exception
+                                                                        Continue For
+                                                                    End Try
+                                                                    If subsuperregkey IsNot Nothing Then
+                                                                        For Each wantedstring As String In subsuperregkey.GetValueNames()
+                                                                            If checkvariables.isnullorwhitespace(wantedstring) = False Then
+                                                                                If wantedstring.Contains(child) Then
+                                                                                    Try
+                                                                                        superregkey.DeleteSubKeyTree(child2)
+                                                                                    Catch ex As Exception
+                                                                                    End Try
+                                                                                End If
+                                                                            End If
+                                                                        Next
                                                                     End If
-                                                                Next
-                                                            End If
+                                                                End If
+                                                            Next
                                                         End If
-                                                    Next
+                                                    End If
                                                 End If
-                                            End If
+                                            Next
                                         End If
-                                    Next
+                                    End If
                                 End If
                             End If
-                        End If
+                        Next
                     End If
-                Next
-            End If
+                End If
+            Next
         Catch ex As Exception
             f.log(ex.StackTrace)
         End Try
@@ -6109,7 +6165,7 @@ Public Class CleanupEngine
         Dim processinfo As New ProcessStartInfo
         Dim process As New Process
         Dim ddudrfolder = f.ddudrfolder
-        Dim userac = f.UserAc
+
 
         Try
             If winxp = False Then
@@ -6132,18 +6188,6 @@ Public Class CleanupEngine
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
                                         If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                                            processinfo.Arguments = _
-    "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child & Chr(34) & " -ot reg -actn setowner -ownr n:" & Chr(34) & "s-1-5-32-544" & Chr(34)
-                                            process.StartInfo = processinfo
-                                            process.Start()
-                                            process.WaitForExit()
-                                            System.Threading.Thread.Sleep(10)  '10 millisecond stall (0.01 Seconds)
-                                            processinfo.Arguments = _
-    "-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles\" & child & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & "s-1-5-32-544" & Chr(34) & ";p:full"
-                                            process.StartInfo = processinfo
-                                            process.Start()
-                                            process.WaitForExit()
-                                            System.Threading.Thread.Sleep(10)  '10 millisecond stall (0.01 Seconds)
                                             Try
                                                 regkey.DeleteSubKeyTree(child)
                                             Catch ex As Exception
@@ -6155,33 +6199,10 @@ Public Class CleanupEngine
                             End If
                         Next
                     End If
-                    '--------------------------------------------------------------
-                    'setting back the registry permission to normal for windows 8+.                       
-                    '--------------------------------------------------------------
 
-                    processinfo.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & ddudrfolder & "\pnpldf.bkp"
-                    process.StartInfo = processinfo
-                    process.Start()
-                    process.WaitForExit()
-                    System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
-
-                    '--------------------------------
-                    'End setting permission to normal
-                    '--------------------------------
 
                 Else   'Older windows  (windows vista and 7 run here)
-                    'setting permission to registry
-                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\setacl.exe"
-                    processinfo.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn ace -ace n:" & Chr(34) & userac & Chr(34) & ";p:full"
-                    processinfo.UseShellExecute = False
-                    processinfo.CreateNoWindow = True
-                    processinfo.RedirectStandardOutput = False
-                    process.StartInfo = processinfo
-                    process.Start()
-                    process.WaitForExit()
-                    System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
+
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                     If regkey IsNot Nothing Then
                         For i As Integer = 0 To driverfiles.Length - 1
@@ -6200,22 +6221,12 @@ Public Class CleanupEngine
                             End If
                         Next
                     End If
-
-                    '--------------------------------------------------------------
-                    'setting back the registry permission to normal.(Vista - win 7)
-                    '--------------------------------------------------------------
-
-                    System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
-                    processinfo.Arguments = _
-"-on " & Chr(34) & "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles" & Chr(34) & " -ot reg -actn restore -bckp .\" & ddudrfolder & "\pnpldf.bkp"
-                    process.Start()
-                    process.WaitForExit()
-                    System.Threading.Thread.Sleep(10)  '25 millisecond stall (0.025 Seconds)
                 End If
             End If
         Catch ex As Exception
             f.log(ex.StackTrace)
         End Try
+
     End Sub
 
     Public Sub clsidleftover(ByVal clsidleftover As String())
