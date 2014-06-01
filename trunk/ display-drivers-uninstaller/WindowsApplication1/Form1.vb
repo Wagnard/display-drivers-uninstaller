@@ -4077,7 +4077,7 @@ Public Class Form1
     End Sub
 
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.TopMost = True
+
         loadinitiated = False
 
         CheckForIllegalCrossThreadCalls = True
@@ -4394,7 +4394,7 @@ Public Class Form1
             Exit Sub
         End If
 
-
+        Me.TopMost = True
 
         MsgBox("Display Driver Uninstaller (DDU) is modifying your registry a lot. PLEASE MAKE A BACKUP OR A SYSTEM RESTORE POINT BEFORE USAGE!", MsgBoxStyle.Information)
 
