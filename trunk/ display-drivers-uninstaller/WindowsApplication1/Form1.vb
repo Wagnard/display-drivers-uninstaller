@@ -47,7 +47,7 @@ Public Class Form1
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
-    Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory")
+    Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
     Dim checkupdatethread As Thread = Nothing
     Public updates As Integer = Nothing
     Dim reply As String = Nothing
@@ -4387,6 +4387,12 @@ Public Class Form1
         End If
 
         'here I check if the process is running on system user account.
+        If Not MyIdentity.IsSystem Then
+            Checkupdates2()
+            If closeapp Then
+                Exit Sub
+            End If
+        End If
 
         If Not MyIdentity.IsSystem Then
             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\paexec.exe"
@@ -4516,10 +4522,7 @@ Public Class Form1
         'checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
         ''checkthread.Priority = ThreadPriority.Highest
         'checkupdatethread.Start()
-        Checkupdates2()
-        If closeapp Then
-            Exit Sub
-        End If
+
         'This code checks to see which mode Windows has booted up in.
         Select Case System.Windows.Forms.SystemInformation.BootMode
             Case BootMode.FailSafe
