@@ -4035,13 +4035,13 @@ Public Class Form1
 
         If reboot Then
             log("Restarting Computer ")
-            System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
+            System.Diagnostics.Process.Start("shutdown", "/r /t 3 /f")
             Invoke(Sub() Button1.Enabled = True)  'doing may sound weird but it is needed as this will reenable the form 1 to be closed. See Form1_close sub
             Invoke(Sub() Me.Close())
             Exit Sub
         End If
         If shutdown Then
-            System.Diagnostics.Process.Start("shutdown", "/s /t 0 /f")
+            System.Diagnostics.Process.Start("shutdown", "/s /t 3 /f")
             Invoke(Sub() Button1.Enabled = True)
             Invoke(Sub() Me.Close())
             Exit Sub
@@ -4073,10 +4073,23 @@ Public Class Form1
     Private Sub Form1_close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
         If preventclose Then
             e.Cancel = True
+            Exit Sub
+        End If
+        If MyIdentity.IsSystem Then
+            Try
+                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
+            Catch ex As Exception
+            End Try
         End If
     End Sub
 
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        Try
+            My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).CreateSubKey("PAexec")
+            My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\PAexec", True).SetValue("", "Service")
+        Catch ex As Exception
+        End Try
 
         loadinitiated = False
 
@@ -4378,16 +4391,11 @@ Public Class Form1
 
         If Not MyIdentity.IsSystem Then
             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\paexec.exe"
-            processinfo.Arguments = "-i -s " & Chr(34) & Application.StartupPath & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34)
+            processinfo.Arguments = "-noname -i -s " & Chr(34) & Application.StartupPath & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34)
             processinfo.UseShellExecute = False
             processinfo.CreateNoWindow = True
             processinfo.RedirectStandardOutput = False
 
-            'creation dun process fantome pour le wait on exit.
-
-            '------------------------------------------------------------------
-            'Detection of the current and leftover videocard for the textboxlog
-            '------------------------------------------------------------------
             process.StartInfo = processinfo
             process.Start()
             Me.Close()
@@ -4580,6 +4588,7 @@ Public Class Form1
 
                     Dim resultmsgbox As Integer = MessageBox.Show("You are not in safe mode. It is highly recommended that you reboot into safe mode to avoid possible issues., Reboot into Safe Mode now?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                     If resultmsgbox = DialogResult.Cancel Then
+                        Me.TopMost = False
                         Me.Close()
                         Exit Sub
                     ElseIf resultmsgbox = DialogResult.No Then
@@ -4588,11 +4597,13 @@ Public Class Form1
                         Dim resultmsgbox2 As Integer = MessageBox.Show("PLEASE READ!!!! You asked DDU to reboot into safemode automatically it is recommended that you manually do this first to be sure " _
                     & "your system really can boot into safemode. 1 Possibility with the 'DDU auto boot in Safemode feature' is that the computer will 'never ending black screen boot loop'  (not a DDU issue , usually cause by other third party softwares.). If you get stuck in that 'boot loop', check the forum on how to fix it or contact me directly. With this being said, Reboot in safemode now automatically ?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                         If resultmsgbox2 = DialogResult.Cancel Then
+                            Me.TopMost = False
                             Me.Close()
                             Exit Sub
                         ElseIf resultmsgbox2 = DialogResult.No Then
                             'do nothing and continue without safe mode
                         ElseIf resultmsgbox2 = DialogResult.Yes Then
+                            Me.TopMost = False
                             Dim setbcdedit As New ProcessStartInfo
                             setbcdedit.FileName = "cmd.exe"
                             setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
@@ -4613,7 +4624,7 @@ Public Class Form1
                                 End Try
 
                             End If
-                            System.Diagnostics.Process.Start("shutdown", "/r /t 0 /f")
+                            System.Diagnostics.Process.Start("shutdown", "/r /t 3 /f")
                             Me.Close()
                             Exit Sub
                         End If
