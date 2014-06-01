@@ -4034,22 +4034,22 @@ Public Class Form1
         scan.RedirectStandardOutput = False
 
         If reboot Then
+            preventclose = False
             log("Restarting Computer ")
-            System.Diagnostics.Process.Start("shutdown", "/r /t 3 /f")
-            Invoke(Sub() Button1.Enabled = True)  'doing may sound weird but it is needed as this will reenable the form 1 to be closed. See Form1_close sub
+            System.Diagnostics.Process.Start("shutdown", "/r /t 0")
+            preventclose = False  'doing may sound weird but it is needed as this will reenable the form 1 to be closed. See Form1_close sub
             Invoke(Sub() Me.Close())
             Exit Sub
         End If
         If shutdown Then
-            System.Diagnostics.Process.Start("shutdown", "/s /t 3 /f")
-            Invoke(Sub() Button1.Enabled = True)
+            preventclose = False
+            System.Diagnostics.Process.Start("shutdown", "/s /t 0")
+            preventclose = False
             Invoke(Sub() Me.Close())
             Exit Sub
         End If
         If reboot = False And shutdown = False Then
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Scanning for new device... " + vbNewLine)
-            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-            Invoke(Sub() TextBox1.ScrollToCaret())
+            UpdateTextMethod("-Scanning for new device... ")
             log("Scanning for new device...")
             Dim proc4 As New Process
             proc4.StartInfo = scan
@@ -4064,9 +4064,8 @@ Public Class Form1
             End If
 
         End If
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Clean uninstall completed!" + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
+        UpdateTextMethod("-Clean uninstall completed!")
+
         log("Clean uninstall completed!")
 
     End Sub
@@ -4514,31 +4513,6 @@ Public Class Form1
 
         ' Setting the driversearching parameter for win 7+
 
-
-        If version >= "6.1" Then
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
-                If regkey.GetValue("SearchOrderConfig").ToString <> 0 Then
-                    regkey.SetValue("SearchOrderConfig", 0)
-                    MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
-                           & " back to default, if you want AFTER your new driver installation.", MsgBoxStyle.Information)
-                End If
-            Catch ex As Exception
-            End Try
-        End If
-        If version >= "6.0" And version < "6.1" Then
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-                If regkey.GetValue("DontSearchWindowsUpdate").ToString <> 1 Then
-                    regkey.SetValue("DontSearchWindowsUpdate", 1)
-                    MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
-                           & " back to default, if you want AFTER your new driver installation.", MsgBoxStyle.Information)
-                End If
-            Catch ex As Exception
-            End Try
-        End If
-
-
         'checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
         ''checkthread.Priority = ThreadPriority.Highest
         'checkupdatethread.Start()
@@ -4589,15 +4563,16 @@ Public Class Form1
                     Dim resultmsgbox As Integer = MessageBox.Show("You are not in safe mode. It is highly recommended that you reboot into safe mode to avoid possible issues., Reboot into Safe Mode now?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                     If resultmsgbox = DialogResult.Cancel Then
                         Me.TopMost = False
+                        preventclose = False
                         Me.Close()
                         Exit Sub
                     ElseIf resultmsgbox = DialogResult.No Then
                         'do nothing and continue without safe mode
                     ElseIf resultmsgbox = DialogResult.Yes Then
-                        Dim resultmsgbox2 As Integer = MessageBox.Show("PLEASE READ!!!! You asked DDU to reboot into safemode automatically it is recommended that you manually do this first to be sure " _
-                    & "your system really can boot into safemode. 1 Possibility with the 'DDU auto boot in Safemode feature' is that the computer will 'never ending black screen boot loop'  (not a DDU issue , usually cause by other third party softwares.). If you get stuck in that 'boot loop', check the forum on how to fix it or contact me directly. With this being said, Reboot in safemode now automatically ?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                        Dim resultmsgbox2 As Integer = MessageBox.Show("Some computer with problem *may* have issues when doing this. Are you sure ?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                         If resultmsgbox2 = DialogResult.Cancel Then
                             Me.TopMost = False
+                            preventclose = False
                             Me.Close()
                             Exit Sub
                         ElseIf resultmsgbox2 = DialogResult.No Then
@@ -4624,7 +4599,8 @@ Public Class Form1
                                 End Try
 
                             End If
-                            System.Diagnostics.Process.Start("shutdown", "/r /t 3 /f")
+                            System.Diagnostics.Process.Start("shutdown", "/r /t 0")
+                            preventclose = False
                             Me.Close()
                             Exit Sub
                         End If
@@ -4902,6 +4878,30 @@ Public Class Form1
     Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
+
+        If version >= "6.1" Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
+                If regkey.GetValue("SearchOrderConfig").ToString <> 0 Then
+                    regkey.SetValue("SearchOrderConfig", 0)
+                    MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
+                           & " back to default, if you want AFTER your new driver installation.", MsgBoxStyle.Information)
+                End If
+            Catch ex As Exception
+            End Try
+        End If
+        If version >= "6.0" And version < "6.1" Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
+                If regkey.GetValue("DontSearchWindowsUpdate").ToString <> 1 Then
+                    regkey.SetValue("DontSearchWindowsUpdate", 1)
+                    MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
+                           & " back to default, if you want AFTER your new driver installation.", MsgBoxStyle.Information)
+                End If
+            Catch ex As Exception
+            End Try
+        End If
+
         Try
             preventclose = True
             Invoke(Sub() Button1.Enabled = False)
@@ -5322,12 +5322,9 @@ Public Class Form1
                 card1 = reply.IndexOf("DISPLAY\", card1 + 1)
 
             End While
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "Monitors and Hidden monitors removed !" + vbNewLine)
-            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-            Invoke(Sub() TextBox1.ScrollToCaret())
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "'ddudr' Remove complete" + vbNewLine)
-            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-            Invoke(Sub() TextBox1.ScrollToCaret())
+            UpdateTextMethod("Monitors and Hidden monitors removed !")
+            UpdateTextMethod("'ddudr' Remove complete")
+
 
             If combobox1value = "AMD" Then
                 cleanamdserviceprocess()
@@ -5383,7 +5380,7 @@ Public Class Form1
         If stopme = True Then
             'Scan for new hardware to not let users into a non working state.
 
-            preventclose = False
+
             Try
                 Dim scan As New ProcessStartInfo
                 scan.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
@@ -5398,6 +5395,7 @@ Public Class Form1
             Catch ex As Exception
             End Try
             'then quit
+            preventclose = False
             Me.Close()
             Exit Sub
         End If
