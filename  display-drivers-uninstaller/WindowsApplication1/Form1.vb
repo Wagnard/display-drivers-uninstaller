@@ -118,6 +118,7 @@ Public Class Form1
                 If result = MsgBoxResult.Yes Then
                     process.Start("http://www.wagnardmobile.com")
                     closeapp = True
+                    preventclose = False
                     Me.Close()
                     Exit Sub
                 ElseIf result = MsgBoxResult.No Then
@@ -138,6 +139,7 @@ Public Class Form1
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
+        Me.TopMost = False
         reboot = True
         combobox1value = ComboBox1.Text
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
@@ -4037,14 +4039,12 @@ Public Class Form1
             preventclose = False
             log("Restarting Computer ")
             System.Diagnostics.Process.Start("shutdown", "/r /t 0")
-            preventclose = False  'doing may sound weird but it is needed as this will reenable the form 1 to be closed. See Form1_close sub
             Invoke(Sub() Me.Close())
             Exit Sub
         End If
         If shutdown Then
             preventclose = False
             System.Diagnostics.Process.Start("shutdown", "/s /t 0")
-            preventclose = False
             Invoke(Sub() Me.Close())
             Exit Sub
         End If
@@ -4074,6 +4074,7 @@ Public Class Form1
             e.Cancel = True
             Exit Sub
         End If
+        Me.TopMost = False
         If MyIdentity.IsSystem Then
             Try
                 My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
@@ -4106,6 +4107,7 @@ Public Class Form1
         'check for admin before trying to do things, as this could cause errors and message boxes for rebooting into startup without admin are useless because you can't bcdedit without admin rights, however the next messagebox still plays the sound effect, for msgboxstyle.information. Not sure if this can be fixed.
         If Not isElevated Then
             MsgBox("You are not using DDU with Administrator privileges. The application will now exit.", MsgBoxStyle.Critical)
+            preventclose = False
             Me.Close()
             Exit Sub
         End If
@@ -4197,20 +4199,6 @@ Public Class Form1
             ComboBox2.SelectedIndex = ComboBox2.FindString(My.Settings.language)
 
         End If
-
-
-        '------------
-        'Check update
-        '------------
-        Try
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
-            Label11.Text = ""
-            Label11.Text = Label11.Text & buttontext("0")
-        Catch ex As Exception
-        End Try
-
-
-
 
 
         '----------------------
@@ -4388,6 +4376,15 @@ Public Class Form1
 
         'here I check if the process is running on system user account.
         If Not MyIdentity.IsSystem Then
+            '------------
+            'Check update
+            '------------
+            Try
+                buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+                Label11.Text = ""
+                Label11.Text = Label11.Text & buttontext("0")
+            Catch ex As Exception
+            End Try
             Checkupdates2()
             If closeapp Then
                 Exit Sub
@@ -4403,6 +4400,7 @@ Public Class Form1
 
             process.StartInfo = processinfo
             process.Start()
+            preventclose = False
             Me.Close()
             Exit Sub
         End If
@@ -4517,12 +4515,6 @@ Public Class Form1
             MsgBox("DDU detected that you have an AMD switching Laptop (Enduro or equivalent), DDU is not yet fully compatible / tested with Enduro systems, Use at your own risk.", MsgBoxStyle.Critical)
         End If
 
-        ' Setting the driversearching parameter for win 7+
-
-        'checkupdatethread = New Thread(AddressOf Me.Checkupdates2)
-        ''checkthread.Priority = ThreadPriority.Highest
-        'checkupdatethread.Start()
-
         'This code checks to see which mode Windows has booted up in.
         Select Case System.Windows.Forms.SystemInformation.BootMode
             Case BootMode.FailSafe
@@ -4565,7 +4557,7 @@ Public Class Form1
 
                     Dim resultmsgbox As Integer = MessageBox.Show("You are not in safe mode. It is highly recommended that you reboot into safe mode to avoid possible issues., Reboot into Safe Mode now?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                     If resultmsgbox = DialogResult.Cancel Then
-                        Me.TopMost = False
+
                         preventclose = False
                         Me.Close()
                         Exit Sub
@@ -4574,14 +4566,14 @@ Public Class Form1
                     ElseIf resultmsgbox = DialogResult.Yes Then
                         Dim resultmsgbox2 As Integer = MessageBox.Show("Some computer with problem *may* have issues when doing this. Are you sure ?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                         If resultmsgbox2 = DialogResult.Cancel Then
-                            Me.TopMost = False
+
                             preventclose = False
                             Me.Close()
                             Exit Sub
                         ElseIf resultmsgbox2 = DialogResult.No Then
                             'do nothing and continue without safe mode
                         ElseIf resultmsgbox2 = DialogResult.Yes Then
-                            Me.TopMost = False
+
                             Dim setbcdedit As New ProcessStartInfo
                             setbcdedit.FileName = "cmd.exe"
                             setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
@@ -4800,6 +4792,7 @@ Public Class Form1
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Me.TopMost = False
         reboot = False
         shutdown = False
         combobox1value = ComboBox1.Text
@@ -4807,6 +4800,7 @@ Public Class Form1
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        Me.TopMost = False
         reboot = False
         shutdown = True
         combobox1value = ComboBox1.Text
@@ -4882,13 +4876,26 @@ Public Class Form1
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
 
+
+        UpdateTextMethod("CleanUP started...")
+
+        preventclose = True
+        Invoke(Sub() Button1.Enabled = False)
+        Invoke(Sub() Button2.Enabled = False)
+        Invoke(Sub() Button3.Enabled = False)
+        Invoke(Sub() ComboBox1.Enabled = False)
+        Invoke(Sub() CheckBox2.Enabled = False)
+        Invoke(Sub() CheckBox1.Enabled = False)
+        Invoke(Sub() CheckBox3.Enabled = False)
+        Invoke(Sub() CheckBox4.Enabled = False)
+
         If version >= "6.1" Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
                 If regkey.GetValue("SearchOrderConfig").ToString <> 0 Then
                     regkey.SetValue("SearchOrderConfig", 0)
                     MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
-                           & " back to default, if you want AFTER your new driver installation.", MsgBoxStyle.Information)
+                           & " back to default, if you want AFTER your new driver installation.")
                 End If
             Catch ex As Exception
             End Try
@@ -4906,15 +4913,7 @@ Public Class Form1
         End If
 
         Try
-            preventclose = True
-            Invoke(Sub() Button1.Enabled = False)
-            Invoke(Sub() Button2.Enabled = False)
-            Invoke(Sub() Button3.Enabled = False)
-            Invoke(Sub() ComboBox1.Enabled = False)
-            Invoke(Sub() CheckBox2.Enabled = False)
-            Invoke(Sub() CheckBox1.Enabled = False)
-            Invoke(Sub() CheckBox3.Enabled = False)
-            Invoke(Sub() CheckBox4.Enabled = False)
+            
             If combobox1value = "AMD" Then
                 vendidexpected = "VEN_1002"
                 provider = "Provider: Advanced Micro Devices"
@@ -5402,7 +5401,6 @@ Public Class Form1
             Me.Close()
             Exit Sub
         End If
-        preventclose = False
         Button1.Enabled = True
         Button2.Enabled = True
         Button3.Enabled = True
@@ -5415,22 +5413,15 @@ Public Class Form1
             If MsgBox("Clean uninstall completed! Would you like to exit now?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                 'do nothing
             Else
+                preventclose = False
                 Me.Close()
             End If
         End If
-    End Sub
-
-    Private Sub CheckForUpdatesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheckForUpdatesToolStripMenuItem.Click
-        Try
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
-            Label11.Text = ""
-            Label11.Text = Label11.Text & buttontext("0")
-        Catch ex As Exception
-        End Try
-        Checkupdates2()
+        preventclose = False
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        Me.TopMost = False
         If version >= "6.1" Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
