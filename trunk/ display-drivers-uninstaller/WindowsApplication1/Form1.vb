@@ -4080,6 +4080,10 @@ Public Class Form1
                 My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
             Catch ex As Exception
             End Try
+            Try
+                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True).DeleteSubKeyTree("PAexec")
+            Catch ex As Exception
+            End Try
         End If
     End Sub
 
@@ -4091,6 +4095,11 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
+        Try
+            My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True).CreateSubKey("PAexec")
+            My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network\PAexec", True).SetValue("", "Service")
+        Catch ex As Exception
+        End Try
         loadinitiated = False
 
         CheckForIllegalCrossThreadCalls = True
