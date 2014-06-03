@@ -139,7 +139,6 @@ Public Class Form1
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        Me.TopMost = False
         reboot = True
         combobox1value = ComboBox1.Text
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
@@ -4074,7 +4073,6 @@ Public Class Form1
             e.Cancel = True
             Exit Sub
         End If
-        Me.TopMost = False
         If MyIdentity.IsSystem Then
             Try
                 My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
@@ -4418,6 +4416,7 @@ Public Class Form1
 
         MsgBox("Display Driver Uninstaller (DDU) is modifying your registry a lot. PLEASE MAKE A BACKUP OR A SYSTEM RESTORE POINT BEFORE USAGE!", MsgBoxStyle.Information)
 
+        Me.TopMost = False
 
         TextBox1.Text = TextBox1.Text + "DDU Version: " + Application.ProductVersion + vbNewLine
         log("DDU Version: " + Application.ProductVersion)
@@ -4801,7 +4800,6 @@ Public Class Form1
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        Me.TopMost = False
         reboot = False
         shutdown = False
         combobox1value = ComboBox1.Text
@@ -4809,7 +4807,6 @@ Public Class Form1
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Me.TopMost = False
         reboot = False
         shutdown = True
         combobox1value = ComboBox1.Text
@@ -5430,7 +5427,6 @@ Public Class Form1
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-        Me.TopMost = False
         If version >= "6.1" Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
