@@ -4098,6 +4098,7 @@ Public Class Form1
             My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network\PAexec", True).SetValue("", "Service")
         Catch ex As Exception
         End Try
+
         loadinitiated = False
 
         CheckForIllegalCrossThreadCalls = True
@@ -4399,6 +4400,30 @@ Public Class Form1
         End If
 
         If Not MyIdentity.IsSystem Then
+            Dim stopservice As New ProcessStartInfo
+            stopservice.FileName = "cmd.exe"
+            stopservice.Arguments = " /Csc stop PAExec"
+            stopservice.UseShellExecute = False
+            stopservice.CreateNoWindow = True
+            stopservice.RedirectStandardOutput = False
+
+            Dim processstopservice As New Process
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+
+            System.Threading.Thread.Sleep(10)
+
+            stopservice.Arguments = " /Csc delete PAExec"
+
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
+
+            stopservice.Arguments = " /Csc interrogate PAExec"
+            processstopservice.StartInfo = stopservice
+            processstopservice.Start()
+            processstopservice.WaitForExit()
             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\paexec.exe"
             processinfo.Arguments = "-noname -i -s " & Chr(34) & Application.StartupPath & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34)
             processinfo.UseShellExecute = False
