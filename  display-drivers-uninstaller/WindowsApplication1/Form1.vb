@@ -4793,19 +4793,24 @@ Public Class Form1
         Invoke(Sub() CheckBox5.Enabled = False)
 
         If createrestorepoint Then
-            UpdateTextMethod("Trying to Create a System Restored Point")
-            log("Trying to Create a System Restored Point")
-            Dim SysterRestoredPoint = GetObject("winmgmts:\\.\root\default:Systemrestore")
-            If SysterRestoredPoint IsNot Nothing Then
-                'Replace 'My System Restored Point' with your ststem restored point
-                If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
-                    UpdateTextMethod("System Restored Point Created")
-                    log("System Restored Point Created")
-                Else
-                    UpdateTextMethod("System Restored Point Could not Created!")
-                    log("System Restored Point Could not Created!")
+            Try
+                UpdateTextMethod("Trying to Create a System Restored Point")
+                log("Trying to Create a System Restored Point")
+                Dim SysterRestoredPoint = GetObject("winmgmts:\\.\root\default:Systemrestore")
+                If SysterRestoredPoint IsNot Nothing Then
+                    'Replace 'My System Restored Point' with your ststem restored point
+                    If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
+                        UpdateTextMethod("System Restored Point Created")
+                        log("System Restored Point Created")
+                    Else
+                        UpdateTextMethod("System Restored Point Could not Created!")
+                        log("System Restored Point Could not Created!")
+                    End If
                 End If
-            End If
+            Catch ex As Exception
+                UpdateTextMethod(ex.Message)
+                log(ex.Message)
+            End Try
         End If
 
         If version >= "6.1" Then
