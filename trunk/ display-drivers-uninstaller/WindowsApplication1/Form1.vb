@@ -3275,6 +3275,7 @@ Public Class Form1
                             child.ToLower.Contains("_shadowplay") Or _
                             child.ToLower.Contains("_update.core") Or _
                             child.ToLower.Contains("nvidiastereo") Or _
+                            child.ToLower.Contains("miracast.virtualaudio") Or _
                             child.ToLower.Contains("_virtualaudio.driver") Then
                             If removephysx = False And child.ToLower.Contains("physx") Then
                                 Continue For
@@ -3326,6 +3327,7 @@ Public Class Form1
                         child.ToLower.Contains("_shadowplay") Or _
                         child.ToLower.Contains("_update.core") Or _
                         child.ToLower.Contains("nvidiastereo") Or _
+                        child.ToLower.Contains("miracast.virtualaudio") Or _
                         child.ToLower.Contains("_virtualaudio.driver") Then
                         If removephysx = False And child.ToLower.Contains("physx") Then
                             Continue For
@@ -3981,6 +3983,45 @@ Public Class Form1
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
+
+        If IntPtr.Size = 8 Then
+            packages = IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\packages.cfg") '// add each line as String Array.
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            Try
+                                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                            Catch ex As Exception
+                                Continue For
+                            End Try
+                            If subregkey IsNot Nothing Then
+                                If checkvariables.isnullorwhitespace(subregkey.GetValue("DisplayName")) = False Then
+                                    wantedvalue = subregkey.GetValue("DisplayName").ToString
+                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                        For i As Integer = 0 To packages.Length - 1
+                                            If Not checkvariables.isnullorwhitespace(packages(i)) Then
+                                                If wantedvalue.ToLower.Contains(packages(i)) Then
+                                                    Try
+                                                        regkey.DeleteSubKeyTree(child)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                            End If
+                                        Next
+                                    End If
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.StackTrace)
+            End Try
+        End If
 
     End Sub
     Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
@@ -6625,5 +6666,8 @@ Public Class CleanupEngine
         End If
 
         f.log("END Interface CleanUP")
+    End Sub
+    Public Sub folderscleanup(ByVal driverfiles As String())
+
     End Sub
 End Class
