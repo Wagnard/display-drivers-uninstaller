@@ -337,71 +337,9 @@ Public Class Form1
         'Delete driver files
         'delete OpenCL
 
-        driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\driverfiles.cfg") '// add each line as String Array.
+        CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\driverfiles.cfg")) '// add each line as String Array.
 
-        For i As Integer = 0 To driverfiles.Length - 1
-            If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                filePath = System.Environment.SystemDirectory
-
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath & "\" & driverfiles(i))
-                Catch ex As Exception
-                End Try
-
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
-                Catch ex As Exception
-                End Try
-            End If
-        Next
-
-        Try
-            For i As Integer = 0 To driverfiles.Length - 1
-                If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                    filePath = Environment.GetEnvironmentVariable("windir")
-                    For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                                Try
-                                    My.Computer.FileSystem.DeleteFile(child)
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        End If
-                    Next
-                End If
-            Next
-        Catch ex As Exception
-            log("info: " + ex.Message)
-        End Try
-
-        If IntPtr.Size = 8 Then
-            For i As Integer = 0 To driverfiles.Length - 1
-                If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                    filePath = Environment.GetEnvironmentVariable("windir")
-                    For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\SysWOW64", FileIO.SearchOption.SearchTopLevelOnly, "*.log")
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                                Try
-                                    My.Computer.FileSystem.DeleteFile(child)
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        End If
-                    Next
-
-                    Try
-                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
-                    Catch ex As Exception
-                    End Try
-
-                    Try
-                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
-                    Catch ex As Exception
-                    End Try
-                End If
-            Next
-        End If
+        
 
         filePath = Environment.GetEnvironmentVariable("windir")
         Try
@@ -2431,54 +2369,7 @@ Public Class Form1
         'Erase driver file from windows directory
 
 
-        driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg") '// add each line as String Array.
-
-        For i As Integer = 0 To driverfiles.Length - 1
-            If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-
-                filePath = System.Environment.SystemDirectory
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\" + driverfiles(i))
-                Catch ex As Exception
-                End Try
-
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
-                Catch ex As Exception
-                End Try
-
-                Try
-                    filePath = Environment.GetEnvironmentVariable("windir")
-                    For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                                Try
-                                    My.Computer.FileSystem.DeleteFile(child)
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        End If
-                    Next
-                Catch ex As Exception
-                    log("Info : " + ex.Message)
-                End Try
-
-                If IntPtr.Size = 8 Then
-
-                    filePath = Environment.GetEnvironmentVariable("windir")
-                    Try
-                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
-                    Catch ex As Exception
-                    End Try
-
-                    Try
-                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
-                    Catch ex As Exception
-                    End Try
-
-                End If
-            End If
-        Next
+        CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
 
         filePath = System.Environment.SystemDirectory
         Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
@@ -2490,6 +2381,7 @@ Public Class Form1
                 End Try
             End If
         Next
+
         filePath = Environment.GetEnvironmentVariable("windir")
         Try
             My.Computer.FileSystem.DeleteDirectory _
@@ -3761,71 +3653,7 @@ Public Class Form1
 
         log("Cleaning Directory")
 
-        driverfiles = IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\driverfiles.cfg") '// add each line as String Array.
-
-        For i As Integer = 0 To driverfiles.Length - 1
-            If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                filePath = System.Environment.SystemDirectory
-
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath & "\" & driverfiles(i))
-                Catch ex As Exception
-                End Try
-
-                Try
-                    My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
-                Catch ex As Exception
-                End Try
-            End If
-        Next
-
-        Try
-            For i As Integer = 0 To driverfiles.Length - 1
-                If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                    filePath = Environment.GetEnvironmentVariable("windir")
-                    For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                                Try
-                                    My.Computer.FileSystem.DeleteFile(child)
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        End If
-                    Next
-                End If
-            Next
-        Catch ex As Exception
-            log("info: " + ex.Message)
-        End Try
-
-        If IntPtr.Size = 8 Then
-            For i As Integer = 0 To driverfiles.Length - 1
-                If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                    filePath = Environment.GetEnvironmentVariable("windir")
-                    For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\SysWOW64", FileIO.SearchOption.SearchTopLevelOnly, "*.log")
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                                Try
-                                    My.Computer.FileSystem.DeleteFile(child)
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        End If
-                    Next
-
-                    Try
-                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
-                    Catch ex As Exception
-                    End Try
-
-                    Try
-                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
-                    Catch ex As Exception
-                    End Try
-                End If
-            Next
-        End If
+        CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
 
     End Sub
     Private Sub cleanintelserviceprocess()
@@ -5687,29 +5515,19 @@ Public Class Form1
                                    child2.ToLower.Contains("nvidia.update") Or _
                                    child2.ToLower.Contains("installer2\installer") Or _
                                    child2.ToLower.Contains("network.service") Or _
+                                   child2.ToLower.Contains("miracast.virtualaudio") Or _
                                    child2.ToLower.Contains("shadowplay") Or _
                                    child2.ToLower.Contains("update.core") Or _
                                    child2.ToLower.Contains("virtualaudio.driver") Or _
                                    child2.ToLower.Contains("hdaudio.driver") Then
-                                    If removephysx Then
+                                    If (removephysx Or Not ((Not removephysx) And child2.ToLower.Contains("physx"))) Then
                                         Try
                                             My.Computer.FileSystem.DeleteDirectory _
                                             (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                         Catch ex As Exception
+                                            log(ex.Message)
                                             TestDelete(child2)
                                         End Try
-                                    Else
-                                        If child2.ToLower.Contains("physx") Then
-                                            'do nothing
-                                        Else
-                                            Try
-                                                My.Computer.FileSystem.DeleteDirectory _
-                                                (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                            Catch ex As Exception
-                                                log(ex.Message)
-                                                TestDelete(child2)
-                                            End Try
-                                        End If
                                     End If
                                 End If
                             End If
@@ -6789,6 +6607,71 @@ Public Class CleanupEngine
         f.log("END Interface CleanUP")
     End Sub
     Public Sub folderscleanup(ByVal driverfiles As String())
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim filePath As String
 
+        For i As Integer = 0 To driverfiles.Length - 1
+            If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+                filePath = System.Environment.SystemDirectory
+
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath & "\" & driverfiles(i))
+                Catch ex As Exception
+                End Try
+
+                Try
+                    My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
+                Catch ex As Exception
+                End Try
+            End If
+        Next
+
+        Try
+            For i As Integer = 0 To driverfiles.Length - 1
+                If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+                    filePath = Environment.GetEnvironmentVariable("windir")
+                    For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                                Try
+                                    My.Computer.FileSystem.DeleteFile(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+            Next
+        Catch ex As Exception
+            f.log("info: " + ex.Message)
+        End Try
+
+        If IntPtr.Size = 8 Then
+            For i As Integer = 0 To driverfiles.Length - 1
+                If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+                    filePath = Environment.GetEnvironmentVariable("windir")
+                    For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\SysWOW64", FileIO.SearchOption.SearchTopLevelOnly, "*.log")
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                                Try
+                                    My.Computer.FileSystem.DeleteFile(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+
+                    Try
+                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
+                    Catch ex As Exception
+                    End Try
+
+                    Try
+                        My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
+                    Catch ex As Exception
+                    End Try
+                End If
+            Next
+        End If
     End Sub
 End Class
