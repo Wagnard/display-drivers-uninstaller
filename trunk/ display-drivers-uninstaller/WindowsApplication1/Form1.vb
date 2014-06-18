@@ -41,6 +41,7 @@ Public Class Form1
     Public win8higher As Boolean = False
     Public winxp As Boolean = False
     Dim stopme As Boolean = False
+    Dim createrestorepoint As Boolean = True
     Public removephysx As Boolean = True
     Dim remove3dtvplay As Boolean = True
     Dim time As String = DateAndTime.Now
@@ -4526,6 +4527,7 @@ Public Class Form1
         log("ddudr DP_ENUM RESULT BELOW")
         log(reply)
         loadinitiated = True
+
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
@@ -4788,6 +4790,23 @@ Public Class Form1
         Invoke(Sub() CheckBox1.Enabled = False)
         Invoke(Sub() CheckBox3.Enabled = False)
         Invoke(Sub() CheckBox4.Enabled = False)
+        Invoke(Sub() CheckBox5.Enabled = False)
+
+        If createrestorepoint Then
+            UpdateTextMethod("Trying to Create a System Restored Point")
+            log("Trying to Create a System Restored Point")
+            Dim SysterRestoredPoint = GetObject("winmgmts:\\.\root\default:Systemrestore")
+            If SysterRestoredPoint IsNot Nothing Then
+                'Replace 'My System Restored Point' with your ststem restored point
+                If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
+                    UpdateTextMethod("System Restored Point Created")
+                    log("System Restored Point Created")
+                Else
+                    UpdateTextMethod("System Restored Point Could not Created!")
+                    log("System Restored Point Could not Created!")
+                End If
+            End If
+        End If
 
         If version >= "6.1" Then
             Try
@@ -4813,7 +4832,7 @@ Public Class Form1
         End If
 
         Try
-            
+
             If combobox1value = "AMD" Then
                 vendidexpected = "VEN_1002"
                 provider = "Provider: Advanced Micro Devices"
@@ -5309,6 +5328,7 @@ Public Class Form1
         CheckBox1.Enabled = True
         CheckBox3.Enabled = True
         CheckBox4.Enabled = True
+        CheckBox5.Enabled = True
         If Not reboot And Not shutdown Then
             If MsgBox("Clean uninstall completed! Would you like to exit now?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                 'do nothing
@@ -5471,6 +5491,15 @@ Public Class Form1
                 End If
                 CheckBox3.Text = CheckBox3.Text & buttontext(i)
             Next
+
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox5.txt") '// add each line as String Array.
+            CheckBox5.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    CheckBox5.Text = CheckBox5.Text & vbNewLine
+                End If
+                CheckBox5.Text = CheckBox5.Text & buttontext(i)
+            Next
         Catch ex As Exception
             log(ex.Message)
         End Try
@@ -5491,6 +5520,13 @@ Public Class Form1
             remove3dtvplay = True
         Else
             remove3dtvplay = False
+        End If
+    End Sub
+    Private Sub CheckBox5_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox5.CheckedChanged
+        If CheckBox5.Checked = True Then
+            createrestorepoint = True
+        Else
+            createrestorepoint = False
         End If
     End Sub
 
