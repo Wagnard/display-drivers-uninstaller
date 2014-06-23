@@ -21,6 +21,7 @@ Imports System.Security.AccessControl
 Imports System.Threading
 Imports System.Security.Principal
 Imports System.Management
+Imports System.Runtime.InteropServices
 
 
 Public Class Form1
@@ -2364,15 +2365,22 @@ Public Class Form1
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
-        'Not sure if this work on XP
-
-        'Erase driver file from windows directory
-
 
         CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
 
         filePath = System.Environment.SystemDirectory
         Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
+        For i As Integer = 0 To files.Length - 1
+            If Not checkvariables.isnullorwhitespace(files(i)) Then
+                Try
+                    My.Computer.FileSystem.DeleteFile(files(i))
+                Catch ex As Exception
+                End Try
+            End If
+        Next
+
+        filePath = System.Environment.SystemDirectory
+        files = IO.Directory.GetFiles(filePath + "\", "nvhdagenco*.*")
         For i As Integer = 0 To files.Length - 1
             If Not checkvariables.isnullorwhitespace(files(i)) Then
                 Try
@@ -4767,7 +4775,17 @@ Public Class Form1
 
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
         Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-        process.Start(webAddress)
+        ' process.Start(webAddress)
+        Dim UserTokenHandle As IntPtr = IntPtr.Zero
+        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+        Dim StartInfo As New WindowsApi.STARTUPINFOW
+        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+        WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\settings\paypal.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo)
+        If Not UserTokenHandle = IntPtr.Zero Then
+            WindowsApi.CloseHandle(UserTokenHandle)
+        End If
     End Sub
 
     Private Sub VisitGuru3dNVIDIAThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dNVIDIAThreadToolStripMenuItem.Click
@@ -6696,4 +6714,74 @@ Public Class CleanupEngine
             Next
         End If
     End Sub
+End Class
+Public Class WindowsApi
+
+    <DllImport("kernel32.dll", EntryPoint:="WTSGetActiveConsoleSessionId", SetLastError:=True)> _
+    Public Shared Function WTSGetActiveConsoleSessionId() As UInteger
+    End Function
+
+    <DllImport("Wtsapi32.dll", EntryPoint:="WTSQueryUserToken", SetLastError:=True)> _
+    Public Shared Function WTSQueryUserToken(ByVal SessionId As UInteger, ByRef phToken As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+    End Function
+
+    <DllImport("kernel32.dll", EntryPoint:="CloseHandle", SetLastError:=True)> _
+    Public Shared Function CloseHandle(<InAttribute()> ByVal hObject As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+    End Function
+
+    <DllImport("advapi32.dll", EntryPoint:="CreateProcessAsUserW", SetLastError:=True)> _
+    Public Shared Function CreateProcessAsUser(<InAttribute()> ByVal hToken As IntPtr, _
+                                                    <InAttribute(), MarshalAs(UnmanagedType.LPWStr)> ByVal lpApplicationName As String, _
+                                                    ByVal lpCommandLine As System.IntPtr, _
+                                                    <InAttribute()> ByVal lpProcessAttributes As IntPtr, _
+                                                    <InAttribute()> ByVal lpThreadAttributes As IntPtr, _
+                                                    <MarshalAs(UnmanagedType.Bool)> ByVal bInheritHandles As Boolean, _
+                                                    ByVal dwCreationFlags As UInteger, _
+                                                    <InAttribute()> ByVal lpEnvironment As IntPtr, _
+                                                    <InAttribute(), MarshalAsAttribute(UnmanagedType.LPWStr)> ByVal lpCurrentDirectory As String, _
+                                                    <InAttribute()> ByRef lpStartupInfo As STARTUPINFOW, _
+                                                    <OutAttribute()> ByRef lpProcessInformation As PROCESS_INFORMATION) As <MarshalAs(UnmanagedType.Bool)> Boolean
+    End Function
+
+    <StructLayout(LayoutKind.Sequential)> _
+    Public Structure SECURITY_ATTRIBUTES
+        Public nLength As UInteger
+        Public lpSecurityDescriptor As IntPtr
+        <MarshalAs(UnmanagedType.Bool)> _
+        Public bInheritHandle As Boolean
+    End Structure
+
+    <StructLayout(LayoutKind.Sequential)> _
+    Public Structure STARTUPINFOW
+        Public cb As UInteger
+        <MarshalAs(UnmanagedType.LPWStr)> _
+        Public lpReserved As String
+        <MarshalAs(UnmanagedType.LPWStr)> _
+        Public lpDesktop As String
+        <MarshalAs(UnmanagedType.LPWStr)> _
+        Public lpTitle As String
+        Public dwX As UInteger
+        Public dwY As UInteger
+        Public dwXSize As UInteger
+        Public dwYSize As UInteger
+        Public dwXCountChars As UInteger
+        Public dwYCountChars As UInteger
+        Public dwFillAttribute As UInteger
+        Public dwFlags As UInteger
+        Public wShowWindow As UShort
+        Public cbReserved2 As UShort
+        Public lpReserved2 As IntPtr
+        Public hStdInput As IntPtr
+        Public hStdOutput As IntPtr
+        Public hStdError As IntPtr
+    End Structure
+
+    <StructLayout(LayoutKind.Sequential)> _
+    Public Structure PROCESS_INFORMATION
+        Public hProcess As IntPtr
+        Public hThread As IntPtr
+        Public dwProcessId As UInteger
+        Public dwThreadId As UInteger
+    End Structure
+
 End Class
