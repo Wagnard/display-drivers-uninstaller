@@ -42,8 +42,8 @@ Public Class Form1
     Public win8higher As Boolean = False
     Public winxp As Boolean = False
     Dim stopme As Boolean = False
-    Public removephysx As Boolean = True
-    Dim remove3dtvplay As Boolean = True
+    Public removephysx As Boolean
+    Dim remove3dtvplay As Boolean
     Dim time As String = DateAndTime.Now
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
@@ -72,7 +72,8 @@ Public Class Form1
     Dim safemode As Boolean = False
     Dim myExe As String
     Dim driverfiles() As String
-    Dim checkupdates As New checkupdate
+    Dim checkupdates As New genericfunction
+    Dim settings As New genericfunction
     Dim CleanupEngine As New CleanupEngine
     Dim enduro As Boolean = False
     Dim preventclose As Boolean = False
@@ -85,6 +86,7 @@ Public Class Form1
     Dim TextLines() As String
     Dim array() As String = Nothing
     Dim loadinitiated As Boolean = True
+    Dim systemrestore As Boolean
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -3964,6 +3966,12 @@ Public Class Form1
 
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        'We try to create config.cfg if non existant.
+        If Not (File.Exists(Application.StartupPath & "\settings\config.cfg")) Then
+            myExe = Application.StartupPath & "\settings\config.cfg"
+            System.IO.File.WriteAllBytes(myExe, My.Resources.config)
+        End If
+
         Try
             My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).CreateSubKey("PAexec")
             My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\PAexec", True).SetValue("", "Service")
@@ -3983,10 +3991,31 @@ Public Class Form1
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
         End If
 
-        If My.Settings.logbox = "dontlog" Then
-            CheckBox2.Checked = False
-        Else
+
+        'read config file
+
+        If settings.getconfig("logbox") = "true" Then
             CheckBox2.Checked = True
+        Else
+            CheckBox2.Checked = False
+        End If
+
+        If settings.getconfig("remove3dtvplay") = "true" Then
+            CheckBox4.Checked = True
+        Else
+            CheckBox4.Checked = False
+        End If
+
+        If settings.getconfig("systemrestore") = "true" Then
+            CheckBox5.Checked = True
+        Else
+            CheckBox5.Checked = False
+        End If
+
+        If settings.getconfig("removephysx") = "true" Then
+            CheckBox3.Checked = True
+        Else
+            CheckBox3.Checked = False
         End If
 
         'check for admin before trying to do things, as this could cause errors and message boxes for rebooting into startup without admin are useless because you can't bcdedit without admin rights, however the next messagebox still plays the sound effect, for msgboxstyle.information. Not sure if this can be fixed.
@@ -4012,7 +4041,7 @@ Public Class Form1
         Next
 
         ComboBox2.Items.AddRange(list)
-        If My.Settings.language = "" Then
+        If settings.getconfig("language") = "" Then
             If System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("fr") Then
                 ComboBox2.SelectedIndex = ComboBox2.FindString("French")
 
@@ -4081,7 +4110,7 @@ Public Class Form1
             End If
 
         Else
-            ComboBox2.SelectedIndex = ComboBox2.FindString(My.Settings.language)
+            ComboBox2.SelectedIndex = ComboBox2.FindString(settings.getconfig("language"))
 
         End If
 
@@ -4462,24 +4491,24 @@ Public Class Form1
                 End If
 
             Case BootMode.Normal
-
-                Form2.Show()
-                Try
-                    log("Trying to Create a System Restored Point")
-                    Dim SysterRestoredPoint = GetObject("winmgmts:\\.\root\default:Systemrestore")
-                    If SysterRestoredPoint IsNot Nothing Then
-                        'Replace 'My System Restored Point' with your ststem restored point
-                        If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
-                            log("System Restored Point Created")
-                        Else
-                            log("System Restored Point Could not Created!")
+                If CheckBox5.Checked = True Then
+                    Form2.Show()
+                    Try
+                        log("Trying to Create a System Restored Point")
+                        Dim SysterRestoredPoint = GetObject("winmgmts:\\.\root\default:Systemrestore")
+                        If SysterRestoredPoint IsNot Nothing Then
+                            'Replace 'My System Restored Point' with your ststem restored point
+                            If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
+                                log("System Restored Point Created")
+                            Else
+                                log("System Restored Point Could not Created!")
+                            End If
                         End If
-                    End If
-                Catch ex As Exception
-                    log(ex.Message)
-                End Try
-                Form2.Close()
-
+                    Catch ex As Exception
+                        log(ex.Message)
+                    End Try
+                    Form2.Close()
+                End If
                 safemode = False
                 If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
 
@@ -4709,11 +4738,13 @@ Public Class Form1
     End Sub
 
     Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
+
         If CheckBox2.Checked = True Then
-            My.Settings.logbox = "log"
+            settings.setconfig("logbox", "true")
         Else
-            My.Settings.logbox = "dontlog"
+            settings.setconfig("logbox", "false")
         End If
+
     End Sub
 
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
@@ -4735,11 +4766,15 @@ Public Class Form1
     End Sub
 
     Private Sub CheckBox3_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox3.CheckedChanged
+
         If CheckBox3.Checked = True Then
+            settings.setconfig("removephysx", "true")
             removephysx = True
         Else
+            settings.setconfig("removephysx", "false")
             removephysx = False
         End If
+
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
@@ -5511,6 +5546,15 @@ Public Class Form1
                 CheckBox3.Text = CheckBox3.Text & buttontext(i)
             Next
 
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox5.txt") '// add each line as String Array.
+            CheckBox5.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    CheckBox5.Text = CheckBox5.Text & vbNewLine
+                End If
+                CheckBox5.Text = CheckBox5.Text & buttontext(i)
+            Next
+
         Catch ex As Exception
             log(ex.Message)
         End Try
@@ -5518,7 +5562,7 @@ Public Class Form1
 
     Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
         combobox2value = ComboBox2.Text
-        My.Settings.language = combobox2value
+        settings.setconfig("language", combobox2value)
         initlanguage()
     End Sub
 
@@ -5527,11 +5571,28 @@ Public Class Form1
     End Sub
 
     Private Sub CheckBox4_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox4.CheckedChanged
+
         If CheckBox4.Checked = True Then
+            settings.setconfig("remove3dtvplay", "true")
             remove3dtvplay = True
         Else
+            settings.setconfig("remove3dtvplay", "false")
             remove3dtvplay = False
         End If
+
+    End Sub
+
+    Private Sub CheckBox5_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox5.CheckedChanged
+
+        If CheckBox5.Checked = True Then
+            settings.setconfig("systemrestore", "true")
+            systemrestore = True
+
+        Else
+            settings.setconfig("systemrestore", "false")
+            systemrestore = False
+        End If
+
     End Sub
 
     Private Sub temporarynvidiaspeedup()   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
@@ -5616,7 +5677,7 @@ Public Class checkvariables
     End Function
 End Class
 
-Public Class checkupdate
+Public Class genericfunction
     Public Function checkupdates() As Integer
 
         Try
@@ -5646,6 +5707,43 @@ Public Class checkupdate
             Return 3
         End Try
     End Function
+    Public Function getconfig(ByVal options As String) As String
+
+        Try
+            Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
+            For i As Integer = 0 To lines.Length - 1
+                If Not String.IsNullOrEmpty(lines(i)) Then
+                    If lines(i).ToLower.Contains(options.ToLower) Then
+                        Return lines(i).ToLower.Replace(options + "=", "")
+                    End If
+                End If
+            Next
+            'if we endup here, it mean the value is not found con .cfg so we add it.
+            Array.Resize(lines, lines.Length + 1)
+            lines(lines.Length - 1) = options + "=false"
+            System.IO.File.WriteAllLines(Application.StartupPath & "\settings\config.cfg", lines)
+
+            Return False
+        Catch ex As Exception
+            MsgBox(ex.Message + ex.StackTrace)
+            Return False
+        End Try
+
+    End Function
+    Public Sub setconfig(ByVal name As String, ByVal setvalue As String)
+        Try
+            Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
+            For i As Integer = 0 To lines.Length - 1
+                If Not String.IsNullOrEmpty(lines(i)) Then
+                    If lines(i).ToLower.Contains(name) Then
+                        lines(i) = name + "=" + setvalue
+                        System.IO.File.WriteAllLines(Application.StartupPath & "\settings\config.cfg", lines)
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+        End Try
+    End Sub
 End Class
 
 Public Class CleanupEngine
