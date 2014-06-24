@@ -55,6 +55,7 @@ Partial Class Form1
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.CheckBox4 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox5 = New System.Windows.Forms.CheckBox()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -242,8 +243,6 @@ Partial Class Form1
         'CheckBox3
         '
         Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Checked = True
-        Me.CheckBox3.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CheckBox3.Location = New System.Drawing.Point(222, 255)
         Me.CheckBox3.Name = "CheckBox3"
         Me.CheckBox3.Size = New System.Drawing.Size(99, 17)
@@ -323,8 +322,6 @@ Partial Class Form1
         'CheckBox4
         '
         Me.CheckBox4.AutoSize = True
-        Me.CheckBox4.Checked = True
-        Me.CheckBox4.CheckState = System.Windows.Forms.CheckState.Checked
         Me.CheckBox4.Location = New System.Drawing.Point(222, 233)
         Me.CheckBox4.Name = "CheckBox4"
         Me.CheckBox4.Size = New System.Drawing.Size(120, 17)
@@ -333,11 +330,21 @@ Partial Class Form1
         Me.CheckBox4.UseVisualStyleBackColor = True
         Me.CheckBox4.Visible = False
         '
+        'CheckBox5
+        '
+        Me.CheckBox5.AutoSize = True
+        Me.CheckBox5.Location = New System.Drawing.Point(222, 321)
+        Me.CheckBox5.Name = "CheckBox5"
+        Me.CheckBox5.Size = New System.Drawing.Size(15, 14)
+        Me.CheckBox5.TabIndex = 27
+        Me.CheckBox5.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(600, 526)
+        Me.Controls.Add(Me.CheckBox5)
         Me.Controls.Add(Me.CheckBox4)
         Me.Controls.Add(Me.Label12)
         Me.Controls.Add(Me.ComboBox2)
@@ -408,5 +415,6 @@ Partial Class Form1
     Friend WithEvents ToSToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CheckBox4 As System.Windows.Forms.CheckBox
     Friend WithEvents VisitDDUHomepageToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CheckBox5 As System.Windows.Forms.CheckBox
 
 End Class
