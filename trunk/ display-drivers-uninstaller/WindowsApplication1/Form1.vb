@@ -177,15 +177,15 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Executing Driver Store cleanUP(Delete OEM step)..." + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
+        UpdateTextMethod("-Executing Driver Store cleanUP(Delete OEM step)...")
+
         While oem > -1 And oem <> Nothing
             Dim position As Integer = reply.IndexOf("Provider:", oem)
             Dim classs As Integer = reply.IndexOf("Class:", oem)
             Dim inf As Integer = reply.IndexOf(".inf", oem)
             If classs > -1 Then 'I saw that sometimes, there could be no class on some oems (winxp)
                 If reply.Substring(position, classs - position).Contains(provider) Or _
+                   reply.Substring(position, classs - position).ToLower.Contains("ati ") Or _
                     reply.Substring(position, classs - position).ToLower.Contains("amd ") Then
                     Dim part As String = reply.Substring(oem, inf - oem)
                     log(part + " Found")
@@ -5718,7 +5718,7 @@ Public Class genericfunction
                     End If
                 End If
             Next
-            'if we endup here, it mean the value is not found con .cfg so we add it.
+            'if we endup here, it mean the value is not found on .cfg so we add it.
             Array.Resize(lines, lines.Length + 1)
             lines(lines.Length - 1) = options + "=false"
             System.IO.File.WriteAllLines(Application.StartupPath & "\settings\config.cfg", lines)
