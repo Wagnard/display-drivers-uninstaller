@@ -187,7 +187,7 @@ Public Class Form1
             If classs > -1 Then 'I saw that sometimes, there could be no class on some oems (winxp)
                 If reply.Substring(position, classs - position).Contains(provider) Or _
                    reply.Substring(position, classs - position).ToLower.Contains("ati tech") Or _
-                    reply.Substring(position, classs - position).ToLower.Contains("amd ") Then
+                    reply.Substring(position, classs - position).ToLower.Contains("amd") Then
                     Dim part As String = reply.Substring(oem, inf - oem)
                     log(part + " Found")
                     Dim deloem As New Diagnostics.ProcessStartInfo
@@ -4943,7 +4943,7 @@ Public Class Form1
                                                                     If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
                                                                         For i As Integer = 0 To array.Length - 1
                                                                             If Not checkvariables.isnullorwhitespace(array(i)) Then
-                                                                                If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("5&ec8fda3&4").ToString.ToLower) Then
+                                                                                If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
                                                                                     log("Found an AMD audio controller bus !")
                                                                                     Try
                                                                                         log("array result: " + array(i))
