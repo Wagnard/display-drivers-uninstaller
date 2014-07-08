@@ -3666,6 +3666,17 @@ Public Class Form1
 
         CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
 
+        filePath = System.Environment.SystemDirectory
+        Dim files() As String = IO.Directory.GetFiles(filePath + "\", "igfxcoin*.*")
+        For i As Integer = 0 To files.Length - 1
+            If Not checkvariables.isnullorwhitespace(files(i)) Then
+                Try
+                    My.Computer.FileSystem.DeleteFile(files(i))
+                Catch ex As Exception
+                End Try
+            End If
+        Next
+
     End Sub
     Private Sub cleanintelserviceprocess()
 
@@ -4545,7 +4556,7 @@ Public Class Form1
                             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
                             If regkey IsNot Nothing Then
                                 Try
-                                    regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & "display driver uninstaller.exe" & Chr(34))
+                                    regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
                                     regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
                                 Catch ex As Exception
                                     log(ex.Message & ex.StackTrace)
@@ -4857,11 +4868,11 @@ Public Class Form1
         Invoke(Sub() Button2.Enabled = False)
         Invoke(Sub() Button3.Enabled = False)
         Invoke(Sub() ComboBox1.Enabled = False)
-        Invoke(Sub() CheckBox2.Enabled = False)
         Invoke(Sub() CheckBox1.Enabled = False)
+        Invoke(Sub() CheckBox2.Enabled = False)
         Invoke(Sub() CheckBox3.Enabled = False)
         Invoke(Sub() CheckBox4.Enabled = False)
-
+        Invoke(Sub() CheckBox5.Enabled = False)
 
         If version >= "6.1" Then
             Try
@@ -5061,7 +5072,7 @@ Public Class Form1
             'If combobox1value= "AMD" & enduro Then
             '    ' ----------------------------------------------------------------------
             '    ' (Experimental) Removing the Intel card because of AMD Enduro videocard
-            '    ' -------------------------------------------------------
+            '    ' ----------------------------------------------------------------------
 
             '    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
             '    processinfo.Arguments = "findall =display"
@@ -5265,6 +5276,44 @@ Public Class Form1
                     Button3.Enabled = True
                     Exit Sub
                 End Try
+
+                ' ------------------------------
+                ' Removing nVidia AudioEndpoints
+                ' ------------------------------
+                log("Removing nVidia Audio Endpoints")
+                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                processinfo.Arguments = "findall =audioendpoint"
+                processinfo.UseShellExecute = False
+                processinfo.CreateNoWindow = True
+                processinfo.RedirectStandardOutput = True
+
+                process.StartInfo = processinfo
+                process.Start()
+                reply = process.StandardOutput.ReadToEnd
+                process.WaitForExit()
+
+                Dim audioendpoints As String() = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
+
+                For Each child As String In audioendpoints
+                    If Not checkvariables.isnullorwhitespace(child) Then
+                        If child.ToLower.Contains("nvidia virtual audio device") Then
+                            child = child.Substring(0, child.IndexOf(":"))
+                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                            processinfo.Arguments = "remove =audioendpoint " & Chr(34) & "@" & child & Chr(34)
+                            processinfo.UseShellExecute = False
+                            processinfo.CreateNoWindow = True
+                            processinfo.RedirectStandardOutput = True
+                            process.StartInfo = processinfo
+
+                            process.Start()
+                            reply2 = process.StandardOutput.ReadToEnd
+                            process.WaitForExit()
+                            log(reply2)
+                        End If
+                    End If
+                Next
+
+
             End If
             If combobox1value = "INTEL" Then
                 'Removing Intel WIdI bus Enumerator
@@ -5290,6 +5339,43 @@ Public Class Form1
                     Button3.Enabled = True
                     Exit Sub
                 End Try
+
+                ' ------------------------------
+                ' Removing Intel AudioEndpoints
+                ' ------------------------------
+                log("Removing nVidia Audio Endpoints")
+                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                processinfo.Arguments = "findall =audioendpoint"
+                processinfo.UseShellExecute = False
+                processinfo.CreateNoWindow = True
+                processinfo.RedirectStandardOutput = True
+
+                process.StartInfo = processinfo
+                process.Start()
+                reply = process.StandardOutput.ReadToEnd
+                process.WaitForExit()
+
+                Dim audioendpoints As String() = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
+
+                For Each child As String In audioendpoints
+                    If Not checkvariables.isnullorwhitespace(child) Then
+                        If child.ToLower.Contains("intel widi audio") Then
+                            child = child.Substring(0, child.IndexOf(":"))
+                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                            processinfo.Arguments = "remove =audioendpoint " & Chr(34) & "@" & child & Chr(34)
+                            processinfo.UseShellExecute = False
+                            processinfo.CreateNoWindow = True
+                            processinfo.RedirectStandardOutput = True
+                            process.StartInfo = processinfo
+
+                            process.Start()
+                            reply2 = process.StandardOutput.ReadToEnd
+                            process.WaitForExit()
+                            log(reply2)
+                        End If
+                    End If
+                Next
+
             End If
 
             log("ddudr Remove Audio/HDMI Complete")
@@ -5427,10 +5513,11 @@ Public Class Form1
         Button2.Enabled = True
         Button3.Enabled = True
         ComboBox1.Enabled = True
-        CheckBox2.Enabled = True
         CheckBox1.Enabled = True
+        CheckBox2.Enabled = True
         CheckBox3.Enabled = True
         CheckBox4.Enabled = True
+        CheckBox5.Enabled = True
 
         If Not reboot And Not shutdown Then
             If MsgBox("Clean uninstall completed! Would you like to exit now?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
