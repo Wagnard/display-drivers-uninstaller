@@ -1227,6 +1227,22 @@ Public Class Form1
                                                     Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static")
                                                         wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static", "")
                                                         regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(sysdrv.ToLower & "\Program Files (x86)\AMD APP\bin\x86_64;")
+                                                        wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "\Program Files (x86)\AMD APP\bin\x86_64;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(sysdrv.ToLower & "\Program Files (x86)\AMD APP\bin\x86;")
+                                                        wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "\Program Files (x86)\AMD APP\bin\x86;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(sysdrv.ToLower & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;")
+                                                        wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(sysdrv.ToLower & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static")
+                                                        wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static", "")
+                                                        regkey.SetValue(child, wantedvalue)
                                                 End Select
                                             Catch ex As Exception
                                             End Try
@@ -2161,7 +2177,35 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-
+        filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\NVIDIA Corporation"
+        Try
+            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("3d vision") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(child)
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        log(ex.Message)
+                        TestDelete(filePath)
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        Catch ex As Exception
+        End Try
 
         Try
             filePath = Environment.GetFolderPath _
@@ -2783,6 +2827,12 @@ Public Class Form1
                                                     Select Case True
                                                         Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
                                                             wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
+                                                            Try
+                                                                regkey.SetValue(child, wantedvalue)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        Case wantedvalue.Contains(sysdrv.ToLower & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
+                                                            wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
                                                             Try
                                                                 regkey.SetValue(child, wantedvalue)
                                                             Catch ex As Exception
@@ -5296,7 +5346,8 @@ Public Class Form1
 
                 For Each child As String In audioendpoints
                     If Not checkvariables.isnullorwhitespace(child) Then
-                        If child.ToLower.Contains("nvidia virtual audio device") Then
+                        If child.ToLower.Contains("nvidia virtual audio device") Or _
+                            child.ToLower.Contains("nvidia high definition audio") Then
                             child = child.Substring(0, child.IndexOf(":"))
                             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                             processinfo.Arguments = "remove =audioendpoint " & Chr(34) & "@" & child & Chr(34)
