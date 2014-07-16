@@ -1701,6 +1701,7 @@ Public Class Form1
                         child.Contains("OpenVideo") Or _
                         child.Contains("OVDecode") Or _
                         child.Contains("amdocl") Or _
+                        child.Contains("kbdsdk64.dll") Or _
                         child.Contains("clinfo") Or _
                         child.Contains("SlotMaximizer") Or _
                         child.Contains("cccutil") Then
@@ -1732,6 +1733,7 @@ Public Class Form1
                         child.Contains("OVDecode") Or _
                         child.Contains("amdocl") Or _
                         child.Contains("clinfo") Or _
+                        child.Contains("kdbsdk32.dll") Or _
                         child.Contains("SlotMaximizer") Or _
                         child.Contains("cccutil") Then
                                 Try
