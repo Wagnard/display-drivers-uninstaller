@@ -43,6 +43,7 @@ Public Class Form1
     Public winxp As Boolean = False
     Dim stopme As Boolean = False
     Public removephysx As Boolean
+    Public removeamdaudiobus As Boolean
     Dim remove3dtvplay As Boolean
     Dim time As String = DateAndTime.Now
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
@@ -87,7 +88,7 @@ Public Class Form1
     Dim array() As String = Nothing
     Dim loadinitiated As Boolean = True
     Dim systemrestore As Boolean
-    Public donotremoveamdhdaudiobus As Boolean = True
+    Public donotremoveamdhdaudiobusfiles As Boolean = True
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -343,7 +344,7 @@ Public Class Form1
 
         CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\driverfiles.cfg")) '// add each line as String Array.
 
-        
+
 
         filePath = Environment.GetEnvironmentVariable("windir")
         Try
@@ -4060,14 +4061,17 @@ Public Class Form1
 
         If settings.getconfig("logbox") = "true" Then
             CheckBox2.Checked = True
+
         Else
             CheckBox2.Checked = False
         End If
 
         If settings.getconfig("remove3dtvplay") = "true" Then
             CheckBox4.Checked = True
+            remove3dtvplay = True
         Else
             CheckBox4.Checked = False
+            remove3dtvplay = False
         End If
 
         If settings.getconfig("systemrestore") = "true" Then
@@ -4078,8 +4082,20 @@ Public Class Form1
 
         If settings.getconfig("removephysx") = "true" Then
             CheckBox3.Checked = True
+            removephysx = True
         Else
             CheckBox3.Checked = False
+            removephysx = False
+        End If
+
+        If ComboBox1.Text = "AMD" Then
+            If settings.getconfig("removeamdaudiobus") = "true" Then
+                CheckBox3.Checked = True
+                removeamdaudiobus = True
+            Else
+                CheckBox3.Checked = False
+                removeamdaudiobus = False
+            End If
         End If
 
         'check for admin before trying to do things, as this could cause errors and message boxes for rebooting into startup without admin are useless because you can't bcdedit without admin rights, however the next messagebox still plays the sound effect, for msgboxstyle.information. Not sure if this can be fixed.
@@ -4831,33 +4847,81 @@ Public Class Form1
 
     Private Sub CheckBox3_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox3.CheckedChanged
 
-        If CheckBox3.Checked = True Then
-            settings.setconfig("removephysx", "true")
-            removephysx = True
-        Else
-            settings.setconfig("removephysx", "false")
-            removephysx = False
+        If combobox1value = "NVIDIA" Then
+
+            If CheckBox3.Checked = True Then
+                settings.setconfig("removephysx", "true")
+                removephysx = True
+            Else
+                settings.setconfig("removephysx", "false")
+                removephysx = False
+            End If
+
+        End If
+
+
+        If combobox1value = "AMD" Then
+            If CheckBox3.Checked = True Then
+                settings.setconfig("removeamdaudiobus", "true")
+                removeamdaudiobus = True
+            Else
+                settings.setconfig("removeamdaudiobus", "false")
+                removeamdaudiobus = False
+            End If
         End If
 
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
-        If ComboBox1.Text = "NVIDIA" Then
+        combobox1value = ComboBox1.Text
+        If combobox1value = "NVIDIA" Then
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3.txt") '// add each line as String Array.
+            CheckBox3.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    CheckBox3.Text = CheckBox3.Text & vbNewLine
+                End If
+                CheckBox3.Text = CheckBox3.Text & buttontext(i)
+            Next
+            If settings.getconfig("removephysx") = "true" Then
+                CheckBox3.Checked = True
+                removephysx = False
+            Else
+                CheckBox3.Checked = False
+                removephysx = False
+            End If
             CheckBox3.Visible = True
             CheckBox4.Visible = True
             PictureBox2.Image = My.Resources.Nvidia_GeForce_Logo
         End If
-        If ComboBox1.Text = "AMD" Then
-            CheckBox3.Visible = False
+
+        If combobox1value = "AMD" Then
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3amd.txt") '// add each line as String Array.
+            CheckBox3.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    CheckBox3.Text = CheckBox3.Text & vbNewLine
+                End If
+                CheckBox3.Text = CheckBox3.Text & buttontext(i)
+            Next
+            If settings.getconfig("removeamdaudiobus") = "true" Then
+                CheckBox3.Checked = True
+                removeamdaudiobus = True
+            Else
+                CheckBox3.Checked = False
+                removeamdaudiobus = False
+            End If
+            CheckBox3.Visible = True
             CheckBox4.Visible = False
             PictureBox2.Image = My.Resources.RadeonLogo1
         End If
+
         If ComboBox1.Text = "INTEL" Then
             CheckBox3.Visible = False
             CheckBox4.Visible = False
             PictureBox2.Image = My.Resources.intel_logo
         End If
-        combobox1value = ComboBox1.Text
+
     End Sub
 
     Public Sub log(ByVal value As String)
@@ -4984,104 +5048,106 @@ Public Class Form1
 
             ' First , get the ParentIdPrefix
 
-            'Try
-            '    If combobox1value = "AMD" Then
-            '        UpdateTextMethod("Trying to remove the AMD HD Audio BUS")
-            '        log("Trying to remove the AMD HD Audio BUS")
-            '        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
-            '        If regkey IsNot Nothing Then
-            '            For Each child As String In regkey.GetSubKeyNames()
-            '                If checkvariables.isnullorwhitespace(child) = False Then
-            '                    If child.ToLower.Contains("ven_1002") Then
-            '                        For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
-            '                            Try
-            '                                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-            '                                If subregkey IsNot Nothing Then
-            '                                    For Each child2 As String In subregkey.GetSubKeyNames()
-            '                                        If checkvariables.isnullorwhitespace(child2) = False Then
-            '                                            If child2.ToLower.Contains("ven_1002") Then
-            '                                                For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-            '                                                    If checkvariables.isnullorwhitespace(child3) = False Then
-            '                                                        array = subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters")
-            '                                                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-            '                                                            For i As Integer = 0 To array.Length - 1
-            '                                                                If Not checkvariables.isnullorwhitespace(array(i)) Then
-            '                                                                    If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
-            '                                                                        log("Found an AMD audio controller bus !")
-            '                                                                        Try
-            '                                                                            log("array result: " + array(i))
-            '                                                                        Catch ex As Exception
-            '                                                                        End Try
-            '                                                                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            '                                                                        processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
-            '                                                                        processinfo.UseShellExecute = False
-            '                                                                        processinfo.CreateNoWindow = True
-            '                                                                        processinfo.RedirectStandardOutput = True
-            '                                                                        process.StartInfo = processinfo
+            If removeamdaudiobus Then
 
-            '                                                                        process.Start()
-            '                                                                        reply2 = process.StandardOutput.ReadToEnd
-            '                                                                        process.WaitForExit()
-            '                                                                        log(reply2)
-            '                                                                        log("AMD HD Audio Bus Removed !")
-            '                                                                        UpdateTextMethod("AMD HD Audio Bus Removed !")
-            '                                                                    End If
-            '                                                                End If
-            '                                                            Next
-            '                                                        End If
-            '                                                    End If
-            '                                                Next
-            '                                            End If
-            '                                        End If
-            '                                    Next
-            '                                End If
-            '                            Catch ex As Exception
-            '                                log(ex.Message + ex.StackTrace)
-            '                            End Try
-            '                        Next
-            '                    End If
-            '                End If
-            '            Next
-            '        End If
-            '    End If
-            'Catch ex As Exception
-            'End Try
+                Try
+                    If combobox1value = "AMD" Then
+                        UpdateTextMethod("Trying to remove the AMD HD Audio BUS")
+                        log("Trying to remove the AMD HD Audio BUS")
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
+                        If regkey IsNot Nothing Then
+                            For Each child As String In regkey.GetSubKeyNames()
+                                If checkvariables.isnullorwhitespace(child) = False Then
+                                    If child.ToLower.Contains("ven_1002") Then
+                                        For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
+                                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+                                            If subregkey IsNot Nothing Then
+                                                For Each child2 As String In subregkey.GetSubKeyNames()
+                                                    If checkvariables.isnullorwhitespace(child2) = False Then
+                                                        If child2.ToLower.Contains("ven_1002") Then
+                                                            For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
+                                                                If checkvariables.isnullorwhitespace(child3) = False Then
+                                                                    array = subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters")
+                                                                    If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                                                        For i As Integer = 0 To array.Length - 1
+                                                                            If Not checkvariables.isnullorwhitespace(array(i)) Then
+                                                                                If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
+                                                                                    log("Found an AMD audio controller bus !")
+                                                                                    Try
+                                                                                        log("array result: " + array(i))
+                                                                                    Catch ex As Exception
+                                                                                    End Try
+                                                                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                                                                    processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
+                                                                                    processinfo.UseShellExecute = False
+                                                                                    processinfo.CreateNoWindow = True
+                                                                                    processinfo.RedirectStandardOutput = True
+                                                                                    process.StartInfo = processinfo
 
-            ''Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobus to true if thats the case
-            'Try
-            '    donotremoveamdhdaudiobus = False
-            '    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-            '    If subregkey IsNot Nothing Then
-            '        For Each child2 As String In subregkey.GetSubKeyNames()
-            '            If checkvariables.isnullorwhitespace(child2) = False Then
-            '                If child2.ToLower.Contains("ven_1002") Then
-            '                    For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-            '                        If checkvariables.isnullorwhitespace(child3) = False Then
-            '                            array = subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters")
-            '                            If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-            '                                For i As Integer = 0 To array.Length - 1
-            '                                    If Not checkvariables.isnullorwhitespace(array(i)) Then
-            '                                        If array(i).ToLower.Contains("amdkmafd") Then
-            '                                            log("Found an remaining AMD audio controller bus ! Preventing te removal of its driverfiles.")
-            '                                            donotremoveamdhdaudiobus = True
-            '                                        End If
-            '                                    End If
-            '                                Next
-            '                            End If
-            '                        End If
-            '                    Next
-            '                End If
-            '            End If
-            '        Next
-            '    End If
-            'Catch ex As Exception
-            '    log(ex.Message + ex.StackTrace)
-            'End Try
+                                                                                    process.Start()
+                                                                                    reply2 = process.StandardOutput.ReadToEnd
+                                                                                    process.WaitForExit()
+                                                                                    log(reply2)
+                                                                                    log("AMD HD Audio Bus Removed !")
+                                                                                    UpdateTextMethod("AMD HD Audio Bus Removed !")
+                                                                                End If
+                                                                            End If
+                                                                        Next
+                                                                    End If
+                                                                End If
+                                                            Next
+                                                        End If
+                                                    End If
+                                                Next
+                                            End If
+                                        Next
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                Catch ex As Exception
+                    log(ex.Message + ex.StackTrace)
+                End Try
 
+                'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
+                Try
+                    donotremoveamdhdaudiobusfiles = False
+                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+                    If subregkey IsNot Nothing Then
+                        For Each child2 As String In subregkey.GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child2) = False Then
+                                If child2.ToLower.Contains("ven_1002") Then
+                                    For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
+                                        If checkvariables.isnullorwhitespace(child3) = False Then
+                                            array = subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters")
+                                            If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                                For i As Integer = 0 To array.Length - 1
+                                                    If Not checkvariables.isnullorwhitespace(array(i)) Then
+                                                        If array(i).ToLower.Contains("amdkmafd") Then
+                                                            UpdateTextMethod("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles")
+                                                            log("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
+                                                            donotremoveamdhdaudiobusfiles = True
+                                                        End If
+                                                    End If
+                                                Next
+                                            End If
+                                        End If
+                                    Next
+                                End If
+                            End If
+                        Next
+                    End If
+                Catch ex As Exception
+                    log(ex.Message + ex.StackTrace)
+                End Try
+
+            End If
 
             ' ----------------------
             ' Removing the videocard
             ' ----------------------
+
             log("Executing DDUDR Remove Display Driver")
             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
             processinfo.Arguments = "findall =display"
@@ -5735,6 +5801,17 @@ Public Class Form1
                 CheckBox3.Text = CheckBox3.Text & buttontext(i)
             Next
 
+            If ComboBox1.Text = "AMD" Then
+                buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3amd.txt") '// add each line as String Array.
+                CheckBox3.Text = ""
+                For i As Integer = 0 To buttontext.Length - 1
+                    If i <> 0 Then
+                        CheckBox3.Text = CheckBox3.Text & vbNewLine
+                    End If
+                    CheckBox3.Text = CheckBox3.Text & buttontext(i)
+                Next
+            End If
+
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox5.txt") '// add each line as String Array.
             CheckBox5.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
@@ -6339,37 +6416,40 @@ Public Class CleanupEngine
     End Sub
     Public Sub cleanserviceprocess(ByVal services As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
 
         f.UpdateTextMethod("Cleaning process/services...")
         f.log("Cleaning Process/Services...")
 
         'STOP AMD service
         For i As Integer = 0 To services.Length - 1
-            If Not checkvariables.isnullorwhitespace(services(i)) Then
-                Dim stopservice As New ProcessStartInfo
-                stopservice.FileName = "cmd.exe"
-                stopservice.Arguments = " /Csc stop " & Chr(34) & services(i) & Chr(34)
-                stopservice.UseShellExecute = False
-                stopservice.CreateNoWindow = True
-                stopservice.RedirectStandardOutput = False
+            If Not (donotremoveamdhdaudiobusfiles AndAlso services(i).ToLower.Contains("amdkmafd")) Then
+                If Not checkvariables.isnullorwhitespace(services(i)) Then
+                    Dim stopservice As New ProcessStartInfo
+                    stopservice.FileName = "cmd.exe"
+                    stopservice.Arguments = " /Csc stop " & Chr(34) & services(i) & Chr(34)
+                    stopservice.UseShellExecute = False
+                    stopservice.CreateNoWindow = True
+                    stopservice.RedirectStandardOutput = False
 
-                Dim processstopservice As New Process
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
+                    Dim processstopservice As New Process
+                    processstopservice.StartInfo = stopservice
+                    processstopservice.Start()
+                    processstopservice.WaitForExit()
 
-                System.Threading.Thread.Sleep(10)
+                    System.Threading.Thread.Sleep(10)
 
-                stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
+                    stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
 
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
+                    processstopservice.StartInfo = stopservice
+                    processstopservice.Start()
+                    processstopservice.WaitForExit()
 
-                stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
+                    stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
+                    processstopservice.StartInfo = stopservice
+                    processstopservice.Start()
+                    processstopservice.WaitForExit()
+                End If
             End If
         Next
         System.Threading.Thread.Sleep(10)
@@ -6384,7 +6464,7 @@ Public Class CleanupEngine
         Dim processinfo As New ProcessStartInfo
         Dim process As New Process
         Dim ddudrfolder = f.ddudrfolder
-        Dim donotremoveamdhdaudiobus = f.donotremoveamdhdaudiobus
+        Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
 
         Try
             If Not winxp Then
@@ -6392,7 +6472,7 @@ Public Class CleanupEngine
                 If regkey IsNot Nothing Then
                     For i As Integer = 0 To driverfiles.Length - 1
                         If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                            If Not (donotremoveamdhdaudiobus AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
+                            If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
                                         If child.ToLower.Contains(driverfiles(i).ToLower) Then
@@ -6903,11 +6983,11 @@ Public Class CleanupEngine
     Public Sub folderscleanup(ByVal driverfiles As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
         Dim filePath As String
-        Dim donotremoveamdhdaudiobus = f.donotremoveamdhdaudiobus
+        Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
 
         For i As Integer = 0 To driverfiles.Length - 1
             If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                If Not (donotremoveamdhdaudiobus AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
+                If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
 
                     filePath = System.Environment.SystemDirectory
 
@@ -6948,7 +7028,7 @@ Public Class CleanupEngine
         If IntPtr.Size = 8 Then
             For i As Integer = 0 To driverfiles.Length - 1
                 If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                    If Not (donotremoveamdhdaudiobus AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
+                    If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
                         filePath = Environment.GetEnvironmentVariable("windir")
                         For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\SysWOW64", FileIO.SearchOption.SearchTopLevelOnly, "*.log")
                             If checkvariables.isnullorwhitespace(child) = False Then
