@@ -185,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\config.cfg" />
+    <None Include="Resources\paypal.bkp" />
     <None Include="Resources\win7\pnpldf.bkp" />
     <None Include="Resources\win8\pnpldf.bkp" />
     <None Include="Resources\x86\subinacl.exe" />

@@ -4284,6 +4284,9 @@ Public Class Form1
         Label3.Refresh()
         ddudrfolder = Label3.Text
 
+
+        myExe = Application.StartupPath & "\settings\paypal.bat"
+        System.IO.File.WriteAllBytes(myExe, My.Resources.paypal)
         If arch = True Then
             Try
 
