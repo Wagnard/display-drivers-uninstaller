@@ -2357,7 +2357,7 @@ Public Class Form1
                            child.ToLower.Contains("nvstreamc") Or _
                            child.ToLower.Contains("nvstreamsrv") Or _
                            child.ToLower.Contains("update common") Or _
-                           child.ToLower.Contains("physx") Or _
+                           child.ToLower.StartsWith("physx") Or _
                            child.ToLower.Contains("update core") Then
                             If removephysx Then
                                 Try
@@ -4888,7 +4888,7 @@ Public Class Form1
             Next
             If settings.getconfig("removephysx") = "true" Then
                 CheckBox3.Checked = True
-                removephysx = False
+                removephysx = True
             Else
                 CheckBox3.Checked = False
                 removephysx = False
