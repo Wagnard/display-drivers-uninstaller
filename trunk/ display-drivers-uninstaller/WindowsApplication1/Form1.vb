@@ -2357,7 +2357,7 @@ Public Class Form1
                            child.ToLower.Contains("nvstreamc") Or _
                            child.ToLower.Contains("nvstreamsrv") Or _
                            child.ToLower.Contains("update common") Or _
-                           child.ToLower.StartsWith("physx") Or _
+                           child.ToLower.Contains("\physx") Or _
                            child.ToLower.Contains("update core") Then
                             If removephysx Then
                                 Try
