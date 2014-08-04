@@ -6471,16 +6471,39 @@ Public Class CleanupEngine
 
         Try
             If Not winxp Then
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
-                If regkey IsNot Nothing Then
-                    For i As Integer = 0 To driverfiles.Length - 1
-                        If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                            If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
-                                For Each child As String In regkey.GetSubKeyNames()
+                If win8higher Then
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
+                    If regkey IsNot Nothing Then
+                        For i As Integer = 0 To driverfiles.Length - 1
+                            If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+                                If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
+                                    For Each child As String In regkey.GetSubKeyNames()
+                                        If checkvariables.isnullorwhitespace(child) = False Then
+                                            If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                                                Try
+                                                    regkey.DeleteSubKeyTree(child)
+                                                Catch ex As Exception
+                                                    f.log(ex.Message & " @Pnplockdownfiles")
+                                                End Try
+                                            End If
+                                        End If
+                                    Next
+                                End If
+                            End If
+                        Next
+                    End If
+
+                Else   'Older windows  (windows vista and 7 run here)
+
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
+                    If regkey IsNot Nothing Then
+                        For i As Integer = 0 To driverfiles.Length - 1
+                            If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+                                For Each child As String In regkey.GetValueNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
                                         If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                             Try
-                                                regkey.DeleteSubKeyTree(child)
+                                                regkey.DeleteValue(child)
                                             Catch ex As Exception
                                                 f.log(ex.Message & " @Pnplockdownfiles")
                                             End Try
@@ -6488,10 +6511,11 @@ Public Class CleanupEngine
                                     End If
                                 Next
                             End If
-                        End If
-                    Next
+                        Next
+                    End If
                 End If
             End If
+
         Catch ex As Exception
             f.log(ex.StackTrace)
         End Try
