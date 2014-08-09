@@ -6104,7 +6104,7 @@ Public Class CleanupEngine
             If basekey IsNot Nothing Then
                 For Each super As String In basekey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(super) = False Then
-                        If super.Contains("S-1-5") Then
+                        If super.ToLower.Contains("s-1-5") Then
                             Try
                                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                                     ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
@@ -6158,13 +6158,13 @@ Public Class CleanupEngine
                                                                     Next
                                                                 End If
                                                                 superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components", True)
+    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
                                                                 If superregkey IsNot Nothing Then
                                                                     For Each child2 As String In superregkey.GetSubKeyNames()
                                                                         If checkvariables.isnullorwhitespace(child2) = False Then
                                                                             Try
                                                                                 subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\" & child2, False)
+    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
                                                                             Catch ex As Exception
                                                                                 Continue For
                                                                             End Try
@@ -6200,7 +6200,7 @@ Public Class CleanupEngine
             f.UpdateTextMethod("-End of S-1-5-xx region cleanUP")
             f.log("-End of S-1-5-xx region cleanUP")
         Catch ex As Exception
-            MsgBox("bug")
+            MsgBox("A problem occur in one of the module, send your DDU logs to the developer.")
             f.log(ex.Message + ex.StackTrace)
         End Try
 
