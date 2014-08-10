@@ -6105,43 +6105,41 @@ Public Class CleanupEngine
                 For Each super As String In basekey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(super) = False Then
                         If super.ToLower.Contains("s-1-5") Then
-                            Try
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                    ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
+
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
+
                             If regkey IsNot Nothing Then
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
-                                        Try
-                                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
-                                "\InstallProperties")
-                                        Catch ex As Exception
-                                            Continue For
-                                        End Try
+
+                                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                            ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
+                            "\InstallProperties", False)
+
                                         If subregkey IsNot Nothing Then
-                                            If checkvariables.isnullorwhitespace(subregkey.GetValue("DisplayName")) = False Then
+                                            If checkvariables.isnullorwhitespace(subregkey.GetValue("DisplayName").ToString) = False Then
                                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
                                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                                     For i As Integer = 0 To packages.Length - 1
                                                         If Not checkvariables.isnullorwhitespace(packages(i)) Then
-                                                            If wantedvalue.ToLower.Contains(packages(i)) And _
+                                                            If wantedvalue.ToLower.Contains(packages(i).ToLower) And _
                                                                (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
-                                                                regkey.DeleteSubKeyTree(child)
+
+                                                                Try
+                                                                    regkey.DeleteSubKeyTree(child)
+                                                                Catch ex As Exception
+                                                                End Try
 
                                                                 superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
     ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
                                                                 If superregkey IsNot Nothing Then
                                                                     For Each child2 As String In superregkey.GetSubKeyNames()
                                                                         If checkvariables.isnullorwhitespace(child2) = False Then
-                                                                            Try
-                                                                                subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2)
-                                                                            Catch ex As Exception
-                                                                                Continue For
-                                                                            End Try
+
+                                                                            subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, False)
+
                                                                             If subsuperregkey IsNot Nothing Then
                                                                                 For Each wantedstring As String In subsuperregkey.GetValueNames()
                                                                                     If checkvariables.isnullorwhitespace(wantedstring) = False Then
@@ -6162,12 +6160,10 @@ Public Class CleanupEngine
                                                                 If superregkey IsNot Nothing Then
                                                                     For Each child2 As String In superregkey.GetSubKeyNames()
                                                                         If checkvariables.isnullorwhitespace(child2) = False Then
-                                                                            Try
-                                                                                subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-    ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
-                                                                            Catch ex As Exception
-                                                                                Continue For
-                                                                            End Try
+
+                                                                            subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
+
 
                                                                             If subsuperregkey IsNot Nothing Then
                                                                                 For Each wantedstring In subsuperregkey.GetValueNames()
@@ -6200,7 +6196,7 @@ Public Class CleanupEngine
             f.UpdateTextMethod("-End of S-1-5-xx region cleanUP")
             f.log("-End of S-1-5-xx region cleanUP")
         Catch ex As Exception
-            MsgBox("A problem occur in one of the module, send your DDU logs to the developer.")
+            MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
             f.log(ex.Message + ex.StackTrace)
         End Try
 
@@ -6211,19 +6207,17 @@ Public Class CleanupEngine
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        Try
-                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-("Installer\Products\" & child)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
+
+                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+("Installer\Products\" & child, False)
+
                         If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName")) = False Then
+                            If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName").ToString) = False Then
                                 wantedvalue = subregkey.GetValue("ProductName").ToString
                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                     For i As Integer = 0 To packages.Length - 1
                                         If Not checkvariables.isnullorwhitespace(packages(i)) Then
-                                            If wantedvalue.ToLower.Contains(packages(i)) And _
+                                            If wantedvalue.ToLower.Contains(packages(i).ToLower) And _
                                                (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
                                                 Try
                                                     regkey.DeleteSubKeyTree(child)
@@ -6238,12 +6232,10 @@ Public Class CleanupEngine
                                                 If superregkey IsNot Nothing Then
                                                     For Each child2 As String In superregkey.GetSubKeyNames()
                                                         If checkvariables.isnullorwhitespace(child2) = False Then
-                                                            Try
-                                                                subsuperregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                                            ("Installer\UpgradeCodes\" & child2)
-                                                            Catch ex As Exception
-                                                                Continue For
-                                                            End Try
+
+                                                            subsuperregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
+                                                        ("Installer\UpgradeCodes\" & child2, False)
+
                                                             If subsuperregkey IsNot Nothing Then
                                                                 For Each wantedstring As String In subsuperregkey.GetValueNames()
                                                                     If checkvariables.isnullorwhitespace(wantedstring) = False Then
@@ -6268,11 +6260,13 @@ Public Class CleanupEngine
                     End If
                 Next
             End If
+            f.UpdateTextMethod("-End Classesroot ,installer\products cleanup")
         Catch ex As Exception
+            MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
             f.log(ex.StackTrace)
         End Try
 
-        f.UpdateTextMethod("-End Classesroot ,installer\products cleanup")
+
         f.UpdateTextMethod("-Start localmachine ,installer\products cleanup")
 
         Try
@@ -6281,19 +6275,17 @@ Public Class CleanupEngine
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        Try
-                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-("Software\Classes\Installer\Products\" & child)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
+
+                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+("Software\Classes\Installer\Products\" & child, False)
+
                         If subregkey IsNot Nothing Then
                             If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName")) = False Then
                                 wantedvalue = subregkey.GetValue("ProductName").ToString
                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                     For i As Integer = 0 To packages.Length - 1
                                         If Not checkvariables.isnullorwhitespace(packages(i)) Then
-                                            If wantedvalue.ToLower.Contains(packages(i)) And _
+                                            If wantedvalue.ToLower.Contains(packages(i).ToLower) And _
                                                (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
                                                 Try
                                                     regkey.DeleteSubKeyTree(child)
@@ -6309,12 +6301,10 @@ Public Class CleanupEngine
                                                 If superregkey IsNot Nothing Then
                                                     For Each child2 As String In superregkey.GetSubKeyNames()
                                                         If checkvariables.isnullorwhitespace(child2) = False Then
-                                                            Try
-                                                                subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                                                            ("Software\Classes\Installer\UpgradeCodes\" & child2)
-                                                            Catch ex As Exception
-                                                                Continue For
-                                                            End Try
+
+                                                            subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                                        ("Software\Classes\Installer\UpgradeCodes\" & child2, False)
+
                                                             If subsuperregkey IsNot Nothing Then
                                                                 For Each wantedstring As String In subsuperregkey.GetValueNames()
                                                                     If checkvariables.isnullorwhitespace(wantedstring) = False Then
@@ -6339,32 +6329,34 @@ Public Class CleanupEngine
                     End If
                 Next
             End If
+            f.UpdateTextMethod("-End localmachine ,installer\products cleanup")
         Catch ex As Exception
+            MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
             f.log(ex.StackTrace)
         End Try
-        f.UpdateTextMethod("-End localmachine ,installer\products cleanup")
+
         f.UpdateTextMethod("-Start currentuser ,installer\products cleanup")
         Try
             For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
                 If Not checkvariables.isnullorwhitespace(users) Then
+
                     regkey = My.Computer.Registry.Users.OpenSubKey _
               (users & "\Software\Microsoft\Installer\Products", True)
+
                     If regkey IsNot Nothing Then
                         For Each child As String In regkey.GetSubKeyNames()
                             If checkvariables.isnullorwhitespace(child) = False Then
-                                Try
-                                    subregkey = My.Computer.Registry.Users.OpenSubKey _
-        (users & "\Software\Microsoft\Installer\Products" & child)
-                                Catch ex As Exception
-                                    Continue For
-                                End Try
+
+                                subregkey = My.Computer.Registry.Users.OpenSubKey _
+    (users & "\Software\Microsoft\Installer\Products" & child, False)
+
                                 If subregkey IsNot Nothing Then
-                                    If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName")) = False Then
+                                    If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName").ToString) = False Then
                                         wantedvalue = subregkey.GetValue("ProductName").ToString
                                         If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                             For i As Integer = 0 To packages.Length - 1
                                                 If Not checkvariables.isnullorwhitespace(packages(i)) Then
-                                                    If wantedvalue.ToLower.Contains(packages(i)) And _
+                                                    If wantedvalue.ToLower.Contains(packages(i).ToLower) And _
                                                        (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
                                                         Try
                                                             regkey.DeleteSubKeyTree(child)
@@ -6380,12 +6372,10 @@ Public Class CleanupEngine
                                                         If superregkey IsNot Nothing Then
                                                             For Each child2 As String In superregkey.GetSubKeyNames()
                                                                 If checkvariables.isnullorwhitespace(child2) = False Then
-                                                                    Try
-                                                                        subsuperregkey = My.Computer.Registry.Users.OpenSubKey _
-                                                                    (users & "\Software\Microsoft\Installer\UpgradeCodes" & child2)
-                                                                    Catch ex As Exception
-                                                                        Continue For
-                                                                    End Try
+
+                                                                    subsuperregkey = My.Computer.Registry.Users.OpenSubKey _
+                                                                (users & "\Software\Microsoft\Installer\UpgradeCodes" & child2, False)
+
                                                                     If subsuperregkey IsNot Nothing Then
                                                                         For Each wantedstring As String In subsuperregkey.GetValueNames()
                                                                             If checkvariables.isnullorwhitespace(wantedstring) = False Then
@@ -6412,10 +6402,12 @@ Public Class CleanupEngine
                     End If
                 End If
             Next
+            f.UpdateTextMethod("-End currentuser ,installer\products cleanup")
         Catch ex As Exception
+            MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
             f.log(ex.StackTrace)
         End Try
-        f.UpdateTextMethod("-End currentuser ,installer\products cleanup")
+
     End Sub
     Public Sub cleanserviceprocess(ByVal services As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
