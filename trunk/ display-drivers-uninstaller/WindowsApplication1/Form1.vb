@@ -6118,7 +6118,7 @@ Public Class CleanupEngine
                             "\InstallProperties", False)
 
                                         If subregkey IsNot Nothing Then
-                                            If checkvariables.isnullorwhitespace(subregkey.GetValue("DisplayName").ToString) = False Then
+                                            If checkvariables.isnullorwhitespace(subregkey.GetValue("DisplayName")) = False Then
                                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
                                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                                     For i As Integer = 0 To packages.Length - 1
@@ -6212,7 +6212,7 @@ Public Class CleanupEngine
 ("Installer\Products\" & child, False)
 
                         If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName").ToString) = False Then
+                            If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName")) = False Then
                                 wantedvalue = subregkey.GetValue("ProductName").ToString
                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                     For i As Integer = 0 To packages.Length - 1
@@ -6263,7 +6263,7 @@ Public Class CleanupEngine
             f.UpdateTextMethod("-End Classesroot ,installer\products cleanup")
         Catch ex As Exception
             MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
-            f.log(ex.StackTrace)
+            f.log(ex.Message + ex.StackTrace)
         End Try
 
 
@@ -6332,7 +6332,7 @@ Public Class CleanupEngine
             f.UpdateTextMethod("-End localmachine ,installer\products cleanup")
         Catch ex As Exception
             MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
-            f.log(ex.StackTrace)
+            f.log(ex.Message + ex.StackTrace)
         End Try
 
         f.UpdateTextMethod("-Start currentuser ,installer\products cleanup")
@@ -6351,7 +6351,7 @@ Public Class CleanupEngine
     (users & "\Software\Microsoft\Installer\Products" & child, False)
 
                                 If subregkey IsNot Nothing Then
-                                    If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName").ToString) = False Then
+                                    If checkvariables.isnullorwhitespace(subregkey.GetValue("ProductName")) = False Then
                                         wantedvalue = subregkey.GetValue("ProductName").ToString
                                         If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                             For i As Integer = 0 To packages.Length - 1
@@ -6405,7 +6405,7 @@ Public Class CleanupEngine
             f.UpdateTextMethod("-End currentuser ,installer\products cleanup")
         Catch ex As Exception
             MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
-            f.log(ex.StackTrace)
+            f.log(ex.Message + ex.StackTrace)
         End Try
 
     End Sub
