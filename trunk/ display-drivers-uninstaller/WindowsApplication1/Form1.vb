@@ -5240,45 +5240,6 @@ Public Class Form1
             ' ----------------------
 
             Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
-
-                For Each child As String In regkey.GetSubKeyNames
-                    If Not child.ToLower.Contains("properties") Then
-                        Try
-                            subregkey = regkey.OpenSubKey(child)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
-
-                        If subregkey IsNot Nothing Then
-                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId").ToString) Then
-                                vendid = subregkey.GetValue("MatchingDeviceId").ToString
-
-                                If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                    processinfo.Arguments = "remove =display " & Chr(34) & vendid & "*" & Chr(34)
-                                    processinfo.UseShellExecute = False
-                                    processinfo.CreateNoWindow = True
-                                    processinfo.RedirectStandardOutput = True
-                                    process.StartInfo = processinfo
-
-                                    process.Start()
-                                    reply2 = process.StandardOutput.ReadToEnd
-                                    process.WaitForExit()
-                                    log(reply2)
-                                End If
-                            End If
-                        End If
-                    End If
-                Next
-            Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
-            End Try
-
-            '-------------------------------------
-            'Removing GPU installed in weird state
-            '-------------------------------------
-            Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames
@@ -5294,13 +5255,6 @@ Public Class Form1
                                     If subregkey.OpenSubKey(child2) Is Nothing Then
                                         Continue For
                                     End If
-
-                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
-                                        'if the device does not return null here, it mean it has a class associated with it
-                                        'so we skip it as we search for missing one.
-                                        Continue For
-                                    End If
-
 
                                     array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
 
@@ -5386,6 +5340,7 @@ Public Class Form1
 
             cleandriverstore()
 
+            UpdateTextMethod("Executing DDUDR Remove Audio controler.")
             log("Executing DDUDR Remove Audio controler.")
             'Next
             'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
