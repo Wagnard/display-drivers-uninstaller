@@ -761,6 +761,7 @@ Public Class Form1
                                                     wantedvalue2.ToLower.Contains("mmace softemu") Or _
                                                     wantedvalue2.ToLower.Contains("mmace deinterlace") Or _
                                                     wantedvalue2.ToLower.Contains("amd video") Or _
+                                                    wantedvalue2.ToLower.Contains("mmace procamp") Or _
                                                     wantedvalue2.ToLower.Contains("ati video") Then
                                                     Try
                                                         My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("CLSID\" & child & "\Instance\" & child2)
@@ -813,6 +814,7 @@ Public Class Form1
                                                     wantedvalue2.ToLower.Contains("ati ticker") Or _
                                                     wantedvalue2.ToLower.Contains("mmace softemu") Or _
                                                     wantedvalue2.ToLower.Contains("mmace deinterlace") Or _
+                                                    wantedvalue2.ToLower.Contains("mmace procamp") Or _
                                                     wantedvalue2.ToLower.Contains("amd video") Or _
                                                     wantedvalue2.ToLower.Contains("ati video") Then
                                                         Try
