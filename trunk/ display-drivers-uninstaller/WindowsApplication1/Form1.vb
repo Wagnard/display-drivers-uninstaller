@@ -4582,6 +4582,7 @@ Public Class Form1
                 End If
             Next
         Catch ex As Exception
+            MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
             log(ex.Message + ex.StackTrace)
         End Try
 
@@ -5290,8 +5291,6 @@ Public Class Form1
 
                                 For Each child2 As String In subregkey.GetSubKeyNames
 
-                                    MsgBox("check registry " + child2)
-
                                     If subregkey.OpenSubKey(child2) IsNot Nothing Then
                                         If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
                                             'if the device does not return null here, it mean it has a class associated with it
@@ -5332,6 +5331,7 @@ Public Class Form1
                     Next
                 End If
             Catch ex As Exception
+                MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
                 log(ex.Message + ex.StackTrace)
             End Try
 
