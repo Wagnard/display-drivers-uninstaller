@@ -120,27 +120,30 @@ Public Class Form1
 
                 Dim result = MsgBox("Updates are available! Visit DDU website now?", MsgBoxStyle.YesNoCancel)
 
-                If result = MsgBoxResult.Yes Then
-                    process.Start("http://www.wagnardmobile.com")
-                    closeapp = True
-                    preventclose = False
-                    Me.Close()
-                    Exit Sub
-                ElseIf result = MsgBoxResult.No Then
-                    MsgBox("Expect limited support on older versions than the most recent. Please check newer version before reporting bugs.")
-                ElseIf result = MsgBoxResult.Cancel Then
-                    MsgBox("Expect limited support on older versions than the most recent. Please check newer version before reporting bugs.")
+                If Not MyIdentity.IsSystem Then    'we dont want to open a webpage when the app is under "System" user.
+                    If result = MsgBoxResult.Yes Then
+                        process.Start("http://www.wagnardmobile.com")
+                        closeapp = True
+                        preventclose = False
+                        Me.Close()
+                        Exit Sub
+                    ElseIf result = MsgBoxResult.No Then
+                        MsgBox("Expect limited support on older versions than the most recent. Please check newer version before reporting bugs.")
+                    ElseIf result = MsgBoxResult.Cancel Then
+                        MsgBox("Expect limited support on older versions than the most recent. Please check newer version before reporting bugs.")
+                    End If
                 End If
-            ElseIf updates = 3 Then
-                Try
-                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
-                    Label11.Text = ""
-                    Label11.Text = Label11.Text & buttontext("3")
-                Catch ex As Exception
-                    Label11.Text = ("Unable to Fetch updates!!")
-                End Try
+
+                ElseIf updates = 3 Then
+                    Try
+                        buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+                        Label11.Text = ""
+                        Label11.Text = Label11.Text & buttontext("3")
+                    Catch ex As Exception
+                        Label11.Text = ("Unable to Fetch updates!!")
+                    End Try
+                End If
             End If
-        End If
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
@@ -4187,6 +4190,9 @@ Public Class Form1
             ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("jv") Then
                 ComboBox2.SelectedIndex = ComboBox2.FindString("Japanese")
 
+            ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("uk") Then
+                ComboBox2.SelectedIndex = ComboBox2.FindString("Ukraine")
+
             Else
                 ComboBox2.SelectedIndex = ComboBox2.FindString("English")
             End If
@@ -4374,21 +4380,21 @@ Public Class Form1
         End If
 
         'here I check if the process is running on system user account.
-        If Not MyIdentity.IsSystem Then
-            '------------
-            'Check update
-            '------------
-            Try
-                buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
-                Label11.Text = ""
-                Label11.Text = Label11.Text & buttontext("0")
-            Catch ex As Exception
-            End Try
-            Checkupdates2()
-            If closeapp Then
-                Exit Sub
-            End If
+
+        '------------
+        'Check update
+        '------------
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+            Label11.Text = ""
+            Label11.Text = Label11.Text & buttontext("0")
+        Catch ex As Exception
+        End Try
+        Checkupdates2()
+        If closeapp Then
+            Exit Sub
         End If
+
 
         If Not MyIdentity.IsSystem Then
             Dim stopservice As New ProcessStartInfo
@@ -4439,40 +4445,40 @@ Public Class Form1
         log("OS: " + Label2.Text)
         log("Architecture: " & ddudrfolder)
 
-        'Videocard type indentification
-        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-        processinfo.Arguments = "findall =display"
-        processinfo.UseShellExecute = False
-        processinfo.CreateNoWindow = True
-        processinfo.RedirectStandardOutput = True
+        ''Videocard type indentification
+        'processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+        'processinfo.Arguments = "findall =display"
+        'processinfo.UseShellExecute = False
+        'processinfo.CreateNoWindow = True
+        'processinfo.RedirectStandardOutput = True
 
-        'creation dun process fantome pour le wait on exit.
+        ''creation dun process fantome pour le wait on exit.
 
-        '------------------------------------------------------------------
-        'Detection of the current and leftover videocard for the textboxlog
-        '------------------------------------------------------------------
-        process.StartInfo = processinfo
-        process.Start()
-        reply = process.StandardOutput.ReadToEnd
-        process.WaitForExit()
-        log(reply)
-        TextLines = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
-        For i As Integer = 0 To TextLines.Length - 2  'reason of -2 instead of -1 , we dont want the last line of ddudr.
-            If Not checkvariables.isnullorwhitespace(TextLines(i)) Then
-                TextBox1.Text = TextBox1.Text + "Detected GPU : " + TextLines(i).Substring(TextLines(i).IndexOf(":") + 1) + vbNewLine
-            End If
-        Next
+        ''------------------------------------------------------------------
+        ''Detection of the current and leftover videocard for the textboxlog
+        ''------------------------------------------------------------------
+        'process.StartInfo = processinfo
+        'process.Start()
+        'reply = process.StandardOutput.ReadToEnd
+        'process.WaitForExit()
+        'log(reply)
+        'TextLines = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
+        'For i As Integer = 0 To TextLines.Length - 2  'reason of -2 instead of -1 , we dont want the last line of ddudr.
+        '    If Not checkvariables.isnullorwhitespace(TextLines(i)) Then
+        '        TextBox1.Text = TextBox1.Text + "Detected GPU : " + TextLines(i).Substring(TextLines(i).IndexOf(":") + 1) + vbNewLine
+        '    End If
+        'Next
 
-        'Trying to autoselect the right GPU cleanup option. 
-        If reply.Contains("VEN_8086") Then
-            ComboBox1.SelectedIndex = 2
-        End If
-        If reply.Contains("VEN_10DE") Then
-            ComboBox1.SelectedIndex = 0
-        End If
-        If reply.Contains("VEN_1002") Then
-            ComboBox1.SelectedIndex = 1
-        End If
+        ''Trying to autoselect the right GPU cleanup option. 
+        'If reply.Contains("VEN_8086") Then
+        '    ComboBox1.SelectedIndex = 2
+        'End If
+        'If reply.Contains("VEN_10DE") Then
+        '    ComboBox1.SelectedIndex = 0
+        'End If
+        'If reply.Contains("VEN_1002") Then
+        '    ComboBox1.SelectedIndex = 1
+        'End If
 
 
         ' -------------------------------------
@@ -4489,17 +4495,51 @@ Public Class Form1
                     Catch ex As Exception
                         Continue For
                     End Try
+
                     If subregkey IsNot Nothing Then
+                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc").ToString) Then
+                            currentdriverversion = subregkey.GetValue("DriverDesc").ToString
+                            UpdateTextMethod("GPU #" + child + " Detected : " + currentdriverversion)
+                            log("GPU #" + child + " Detected : " + currentdriverversion)
+                        End If
+                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId").ToString) Then
+                            currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
+                            UpdateTextMethod("GPU DeviceId : " + currentdriverversion)
+                            log("GPU DeviceId : " + currentdriverversion)
+                            If currentdriverversion.Contains("VEN_8086") Then
+                                ComboBox1.SelectedIndex = 2
+                            End If
+                            If currentdriverversion.Contains("VEN_10DE") Then
+                                ComboBox1.SelectedIndex = 0
+                            End If
+                            If currentdriverversion.Contains("VEN_1002") Then
+                                ComboBox1.SelectedIndex = 1
+                            End If
+                        End If
+
                         If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverVersion").ToString) Then
                             currentdriverversion = subregkey.GetValue("DriverVersion").ToString
-                            TextBox1.Text = TextBox1.Text + "Detected Driver(s) Version(s) : " + currentdriverversion + vbNewLine
+                            UpdateTextMethod("Detected Driver(s) Version(s) : " + currentdriverversion)
+                            log("Detected Driver(s) Version(s) : " + currentdriverversion)
+                        End If
+                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfPath").ToString) Then
+                            currentdriverversion = subregkey.GetValue("InfPath").ToString
+                            UpdateTextMethod("INF : " + currentdriverversion)
+                            log("INF : " + currentdriverversion)
+                        End If
+                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfSection").ToString) Then
+                            currentdriverversion = subregkey.GetValue("InfSection").ToString
+                            UpdateTextMethod("INF Section : " + currentdriverversion)
+                            log("INF Section : " + currentdriverversion)
                         End If
                     End If
+                    UpdateTextMethod("--------------")
+                    log("--------------")
                 End If
             Next
         Catch ex As Exception
         End Try
-        log("Driver Version : " + currentdriverversion)
+
 
         ' -------------------------------------
         ' Check if this is an AMD Enduro system
@@ -5153,44 +5193,43 @@ Public Class Form1
             ' Removing the videocard
             ' ----------------------
 
-            log("Executing DDUDR Remove Display Driver")
-            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            processinfo.Arguments = "findall =display"
-            processinfo.UseShellExecute = False
-            processinfo.CreateNoWindow = True
-            processinfo.RedirectStandardOutput = True
-
-            process.StartInfo = processinfo
-            process.Start()
-            reply = process.StandardOutput.ReadToEnd
-            process.WaitForExit()
-
             Try
-                card1 = reply.IndexOf("PCI\")
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
+
+                For Each child As String In regkey.GetSubKeyNames
+                    If Not child.ToLower.Contains("properties") Then
+                        Try
+                            subregkey = regkey.OpenSubKey(child)
+                        Catch ex As Exception
+                            Continue For
+                        End Try
+
+                        If subregkey IsNot Nothing Then
+                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId").ToString) Then
+                                vendid = subregkey.GetValue("MatchingDeviceId").ToString
+
+                                If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                    processinfo.Arguments = "remove =display " & Chr(34) & vendid & "*" & Chr(34)
+                                    processinfo.UseShellExecute = False
+                                    processinfo.CreateNoWindow = True
+                                    processinfo.RedirectStandardOutput = True
+                                    process.StartInfo = processinfo
+
+                                    process.Start()
+                                    reply2 = process.StandardOutput.ReadToEnd
+                                    process.WaitForExit()
+                                    log(reply2)
+                                End If
+                            End If
+                        End If
+                    End If
+                Next
             Catch ex As Exception
-
+                log(ex.Message + ex.StackTrace)
             End Try
-            While card1 > -1
-                position2 = reply.IndexOf(":", card1)
-                vendid = reply.Substring(card1, position2 - card1).Trim
-                If vendid.Contains(vendidexpected) Then
-                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                    processinfo.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
-                    processinfo.UseShellExecute = False
-                    processinfo.CreateNoWindow = True
-                    processinfo.RedirectStandardOutput = True
-                    process.StartInfo = processinfo
-
-                    process.Start()
-                    reply2 = process.StandardOutput.ReadToEnd
-                    process.WaitForExit()
-                    log(reply2)
 
 
-
-                End If
-                card1 = reply.IndexOf("PCI\", card1 + 1)
-            End While
 
             'If combobox1value= "AMD" & enduro Then
             '    ' ----------------------------------------------------------------------
