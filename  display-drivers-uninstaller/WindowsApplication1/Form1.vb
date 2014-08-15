@@ -5279,50 +5279,58 @@ Public Class Form1
             '-------------------------------------
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames
+                        If child.ToLower.Contains("ven_10de") Or _
+                            child.ToLower.Contains("ven_8086") Or _
+                           child.ToLower.Contains("ven_1002") Then
 
-                For Each child As String In regkey.GetSubKeyNames
-                    If child.ToLower.Contains("ven_10de") Or _
-                        child.ToLower.Contains("ven_8086") Or _
-                       child.ToLower.Contains("ven_1002") Then
+                            subregkey = regkey.OpenSubKey(child)
+                            If subregkey IsNot Nothing Then
 
-                        subregkey = regkey.OpenSubKey(child)
-                        For Each child2 As String In subregkey.GetSubKeyNames
+                                For Each child2 As String In subregkey.GetSubKeyNames
 
-                            If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
-                                'if the device does not return null here, it mean it has a class associated with it
-                                'so we skip it as we search for missing one.
-                                Continue For
-                            End If
+                                    MsgBox("check registry " + child2)
 
-                            array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
-
-                            If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                For i As Integer = 0 To array.Length - 1
-                                    If array(i).ToLower.Contains("pci\cc_03") Then
-
-                                        vendid = child
-
-                                        If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                            processinfo.Arguments = "remove =display " & Chr(34) & "pci\" & vendid & "*" & Chr(34)
-                                            processinfo.UseShellExecute = False
-                                            processinfo.CreateNoWindow = True
-                                            processinfo.RedirectStandardOutput = True
-                                            process.StartInfo = processinfo
-
-                                            process.Start()
-                                            reply2 = process.StandardOutput.ReadToEnd
-                                            process.WaitForExit()
-                                            log(reply2)
-
+                                    If subregkey.OpenSubKey(child2) IsNot Nothing Then
+                                        If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
+                                            'if the device does not return null here, it mean it has a class associated with it
+                                            'so we skip it as we search for missing one.
+                                            Continue For
                                         End If
-                                        Exit For
+                                    End If
+
+                                    array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
+
+                                    If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                        For i As Integer = 0 To array.Length - 1
+                                            If array(i).ToLower.Contains("pci\cc_03") Then
+
+                                                vendid = child
+
+                                                If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+                                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                                    processinfo.Arguments = "remove " & Chr(34) & "pci\" & vendid & "*" & Chr(34)
+                                                    processinfo.UseShellExecute = False
+                                                    processinfo.CreateNoWindow = True
+                                                    processinfo.RedirectStandardOutput = True
+                                                    process.StartInfo = processinfo
+
+                                                    process.Start()
+                                                    reply2 = process.StandardOutput.ReadToEnd
+                                                    process.WaitForExit()
+                                                    log(reply2)
+
+                                                End If
+                                                Exit For
+                                            End If
+                                        Next
                                     End If
                                 Next
                             End If
-                        Next
-                    End If
-                Next
+                        End If
+                    Next
+                End If
             Catch ex As Exception
                 log(ex.Message + ex.StackTrace)
             End Try
