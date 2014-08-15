@@ -3943,31 +3943,29 @@ Public Class Form1
             For Each child As String In regkey.GetSubKeyNames()
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("ven_8086") Then
-                        Try
-                            subregkey = regkey.OpenSubKey(child)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
-                        For Each childs As String In subregkey.GetSubKeyNames()
-                            If checkvariables.isnullorwhitespace(childs) = False Then
-                                array = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
-                                If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                    For i As Integer = 0 To array.Length - 1
-                                        If (Not checkvariables.isnullorwhitespace(array(i))) AndAlso (array(i).ToLower.Contains("nvpciflt")) Then
-                                            UpdateTextMethod("-nVidia Optimus UpperFilter Found." + vbNewLine)
+                        subregkey = regkey.OpenSubKey(child)
+                        If subregkey IsNot Nothing Then
+                            For Each childs As String In subregkey.GetSubKeyNames()
+                                If checkvariables.isnullorwhitespace(childs) = False Then
+                                    array = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
+                                    If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                        For i As Integer = 0 To array.Length - 1
+                                            If (Not checkvariables.isnullorwhitespace(array(i))) AndAlso (array(i).ToLower.Contains("nvpciflt")) Then
+                                                UpdateTextMethod("-nVidia Optimus UpperFilter Found." + vbNewLine)
 
-                                            log("nVidia Optimus UpperFilter Found.")
+                                                log("nVidia Optimus UpperFilter Found.")
 
-                                            Try
-                                                subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
-                                            Catch ex As Exception
-                                                log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
-                                            End Try
-                                        End If
-                                    Next
+                                                Try
+                                                    subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
+                                                Catch ex As Exception
+                                                    log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
+                                                End Try
+                                            End If
+                                        Next
+                                    End If
                                 End If
-                            End If
-                        Next
+                            Next
+                        End If
                     End If
                 End If
             Next
@@ -4481,9 +4479,10 @@ Public Class Form1
         'End If
 
 
-        ' -------------------------------------
-        ' Trying to get current driver version
-        ' -------------------------------------
+        ' ----------------------------------------------------------------------------
+        ' Trying to get the installed GPU info 
+        ' (These list the one that are at least installed with minimal driver support)
+        ' ----------------------------------------------------------------------------
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
@@ -4538,6 +4537,52 @@ Public Class Form1
                 End If
             Next
         Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+
+        ' ----------------------------------------------------------------------------
+        ' Trying to get the installed GPU info 
+        ' (These list the one that are at least installed with minimal driver support)
+        ' ----------------------------------------------------------------------------
+
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+
+            For Each child As String In regkey.GetSubKeyNames
+                If child.ToLower.Contains("ven_10de") Or _
+                    child.ToLower.Contains("ven_8086") Or _
+                   child.ToLower.Contains("ven_1002") Then
+
+                    subregkey = regkey.OpenSubKey(child)
+                    For Each child2 As String In subregkey.GetSubKeyNames
+
+                        If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
+                            'if the device does not return null here, it mean it has a class associated with it
+                            'so we skip it as we search for missing one.
+                            Continue For
+                        End If
+
+                        array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
+
+                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                            For i As Integer = 0 To array.Length - 1
+                                If array(i).ToLower.Contains("pci\cc_03") Then
+                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString) Then
+                                        currentdriverversion = subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString
+                                        UpdateTextMethod("Not Correctly Installed GPU : " + currentdriverversion)
+                                        log("Not Correctly Installed GPU : " + currentdriverversion)
+                                        UpdateTextMethod("--------------")
+                                        log("--------------")
+                                        Exit For  'we exit as we have found what we were looking for
+                                    End If
+                                End If
+                            Next
+                        End If
+                    Next
+                End If
+            Next
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
         End Try
 
 
@@ -5229,7 +5274,58 @@ Public Class Form1
                 log(ex.Message + ex.StackTrace)
             End Try
 
+            '-------------------------------------
+            'Removing GPU installed in weird state
+            '-------------------------------------
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
 
+                For Each child As String In regkey.GetSubKeyNames
+                    If child.ToLower.Contains("ven_10de") Or _
+                        child.ToLower.Contains("ven_8086") Or _
+                       child.ToLower.Contains("ven_1002") Then
+
+                        subregkey = regkey.OpenSubKey(child)
+                        For Each child2 As String In subregkey.GetSubKeyNames
+
+                            If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
+                                'if the device does not return null here, it mean it has a class associated with it
+                                'so we skip it as we search for missing one.
+                                Continue For
+                            End If
+
+                            array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
+
+                            If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                For i As Integer = 0 To array.Length - 1
+                                    If array(i).ToLower.Contains("pci\cc_03") Then
+
+                                        vendid = child
+
+                                        If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                            processinfo.Arguments = "remove =display " & Chr(34) & "pci\" & vendid & "*" & Chr(34)
+                                            processinfo.UseShellExecute = False
+                                            processinfo.CreateNoWindow = True
+                                            processinfo.RedirectStandardOutput = True
+                                            process.StartInfo = processinfo
+
+                                            process.Start()
+                                            reply2 = process.StandardOutput.ReadToEnd
+                                            process.WaitForExit()
+                                            log(reply2)
+
+                                        End If
+                                        Exit For
+                                    End If
+                                Next
+                            End If
+                        Next
+                    End If
+                Next
+            Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
+            End Try
 
             'If combobox1value= "AMD" & enduro Then
             '    ' ----------------------------------------------------------------------
