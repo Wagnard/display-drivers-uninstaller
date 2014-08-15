@@ -5291,13 +5291,16 @@ Public Class Form1
 
                                 For Each child2 As String In subregkey.GetSubKeyNames
 
-                                    If subregkey.OpenSubKey(child2) IsNot Nothing Then
-                                        If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
-                                            'if the device does not return null here, it mean it has a class associated with it
-                                            'so we skip it as we search for missing one.
-                                            Continue For
-                                        End If
+                                    If subregkey.OpenSubKey(child2) Is Nothing Then
+                                        Continue For
                                     End If
+
+                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
+                                        'if the device does not return null here, it mean it has a class associated with it
+                                        'so we skip it as we search for missing one.
+                                        Continue For
+                                    End If
+
 
                                     array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
 
