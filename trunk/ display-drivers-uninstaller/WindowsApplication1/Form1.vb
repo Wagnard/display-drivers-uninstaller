@@ -5140,7 +5140,7 @@ Public Class Form1
 
             ' First , get the ParentIdPrefix
 
-            If removeamdaudiobus Then
+            If removeamdaudiobus And combobox1value = "AMD" Then
 
                 Try
                     If combobox1value = "AMD" Then
