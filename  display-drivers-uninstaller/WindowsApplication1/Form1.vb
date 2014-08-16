@@ -4722,8 +4722,8 @@ Public Class Form1
                                 End Try
 
                             End If
-                            System.Diagnostics.Process.Start("shutdown", "/r /t 0")
                             preventclose = False
+                            System.Diagnostics.Process.Start("shutdown", "/r /t 0")
                             Me.Close()
                             Exit Sub
                         End If
