@@ -3958,6 +3958,7 @@ Public Class Form1
                                                 Try
                                                     subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
                                                 Catch ex As Exception
+                                                    log(ex.Message + ex.StackTrace)
                                                     log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
                                                 End Try
                                             End If
@@ -4505,13 +4506,13 @@ Public Class Form1
                             currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
                             UpdateTextMethod("GPU DeviceId : " + currentdriverversion)
                             log("GPU DeviceId : " + currentdriverversion)
-                            If currentdriverversion.Contains("VEN_8086") Then
+                            If currentdriverversion.ToLower.Contains("ven_8086") Then
                                 ComboBox1.SelectedIndex = 2
                             End If
-                            If currentdriverversion.Contains("VEN_10DE") Then
+                            If currentdriverversion.ToLower.Contains("ven_10de") Then
                                 ComboBox1.SelectedIndex = 0
                             End If
-                            If currentdriverversion.Contains("VEN_1002") Then
+                            If currentdriverversion.ToLower.Contains("ven_1002") Then
                                 ComboBox1.SelectedIndex = 1
                             End If
                         End If
