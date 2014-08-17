@@ -118,9 +118,9 @@ Public Class Form1
                     Label11.Text = ("Updates found! Expect limited support on older versions than the most recent.")
                 End Try
 
-                Dim result = MsgBox("Updates are available! Visit DDU website now?", MsgBoxStyle.YesNoCancel)
-
                 If Not MyIdentity.IsSystem Then    'we dont want to open a webpage when the app is under "System" user.
+                    Dim result = MsgBox("Updates are available! Visit DDU website now?", MsgBoxStyle.YesNoCancel)
+
                     If result = MsgBoxResult.Yes Then
                         process.Start("http://www.wagnardmobile.com")
                         closeapp = True
