@@ -89,6 +89,7 @@ Public Class Form1
     Dim loadinitiated As Boolean = True
     Dim systemrestore As Boolean
     Public donotremoveamdhdaudiobusfiles As Boolean = True
+    Public msgboxmessage As String()
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -119,7 +120,7 @@ Public Class Form1
                 End Try
 
                 If Not MyIdentity.IsSystem Then    'we dont want to open a webpage when the app is under "System" user.
-                    Dim result = MsgBox("Updates are available! Visit DDU website now?", MsgBoxStyle.YesNoCancel)
+                    Dim result = MsgBox(msgboxmessage("0"), MsgBoxStyle.YesNoCancel)
 
                     If result = MsgBoxResult.Yes Then
                         process.Start("http://www.wagnardmobile.com")
@@ -128,9 +129,11 @@ Public Class Form1
                         Me.Close()
                         Exit Sub
                     ElseIf result = MsgBoxResult.No Then
-                        MsgBox("Expect limited support on older versions than the most recent. Please check newer version before reporting bugs.")
+                        MsgBox(msgboxmessage("1"))
                     ElseIf result = MsgBoxResult.Cancel Then
-                        MsgBox("Expect limited support on older versions than the most recent. Please check newer version before reporting bugs.")
+                        closeapp = True
+                        preventclose = False
+                        Me.Close()
                     End If
                 End If
 
@@ -4104,7 +4107,7 @@ Public Class Form1
 
         'check for admin before trying to do things, as this could cause errors and message boxes for rebooting into startup without admin are useless because you can't bcdedit without admin rights, however the next messagebox still plays the sound effect, for msgboxstyle.information. Not sure if this can be fixed.
         If Not isElevated Then
-            MsgBox("You are not using DDU with Administrator privileges. The application will now exit.", MsgBoxStyle.Critical)
+            MsgBox(msgboxmessage("2"), MsgBoxStyle.Critical)
             preventclose = False
             Me.Close()
             Exit Sub
@@ -4362,7 +4365,7 @@ Public Class Form1
 
         If arch = True Then
             If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x64\ddudr.exe") Then
-                MsgBox("Unable to find ddudr. Please refer to the log.", MsgBoxStyle.Critical)
+                MsgBox(msgboxmessage("3"), MsgBoxStyle.Critical)
                 Button1.Enabled = False
                 Button2.Enabled = False
                 Button3.Enabled = False
@@ -4370,7 +4373,7 @@ Public Class Form1
             End If
         ElseIf arch = False Then
             If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x86\ddudr.exe") Then
-                MsgBox("Unable to find ddudr. Please refer to the log.", MsgBoxStyle.Critical)
+                MsgBox(msgboxmessage("3"), MsgBoxStyle.Critical)
                 Button1.Enabled = False
                 Button2.Enabled = False
                 Button3.Enabled = False
@@ -4435,7 +4438,7 @@ Public Class Form1
 
         Me.TopMost = True
 
-        MsgBox("Display Driver Uninstaller (DDU) is modifying your registry a lot. DDU will try to automatically create a System Restore point (Normal mode Only)", MsgBoxStyle.Information)
+        MsgBox(msgboxmessage("4"), MsgBoxStyle.Information)
 
         Me.TopMost = False
 
@@ -4583,7 +4586,7 @@ Public Class Form1
                 End If
             Next
         Catch ex As Exception
-            MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
+            MsgBox(msgboxmessage("5"))
             log(ex.Message + ex.StackTrace)
         End Try
 
@@ -4623,7 +4626,7 @@ Public Class Form1
         End Try
 
         If enduro Then
-            MsgBox("DDU detected that you have an AMD switching Laptop (Enduro or equivalent), DDU is not yet fully compatible / tested with Enduro systems, Use at your own risk.", MsgBoxStyle.Critical)
+            MsgBox(msgboxmessage("6"), MsgBoxStyle.Critical)
         End If
 
         'This code checks to see which mode Windows has booted up in.
@@ -4682,9 +4685,10 @@ Public Class Form1
                     Form2.Close()
                 End If
                 safemode = False
+
                 If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
 
-                    Dim resultmsgbox As Integer = MessageBox.Show("You are not in safe mode. It is highly recommended that you reboot into safe mode to avoid possible issues., Reboot into Safe Mode now?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                    Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessage("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                     If resultmsgbox = DialogResult.Cancel Then
 
                         preventclose = False
@@ -4693,44 +4697,35 @@ Public Class Form1
                     ElseIf resultmsgbox = DialogResult.No Then
                         'do nothing and continue without safe mode
                     ElseIf resultmsgbox = DialogResult.Yes Then
-                        Dim resultmsgbox2 As Integer = MessageBox.Show("Some computer with problem *may* have issues when doing this. Are you sure ?", "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-                        If resultmsgbox2 = DialogResult.Cancel Then
 
-                            preventclose = False
-                            Me.Close()
-                            Exit Sub
-                        ElseIf resultmsgbox2 = DialogResult.No Then
-                            'do nothing and continue without safe mode
-                        ElseIf resultmsgbox2 = DialogResult.Yes Then
 
-                            Dim setbcdedit As New ProcessStartInfo
-                            setbcdedit.FileName = "cmd.exe"
-                            setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
-                            setbcdedit.UseShellExecute = False
-                            setbcdedit.CreateNoWindow = True
-                            setbcdedit.RedirectStandardOutput = False
-                            Dim processstopservice As New Process
-                            processstopservice.StartInfo = setbcdedit
-                            processstopservice.Start()
-                            processstopservice.WaitForExit()
-                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-                            If regkey IsNot Nothing Then
-                                Try
-                                    regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
-                                    regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
-                                Catch ex As Exception
-                                    log(ex.Message & ex.StackTrace)
-                                End Try
+                        Dim setbcdedit As New ProcessStartInfo
+                        setbcdedit.FileName = "cmd.exe"
+                        setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
+                        setbcdedit.UseShellExecute = False
+                        setbcdedit.CreateNoWindow = True
+                        setbcdedit.RedirectStandardOutput = False
+                        Dim processstopservice As New Process
+                        processstopservice.StartInfo = setbcdedit
+                        processstopservice.Start()
+                        processstopservice.WaitForExit()
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+                        If regkey IsNot Nothing Then
+                            Try
+                                regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
+                                regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+                            Catch ex As Exception
+                                log(ex.Message & ex.StackTrace)
+                            End Try
 
-                            End If
-                            preventclose = False
-                            System.Diagnostics.Process.Start("shutdown", "/r /t 0")
-                            Me.Close()
-                            Exit Sub
                         End If
+                        preventclose = False
+                        System.Diagnostics.Process.Start("shutdown", "/r /t 0")
+                        Me.Close()
+                        Exit Sub
                     End If
                 Else
-                    MsgBox("DDU has detected that you are NOT in SafeMode... For a better CleanUP without issues, it is recommended that you reboot into safemode")
+                    MsgBox(msgboxmessage("7"))
                 End If
 
         End Select
@@ -5087,8 +5082,7 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
                 If regkey.GetValue("SearchOrderConfig").ToString <> 0 Then
                     regkey.SetValue("SearchOrderConfig", 0)
-                    MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
-                           & " back to default, if you want AFTER your new driver installation.")
+                    MsgBox(msgboxmessage("8"))
                 End If
             Catch ex As Exception
             End Try
@@ -5098,8 +5092,7 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
                 If regkey.GetValue("DontSearchWindowsUpdate").ToString <> 1 Then
                     regkey.SetValue("DontSearchWindowsUpdate", 1)
-                    MsgBox("DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this" _
-                           & " back to default, if you want AFTER your new driver installation.", MsgBoxStyle.Information)
+                    MsgBox(msgboxmessage("8"))
                 End If
             Catch ex As Exception
             End Try
@@ -5289,7 +5282,7 @@ Public Class Form1
                     Next
                 End If
             Catch ex As Exception
-                MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
+                MsgBox(msgboxmessage("5"))
                 log(ex.Message + ex.StackTrace)
             End Try
 
@@ -5361,91 +5354,16 @@ Public Class Form1
 
             Try
                 card1 = reply.IndexOf("HDAUDIO\")
-            Catch ex As Exception
 
-            End Try
-
-            While card1 > -1
-
-                position2 = reply.IndexOf(":", card1)
-                vendid = reply.Substring(card1, position2 - card1).Trim
-                If vendid.Contains(vendidexpected) Then
-
-                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                    processinfo.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
-                    processinfo.UseShellExecute = False
-                    processinfo.CreateNoWindow = True
-                    processinfo.RedirectStandardOutput = True
-                    process.StartInfo = processinfo
-                    Try
-                        process.Start()
-                        reply2 = process.StandardOutput.ReadToEnd
-                        process.WaitForExit()
-                        log(reply2)
-                    Catch ex As Exception
-                        preventclose = False
-                        log(ex.Message)
-                        MsgBox("Cannot find ddudr in " & ddudrfolder & " folder", MsgBoxStyle.Critical)
-                        Button1.Enabled = True
-                        Button2.Enabled = True
-                        Button3.Enabled = True
-                    End Try
-
-
-                End If
-                card1 = reply.IndexOf("HDAUDIO\", card1 + 1)
-
-            End While
-            Invoke(Sub() TextBox1.Text = TextBox1.Text + "HD audio adapters Removed !" + vbNewLine)
-            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-            Invoke(Sub() TextBox1.ScrollToCaret())
-
-            log("DDUDR Remove Audio controler Complete.")
-
-            If Not combobox1value = "INTEL" Then
-                cleandriverstore()
-            End If
-
-            'Here I remove 3dVision USB Adapter.
-            If combobox1value = "NVIDIA" Then
-                'removing 3DVision USB driver
-                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                processinfo.Arguments = "findall =USB"
-                processinfo.UseShellExecute = False
-                processinfo.CreateNoWindow = True
-                processinfo.RedirectStandardOutput = True
-
-                'creation dun process fantome pour le wait on exit.
-
-                process.StartInfo = processinfo
-                process.Start()
-                reply = process.StandardOutput.ReadToEnd
-                process.WaitForExit()
-                Try
-                    card1 = reply.IndexOf("USB\")
-                Catch ex As Exception
-
-                End Try
 
                 While card1 > -1
 
                     position2 = reply.IndexOf(":", card1)
                     vendid = reply.Substring(card1, position2 - card1).Trim
-                    If vendid.Contains("USB\VID_0955&PID_0007") Or _
-                        vendid.Contains("USB\VID_0955&PID_7001") Or _
-                        vendid.Contains("USB\VID_0955&PID_7002") Or _
-                        vendid.Contains("USB\VID_0955&PID_7003") Or _
-                        vendid.Contains("USB\VID_0955&PID_7004") Or _
-                        vendid.Contains("USB\VID_0955&PID_7008") Or _
-                        vendid.Contains("USB\VID_0955&PID_7009") Or _
-                        vendid.Contains("USB\VID_0955&PID_700A") Or _
-                        vendid.Contains("USB\VID_0955&PID_700C") Or _
-                        vendid.Contains("USB\VID_0955&PID_700D&MI_00") Or _
-                        vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
-                        log("-" & vendid & "- 3D vision usb controler found")
+                    If vendid.Contains(vendidexpected) Then
 
                         processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                        processinfo.Arguments = "remove =USB " & Chr(34) & vendid & Chr(34)
+                        processinfo.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
                         processinfo.UseShellExecute = False
                         processinfo.CreateNoWindow = True
                         processinfo.RedirectStandardOutput = True
@@ -5458,74 +5376,73 @@ Public Class Form1
                         Catch ex As Exception
                             preventclose = False
                             log(ex.Message)
-                            MsgBox("Cannot find ddudr in " & ddudrfolder & " folder", MsgBoxStyle.Critical)
                             Button1.Enabled = True
                             Button2.Enabled = True
                             Button3.Enabled = True
                         End Try
 
 
-
                     End If
-                    card1 = reply.IndexOf("USB\", card1 + 1)
+                    card1 = reply.IndexOf("HDAUDIO\", card1 + 1)
 
                 End While
 
-                Invoke(Sub() TextBox1.Text = TextBox1.Text + "3D Vision USB Adapter Removed from Device Manager." + vbNewLine)
-                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                Invoke(Sub() TextBox1.ScrollToCaret())
+            Catch ex As Exception
+                MsgBox(msgboxmessage("5"))
+                log(ex.Message + ex.StackTrace)
+            End Try
+
+            UpdateTextMethod("HD audio adapters Removed !")
 
 
-                'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
-                Invoke(Sub() TextBox1.Text = TextBox1.Text + "Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!" + vbNewLine)
-                Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                Invoke(Sub() TextBox1.ScrollToCaret())
-                log("Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!")
-                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                processinfo.Arguments = "remove =media " & Chr(34) & "USB\VID_0955&PID_9000" & Chr(34)
-                processinfo.UseShellExecute = False
-                processinfo.CreateNoWindow = True
-                processinfo.RedirectStandardOutput = True
-                process.StartInfo = processinfo
+        log("DDUDR Remove Audio controler Complete.")
+
+        If Not combobox1value = "INTEL" Then
+            cleandriverstore()
+        End If
+
+        'Here I remove 3dVision USB Adapter.
+
+            If combobox1value = "NVIDIA" Then
                 Try
+                    'removing 3DVision USB driver
+                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                    processinfo.Arguments = "findall =USB"
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = True
+
+                    'creation dun process fantome pour le wait on exit.
+
+                    process.StartInfo = processinfo
                     process.Start()
-                    reply2 = process.StandardOutput.ReadToEnd
+                    reply = process.StandardOutput.ReadToEnd
                     process.WaitForExit()
-                    log(reply2)
-                Catch ex As Exception
-                    preventclose = False
-                    log(ex.Message)
-                    MsgBox("Cannot find ddudr in " & ddudrfolder & " folder", MsgBoxStyle.Critical)
-                    Button1.Enabled = True
-                    Button2.Enabled = True
-                    Button3.Enabled = True
-                    Exit Sub
-                End Try
 
-                ' ------------------------------
-                ' Removing nVidia AudioEndpoints
-                ' ------------------------------
-                log("Removing nVidia Audio Endpoints")
-                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                processinfo.Arguments = "findall =audioendpoint"
-                processinfo.UseShellExecute = False
-                processinfo.CreateNoWindow = True
-                processinfo.RedirectStandardOutput = True
+                    Try
+                        card1 = reply.IndexOf("USB\")
+                    Catch ex As Exception
+                    End Try
 
-                process.StartInfo = processinfo
-                process.Start()
-                reply = process.StandardOutput.ReadToEnd
-                process.WaitForExit()
+                    While card1 > -1
 
-                Dim audioendpoints As String() = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
+                        position2 = reply.IndexOf(":", card1)
+                        vendid = reply.Substring(card1, position2 - card1).Trim
+                        If vendid.Contains("USB\VID_0955&PID_0007") Or _
+                            vendid.Contains("USB\VID_0955&PID_7001") Or _
+                            vendid.Contains("USB\VID_0955&PID_7002") Or _
+                            vendid.Contains("USB\VID_0955&PID_7003") Or _
+                            vendid.Contains("USB\VID_0955&PID_7004") Or _
+                            vendid.Contains("USB\VID_0955&PID_7008") Or _
+                            vendid.Contains("USB\VID_0955&PID_7009") Or _
+                            vendid.Contains("USB\VID_0955&PID_700A") Or _
+                            vendid.Contains("USB\VID_0955&PID_700C") Or _
+                            vendid.Contains("USB\VID_0955&PID_700D&MI_00") Or _
+                            vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
+                            log("-" & vendid & "- 3D vision usb controler found")
 
-                For Each child As String In audioendpoints
-                    If Not checkvariables.isnullorwhitespace(child) Then
-                        If child.ToLower.Contains("nvidia virtual audio device") Or _
-                            child.ToLower.Contains("nvidia high definition audio") Then
-                            child = child.Substring(0, child.IndexOf(":"))
                             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                            processinfo.Arguments = "remove =audioendpoint " & Chr(34) & "@" & child & Chr(34)
+                            processinfo.Arguments = "remove =USB " & Chr(34) & vendid & Chr(34)
                             processinfo.UseShellExecute = False
                             processinfo.CreateNoWindow = True
                             processinfo.RedirectStandardOutput = True
@@ -5535,125 +5452,177 @@ Public Class Form1
                             reply2 = process.StandardOutput.ReadToEnd
                             process.WaitForExit()
                             log(reply2)
+
+
                         End If
-                    End If
-                Next
+                        card1 = reply.IndexOf("USB\", card1 + 1)
 
+                    End While
 
-            End If
-            If combobox1value = "INTEL" Then
-                'Removing Intel WIdI bus Enumerator
-                UpdateTextMethod("Removing IWD Bus Enumerator")
-                log("Removing IWD Bus Enumerator")
-                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
-                processinfo.UseShellExecute = False
-                processinfo.CreateNoWindow = True
-                processinfo.RedirectStandardOutput = True
-                process.StartInfo = processinfo
+                Catch ex As Exception
+                    MsgBox(msgboxmessage("5"))
+                    log(ex.Message + ex.StackTrace)
+                End Try
+
+                UpdateTextMethod("3D Vision USB Adapter Removed from Device Manager.")
+
                 Try
+                    'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
+                    UpdateTextMethod("Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!")
+
+                    log("Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!")
+                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                    processinfo.Arguments = "remove =media " & Chr(34) & "USB\VID_0955&PID_9000" & Chr(34)
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = True
+                    process.StartInfo = processinfo
+
                     process.Start()
                     reply2 = process.StandardOutput.ReadToEnd
                     process.WaitForExit()
                     log(reply2)
-                Catch ex As Exception
-                    preventclose = False
-                    log(ex.Message)
-                    MsgBox("Cannot find ddudr in " & ddudrfolder & " folder", MsgBoxStyle.Critical)
-                    Button1.Enabled = True
-                    Button2.Enabled = True
-                    Button3.Enabled = True
-                    Exit Sub
-                End Try
 
-                ' ------------------------------
-                ' Removing Intel AudioEndpoints
-                ' ------------------------------
-                log("Removing nVidia Audio Endpoints")
-                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                processinfo.Arguments = "findall =audioendpoint"
-                processinfo.UseShellExecute = False
-                processinfo.CreateNoWindow = True
-                processinfo.RedirectStandardOutput = True
+                    ' ------------------------------
+                    ' Removing nVidia AudioEndpoints
+                    ' ------------------------------
+                    log("Removing nVidia Audio Endpoints")
+                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                    processinfo.Arguments = "findall =audioendpoint"
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = True
 
-                process.StartInfo = processinfo
-                process.Start()
-                reply = process.StandardOutput.ReadToEnd
-                process.WaitForExit()
+                    process.StartInfo = processinfo
+                    process.Start()
+                    reply = process.StandardOutput.ReadToEnd
+                    process.WaitForExit()
 
-                Dim audioendpoints As String() = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
+                    Dim audioendpoints As String() = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
 
-                For Each child As String In audioendpoints
-                    If Not checkvariables.isnullorwhitespace(child) Then
-                        If child.ToLower.Contains("intel widi audio") Then
-                            child = child.Substring(0, child.IndexOf(":"))
-                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                            processinfo.Arguments = "remove =audioendpoint " & Chr(34) & "@" & child & Chr(34)
-                            processinfo.UseShellExecute = False
-                            processinfo.CreateNoWindow = True
-                            processinfo.RedirectStandardOutput = True
-                            process.StartInfo = processinfo
+                    For Each child As String In audioendpoints
+                        If Not checkvariables.isnullorwhitespace(child) Then
+                            If child.ToLower.Contains("nvidia virtual audio device") Or _
+                                child.ToLower.Contains("nvidia high definition audio") Then
+                                child = child.Substring(0, child.IndexOf(":"))
+                                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                processinfo.Arguments = "remove =audioendpoint " & Chr(34) & "@" & child & Chr(34)
+                                processinfo.UseShellExecute = False
+                                processinfo.CreateNoWindow = True
+                                processinfo.RedirectStandardOutput = True
+                                process.StartInfo = processinfo
 
-                            process.Start()
-                            reply2 = process.StandardOutput.ReadToEnd
-                            process.WaitForExit()
-                            log(reply2)
+                                process.Start()
+                                reply2 = process.StandardOutput.ReadToEnd
+                                process.WaitForExit()
+                                log(reply2)
+                            End If
                         End If
-                    End If
-                Next
-
+                    Next
+                Catch ex As Exception
+                    MsgBox(msgboxmessage("5"))
+                    log(ex.Message + ex.StackTrace)
+                End Try
             End If
 
-            log("ddudr Remove Audio/HDMI Complete")
-            'removing monitor and hidden monitor
 
-            log("ddudr Remove Monitor started")
-
+        If combobox1value = "INTEL" Then
+            'Removing Intel WIdI bus Enumerator
+            UpdateTextMethod("Removing IWD Bus Enumerator")
+            log("Removing IWD Bus Enumerator")
             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            processinfo.Arguments = "findall =monitor"
+            processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
             processinfo.UseShellExecute = False
             processinfo.CreateNoWindow = True
             processinfo.RedirectStandardOutput = True
+            process.StartInfo = processinfo
 
-            'creation dun process fantome pour le wait on exit.
+            process.Start()
+            reply2 = process.StandardOutput.ReadToEnd
+            process.WaitForExit()
+            log(reply2)
+
+
+            ' ------------------------------
+            ' Removing Intel AudioEndpoints
+            ' ------------------------------
+            log("Removing nVidia Audio Endpoints")
+            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+            processinfo.Arguments = "findall =audioendpoint"
+            processinfo.UseShellExecute = False
+            processinfo.CreateNoWindow = True
+            processinfo.RedirectStandardOutput = True
 
             process.StartInfo = processinfo
             process.Start()
             reply = process.StandardOutput.ReadToEnd
             process.WaitForExit()
-            Try
-                card1 = reply.IndexOf("DISPLAY\")
-            Catch ex As Exception
 
-            End Try
-            While card1 > -1
+            Dim audioendpoints As String() = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
 
-                position2 = reply.IndexOf(":", card1)
-                vendid = reply.Substring(card1, position2 - card1).Trim
+            For Each child As String In audioendpoints
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains("intel widi audio") Then
+                        child = child.Substring(0, child.IndexOf(":"))
+                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                        processinfo.Arguments = "remove =audioendpoint " & Chr(34) & "@" & child & Chr(34)
+                        processinfo.UseShellExecute = False
+                        processinfo.CreateNoWindow = True
+                        processinfo.RedirectStandardOutput = True
+                        process.StartInfo = processinfo
+
+                        process.Start()
+                        reply2 = process.StandardOutput.ReadToEnd
+                        process.WaitForExit()
+                        log(reply2)
+                    End If
+                End If
+            Next
+        End If
 
 
-                log("-" & vendid & "- Monitor id found")
-                'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                processinfo.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
-                processinfo.UseShellExecute = False
-                processinfo.CreateNoWindow = True
-                processinfo.RedirectStandardOutput = True
-                process.StartInfo = processinfo
-                Try
-                    process.Start()
-                    reply2 = process.StandardOutput.ReadToEnd
-                    process.WaitForExit()
-                    log(reply2)
-                Catch ex As Exception
-                    preventclose = False
-                    log(ex.Message)
-                    MsgBox("Cannot find ddudr in " & ddudrfolder & " folder", MsgBoxStyle.Critical)
-                    Button1.Enabled = True
-                    Button2.Enabled = True
-                    Button3.Enabled = True
-                    Exit Sub
-                End Try
+        log("ddudr Remove Audio/HDMI Complete")
+        'removing monitor and hidden monitor
+
+        log("ddudr Remove Monitor started")
+
+        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+        processinfo.Arguments = "findall =monitor"
+        processinfo.UseShellExecute = False
+        processinfo.CreateNoWindow = True
+        processinfo.RedirectStandardOutput = True
+
+        'creation dun process fantome pour le wait on exit.
+
+        process.StartInfo = processinfo
+        process.Start()
+        reply = process.StandardOutput.ReadToEnd
+        process.WaitForExit()
+        Try
+            card1 = reply.IndexOf("DISPLAY\")
+        Catch ex As Exception
+
+        End Try
+        While card1 > -1
+
+            position2 = reply.IndexOf(":", card1)
+            vendid = reply.Substring(card1, position2 - card1).Trim
+
+
+            log("-" & vendid & "- Monitor id found")
+            'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
+            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+            processinfo.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
+            processinfo.UseShellExecute = False
+            processinfo.CreateNoWindow = True
+            processinfo.RedirectStandardOutput = True
+            process.StartInfo = processinfo
+
+                process.Start()
+                reply2 = process.StandardOutput.ReadToEnd
+                process.WaitForExit()
+                log(reply2)
+
 
                 card1 = reply.IndexOf("DISPLAY\", card1 + 1)
 
@@ -5703,7 +5672,7 @@ Public Class Form1
 
         Catch ex As Exception
             log(ex.Message & ex.StackTrace)
-            MsgBox("An error occured. Send the .log to the devs, Application will exit", MsgBoxStyle.Critical)
+            MsgBox(msgboxmessage("5"), MsgBoxStyle.Critical)
             stopme = True
         End Try
 
@@ -5746,7 +5715,7 @@ Public Class Form1
         CheckBox5.Enabled = True
 
         If Not reboot And Not shutdown Then
-            If MsgBox("Clean uninstall completed! Would you like to exit now?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
+            If MsgBox(msgboxmessage("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                 'do nothing
             Else
                 preventclose = False
@@ -5761,7 +5730,7 @@ Public Class Form1
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
                 regkey.SetValue("SearchOrderConfig", 1)
-                MsgBox("Done")
+                MsgBox(msgboxmessage("10"))
             Catch ex As Exception
             End Try
         End If
@@ -5769,7 +5738,7 @@ Public Class Form1
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
                 regkey.SetValue("DontSearchWindowsUpdate", 0)
-                MsgBox("Done")
+                MsgBox(msgboxmessage("10"))
             Catch ex As Exception
             End Try
         End If
@@ -5927,6 +5896,8 @@ Public Class Form1
                 End If
                 CheckBox5.Text = CheckBox5.Text & buttontext(i)
             Next
+
+            msgboxmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\msgbox.txt") '// add each line as String Array.
 
         Catch ex As Exception
             log(ex.Message)
@@ -6198,7 +6169,7 @@ Public Class CleanupEngine
         Dim subsuperregkey As RegistryKey
         Dim wantedvalue As String = Nothing
         Dim removephysx As Boolean = f.removephysx
-
+        Dim msgboxmessage As String() = f.msgboxmessage
         f.UpdateTextMethod("-Starting S-1-5-xx region cleanUP")
 
         Try
@@ -6300,7 +6271,7 @@ Public Class CleanupEngine
             f.UpdateTextMethod("-End of S-1-5-xx region cleanUP")
             f.log("-End of S-1-5-xx region cleanUP")
         Catch ex As Exception
-            MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
+            MsgBox(msgboxmessage("5"))
             f.log(ex.Message + ex.StackTrace)
         End Try
 
@@ -6366,7 +6337,7 @@ Public Class CleanupEngine
             End If
             f.UpdateTextMethod("-End Classesroot ,installer\products cleanup")
         Catch ex As Exception
-            MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
+            MsgBox(msgboxmessage("5"))
             f.log(ex.Message + ex.StackTrace)
         End Try
 
@@ -6435,7 +6406,7 @@ Public Class CleanupEngine
             End If
             f.UpdateTextMethod("-End localmachine ,installer\products cleanup")
         Catch ex As Exception
-            MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
+            MsgBox(msgboxmessage("5"))
             f.log(ex.Message + ex.StackTrace)
         End Try
 
@@ -6508,7 +6479,7 @@ Public Class CleanupEngine
             Next
             f.UpdateTextMethod("-End currentuser ,installer\products cleanup")
         Catch ex As Exception
-            MsgBox("A problem occured in one of the module, send your DDU logs to the developer.")
+            MsgBox(msgboxmessage("5"))
             f.log(ex.Message + ex.StackTrace)
         End Try
 
