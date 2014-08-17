@@ -5263,11 +5263,11 @@ Public Class Form1
                                         For i As Integer = 0 To array.Length - 1
                                             If array(i).ToLower.Contains("pci\cc_03") Then
 
-                                                vendid = child
+                                                vendid = child & "\" & child2
 
                                                 If vendid.ToLower.Contains(vendidexpected.ToLower) Then
                                                     processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                                    processinfo.Arguments = "remove " & Chr(34) & "pci\" & vendid & "*" & Chr(34)
+                                                    processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & "*" & Chr(34)
                                                     processinfo.UseShellExecute = False
                                                     processinfo.CreateNoWindow = True
                                                     processinfo.RedirectStandardOutput = True
