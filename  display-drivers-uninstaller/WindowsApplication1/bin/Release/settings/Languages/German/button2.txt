@@ -1,2 +1,2 @@
-﻿Clean and DO NOT restart.
-(May cause issues like blackscreen)
+﻿Säubern und KEIN Neustart.
+(Kann Problem wie "black screen" verursachen)

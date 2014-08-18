@@ -1,15 +1,15 @@
-﻿Driver Uninstaller (DDU) / Cleaner gemacht für Grafiktreiber.(NVIDIA/AMD)
+﻿Display Driver Uninstaller (DDU) / Cleaner für Grafiktreiber.(NVIDIA/AMD)
 
 
-Es entfernt den Grafiktreiber vom Gerätemanager, den aktuellen und alle vorhergehendenden Treiber vom Windows Treiber
-Store, zusammen mit den Diensten von NVIDIA/AMD. 
+Das Programm entfernt den Grafiktreiber vom Gerätemanager, den aktuellen und alle vorhergehendenden Treiber vom Windows Treiber
+Store, sowie die Dienste von NVIDIA/AMD. 
 
-Der Effekt, nachdem Sie dieses Tool verwendet haben, wird ähnlich sein, als wenn Windows gerade neu installiert wurde.
+Nach der Anwendung des Tools ist der Zustand des Betriebssystems vergleichbar dem Zustand nach einer Neuinstallation.
 
-Dieses Tool arbeitet ähnlich wie Drive Sweeper + oben genannten.
+Dieses Tool arbeitet ähnlich wie Driver Sweeper und die oben genannten Programme.
 
 Falls Sie Probleme bei der Installation älterer oder neuerer Treiber haben sollten, probieren Sie dieses 
-Programm aus, da es einige Berichte gibt, dass es dieses Probleme behebt. 
+Programm aus. Es gibt einige Berichte, dass DDU dieses Probleme beheben kann. 
 
 
 EMPFOHLENE BENUTZUNG:
@@ -17,20 +17,20 @@ EMPFOHLENE BENUTZUNG:
 -Ich persönlich empfehle, dass Sie das Internet trennen, während Sie das Programm benutzen, da es manchmal 
 nach der Deinstallation vorkommen kann, dass Windows Update ohne Genehmigung einen Treiber neu-installiert.
 
--Dieses Programm kann im normalen Windows Modus benutzt werden, für absolute Stabilität bei der Benutzung
+-Dieses Programm kann im normalen Windows Modus benutzt werden, für absolute Stabilität bei der Benutzung des Tools
 ist der Abgesicherte Modus aber immer die beste Wahl.
 
--Wir möchten Feedback von Ihnen sammeln. Teilt uns mit, ob Sie Erfolg hatten oder nicht. Machen Sie ein Backup 
-oder ein Wiederherstellungspunkt (aber es sollte in der Regel ziemlich sicher sein). 
+-Wir würden gerne Feedback von Ihnen erhalten. Bitte teilen Sie uns mit, ob Sie Erfolg hatten oder nicht. Erstellen Sie ein Backup
+oder einen Wiederherstellungspunkt (in der Regel sollte es jedoch ziemlich sicher sein). 
 
--Wenn Sie jemals ein Treiber-Problem hatten und dieses Tool half mit einigen Fehlern, 
+-Wenn Sie jemals ein Treiber-Problem hatten und dieses Tool Ihnen geholfen hat Fehler zu beheben, 
 teilen Sie bitte Ihr Ergebnis mit.
 
-Beachten Sie, dass NVIDIA/AMD nichts mit alledem hier zu tun hatte. Wir arbeiten nicht für NVIDIA/AMD 
-und sie sollten nicht haftbar für Schäden oder Fehler gemacht werden, die ihr System betreffen. 
+Beachten Sie, dass NVIDIA/AMD nichts mit alledem hier zu tun haben. Wir arbeiten nicht für NVIDIA/AMD 
+und sie werden für Schäden oder Fehler die Ihr System betreffen nicht haftbar gemacht. 
 -------------------------------
 
-Kreiert von Wagnard.
+Produziert von Wagnard.
 
 Mitinhaber: Shady7557
 
