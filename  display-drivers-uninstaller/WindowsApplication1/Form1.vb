@@ -90,6 +90,7 @@ Public Class Form1
     Dim systemrestore As Boolean
     Public donotremoveamdhdaudiobusfiles As Boolean = True
     Public msgboxmessage As String()
+    Public UpdateTextMethodmessage As String()
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -185,7 +186,7 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        UpdateTextMethod("-Executing Driver Store cleanUP(Delete OEM step)...")
+        UpdateTextMethod(UpdateTextMethodmessage("0"))
 
         While oem > -1 And oem <> Nothing
             Dim position As Integer = reply.IndexOf("Provider:", oem)
@@ -328,7 +329,7 @@ Public Class Form1
     End Sub
     Private Sub cleanamdfolders()
         'Delete AMD data Folders
-        UpdateTextMethod("Cleaning Directory")
+        UpdateTextMethod(UpdateTextMethodmessage("1"))
 
         log("Cleaning Directory (Please Wait...)")
 
@@ -680,7 +681,7 @@ Public Class Form1
         Next
     End Sub
     Private Sub cleanamd()
-        UpdateTextMethod("Cleaning known Regkeys... May take a minute or two.")
+        UpdateTextMethod(UpdateTextMethodmessage("2"))
         log("Cleaning known Regkeys")
 
 
@@ -1959,7 +1960,7 @@ Public Class Form1
         'Delete NVIDIA data Folders
         'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
 
-        UpdateTextMethod("-Cleaning UpdatusUser users ac if present")
+        UpdateTextMethod(UpdateTextMethodmessage("3"))
         log("Cleaning UpdatusUser users ac if present")
 
         Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName.ToString())
@@ -1972,7 +1973,7 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        UpdateTextMethod("Cleaning Directory")
+        UpdateTextMethod(UpdateTextMethodmessage("4"))
 
         log("Cleaning Directory")
 
@@ -2587,7 +2588,7 @@ Public Class Form1
         '-----------------
         'Registry Cleaning
         '-----------------
-        UpdateTextMethod("Starting Registry CleanUP")
+        UpdateTextMethod(UpdateTextMethodmessage("5"))
         log("Starting reg cleanUP... May take a minute or two.")
 
 
@@ -3721,7 +3722,7 @@ Public Class Form1
     End Sub
     Private Sub cleanintelfolders()
 
-        UpdateTextMethod("Cleaning Directory")
+        UpdateTextMethod(UpdateTextMethodmessage("4"))
 
         log("Cleaning Directory")
 
@@ -3751,7 +3752,7 @@ Public Class Form1
     End Sub
     Private Sub cleanintel()
 
-        UpdateTextMethod("Cleaning Registry")
+        UpdateTextMethod(UpdateTextMethodmessage("5"))
 
         log("Cleaning registry")
 
@@ -3933,11 +3934,11 @@ Public Class Form1
                 log(ex.StackTrace)
             End Try
         End If
-
+        UpdateTextMethod(UpdateTextMethodmessage("6"))
     End Sub
     Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
 
-        UpdateTextMethod("-Starting the removal of nVidia Optimus UpperFilter if present.")
+        UpdateTextMethod(UpdateTextMethodmessage("7"))
 
         log("Starting the removal of nVidia Optimus UpperFilter if present.")
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -3954,7 +3955,6 @@ Public Class Form1
                                     If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
                                         For i As Integer = 0 To array.Length - 1
                                             If (Not checkvariables.isnullorwhitespace(array(i))) AndAlso (array(i).ToLower.Contains("nvpciflt")) Then
-                                                UpdateTextMethod("-nVidia Optimus UpperFilter Found." + vbNewLine)
 
                                                 log("nVidia Optimus UpperFilter Found.")
 
@@ -3999,7 +3999,7 @@ Public Class Form1
             Exit Sub
         End If
         If reboot = False And shutdown = False Then
-            UpdateTextMethod("-Scanning for new device... ")
+            UpdateTextMethod(UpdateTextMethodmessage("8"))
             log("Scanning for new device...")
             Dim proc4 As New Process
             proc4.StartInfo = scan
@@ -4014,7 +4014,7 @@ Public Class Form1
             End If
 
         End If
-        UpdateTextMethod("-Clean uninstall completed!")
+        UpdateTextMethod(UpdateTextMethodmessage("9"))
 
         log("Clean uninstall completed!")
 
@@ -4442,7 +4442,7 @@ Public Class Form1
 
         Me.TopMost = False
 
-        TextBox1.Text = TextBox1.Text + "DDU Version: " + Application.ProductVersion + vbNewLine
+        UpdateTextMethod(UpdateTextMethodmessage("10") + Application.ProductVersion)
         log("DDU Version: " + Application.ProductVersion)
         log("OS: " + Label2.Text)
         log("Architecture: " & ddudrfolder)
@@ -4502,12 +4502,12 @@ Public Class Form1
                     If subregkey IsNot Nothing Then
                         If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc").ToString) Then
                             currentdriverversion = subregkey.GetValue("DriverDesc").ToString
-                            UpdateTextMethod("GPU #" + child + " Detected : " + currentdriverversion)
+                            UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + UpdateTextMethodmessage("12") + " " + currentdriverversion)
                             log("GPU #" + child + " Detected : " + currentdriverversion)
                         End If
                         If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId").ToString) Then
                             currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
-                            UpdateTextMethod("GPU DeviceId : " + currentdriverversion)
+                            UpdateTextMethod(UpdateTextMethodmessage("13") + " " + currentdriverversion)
                             log("GPU DeviceId : " + currentdriverversion)
                             If currentdriverversion.ToLower.Contains("ven_8086") Then
                                 ComboBox1.SelectedIndex = 2
@@ -4522,17 +4522,17 @@ Public Class Form1
 
                         If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverVersion").ToString) Then
                             currentdriverversion = subregkey.GetValue("DriverVersion").ToString
-                            UpdateTextMethod("Detected Driver(s) Version(s) : " + currentdriverversion)
+                            UpdateTextMethod(UpdateTextMethodmessage("14") + " " + currentdriverversion)
                             log("Detected Driver(s) Version(s) : " + currentdriverversion)
                         End If
                         If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfPath").ToString) Then
                             currentdriverversion = subregkey.GetValue("InfPath").ToString
-                            UpdateTextMethod("INF : " + currentdriverversion)
+                            UpdateTextMethod(UpdateTextMethodmessage("15") + " " + currentdriverversion)
                             log("INF : " + currentdriverversion)
                         End If
                         If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfSection").ToString) Then
                             currentdriverversion = subregkey.GetValue("InfSection").ToString
-                            UpdateTextMethod("INF Section : " + currentdriverversion)
+                            UpdateTextMethod(UpdateTextMethodmessage("16") + " " + currentdriverversion)
                             log("INF Section : " + currentdriverversion)
                         End If
                     End If
@@ -4573,7 +4573,7 @@ Public Class Form1
                                 If array(i).ToLower.Contains("pci\cc_03") Then
                                     If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString) Then
                                         currentdriverversion = subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString
-                                        UpdateTextMethod("Not Correctly Installed GPU : " + currentdriverversion)
+                                        UpdateTextMethod(UpdateTextMethodmessage("17") + " " + currentdriverversion)
                                         log("Not Correctly Installed GPU : " + currentdriverversion)
                                         UpdateTextMethod("--------------")
                                         log("--------------")
@@ -4752,7 +4752,7 @@ Public Class Form1
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
-        UpdateTextMethod("Deleting some specials folders, it may take some times...")
+        UpdateTextMethod(UpdateTextMethodmessage("18"))
         log("Deleting some specials folders, it could take some times...")
         'ensure that this folder can be accessed with current user ac.
         If Not Directory.Exists(folder) Then
@@ -5064,7 +5064,7 @@ Public Class Form1
                      Handles BackgroundWorker1.DoWork
 
 
-        UpdateTextMethod("CleanUP started...")
+        UpdateTextMethod(UpdateTextMethodmessage("19"))
 
         preventclose = True
         Invoke(Sub() Button1.Enabled = False)
@@ -5115,9 +5115,9 @@ Public Class Form1
                 provider = "Provider: Intel"
             End If
 
-            UpdateTextMethod("-Uninstalling " & combobox1value & " driver... ")
+            UpdateTextMethod(UpdateTextMethodmessage("20") + " " & combobox1value & " " + UpdateTextMethodmessage("21"))
             log("Uninstalling " + combobox1value + " driver ...")
-            UpdateTextMethod("-Executing ddudr Remove , Please wait(can take a few minutes) ")
+            UpdateTextMethod(UpdateTextMethodmessage("22"))
 
             Try
                 If combobox1value = "NVIDIA" Then
@@ -5137,7 +5137,6 @@ Public Class Form1
 
                 Try
                     If combobox1value = "AMD" Then
-                        UpdateTextMethod("Trying to remove the AMD HD Audio BUS")
                         log("Trying to remove the AMD HD Audio BUS")
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
                         If regkey IsNot Nothing Then
@@ -5174,7 +5173,6 @@ Public Class Form1
                                                                                     process.WaitForExit()
                                                                                     log(reply2)
                                                                                     log("AMD HD Audio Bus Removed !")
-                                                                                    UpdateTextMethod("AMD HD Audio Bus Removed !")
                                                                                 End If
                                                                             End If
                                                                         Next
@@ -5210,7 +5208,6 @@ Public Class Form1
                                                 For i As Integer = 0 To array.Length - 1
                                                     If Not checkvariables.isnullorwhitespace(array(i)) Then
                                                         If array(i).ToLower.Contains("amdkmafd") Then
-                                                            UpdateTextMethod("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles")
                                                             log("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
                                                             donotremoveamdhdaudiobusfiles = True
                                                         End If
@@ -5329,12 +5326,12 @@ Public Class Form1
             '        card1 = reply.IndexOf("PCI\", card1 + 1)
             '    End While
             'End If
-            UpdateTextMethod("GPU(s) Removed from Device Manager.")
+            UpdateTextMethod(UpdateTextMethodmessage("23"))
             log("DDUDR Remove Display Driver: Complete.")
 
             cleandriverstore()
 
-            UpdateTextMethod("Executing DDUDR Remove Audio controler.")
+            UpdateTextMethod(UpdateTextMethodmessage("24"))
             log("Executing DDUDR Remove Audio controler.")
             'Next
             'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
@@ -5392,7 +5389,7 @@ Public Class Form1
                 log(ex.Message + ex.StackTrace)
             End Try
 
-            UpdateTextMethod("HD audio adapters Removed !")
+            UpdateTextMethod(UpdateTextMethodmessage("25"))
 
 
         log("DDUDR Remove Audio controler Complete.")
@@ -5464,11 +5461,10 @@ Public Class Form1
                     log(ex.Message + ex.StackTrace)
                 End Try
 
-                UpdateTextMethod("3D Vision USB Adapter Removed from Device Manager.")
+                UpdateTextMethod(UpdateTextMethodmessage("26"))
 
                 Try
                     'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
-                    UpdateTextMethod("Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!")
 
                     log("Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!")
                     processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
@@ -5528,8 +5524,7 @@ Public Class Form1
 
         If combobox1value = "INTEL" Then
             'Removing Intel WIdI bus Enumerator
-            UpdateTextMethod("Removing IWD Bus Enumerator")
-            log("Removing IWD Bus Enumerator")
+                log("Removing IWD Bus Enumerator")
             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
             processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
             processinfo.UseShellExecute = False
@@ -5627,8 +5622,8 @@ Public Class Form1
                 card1 = reply.IndexOf("DISPLAY\", card1 + 1)
 
             End While
-            UpdateTextMethod("Monitors and Hidden monitors removed !")
-            UpdateTextMethod("'ddudr' Remove complete")
+            UpdateTextMethod(UpdateTextMethodmessage("27"))
+            UpdateTextMethod(UpdateTextMethodmessage("28"))
 
 
             If combobox1value = "AMD" Then
@@ -5898,7 +5893,7 @@ Public Class Form1
             Next
 
             msgboxmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\msgbox.txt") '// add each line as String Array.
-
+            UpdateTextMethodmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\updatetextmethod.txt") '// add each line as String Array.
         Catch ex As Exception
             log(ex.Message)
         End Try
@@ -6170,7 +6165,8 @@ Public Class CleanupEngine
         Dim wantedvalue As String = Nothing
         Dim removephysx As Boolean = f.removephysx
         Dim msgboxmessage As String() = f.msgboxmessage
-        f.UpdateTextMethod("-Starting S-1-5-xx region cleanUP")
+        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
+        f.UpdateTextMethod(UpdateTextMethodmessage("29"))
 
         Try
             f.log("-Starting S-1-5-xx region cleanUP")
@@ -6268,14 +6264,14 @@ Public Class CleanupEngine
                     End If
                 Next
             End If
-            f.UpdateTextMethod("-End of S-1-5-xx region cleanUP")
+            f.UpdateTextMethod(updateTextMethodmessage("30"))
             f.log("-End of S-1-5-xx region cleanUP")
         Catch ex As Exception
             MsgBox(msgboxmessage("5"))
             f.log(ex.Message + ex.StackTrace)
         End Try
 
-        f.UpdateTextMethod("-Begin Classesroot ,installer\products cleanup")
+        f.UpdateTextMethod(updateTextMethodmessage("31"))
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
       ("Installer\Products", True)
@@ -6335,14 +6331,14 @@ Public Class CleanupEngine
                     End If
                 Next
             End If
-            f.UpdateTextMethod("-End Classesroot ,installer\products cleanup")
+            f.UpdateTextMethod(updateTextMethodmessage("32"))
         Catch ex As Exception
             MsgBox(msgboxmessage("5"))
             f.log(ex.Message + ex.StackTrace)
         End Try
 
 
-        f.UpdateTextMethod("-Start localmachine ,installer\products cleanup")
+        f.UpdateTextMethod(updateTextMethodmessage("33"))
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -6404,13 +6400,13 @@ Public Class CleanupEngine
                     End If
                 Next
             End If
-            f.UpdateTextMethod("-End localmachine ,installer\products cleanup")
+            f.UpdateTextMethod(updateTextMethodmessage("34"))
         Catch ex As Exception
             MsgBox(msgboxmessage("5"))
             f.log(ex.Message + ex.StackTrace)
         End Try
 
-        f.UpdateTextMethod("-Start currentuser ,installer\products cleanup")
+        f.UpdateTextMethod(updateTextMethodmessage("35"))
         Try
             For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
                 If Not checkvariables.isnullorwhitespace(users) Then
@@ -6477,7 +6473,7 @@ Public Class CleanupEngine
                     End If
                 End If
             Next
-            f.UpdateTextMethod("-End currentuser ,installer\products cleanup")
+            f.UpdateTextMethod(updateTextMethodmessage("36"))
         Catch ex As Exception
             MsgBox(msgboxmessage("5"))
             f.log(ex.Message + ex.StackTrace)
@@ -6487,8 +6483,9 @@ Public Class CleanupEngine
     Public Sub cleanserviceprocess(ByVal services As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
         Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
+        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
 
-        f.UpdateTextMethod("Cleaning process/services...")
+        f.UpdateTextMethod(updateTextMethodmessage("37"))
         f.log("Cleaning Process/Services...")
 
         'STOP AMD service
@@ -6523,7 +6520,7 @@ Public Class CleanupEngine
             End If
         Next
         System.Threading.Thread.Sleep(10)
-        f.UpdateTextMethod("Process/Services CleanUP Complete")
+        f.UpdateTextMethod(updateTextMethodmessage("38"))
         f.log("Process/Services CleanUP Complete")
     End Sub
     Public Sub Pnplockdownfiles(ByVal driverfiles As String())
