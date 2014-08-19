@@ -143,6 +143,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property NV_GF_GTX_preferred_badge_FOR_WEB_ONLY() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("NV_GF_GTX_preferred_badge_FOR_WEB_ONLY", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property Nvidia_GeForce_Logo() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Nvidia_GeForce_Logo", resourceCulture)
