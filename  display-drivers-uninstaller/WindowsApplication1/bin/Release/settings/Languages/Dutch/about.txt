@@ -36,3 +36,5 @@ Tester: Dellon132
 Logos: juanchacin
 
 Bedankt aan iedereen die hun systeem in gevaar brengen voor het testen. (speciale dank aan Dellon132)
+
+Vertaler: MojoW
