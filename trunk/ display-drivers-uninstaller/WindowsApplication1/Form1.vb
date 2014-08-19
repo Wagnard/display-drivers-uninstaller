@@ -4502,7 +4502,7 @@ Public Class Form1
                     If subregkey IsNot Nothing Then
                         If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc").ToString) Then
                             currentdriverversion = subregkey.GetValue("DriverDesc").ToString
-                            UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + UpdateTextMethodmessage("12") + " " + currentdriverversion)
+                            UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child +" "+ UpdateTextMethodmessage("12") + " " + currentdriverversion)
                             log("GPU #" + child + " Detected : " + currentdriverversion)
                         End If
                         If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId").ToString) Then
