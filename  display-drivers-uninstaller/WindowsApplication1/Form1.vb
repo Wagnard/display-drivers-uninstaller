@@ -4511,12 +4511,18 @@ Public Class Form1
                             log("GPU DeviceId : " + currentdriverversion)
                             If currentdriverversion.ToLower.Contains("ven_8086") Then
                                 ComboBox1.SelectedIndex = 2
+                                PictureBox2.Location = New Point(333, 92)
+                                PictureBox2.Size = New Size(158, 126)
                             End If
                             If currentdriverversion.ToLower.Contains("ven_10de") Then
                                 ComboBox1.SelectedIndex = 0
+                                PictureBox2.Location = New Point(286, 92)
+                                PictureBox2.Size = New Size(252, 123)
                             End If
                             If currentdriverversion.ToLower.Contains("ven_1002") Then
                                 ComboBox1.SelectedIndex = 1
+                                PictureBox2.Location = New Point(333, 92)
+                                PictureBox2.Size = New Size(158, 126)
                             End If
                         End If
 
@@ -4979,7 +4985,9 @@ Public Class Form1
             End If
             CheckBox3.Visible = True
             CheckBox4.Visible = True
-            PictureBox2.Image = My.Resources.Nvidia_GeForce_Logo
+            PictureBox2.Location = New Point(286, 92)
+            PictureBox2.Size = New Size(252, 123)
+            PictureBox2.Image = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
         End If
 
         If combobox1value = "AMD" Then
@@ -5000,12 +5008,16 @@ Public Class Form1
             End If
             CheckBox3.Visible = True
             CheckBox4.Visible = False
+            PictureBox2.Location = New Point(333, 92)
+            PictureBox2.Size = New Size(158, 126)
             PictureBox2.Image = My.Resources.RadeonLogo1
         End If
 
         If ComboBox1.Text = "INTEL" Then
             CheckBox3.Visible = False
             CheckBox4.Visible = False
+            PictureBox2.Location = New Point(333, 92)
+            PictureBox2.Size = New Size(158, 126)
             PictureBox2.Image = My.Resources.intel_logo
         End If
 
@@ -5032,6 +5044,7 @@ Public Class Form1
         Dim StartInfo As New WindowsApi.STARTUPINFOW
         StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
+        'WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\settings\paypal.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo)
         WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\settings\paypal.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo)
         If Not UserTokenHandle = IntPtr.Zero Then
             WindowsApi.CloseHandle(UserTokenHandle)

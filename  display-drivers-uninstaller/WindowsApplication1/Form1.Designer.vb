@@ -51,11 +51,11 @@ Partial Class Form1
         Me.Button4 = New System.Windows.Forms.Button()
         Me.ComboBox2 = New System.Windows.Forms.ComboBox()
         Me.Label12 = New System.Windows.Forms.Label()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.CheckBox4 = New System.Windows.Forms.CheckBox()
         Me.CheckBox5 = New System.Windows.Forms.CheckBox()
         Me.Label11 = New System.Windows.Forms.Label()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -290,27 +290,6 @@ Partial Class Form1
         Me.Label12.TabIndex = 25
         Me.Label12.Text = "Language :"
         '
-        'PictureBox2
-        '
-        Me.PictureBox2.ErrorImage = Nothing
-        Me.PictureBox2.Image = Global.WindowsApplication1.My.Resources.Resources.Nvidia_GeForce_Logo
-        Me.PictureBox2.Location = New System.Drawing.Point(333, 92)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(158, 126)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 20
-        Me.PictureBox2.TabStop = False
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.WindowsApplication1.My.Resources.Resources.btn_donate_LG
-        Me.PictureBox1.InitialImage = CType(resources.GetObject("PictureBox1.InitialImage"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(495, 468)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(93, 28)
-        Me.PictureBox1.TabIndex = 18
-        Me.PictureBox1.TabStop = False
-        '
         'CheckBox4
         '
         Me.CheckBox4.AutoSize = True
@@ -338,6 +317,27 @@ Partial Class Form1
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(0, 13)
         Me.Label11.TabIndex = 22
+        '
+        'PictureBox2
+        '
+        Me.PictureBox2.ErrorImage = Nothing
+        Me.PictureBox2.Image = Global.WindowsApplication1.My.Resources.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
+        Me.PictureBox2.Location = New System.Drawing.Point(333, 92)
+        Me.PictureBox2.Name = "PictureBox2"
+        Me.PictureBox2.Size = New System.Drawing.Size(158, 126)
+        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox2.TabIndex = 20
+        Me.PictureBox2.TabStop = False
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.WindowsApplication1.My.Resources.Resources.btn_donate_LG
+        Me.PictureBox1.InitialImage = CType(resources.GetObject("PictureBox1.InitialImage"), System.Drawing.Image)
+        Me.PictureBox1.Location = New System.Drawing.Point(495, 468)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(93, 28)
+        Me.PictureBox1.TabIndex = 18
+        Me.PictureBox1.TabStop = False
         '
         'Form1
         '

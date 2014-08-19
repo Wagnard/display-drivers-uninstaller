@@ -208,6 +208,7 @@
   <ItemGroup>
     <Content Include="DDU.ico" />
     <Content Include="Resources\ddu logo3.png" />
+    <None Include="Resources\NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg" />
     <None Include="Resources\paexec.exe" />
     <None Include="Resources\xp64\ddudr.exe" />
     <None Include="Resources\intel_logo.png" />
