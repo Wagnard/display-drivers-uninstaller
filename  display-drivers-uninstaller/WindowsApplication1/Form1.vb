@@ -2098,6 +2098,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("ledvisualizer") Or _
                             child.ToLower.Contains("shadowplay") Or _
+                            child.ToLower.Contains("gfexperience") Or _
                             child.ToLower.Contains("shield apps") Then
                             Try
                                 My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -4044,6 +4045,29 @@ Public Class Form1
             System.IO.File.WriteAllBytes(myExe, My.Resources.config)
         End If
 
+        ''checking if we must open the webpage for donation (when not using system priviledge)
+        'If Not MyIdentity.IsSystem Then
+        '    Try
+        '        Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
+
+        '        For i As Integer = 0 To lines.Length - 1
+        '            If Not String.IsNullOrEmpty(lines(i)) Then
+        '                If lines(i).ToLower.Contains("donate") Then
+        '                    Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+        '                    process.Start(webAddress)
+        '                    System.Array.Resize(lines, lines.Length - 1)
+        '                    System.IO.File.WriteAllLines(Application.StartupPath & "\settings\config.cfg", lines)
+        '                    preventclose = False
+        '                    Me.Close()
+        '                    Exit Sub
+        '                End If
+        '            End If
+        '        Next
+        '    Catch ex As Exception
+        '        MsgBox(ex.Message + ex.StackTrace)
+        '    End Try
+        'End If
+
         Try
             My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).CreateSubKey("PAexec")
             My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\PAexec", True).SetValue("", "Service")
@@ -4105,13 +4129,6 @@ Public Class Form1
             End If
         End If
 
-        'check for admin before trying to do things, as this could cause errors and message boxes for rebooting into startup without admin are useless because you can't bcdedit without admin rights, however the next messagebox still plays the sound effect, for msgboxstyle.information. Not sure if this can be fixed.
-        If Not isElevated Then
-            MsgBox(msgboxmessage("2"), MsgBoxStyle.Critical)
-            preventclose = False
-            Me.Close()
-            Exit Sub
-        End If
 
         '----------------
         'language section
@@ -4204,6 +4221,14 @@ Public Class Form1
 
         End If
 
+        'check for admin before trying to do things, as this could cause errors and message boxes for rebooting into startup without admin are useless because you can't bcdedit without admin rights, however the next messagebox still plays the sound effect, for msgboxstyle.information. Not sure if this can be fixed.
+        If Not isElevated Then
+
+            MsgBox(msgboxmessage("2"), MsgBoxStyle.Critical)
+            preventclose = False
+            Me.Close()
+            Exit Sub
+        End If
 
         '----------------------
         'check computer/os info
@@ -4490,62 +4515,66 @@ Public Class Form1
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames
+                    If Not child.ToLower.Contains("properties") Then
 
-            For Each child As String In regkey.GetSubKeyNames
-                If Not child.ToLower.Contains("properties") Then
-                    Try
                         subregkey = regkey.OpenSubKey(child)
-                    Catch ex As Exception
-                        Continue For
-                    End Try
+                        If subregkey IsNot Nothing Then
 
-                    If subregkey IsNot Nothing Then
-                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc").ToString) Then
-                            currentdriverversion = subregkey.GetValue("DriverDesc").ToString
-                            UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child +" "+ UpdateTextMethodmessage("12") + " " + currentdriverversion)
-                            log("GPU #" + child + " Detected : " + currentdriverversion)
-                        End If
-                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId").ToString) Then
-                            currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
-                            UpdateTextMethod(UpdateTextMethodmessage("13") + " " + currentdriverversion)
-                            log("GPU DeviceId : " + currentdriverversion)
-                            If currentdriverversion.ToLower.Contains("ven_8086") Then
-                                ComboBox1.SelectedIndex = 2
-                                PictureBox2.Location = New Point(333, 92)
-                                PictureBox2.Size = New Size(158, 126)
+                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc").ToString) Then
+                                currentdriverversion = subregkey.GetValue("DriverDesc").ToString
+                                UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
+                                log("GPU #" + child + " Detected : " + currentdriverversion)
                             End If
-                            If currentdriverversion.ToLower.Contains("ven_10de") Then
-                                ComboBox1.SelectedIndex = 0
-                                PictureBox2.Location = New Point(286, 92)
-                                PictureBox2.Size = New Size(252, 123)
+                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId").ToString) Then
+                                currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
+                                UpdateTextMethod(UpdateTextMethodmessage("13") + " " + currentdriverversion)
+                                log("GPU DeviceId : " + currentdriverversion)
+                                If currentdriverversion.ToLower.Contains("ven_8086") Then
+                                    ComboBox1.SelectedIndex = 2
+                                    PictureBox2.Location = New Point(333, 92)
+                                    PictureBox2.Size = New Size(158, 126)
+                                End If
+                                If currentdriverversion.ToLower.Contains("ven_10de") Then
+                                    ComboBox1.SelectedIndex = 0
+                                    PictureBox2.Location = New Point(286, 92)
+                                    PictureBox2.Size = New Size(252, 123)
+                                End If
+                                If currentdriverversion.ToLower.Contains("ven_1002") Then
+                                    ComboBox1.SelectedIndex = 1
+                                    PictureBox2.Location = New Point(333, 92)
+                                    PictureBox2.Size = New Size(158, 126)
+                                End If
                             End If
-                            If currentdriverversion.ToLower.Contains("ven_1002") Then
-                                ComboBox1.SelectedIndex = 1
-                                PictureBox2.Location = New Point(333, 92)
-                                PictureBox2.Size = New Size(158, 126)
-                            End If
-                        End If
 
-                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverVersion").ToString) Then
-                            currentdriverversion = subregkey.GetValue("DriverVersion").ToString
-                            UpdateTextMethod(UpdateTextMethodmessage("14") + " " + currentdriverversion)
-                            log("Detected Driver(s) Version(s) : " + currentdriverversion)
+                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString")) Then
+                                currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString")
+                                UpdateTextMethod("Vbios :" + " " + currentdriverversion)
+                                log("Vbios : " + currentdriverversion)
+                            End If
+
+                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverVersion").ToString) Then
+                                currentdriverversion = subregkey.GetValue("DriverVersion").ToString
+                                UpdateTextMethod(UpdateTextMethodmessage("14") + " " + currentdriverversion)
+                                log("Detected Driver(s) Version(s) : " + currentdriverversion)
+                            End If
+                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfPath").ToString) Then
+                                currentdriverversion = subregkey.GetValue("InfPath").ToString
+                                UpdateTextMethod(UpdateTextMethodmessage("15") + " " + currentdriverversion)
+                                log("INF : " + currentdriverversion)
+                            End If
+                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfSection").ToString) Then
+                                currentdriverversion = subregkey.GetValue("InfSection").ToString
+                                UpdateTextMethod(UpdateTextMethodmessage("16") + " " + currentdriverversion)
+                                log("INF Section : " + currentdriverversion)
+                            End If
                         End If
-                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfPath").ToString) Then
-                            currentdriverversion = subregkey.GetValue("InfPath").ToString
-                            UpdateTextMethod(UpdateTextMethodmessage("15") + " " + currentdriverversion)
-                            log("INF : " + currentdriverversion)
-                        End If
-                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfSection").ToString) Then
-                            currentdriverversion = subregkey.GetValue("InfSection").ToString
-                            UpdateTextMethod(UpdateTextMethodmessage("16") + " " + currentdriverversion)
-                            log("INF Section : " + currentdriverversion)
-                        End If
+                        UpdateTextMethod("--------------")
+                        log("--------------")
                     End If
-                    UpdateTextMethod("--------------")
-                    log("--------------")
-                End If
-            Next
+                Next
+            End If
         Catch ex As Exception
             log(ex.Message + ex.StackTrace)
         End Try
@@ -5044,8 +5073,24 @@ Public Class Form1
         Dim StartInfo As New WindowsApi.STARTUPINFOW
         StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-        'WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\settings\paypal.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo)
-        WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\settings\paypal.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo)
+
+        'Try
+        '    Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
+
+        '    'if we endup here, it mean the value is not found on .cfg so we add it.
+        '    System.Array.Resize(lines, lines.Length + 1)
+        '    lines(lines.Length - 1) = "Donate"
+        '    System.IO.File.WriteAllLines(Application.StartupPath & "\settings\config.cfg", lines)
+
+        'Catch ex As Exception
+        '    MsgBox(ex.Message + ex.StackTrace)
+        'End Try
+
+        If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\settings\paypal.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+        Else
+            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+        End If
+
         If Not UserTokenHandle = IntPtr.Zero Then
             WindowsApi.CloseHandle(UserTokenHandle)
         End If
@@ -6996,11 +7041,9 @@ Public Class CleanupEngine
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        Try
-                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
+
+                        subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
+
                         If subregkey IsNot Nothing Then
                             If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
                                 wantedvalue = subregkey.GetValue("").ToString
@@ -7043,11 +7086,9 @@ Public Class CleanupEngine
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
                         If checkvariables.isnullorwhitespace(child) = False Then
-                            Try
-                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\Interface\" & child, False)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
+
+                            subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\Interface\" & child, False)
+
                             If subregkey IsNot Nothing Then
                                 If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
                                     wantedvalue = subregkey.GetValue("").ToString
@@ -7180,7 +7221,7 @@ Public Class WindowsApi
     <DllImport("advapi32.dll", EntryPoint:="CreateProcessAsUserW", SetLastError:=True)> _
     Public Shared Function CreateProcessAsUser(<InAttribute()> ByVal hToken As IntPtr, _
                                                     <InAttribute(), MarshalAs(UnmanagedType.LPWStr)> ByVal lpApplicationName As String, _
-                                                    ByVal lpCommandLine As System.IntPtr, _
+                                                    ByVal lpCommandLine As IntPtr, _
                                                     <InAttribute()> ByVal lpProcessAttributes As IntPtr, _
                                                     <InAttribute()> ByVal lpThreadAttributes As IntPtr, _
                                                     <MarshalAs(UnmanagedType.Bool)> ByVal bInheritHandles As Boolean, _
