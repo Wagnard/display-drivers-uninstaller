@@ -713,7 +713,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         subregkey = regkey.OpenSubKey(child & "\Video", False)
                         If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("Service").ToString) = False Then
+                            If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
                                 If subregkey.GetValue("Service").ToString.ToLower = "amdkmdap" Then
                                     Try
                                         My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
@@ -734,7 +734,7 @@ Public Class Form1
         'end control/video
         '-----------------
 
-        log("Instance lass cleanUP")
+        log("Instance class cleanUP")
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", False)
             If regkey IsNot Nothing Then
@@ -833,6 +833,73 @@ Public Class Form1
                                             End If
                                         End If
                                     Next
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.StackTrace)
+            End Try
+        End If
+
+        log("MediaFoundation cleanUP")
+        Try
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transforms", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+
+                        If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("")) Then
+                            If regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd d3d11 hardware mft") Or _
+                                    regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd fast (dnd) decoder") Or _
+                                     regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd h.264 hardware mft encoder") Or _
+                                    regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd playback decoder mft") Then
+
+                                For Each child2 As String In regkey.OpenSubKey("Categories", False).GetSubKeyNames
+                                    Try
+                                        regkey.OpenSubKey("Categories\" & child2, True).DeleteSubKeyTree(child)
+                                    Catch ex As Exception
+                                    End Try
+                                Next
+
+                                Try
+                                    regkey.DeleteSubKeyTree(child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+        If IntPtr.Size = 8 Then
+            Try
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+
+                            If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("")) Then
+                                If regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd d3d11 hardware mft") Or _
+                                    regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd fast (dnd) decoder") Or _
+                                    regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd h.264 hardware mft encoder") Or _
+                                    regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd playback decoder mft") Then
+
+                                    For Each child2 As String In regkey.OpenSubKey("Categories", False).GetSubKeyNames
+                                        Try
+                                            regkey.OpenSubKey("Categories\" & child2, True).DeleteSubKeyTree(child)
+                                        Catch ex As Exception
+                                        End Try
+                                    Next
+
+                                    Try
+                                        regkey.DeleteSubKeyTree(child)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
                         End If
@@ -4548,11 +4615,15 @@ Public Class Form1
                                 End If
                             End If
 
-                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString")) Then
-                                currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString")
-                                UpdateTextMethod("Vbios :" + " " + currentdriverversion)
-                                log("Vbios : " + currentdriverversion)
-                            End If
+                            Try
+                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString").ToString) Then
+                                    currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
+                                    UpdateTextMethod("Vbios :" + " " + currentdriverversion)
+                                    log("Vbios : " + currentdriverversion)
+                                End If
+                            Catch ex As Exception
+                            End Try
+
 
                             If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverVersion").ToString) Then
                                 currentdriverversion = subregkey.GetValue("DriverVersion").ToString
