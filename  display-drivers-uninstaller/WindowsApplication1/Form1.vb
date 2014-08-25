@@ -4616,10 +4616,15 @@ Public Class Form1
                             End If
 
                             Try
-                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString").ToString) Then
-                                    currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
-                                    UpdateTextMethod("Vbios :" + " " + currentdriverversion)
-                                    log("Vbios : " + currentdriverversion)
+                                If subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
+                                    UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
+                                    log("Vbios :" + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
+                                Else
+                                    If Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString").ToString) Then
+                                        currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
+                                        UpdateTextMethod("Vbios :" + " " + currentdriverversion)
+                                        log("Vbios : " + currentdriverversion)
+                                    End If
                                 End If
                             Catch ex As Exception
                             End Try
@@ -6132,7 +6137,22 @@ Public Class Form1
         End If
 
     End Sub
-
+    Public Function GetREG_BINARY(ByVal Path As String, ByVal Value As String) As String
+        Dim Data() As Byte = CType(Microsoft.Win32.Registry.GetValue(Path, Value, Nothing), Byte())
+        If Data Is Nothing Then Return "N/A"
+        Dim Result As String = String.Empty
+        For j As Integer = 0 To Data.Length - 1
+            Result &= Hex(Data(j)).PadLeft(2, "0"c) & ""
+        Next
+        Return Result
+    End Function
+    Public Function HexToString(ByVal Data As String) As String
+        Dim com As String = ""
+        For x = 0 To Data.Length - 1 Step 2
+            com &= ChrW(CInt("&H" & Data.Substring(x, 2)))
+        Next
+        Return com
+    End Function
 End Class
 Public Class checkvariables
 
