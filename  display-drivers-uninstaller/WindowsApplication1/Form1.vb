@@ -912,39 +912,6 @@ Public Class Form1
 
         log("AppID and clsidleftover cleanUP")
         'old dcom 
-        Try
-            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("amdwdst") Then
-                            If checkvariables.isnullorwhitespace(child) = False Then
-                                Try
-                                    subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID\" + child)
-                                Catch ex As Exception
-                                    Continue For
-                                End Try
-                                If subregkey IsNot Nothing Then
-                                    If checkvariables.isnullorwhitespace(subregkey.GetValue("AppID")) = False Then
-                                        wantedvalue = subregkey.GetValue("AppID").ToString
-                                        Try
-                                            regkey.DeleteSubKeyTree(child)
-                                        Catch ex As Exception
-                                        End Try
-                                        Try
-                                            regkey.DeleteSubKeyTree(wantedvalue)
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
-                                End If
-                            End If
-                        End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
 
         CleanupEngine.clsidleftover(IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\clsidleftover.cfg")) '// add each line as String Array.
 
@@ -2662,56 +2629,8 @@ Public Class Form1
 
         'Deleting DCOM object /classroot
         log("Starting dcom/clsid/appid/typelib cleanup")
-        log("Step 1/2")
-
 
         CleanupEngine.classroot(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\classroot.cfg")) '// add each line as String Array.
-
-        log("Step 2/2")
-
-        Try
-            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID")
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-
-                        If child.ToLower.Contains("comupdatus") Or _
-                           child.ToLower.Contains("nv3d") Or _
-                           child.ToLower.Contains("nvui") Or _
-                           child.ToLower.Contains("nvvsvc") Or _
-                           child.ToLower.Contains("nvxd") Or _
-                           child.ToLower.Contains("gamesconfigserver") Or _
-                           child.ToLower.Contains("nvidia.installer") Or _
-                           child.ToLower.Contains("displayserver") Then
-                            subregkey = regkey.OpenSubKey(child)
-                            If subregkey IsNot Nothing Then
-                                If checkvariables.isnullorwhitespace(subregkey.GetValue("AppID")) = False Then
-                                    wantedvalue = subregkey.GetValue("AppID").ToString
-                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                        Try
-                                            appid = wantedvalue
-                                            If checkvariables.isnullorwhitespace(appid) = False Then
-                                                Try
-                                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & appid)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                        Catch ex As Exception
-                                        End Try
-                                        Try
-                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AppID\" & child)
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
-                                End If
-                            End If
-                        End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
 
         CleanupEngine.clsidleftover(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 
@@ -7114,6 +7033,79 @@ Public Class CleanupEngine
             End Try
         End If
 
+        Try
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        For i As Integer = 0 To clsidleftover.Length - 1
+                            If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                If child.ToLower.Contains(clsidleftover(i)) Then
+                                    subregkey = regkey.OpenSubKey(child)
+                                    If subregkey IsNot Nothing Then
+                                        If checkvariables.isnullorwhitespace(subregkey.GetValue("AppID")) = False Then
+                                            wantedvalue = subregkey.GetValue("AppID").ToString
+                                            If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+
+                                                Try
+                                                    regkey.DeleteSubKeyTree(wantedvalue)
+                                                Catch ex As Exception
+                                                End Try
+
+                                                Try
+                                                    regkey.DeleteSubKeyTree(child)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        next
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            f.log(ex.Message + ex.StackTrace)
+        End Try
+
+        If IntPtr.Size = 8 Then
+            Try
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            For i As Integer = 0 To clsidleftover.Length - 1
+                                If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                    If child.ToLower.Contains(clsidleftover(i)) Then
+                                        subregkey = regkey.OpenSubKey(child)
+                                        If subregkey IsNot Nothing Then
+                                            If checkvariables.isnullorwhitespace(subregkey.GetValue("AppID")) = False Then
+                                                wantedvalue = subregkey.GetValue("AppID").ToString
+                                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+
+                                                    Try
+                                                        regkey.DeleteSubKeyTree(wantedvalue)
+                                                    Catch ex As Exception
+                                                    End Try
+
+                                                    Try
+                                                        regkey.DeleteSubKeyTree(child)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                            End If
+                                        End If
+                                    End If
+                                End If
+                            Next
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                f.log(ex.Message + ex.StackTrace)
+            End Try
+        End If
         f.log("End clsidleftover CleanUP")
     End Sub
 
