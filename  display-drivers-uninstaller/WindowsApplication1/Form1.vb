@@ -4025,6 +4025,7 @@ Public Class Form1
 
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+
         'We try to create config.cfg if non existant.
         If Not (File.Exists(Application.StartupPath & "\settings\config.cfg")) Then
             myExe = Application.StartupPath & "\settings\config.cfg"
@@ -6264,6 +6265,29 @@ Public Class CleanupEngine
                                                         If Not checkvariables.isnullorwhitespace(packages(i)) Then
                                                             If wantedvalue.ToLower.Contains(packages(i).ToLower) And _
                                                                (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
+
+
+
+                                                                'Deleting here the c:\windows\installer entries.
+                                                                Try
+                                                                    If (Not checkvariables.isnullorwhitespace(subregkey.GetValue("LocalPackage"))) AndAlso _
+                                                                      subregkey.GetValue("LocalPackage").ToString.ToLower.Contains(".msi") Then
+                                                                        My.Computer.FileSystem.DeleteFile(subregkey.GetValue("LocalPackage").ToString)
+                                                                    End If
+                                                                Catch ex As Exception
+                                                                End Try
+
+                                                               
+                                                                Try
+                                                                    If (Not checkvariables.isnullorwhitespace(subregkey.GetValue("UninstallString"))) AndAlso _
+                                                                      subregkey.GetValue("UninstallString").ToString.ToLower.Contains("{") Then
+                                                                        Dim folder As String = subregkey.GetValue("UninstallString").ToString
+                                                                        folder = folder.Substring(folder.IndexOf("{"))
+                                                                        f.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
+                                                                    End If
+                                                                Catch ex As Exception
+                                                                    MsgBox(ex.Message + ex.StackTrace)
+                                                                End Try
 
                                                                 Try
                                                                     regkey.DeleteSubKeyTree(child)
