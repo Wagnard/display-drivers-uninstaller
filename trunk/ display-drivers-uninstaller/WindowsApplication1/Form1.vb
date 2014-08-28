@@ -4546,7 +4546,7 @@ Public Class Form1
                                     UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
                                     log("Vbios :" + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
                                 Else
-                                    If Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString").ToString) Then
+                                    If Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString")) Then
                                         currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
                                         UpdateTextMethod("Vbios :" + " " + currentdriverversion)
                                         log("Vbios : " + currentdriverversion)
@@ -4556,17 +4556,17 @@ Public Class Form1
                             End Try
 
 
-                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverVersion").ToString) Then
+                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverVersion")) Then
                                 currentdriverversion = subregkey.GetValue("DriverVersion").ToString
                                 UpdateTextMethod(UpdateTextMethodmessage("14") + " " + currentdriverversion)
                                 log("Detected Driver(s) Version(s) : " + currentdriverversion)
                             End If
-                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfPath").ToString) Then
+                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfPath")) Then
                                 currentdriverversion = subregkey.GetValue("InfPath").ToString
                                 UpdateTextMethod(UpdateTextMethodmessage("15") + " " + currentdriverversion)
                                 log("INF : " + currentdriverversion)
                             End If
-                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfSection").ToString) Then
+                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfSection")) Then
                                 currentdriverversion = subregkey.GetValue("InfSection").ToString
                                 UpdateTextMethod(UpdateTextMethodmessage("16") + " " + currentdriverversion)
                                 log("INF Section : " + currentdriverversion)
@@ -4608,7 +4608,7 @@ Public Class Form1
                         If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
                             For i As Integer = 0 To array.Length - 1
                                 If array(i).ToLower.Contains("pci\cc_03") Then
-                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString) Then
+                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) Then
                                         currentdriverversion = subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString
                                         UpdateTextMethod(UpdateTextMethodmessage("17") + " " + currentdriverversion)
                                         log("Not Correctly Installed GPU : " + currentdriverversion)
