@@ -3928,39 +3928,45 @@ Public Class Form1
         UpdateTextMethod(UpdateTextMethodmessage("7"))
 
         log("Starting the removal of nVidia Optimus UpperFilter if present.")
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                   ("SYSTEM\CurrentControlSet\Enum\PCI")
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("ven_8086") Then
-                        subregkey = regkey.OpenSubKey(child)
-                        If subregkey IsNot Nothing Then
-                            For Each childs As String In subregkey.GetSubKeyNames()
-                                If checkvariables.isnullorwhitespace(childs) = False Then
-                                    array = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
-                                    If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                        For i As Integer = 0 To array.Length - 1
-                                            If (Not checkvariables.isnullorwhitespace(array(i))) AndAlso (array(i).ToLower.Contains("nvpciflt")) Then
 
-                                                log("nVidia Optimus UpperFilter Found.")
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                  ("SYSTEM\CurrentControlSet\Enum\PCI")
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If Not checkvariables.isnullorwhitespace(child) Then
+                        If child.ToLower.Contains("ven_8086") Then
+                            subregkey = regkey.OpenSubKey(child)
+                            If subregkey IsNot Nothing Then
+                                For Each childs As String In subregkey.GetSubKeyNames()
+                                    If checkvariables.isnullorwhitespace(childs) = False Then
+                                        array = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
+                                        If (array IsNot Nothing) AndAlso (Not array.Length < 1) Then
+                                            For i As Integer = 0 To array.Length - 1
+                                                If (Not checkvariables.isnullorwhitespace(array(i))) AndAlso (array(i).ToLower.Contains("nvpciflt")) Then
 
-                                                Try
-                                                    subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
-                                                Catch ex As Exception
-                                                    log(ex.Message + ex.StackTrace)
-                                                    log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
-                                                End Try
-                                            End If
-                                        Next
+                                                    log("nVidia Optimus UpperFilter Found.")
+
+                                                    Try
+                                                        subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
+                                                    Catch ex As Exception
+                                                        log(ex.Message + ex.StackTrace)
+                                                        log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
+                                                    End Try
+                                                End If
+                                            Next
+                                        End If
                                     End If
-                                End If
-                            Next
+                                Next
+                            End If
                         End If
                     End If
-                End If
-            Next
-        End If
+                Next
+            End If
+        Catch ex As Exception
+            MsgBox(msgboxmessage("5"))
+            log(ex.Message + ex.StackTrace)
+        End Try
     End Sub
     Private Sub rescan()
 
