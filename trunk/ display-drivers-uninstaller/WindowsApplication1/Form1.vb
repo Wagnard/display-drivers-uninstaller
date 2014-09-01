@@ -4465,47 +4465,6 @@ Public Class Form1
         log("OS: " + Label2.Text)
         log("Architecture: " & ddudrfolder)
 
-        ''Videocard type indentification
-        'processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-        'processinfo.Arguments = "findall =display"
-        'processinfo.UseShellExecute = False
-        'processinfo.CreateNoWindow = True
-        'processinfo.RedirectStandardOutput = True
-
-        ''creation dun process fantome pour le wait on exit.
-
-        ''------------------------------------------------------------------
-        ''Detection of the current and leftover videocard for the textboxlog
-        ''------------------------------------------------------------------
-        'process.StartInfo = processinfo
-        'process.Start()
-        'reply = process.StandardOutput.ReadToEnd
-        'process.WaitForExit()
-        'log(reply)
-        'TextLines = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
-        'For i As Integer = 0 To TextLines.Length - 2  'reason of -2 instead of -1 , we dont want the last line of ddudr.
-        '    If Not checkvariables.isnullorwhitespace(TextLines(i)) Then
-        '        TextBox1.Text = TextBox1.Text + "Detected GPU : " + TextLines(i).Substring(TextLines(i).IndexOf(":") + 1) + vbNewLine
-        '    End If
-        'Next
-
-        ''Trying to autoselect the right GPU cleanup option. 
-        'If reply.Contains("VEN_8086") Then
-        '    ComboBox1.SelectedIndex = 2
-        'End If
-        'If reply.Contains("VEN_10DE") Then
-        '    ComboBox1.SelectedIndex = 0
-        'End If
-        'If reply.Contains("VEN_1002") Then
-        '    ComboBox1.SelectedIndex = 1
-        'End If
-
-
-        ' ----------------------------------------------------------------------------
-        ' Trying to get the installed GPU info 
-        ' (These list the one that are at least installed with minimal driver support)
-        ' ----------------------------------------------------------------------------
-
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
             If regkey IsNot Nothing Then
@@ -4809,18 +4768,16 @@ Public Class Form1
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
             If removephysx Then
-                Try
-                    If diChild.ToString.ToLower.Contains("nvidia demos") Then
-                        'do nothing
-                    Else
-                        Try
-                            TraverseDirectory(diChild)
-                        Catch ex As Exception
-                        End Try
-                    End If
 
-                Catch ex As Exception
-                End Try
+                If diChild.ToString.ToLower.Contains("nvidia demos") Then
+                    'do nothing
+                Else
+                    Try
+                        TraverseDirectory(diChild)
+                    Catch ex As Exception
+                        log(ex.Message + ex.StackTrace)
+                    End Try
+                End If
             Else
                 If diChild.ToString.ToLower.Contains("physx") Or diChild.ToString.ToLower.Contains("nvidia demos") Then
                     'do nothing
@@ -4828,6 +4785,7 @@ Public Class Form1
                     Try
                         TraverseDirectory(diChild)
                     Catch ex As Exception
+                        log(ex.Message + ex.StackTrace)
                     End Try
                 End If
             End If
@@ -4835,6 +4793,18 @@ Public Class Form1
 
         'Finally, clean all of the files directly in the root directory
         CleanAllFilesInDirectory(di)
+
+        'The containing directory can only be deleted if the directory
+        'is now completely empty and all files previously within
+        'were deleted.
+        If di.GetFiles().Length = 0 Then
+            Try
+                di.Delete()
+            Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
+            End Try
+        End If
+
     End Sub
 
 
@@ -4855,6 +4825,7 @@ Public Class Form1
                     Try
                         TraverseDirectory(diChild)
                     Catch ex As Exception
+                        log(ex.Message + ex.StackTrace)
                     End Try
                 End If
             Else
@@ -4864,6 +4835,7 @@ Public Class Form1
                     Try
                         TraverseDirectory(diChild)
                     Catch ex As Exception
+                        log(ex.Message + ex.StackTrace)
                     End Try
                 End If
             End If
@@ -4881,6 +4853,7 @@ Public Class Form1
             Try
                 di.Delete()
             Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
             End Try
         End If
 
@@ -4906,11 +4879,13 @@ Public Class Form1
             Try
                 fi.IsReadOnly = False
             Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
             End Try
 
             Try
                 fi.Delete()
             Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
             End Try
             'On a rare occasion, files being deleted might be slower than program execution, and upon returning
             'from this call, attempting to delete the directory will throw an exception stating it is not yet
@@ -5317,7 +5292,7 @@ Public Class Form1
 
                                                 If vendid.ToLower.Contains(vendidexpected.ToLower) Then
                                                     processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                                    processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & "*" & Chr(34)
+                                                    processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
                                                     processinfo.UseShellExecute = False
                                                     processinfo.CreateNoWindow = True
                                                     processinfo.RedirectStandardOutput = True
@@ -5343,49 +5318,6 @@ Public Class Form1
                 log(ex.Message + ex.StackTrace)
             End Try
 
-            'If combobox1value= "AMD" & enduro Then
-            '    ' ----------------------------------------------------------------------
-            '    ' (Experimental) Removing the Intel card because of AMD Enduro videocard
-            '    ' ----------------------------------------------------------------------
-
-            '    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            '    processinfo.Arguments = "findall =display"
-            '    processinfo.UseShellExecute = False
-            '    processinfo.CreateNoWindow = True
-            '    processinfo.RedirectStandardOutput = True
-
-            '    process.StartInfo = processinfo
-            '    process.Start()
-            '    reply = process.StandardOutput.ReadToEnd
-            '    process.WaitForExit()
-
-            '    Try
-            '        card1 = reply.IndexOf("PCI\")
-            '    Catch ex As Exception
-
-            '    End Try
-            '    While card1 > -1
-            '        position2 = reply.IndexOf(":", card1)
-            '        vendid = reply.Substring(card1, position2 - card1).Trim
-            '        If vendid.Contains("VEN_8086") Then
-            '            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            '            processinfo.Arguments = "remove =display " & Chr(34) & "@" & vendid & Chr(34)
-            '            processinfo.UseShellExecute = False
-            '            processinfo.CreateNoWindow = True
-            '            processinfo.RedirectStandardOutput = True
-            '            process.StartInfo = processinfo
-
-            '            process.Start()
-            '            reply2 = process.StandardOutput.ReadToEnd
-            '            process.WaitForExit()
-            '            log(reply2)
-
-
-
-            '        End If
-            '        card1 = reply.IndexOf("PCI\", card1 + 1)
-            '    End While
-            'End If
             UpdateTextMethod(UpdateTextMethodmessage("23"))
             log("DDUDR Remove Display Driver: Complete.")
 
@@ -5393,57 +5325,45 @@ Public Class Form1
 
             UpdateTextMethod(UpdateTextMethodmessage("24"))
             log("Executing DDUDR Remove Audio controler.")
-            'Next
-            'For i As Integer = 0 To 1 'loop 2 time to check if there is a remaining videocard.
-            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            processinfo.Arguments = "findall =media"
-            processinfo.UseShellExecute = False
-            processinfo.CreateNoWindow = True
-            processinfo.RedirectStandardOutput = True
-
-            'creation dun process fantome pour le wait on exit.
-
-            process.StartInfo = processinfo
-            process.Start()
-            reply = process.StandardOutput.ReadToEnd
-            process.WaitForExit()
-
 
             Try
-                card1 = reply.IndexOf("HDAUDIO\")
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames
+                        If child.ToLower.Contains("ven_10de") Or _
+                            child.ToLower.Contains("ven_8086") Or _
+                           child.ToLower.Contains("ven_1002") Then
 
+                            subregkey = regkey.OpenSubKey(child)
+                            If subregkey IsNot Nothing Then
 
-                While card1 > -1
+                                For Each child2 As String In subregkey.GetSubKeyNames
 
-                    position2 = reply.IndexOf(":", card1)
-                    vendid = reply.Substring(card1, position2 - card1).Trim
-                    If vendid.Contains(vendidexpected) Then
+                                    If subregkey.OpenSubKey(child2) Is Nothing Then
+                                        Continue For
+                                    End If
 
-                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                        processinfo.Arguments = "remove =MEDIA " & Chr(34) & "@" & vendid & Chr(34)
-                        processinfo.UseShellExecute = False
-                        processinfo.CreateNoWindow = True
-                        processinfo.RedirectStandardOutput = True
-                        process.StartInfo = processinfo
-                        Try
-                            process.Start()
-                            reply2 = process.StandardOutput.ReadToEnd
-                            process.WaitForExit()
-                            log(reply2)
-                        Catch ex As Exception
-                            preventclose = False
-                            log(ex.Message)
-                            Button1.Enabled = True
-                            Button2.Enabled = True
-                            Button3.Enabled = True
-                        End Try
+                                    vendid = child & "\" & child2
 
+                                    If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+                                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                        processinfo.Arguments = "remove " & Chr(34) & "@HDAUDIO\" & vendid & Chr(34)
+                                        processinfo.UseShellExecute = False
+                                        processinfo.CreateNoWindow = True
+                                        processinfo.RedirectStandardOutput = True
+                                        process.StartInfo = processinfo
 
-                    End If
-                    card1 = reply.IndexOf("HDAUDIO\", card1 + 1)
+                                        process.Start()
+                                        reply2 = process.StandardOutput.ReadToEnd
+                                        process.WaitForExit()
+                                        log(reply2)
 
-                End While
-
+                                    End If
+                                Next
+                            End If
+                        End If
+                    Next
+                End If
             Catch ex As Exception
                 MsgBox(msgboxmessage("5"))
                 log(ex.Message + ex.StackTrace)
@@ -5523,62 +5443,88 @@ Public Class Form1
 
                 UpdateTextMethod(UpdateTextMethodmessage("26"))
 
+
+                'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
                 Try
-                    'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ROOT")
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames
 
-                    log("Trying to remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) if present!")
-                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                    processinfo.Arguments = "remove =media " & Chr(34) & "USB\VID_0955&PID_9000" & Chr(34)
-                    processinfo.UseShellExecute = False
-                    processinfo.CreateNoWindow = True
-                    processinfo.RedirectStandardOutput = True
-                    process.StartInfo = processinfo
+                                subregkey = regkey.OpenSubKey(child)
+                                If subregkey IsNot Nothing Then
 
-                    process.Start()
-                    reply2 = process.StandardOutput.ReadToEnd
-                    process.WaitForExit()
-                    log(reply2)
+                                    For Each child2 As String In subregkey.GetSubKeyNames
 
-                    ' ------------------------------
-                    ' Removing nVidia AudioEndpoints
-                    ' ------------------------------
-                    log("Removing nVidia Audio Endpoints")
-                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                    processinfo.Arguments = "findall =audioendpoint"
-                    processinfo.UseShellExecute = False
-                    processinfo.CreateNoWindow = True
-                    processinfo.RedirectStandardOutput = True
+                                        If subregkey.OpenSubKey(child2) Is Nothing Then
+                                            Continue For
+                                    End If
 
-                    process.StartInfo = processinfo
-                    process.Start()
-                    reply = process.StandardOutput.ReadToEnd
-                    process.WaitForExit()
+                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) AndAlso _
+                                       subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
 
-                    Dim audioendpoints As String() = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
+                                        vendid = child & "\" & child2
 
-                    For Each child As String In audioendpoints
-                        If Not checkvariables.isnullorwhitespace(child) Then
-                            If child.ToLower.Contains("nvidia virtual audio device") Or _
-                                child.ToLower.Contains("nvidia high definition audio") Then
-                                child = child.Substring(0, child.IndexOf(":"))
-                                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                processinfo.Arguments = "remove =audioendpoint " & Chr(34) & "@" & child & Chr(34)
-                                processinfo.UseShellExecute = False
-                                processinfo.CreateNoWindow = True
-                                processinfo.RedirectStandardOutput = True
-                                process.StartInfo = processinfo
+                                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                        processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
+                                        processinfo.UseShellExecute = False
+                                        processinfo.CreateNoWindow = True
+                                        processinfo.RedirectStandardOutput = True
+                                        process.StartInfo = processinfo
 
-                                process.Start()
-                                reply2 = process.StandardOutput.ReadToEnd
-                                process.WaitForExit()
-                                log(reply2)
+                                        process.Start()
+                                        reply2 = process.StandardOutput.ReadToEnd
+                                        process.WaitForExit()
+                                        log(reply2)
+
+                                    End If
+                                Next
                             End If
-                        End If
-                    Next
+                        Next
+                    End If
                 Catch ex As Exception
                     MsgBox(msgboxmessage("5"))
                     log(ex.Message + ex.StackTrace)
                 End Try
+
+                ' ------------------------------
+                ' Removing nVidia AudioEndpoints
+                ' ------------------------------
+
+                log("Removing nVidia Audio Endpoints")
+
+                Try
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames
+                            If Not checkvariables.isnullorwhitespace(child) Then
+
+                                If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("FriendlyName")) AndAlso _
+                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia virtual audio device") Or _
+                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia high definition audio") Then
+
+                                    vendid = child
+
+                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                    processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
+                                    processinfo.UseShellExecute = False
+                                    processinfo.CreateNoWindow = True
+                                    processinfo.RedirectStandardOutput = True
+                                    process.StartInfo = processinfo
+
+                                    process.Start()
+                                    reply2 = process.StandardOutput.ReadToEnd
+                                    process.WaitForExit()
+                                    log(reply2)
+
+                                End If
+                            End If
+                        Next
+                    End If
+                Catch ex As Exception
+                    MsgBox(msgboxmessage("5"))
+                    log(ex.Message + ex.StackTrace)
+                End Try
+
             End If
 
 
@@ -5641,47 +5587,44 @@ Public Class Form1
 
         log("ddudr Remove Monitor started")
 
-        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-        processinfo.Arguments = "findall =monitor"
-        processinfo.UseShellExecute = False
-        processinfo.CreateNoWindow = True
-        processinfo.RedirectStandardOutput = True
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames
 
-        'creation dun process fantome pour le wait on exit.
+                        subregkey = regkey.OpenSubKey(child)
+                            If subregkey IsNot Nothing Then
 
-        process.StartInfo = processinfo
-        process.Start()
-        reply = process.StandardOutput.ReadToEnd
-        process.WaitForExit()
-        Try
-            card1 = reply.IndexOf("DISPLAY\")
-        Catch ex As Exception
+                                For Each child2 As String In subregkey.GetSubKeyNames
 
-        End Try
-        While card1 > -1
+                                    If subregkey.OpenSubKey(child2) Is Nothing Then
+                                        Continue For
+                                    End If
 
-            position2 = reply.IndexOf(":", card1)
-            vendid = reply.Substring(card1, position2 - card1).Trim
+                                    vendid = child & "\" & child2
 
 
-            log("-" & vendid & "- Monitor id found")
-            'Driver uninstallation procedure Display & Sound/HDMI used by some GPU
-            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            processinfo.Arguments = "remove =monitor " & Chr(34) & "@" & vendid & Chr(34)
-            processinfo.UseShellExecute = False
-            processinfo.CreateNoWindow = True
-            processinfo.RedirectStandardOutput = True
-            process.StartInfo = processinfo
+                                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                processinfo.Arguments = "remove " & Chr(34) & "@DISPLAY\" & vendid & Chr(34)
+                                processinfo.UseShellExecute = False
+                                processinfo.CreateNoWindow = True
+                                processinfo.RedirectStandardOutput = True
+                                process.StartInfo = processinfo
 
-                process.Start()
-                reply2 = process.StandardOutput.ReadToEnd
-                process.WaitForExit()
-                log(reply2)
+                                process.Start()
+                                reply2 = process.StandardOutput.ReadToEnd
+                                process.WaitForExit()
+                                log(reply2)
 
+                            Next
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                MsgBox(msgboxmessage("5"))
+                log(ex.Message + ex.StackTrace)
+            End Try
 
-                card1 = reply.IndexOf("DISPLAY\", card1 + 1)
-
-            End While
             UpdateTextMethod(UpdateTextMethodmessage("27"))
             UpdateTextMethod(UpdateTextMethodmessage("28"))
 
@@ -6288,7 +6231,7 @@ Public Class CleanupEngine
                                                                     If (Not checkvariables.isnullorwhitespace(subregkey.GetValue("UninstallString"))) AndAlso _
                                                                       subregkey.GetValue("UninstallString").ToString.ToLower.Contains("{") Then
                                                                         Dim folder As String = subregkey.GetValue("UninstallString").ToString
-                                                                        folder = folder.Substring(folder.IndexOf("{"))
+                                                                        folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
                                                                         f.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
                                                                     End If
                                                                 Catch ex As Exception
@@ -6388,6 +6331,18 @@ Public Class CleanupEngine
                                         If Not checkvariables.isnullorwhitespace(packages(i)) Then
                                             If wantedvalue.ToLower.Contains(packages(i).ToLower) And _
                                                (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
+
+                                                Try
+                                                    If (Not checkvariables.isnullorwhitespace(subregkey.GetValue("ProductIcon"))) AndAlso _
+                                                      subregkey.GetValue("ProductIcon").ToString.ToLower.Contains("{") Then
+                                                        Dim folder As String = subregkey.GetValue("ProductIcon").ToString
+                                                        folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
+                                                        f.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
+                                                    End If
+                                                Catch ex As Exception
+                                                    MsgBox(ex.Message + ex.StackTrace)
+                                                End Try
+
                                                 Try
                                                     regkey.DeleteSubKeyTree(child)
                                                 Catch ex As Exception
