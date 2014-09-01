@@ -6247,9 +6247,18 @@ Public Class CleanupEngine
                                                                         Dim folder As String = subregkey.GetValue("UninstallString").ToString
                                                                         folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
                                                                         f.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
+                                                                        For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
+                  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
+                                                                            If Not checkvariables.isnullorwhitespace(subkeyname) Then
+                                                                                If subkeyname.ToLower.Contains(folder.ToLower) Then
+                                                                                    My.Computer.Registry.LocalMachine.OpenSubKey _
+                  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(subkeyname)
+                                                                                End If
+                                                                            End If
+                                                                        Next
                                                                     End If
                                                                 Catch ex As Exception
-                                                                    MsgBox(ex.Message + ex.StackTrace)
+                                                                    f.log(ex.Message + ex.StackTrace)
                                                                 End Try
 
                                                                 Try
@@ -6352,9 +6361,18 @@ Public Class CleanupEngine
                                                         Dim folder As String = subregkey.GetValue("ProductIcon").ToString
                                                         folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
                                                         f.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
+                                                        For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
+("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
+                                                            If Not checkvariables.isnullorwhitespace(subkeyname) Then
+                                                                If subkeyname.ToLower.Contains(folder.ToLower) Then
+                                                                    My.Computer.Registry.LocalMachine.OpenSubKey _
+  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(subkeyname)
+                                                                End If
+                                                            End If
+                                                        Next
                                                     End If
                                                 Catch ex As Exception
-                                                    MsgBox(ex.Message + ex.StackTrace)
+                                                    f.log(ex.Message + ex.StackTrace)
                                                 End Try
 
                                                 Try
