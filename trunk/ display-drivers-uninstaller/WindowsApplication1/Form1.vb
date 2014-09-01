@@ -5540,60 +5540,100 @@ Public Class Form1
                 End Try
 
             End If
+            If combobox1value = "AMD" Then
+                ' ------------------------------
+                ' Removing some of AMD AudioEndpoints
+                ' ------------------------------
 
+                log("Removing AMD Audio Endpoints")
 
-        If combobox1value = "INTEL" Then
-            'Removing Intel WIdI bus Enumerator
-                log("Removing IWD Bus Enumerator")
-            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
-            processinfo.UseShellExecute = False
-            processinfo.CreateNoWindow = True
-            processinfo.RedirectStandardOutput = True
-            process.StartInfo = processinfo
+                Try
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames
+                            If Not checkvariables.isnullorwhitespace(child) Then
 
-            process.Start()
-            reply2 = process.StandardOutput.ReadToEnd
-            process.WaitForExit()
-            log(reply2)
+                                If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("FriendlyName")) AndAlso _
+                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("amd high definition audio device") Or _
+                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("digital audio (hdmi) (high definition audio device)") Then
 
+                                    vendid = child
 
-            ' ------------------------------
-            ' Removing Intel AudioEndpoints
-            ' ------------------------------
-            log("Removing nVidia Audio Endpoints")
-            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-            processinfo.Arguments = "findall =audioendpoint"
-            processinfo.UseShellExecute = False
-            processinfo.CreateNoWindow = True
-            processinfo.RedirectStandardOutput = True
+                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                    processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
+                                    processinfo.UseShellExecute = False
+                                    processinfo.CreateNoWindow = True
+                                    processinfo.RedirectStandardOutput = True
+                                    process.StartInfo = processinfo
 
-            process.StartInfo = processinfo
-            process.Start()
-            reply = process.StandardOutput.ReadToEnd
-            process.WaitForExit()
+                                    process.Start()
+                                    reply2 = process.StandardOutput.ReadToEnd
+                                    process.WaitForExit()
+                                    log(reply2)
 
-            Dim audioendpoints As String() = reply.Split(Environment.NewLine.ToCharArray, System.StringSplitOptions.RemoveEmptyEntries)
-
-            For Each child As String In audioendpoints
-                If Not checkvariables.isnullorwhitespace(child) Then
-                    If child.ToLower.Contains("intel widi audio") Then
-                        child = child.Substring(0, child.IndexOf(":"))
-                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                        processinfo.Arguments = "remove =audioendpoint " & Chr(34) & "@" & child & Chr(34)
-                        processinfo.UseShellExecute = False
-                        processinfo.CreateNoWindow = True
-                        processinfo.RedirectStandardOutput = True
-                        process.StartInfo = processinfo
-
-                        process.Start()
-                        reply2 = process.StandardOutput.ReadToEnd
-                        process.WaitForExit()
-                        log(reply2)
+                                End If
+                            End If
+                        Next
                     End If
-                End If
-            Next
-        End If
+                Catch ex As Exception
+                    MsgBox(msgboxmessage("5"))
+                    log(ex.Message + ex.StackTrace)
+                End Try
+
+            End If
+            If combobox1value = "INTEL" Then
+                'Removing Intel WIdI bus Enumerator
+                log("Removing IWD Bus Enumerator")
+                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
+                processinfo.UseShellExecute = False
+                processinfo.CreateNoWindow = True
+                processinfo.RedirectStandardOutput = True
+                process.StartInfo = processinfo
+
+                process.Start()
+                reply2 = process.StandardOutput.ReadToEnd
+                process.WaitForExit()
+                log(reply2)
+
+
+                ' ------------------------------
+                ' Removing Intel AudioEndpoints
+                ' ------------------------------
+                log("Removing Intel Audio Endpoints")
+                Try
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames
+                            If Not checkvariables.isnullorwhitespace(child) Then
+
+                                If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("FriendlyName")) AndAlso _
+                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel widi") Or _
+                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel(r)") Then
+
+                                    vendid = child
+
+                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                    processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
+                                    processinfo.UseShellExecute = False
+                                    processinfo.CreateNoWindow = True
+                                    processinfo.RedirectStandardOutput = True
+                                    process.StartInfo = processinfo
+
+                                    process.Start()
+                                    reply2 = process.StandardOutput.ReadToEnd
+                                    process.WaitForExit()
+                                    log(reply2)
+
+                                End If
+                            End If
+                        Next
+                    End If
+                Catch ex As Exception
+                    MsgBox(msgboxmessage("5"))
+                    log(ex.Message + ex.StackTrace)
+                End Try
+            End If
 
 
         log("ddudr Remove Audio/HDMI Complete")
