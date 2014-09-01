@@ -462,48 +462,52 @@ Public Class Form1
 
             filePath = Environment.GetFolderPath _
                        (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
-            Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-                log(ex.Message)
-                TestDelete(filePath)
-            End Try
+            If Directory.Exists(filePath) Then
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    log(ex.Message)
+                    TestDelete(filePath)
+                End Try
+            End If
 
-            Try
-                filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
-                For Each child As String In Directory.GetDirectories(filePath)
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("ati.ace") Or _
-                            child.ToLower.Contains("hydravision") Then
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
+            If Directory.Exists(filePath) Then
+                Try
+                    For Each child As String In Directory.GetDirectories(filePath)
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("ati.ace") Or _
+                                child.ToLower.Contains("hydravision") Then
+                                Try
+                                    My.Computer.FileSystem.DeleteDirectory _
+                                    (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                    TestDelete(child)
+                                End Try
+
+                            End If
+                        End If
+                    Next
+                    Try
+                        If Directory.GetDirectories(filePath).Length = 0 Then
                             Try
                                 My.Computer.FileSystem.DeleteDirectory _
-                                (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(Environment.GetFolderPath _
+                        (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies\")
                             Catch ex As Exception
                                 log(ex.Message)
-                                TestDelete(child)
+                                TestDelete(filePath)
                             End Try
-
                         End If
-                    End If
-                Next
-                Try
-                    If Directory.GetDirectories(filePath).Length = 0 Then
-                        Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies\")
-                        Catch ex As Exception
-                            log(ex.Message)
-                            TestDelete(filePath)
-                        End Try
-                    End If
+                    Catch ex As Exception
+                    End Try
                 Catch ex As Exception
                 End Try
-            Catch ex As Exception
-            End Try
+            End If
 
             filePath = System.Environment.SystemDirectory
             Dim files() As String = IO.Directory.GetFiles(filePath + "\", "coinst_*.*")
@@ -518,22 +522,25 @@ Public Class Form1
 
             filePath = Environment.GetFolderPath _
                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
-
-            Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-                log(ex.Message + "AMD APP")
-                TestDelete(filePath)
-            End Try
+            If Directory.Exists(filePath) Then
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    log(ex.Message + "AMD APP")
+                    TestDelete(filePath)
+                End Try
+            End If
 
             filePath = Environment.GetFolderPath _
             (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
-            Try
-                TestDelete(filePath)
-            Catch ex As Exception
-                log(ex.Message + "SteadyVideo testdelete")
-            End Try
+            If Directory.Exists(filePath) Then
+                Try
+                    TestDelete(filePath)
+                Catch ex As Exception
+                    log(ex.Message + "SteadyVideo testdelete")
+                End Try
+            End If
 
             Try
                 filePath = Environment.GetFolderPath _
@@ -571,113 +578,121 @@ Public Class Form1
         End If
 
         filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
-        Try
-            My.Computer.FileSystem.DeleteDirectory _
-                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-            TestDelete(filePath)
-        End Try
+        If Directory.Exists(filePath) Then
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TestDelete(filePath)
+            End Try
+        End If
 
         filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
-        Try
-            My.Computer.FileSystem.DeleteDirectory _
-                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-        Catch ex As Exception
-            TestDelete(filePath)
-        End Try
-
+        If Directory.Exists(filePath) Then
+            Try
+                My.Computer.FileSystem.DeleteDirectory _
+                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            Catch ex As Exception
+                TestDelete(filePath)
+            End Try
+        End If
 
         filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\ATI"
-        Try
-            For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("ace") Then
+        If Directory.Exists(filePath) Then
+            Try
+                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("ace") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(child)
+                            End Try
+                        End If
+                    End If
+                Next
+                Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         Catch ex As Exception
                             log(ex.Message)
-                            TestDelete(child)
+                            TestDelete(filePath)
                         End Try
                     End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
+                Catch ex As Exception
+                End Try
             Catch ex As Exception
+                log(ex.Message)
             End Try
-        Catch ex As Exception
-            log(ex.Message)
-        End Try
+        End If
 
         For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(userpth))
             filePath = filepaths + "\AppData\Roaming\ATI"
-            Try
-                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("ace") Then
+            If Directory.Exists(filePath) Then
+                Try
+                    For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("ace") Then
+                                Try
+                                    My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                    TestDelete(child)
+                                End Try
+                            End If
+                        End If
+                    Next
+                    Try
+                        If Directory.GetDirectories(filePath).Length = 0 Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                My.Computer.FileSystem.DeleteDirectory _
+                                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                             Catch ex As Exception
                                 log(ex.Message)
-                                TestDelete(child)
+                                TestDelete(filePath)
                             End Try
                         End If
-                    End If
-                Next
-                Try
-                    If Directory.GetDirectories(filePath).Length = 0 Then
-                        Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                        Catch ex As Exception
-                            log(ex.Message)
-                            TestDelete(filePath)
-                        End Try
-                    End If
+                    Catch ex As Exception
+                    End Try
                 Catch ex As Exception
+                    log(ex.Message)
                 End Try
-            Catch ex As Exception
-                log(ex.Message)
-            End Try
-
+            End If
 
             filePath = filepaths + "\AppData\Local\ATI"
-            Try
-                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("ace") Then
+            If Directory.Exists(filePath) Then
+                Try
+                    For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("ace") Then
+                                Try
+                                    My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                    TestDelete(child)
+                                End Try
+                            End If
+                        End If
+                    Next
+                    Try
+                        If Directory.GetDirectories(filePath).Length = 0 Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                My.Computer.FileSystem.DeleteDirectory _
+                                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
                             Catch ex As Exception
                                 log(ex.Message)
-                                TestDelete(child)
+                                TestDelete(filePath)
                             End Try
                         End If
-                    End If
-                Next
-                Try
-                    If Directory.GetDirectories(filePath).Length = 0 Then
-                        Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                        Catch ex As Exception
-                            log(ex.Message)
-                            TestDelete(filePath)
-                        End Try
-                    End If
+                    Catch ex As Exception
+                    End Try
                 Catch ex As Exception
+                    log(ex.Message)
                 End Try
-            Catch ex As Exception
-                log(ex.Message)
-            End Try
+            End If
         Next
     End Sub
     Private Sub cleanamd()
@@ -4748,11 +4763,10 @@ Public Class Form1
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
-        UpdateTextMethod(UpdateTextMethodmessage("18"))
-        log("Deleting some specials folders, it could take some times...")
+        ' UpdateTextMethod(UpdateTextMethodmessage("18"))
+        'log("Deleting some specials folders, it could take some times...")
         'ensure that this folder can be accessed with current user ac.
         If Not Directory.Exists(folder) Then
-            log("Folder " + folder + " doesn't exist.")
             Exit Sub
         End If
 
