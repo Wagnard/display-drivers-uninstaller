@@ -1,1 +1,4 @@
 ﻿Sprawdzanie aktualizacji...
+Nie znaleziono aktualizacji. Posiadasz najnowszą wersję.
+Znaleziono aktualizację! Spodziewaj się ograniczonego wsparcia dla starszych wersji programu niż najnowszych.
+Nie można pobrać informacji o aktualizacjach!
