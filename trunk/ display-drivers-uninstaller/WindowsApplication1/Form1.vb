@@ -91,6 +91,8 @@ Public Class Form1
     Public donotremoveamdhdaudiobusfiles As Boolean = True
     Public msgboxmessage As String()
     Public UpdateTextMethodmessage As String()
+    Public picturebox2originalx As Integer
+    Public picturebox2originaly As Integer
 
     Private Sub Checkupdates2()
         AccessUI()
@@ -4052,7 +4054,8 @@ Public Class Form1
             myExe = Application.StartupPath & "\settings\config.cfg"
             System.IO.File.WriteAllBytes(myExe, My.Resources.config)
         End If
-
+        picturebox2originalx = PictureBox2.Location.X
+        picturebox2originaly = PictureBox2.Location.Y
         ''checking if we must open the webpage for donation (when not using system priviledge)
         'If Not MyIdentity.IsSystem Then
         '    Try
@@ -4500,17 +4503,17 @@ Public Class Form1
                                 log("GPU DeviceId : " + currentdriverversion)
                                 If currentdriverversion.ToLower.Contains("ven_8086") Then
                                     ComboBox1.SelectedIndex = 2
-                                    PictureBox2.Location = New Point(333, 92)
+                                    PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
                                     PictureBox2.Size = New Size(158, 126)
                                 End If
                                 If currentdriverversion.ToLower.Contains("ven_10de") Then
                                     ComboBox1.SelectedIndex = 0
-                                    PictureBox2.Location = New Point(286, 92)
+                                    PictureBox2.Location = New Point(286 * (picturebox2originalx / 333), 92 * (picturebox2originaly / 92))
                                     PictureBox2.Size = New Size(252, 123)
                                 End If
                                 If currentdriverversion.ToLower.Contains("ven_1002") Then
                                     ComboBox1.SelectedIndex = 1
-                                    PictureBox2.Location = New Point(333, 92)
+                                    PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
                                     PictureBox2.Size = New Size(158, 126)
                                 End If
                             End If
@@ -5005,7 +5008,7 @@ Public Class Form1
             End If
             CheckBox3.Visible = True
             CheckBox4.Visible = True
-            PictureBox2.Location = New Point(286, 92)
+            PictureBox2.Location = New Point(286 * (picturebox2originalx / 333), 92 * (picturebox2originaly / 92))
             PictureBox2.Size = New Size(252, 123)
             PictureBox2.Image = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
         End If
@@ -5028,7 +5031,7 @@ Public Class Form1
             End If
             CheckBox3.Visible = True
             CheckBox4.Visible = False
-            PictureBox2.Location = New Point(333, 92)
+            PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
             PictureBox2.Size = New Size(158, 126)
             PictureBox2.Image = My.Resources.RadeonLogo1
         End If
@@ -5036,7 +5039,7 @@ Public Class Form1
         If ComboBox1.Text = "INTEL" Then
             CheckBox3.Visible = False
             CheckBox4.Visible = False
-            PictureBox2.Location = New Point(333, 92)
+            PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
             PictureBox2.Size = New Size(158, 126)
             PictureBox2.Image = My.Resources.intel_logo
         End If
