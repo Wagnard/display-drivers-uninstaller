@@ -186,9 +186,6 @@
   <ItemGroup>
     <None Include="Resources\config.cfg" />
     <None Include="Resources\paypal.bkp" />
-    <None Include="Resources\win7\pnpldf.bkp" />
-    <None Include="Resources\win8\pnpldf.bkp" />
-    <None Include="Resources\x86\subinacl.exe" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Nvidia-GeForce-Logo.jpg" />
@@ -203,17 +200,12 @@
     <Folder Include="bin\Release\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\x64\subinacl.exe" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="DDU.ico" />
     <Content Include="Resources\ddu logo3.png" />
     <None Include="Resources\NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg" />
     <None Include="Resources\paexec.exe" />
     <None Include="Resources\xp64\ddudr.exe" />
     <None Include="Resources\intel_logo.png" />
-    <None Include="Resources\x86\SetACL.exe" />
-    <None Include="Resources\x64\SetACL.exe" />
     <None Include="Resources\xp32\ddudr.exe" />
     <None Include="Resources\x86\ddudr.exe" />
     <None Include="Resources\x64\ddudr.exe" />

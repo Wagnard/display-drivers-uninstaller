@@ -86,7 +86,6 @@ Public Class Form1
     Public ddudrfolder As String
     Dim TextLines() As String
     Dim array() As String = Nothing
-    Dim loadinitiated As Boolean = True
     Dim systemrestore As Boolean
     Public donotremoveamdhdaudiobusfiles As Boolean = True
     Public msgboxmessage As String()
@@ -4054,30 +4053,9 @@ Public Class Form1
             myExe = Application.StartupPath & "\settings\config.cfg"
             System.IO.File.WriteAllBytes(myExe, My.Resources.config)
         End If
+
         picturebox2originalx = PictureBox2.Location.X
         picturebox2originaly = PictureBox2.Location.Y
-        ''checking if we must open the webpage for donation (when not using system priviledge)
-        'If Not MyIdentity.IsSystem Then
-        '    Try
-        '        Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
-
-        '        For i As Integer = 0 To lines.Length - 1
-        '            If Not String.IsNullOrEmpty(lines(i)) Then
-        '                If lines(i).ToLower.Contains("donate") Then
-        '                    Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-        '                    process.Start(webAddress)
-        '                    System.Array.Resize(lines, lines.Length - 1)
-        '                    System.IO.File.WriteAllLines(Application.StartupPath & "\settings\config.cfg", lines)
-        '                    preventclose = False
-        '                    Me.Close()
-        '                    Exit Sub
-        '                End If
-        '            End If
-        '        Next
-        '    Catch ex As Exception
-        '        MsgBox(ex.Message + ex.StackTrace)
-        '    End Try
-        'End If
 
         Try
             My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).CreateSubKey("PAexec")
@@ -4091,7 +4069,6 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        loadinitiated = False
 
         CheckForIllegalCrossThreadCalls = True
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
@@ -4339,8 +4316,6 @@ Public Class Form1
                 If winxp Then  'XP64
                     myExe = Application.StartupPath & "\x64\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp64)
-                    myExe = Application.StartupPath & "\x64\setacl.exe"
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.setacl64)
                     myExe = Application.StartupPath & "\x64\paexec.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
                 Else
@@ -4348,21 +4323,12 @@ Public Class Form1
                     myExe = Application.StartupPath & "\x64\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr64)
 
-                    myExe = Application.StartupPath & "\x64\setacl.exe"
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.setacl64)
-
                     myExe = Application.StartupPath & "\x64\paexec.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
                 End If
-                If version.StartsWith("6.2") Or version.StartsWith("6.3") Then
-                    myExe = Application.StartupPath & "\x64\pnpldf.bkp"
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.pnpldfwin8)
-                End If
-                If version.StartsWith("6.0") Or version.StartsWith("6.1") Then
-                    myExe = Application.StartupPath & "\x64\pnpldf.bkp"
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.pnpldfwin7vista)
-                End If
+
             Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
             End Try
         Else
             Try
@@ -4370,29 +4336,15 @@ Public Class Form1
                     myExe = Application.StartupPath & "\x86\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp32)
 
-                    myExe = Application.StartupPath & "\x86\setacl.exe"
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.setacl32)
-
                     myExe = Application.StartupPath & "\x86\paexec.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
                 Else 'all other 32 bits
                     myExe = Application.StartupPath & "\x86\ddudr.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr32)
 
-                    myExe = Application.StartupPath & "\x86\setacl.exe"
-                    System.IO.File.WriteAllBytes(myExe, My.Resources.setacl32)
-
                     myExe = Application.StartupPath & "\x86\paexec.exe"
                     System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
 
-                    If version.StartsWith("6.2") Or version.StartsWith("6.3") Then
-                        myExe = Application.StartupPath & "\x86\pnpldf.bkp"
-                        System.IO.File.WriteAllBytes(myExe, My.Resources.pnpldfwin8)
-                    End If
-                    If version.StartsWith("6.0") Or version.StartsWith("6.1") Then
-                        myExe = Application.StartupPath & "\x86\pnpldf.bkp"
-                        System.IO.File.WriteAllBytes(myExe, My.Resources.pnpldfwin7vista)
-                    End If
                 End If
 
             Catch ex As Exception
@@ -4761,7 +4713,7 @@ Public Class Form1
 
         log("ddudr DP_ENUM RESULT BELOW")
         log(reply)
-        loadinitiated = True
+
 
     End Sub
 
@@ -4784,27 +4736,13 @@ Public Class Form1
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-            If removephysx Then
+            If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
 
-                If diChild.ToString.ToLower.Contains("nvidia demos") Then
-                    'do nothing
-                Else
-                    Try
-                        TraverseDirectory(diChild)
-                    Catch ex As Exception
-                        log(ex.Message + ex.StackTrace)
-                    End Try
-                End If
-            Else
-                If diChild.ToString.ToLower.Contains("physx") Or diChild.ToString.ToLower.Contains("nvidia demos") Then
-                    'do nothing
-                Else
-                    Try
-                        TraverseDirectory(diChild)
-                    Catch ex As Exception
-                        log(ex.Message + ex.StackTrace)
-                    End Try
-                End If
+                Try
+                    TraverseDirectory(diChild)
+                Catch ex As Exception
+                    log(ex.Message + ex.StackTrace)
+                End Try
             End If
         Next
 
@@ -4835,26 +4773,13 @@ Public Class Form1
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-            If removephysx Then
-                If diChild.ToString.ToLower.Contains("nvidia demos") Then
-                    'do nothing
-                Else
-                    Try
-                        TraverseDirectory(diChild)
-                    Catch ex As Exception
-                        log(ex.Message + ex.StackTrace)
-                    End Try
-                End If
-            Else
-                If diChild.ToString.ToLower.Contains("physx") Or diChild.ToString.ToLower.Contains("nvidia demos") Then
-                    'do nothing
-                Else
-                    Try
-                        TraverseDirectory(diChild)
-                    Catch ex As Exception
-                        log(ex.Message + ex.StackTrace)
-                    End Try
-                End If
+            If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+
+                Try
+                    TraverseDirectory(diChild)
+                Catch ex As Exception
+                    log(ex.Message + ex.StackTrace)
+                End Try
             End If
         Next
 
@@ -4912,25 +4837,6 @@ Public Class Form1
             'System.Threading.Thread.sleep(10)  '50 millisecond stall (0.025 Seconds)
 
         Next
-    End Sub
-
-
-    Private Sub Cleanup(ByVal directory As String, ByVal KeepDur As Integer)
-        'Code taken from my CoDUO FoV Changer program, thus why it uses a keepdur, 
-        'it's supposed to delete logs older than whatever days. I set it to 2 seconds instead of modifying the code. Lol
-        Try
-            Dim logdir As New System.IO.DirectoryInfo(directory)
-            For Each file As System.IO.FileInfo In logdir.GetFiles
-                If (Now - file.CreationTime).Seconds > KeepDur Then
-                    file.Delete()
-                End If
-
-            Next
-        Catch ex As Exception
-            log("")
-            log("!! ERROR: " & ex.Message)
-            log("")
-        End Try
     End Sub
 
     Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
@@ -5066,19 +4972,6 @@ Public Class Form1
         Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
         Dim StartInfo As New WindowsApi.STARTUPINFOW
         StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-
-        'Try
-        '    Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
-
-        '    'if we endup here, it mean the value is not found on .cfg so we add it.
-        '    System.Array.Resize(lines, lines.Length + 1)
-        '    lines(lines.Length - 1) = "Donate"
-        '    System.IO.File.WriteAllLines(Application.StartupPath & "\settings\config.cfg", lines)
-
-        'Catch ex As Exception
-        '    MsgBox(ex.Message + ex.StackTrace)
-        'End Try
 
         If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\settings\paypal.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
         Else
