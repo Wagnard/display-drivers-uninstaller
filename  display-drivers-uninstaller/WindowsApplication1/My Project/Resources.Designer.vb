@@ -181,72 +181,12 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized resource of type System.Byte[].
-        '''</summary>
-        Friend ReadOnly Property pnpldfwin7vista() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("pnpldfwin7vista", resourceCulture)
-                Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Byte[].
-        '''</summary>
-        Friend ReadOnly Property pnpldfwin8() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("pnpldfwin8", resourceCulture)
-                Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property RadeonLogo1() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("RadeonLogo1", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Byte[].
-        '''</summary>
-        Friend ReadOnly Property setacl32() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("setacl32", resourceCulture)
-                Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Byte[].
-        '''</summary>
-        Friend ReadOnly Property setacl64() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("setacl64", resourceCulture)
-                Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Byte[].
-        '''</summary>
-        Friend ReadOnly Property subinacl32() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("subinacl32", resourceCulture)
-                Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Byte[].
-        '''</summary>
-        Friend ReadOnly Property subinacl64() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("subinacl64", resourceCulture)
-                Return CType(obj,Byte())
             End Get
         End Property
     End Module
