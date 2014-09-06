@@ -6490,8 +6490,8 @@ Public Class CleanupEngine
                     If checkvariables.isnullorwhitespace(child) = False Then
                         subregkey = regkey.OpenSubKey(child & "\Video", False)
                         If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
-                                For i As Integer = 0 To services.Length - 1
+                            For i As Integer = 0 To services.Length - 1
+                                If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
                                     If subregkey.GetValue("Service").ToString.ToLower = services(i).ToLower Then
                                         Try
                                             My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
@@ -6499,8 +6499,8 @@ Public Class CleanupEngine
                                         Catch ex As Exception
                                         End Try
                                     End If
-                                Next
-                            End If
+                                End If
+                            Next
                         Else
                             'Here, if subregkey is nothing, it mean \video doesnt exist, so we can delete it.
                             'this is a general cleanUP we could say.
