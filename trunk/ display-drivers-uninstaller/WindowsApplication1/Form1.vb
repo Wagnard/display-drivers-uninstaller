@@ -717,39 +717,6 @@ Public Class Form1
 
         CleanupEngine.interfaces(IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\interface.cfg")) '// add each line as String Array.
 
-        '-------------
-        'control/video
-        '-------------
-        Try
-
-
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", False)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        subregkey = regkey.OpenSubKey(child & "\Video", False)
-                        If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
-                                If subregkey.GetValue("Service").ToString.ToLower = "amdkmdap" Then
-                                    Try
-                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
-                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                                    Catch ex As Exception
-                                    End Try
-                                End If
-                            End If
-                        End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
-        '-----------------
-        'end control/video
-        '-----------------
-
         log("Instance class cleanUP")
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", False)
@@ -3591,40 +3558,6 @@ Public Class Form1
         CleanupEngine.installer(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\packages.cfg"))
 
 
-
-        '-------------
-        'control/video
-        '-------------
-        Try
-
-
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", False)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        subregkey = regkey.OpenSubKey(child & "\Video", False)
-                        If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("Service").ToString) = False Then
-                                If subregkey.GetValue("Service").ToString.ToLower = "nvlddmkm" Then
-                                    Try
-                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
-                                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                                    Catch ex As Exception
-                                    End Try
-                                End If
-                            End If
-                        End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
-        '-----------------
-        'end control/video
-        '-----------------
-
         If remove3dtvplay Then
             Try
                 My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("mpegfile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
@@ -3898,6 +3831,8 @@ Public Class Form1
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
+
+        CleanupEngine.installer(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\packages.cfg"))
 
         If IntPtr.Size = 8 Then
             packages = IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\packages.cfg") '// add each line as String Array.
@@ -4328,7 +4263,6 @@ Public Class Form1
                 End If
 
             Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
             End Try
         Else
             Try
@@ -4821,13 +4755,11 @@ Public Class Form1
             Try
                 fi.IsReadOnly = False
             Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
             End Try
 
             Try
                 fi.Delete()
             Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
             End Try
             'On a rare occasion, files being deleted might be slower than program execution, and upon returning
             'from this call, attempting to delete the directory will throw an exception stating it is not yet
@@ -6505,6 +6437,8 @@ Public Class CleanupEngine
         Dim f As Form1 = My.Application.OpenForms("Form1")
         Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
         Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
+        Dim regkey As RegistryKey
+        Dim subregkey As RegistryKey
 
         f.UpdateTextMethod(updateTextMethodmessage("37"))
         f.log("Cleaning Process/Services...")
@@ -6543,6 +6477,45 @@ Public Class CleanupEngine
         System.Threading.Thread.Sleep(10)
         f.UpdateTextMethod(updateTextMethodmessage("38"))
         f.log("Process/Services CleanUP Complete")
+
+        '-------------
+        'control/video
+        '-------------
+        'Reason I put this in srvice is that the removal of this is based from its service.
+        f.log("Control/Video CleanUP")
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", False)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        subregkey = regkey.OpenSubKey(child & "\Video", False)
+                        If subregkey IsNot Nothing Then
+                            If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
+                                For i As Integer = 0 To services.Length - 1
+                                    If subregkey.GetValue("Service").ToString.ToLower = services(i).ToLower Then
+                                        Try
+                                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
+                                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                                        Catch ex As Exception
+                                        End Try
+                                    End If
+                                Next
+                            End If
+                        Else
+                            'Here, if subregkey is nothing, it mean \video doesnt exist, so we can delete it.
+                            'this is a general cleanUP we could say.
+                            Try
+                                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
+                                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            f.log(ex.Message + ex.StackTrace)
+        End Try
     End Sub
     Public Sub Pnplockdownfiles(ByVal driverfiles As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
