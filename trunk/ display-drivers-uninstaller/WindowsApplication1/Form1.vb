@@ -5776,7 +5776,7 @@ Public Class Form1
                                    child2.ToLower.Contains("shadowplay") Or _
                                    child2.ToLower.Contains("update.core") Or _
                                    child2.ToLower.Contains("virtualaudio.driver") Or _
-                                   child.ToLower.Contains("coretemp") Or _
+                                   child2.ToLower.Contains("coretemp") Or _
                                    child2.ToLower.Contains("hdaudio.driver") Then
                                     If (removephysx Or Not ((Not removephysx) And child2.ToLower.Contains("physx"))) Then
                                         Try
