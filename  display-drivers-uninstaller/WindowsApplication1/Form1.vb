@@ -2258,66 +2258,10 @@ Public Class Form1
                        child.ToLower.Contains("physx") Or _
                        child.ToLower.Contains("nvstreamsrv") Or _
                        child.ToLower.Contains("shadowplay") Or _
-                       child.ToLower.Contains("installer2") Or _
                        child.ToLower.Contains("update common") Or _
                        child.ToLower.Contains("update core") Then
 
-                        If child.ToLower.Contains("installer2") Then
-                            For Each child2 As String In Directory.GetDirectories(child)
-                                If checkvariables.isnullorwhitespace(child2) = False Then
-                                    If child2.ToLower.Contains("display.3dvision") Or _
-                                       child2.ToLower.Contains("display.controlpanel") Or _
-                                       child2.ToLower.Contains("display.driver") Or _
-                                       child2.ToLower.Contains("display.gfexperience") Or _
-                                       child2.ToLower.Contains("display.nvirusb") Or _
-                                       child2.ToLower.Contains("display.physx") Or _
-                                       child2.ToLower.Contains("display.update") Or _
-                                       child2.ToLower.Contains("gfexperience") Or _
-                                       child2.ToLower.Contains("nvidia.update") Or _
-                                       child2.ToLower.Contains("installer2\installer") Or _
-                                       child2.ToLower.Contains("network.service") Or _
-                                       child2.ToLower.Contains("shadowplay") Or _
-                                       child2.ToLower.Contains("update.core") Or _
-                                       child2.ToLower.Contains("virtualaudio.driver") Or _
-                                       child2.ToLower.Contains("hdaudio.driver") Then
-                                        If removephysx Then
-                                            Try
-                                                My.Computer.FileSystem.DeleteDirectory _
-                                                (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                            Catch ex As Exception
-                                                log(ex.Message)
-                                                TestDelete(child2)
-                                            End Try
-                                        Else
-                                            If child2.ToLower.Contains("physx") Then
-                                                'do nothing
-                                            Else
-                                                Try
-                                                    My.Computer.FileSystem.DeleteDirectory _
-                                                    (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                                Catch ex As Exception
-                                                    log(ex.Message)
-                                                    TestDelete(child2)
-                                                End Try
-                                            End If
-                                        End If
-                                    End If
-                                End If
-                            Next
-                            Try
-                                If Directory.GetDirectories(child).Length = 0 Then
-                                    Try
-                                        My.Computer.FileSystem.DeleteDirectory _
-                                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                    Catch ex As Exception
-                                        log(ex.Message)
-                                        TestDelete(child)
-                                    End Try
-                                End If
-                            Catch ex As Exception
-                            End Try
-                        End If
-                        If removephysx And Not child.ToLower.Contains("installer2") Then
+                        If (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
                             Try
                                 My.Computer.FileSystem.DeleteDirectory _
                                 (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -2325,18 +2269,6 @@ Public Class Form1
                                 log(ex.Message)
                                 TestDelete(child)
                             End Try
-                        Else
-                            If child.ToLower.Contains("physx") Or child.ToLower.Contains("installer2") Then
-                                'do nothing
-                            Else
-                                Try
-                                    My.Computer.FileSystem.DeleteDirectory _
-                                    (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                Catch ex As Exception
-                                    log(ex.Message)
-                                    TestDelete(child)
-                                End Try
-                            End If
                         End If
                     End If
                 End If
@@ -5844,6 +5776,7 @@ Public Class Form1
                                    child2.ToLower.Contains("shadowplay") Or _
                                    child2.ToLower.Contains("update.core") Or _
                                    child2.ToLower.Contains("virtualaudio.driver") Or _
+                                   child.ToLower.Contains("coretemp") Or _
                                    child2.ToLower.Contains("hdaudio.driver") Then
                                     If (removephysx Or Not ((Not removephysx) And child2.ToLower.Contains("physx"))) Then
                                         Try
