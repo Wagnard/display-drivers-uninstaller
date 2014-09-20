@@ -85,7 +85,7 @@ Public Class Form1
     Dim closeapp As String = False
     Public ddudrfolder As String
     Dim TextLines() As String
-    Dim array() As String = Nothing
+    Dim array() As String
     Dim systemrestore As Boolean
     Public donotremoveamdhdaudiobusfiles As Boolean = True
     Public msgboxmessage As String()
@@ -2252,13 +2252,14 @@ Public Class Form1
                        child.ToLower.Contains("3d vision") Or _
                        child.ToLower.Contains("led visualizer") Or _
                        child.ToLower.Contains("netservice") Or _
-                       child.ToLower.Contains("nvidia geforce experience") Or _
+                       child.ToLower.Contains("geforce experience") Or _
                        child.ToLower.Contains("nvstreamc") Or _
                        child.ToLower.Contains("nvstreamsrv") Or _
                        child.ToLower.Contains("physx") Or _
                        child.ToLower.Contains("nvstreamsrv") Or _
                        child.ToLower.Contains("shadowplay") Or _
                        child.ToLower.Contains("update common") Or _
+                       child.ToLower.Contains("shield") Or _
                        child.ToLower.Contains("update core") Then
 
                         If (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
@@ -4564,23 +4565,51 @@ Public Class Form1
 
 
         'Check and log the driver from the driver store  ( oemxx.inf)
-        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-        processinfo.Arguments = "dp_enum"
-        processinfo.UseShellExecute = False
-        processinfo.CreateNoWindow = True
-        processinfo.RedirectStandardOutput = True
+        'processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+        'processinfo.Arguments = "dp_enum"
+        'processinfo.UseShellExecute = False
+        'processinfo.CreateNoWindow = True
+        'processinfo.RedirectStandardOutput = True
 
         'creation dun process fantome pour le wait on exit.
 
-        process.StartInfo = processinfo
-        process.Start()
-        reply = process.StandardOutput.ReadToEnd
-        process.WaitForExit()
+        'process.StartInfo = processinfo
+        'process.Start()
+        'reply = process.StandardOutput.ReadToEnd
+        'process.WaitForExit()
 
-        log("ddudr DP_ENUM RESULT BELOW")
-        log(reply)
+        'log("ddudr DP_ENUM RESULT BELOW")
+        'log(reply)
+        log("The following thirs-party driver packages are installed on this computer: ")
+        Dim deloem As New Diagnostics.ProcessStartInfo
+        deloem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+        For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
+            log("---")
+            log(infs)
+            Try
+                For Each child As String In IO.File.ReadAllLines(infs)
 
+                    child = child.Replace(" ", "")
+                    child = child.Replace(vbTab, "")
+                    If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
+                        log(child)
+                        Exit For
+                    End If
+                Next
 
+                For Each child As String In IO.File.ReadAllLines(infs)
+                    child = child.Replace(" ", "")
+                    child = child.Replace(vbTab, "")
+                    If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
+                        log(child)
+                        Exit For
+                    End If
+                Next
+
+            Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
+            End Try
+        Next
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
@@ -5008,24 +5037,22 @@ Public Class Form1
                     subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
                     If subregkey IsNot Nothing Then
                         For Each child2 As String In subregkey.GetSubKeyNames()
-                            If checkvariables.isnullorwhitespace(child2) = False Then
-                                If child2.ToLower.Contains("ven_1002") Then
-                                    For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-                                        If checkvariables.isnullorwhitespace(child3) = False Then
-                                            array = subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters")
-                                            If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                                For i As Integer = 0 To array.Length - 1
-                                                    If Not checkvariables.isnullorwhitespace(array(i)) Then
-                                                        If array(i).ToLower.Contains("amdkmafd") Then
-                                                            log("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
-                                                            donotremoveamdhdaudiobusfiles = True
-                                                        End If
+                            If Not checkvariables.isnullorwhitespace(child2) AndAlso child2.ToLower.Contains("ven_1002") Then
+                                For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
+                                    If checkvariables.isnullorwhitespace(child3) = False Then
+                                        array = subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters")
+                                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                            For i As Integer = 0 To array.Length - 1
+                                                If Not checkvariables.isnullorwhitespace(array(i)) Then
+                                                    If array(i).ToLower.Contains("amdkmafd") Then
+                                                        log("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
+                                                        donotremoveamdhdaudiobusfiles = True
                                                     End If
-                                                Next
-                                            End If
+                                                End If
+                                            Next
                                         End If
-                                    Next
-                                End If
+                                    End If
+                                Next
                             End If
                         Next
                     End If
@@ -5043,9 +5070,10 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames
-                        If child.ToLower.Contains("ven_10de") Or _
-                            child.ToLower.Contains("ven_8086") Or _
-                           child.ToLower.Contains("ven_1002") Then
+                        If Not checkvariables.isnullorwhitespace(child) AndAlso _
+                               (child.ToLower.Contains("ven_10de") Or _
+                               child.ToLower.Contains("ven_8086") Or _
+                               child.ToLower.Contains("ven_1002")) Then
 
                             subregkey = regkey.OpenSubKey(child)
                             If subregkey IsNot Nothing Then
@@ -5060,7 +5088,8 @@ Public Class Form1
 
                                     If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
                                         For i As Integer = 0 To array.Length - 1
-                                            If array(i).ToLower.Contains("pci\cc_03") Then
+
+                                            If Not checkvariables.isnullorwhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
 
                                                 vendid = child & "\" & child2
 
@@ -5078,7 +5107,7 @@ Public Class Form1
                                                     log(reply2)
 
                                                 End If
-                                                Exit For
+                                                Exit For   'the card is removed so we exit the loop from here.
                                             End If
                                         Next
                                     End If
@@ -5104,9 +5133,10 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames
-                        If child.ToLower.Contains("ven_10de") Or _
-                            child.ToLower.Contains("ven_8086") Or _
-                           child.ToLower.Contains("ven_1002") Then
+                        If Not checkvariables.isnullorwhitespace(child) AndAlso _
+                           (child.ToLower.Contains("ven_10de") Or _
+                           child.ToLower.Contains("ven_8086") Or _
+                           child.ToLower.Contains("ven_1002")) Then
 
                             subregkey = regkey.OpenSubKey(child)
                             If subregkey IsNot Nothing Then
@@ -5223,6 +5253,7 @@ Public Class Form1
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ROOT")
                     If regkey IsNot Nothing Then
                         For Each child As String In regkey.GetSubKeyNames
+                            If Not checkvariables.isnullorwhitespace(child) Then
 
                                 subregkey = regkey.OpenSubKey(child)
                                 If subregkey IsNot Nothing Then
@@ -5231,27 +5262,28 @@ Public Class Form1
 
                                         If subregkey.OpenSubKey(child2) Is Nothing Then
                                             Continue For
-                                    End If
+                                        End If
 
-                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) AndAlso _
-                                       subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
+                                        If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) AndAlso _
+                                           subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
 
-                                        vendid = child & "\" & child2
+                                            vendid = child & "\" & child2
 
-                                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                        processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
-                                        processinfo.UseShellExecute = False
-                                        processinfo.CreateNoWindow = True
-                                        processinfo.RedirectStandardOutput = True
-                                        process.StartInfo = processinfo
+                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                            processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
+                                            processinfo.UseShellExecute = False
+                                            processinfo.CreateNoWindow = True
+                                            processinfo.RedirectStandardOutput = True
+                                            process.StartInfo = processinfo
 
-                                        process.Start()
-                                        reply2 = process.StandardOutput.ReadToEnd
-                                        process.WaitForExit()
-                                        log(reply2)
+                                            process.Start()
+                                            reply2 = process.StandardOutput.ReadToEnd
+                                            process.WaitForExit()
+                                            log(reply2)
 
-                                    End If
-                                Next
+                                        End If
+                                    Next
+                                End If
                             End If
                         Next
                     End If
@@ -5300,6 +5332,7 @@ Public Class Form1
                 End Try
 
             End If
+
             If combobox1value = "AMD" Then
                 ' ------------------------------
                 ' Removing some of AMD AudioEndpoints
@@ -5405,8 +5438,9 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames
+                        If Not checkvariables.isnullorwhitespace(child) Then
 
-                        subregkey = regkey.OpenSubKey(child)
+                            subregkey = regkey.OpenSubKey(child)
                             If subregkey IsNot Nothing Then
 
                                 For Each child2 As String In subregkey.GetSubKeyNames
@@ -5418,19 +5452,20 @@ Public Class Form1
                                     vendid = child & "\" & child2
 
 
-                                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                processinfo.Arguments = "remove " & Chr(34) & "@DISPLAY\" & vendid & Chr(34)
-                                processinfo.UseShellExecute = False
-                                processinfo.CreateNoWindow = True
-                                processinfo.RedirectStandardOutput = True
-                                process.StartInfo = processinfo
+                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                    processinfo.Arguments = "remove " & Chr(34) & "@DISPLAY\" & vendid & Chr(34)
+                                    processinfo.UseShellExecute = False
+                                    processinfo.CreateNoWindow = True
+                                    processinfo.RedirectStandardOutput = True
+                                    process.StartInfo = processinfo
 
-                                process.Start()
-                                reply2 = process.StandardOutput.ReadToEnd
-                                process.WaitForExit()
-                                log(reply2)
+                                    process.Start()
+                                    reply2 = process.StandardOutput.ReadToEnd
+                                    process.WaitForExit()
+                                    log(reply2)
 
-                            Next
+                                Next
+                            End If
                         End If
                     Next
                 End If
@@ -5777,6 +5812,7 @@ Public Class Form1
                                    child2.ToLower.Contains("update.core") Or _
                                    child2.ToLower.Contains("virtualaudio.driver") Or _
                                    child2.ToLower.Contains("coretemp") Or _
+                                   child2.ToLower.Contains("shield") Or _
                                    child2.ToLower.Contains("hdaudio.driver") Then
                                     If (removephysx Or Not ((Not removephysx) And child2.ToLower.Contains("physx"))) Then
                                         Try
