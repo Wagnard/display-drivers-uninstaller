@@ -2532,6 +2532,31 @@ Public Class Form1
             End Try
         Next
 
+        'Cleaning the GFE 2.0.1 and earlier assemblies.
+
+        Try
+            filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_32"
+            For Each child As String In Directory.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("gfexperience") Or _
+                        child.ToLower.Contains("nvidia.sett") Or _
+                        child.ToLower.Contains("nvidia.updateservice") Or _
+                        child.ToLower.Contains("nvidia.win32api") Or _
+                       child.ToLower.Contains("nvidia.gfe") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(child)
+                        End Try
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            log(ex.Message)
+        End Try
+
     End Sub
 
     Private Sub cleannvidia()
