@@ -45,7 +45,6 @@ Public Class Form1
     Public removephysx As Boolean
     Public removeamdaudiobus As Boolean
     Dim remove3dtvplay As Boolean
-    Dim time As String = DateAndTime.Now
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
@@ -55,13 +54,8 @@ Public Class Form1
     Dim reply As String = Nothing
     Dim reply2 As String = Nothing
     Dim version As String = Nothing
-    Dim tos As String = Nothing
     Dim card1 As Integer = Nothing
     Dim position2 As Integer = Nothing
-    Dim keyroot As String = Nothing
-    Dim keychild As String = Nothing
-    Dim typelib As String = Nothing
-    Dim appid As String = Nothing
     Dim wantedvalue2 As String = Nothing
     Dim subregkey As RegistryKey = Nothing
     Dim subregkey2 As RegistryKey = Nothing
@@ -72,7 +66,6 @@ Public Class Form1
     Dim packages As String()
     Dim safemode As Boolean = False
     Dim myExe As String
-    Dim driverfiles() As String
     Dim checkupdates As New genericfunction
     Dim settings As New genericfunction
     Dim CleanupEngine As New CleanupEngine
@@ -84,9 +77,7 @@ Public Class Form1
     Dim buttontext As String()
     Dim closeapp As String = False
     Public ddudrfolder As String
-    Dim TextLines() As String
     Dim array() As String
-    Dim systemrestore As Boolean
     Public donotremoveamdhdaudiobusfiles As Boolean = True
     Public msgboxmessage As String()
     Public UpdateTextMethodmessage As String()
@@ -695,6 +686,46 @@ Public Class Form1
                 End Try
             End If
         Next
+
+        'Cleaning the CCC assemblies.
+
+        Try
+            filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_64"
+            For Each child As String In Directory.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.EndsWith("\mom") Or _
+                        child.ToLower.Contains("\mom.") Or _
+                        child.ToLower.Contains("newaem.foundation") Or _
+                        child.ToLower.Contains("fuel.foundation") Or _
+                        child.ToLower.Contains("\localizatio") Or _
+                        child.ToLower.EndsWith("\log") Or _
+                        child.ToLower.Contains("log.foundat") Or _
+                        child.ToLower.EndsWith("\cli") Or _
+                        child.ToLower.Contains("\cli.") Or _
+                        child.ToLower.Contains("ace.graphi") Or _
+                        child.ToLower.Contains("adl.foundation") Or _
+                        child.ToLower.Contains("64\aem.") Or _
+                        child.ToLower.Contains("aticccom") Or _
+                        child.ToLower.EndsWith("\ccc") Or _
+                        child.ToLower.Contains("\ccc.") Or _
+                        child.ToLower.Contains("\pckghlp.") Or _
+                        child.ToLower.Contains("\resourceman") Or _
+                        child.ToLower.Contains("\apm.") Or _
+                        child.ToLower.Contains("\a4.found") Or _
+                       child.ToLower.Contains("\dem.") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(child)
+                        End Try
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            log(ex.Message)
+        End Try
     End Sub
     Private Sub cleanamd()
         UpdateTextMethod(UpdateTextMethodmessage("2"))
@@ -4883,7 +4914,7 @@ Public Class Form1
     End Sub
 
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
-        Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
         ' process.Start(webAddress)
         Dim UserTokenHandle As IntPtr = IntPtr.Zero
         WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
@@ -5802,11 +5833,11 @@ Public Class Form1
 
         If CheckBox5.Checked = True Then
             settings.setconfig("systemrestore", "true")
-            systemrestore = True
+
 
         Else
             settings.setconfig("systemrestore", "false")
-            systemrestore = False
+
         End If
 
     End Sub
@@ -6518,7 +6549,6 @@ Public Class CleanupEngine
         Dim win8higher = f.win8higher
         Dim processinfo As New ProcessStartInfo
         Dim process As New Process
-        Dim ddudrfolder = f.ddudrfolder
         Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
 
         Try
@@ -7034,7 +7064,6 @@ Public Class CleanupEngine
         Dim regkey As RegistryKey
         Dim subregkey As RegistryKey
         Dim wantedvalue As String
-        Dim appid As String = Nothing
         Dim typelib As String = Nothing
 
         f.log("Start Interface CleanUP")
