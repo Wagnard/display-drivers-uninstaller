@@ -151,89 +151,188 @@ Public Class Form1
 
     Private Sub cleandriverstore()
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Executing Driver Store cleanUP(finding OEM step)..." + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
+        UpdateTextMethod("-Executing Driver Store cleanUP(finding OEM step)...")
         log("Executing Driver Store cleanUP(Find OEM)...")
         'Check the driver from the driver store  ( oemxx.inf)
+        Dim deloem As New Diagnostics.ProcessStartInfo
+        deloem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+        Dim proc3 As New Diagnostics.Process
         processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
         processinfo.Arguments = "dp_enum"
-        processinfo.UseShellExecute = False
-        processinfo.CreateNoWindow = True
-        processinfo.RedirectStandardOutput = True
+        'processinfo.UseShellExecute = False
+        'processinfo.CreateNoWindow = True
+        'processinfo.RedirectStandardOutput = True
 
-        'creation dun process fantome pour le wait on exit.
+        ''creation dun process fantome pour le wait on exit.
 
-        process.StartInfo = processinfo
-        process.Start()
-        reply = process.StandardOutput.ReadToEnd
-        process.WaitForExit()
 
-        ' log("ddudr DP_ENUM RESULT BELOW")
-        ' log(reply)
+        'process.Start()
+        'reply = process.StandardOutput.ReadToEnd
+        'process.WaitForExit()
+
+
         'Preparing to read output.
-        Dim oem As Integer = Nothing
-        Try
-            oem = reply.IndexOf("oem")
-        Catch ex As Exception
-        End Try
+
+        'Dim oem As Integer = Nothing
+        'Try
+        '    oem = reply.IndexOf("oem")
+        'Catch ex As Exception
+        'End Try
 
         UpdateTextMethod(UpdateTextMethodmessage("0"))
 
-        While oem > -1 And oem <> Nothing
-            Dim position As Integer = reply.IndexOf("Provider:", oem)
-            Dim classs As Integer = reply.IndexOf("Class:", oem)
-            Dim inf As Integer = reply.IndexOf(".inf", oem)
-            If classs > -1 Then 'I saw that sometimes, there could be no class on some oems (winxp)
-                If reply.Substring(position, classs - position).Contains(provider) Or _
-                   reply.Substring(position, classs - position).ToLower.Contains("ati tech") Or _
-                    reply.Substring(position, classs - position).ToLower.Contains("amd") Then
-                    Dim part As String = reply.Substring(oem, inf - oem)
-                    log(part + " Found")
-                    Dim deloem As New Diagnostics.ProcessStartInfo
-                    deloem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                    deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
-                    Try
-                        For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
-                            If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
-                                child.ToLower.Trim.Replace(" ", "").Contains("class=media") Then
-                                deloem.Arguments = "-f dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+        'While oem > -1 And oem <> Nothing
+        '    Dim position As Integer = reply.IndexOf("Provider:", oem)
+        '    Dim classs As Integer = reply.IndexOf("Class:", oem)
+        '    Dim inf As Integer = reply.IndexOf(".inf", oem)
+        '    If classs > -1 Then 'I saw that sometimes, there could be no class on some oems (winxp)
+        '        If reply.Substring(position, classs - position).Contains(provider) Or _
+        '           reply.Substring(position, classs - position).ToLower.Contains("ati tech") Or _
+        '            reply.Substring(position, classs - position).ToLower.Contains("amd") Then
+        '            Dim part As String = reply.Substring(oem, inf - oem)
+        '            log(part + " Found")
+        '            Dim deloem As New Diagnostics.ProcessStartInfo
+
+        '            deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+        '            Try
+        '                For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
+        '                    If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
+        '                        child.ToLower.Trim.Replace(" ", "").Contains("class=media") Then
+        '                        deloem.Arguments = "-f dp_delete " + Chr(34) + part + ".inf" + Chr(34)
+        '                    End If
+        '                Next
+        '            Catch ex As Exception
+        '            End Try
+
+        '            'Uninstall Driver from driver store  delete from (oemxx.inf)
+        '            log(deloem.Arguments)
+        '            deloem.UseShellExecute = False
+        '            deloem.CreateNoWindow = True
+        '            deloem.RedirectStandardOutput = True
+        '            'creation dun process fantome pour le wait on exit.
+        '            Dim proc3 As New Diagnostics.Process
+        '            Invoke(Sub() TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine)
+        '            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        '            Invoke(Sub() TextBox1.ScrollToCaret())
+        '            log("Executing Driver Store CleanUP(delete OEM)...")
+        '            proc3.StartInfo = deloem
+        '            proc3.Start()
+        '            reply2 = proc3.StandardOutput.ReadToEnd
+        '            proc3.WaitForExit()
+
+
+        '            Invoke(Sub() TextBox1.Text = TextBox1.Text + reply2 + vbNewLine)
+        '            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
+        '            Invoke(Sub() TextBox1.ScrollToCaret())
+        '            log(reply2)
+
+        '        End If
+        '    End If
+        '    oem = reply.IndexOf("oem", oem + 1)
+        'End While
+
+
+
+        Try
+            For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
+                If Not checkvariables.isnullorwhitespace(infs) Then
+                    For Each child As String In IO.File.ReadAllLines(infs)
+                        If Not checkvariables.isnullorwhitespace(child) Then
+
+                            child = child.Replace(" ", "").Replace(vbTab, "")
+
+                            If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
+                                If child.EndsWith("%") Then
+                                    For Each providers As String In IO.File.ReadAllLines(infs)
+                                        If Not checkvariables.isnullorwhitespace(providers) Then
+
+                                            providers = providers.Replace(" ", "").Replace(vbTab, "")
+                                            If Not checkvariables.isnullorwhitespace(providers) AndAlso providers.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso _
+                                               Not providers.Contains("%") Then
+                                                If providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(provider.ToLower) Or _
+                                                   providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("ati tech") Or _
+                                                   providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("amd") Then
+
+                                                    deloem.Arguments = "dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
+                                                    Try
+                                                        For Each child3 As String In IO.File.ReadAllLines(infs)
+                                                            If Not checkvariables.isnullorwhitespace(child3) Then
+                                                                If child3.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
+                                                                    child3.ToLower.Trim.Replace(" ", "").Contains("class=media") Then
+                                                                    deloem.Arguments = "-f dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
+                                                                    Exit For
+                                                                End If
+                                                            End If
+                                                        Next
+                                                    Catch ex As Exception
+                                                    End Try
+                                                    'Uninstall Driver from driver store  delete from (oemxx.inf)
+                                                    log(deloem.Arguments)
+                                                    deloem.UseShellExecute = False
+                                                    deloem.CreateNoWindow = True
+                                                    deloem.RedirectStandardOutput = True
+                                                    'creation dun process fantome pour le wait on exit.
+
+                                                    proc3.StartInfo = deloem
+                                                    proc3.Start()
+                                                    reply2 = proc3.StandardOutput.ReadToEnd
+                                                    proc3.WaitForExit()
+
+
+                                                    UpdateTextMethod(reply2)
+                                                    log(reply2)
+                                                    Exit For
+                                                End If
+                                            End If
+                                        End If
+                                    Next
+
+                                End If
+
+                                If child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(provider.ToLower) Or _
+                                               child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("ati tech") Or _
+                                               child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("amd") Then
+                                    deloem.Arguments = "dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
+                                    Try
+                                        For Each child3 As String In IO.File.ReadAllLines(infs)
+                                            If Not checkvariables.isnullorwhitespace(child3) Then
+                                                If child3.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
+                                                    child3.ToLower.Trim.Replace(" ", "").Contains("class=media") Then
+                                                    deloem.Arguments = "-f dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
+                                                    Exit For
+                                                End If
+                                            End If
+                                        Next
+                                    Catch ex As Exception
+                                    End Try
+
+                                    'Uninstall Driver from driver store  delete from (oemxx.inf)
+                                    log(deloem.Arguments)
+                                    deloem.UseShellExecute = False
+                                    deloem.CreateNoWindow = True
+                                    deloem.RedirectStandardOutput = True
+                                    'creation dun process fantome pour le wait on exit.
+
+                                    proc3.StartInfo = deloem
+                                    proc3.Start()
+                                    reply2 = proc3.StandardOutput.ReadToEnd
+                                    proc3.WaitForExit()
+
+
+                                    UpdateTextMethod(reply2)
+                                    log(reply2)
+                                    Exit For
+                                End If
                             End If
-                        Next
-                    Catch ex As Exception
-                    End Try
-
-                    'Uninstall Driver from driver store  delete from (oemxx.inf)
-                    log(deloem.Arguments)
-                    deloem.UseShellExecute = False
-                    deloem.CreateNoWindow = True
-                    deloem.RedirectStandardOutput = True
-                    'creation dun process fantome pour le wait on exit.
-                    Dim proc3 As New Diagnostics.Process
-                    Invoke(Sub() TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine)
-                    Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                    Invoke(Sub() TextBox1.ScrollToCaret())
-                    log("Executing Driver Store CleanUP(delete OEM)...")
-                    proc3.StartInfo = deloem
-                    proc3.Start()
-                    reply2 = proc3.StandardOutput.ReadToEnd
-                    proc3.WaitForExit()
-
-
-                    Invoke(Sub() TextBox1.Text = TextBox1.Text + reply2 + vbNewLine)
-                    Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-                    Invoke(Sub() TextBox1.ScrollToCaret())
-                    log(reply2)
-
+                        End If
+                    Next
                 End If
-            End If
-            oem = reply.IndexOf("oem", oem + 1)
-        End While
+            Next
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+        UpdateTextMethod("-Driver Store cleanUP complete.")
 
-
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-Driver Store cleanUP complete." + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
         log("Driver Store CleanUP Complete.")
 
 
@@ -3639,9 +3738,8 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        Invoke(Sub() TextBox1.Text = TextBox1.Text + "-End of Registry Cleaning" + vbNewLine)
-        Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        Invoke(Sub() TextBox1.ScrollToCaret())
+        UpdateTextMethod("-End of Registry Cleaning")
+
         log("End of Registry Cleaning")
         System.Threading.Thread.Sleep(10)
     End Sub
@@ -4601,7 +4699,7 @@ Public Class Form1
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
                         If regkey IsNot Nothing Then
                             Try
-                                regkey.SetValue("*loadDDU", "cmd /c start " & Chr(34) & Chr(34) & " /d " & Chr(34) & Application.StartupPath & Chr(34) & " " & Chr(34) & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
+                                regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
                                 regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
                             Catch ex As Exception
                                 log(ex.Message & ex.StackTrace)
@@ -4627,7 +4725,7 @@ Public Class Form1
         'processinfo.CreateNoWindow = True
         'processinfo.RedirectStandardOutput = True
 
-        'creation dun process fantome pour le wait on exit.
+        ''creation dun process fantome pour le wait on exit.
 
         'process.StartInfo = processinfo
         'process.Start()
@@ -4636,35 +4734,71 @@ Public Class Form1
 
         'log("ddudr DP_ENUM RESULT BELOW")
         'log(reply)
+
         log("The following thirs-party driver packages are installed on this computer: ")
-        Dim deloem As New Diagnostics.ProcessStartInfo
-        deloem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+
         For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
-            log("---")
-            log(infs)
-            Try
-                For Each child As String In IO.File.ReadAllLines(infs)
+            If Not checkvariables.isnullorwhitespace(infs) Then
 
-                    child = child.Replace(" ", "")
-                    child = child.Replace(vbTab, "")
-                    If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
-                        log(child)
-                        Exit For
-                    End If
-                Next
+                log("---")
+                log(infs)
+                Try
 
-                For Each child As String In IO.File.ReadAllLines(infs)
-                    child = child.Replace(" ", "")
-                    child = child.Replace(vbTab, "")
-                    If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
-                        log(child)
-                        Exit For
-                    End If
-                Next
+                    For Each child As String In IO.File.ReadAllLines(infs)
+                        If Not checkvariables.isnullorwhitespace(child) Then
+                            child = child.Replace(" ", "").Replace(vbTab, "")
 
-            Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
-            End Try
+                            If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
+                                If child.EndsWith("%") Then
+                                    For Each provider As String In IO.File.ReadAllLines(infs)
+                                        If Not checkvariables.isnullorwhitespace(provider) Then
+                                            provider = provider.Replace(" ", "").Replace(vbTab, "")
+                                            If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso _
+                                               Not provider.Contains("%") Then
+                                                log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
+
+                                                Exit For
+                                            End If
+                                        End If
+                                    Next
+                                    Exit For
+                                End If
+                                log(child)
+                                Exit For
+                            End If
+                        End If
+                    Next
+
+                    For Each child As String In IO.File.ReadAllLines(infs)
+                        If Not checkvariables.isnullorwhitespace(child) Then
+
+                            child = child.Replace(" ", "").Replace(vbTab, "")
+
+                            If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
+                                If child.EndsWith("%") Then
+                                    For Each provider As String In IO.File.ReadAllLines(infs)
+                                        If Not checkvariables.isnullorwhitespace(provider) Then
+                                            provider = provider.Replace(" ", "").Replace(vbTab, "")
+                                            If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso _
+                                               Not provider.Contains("%") Then
+                                                log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
+
+                                                Exit For
+                                            End If
+                                        End If
+                                    Next
+                                    Exit For
+                                End If
+                                log(child)
+                                Exit For
+                            End If
+                        End If
+                    Next
+
+                Catch ex As Exception
+                    log(ex.Message + ex.StackTrace)
+                End Try
+            End If
         Next
     End Sub
 
@@ -4996,17 +5130,17 @@ Public Class Form1
 
             If combobox1value = "AMD" Then
                 vendidexpected = "VEN_1002"
-                provider = "Provider: Advanced Micro Devices"
+                provider = "Advanced Micro Devices"
             End If
 
             If combobox1value = "NVIDIA" Then
                 vendidexpected = "VEN_10DE"
-                provider = "Provider: NVIDIA"
+                provider = "NVIDIA"
             End If
 
             If combobox1value = "INTEL" Then
                 vendidexpected = "VEN_8086"
-                provider = "Provider: Intel"
+                provider = "Intel"
             End If
 
             UpdateTextMethod(UpdateTextMethodmessage("20") + " " & combobox1value & " " + UpdateTextMethodmessage("21"))
@@ -5232,13 +5366,13 @@ Public Class Form1
             UpdateTextMethod(UpdateTextMethodmessage("25"))
 
 
-        log("DDUDR Remove Audio controler Complete.")
+            log("DDUDR Remove Audio controler Complete.")
 
-        If Not combobox1value = "INTEL" Then
-            cleandriverstore()
-        End If
+            If Not combobox1value = "INTEL" Then
+                cleandriverstore()
+            End If
 
-        'Here I remove 3dVision USB Adapter.
+            'Here I remove 3dVision USB Adapter.
 
             If combobox1value = "NVIDIA" Then
                 Try
@@ -5485,10 +5619,10 @@ Public Class Form1
             End If
 
 
-        log("ddudr Remove Audio/HDMI Complete")
-        'removing monitor and hidden monitor
+            log("ddudr Remove Audio/HDMI Complete")
+            'removing monitor and hidden monitor
 
-        log("ddudr Remove Monitor started")
+            log("ddudr Remove Monitor started")
 
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
