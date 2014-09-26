@@ -250,7 +250,7 @@ Public Class Form1
                                             If Not checkvariables.isnullorwhitespace(providers) AndAlso providers.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso _
                                                Not providers.Contains("%") Then
                                                 If providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(provider.ToLower) Or _
-                                                   providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("ati tech") Or _
+                                                   providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.StartsWith("atitech") Or _
                                                    providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("amd") Then
 
                                                     deloem.Arguments = "dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
@@ -287,41 +287,42 @@ Public Class Form1
                                         End If
                                     Next
 
-                                End If
+                                Else
 
-                                If child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(provider.ToLower) Or _
-                                               child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("ati tech") Or _
-                                               child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("amd") Then
-                                    deloem.Arguments = "dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
-                                    Try
-                                        For Each child3 As String In IO.File.ReadAllLines(infs)
-                                            If Not checkvariables.isnullorwhitespace(child3) Then
-                                                If child3.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
-                                                    child3.ToLower.Trim.Replace(" ", "").Contains("class=media") Then
-                                                    deloem.Arguments = "-f dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
-                                                    Exit For
+                                    If child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(provider.ToLower) Or _
+                                                   child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.StartsWith("atitech") Or _
+                                                   child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("amd") Then
+                                        deloem.Arguments = "dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
+                                        Try
+                                            For Each child3 As String In IO.File.ReadAllLines(infs)
+                                                If Not checkvariables.isnullorwhitespace(child3) Then
+                                                    If child3.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
+                                                        child3.ToLower.Trim.Replace(" ", "").Contains("class=media") Then
+                                                        deloem.Arguments = "-f dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
+                                                        Exit For
+                                                    End If
                                                 End If
-                                            End If
-                                        Next
-                                    Catch ex As Exception
-                                    End Try
+                                            Next
+                                        Catch ex As Exception
+                                        End Try
 
-                                    'Uninstall Driver from driver store  delete from (oemxx.inf)
-                                    log(deloem.Arguments)
-                                    deloem.UseShellExecute = False
-                                    deloem.CreateNoWindow = True
-                                    deloem.RedirectStandardOutput = True
-                                    'creation dun process fantome pour le wait on exit.
+                                        'Uninstall Driver from driver store  delete from (oemxx.inf)
+                                        log(deloem.Arguments)
+                                        deloem.UseShellExecute = False
+                                        deloem.CreateNoWindow = True
+                                        deloem.RedirectStandardOutput = True
+                                        'creation dun process fantome pour le wait on exit.
 
-                                    proc3.StartInfo = deloem
-                                    proc3.Start()
-                                    reply2 = proc3.StandardOutput.ReadToEnd
-                                    proc3.WaitForExit()
+                                        proc3.StartInfo = deloem
+                                        proc3.Start()
+                                        reply2 = proc3.StandardOutput.ReadToEnd
+                                        proc3.WaitForExit()
 
 
-                                    UpdateTextMethod(reply2)
-                                    log(reply2)
-                                    Exit For
+                                        UpdateTextMethod(reply2)
+                                        log(reply2)
+                                        Exit For
+                                    End If
                                 End If
                             End If
                         End If
@@ -3741,7 +3742,7 @@ Public Class Form1
         UpdateTextMethod("-End of Registry Cleaning")
 
         log("End of Registry Cleaning")
-        System.Threading.Thread.Sleep(10)
+
     End Sub
     Private Sub cleanintelfolders()
 
@@ -4735,14 +4736,19 @@ Public Class Form1
         'log("ddudr DP_ENUM RESULT BELOW")
         'log(reply)
 
+        getoeminfo()
+        
+    End Sub
+    Sub getoeminfo()
+
         log("The following thirs-party driver packages are installed on this computer: ")
 
-        For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
-            If Not checkvariables.isnullorwhitespace(infs) Then
+        Try
+            For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
+                If Not checkvariables.isnullorwhitespace(infs) Then
 
-                log("---")
-                log(infs)
-                Try
+                    log("---")
+                    log(infs)
 
                     For Each child As String In IO.File.ReadAllLines(infs)
                         If Not checkvariables.isnullorwhitespace(child) Then
@@ -4756,7 +4762,6 @@ Public Class Form1
                                             If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso _
                                                Not provider.Contains("%") Then
                                                 log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
-
                                                 Exit For
                                             End If
                                         End If
@@ -4782,7 +4787,6 @@ Public Class Form1
                                             If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso _
                                                Not provider.Contains("%") Then
                                                 log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
-
                                                 Exit For
                                             End If
                                         End If
@@ -4794,12 +4798,12 @@ Public Class Form1
                             End If
                         End If
                     Next
+                End If
+            Next
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
 
-                Catch ex As Exception
-                    log(ex.Message + ex.StackTrace)
-                End Try
-            End If
-        Next
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
@@ -5041,9 +5045,9 @@ Public Class Form1
             wlog.WriteLine(DateTime.Now & " >> " & value)
             wlog.Flush()
             wlog.Dispose()
-            System.Threading.Thread.Sleep(20)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
+            '  System.Threading.Thread.Sleep(10)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
         Else
-
+            'do nothing
         End If
     End Sub
 
