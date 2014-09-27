@@ -2403,6 +2403,52 @@ Public Class Form1
                             End Try
                         End If
                     End If
+                    If child.ToLower.Contains("installer2") Then
+                        For Each child2 As String In Directory.GetDirectories(child)
+                            If checkvariables.isnullorwhitespace(child2) = False Then
+                                If child2.ToLower.Contains("display.3dvision") Or _
+                                   child2.ToLower.Contains("display.controlpanel") Or _
+                                   child2.ToLower.Contains("display.driver") Or _
+                                   child2.ToLower.Contains("display.gfexperience") Or _
+                                   child2.ToLower.Contains("display.nvirusb") Or _
+                                   child2.ToLower.Contains("display.physx") Or _
+                                   child2.ToLower.Contains("display.update") Or _
+                                   child2.ToLower.Contains("gfexperience") Or _
+                                   child2.ToLower.Contains("nvidia.update") Or _
+                                   child2.ToLower.Contains("installer2\installer") Or _
+                                   child2.ToLower.Contains("network.service") Or _
+                                   child2.ToLower.Contains("miracast.virtualaudio") Or _
+                                   child2.ToLower.Contains("shadowplay") Or _
+                                   child2.ToLower.Contains("update.core") Or _
+                                   child2.ToLower.Contains("virtualaudio.driver") Or _
+                                   child2.ToLower.Contains("coretemp") Or _
+                                   child2.ToLower.Contains("shield") Or _
+                                   child2.ToLower.Contains("hdaudio.driver") Then
+                                    If (removephysx Or Not ((Not removephysx) And child2.ToLower.Contains("physx"))) Then
+                                        Try
+                                            My.Computer.FileSystem.DeleteDirectory _
+                                            (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                        Catch ex As Exception
+                                            log(ex.Message)
+                                            TestDelete(child2)
+                                        End Try
+                                    End If
+                                End If
+                            End If
+                        Next
+                        Try
+                            If Directory.GetDirectories(child).Length = 0 Then
+                                Try
+                                    My.Computer.FileSystem.DeleteDirectory _
+                                        (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                    TestDelete(child)
+                                End Try
+                            End If
+                        Catch ex As Exception
+                        End Try
+                    End If
                 End If
             Next
             Try
@@ -2706,6 +2752,29 @@ Public Class Form1
 
         CleanupEngine.clsidleftover(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 
+        '----------------------------
+        'Clean the rebootneed message
+        '----------------------------
+        Try
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If Not checkvariables.isnullorwhitespace(child) Then
+                        If child.ToLower.Contains("nvidia_rebootneeded") Then
+                            Try
+                                regkey.DeleteSubKeyTree(child)
+                            Catch ex As Exception
+                                log(ex.Message + ex.StackTrace)
+                            End Try
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+
         '-----------------
         'interface cleanup
         '-----------------
@@ -2767,7 +2836,7 @@ Public Class Form1
         log("Firewall entry cleanUP")
         Try
             If winxp = False Then
-                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\", False)
+                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
                 If subregkey IsNot Nothing Then
                     For Each child2 As String In subregkey.GetSubKeyNames()
                         If child2.ToLower.Contains("controlset") Then
@@ -2811,7 +2880,7 @@ Public Class Form1
         log("Power Settings Cleanup")
         Try
             If winxp = False Then
-                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\", False)
+                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
                 If subregkey IsNot Nothing Then
                     For Each child2 As String In subregkey.GetSubKeyNames()
                         If child2.ToLower.Contains("controlset") Then
@@ -4461,70 +4530,73 @@ Public Class Form1
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames
-                    If Not child.ToLower.Contains("properties") Then
+                    If Not checkvariables.isnullorwhitespace(child) Then
 
-                        subregkey = regkey.OpenSubKey(child)
-                        If subregkey IsNot Nothing Then
+                        If Not child.ToLower.Contains("properties") Then
 
-                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc").ToString) Then
-                                currentdriverversion = subregkey.GetValue("DriverDesc").ToString
-                                UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
-                                log("GPU #" + child + " Detected : " + currentdriverversion)
-                            End If
-                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId").ToString) Then
-                                currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
-                                UpdateTextMethod(UpdateTextMethodmessage("13") + " " + currentdriverversion)
-                                log("GPU DeviceId : " + currentdriverversion)
-                                If currentdriverversion.ToLower.Contains("ven_8086") Then
-                                    ComboBox1.SelectedIndex = 2
-                                    PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-                                    PictureBox2.Size = New Size(158, 126)
-                                End If
-                                If currentdriverversion.ToLower.Contains("ven_10de") Then
-                                    ComboBox1.SelectedIndex = 0
-                                    PictureBox2.Location = New Point(286 * (picturebox2originalx / 333), 92 * (picturebox2originaly / 92))
-                                    PictureBox2.Size = New Size(252, 123)
-                                End If
-                                If currentdriverversion.ToLower.Contains("ven_1002") Then
-                                    ComboBox1.SelectedIndex = 1
-                                    PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-                                    PictureBox2.Size = New Size(158, 126)
-                                End If
-                            End If
+                            subregkey = regkey.OpenSubKey(child)
+                            If subregkey IsNot Nothing Then
 
-                            Try
-                                If subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
-                                    UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
-                                    log("Vbios :" + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
-                                Else
-                                    If Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString")) Then
-                                        currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
-                                        UpdateTextMethod("Vbios :" + " " + currentdriverversion)
-                                        log("Vbios : " + currentdriverversion)
+                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc").ToString) Then
+                                    currentdriverversion = subregkey.GetValue("DriverDesc").ToString
+                                    UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
+                                    log("GPU #" + child + " Detected : " + currentdriverversion)
+                                End If
+                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId").ToString) Then
+                                    currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
+                                    UpdateTextMethod(UpdateTextMethodmessage("13") + " " + currentdriverversion)
+                                    log("GPU DeviceId : " + currentdriverversion)
+                                    If currentdriverversion.ToLower.Contains("ven_8086") Then
+                                        ComboBox1.SelectedIndex = 2
+                                        PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+                                        PictureBox2.Size = New Size(158, 126)
+                                    End If
+                                    If currentdriverversion.ToLower.Contains("ven_10de") Then
+                                        ComboBox1.SelectedIndex = 0
+                                        PictureBox2.Location = New Point(286 * (picturebox2originalx / 333), 92 * (picturebox2originaly / 92))
+                                        PictureBox2.Size = New Size(252, 123)
+                                    End If
+                                    If currentdriverversion.ToLower.Contains("ven_1002") Then
+                                        ComboBox1.SelectedIndex = 1
+                                        PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+                                        PictureBox2.Size = New Size(158, 126)
                                     End If
                                 End If
-                            Catch ex As Exception
-                            End Try
+
+                                Try
+                                    If subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
+                                        UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
+                                        log("Vbios :" + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
+                                    Else
+                                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString")) Then
+                                            currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
+                                            UpdateTextMethod("Vbios :" + " " + currentdriverversion)
+                                            log("Vbios : " + currentdriverversion)
+                                        End If
+                                    End If
+                                Catch ex As Exception
+                                End Try
 
 
-                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverVersion")) Then
-                                currentdriverversion = subregkey.GetValue("DriverVersion").ToString
-                                UpdateTextMethod(UpdateTextMethodmessage("14") + " " + currentdriverversion)
-                                log("Detected Driver(s) Version(s) : " + currentdriverversion)
+                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverVersion")) Then
+                                    currentdriverversion = subregkey.GetValue("DriverVersion").ToString
+                                    UpdateTextMethod(UpdateTextMethodmessage("14") + " " + currentdriverversion)
+                                    log("Detected Driver(s) Version(s) : " + currentdriverversion)
+                                End If
+                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfPath")) Then
+                                    currentdriverversion = subregkey.GetValue("InfPath").ToString
+                                    UpdateTextMethod(UpdateTextMethodmessage("15") + " " + currentdriverversion)
+                                    log("INF : " + currentdriverversion)
+                                End If
+                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfSection")) Then
+                                    currentdriverversion = subregkey.GetValue("InfSection").ToString
+                                    UpdateTextMethod(UpdateTextMethodmessage("16") + " " + currentdriverversion)
+                                    log("INF Section : " + currentdriverversion)
+                                End If
                             End If
-                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfPath")) Then
-                                currentdriverversion = subregkey.GetValue("InfPath").ToString
-                                UpdateTextMethod(UpdateTextMethodmessage("15") + " " + currentdriverversion)
-                                log("INF : " + currentdriverversion)
-                            End If
-                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfSection")) Then
-                                currentdriverversion = subregkey.GetValue("InfSection").ToString
-                                UpdateTextMethod(UpdateTextMethodmessage("16") + " " + currentdriverversion)
-                                log("INF Section : " + currentdriverversion)
-                            End If
+                            UpdateTextMethod("--------------")
+                            log("--------------")
                         End If
-                        UpdateTextMethod("--------------")
-                        log("--------------")
                     End If
                 Next
             End If
@@ -4541,36 +4613,38 @@ Public Class Form1
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
 
             For Each child As String In regkey.GetSubKeyNames
-                If child.ToLower.Contains("ven_10de") Or _
-                    child.ToLower.Contains("ven_8086") Or _
-                   child.ToLower.Contains("ven_1002") Then
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains("ven_10de") Or _
+                        child.ToLower.Contains("ven_8086") Or _
+                       child.ToLower.Contains("ven_1002") Then
 
-                    subregkey = regkey.OpenSubKey(child)
-                    For Each child2 As String In subregkey.GetSubKeyNames
+                        subregkey = regkey.OpenSubKey(child)
+                        For Each child2 As String In subregkey.GetSubKeyNames
 
-                        If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
-                            'if the device does not return null here, it mean it has a class associated with it
-                            'so we skip it as we search for missing one.
-                            Continue For
-                        End If
+                            If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
+                                'if the device does not return null here, it mean it has a class associated with it
+                                'so we skip it as we search for missing one.
+                                Continue For
+                            End If
 
-                        array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
+                            array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
 
-                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                            For i As Integer = 0 To array.Length - 1
-                                If array(i).ToLower.Contains("pci\cc_03") Then
-                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) Then
-                                        currentdriverversion = subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessage("17") + " " + currentdriverversion)
-                                        log("Not Correctly Installed GPU : " + currentdriverversion)
-                                        UpdateTextMethod("--------------")
-                                        log("--------------")
-                                        Exit For  'we exit as we have found what we were looking for
+                            If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                For i As Integer = 0 To array.Length - 1
+                                    If array(i).ToLower.Contains("pci\cc_03") Then
+                                        If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) Then
+                                            currentdriverversion = subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString
+                                            UpdateTextMethod(UpdateTextMethodmessage("17") + " " + currentdriverversion)
+                                            log("Not Correctly Installed GPU : " + currentdriverversion)
+                                            UpdateTextMethod("--------------")
+                                            log("--------------")
+                                            Exit For  'we exit as we have found what we were looking for
+                                        End If
                                     End If
-                                End If
-                            Next
-                        End If
-                    Next
+                                Next
+                            End If
+                        Next
+                    End If
                 End If
             Next
         Catch ex As Exception
@@ -5153,6 +5227,7 @@ Public Class Form1
 
             Try
                 If combobox1value = "NVIDIA" Then
+
                     temporarynvidiaspeedup()   'we do this If and until nvidia speed up their installer that is impacting "ddudr remove" of the GPU from device manager.
                 End If
             Catch ex As Exception
@@ -6013,8 +6088,6 @@ Public Class Form1
                                             My.Computer.FileSystem.DeleteDirectory _
                                             (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                         Catch ex As Exception
-                                            log(ex.Message)
-                                            TestDelete(child2)
                                         End Try
                                     End If
                                 End If
@@ -6026,8 +6099,6 @@ Public Class Form1
                                     My.Computer.FileSystem.DeleteDirectory _
                                         (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
                                 Catch ex As Exception
-                                    log(ex.Message)
-                                    TestDelete(child)
                                 End Try
                             End If
                         Catch ex As Exception
