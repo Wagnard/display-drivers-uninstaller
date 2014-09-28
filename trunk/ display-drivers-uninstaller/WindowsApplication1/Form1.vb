@@ -4048,19 +4048,22 @@ Public Class Form1
                             If subregkey IsNot Nothing Then
                                 For Each childs As String In subregkey.GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(childs) = False Then
-                                        array = subregkey.OpenSubKey(childs).GetValue("UpperFilters")    'do a .tostring here?
+                                        array = subregkey.OpenSubKey(childs).GetValue("UpperFilters")
                                         If (array IsNot Nothing) AndAlso (Not array.Length < 1) Then
                                             For i As Integer = 0 To array.Length - 1
-                                                If (Not checkvariables.isnullorwhitespace(array(i))) AndAlso (array(i).ToLower.Contains("nvpciflt")) Then
+                                                If Not checkvariables.isnullorwhitespace(array(i)) Then
+                                                    log("UpperFilter found : " + array(i))
+                                                    If (array(i).ToLower.Contains("nvpciflt")) Then
 
-                                                    log("nVidia Optimus UpperFilter Found.")
+                                                        log("nVidia Optimus UpperFilter Found.")
 
-                                                    Try
-                                                        subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
-                                                    Catch ex As Exception
-                                                        log(ex.Message + ex.StackTrace)
-                                                        log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
-                                                    End Try
+                                                        Try
+                                                            subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
+                                                        Catch ex As Exception
+                                                            log(ex.Message + ex.StackTrace)
+                                                            log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
+                                                        End Try
+                                                    End If
                                                 End If
                                             Next
                                         End If
@@ -5208,7 +5211,7 @@ Public Class Form1
 
             If combobox1value = "AMD" Then
                 vendidexpected = "VEN_1002"
-                provider = "Advanced Micro Devices"
+                provider = "AdvancedMicroDevices"
             End If
 
             If combobox1value = "NVIDIA" Then
