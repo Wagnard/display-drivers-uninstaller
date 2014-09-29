@@ -4293,7 +4293,7 @@ Public Class Form1
                 ComboBox2.SelectedIndex = ComboBox2.FindString("Japanese")
 
             ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("uk") Then
-                ComboBox2.SelectedIndex = ComboBox2.FindString("Ukraine")
+                ComboBox2.SelectedIndex = ComboBox2.FindString("Ukrainian")
 
             Else
                 ComboBox2.SelectedIndex = ComboBox2.FindString("English")
