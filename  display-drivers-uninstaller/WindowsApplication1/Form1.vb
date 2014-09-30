@@ -3190,6 +3190,7 @@ Public Class Form1
                                     For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
                                         If checkvariables.isnullorwhitespace(child2) = False Then
                                             If child2.ToLower.Contains("global") Or _
+                                                child2.ToLower.Contains("logging") Or _
                                                child2.ToLower.Contains("nvbackend") Or _
                                                child2.ToLower.Contains("nvidia update core") Or _
                                                 child2.ToLower.Contains("nvcontrolpanel2") Or _
@@ -3267,6 +3268,7 @@ Public Class Form1
                                 If checkvariables.isnullorwhitespace(child2) = False Then
                                     If child2.ToLower.Contains("global") Or _
                                        child2.ToLower.Contains("installer") Or _
+                                       child2.ToLower.Contains("logging") Or _
                                         child2.ToLower.Contains("installer2") Or _
                                         child2.ToLower.Contains("nvidia update core") Or _
                                         child2.ToLower.Contains("nvcontrolpanel") Or _
@@ -3312,6 +3314,7 @@ Public Class Form1
                                 For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(child2) = False Then
                                         If child2.ToLower.Contains("global") Or _
+                                            child2.ToLower.Contains("logging") Or _
                                            child2.ToLower.Contains("installer2") Or _
                                            child2.ToLower.Contains("physx") Then
                                             If removephysx Then
