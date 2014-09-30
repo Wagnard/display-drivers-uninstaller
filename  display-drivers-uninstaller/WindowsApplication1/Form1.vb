@@ -1747,12 +1747,10 @@ Public Class Form1
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        Try
-                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
+
+                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
+
                         If subregkey IsNot Nothing Then
                             If checkvariables.isnullorwhitespace(subregkey.GetValue("DisplayName")) = False Then
                                 wantedvalue = subregkey.GetValue("DisplayName").ToString
@@ -1862,6 +1860,7 @@ Public Class Form1
                         child.Contains("kbdsdk64.dll") Or _
                         child.Contains("clinfo") Or _
                         child.Contains("SlotMaximizer") Or _
+                        child.Contains("amdacpusl") Or _
                         child.Contains("cccutil") Then
                             Try
                                 regkey.DeleteValue(child)
