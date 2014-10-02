@@ -4592,12 +4592,19 @@ Public Class Form1
                             subregkey = regkey.OpenSubKey(child)
                             If subregkey IsNot Nothing Then
 
-                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc").ToString) Then
-                                    currentdriverversion = subregkey.GetValue("DriverDesc").ToString
+                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("Device Description")) Then
+                                    currentdriverversion = subregkey.GetValue("Device Description").ToString
                                     UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
                                     log("GPU #" + child + " Detected : " + currentdriverversion)
+                                Else
+
+                                    If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc")) Then
+                                        currentdriverversion = subregkey.GetValue("DriverDesc").ToString
+                                        UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
+                                        log("GPU #" + child + " Detected : " + currentdriverversion)
+                                    End If
                                 End If
-                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId").ToString) Then
+                                If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId")) Then
                                     currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
                                     UpdateTextMethod(UpdateTextMethodmessage("13") + " " + currentdriverversion)
                                     log("GPU DeviceId : " + currentdriverversion)
