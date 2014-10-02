@@ -1551,6 +1551,44 @@ Public Class Form1
                             End Try
                         End If
                         If child.ToLower.Contains("install") Then
+                            'here we check the install path location in case CCC is not installed on the system drive
+                            Try
+                                If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("InstallDir")) Then
+                                    filePath = regkey.OpenSubKey(child).GetValue("InstallDir").ToString
+                                    If Not checkvariables.isnullorwhitespace(filePath) Then
+
+                                        For Each childf As String In Directory.GetDirectories(filePath)
+                                            If checkvariables.isnullorwhitespace(childf) = False Then
+                                                If childf.ToLower.Contains("ati.ace") Then
+                                                    Try
+                                                        My.Computer.FileSystem.DeleteDirectory _
+                                                        (childf, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                    Catch ex As Exception
+                                                        log(ex.Message)
+                                                        TestDelete(childf)
+                                                    End Try
+                                                End If
+                                            End If
+                                        Next
+                                        Try
+                                            If Directory.GetDirectories(filePath).Length = 0 Then
+                                                Try
+                                                    My.Computer.FileSystem.DeleteDirectory _
+                                                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                Catch ex As Exception
+                                                    log(ex.Message)
+                                                    TestDelete(filePath)
+                                                End Try
+                                            End If
+                                        Catch ex As Exception
+                                        End Try
+
+                                    End If
+                                End If
+
+                            Catch ex As Exception
+                                log(ex.Message + ex.StackTrace)
+                            End Try
                             For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
                                 If child2.ToLower.Contains("ati catalyst") Or _
                                     child2.ToLower.Contains("ati mcat") Or _
@@ -4349,6 +4387,12 @@ Public Class Form1
 
         End If
 
+
+        If Not checkvariables.isnullorwhitespace(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion")) Then
+            version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
+
+        End If
+
         If version < "5.1" Then
 
             Label2.Text = "Unsupported OS"
@@ -4386,7 +4430,13 @@ Public Class Form1
             Label2.Text = "Windows 8.1"
             win8higher = True
         End If
-        If version >= "6.4" Then
+
+        If version.StartsWith("6.4") Then
+            Label2.Text = "Windows 10"
+            win8higher = True
+        End If
+
+        If version > "6.4" Then
             Label2.Text = "Unsupported O.S"
             win8higher = True
             Button1.Enabled = False
@@ -4816,7 +4866,7 @@ Public Class Form1
         'log(reply)
 
         getoeminfo()
-        
+
     End Sub
     Sub getoeminfo()
 
