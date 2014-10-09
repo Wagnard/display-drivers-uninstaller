@@ -2756,6 +2756,10 @@ Public Class Form1
                         child.ToLower.Contains("nvidia.sett") Or _
                         child.ToLower.Contains("nvidia.updateservice") Or _
                         child.ToLower.Contains("nvidia.win32api") Or _
+                        child.ToLower.Contains("installeruiextension") Or _
+                        child.ToLower.Contains("installerservice") Or _
+                        child.ToLower.Contains("gridservice") Or _
+                        child.ToLower.Contains("shadowplay") Or _
                        child.ToLower.Contains("nvidia.gfe") Then
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
@@ -3401,13 +3405,14 @@ Public Class Form1
                             child.ToLower.Contains("_display.nvirusb") Or _
                             child.ToLower.Contains("_display.physx") Or _
                             child.ToLower.Contains("_display.update") Or _
-                            child.ToLower.Contains("_gfexperience.") Or _
+                            child.ToLower.Contains("_gfexperience") Or _
                             child.ToLower.Contains("_hdaudio.driver") Or _
                             child.ToLower.Contains("_installer") Or _
                             child.ToLower.Contains("_network.service") Or _
                             child.ToLower.Contains("_shadowplay") Or _
                             child.ToLower.Contains("_update.core") Or _
                             child.ToLower.Contains("nvidiastereo") Or _
+                            child.ToLower.Contains("_shieldwireless") Or _
                             child.ToLower.Contains("miracast.virtualaudio") Or _
                             child.ToLower.Contains("_virtualaudio.driver") Then
                             If removephysx = False And child.ToLower.Contains("physx") Then
@@ -3453,13 +3458,14 @@ Public Class Form1
                         child.ToLower.Contains("_display.physx") Or _
                         child.ToLower.Contains("_display.update") Or _
                         child.ToLower.Contains("_nvidia.update") Or _
-                        child.ToLower.Contains("_gfexperience.") Or _
+                        child.ToLower.Contains("_gfexperience") Or _
                         child.ToLower.Contains("_hdaudio.driver") Or _
                         child.ToLower.Contains("_installer") Or _
                         child.ToLower.Contains("_network.service") Or _
                         child.ToLower.Contains("_shadowplay") Or _
                         child.ToLower.Contains("_update.core") Or _
                         child.ToLower.Contains("nvidiastereo") Or _
+                        child.ToLower.Contains("_shieldwireless") Or _
                         child.ToLower.Contains("miracast.virtualaudio") Or _
                         child.ToLower.Contains("_virtualaudio.driver") Then
                         If removephysx = False And child.ToLower.Contains("physx") Then
