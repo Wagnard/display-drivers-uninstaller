@@ -2793,9 +2793,9 @@ Public Class Form1
 
         CleanupEngine.clsidleftover(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 
-        '----------------------------
-        'Clean the rebootneed message
-        '----------------------------
+        '------------------------------
+        'Clean the rebootneeded message
+        '------------------------------
         Try
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE", True)
@@ -3560,6 +3560,49 @@ Public Class Form1
         End Try
 
         log("ngenservice Clean")
+
+
+        '-----------------
+        'MUI cache cleanUP
+        '-----------------
+        log("MuiCache CleanUP")
+        Try
+            
+            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames
+                If Not checkvariables.isnullorwhitespace(users) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey(users & "\software\classes\local settings\muicache", False)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child) = False Then
+                                subregkey = regkey.OpenSubKey(child, False)
+                                If subregkey IsNot Nothing Then
+                                    For Each childs As String In subregkey.GetSubKeyNames()
+                                        If checkvariables.isnullorwhitespace(childs) = False Then
+                                            For Each Keyname As String In subregkey.OpenSubKey(childs).GetValueNames
+                                                If Not checkvariables.isnullorwhitespace(Keyname) Then
+
+                                                    If Keyname.ToLower.Contains("nvstlink.exe") Or _
+                                                       Keyname.ToLower.Contains("nvcpluir.dll") Then
+                                                        Try
+                                                            subregkey.OpenSubKey(childs, True).DeleteValue(Keyname)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                End If
+                                            Next
+                                        End If
+                                    Next
+                                End If
+                            End If
+                        Next
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+
 
         '----------------------
         '.net ngenservice clean
@@ -6848,7 +6891,7 @@ Public Class CleanupEngine
                                 If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
                                     For Each child As String In regkey.GetSubKeyNames()
                                         If checkvariables.isnullorwhitespace(child) = False Then
-                                            If child.ToLower.Contains(driverfiles(i).ToLower) Then
+                                            If child.ToLower.Replace("/", "\").Contains(driverfiles(i).ToLower) Then
                                                 Try
                                                     regkey.DeleteSubKeyTree(child)
                                                 Catch ex As Exception
