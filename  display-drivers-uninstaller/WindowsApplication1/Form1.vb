@@ -2086,58 +2086,59 @@ Public Class Form1
 
         'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
         'holding files in the NVIDIA folders sometimes.
+        Try
+            Dim appproc = process.GetProcessesByName("Lcore")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
 
-        Dim appproc = process.GetProcessesByName("Lcore")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
+            appproc = process.GetProcessesByName("nvstreamsvc")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
 
-        appproc = process.GetProcessesByName("nvstreamsvc")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
-
-        appproc = process.GetProcessesByName("NvTmru")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
+            appproc = process.GetProcessesByName("NvTmru")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
 
 
-        appproc = process.GetProcessesByName("nvxdsync")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
+            appproc = process.GetProcessesByName("nvxdsync")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
 
-        appproc = process.GetProcessesByName("nvtray")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
+            appproc = process.GetProcessesByName("nvtray")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
 
-        appproc = process.GetProcessesByName("dwm")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
+            appproc = process.GetProcessesByName("dwm")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
 
-        appproc = process.GetProcessesByName("WWAHost")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
+            appproc = process.GetProcessesByName("WWAHost")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
 
-        appproc = process.GetProcessesByName("nvspcaps64")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
+            appproc = process.GetProcessesByName("nvspcaps64")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
 
-        appproc = process.GetProcessesByName("nvspcaps")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
+            appproc = process.GetProcessesByName("nvspcaps")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
 
-        appproc = process.GetProcessesByName("NvBackend")
-        For i As Integer = 0 To appproc.Length - 1
-            appproc(i).Kill()
-        Next i
-
+            appproc = process.GetProcessesByName("NvBackend")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub cleannvidiafolders()
@@ -2773,6 +2774,48 @@ Public Class Form1
             Next
         Catch ex As Exception
             log(ex.Message)
+        End Try
+
+        '-----------------
+        'MUI cache cleanUP
+        '-----------------
+        'Note: this MUST be done after cleaning the folders.
+        log("MuiCache CleanUP")
+        Try
+
+            For Each regusers As String In My.Computer.Registry.Users.GetSubKeyNames
+                If Not checkvariables.isnullorwhitespace(regusers) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey(regusers & "\software\classes\local settings\muicache", False)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child) = False Then
+                                subregkey = regkey.OpenSubKey(child, False)
+                                If subregkey IsNot Nothing Then
+                                    For Each childs As String In subregkey.GetSubKeyNames()
+                                        If checkvariables.isnullorwhitespace(childs) = False Then
+                                            For Each Keyname As String In subregkey.OpenSubKey(childs).GetValueNames
+                                                If Not checkvariables.isnullorwhitespace(Keyname) Then
+
+                                                    If Keyname.ToLower.Contains("nvstlink.exe") Or _
+                                                       Keyname.ToLower.Contains("nvcpluir.dll") Then
+                                                        Try
+                                                            subregkey.OpenSubKey(childs, True).DeleteValue(Keyname)
+                                                        Catch ex As Exception
+                                                            log(ex.Message + ex.StackTrace)
+                                                        End Try
+                                                    End If
+                                                End If
+                                            Next
+                                        End If
+                                    Next
+                                End If
+                            End If
+                        Next
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
         End Try
 
     End Sub
@@ -3560,48 +3603,6 @@ Public Class Form1
         End Try
 
         log("ngenservice Clean")
-
-
-        '-----------------
-        'MUI cache cleanUP
-        '-----------------
-        log("MuiCache CleanUP")
-        Try
-            
-            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames
-                If Not checkvariables.isnullorwhitespace(users) Then
-                    regkey = My.Computer.Registry.Users.OpenSubKey(users & "\software\classes\local settings\muicache", False)
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames()
-                            If checkvariables.isnullorwhitespace(child) = False Then
-                                subregkey = regkey.OpenSubKey(child, False)
-                                If subregkey IsNot Nothing Then
-                                    For Each childs As String In subregkey.GetSubKeyNames()
-                                        If checkvariables.isnullorwhitespace(childs) = False Then
-                                            For Each Keyname As String In subregkey.OpenSubKey(childs).GetValueNames
-                                                If Not checkvariables.isnullorwhitespace(Keyname) Then
-
-                                                    If Keyname.ToLower.Contains("nvstlink.exe") Or _
-                                                       Keyname.ToLower.Contains("nvcpluir.dll") Then
-                                                        Try
-                                                            subregkey.OpenSubKey(childs, True).DeleteValue(Keyname)
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                End If
-                                            Next
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        Next
-                    End If
-                End If
-            Next
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
 
 
         '----------------------
@@ -5649,28 +5650,29 @@ Public Class Form1
                                 If subregkey IsNot Nothing Then
 
                                     For Each child2 As String In subregkey.GetSubKeyNames
+                                        If Not checkvariables.isnullorwhitespace(child2) Then
+                                            If subregkey.OpenSubKey(child2) Is Nothing Then
+                                                Continue For
+                                            End If
 
-                                        If subregkey.OpenSubKey(child2) Is Nothing Then
-                                            Continue For
-                                        End If
+                                            If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) AndAlso _
+                                               subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
 
-                                        If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) AndAlso _
-                                           subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
+                                                vendid = child & "\" & child2
 
-                                            vendid = child & "\" & child2
+                                                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                                processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
+                                                processinfo.UseShellExecute = False
+                                                processinfo.CreateNoWindow = True
+                                                processinfo.RedirectStandardOutput = True
+                                                process.StartInfo = processinfo
 
-                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                            processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
-                                            processinfo.UseShellExecute = False
-                                            processinfo.CreateNoWindow = True
-                                            processinfo.RedirectStandardOutput = True
-                                            process.StartInfo = processinfo
+                                                process.Start()
+                                                reply2 = process.StandardOutput.ReadToEnd
+                                                process.WaitForExit()
+                                                log(reply2)
 
-                                            process.Start()
-                                            reply2 = process.StandardOutput.ReadToEnd
-                                            process.WaitForExit()
-                                            log(reply2)
-
+                                            End If
                                         End If
                                     Next
                                 End If
@@ -5834,26 +5836,27 @@ Public Class Form1
                             If subregkey IsNot Nothing Then
 
                                 For Each child2 As String In subregkey.GetSubKeyNames
+                                    If Not checkvariables.isnullorwhitespace(child2) Then
 
-                                    If subregkey.OpenSubKey(child2) Is Nothing Then
-                                        Continue For
+                                        If subregkey.OpenSubKey(child2) Is Nothing Then
+                                            Continue For
+                                        End If
+
+                                        vendid = child & "\" & child2
+
+
+                                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                        processinfo.Arguments = "remove " & Chr(34) & "@DISPLAY\" & vendid & Chr(34)
+                                        processinfo.UseShellExecute = False
+                                        processinfo.CreateNoWindow = True
+                                        processinfo.RedirectStandardOutput = True
+                                        process.StartInfo = processinfo
+
+                                        process.Start()
+                                        reply2 = process.StandardOutput.ReadToEnd
+                                        process.WaitForExit()
+                                        log(reply2)
                                     End If
-
-                                    vendid = child & "\" & child2
-
-
-                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                    processinfo.Arguments = "remove " & Chr(34) & "@DISPLAY\" & vendid & Chr(34)
-                                    processinfo.UseShellExecute = False
-                                    processinfo.CreateNoWindow = True
-                                    processinfo.RedirectStandardOutput = True
-                                    process.StartInfo = processinfo
-
-                                    process.Start()
-                                    reply2 = process.StandardOutput.ReadToEnd
-                                    process.WaitForExit()
-                                    log(reply2)
-
                                 Next
                             End If
                         End If
@@ -6954,58 +6957,52 @@ Public Class CleanupEngine
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\InProcServer32", False)
-                        Try
-                            If subregkey IsNot Nothing Then
-                                If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
-                                    wantedvalue = subregkey.GetValue("").ToString
-                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                        For i As Integer = 0 To clsidleftover.Length - 1
-                                            If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
-                                                If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
+                        If subregkey IsNot Nothing Then
+                            If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
+                                wantedvalue = subregkey.GetValue("").ToString
+                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                    For i As Integer = 0 To clsidleftover.Length - 1
+                                        If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                            If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
+
+                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                If subregkey2 IsNot Nothing Then
+
                                                     Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                        If subregkey2 IsNot Nothing Then
-
+                                                        If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child).GetValue("AppID")) Then
+                                                            appid = subregkey2.OpenSubKey(child).GetValue("AppID").ToString
                                                             Try
-                                                                If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child).GetValue("AppID")) Then
-                                                                    appid = subregkey2.OpenSubKey(child).GetValue("AppID").ToString
-                                                                    Try
-                                                                        My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                End If
+                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
                                                             Catch ex As Exception
                                                             End Try
-
-                                                            Try
-                                                                If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child & "\TypeLib").GetValue("")) Then
-                                                                    typelib = subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString
-                                                                    Try
-                                                                        My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                End If
-                                                            Catch ex As Exception
-                                                            End Try
-
-                                                            subregkey2.DeleteSubKeyTree(child)
                                                         End If
                                                     Catch ex As Exception
-                                                        f.log(ex.Message + ex.StackTrace)
                                                     End Try
+
+                                                    Try
+                                                        If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child & "\TypeLib").GetValue("")) Then
+                                                            typelib = subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString
+                                                            Try
+                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        End If
+                                                    Catch ex As Exception
+                                                    End Try
+
+                                                    subregkey2.DeleteSubKeyTree(child)
                                                 End If
                                             End If
-                                        Next
-                                    End If
+                                        End If
+                                    Next
                                 End If
                             End If
-                        Catch ex As Exception
-                        End Try
+                        End If
                     End If
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.StackTrace)
+            f.log(ex.Message + ex.StackTrace)
         End Try
 
         Try
@@ -7014,58 +7011,51 @@ Public Class CleanupEngine
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child, False)
-                        Try
-                            If subregkey IsNot Nothing Then
-                                If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
-                                    wantedvalue = subregkey.GetValue("").ToString
-                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                        For i As Integer = 0 To clsidleftover.Length - 1
-                                            If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
-                                                If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
+                        If subregkey IsNot Nothing Then
+                            If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
+                                wantedvalue = subregkey.GetValue("").ToString
+                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                    For i As Integer = 0 To clsidleftover.Length - 1
+                                        If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                            If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
+                                                subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+                                                If subregkey2 IsNot Nothing Then
+
                                                     Try
-                                                        subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
-                                                        If subregkey2 IsNot Nothing Then
-
+                                                        If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child).GetValue("AppID")) Then
+                                                            appid = subregkey2.OpenSubKey(child).GetValue("AppID").ToString
                                                             Try
-                                                                If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child).GetValue("AppID")) Then
-                                                                    appid = subregkey2.OpenSubKey(child).GetValue("AppID").ToString
-                                                                    Try
-                                                                        My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                End If
+                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
                                                             Catch ex As Exception
                                                             End Try
-
-                                                            Try
-                                                                If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child & "\TypeLib").GetValue("")) Then
-                                                                    typelib = subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString
-                                                                    Try
-                                                                        My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
-                                                                    Catch ex As Exception
-                                                                    End Try
-                                                                End If
-                                                            Catch ex As Exception
-                                                            End Try
-
-                                                            subregkey2.DeleteSubKeyTree(child)
                                                         End If
                                                     Catch ex As Exception
-                                                        f.log(ex.Message + ex.StackTrace)
                                                     End Try
+
+                                                    Try
+                                                        If Not checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(child & "\TypeLib").GetValue("")) Then
+                                                            typelib = subregkey2.OpenSubKey(child & "\TypeLib").GetValue("").ToString
+                                                            Try
+                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        End If
+                                                    Catch ex As Exception
+                                                    End Try
+
+                                                    subregkey2.DeleteSubKeyTree(child)
                                                 End If
                                             End If
-                                        Next
-                                    End If
+                                        End If
+                                    Next
                                 End If
                             End If
-                        Catch ex As Exception
-                        End Try
+                        End If
                     End If
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.StackTrace)
+            f.log(ex.Message + ex.StackTrace)
         End Try
 
 
@@ -7127,7 +7117,7 @@ Public Class CleanupEngine
                     Next
                 End If
             Catch ex As Exception
-                f.log(ex.StackTrace)
+                f.log(ex.Message + ex.StackTrace)
             End Try
 
             Try
@@ -7187,7 +7177,7 @@ Public Class CleanupEngine
                     Next
                 End If
             Catch ex As Exception
-                f.log(ex.StackTrace)
+                f.log(ex.Message + ex.StackTrace)
             End Try
         End If
 
@@ -7248,7 +7238,7 @@ Public Class CleanupEngine
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.StackTrace)
+            f.log(ex.Message + ex.StackTrace)
         End Try
 
         If IntPtr.Size = 8 Then
@@ -7309,7 +7299,7 @@ Public Class CleanupEngine
                     Next
                 End If
             Catch ex As Exception
-                f.log(ex.StackTrace)
+                f.log(ex.Message + ex.StackTrace)
             End Try
         End If
 
