@@ -4243,6 +4243,65 @@ Public Class Form1
             Exit Sub
         End If
 
+        'second, we check on what we are running and set variables accordingly (os, architecture)
+
+        If Not checkvariables.isnullorwhitespace(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion")) Then
+            version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
+
+        End If
+
+        If version < "5.1" Then
+
+            Label2.Text = "Unsupported OS"
+            log("Unsupported OS.")
+            Button1.Enabled = False
+            Button2.Enabled = False
+            Button3.Enabled = False
+            Button4.Enabled = False
+        End If
+
+        If version.StartsWith("5.1") Then
+            Label2.Text = "Windows XP or Server 2003"
+            winxp = True
+        End If
+
+        If version.StartsWith("5.2") Then
+            Label2.Text = "Windows XP or Server 2003"
+            winxp = True
+        End If
+
+        If version.StartsWith("6.0") Then
+            Label2.Text = "Windows Vista or Server 2008"
+        End If
+
+        If version.StartsWith("6.1") Then
+            Label2.Text = "Windows 7 or Server 2008r2"
+        End If
+
+        If version.StartsWith("6.2") Then
+            Label2.Text = "Windows 8 or Server 2012"
+            win8higher = True
+        End If
+
+        If version.StartsWith("6.3") Then
+            Label2.Text = "Windows 8.1"
+            win8higher = True
+        End If
+
+        If version.StartsWith("6.4") Then
+            Label2.Text = "Windows 10"
+            win8higher = True
+        End If
+
+        If version > "6.4" Then
+            Label2.Text = "Unsupported O.S"
+            win8higher = True
+            Button1.Enabled = False
+            Button2.Enabled = False
+            Button3.Enabled = False
+            Button4.Enabled = False
+        End If
+
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
         End If
@@ -4570,63 +4629,6 @@ Public Class Form1
             MsgBox(msgboxmessage("4"), MsgBoxStyle.Information)
 
             Me.TopMost = False
-
-            If Not checkvariables.isnullorwhitespace(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion")) Then
-                version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
-
-            End If
-
-            If version < "5.1" Then
-
-                Label2.Text = "Unsupported OS"
-                log("Unsupported OS.")
-                Button1.Enabled = False
-                Button2.Enabled = False
-                Button3.Enabled = False
-                Button4.Enabled = False
-            End If
-
-            If version.StartsWith("5.1") Then
-                Label2.Text = "Windows XP or Server 2003"
-                winxp = True
-            End If
-
-            If version.StartsWith("5.2") Then
-                Label2.Text = "Windows XP or Server 2003"
-                winxp = True
-            End If
-
-            If version.StartsWith("6.0") Then
-                Label2.Text = "Windows Vista or Server 2008"
-            End If
-
-            If version.StartsWith("6.1") Then
-                Label2.Text = "Windows 7 or Server 2008r2"
-            End If
-
-            If version.StartsWith("6.2") Then
-                Label2.Text = "Windows 8 or Server 2012"
-                win8higher = True
-            End If
-
-            If version.StartsWith("6.3") Then
-                Label2.Text = "Windows 8.1"
-                win8higher = True
-            End If
-
-            If version.StartsWith("6.4") Then
-                Label2.Text = "Windows 10"
-                win8higher = True
-            End If
-
-            If version > "6.4" Then
-                Label2.Text = "Unsupported O.S"
-                win8higher = True
-                Button1.Enabled = False
-                Button2.Enabled = False
-                Button3.Enabled = False
-                Button4.Enabled = False
-            End If
 
             UpdateTextMethod(UpdateTextMethodmessage("10") + Application.ProductVersion)
             log("DDU Version: " + Application.ProductVersion)
