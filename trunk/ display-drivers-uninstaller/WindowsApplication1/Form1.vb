@@ -276,7 +276,7 @@ Public Class Form1
                                                     proc3.StartInfo = deloem
                                                     proc3.Start()
                                                     reply2 = proc3.StandardOutput.ReadToEnd
-                                                    proc3.WaitForExit()
+                                                    'proc3.WaitForExit()
 
 
                                                     UpdateTextMethod(reply2)
@@ -316,7 +316,7 @@ Public Class Form1
                                         proc3.StartInfo = deloem
                                         proc3.Start()
                                         reply2 = proc3.StandardOutput.ReadToEnd
-                                        proc3.WaitForExit()
+                                        'proc3.WaitForExit()
 
 
                                         UpdateTextMethod(reply2)
@@ -4611,6 +4611,7 @@ Public Class Form1
                 processstopservice.StartInfo = stopservice
                 processstopservice.Start()
                 processstopservice.WaitForExit()
+
                 processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\paexec.exe"
                 processinfo.Arguments = "-noname -i -s " & Chr(34) & Application.StartupPath & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34)
                 processinfo.UseShellExecute = False
@@ -5406,7 +5407,7 @@ Public Class Form1
 
                                                                                     process.Start()
                                                                                     reply2 = process.StandardOutput.ReadToEnd
-                                                                                    process.WaitForExit()
+                                                                                    'process.WaitForExit()
                                                                                     log(reply2)
                                                                                     log("AMD HD Audio Bus Removed !")
                                                                                 End If
@@ -5501,7 +5502,7 @@ Public Class Form1
 
                                                     process.Start()
                                                     reply2 = process.StandardOutput.ReadToEnd
-                                                    process.WaitForExit()
+                                                    'process.WaitForExit()
                                                     log(reply2)
 
                                                 End If
@@ -5557,7 +5558,7 @@ Public Class Form1
 
                                         process.Start()
                                         reply2 = process.StandardOutput.ReadToEnd
-                                        process.WaitForExit()
+                                        'process.WaitForExit()
                                         log(reply2)
 
                                     End If
@@ -5596,7 +5597,7 @@ Public Class Form1
                     process.StartInfo = processinfo
                     process.Start()
                     reply = process.StandardOutput.ReadToEnd
-                    process.WaitForExit()
+                    'process.WaitForExit()
 
                     Try
                         card1 = reply.IndexOf("USB\")
@@ -5629,7 +5630,7 @@ Public Class Form1
 
                             process.Start()
                             reply2 = process.StandardOutput.ReadToEnd
-                            process.WaitForExit()
+                            'process.WaitForExit()
                             log(reply2)
 
 
@@ -5676,7 +5677,7 @@ Public Class Form1
 
                                                 process.Start()
                                                 reply2 = process.StandardOutput.ReadToEnd
-                                                process.WaitForExit()
+                                                'process.WaitForExit()
                                                 log(reply2)
 
                                             End If
@@ -5718,7 +5719,7 @@ Public Class Form1
 
                                     process.Start()
                                     reply2 = process.StandardOutput.ReadToEnd
-                                    process.WaitForExit()
+                                    'process.WaitForExit()
                                     log(reply2)
 
                                 End If
@@ -5760,7 +5761,7 @@ Public Class Form1
 
                                     process.Start()
                                     reply2 = process.StandardOutput.ReadToEnd
-                                    process.WaitForExit()
+                                    'process.WaitForExit()
                                     log(reply2)
 
                                 End If
@@ -5785,7 +5786,7 @@ Public Class Form1
 
                 process.Start()
                 reply2 = process.StandardOutput.ReadToEnd
-                process.WaitForExit()
+                'process.WaitForExit()
                 log(reply2)
 
 
@@ -5814,7 +5815,7 @@ Public Class Form1
 
                                     process.Start()
                                     reply2 = process.StandardOutput.ReadToEnd
-                                    process.WaitForExit()
+                                    'process.WaitForExit()
                                     log(reply2)
 
                                 End If
@@ -5861,7 +5862,7 @@ Public Class Form1
 
                                         process.Start()
                                         reply2 = process.StandardOutput.ReadToEnd
-                                        process.WaitForExit()
+                                        'process.WaitForExit()
                                         log(reply2)
                                     End If
                                 Next
