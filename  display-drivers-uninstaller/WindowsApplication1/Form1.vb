@@ -4651,12 +4651,17 @@ Public Class Form1
                                         UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
                                         log("GPU #" + child + " Detected : " + currentdriverversion)
                                     Else
-
-                                        If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc")) Then
-                                            currentdriverversion = subregkey.GetValue("DriverDesc").ToString
-                                            UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
-                                            log("GPU #" + child + " Detected : " + currentdriverversion)
+                                        If subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
+                                            UpdateTextMethod("GPU #" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc")))
+                                            log("GPU #" + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc")))
+                                        Else
+                                            If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc")) Then
+                                                currentdriverversion = subregkey.GetValue("DriverDesc").ToString
+                                                UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
+                                                log("GPU #" + child + " Detected : " + currentdriverversion)
+                                            End If
                                         End If
+
                                     End If
                                     If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId")) Then
                                         currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
@@ -4710,9 +4715,9 @@ Public Class Form1
                                         log("INF Section : " + currentdriverversion)
                                     End If
                                 End If
-                                UpdateTextMethod("--------------")
-                                log("--------------")
-                            End If
+                                    UpdateTextMethod("--------------")
+                                    log("--------------")
+                                End If
                         End If
                     Next
                 End If
