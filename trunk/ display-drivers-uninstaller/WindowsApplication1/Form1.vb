@@ -4674,21 +4674,6 @@ Public Class Form1
                                         currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
                                         UpdateTextMethod(UpdateTextMethodmessage("13") + " " + currentdriverversion)
                                         log("GPU DeviceId : " + currentdriverversion)
-                                        If currentdriverversion.ToLower.Contains("ven_8086") Then
-                                            ComboBox1.SelectedIndex = 2
-                                            PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-                                            PictureBox2.Size = New Size(158, 126)
-                                        End If
-                                        If currentdriverversion.ToLower.Contains("ven_10de") Then
-                                            ComboBox1.SelectedIndex = 0
-                                            PictureBox2.Location = New Point(286 * (picturebox2originalx / 333), 92 * (picturebox2originaly / 92))
-                                            PictureBox2.Size = New Size(252, 123)
-                                        End If
-                                        If currentdriverversion.ToLower.Contains("ven_1002") Then
-                                            ComboBox1.SelectedIndex = 1
-                                            PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-                                            PictureBox2.Size = New Size(158, 126)
-                                        End If
                                     End If
 
                                     Try
@@ -4750,27 +4735,51 @@ Public Class Form1
                             For Each child2 As String In subregkey.GetSubKeyNames
 
                                 If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("ClassGUID")) Then
+                                    array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
+                                    If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                        For i As Integer = 0 To array.Length - 1
+                                            If array(i).ToLower.Contains("pci\cc_03") Then
+                                                For j As Integer = 0 To array.Length - 1
+                                                    If array(j).ToLower.Contains("ven_1002") Then
+                                                        ComboBox1.SelectedIndex = 1
+                                                        PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+                                                        PictureBox2.Size = New Size(158, 126)
+                                                    End If
+                                                    If array(j).ToLower.Contains("ven_10de") Then
+                                                        ComboBox1.SelectedIndex = 0
+                                                        PictureBox2.Location = New Point(286 * (picturebox2originalx / 333), 92 * (picturebox2originaly / 92))
+                                                        PictureBox2.Size = New Size(252, 123)
+                                                    End If
+                                                    If array(j).ToLower.Contains("ven_8086") Then
+                                                        ComboBox1.SelectedIndex = 2
+                                                        PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+                                                        PictureBox2.Size = New Size(158, 126)
+                                                    End If
+                                                Next
+                                            End If
+                                        Next
+                                    End If
                                     'if the device does not return null here, it mean it has a class associated with it
                                     'so we skip it as we search for missing one.
                                     Continue For
                                 End If
 
-                                array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
+                        array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
 
-                                If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                    For i As Integer = 0 To array.Length - 1
-                                        If array(i).ToLower.Contains("pci\cc_03") Then
-                                            If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) Then
-                                                currentdriverversion = subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString
-                                                UpdateTextMethod(UpdateTextMethodmessage("17") + " " + currentdriverversion)
-                                                log("Not Correctly Installed GPU : " + currentdriverversion)
-                                                UpdateTextMethod("--------------")
-                                                log("--------------")
-                                                Exit For  'we exit as we have found what we were looking for
-                                            End If
-                                        End If
-                                    Next
+                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) AndAlso Not (array.Length - 1) Then
+                            For i As Integer = 0 To array.Length - 1
+                                If array(i).ToLower.Contains("pci\cc_03") Then
+                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) Then
+                                        currentdriverversion = subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString
+                                        UpdateTextMethod(UpdateTextMethodmessage("17") + " " + currentdriverversion)
+                                        log("Not Correctly Installed GPU : " + currentdriverversion)
+                                        UpdateTextMethod("--------------")
+                                        log("--------------")
+                                        Exit For  'we exit as we have found what we were looking for
+                                    End If
                                 End If
+                            Next
+                        End If
                             Next
                         End If
                     End If
@@ -5838,7 +5847,6 @@ Public Class Form1
             End If
             UpdateTextMethod(UpdateTextMethodmessage("28"))
 
-
             If combobox1value = "AMD" Then
                 cleanamdserviceprocess()
                 cleanamd()
@@ -6302,6 +6310,7 @@ Public Class CleanupEngine
         Catch ex As Exception
             f.log(ex.Message + ex.StackTrace)
         End Try
+
         f.log("End classroot CleanUP")
     End Sub
 
@@ -7268,6 +7277,45 @@ Public Class CleanupEngine
                 f.log(ex.Message + ex.StackTrace)
             End Try
         End If
+
+        'clean amd orphan typelib.....(amd bug?)
+
+       Try
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+                            If Not checkvariables.isnullorwhitespace(child2) Then
+                                For Each child3 As String In regkey.OpenSubKey(child).OpenSubKey(child2).GetSubKeyNames()
+                                    If Not checkvariables.isnullorwhitespace(child3) Then
+                                        For Each child4 As String In regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).GetSubKeyNames()
+                                            If Not checkvariables.isnullorwhitespace(child4) Then
+                                                For i As Integer = 0 To clsidleftover.Length - 1
+                                                    If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                                        If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("")) Then
+                                                            If regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("").ToString.ToLower.Contains(clsidleftover(i).ToLower) Then
+                                                                Try
+                                                                    regkey.DeleteSubKeyTree(child)
+                                                                Catch ex As Exception
+                                                                End Try
+                                                            End If
+                                                        End If
+                                                    End If
+                                                Next
+                                            End If
+                                        Next
+                                    End If
+                                Next
+                            End If
+                        Next
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            f.log(ex.Message + ex.StackTrace)
+        End Try
+
         f.log("End clsidleftover CleanUP")
     End Sub
 
