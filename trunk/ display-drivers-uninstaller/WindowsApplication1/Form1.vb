@@ -26,6 +26,7 @@ Imports System.Runtime.InteropServices
 
 Public Class Form1
 
+    Dim f As new options
     Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
     Dim checkvariables As New checkvariables
     Dim identity = WindowsIdentity.GetCurrent()
@@ -42,9 +43,9 @@ Public Class Form1
     Public win8higher As Boolean = False
     Public winxp As Boolean = False
     Dim stopme As Boolean = False
-    Public removephysx As Boolean
-    Public removeamdaudiobus As Boolean
-    Dim remove3dtvplay As Boolean
+    Public Shared removephysx As Boolean
+    Public Shared removeamdaudiobus As Boolean
+    Public Shared remove3dtvplay As Boolean
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
@@ -67,13 +68,13 @@ Public Class Form1
     Dim safemode As Boolean = False
     Dim myExe As String
     Dim checkupdates As New genericfunction
-    Dim settings As New genericfunction
+    Public Shared settings As New genericfunction
     Dim CleanupEngine As New CleanupEngine
     Dim enduro As Boolean = False
     Dim preventclose As Boolean = False
     Dim filePath As String
-    Dim combobox1value As String = Nothing
-    Dim combobox2value As String = Nothing
+    Public Shared combobox1value As String = Nothing
+    Public Shared combobox2value As String = Nothing
     Dim buttontext As String()
     Dim closeapp As String = False
     Public ddudrfolder As String
@@ -426,8 +427,8 @@ Public Class Form1
         log("Cleaning Directory (Please Wait...)")
 
 
-        If CheckBox1.Checked = True Then
-            filePath = "C:\AMD"
+        If f.CheckBox1.Checked = True Then
+            filePath = sysdrv + "\AMD"
 
             Try
                 My.Computer.FileSystem.DeleteDirectory _
@@ -2164,8 +2165,8 @@ Public Class Form1
         log("Cleaning Directory")
 
 
-        If CheckBox1.Checked = True Then
-            filePath = "C:\NVIDIA"
+        If options.CheckBox1.Checked = True Then
+            filePath = sysdrv + "\NVIDIA"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
                     (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -4334,40 +4335,40 @@ Public Class Form1
             'read config file
 
             If settings.getconfig("logbox") = "true" Then
-                CheckBox2.Checked = True
+                f.checkbox2.Checked = True
 
             Else
-                CheckBox2.Checked = False
+                f.checkbox2.Checked = False
             End If
 
             If settings.getconfig("remove3dtvplay") = "true" Then
-                CheckBox4.Checked = True
+                f.checkbox4.Checked = True
                 remove3dtvplay = True
             Else
-                CheckBox4.Checked = False
+                f.checkbox4.Checked = False
                 remove3dtvplay = False
             End If
 
             If settings.getconfig("systemrestore") = "true" Then
-                CheckBox5.Checked = True
+                f.checkbox5.Checked = True
             Else
-                CheckBox5.Checked = False
+                f.checkbox5.Checked = False
             End If
 
             If settings.getconfig("removephysx") = "true" Then
-                CheckBox3.Checked = True
+                f.CheckBox3.Checked = True
                 removephysx = True
             Else
-                CheckBox3.Checked = False
+                f.CheckBox3.Checked = False
                 removephysx = False
             End If
 
             If ComboBox1.Text = "AMD" Then
                 If settings.getconfig("removeamdaudiobus") = "true" Then
-                    CheckBox3.Checked = True
+                    f.CheckBox3.Checked = True
                     removeamdaudiobus = True
                 Else
-                    CheckBox3.Checked = False
+                    f.CheckBox3.Checked = False
                     removeamdaudiobus = False
                 End If
             End If
@@ -4653,8 +4654,8 @@ Public Class Form1
                                         log("GPU #" + child + " Detected : " + currentdriverversion)
                                     Else
                                         If subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
-                                            UpdateTextMethod("GPU #" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc")))
-                                            log("GPU #" + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc")))
+                                            UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
+                                            log("GPU #" + child + " Detected : " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
                                         Else
                                             If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc")) Then
                                                 currentdriverversion = subregkey.GetValue("DriverDesc").ToString
@@ -4716,9 +4717,9 @@ Public Class Form1
                                         log("INF Section : " + currentdriverversion)
                                     End If
                                 End If
-                                    UpdateTextMethod("--------------")
-                                    log("--------------")
-                                End If
+                                UpdateTextMethod("--------------")
+                                log("--------------")
+                            End If
                         End If
                     Next
                 End If
@@ -4850,7 +4851,7 @@ Public Class Form1
                     End If
 
                 Case BootMode.Normal
-                    If CheckBox5.Checked = True Then
+                    If f.checkbox5.Checked = True Then
                         Form2.Show()
                         Try
                             log("Trying to Create a System Restored Point")
@@ -4935,7 +4936,7 @@ Public Class Form1
             getoeminfo()
 
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MsgBox(ex.Message + ex.StackTrace)
             log(ex.Message + ex.StackTrace)
             preventclose = False
             Me.Close()
@@ -5130,16 +5131,6 @@ Public Class Form1
         Next
     End Sub
 
-    Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
-
-        If CheckBox2.Checked = True Then
-            settings.setconfig("logbox", "true")
-        Else
-            settings.setconfig("logbox", "false")
-        End If
-
-    End Sub
-
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
         about.Show()
     End Sub
@@ -5158,84 +5149,40 @@ Public Class Form1
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
     End Sub
 
-    Private Sub CheckBox3_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox3.CheckedChanged
-
-        If combobox1value = "NVIDIA" Then
-
-            If CheckBox3.Checked = True Then
-                settings.setconfig("removephysx", "true")
-                removephysx = True
-            Else
-                settings.setconfig("removephysx", "false")
-                removephysx = False
-            End If
-
-        End If
-
-
-        If combobox1value = "AMD" Then
-            If CheckBox3.Checked = True Then
-                settings.setconfig("removeamdaudiobus", "true")
-                removeamdaudiobus = True
-            Else
-                settings.setconfig("removeamdaudiobus", "false")
-                removeamdaudiobus = False
-            End If
-        End If
-
-    End Sub
-
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
         combobox1value = ComboBox1.Text
         If combobox1value = "NVIDIA" Then
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3.txt") '// add each line as String Array.
-            CheckBox3.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    CheckBox3.Text = CheckBox3.Text & vbNewLine
-                End If
-                CheckBox3.Text = CheckBox3.Text & buttontext(i)
-            Next
+
             If settings.getconfig("removephysx") = "true" Then
-                CheckBox3.Checked = True
+                f.CheckBox3.Checked = True
                 removephysx = True
             Else
-                CheckBox3.Checked = False
+                f.CheckBox3.Checked = False
                 removephysx = False
             End If
-            CheckBox3.Visible = True
-            CheckBox4.Visible = True
+
             PictureBox2.Location = New Point(286 * (picturebox2originalx / 333), 92 * (picturebox2originaly / 92))
             PictureBox2.Size = New Size(252, 123)
             PictureBox2.Image = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
         End If
 
         If combobox1value = "AMD" Then
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3amd.txt") '// add each line as String Array.
-            CheckBox3.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    CheckBox3.Text = CheckBox3.Text & vbNewLine
-                End If
-                CheckBox3.Text = CheckBox3.Text & buttontext(i)
-            Next
+            
             If settings.getconfig("removeamdaudiobus") = "true" Then
-                CheckBox3.Checked = True
+                f.CheckBox3.Checked = True
                 removeamdaudiobus = True
             Else
-                CheckBox3.Checked = False
+                f.CheckBox3.Checked = False
                 removeamdaudiobus = False
             End If
-            CheckBox3.Visible = True
-            CheckBox4.Visible = False
+
             PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
             PictureBox2.Size = New Size(158, 126)
             PictureBox2.Image = My.Resources.RadeonLogo1
         End If
 
         If ComboBox1.Text = "INTEL" Then
-            CheckBox3.Visible = False
-            CheckBox4.Visible = False
+
             PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
             PictureBox2.Size = New Size(158, 126)
             PictureBox2.Image = My.Resources.intel_logo
@@ -5244,15 +5191,21 @@ Public Class Form1
     End Sub
 
     Public Sub log(ByVal value As String)
-        If Me.CheckBox2.Checked = True Then
-            Dim wlog As New IO.StreamWriter(locations, True)
-            wlog.WriteLine(DateTime.Now & " >> " & value)
-            wlog.Flush()
-            wlog.Dispose()
-            '  System.Threading.Thread.Sleep(10)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
-        Else
-            'do nothing
-        End If
+        Try
+
+
+            If f.CheckBox2.Checked = True Then
+                Dim wlog As New IO.StreamWriter(locations, True)
+                wlog.WriteLine(DateTime.Now & " >> " & value)
+                wlog.Flush()
+                wlog.Dispose()
+                '  System.Threading.Thread.Sleep(10)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
+            Else
+                'do nothing
+            End If
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
@@ -5307,11 +5260,11 @@ Public Class Form1
         Invoke(Sub() Button2.Enabled = False)
         Invoke(Sub() Button3.Enabled = False)
         Invoke(Sub() ComboBox1.Enabled = False)
-        Invoke(Sub() CheckBox1.Enabled = False)
-        Invoke(Sub() CheckBox2.Enabled = False)
-        Invoke(Sub() CheckBox3.Enabled = False)
-        Invoke(Sub() CheckBox4.Enabled = False)
-        Invoke(Sub() CheckBox5.Enabled = False)
+        Invoke(Sub() f.CheckBox1.Enabled = False)
+        Invoke(Sub() f.CheckBox2.Enabled = False)
+        Invoke(Sub() f.CheckBox3.Enabled = False)
+        Invoke(Sub() f.CheckBox4.Enabled = False)
+        Invoke(Sub() f.CheckBox5.Enabled = False)
 
         If version >= "6.1" Then
             Try
@@ -5956,11 +5909,11 @@ Public Class Form1
         Button2.Enabled = True
         Button3.Enabled = True
         ComboBox1.Enabled = True
-        CheckBox1.Enabled = True
-        CheckBox2.Enabled = True
-        CheckBox3.Enabled = True
-        CheckBox4.Enabled = True
-        CheckBox5.Enabled = True
+        f.CheckBox1.Enabled = True
+        f.CheckBox2.Enabled = True
+        f.CheckBox3.Enabled = True
+        f.CheckBox4.Enabled = True
+        f.CheckBox5.Enabled = True
 
         If Not reboot And Not shutdown Then
             If MsgBox(msgboxmessage("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
@@ -6089,62 +6042,6 @@ Public Class Form1
                 Label10.Text = Label10.Text & buttontext(i)
             Next
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox1.txt") '// add each line as String Array.
-            CheckBox1.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    CheckBox1.Text = CheckBox1.Text & vbNewLine
-                End If
-                CheckBox1.Text = CheckBox1.Text & buttontext(i)
-            Next
-
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox2.txt") '// add each line as String Array.
-            CheckBox2.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    CheckBox2.Text = CheckBox2.Text & vbNewLine
-                End If
-                CheckBox2.Text = CheckBox2.Text & buttontext(i)
-            Next
-
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox4.txt") '// add each line as String Array.
-            CheckBox4.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    CheckBox4.Text = CheckBox4.Text & vbNewLine
-                End If
-                CheckBox4.Text = CheckBox4.Text & buttontext(i)
-            Next
-
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3.txt") '// add each line as String Array.
-            CheckBox3.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    CheckBox3.Text = CheckBox3.Text & vbNewLine
-                End If
-                CheckBox3.Text = CheckBox3.Text & buttontext(i)
-            Next
-
-            If ComboBox1.Text = "AMD" Then
-                buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3amd.txt") '// add each line as String Array.
-                CheckBox3.Text = ""
-                For i As Integer = 0 To buttontext.Length - 1
-                    If i <> 0 Then
-                        CheckBox3.Text = CheckBox3.Text & vbNewLine
-                    End If
-                    CheckBox3.Text = CheckBox3.Text & buttontext(i)
-                Next
-            End If
-
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox5.txt") '// add each line as String Array.
-            CheckBox5.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    CheckBox5.Text = CheckBox5.Text & vbNewLine
-                End If
-                CheckBox5.Text = CheckBox5.Text & buttontext(i)
-            Next
-
             msgboxmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\msgbox.txt") '// add each line as String Array.
             UpdateTextMethodmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\updatetextmethod.txt") '// add each line as String Array.
         Catch ex As Exception
@@ -6160,31 +6057,6 @@ Public Class Form1
 
     Private Sub ToSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ToSToolStripMenuItem.Click
         MessageBox.Show(IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & combobox2value & "\tos.txt"), "ToS")
-    End Sub
-
-    Private Sub CheckBox4_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox4.CheckedChanged
-
-        If CheckBox4.Checked = True Then
-            settings.setconfig("remove3dtvplay", "true")
-            remove3dtvplay = True
-        Else
-            settings.setconfig("remove3dtvplay", "false")
-            remove3dtvplay = False
-        End If
-
-    End Sub
-
-    Private Sub CheckBox5_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox5.CheckedChanged
-
-        If CheckBox5.Checked = True Then
-            settings.setconfig("systemrestore", "true")
-
-
-        Else
-            settings.setconfig("systemrestore", "false")
-
-        End If
-
     End Sub
 
     Private Sub temporarynvidiaspeedup()   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
@@ -6270,6 +6142,11 @@ Public Class Form1
         Next
         Return com
     End Function
+
+    Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
+        options.Show()
+        Me.Hide()
+    End Sub
 End Class
 Public Class checkvariables
 
@@ -6429,7 +6306,7 @@ Public Class CleanupEngine
         Dim subregkey As RegistryKey
         Dim subsuperregkey As RegistryKey
         Dim wantedvalue As String = Nothing
-        Dim removephysx As Boolean = f.removephysx
+        Dim removephysx As Boolean = removephysx
         Dim msgboxmessage As String() = f.msgboxmessage
         Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
         f.UpdateTextMethod(UpdateTextMethodmessage("29"))
