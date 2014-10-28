@@ -115,6 +115,12 @@ Public Class options
             End If
         End If
 
+        If settings.getconfig("removemonitor") = "true" Then
+            CheckBox6.Checked = True
+        Else
+            CheckBox6.Checked = False
+        End If
+
         'Check some values.
         If combobox1value = "NVIDIA" Then
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3.txt") '// add each line as String Array.
@@ -206,5 +212,16 @@ Public Class options
 
     Private Sub options_close(sender As Object, e As EventArgs) Handles MyBase.FormClosed
         Form1.Show()
+    End Sub
+
+    Private Sub CheckBox6_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox6.CheckedChanged
+        If CheckBox6.Checked = True Then
+            setconfig("removemonitor", "true")
+
+
+        Else
+            setconfig("removemonitor", "false")
+
+        End If
     End Sub
 End Class
