@@ -4,6 +4,7 @@ Public Class options
     Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
         If CheckBox2.Checked = True Then
             setconfig("logbox", "true")
+
         Else
             setconfig("logbox", "false")
         End If
@@ -217,11 +218,11 @@ Public Class options
     Private Sub CheckBox6_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox6.CheckedChanged
         If CheckBox6.Checked = True Then
             setconfig("removemonitor", "true")
-
+            removemonitor = True
 
         Else
             setconfig("removemonitor", "false")
-
+            removemonitor = False
         End If
     End Sub
 End Class
