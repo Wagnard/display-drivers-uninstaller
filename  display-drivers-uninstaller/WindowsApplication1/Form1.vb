@@ -43,6 +43,7 @@ Public Class Form1
     Public win8higher As Boolean = False
     Public winxp As Boolean = False
     Dim stopme As Boolean = False
+    Public Shared removemonitor As Boolean
     Public Shared removephysx As Boolean
     Public Shared removeamdaudiobus As Boolean
     Public Shared remove3dtvplay As Boolean
@@ -4372,7 +4373,11 @@ Public Class Form1
                     removeamdaudiobus = False
                 End If
             End If
-
+            If settings.getconfig("removemonitor") = "true" Then
+                f.CheckBox6.Checked = True
+            Else
+                f.CheckBox6.Checked = False
+            End If
 
             '----------------
             'language section
@@ -5787,48 +5792,50 @@ Public Class Form1
 
             log("ddudr Remove Monitor started")
 
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames
-                        If Not checkvariables.isnullorwhitespace(child) Then
+            If removemonitor Then
+                Try
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames
+                            If Not checkvariables.isnullorwhitespace(child) Then
 
-                            subregkey = regkey.OpenSubKey(child)
-                            If subregkey IsNot Nothing Then
+                                subregkey = regkey.OpenSubKey(child)
+                                If subregkey IsNot Nothing Then
 
-                                For Each child2 As String In subregkey.GetSubKeyNames
-                                    If Not checkvariables.isnullorwhitespace(child2) Then
+                                    For Each child2 As String In subregkey.GetSubKeyNames
+                                        If Not checkvariables.isnullorwhitespace(child2) Then
 
-                                        If subregkey.OpenSubKey(child2) Is Nothing Then
-                                            Continue For
+                                            If subregkey.OpenSubKey(child2) Is Nothing Then
+                                                Continue For
+                                            End If
+
+                                            vendid = child & "\" & child2
+
+
+                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                            processinfo.Arguments = "remove " & Chr(34) & "@DISPLAY\" & vendid & Chr(34)
+                                            processinfo.UseShellExecute = False
+                                            processinfo.CreateNoWindow = True
+                                            processinfo.RedirectStandardOutput = True
+                                            process.StartInfo = processinfo
+
+                                            process.Start()
+                                            reply2 = process.StandardOutput.ReadToEnd
+                                            'process.WaitForExit()
+                                            log(reply2)
                                         End If
-
-                                        vendid = child & "\" & child2
-
-
-                                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                        processinfo.Arguments = "remove " & Chr(34) & "@DISPLAY\" & vendid & Chr(34)
-                                        processinfo.UseShellExecute = False
-                                        processinfo.CreateNoWindow = True
-                                        processinfo.RedirectStandardOutput = True
-                                        process.StartInfo = processinfo
-
-                                        process.Start()
-                                        reply2 = process.StandardOutput.ReadToEnd
-                                        'process.WaitForExit()
-                                        log(reply2)
-                                    End If
-                                Next
+                                    Next
+                                End If
                             End If
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                MsgBox(msgboxmessage("5"))
-                log(ex.Message + ex.StackTrace)
-            End Try
+                        Next
+                    End If
+                Catch ex As Exception
+                    MsgBox(msgboxmessage("5"))
+                    log(ex.Message + ex.StackTrace)
+                End Try
 
-            UpdateTextMethod(UpdateTextMethodmessage("27"))
+                UpdateTextMethod(UpdateTextMethodmessage("27"))
+            End If
             UpdateTextMethod(UpdateTextMethodmessage("28"))
 
 
