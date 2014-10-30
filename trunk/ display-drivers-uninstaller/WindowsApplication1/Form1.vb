@@ -44,6 +44,7 @@ Public Class Form1
     Public winxp As Boolean = False
     Dim stopme As Boolean = False
     Public Shared removemonitor As Boolean
+    Public Shared removecamdnvidia As Boolean
     Public Shared removephysx As Boolean
     Public Shared removeamdaudiobus As Boolean
     Public Shared remove3dtvplay As Boolean
@@ -428,7 +429,7 @@ Public Class Form1
         log("Cleaning Directory (Please Wait...)")
 
 
-        If f.CheckBox1.Checked = True Then
+        If removecamdnvidia Then
             filePath = sysdrv + "\AMD"
 
             Try
@@ -4375,8 +4376,18 @@ Public Class Form1
             End If
             If settings.getconfig("removemonitor") = "true" Then
                 f.CheckBox6.Checked = True
+                removemonitor = True
             Else
                 f.CheckBox6.Checked = False
+                removemonitor = False
+            End If
+
+            If settings.getconfig("removecamdnvidia") = "true" Then
+                f.CheckBox1.Checked = True
+                removecamdnvidia = True
+            Else
+                f.CheckBox1.Checked = False
+                removecamdnvidia = False
             End If
 
             '----------------
@@ -5274,11 +5285,7 @@ Public Class Form1
         Invoke(Sub() Button2.Enabled = False)
         Invoke(Sub() Button3.Enabled = False)
         Invoke(Sub() ComboBox1.Enabled = False)
-        Invoke(Sub() f.CheckBox1.Enabled = False)
-        Invoke(Sub() f.CheckBox2.Enabled = False)
-        Invoke(Sub() f.CheckBox3.Enabled = False)
-        Invoke(Sub() f.CheckBox4.Enabled = False)
-        Invoke(Sub() f.CheckBox5.Enabled = False)
+        Invoke(Sub() MenuStrip1.Enabled = False)
 
         If version >= "6.1" Then
             Try
@@ -5799,9 +5806,10 @@ Public Class Form1
             log("ddudr Remove Audio/HDMI Complete")
             'removing monitor and hidden monitor
 
-            log("ddudr Remove Monitor started")
+
 
             If removemonitor Then
+                log("ddudr Remove Monitor started")
                 Try
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
                     If regkey IsNot Nothing Then
@@ -5924,11 +5932,7 @@ Public Class Form1
         Button2.Enabled = True
         Button3.Enabled = True
         ComboBox1.Enabled = True
-        f.CheckBox1.Enabled = True
-        f.CheckBox2.Enabled = True
-        f.CheckBox3.Enabled = True
-        f.CheckBox4.Enabled = True
-        f.CheckBox5.Enabled = True
+        MenuStrip1.Enabled = True
 
         If Not reboot And Not shutdown Then
             If MsgBox(msgboxmessage("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
