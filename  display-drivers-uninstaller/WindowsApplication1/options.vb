@@ -24,7 +24,6 @@ Public Class options
         If CheckBox5.Checked = True Then
             setconfig("systemrestore", "true")
 
-
         Else
             setconfig("systemrestore", "false")
 
@@ -118,8 +117,18 @@ Public Class options
 
         If settings.getconfig("removemonitor") = "true" Then
             CheckBox6.Checked = True
+            removemonitor = True
         Else
             CheckBox6.Checked = False
+            removemonitor = False
+        End If
+
+        If settings.getconfig("removecamdnvidia") = "true" Then
+            CheckBox1.Checked = True
+            removecamdnvidia = True
+        Else
+            CheckBox1.Checked = False
+            removecamdnvidia = False
         End If
 
         'Check some values.
@@ -223,6 +232,17 @@ Public Class options
         Else
             setconfig("removemonitor", "false")
             removemonitor = False
+        End If
+    End Sub
+
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
+        If CheckBox1.Checked = True Then
+            setconfig("removecamdnvidia", "true")
+            removecamdnvidia = True
+
+        Else
+            setconfig("removecamdnvidia", "false")
+            removecamdnvidia = False
         End If
     End Sub
 End Class
