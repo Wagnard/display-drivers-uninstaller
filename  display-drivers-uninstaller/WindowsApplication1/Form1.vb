@@ -148,6 +148,7 @@ Public Class Form1
 
         reboot = True
         combobox1value = ComboBox1.Text
+        systemrestore()
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
 
     End Sub
@@ -4185,13 +4186,29 @@ Public Class Form1
         If reboot Then
             preventclose = False
             log("Restarting Computer ")
-            System.Diagnostics.Process.Start("shutdown", "/r /t 0")
+            processinfo.FileName = "shutdown"
+            processinfo.Arguments = "/r /t 0"
+            processinfo.WindowStyle = ProcessWindowStyle.Hidden
+            processinfo.UseShellExecute = True
+            processinfo.CreateNoWindow = True
+            processinfo.RedirectStandardOutput = False
+
+            process.StartInfo = processinfo
+            process.Start()
             Invoke(Sub() Me.Close())
             Exit Sub
         End If
         If shutdown Then
             preventclose = False
-            System.Diagnostics.Process.Start("shutdown", "/s /t 0")
+            processinfo.FileName = "shutdown"
+            processinfo.Arguments = "/s /t 0"
+            processinfo.WindowStyle = ProcessWindowStyle.Hidden
+            processinfo.UseShellExecute = True
+            processinfo.CreateNoWindow = True
+            processinfo.RedirectStandardOutput = False
+
+            process.StartInfo = processinfo
+            process.Start()
             Invoke(Sub() Me.Close())
             Exit Sub
         End If
@@ -4236,6 +4253,37 @@ Public Class Form1
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         CheckForIllegalCrossThreadCalls = True
+
+        'We try to create config.cfg if non existant.
+        If Not (File.Exists(Application.StartupPath & "\settings\config.cfg")) Then
+            myExe = Application.StartupPath & "\settings\config.cfg"
+            System.IO.File.WriteAllBytes(myExe, My.Resources.config)
+        End If
+
+        'we check if the donate is trigger here directly.
+        If settings.getconfig("donate") = True Then
+            Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+
+            processinfo.FileName = webAddress
+            processinfo.Arguments = Nothing
+            processinfo.UseShellExecute = True
+            processinfo.CreateNoWindow = True
+            processinfo.RedirectStandardOutput = False
+
+            process.StartInfo = processinfo
+            process.Start()
+
+            settings.setconfig("donate", "false")
+            Try
+                If System.IO.File.Exists(Application.StartupPath + "\DDU.bat") = True Then
+                    System.IO.File.Delete(Application.StartupPath + "\DDU.bat")
+                End If
+            Catch ex As Exception
+            End Try
+            preventclose = False
+            Me.Close()
+            Exit Sub
+        End If
 
         'check for admin before trying to do things, as this could cause errors and message boxes for rebooting into startup without admin are useless because you can't bcdedit without admin rights, however the next messagebox still plays the sound effect, for msgboxstyle.information. Not sure if this can be fixed.
         If Not isElevated Then
@@ -4540,9 +4588,6 @@ Public Class Form1
             Label3.Refresh()
             ddudrfolder = Label3.Text
 
-
-            myExe = Application.StartupPath & "\settings\paypal.bat"
-            System.IO.File.WriteAllBytes(myExe, My.Resources.paypal)
             If arch = True Then
                 Try
 
@@ -4644,9 +4689,9 @@ Public Class Form1
 
             Me.TopMost = True
 
-            MsgBox(msgboxmessage("4"), MsgBoxStyle.Information)
+            'MsgBox(msgboxmessage("4"), MsgBoxStyle.Information)
 
-            Me.TopMost = False
+
 
             UpdateTextMethod(UpdateTextMethodmessage("10") + Application.ProductVersion)
             log("DDU Version: " + Application.ProductVersion)
@@ -4876,24 +4921,7 @@ Public Class Form1
                     End If
 
                 Case BootMode.Normal
-                    If f.checkbox5.Checked = True Then
-                        Form2.Show()
-                        Try
-                            log("Trying to Create a System Restored Point")
-                            Dim SysterRestoredPoint = GetObject("winmgmts:\\.\root\default:Systemrestore")
-                            If SysterRestoredPoint IsNot Nothing Then
-                                'Replace 'My System Restored Point' with your ststem restored point
-                                If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
-                                    log("System Restored Point Created")
-                                Else
-                                    log("System Restored Point Could not Created!")
-                                End If
-                            End If
-                        Catch ex As Exception
-                            log(ex.Message)
-                        End Try
-                        Form2.Close()
-                    End If
+                    
                     safemode = False
 
                     If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
@@ -4902,6 +4930,7 @@ Public Class Form1
                         If resultmsgbox = DialogResult.Cancel Then
 
                             preventclose = False
+                            Me.TopMost = False
                             Me.Close()
                             Exit Sub
                         ElseIf resultmsgbox = DialogResult.No Then
@@ -4930,7 +4959,16 @@ Public Class Form1
 
                             End If
                             preventclose = False
-                            System.Diagnostics.Process.Start("shutdown", "/r /t 0")
+                            Me.TopMost = False
+                            processinfo.FileName = "shutdown"
+                            processinfo.Arguments = "/r /t 0"
+                            processinfo.WindowStyle = ProcessWindowStyle.Hidden
+                            processinfo.UseShellExecute = True
+                            processinfo.CreateNoWindow = True
+                            processinfo.RedirectStandardOutput = False
+
+                            process.StartInfo = processinfo
+                            process.Start()
                             Me.Close()
                             Exit Sub
                         End If
@@ -4939,7 +4977,7 @@ Public Class Form1
                     End If
 
             End Select
-
+            Me.TopMost = False
 
             'Check and log the driver from the driver store  ( oemxx.inf)
             'processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
@@ -4968,6 +5006,27 @@ Public Class Form1
             Exit Sub
         End Try
 
+    End Sub
+    Sub systemrestore()
+        Select Case System.Windows.Forms.SystemInformation.BootMode
+            Case BootMode.Normal
+                If f.CheckBox5.Checked = True Then
+                    UpdateTextMethod("Creating System Restore point (If allowed by the system)")
+                    Try
+                        log("Trying to Create a System Restored Point")
+                        Dim SysterRestoredPoint = GetObject("winmgmts:\\.\root\default:Systemrestore")
+                        If SysterRestoredPoint IsNot Nothing Then
+                            If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
+                                log("System Restored Point Created")
+                            Else
+                                log("System Restored Point Could not Created!")
+                            End If
+                        End If
+                    Catch ex As Exception
+                        log(ex.Message)
+                    End Try
+                End If
+        End Select
     End Sub
     Sub getoeminfo()
 
@@ -5164,6 +5223,7 @@ Public Class Form1
         reboot = False
         shutdown = False
         combobox1value = ComboBox1.Text
+        systemrestore()
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
     End Sub
 
@@ -5171,6 +5231,7 @@ Public Class Form1
         reboot = False
         shutdown = True
         combobox1value = ComboBox1.Text
+        systemrestore()
         BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
     End Sub
 
@@ -5234,15 +5295,23 @@ Public Class Form1
     End Sub
 
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
+        settings.setconfig("donate", "true")
+
         'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
         ' process.Start(webAddress)
+        'Create the ddu.bat file
+        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+        sw.Flush()
+        sw.Close()
+
         Dim UserTokenHandle As IntPtr = IntPtr.Zero
         WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
         Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
         Dim StartInfo As New WindowsApi.STARTUPINFOW
         StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-        If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\settings\paypal.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+        If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
         Else
             MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
         End If
