@@ -2433,6 +2433,8 @@ Public Class Form1
                        child.ToLower.Contains("shadowplay") Or _
                        child.ToLower.Contains("update common") Or _
                        child.ToLower.Contains("shield") Or _
+                       child.ToLower.Contains("nview") Or _
+                       child.ToLower.Contains("nvidia wmi provider") Or _
                        child.ToLower.Contains("update core") Then
 
                         If (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
@@ -3283,6 +3285,7 @@ Public Class Form1
                                                child2.ToLower.Contains("nvbackend") Or _
                                                child2.ToLower.Contains("nvidia update core") Or _
                                                 child2.ToLower.Contains("nvcontrolpanel2") Or _
+												child2.ToLower.Contains("nvcontrolpanel") Or _
                                                 child2.ToLower.Contains("nvtray") Or _
                                                 child2.ToLower.Contains("nvidia control panel") Then
                                                 Try
@@ -3504,6 +3507,8 @@ Public Class Form1
                         child.ToLower.Contains("_display.nvirusb") Or _
                         child.ToLower.Contains("_display.physx") Or _
                         child.ToLower.Contains("_display.update") Or _
+                        child.ToLower.Contains("_display.nview") Or _
+                        child.ToLower.Contains("_display.nvwmi") Or _
                         child.ToLower.Contains("_nvidia.update") Or _
                         child.ToLower.Contains("_gfexperience") Or _
                         child.ToLower.Contains("_hdaudio.driver") Or _
@@ -3585,7 +3590,8 @@ Public Class Form1
                             If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
                                 wantedvalue = subregkey.GetValue("").ToString
                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                    If wantedvalue.ToLower.Contains("nvidia control panel") Then
+                                    If wantedvalue.ToLower.Contains("nvidia control panel") or _ 
+									   wantedvalue.ToLower.Contains("nvidia nview desktop manager") Then
                                         Try
                                             regkey.DeleteSubKeyTree(child)
                                         Catch ex As Exception
@@ -3780,6 +3786,11 @@ Public Class Form1
                     regkey.DeleteValue("NvBackend")
                 Catch ex As Exception
                 End Try
+				
+				Try
+                    regkey.DeleteValue("nwiz")
+                Catch ex As Exception
+                End Try
 
                 Try
                     regkey.DeleteValue("ShadowPlay")
@@ -3834,6 +3845,9 @@ Public Class Form1
                 For Each child As String In regkey.GetValueNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If regkey.GetValue(child).ToString.ToLower.Contains("nvcpl desktopcontext class") Or _
+						   regkey.GetValue(child).ToString.ToLower.Contains("nview desktop context menu") Or _
+						   regkey.GetValue(child).ToString.ToLower.Contains("nvappshext extension") Or _
+						   regkey.GetValue(child).ToString.ToLower.Contains("openglshext extension") Or _
                            regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context menu extension") Then
                             Try
                                 regkey.DeleteValue(child)
@@ -3897,8 +3911,19 @@ Public Class Form1
             My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("NvCplDesktopContext")
         Catch ex As Exception
         End Try
-        Try
+		
+		Try
+            My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("00nView")
+        Catch ex As Exception
+        End Try
+        
+		Try
             My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("NvCplDesktopContext")
+        Catch ex As Exception
+        End Try
+		
+	    Try
+            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("00nView")
         Catch ex As Exception
         End Try
 
@@ -6164,6 +6189,8 @@ Public Class Form1
                                    child2.ToLower.Contains("display.nvirusb") Or _
                                    child2.ToLower.Contains("display.physx") Or _
                                    child2.ToLower.Contains("display.update") Or _
+                                   child2.ToLower.Contains("display.nview") Or _
+                                   child2.ToLower.Contains("display.nvwmi") Or _
                                    child2.ToLower.Contains("gfexperience") Or _
                                    child2.ToLower.Contains("nvidia.update") Or _
                                    child2.ToLower.Contains("installer2\installer") Or _
