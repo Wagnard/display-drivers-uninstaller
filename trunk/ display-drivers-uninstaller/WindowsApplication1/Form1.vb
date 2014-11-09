@@ -2168,7 +2168,7 @@ Public Class Form1
         log("Cleaning Directory")
 
 
-        If options.CheckBox1.Checked = True Then
+        If removecamdnvidia = True Then
             filePath = sysdrv + "\NVIDIA"
             Try
                 My.Computer.FileSystem.DeleteDirectory _
@@ -5055,7 +5055,7 @@ Public Class Form1
     End Sub
     Sub getoeminfo()
 
-        log("The following thirs-party driver packages are installed on this computer: ")
+        log("The following third-party driver packages are installed on this computer: ")
 
         Try
             For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
@@ -7384,16 +7384,16 @@ Public Class CleanupEngine
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
+                    If Not (checkvariables.isnullorwhitespace(child)) AndAlso (regkey.OpenSubKey(child) IsNot Nothing) Then
                         For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-                            If Not checkvariables.isnullorwhitespace(child2) Then
+                            If (Not checkvariables.isnullorwhitespace(child2)) AndAlso regkey.OpenSubKey(child).OpenSubKey(child2) IsNot Nothing Then
                                 For Each child3 As String In regkey.OpenSubKey(child).OpenSubKey(child2).GetSubKeyNames()
-                                    If Not checkvariables.isnullorwhitespace(child3) Then
+                                    If (Not checkvariables.isnullorwhitespace(child3)) AndAlso (regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3) IsNot Nothing) Then
                                         For Each child4 As String In regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).GetSubKeyNames()
                                             If Not checkvariables.isnullorwhitespace(child4) Then
                                                 For i As Integer = 0 To clsidleftover.Length - 1
                                                     If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
-                                                        If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("")) Then
+                                                        If (regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4) IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue(""))) Then
                                                             If regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("").ToString.ToLower.Contains(clsidleftover(i).ToLower) Then
                                                                 Try
                                                                     regkey.DeleteSubKeyTree(child)
