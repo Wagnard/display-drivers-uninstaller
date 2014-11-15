@@ -1559,7 +1559,7 @@ Public Class Form1
                             Try
                                 If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("InstallDir")) Then
                                     filePath = regkey.OpenSubKey(child).GetValue("InstallDir").ToString
-                                    If Not checkvariables.isnullorwhitespace(filePath) Then
+                                    If Not checkvariables.isnullorwhitespace(filePath) AndAlso My.Computer.FileSystem.DirectoryExists(filePath) Then
 
                                         For Each childf As String In Directory.GetDirectories(filePath)
                                             If checkvariables.isnullorwhitespace(childf) = False Then
@@ -2880,44 +2880,49 @@ Public Class Form1
         CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
 
         'Cleaning PNPRessources.
-
-        Try
-
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
-        Catch ex As Exception
-            log(ex.Message & "pnp resources khronos")
-        End Try
-
-        Try
-
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global\CoprocManager\OptimusEnhancements")
-        Catch ex As Exception
-            log(ex.Message & "pnp resources khronos")
-        End Try
-
-        Try
-
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
-        Catch ex As Exception
-            log(ex.Message & "pnp resources cpl extension")
-        End Try
-
-        If IntPtr.Size = 8 Then
-
+        If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos", False) IsNot Nothing Then
             Try
-
-                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
+                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
             Catch ex As Exception
-                log(ex.Message & "pnpresources wow6432node khronos")
+                log(ex.Message & "pnp resources khronos")
             End Try
         End If
 
-        Try
+        If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global\CoprocManager\OptimusEnhancements", False) IsNot Nothing Then
+            Try
+                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global\CoprocManager\OptimusEnhancements")
+            Catch ex As Exception
+                log(ex.Message & "pnp resources khronos")
+            End Try
+        End If
 
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
-        Catch ex As Exception
-            log(ex.Message & "pnp ressources nvidia corporation")
-        End Try
+        If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension", False) IsNot Nothing Then
+            Try
+                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
+            Catch ex As Exception
+                log(ex.Message & "pnp resources cpl extension")
+            End Try
+        End If
+
+        If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation", False) IsNot Nothing Then
+            Try
+                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
+            Catch ex As Exception
+                log(ex.Message & "pnp ressources nvidia corporation")
+            End Try
+        End If
+
+        If IntPtr.Size = 8 Then
+            If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos", False) IsNot Nothing Then
+                Try
+                    My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
+                Catch ex As Exception
+                    log(ex.Message & "pnpresources wow6432node khronos")
+                End Try
+            End If
+        End If
+
+
 
 
         '----------------------
@@ -2930,11 +2935,7 @@ Public Class Form1
                 If subregkey IsNot Nothing Then
                     For Each child2 As String In subregkey.GetSubKeyNames()
                         If child2.ToLower.Contains("controlset") Then
-                            Try
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\SharedAccess\Parameters\FirewallPolicy\FirewallRules", True)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\SharedAccess\Parameters\FirewallPolicy\FirewallRules", True)
                             If regkey IsNot Nothing Then
                                 For Each child As String In regkey.GetValueNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
@@ -2974,11 +2975,7 @@ Public Class Form1
                 If subregkey IsNot Nothing Then
                     For Each child2 As String In subregkey.GetSubKeyNames()
                         If child2.ToLower.Contains("controlset") Then
-                            Try
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Power\PowerSettings", True)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Power\PowerSettings", True)
                             If regkey IsNot Nothing Then
                                 For Each childs As String In regkey.GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(childs) = False Then
@@ -3042,11 +3039,7 @@ Public Class Form1
                 If subregkey IsNot Nothing Then
                     For Each child2 As String In subregkey.GetSubKeyNames()
                         If child2.ToLower.Contains("controlset") Then
-                            Try
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
                             If regkey IsNot Nothing Then
                                 For Each child As String In regkey.GetValueNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
@@ -3158,11 +3151,11 @@ Public Class Form1
         Try
             If removephysx Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("Software\\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
+                        ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetValueNames()
                         If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.Contains("NVIDIA Corporation\") Then
+                            If child.ToLower.Contains("nvidia corporation\physx") Then
                                 Try
                                     regkey.DeleteValue(child)
                                 Catch ex As Exception
@@ -3234,7 +3227,7 @@ Public Class Form1
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.Contains("NVIDIA Corporation") Then
+                        If child.ToLower.Contains("nvidia corporation") Then
                             Try
                                 regkey.DeleteValue(child)
                             Catch ex As Exception
@@ -3255,7 +3248,7 @@ Public Class Form1
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetValueNames()
                         If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.Contains("NVIDIA Corporation") Then
+                            If child.ToLower.Contains("nvidia corporation\physx") Then
                                 Try
                                     regkey.DeleteValue(child)
                                 Catch ex As Exception
@@ -3282,10 +3275,10 @@ Public Class Form1
                                         If checkvariables.isnullorwhitespace(child2) = False Then
                                             If child2.ToLower.Contains("global") Or _
                                                 child2.ToLower.Contains("logging") Or _
-                                               child2.ToLower.Contains("nvbackend") Or _
-                                               child2.ToLower.Contains("nvidia update core") Or _
+                                                child2.ToLower.Contains("nvbackend") Or _
+                                                child2.ToLower.Contains("nvidia update core") Or _
                                                 child2.ToLower.Contains("nvcontrolpanel2") Or _
-												child2.ToLower.Contains("nvcontrolpanel") Or _
+                                                child2.ToLower.Contains("nvcontrolpanel") Or _
                                                 child2.ToLower.Contains("nvtray") Or _
                                                 child2.ToLower.Contains("nvidia control panel") Then
                                                 Try
@@ -3590,8 +3583,8 @@ Public Class Form1
                             If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
                                 wantedvalue = subregkey.GetValue("").ToString
                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                    If wantedvalue.ToLower.Contains("nvidia control panel") or _ 
-									   wantedvalue.ToLower.Contains("nvidia nview desktop manager") Then
+                                    If wantedvalue.ToLower.Contains("nvidia control panel") Or _
+                                       wantedvalue.ToLower.Contains("nvidia nview desktop manager") Then
                                         Try
                                             regkey.DeleteSubKeyTree(child)
                                         Catch ex As Exception
@@ -3786,8 +3779,8 @@ Public Class Form1
                     regkey.DeleteValue("NvBackend")
                 Catch ex As Exception
                 End Try
-				
-				Try
+
+                Try
                     regkey.DeleteValue("nwiz")
                 Catch ex As Exception
                 End Try
@@ -3845,9 +3838,9 @@ Public Class Form1
                 For Each child As String In regkey.GetValueNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If regkey.GetValue(child).ToString.ToLower.Contains("nvcpl desktopcontext class") Or _
-						   regkey.GetValue(child).ToString.ToLower.Contains("nview desktop context menu") Or _
-						   regkey.GetValue(child).ToString.ToLower.Contains("nvappshext extension") Or _
-						   regkey.GetValue(child).ToString.ToLower.Contains("openglshext extension") Or _
+                           regkey.GetValue(child).ToString.ToLower.Contains("nview desktop context menu") Or _
+                           regkey.GetValue(child).ToString.ToLower.Contains("nvappshext extension") Or _
+                           regkey.GetValue(child).ToString.ToLower.Contains("openglshext extension") Or _
                            regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context menu extension") Then
                             Try
                                 regkey.DeleteValue(child)
@@ -3911,18 +3904,18 @@ Public Class Form1
             My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("NvCplDesktopContext")
         Catch ex As Exception
         End Try
-		
-		Try
+
+        Try
             My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("00nView")
         Catch ex As Exception
         End Try
-        
-		Try
+
+        Try
             My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("NvCplDesktopContext")
         Catch ex As Exception
         End Try
-		
-	    Try
+
+        Try
             My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("00nView")
         Catch ex As Exception
         End Try
@@ -4739,7 +4732,7 @@ Public Class Form1
                                         UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
                                         log("GPU #" + child + " Detected : " + currentdriverversion)
                                     Else
-                                        If subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
+                                        If (Not checkvariables.isnullorwhitespace(subregkey.GetValueKind("DriverDesc"))) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
                                             UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
                                             log("GPU #" + child + " Detected : " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
                                         Else
@@ -4758,7 +4751,7 @@ Public Class Form1
                                     End If
 
                                     Try
-                                        If subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
+                                        If (Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString"))) AndAlso (subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary) Then
                                             UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
                                             log("Vbios :" + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
                                         Else
@@ -4891,7 +4884,7 @@ Public Class Form1
                                         If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(childs).GetValue("Service")) Then
                                             If subregkey.OpenSubKey(childs).GetValue("Service").ToString.ToLower.Contains("amdkmdap") Then
                                                 enduro = True
-                                                TextBox1.Text = TextBox1.Text + "System seems to be an AMD Enduro (Intel)" + vbNewLine
+                                                UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
                                                 log("System seems to be an AMD Enduro (Intel)")
                                             End If
                                         End If
