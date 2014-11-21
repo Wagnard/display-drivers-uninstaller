@@ -1432,11 +1432,7 @@ Public Class Form1
                 For Each child2 As String In subregkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child2) = False Then
                         If child2.ToLower.Contains("controlset") Then
-                            Try
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog", True)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog", True)
                             If regkey IsNot Nothing Then
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
@@ -1445,23 +1441,23 @@ Public Class Form1
                                         End If
                                     End If
                                 Next
+
+
+                                Try
+                                    regkey.OpenSubKey("Application", True).DeleteSubKeyTree("ATIeRecord")
+                                Catch ex As Exception
+                                End Try
+
+                                Try
+                                    regkey.OpenSubKey("System", True).DeleteSubKeyTree("amdkmdag")
+                                Catch ex As Exception
+                                End Try
+
+                                Try
+                                    regkey.OpenSubKey("System", True).DeleteSubKeyTree("amdkmdap")
+                                Catch ex As Exception
+                                End Try
                             End If
-
-                            Try
-                                regkey.OpenSubKey("Application", True).DeleteSubKeyTree("ATIeRecord")
-                            Catch ex As Exception
-                            End Try
-
-                            Try
-                                regkey.OpenSubKey("System", True).DeleteSubKeyTree("amdkmdag")
-                            Catch ex As Exception
-                            End Try
-
-                            Try
-                                regkey.OpenSubKey("System", True).DeleteSubKeyTree("amdkmdap")
-                            Catch ex As Exception
-                            End Try
-
                             Try
                                 My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services", True).DeleteSubKeyTree("Atierecord")
                             Catch ex As Exception
@@ -3687,11 +3683,7 @@ Public Class Form1
                 For Each child2 As String In subregkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child2) = False Then
                         If child2.ToLower.Contains("controlset") Then
-                            Try
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog\Application", True)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog\Application", True)
                             If regkey IsNot Nothing Then
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
@@ -4168,14 +4160,22 @@ Public Class Form1
                                                     If (array(i).ToLower.Contains("nvpciflt")) Then
                                                         Dim AList As ArrayList = New ArrayList(array)
 
+                                                        AList.Remove("nvpciflt")
+                                                        AList.Remove("nvkflt")
+
                                                         log("nVidia Optimus UpperFilter Found.")
+                                                        Dim upfiler As String() = AList.ToArray(GetType(String))
 
                                                         Try
+
                                                             subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
+                                                            If (upfiler IsNot Nothing) AndAlso (Not upfiler.Length < 1) Then
+                                                                subregkey.OpenSubKey(childs, True).SetValue("UpperFilters", upfiler, RegistryValueKind.MultiString)
+                                                            End If
                                                         Catch ex As Exception
-                                                            log(ex.Message + ex.StackTrace)
-                                                            log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
-                                                        End Try
+            log(ex.Message + ex.StackTrace)
+            log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
+        End Try
                                                     End If
                                                 End If
                                             Next
@@ -7391,9 +7391,9 @@ Public Class CleanupEngine
                 For Each child As String In regkey.GetSubKeyNames()
                     If Not (checkvariables.isnullorwhitespace(child)) AndAlso (regkey.OpenSubKey(child) IsNot Nothing) Then
                         For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-                            If (Not checkvariables.isnullorwhitespace(child2)) AndAlso regkey.OpenSubKey(child).OpenSubKey(child2) IsNot Nothing Then
+                            If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child2)) AndAlso regkey.OpenSubKey(child).OpenSubKey(child2) IsNot Nothing Then
                                 For Each child3 As String In regkey.OpenSubKey(child).OpenSubKey(child2).GetSubKeyNames()
-                                    If (Not checkvariables.isnullorwhitespace(child3)) AndAlso (regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3) IsNot Nothing) Then
+                                    If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child3)) AndAlso (regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3) IsNot Nothing) Then
                                         For Each child4 As String In regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).GetSubKeyNames()
                                             If Not checkvariables.isnullorwhitespace(child4) Then
                                                 For i As Integer = 0 To clsidleftover.Length - 1
