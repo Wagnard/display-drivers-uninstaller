@@ -4166,6 +4166,7 @@ Public Class Form1
                                                 If Not checkvariables.isnullorwhitespace(array(i)) Then
                                                     log("UpperFilter found : " + array(i))
                                                     If (array(i).ToLower.Contains("nvpciflt")) Then
+                                                        Dim AList As ArrayList = New ArrayList(array)
 
                                                         log("nVidia Optimus UpperFilter Found.")
 
@@ -6796,37 +6797,48 @@ Public Class CleanupEngine
         f.log("Cleaning Process/Services...")
 
         'STOP AMD service
-        For i As Integer = 0 To services.Length - 1
-            If Not (donotremoveamdhdaudiobusfiles AndAlso services(i).ToLower.Contains("amdkmafd")) Then
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Services", False)
+        If regkey IsNot Nothing Then
+            For i As Integer = 0 To services.Length - 1
                 If Not checkvariables.isnullorwhitespace(services(i)) Then
-                    Dim stopservice As New ProcessStartInfo
-                    stopservice.FileName = "cmd.exe"
-                    stopservice.Arguments = " /Csc stop " & Chr(34) & services(i) & Chr(34)
-                    stopservice.UseShellExecute = False
-                    stopservice.CreateNoWindow = True
-                    stopservice.RedirectStandardOutput = False
+                    If regkey.OpenSubKey(services(i), False) IsNot Nothing Then
+                        If Not (donotremoveamdhdaudiobusfiles AndAlso services(i).ToLower.Contains("amdkmafd")) Then
 
-                    Dim processstopservice As New Process
-                    processstopservice.StartInfo = stopservice
-                    processstopservice.Start()
-                    processstopservice.WaitForExit()
+                            Dim stopservice As New ProcessStartInfo
+                            stopservice.FileName = "cmd.exe"
+                            stopservice.Arguments = " /Cnet stop " & Chr(34) & services(i) & Chr(34)
+                            stopservice.UseShellExecute = False
+                            stopservice.CreateNoWindow = True
+                            stopservice.RedirectStandardOutput = False
 
-                    System.Threading.Thread.Sleep(10)
 
-                    stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
+                            Dim processstopservice As New Process
+                            processstopservice.StartInfo = stopservice
+                            f.UpdateTextMethod("Stopping service : " & services(i))
+                            f.log("Stopping service : " & services(i))
+                            processstopservice.Start()
+                            processstopservice.WaitForExit()
 
-                    processstopservice.StartInfo = stopservice
-                    processstopservice.Start()
-                    processstopservice.WaitForExit()
+                            stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
 
-                    stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
-                    processstopservice.StartInfo = stopservice
-                    processstopservice.Start()
-                    processstopservice.WaitForExit()
+                            processstopservice.StartInfo = stopservice
+                            f.UpdateTextMethod("Deleting service : " & services(i))
+                            f.log("Deleting service : " & services(i))
+                            processstopservice.Start()
+                            processstopservice.WaitForExit()
+
+                            stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
+                            processstopservice.StartInfo = stopservice
+                            processstopservice.Start()
+                            processstopservice.WaitForExit()
+
+                        End If
+                    End If
                 End If
-            End If
-        Next
-        System.Threading.Thread.Sleep(10)
+
+                System.Threading.Thread.Sleep(10)
+            Next
+        End If
         f.UpdateTextMethod(updateTextMethodmessage("38"))
         f.log("Process/Services CleanUP Complete")
 
@@ -7386,7 +7398,7 @@ Public Class CleanupEngine
                                             If Not checkvariables.isnullorwhitespace(child4) Then
                                                 For i As Integer = 0 To clsidleftover.Length - 1
                                                     If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
-                                                        If (regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4) IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue(""))) Then
+                                                        If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue(""))) Then
                                                             If regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("").ToString.ToLower.Contains(clsidleftover(i).ToLower) Then
                                                                 Try
                                                                     regkey.DeleteSubKeyTree(child)
