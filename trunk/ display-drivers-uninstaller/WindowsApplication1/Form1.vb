@@ -4318,6 +4318,8 @@ Public Class Form1
         If Not checkvariables.isnullorwhitespace(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion")) Then
             version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
 
+        Else
+            version = 5.0
         End If
 
         If version < "5.1" Then
