@@ -281,8 +281,8 @@ Public Class Form1
                                                     proc3.Start()
                                                     reply2 = proc3.StandardOutput.ReadToEnd
                                                     'proc3.WaitForExit()
-
-
+                                                    proc3.StandardOutput.Close()
+                                                    proc3.Close()
                                                     UpdateTextMethod(reply2)
                                                     log(reply2)
                                                     Exit For
@@ -321,7 +321,8 @@ Public Class Form1
                                         proc3.Start()
                                         reply2 = proc3.StandardOutput.ReadToEnd
                                         'proc3.WaitForExit()
-
+                                        proc3.StandardOutput.Close()
+                                        proc3.Close()
 
                                         UpdateTextMethod(reply2)
                                         log(reply2)
@@ -5438,6 +5439,8 @@ Public Class Form1
                                                                                     process.Start()
                                                                                     reply2 = process.StandardOutput.ReadToEnd
                                                                                     'process.WaitForExit()
+                                                                                    process.StandardOutput.Close()
+                                                                                    process.Close()
                                                                                     log(reply2)
                                                                                     log("AMD HD Audio Bus Removed !")
                                                                                 End If
@@ -5532,6 +5535,8 @@ Public Class Form1
 
                                                     process.Start()
                                                     reply2 = process.StandardOutput.ReadToEnd
+                                                    process.StandardOutput.Close()
+                                                    process.Close()
                                                     'process.WaitForExit()
                                                     log(reply2)
 
@@ -5588,6 +5593,8 @@ Public Class Form1
 
                                         process.Start()
                                         reply2 = process.StandardOutput.ReadToEnd
+                                        process.StandardOutput.Close()
+                                        process.Close()
                                         'process.WaitForExit()
                                         log(reply2)
 
@@ -5627,6 +5634,8 @@ Public Class Form1
                     process.StartInfo = processinfo
                     process.Start()
                     reply = process.StandardOutput.ReadToEnd
+                    process.StandardOutput.Close()
+                    process.Close()
                     'process.WaitForExit()
 
                     Try
@@ -5660,6 +5669,8 @@ Public Class Form1
 
                             process.Start()
                             reply2 = process.StandardOutput.ReadToEnd
+                            process.StandardOutput.Close()
+                            process.Close()
                             'process.WaitForExit()
                             log(reply2)
 
@@ -5707,6 +5718,8 @@ Public Class Form1
 
                                                 process.Start()
                                                 reply2 = process.StandardOutput.ReadToEnd
+                                                process.StandardOutput.Close()
+                                                process.Close()
                                                 'process.WaitForExit()
                                                 log(reply2)
 
@@ -5749,6 +5762,8 @@ Public Class Form1
 
                                     process.Start()
                                     reply2 = process.StandardOutput.ReadToEnd
+                                    process.StandardOutput.Close()
+                                    process.Close()
                                     'process.WaitForExit()
                                     log(reply2)
 
@@ -5791,6 +5806,8 @@ Public Class Form1
 
                                     process.Start()
                                     reply2 = process.StandardOutput.ReadToEnd
+                                    process.StandardOutput.Close()
+                                    process.Close()
                                     'process.WaitForExit()
                                     log(reply2)
 
@@ -5816,6 +5833,8 @@ Public Class Form1
 
                 process.Start()
                 reply2 = process.StandardOutput.ReadToEnd
+                process.StandardOutput.Close()
+                process.Close()
                 'process.WaitForExit()
                 log(reply2)
 
@@ -5845,6 +5864,8 @@ Public Class Form1
 
                                     process.Start()
                                     reply2 = process.StandardOutput.ReadToEnd
+                                    process.StandardOutput.Close()
+                                    process.Close()
                                     'process.WaitForExit()
                                     log(reply2)
 
@@ -5894,6 +5915,8 @@ Public Class Form1
 
                                             process.Start()
                                             reply2 = process.StandardOutput.ReadToEnd
+                                            process.StandardOutput.Close()
+                                            process.Close()
                                             'process.WaitForExit()
                                             log(reply2)
                                         End If
@@ -6253,6 +6276,7 @@ Public Class genericfunction
             Dim sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
 
             Dim newestversion2 As String = sr.ReadToEnd()
+            sr.Close()
             Dim newestversion2int As Integer = newestversion2.Replace(".", "")
             Dim applicationversion As Integer = Application.ProductVersion.Replace(".", "")
 
