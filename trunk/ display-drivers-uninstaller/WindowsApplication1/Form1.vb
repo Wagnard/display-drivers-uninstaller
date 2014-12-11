@@ -462,40 +462,11 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        Try
-            filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.CommonProgramFiles) + "\ATI Technologies"
-            For Each child As String In Directory.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("multimedia") Then
-                        Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                        Catch ex As Exception
-                            log(ex.Message)
-                            TestDelete(child)
-                        End Try
-                    End If
-                End If
-            Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
-            Catch ex As Exception
-            End Try
-        Catch ex As Exception
-        End Try
 
-        Try
-            filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
+        filePath = Environment.GetFolderPath _
+            (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
+        If Directory.Exists(filePath) Then
+
             For Each child As String In Directory.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("ati.ace") Then
@@ -521,8 +492,7 @@ Public Class Form1
                 End If
             Catch ex As Exception
             End Try
-        Catch ex As Exception
-        End Try
+        End If
 
         Try
             filePath = Environment.GetFolderPath _
@@ -555,6 +525,45 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
+        filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + "\Common Files" + "\ATI Technologies"
+        If Directory.Exists(filePath) Then
+            For Each child As String In Directory.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("multimedia") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(child)
+                        End Try
+                    End If
+                End If
+            Next
+            If Directory.GetDirectories(filePath).Length = 0 Then
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    'on success, do this
+
+                Catch ex As Exception
+                    log(ex.Message)
+                    TestDelete(filePath)
+                End Try
+            End If
+        End If
+
+        If Not Directory.Exists(filePath) Then
+            For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains(filePath + "\") Then
+                        Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                    End If
+                End If
+            Next
+        End If
+
         If IntPtr.Size = 8 Then
 
             filePath = Environment.GetFolderPath _
@@ -567,6 +576,16 @@ Public Class Form1
                     log(ex.Message)
                     TestDelete(filePath)
                 End Try
+            End If
+
+            If Not Directory.Exists(filePath) Then
+                For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                    If Not checkvariables.isnullorwhitespace(child) Then
+                        If child.ToLower.Contains(filePath + "\") Then
+                            Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                        End If
+                    End If
+                Next
             End If
 
             filePath = Environment.GetFolderPath _
@@ -588,22 +607,27 @@ Public Class Form1
                             End If
                         End If
                     Next
-                    Try
-                        If Directory.GetDirectories(filePath).Length = 0 Then
-                            Try
-                                My.Computer.FileSystem.DeleteDirectory _
-                                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(Environment.GetFolderPath _
-                        (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies\")
-                            Catch ex As Exception
-                                log(ex.Message)
-                                TestDelete(filePath)
-                            End Try
-                        End If
-                    Catch ex As Exception
-                    End Try
+                    If Directory.GetDirectories(filePath).Length = 0 Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(filePath)
+                        End Try
+                    End If
                 Catch ex As Exception
                 End Try
+            End If
+
+            If Not Directory.Exists(filePath) Then
+                For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                    If Not checkvariables.isnullorwhitespace(child) Then
+                        If child.ToLower.Contains(filePath + "\") Then
+                            Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                        End If
+                    End If
+                Next
             End If
 
             filePath = System.Environment.SystemDirectory
@@ -639,9 +663,10 @@ Public Class Form1
                 End Try
             End If
 
-            Try
-                filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies"
+
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies"
+            If Directory.Exists(filePath) Then
                 For Each child As String In Directory.GetDirectories(filePath)
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("multimedia") Then
@@ -660,9 +685,6 @@ Public Class Form1
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
                                 (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                            'on success, do this
-                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies\")
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
@@ -670,8 +692,17 @@ Public Class Form1
                     End If
                 Catch ex As Exception
                 End Try
-            Catch ex As Exception
-            End Try
+            End If
+        End If
+
+        If Not Directory.Exists(filePath) Then
+            For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains(filePath + "\") Then
+                        Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                    End If
+                End If
+            Next
         End If
 
         filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
@@ -792,6 +823,77 @@ Public Class Form1
             End If
         Next
 
+        'starting with AMD  14.12 Omega driver folders
+
+        filePath = Environment.GetFolderPath _
+            (Environment.SpecialFolder.ProgramFiles) + "\AMD"
+        If Directory.Exists(filePath) Then
+            For Each child As String In Directory.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("amdkmpfd") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(child)
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        log(ex.Message)
+                        TestDelete(filePath)
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        End If
+
+        filePath = Environment.GetFolderPath _
+    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD"
+        If Directory.Exists(filePath) Then
+
+            For Each child As String In Directory.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("ati.ace") Then
+                        Try
+                            My.Computer.FileSystem.DeleteDirectory _
+                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(child)
+                        End Try
+                    End If
+                End If
+            Next
+            Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        log(ex.Message)
+                        TestDelete(filePath)
+                    End Try
+                End If
+            Catch ex As Exception
+            End Try
+        End If
+        If Not Directory.Exists(filePath) Then
+            For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains(filePath + "\") Then
+                        Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                    End If
+                End If
+            Next
+        End If
         'Cleaning the CCC assemblies.
 
         Try
@@ -1524,7 +1626,13 @@ Public Class Form1
                             End Try
                         End If
                         If child.ToLower.Contains("install") Then
-                            'here we check the install path location in case CCC is not installed on the system drive
+                            'here we check the install path location in case CCC is not installed on the system drive.  A kill to explorer must be made
+                            'to help cleaning in normal mode.
+                            log("Killing Explorer.exe")
+                            Dim appproc = process.GetProcessesByName("explorer")
+                            For i As Integer = 0 To appproc.Length - 1
+                                appproc(i).Kill()
+                            Next i
                             Try
                                 If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("InstallDir")) Then
                                     filePath = regkey.OpenSubKey(child).GetValue("InstallDir").ToString
@@ -1532,7 +1640,9 @@ Public Class Form1
 
                                         For Each childf As String In Directory.GetDirectories(filePath)
                                             If checkvariables.isnullorwhitespace(childf) = False Then
-                                                If childf.ToLower.Contains("ati.ace") Then
+                                                If childf.ToLower.Contains("ati.ace") Or _
+                                                    childf.ToLower.Contains("amdkmpfd") Or _
+                                                    childf.ToLower.Contains("cim") Then
                                                     Try
                                                         My.Computer.FileSystem.DeleteDirectory _
                                                         (childf, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -1543,19 +1653,26 @@ Public Class Form1
                                                 End If
                                             End If
                                         Next
-                                        Try
-                                            If Directory.GetDirectories(filePath).Length = 0 Then
-                                                Try
-                                                    My.Computer.FileSystem.DeleteDirectory _
-                                                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                                                Catch ex As Exception
-                                                    log(ex.Message)
-                                                    TestDelete(filePath)
-                                                End Try
-                                            End If
-                                        Catch ex As Exception
-                                        End Try
 
+                                        If Directory.GetDirectories(filePath).Length = 0 Then
+                                            Try
+                                                My.Computer.FileSystem.DeleteDirectory _
+                                                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+                                            Catch ex As Exception
+                                                log(ex.Message)
+                                                TestDelete(filePath)
+                                            End Try
+                                        End If
+                                        If Not Directory.Exists(filePath) Then
+                                            For Each childs As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                                                If Not checkvariables.isnullorwhitespace(childs) Then
+                                                    If childs.ToLower.Contains(filePath + "\") Then
+                                                        Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(childs)
+                                                    End If
+                                                End If
+                                            Next
+                                        End If
                                     End If
                                 End If
 
@@ -1924,14 +2041,12 @@ Public Class Form1
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.Contains("ATI\CIM\") Or child.Contains("AMD AVT") Or _
+                        If child.Contains("ATI\CIM\") Or _
                            child.Contains("ATI\CIM\") Or _
                            child.Contains("AMD APP\") Or _
                            child.Contains("AMD\SteadyVideo\") Or _
-                           child.Contains("ATI.ACE\") Or _
-                           child.Contains("HydraVision\") Or _
-                           child.Contains("ATI Technologies\Application Profiles\") Or _
-                           child.Contains("ATI Technologies\Multimedia\") Then
+                           child.Contains("HydraVision\")  Then
+
                             Try
                                 regkey.DeleteValue(child)
                             Catch ex As Exception
@@ -2482,11 +2597,17 @@ Public Class Form1
                 Try
                     My.Computer.FileSystem.DeleteDirectory _
                         (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(Environment.GetFolderPath _
-(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies\")
                 Catch ex As Exception
                 End Try
-
+                If Not Directory.Exists(filePath) Then
+                    For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                        If Not checkvariables.isnullorwhitespace(child) Then
+                            If child.ToLower.Contains(filePath + "\") Then
+                                Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                            End If
+                        End If
+                    Next
+                End If
             End If
         Catch ex As Exception
             log(ex.StackTrace)
@@ -4289,57 +4410,68 @@ Public Class Form1
             version = 5.0
         End If
 
-        If version < "5.1" Then
+        Select Case version
 
-            Label2.Text = "Unsupported OS"
-            log("Unsupported OS.")
-            Button1.Enabled = False
-            Button2.Enabled = False
-            Button3.Enabled = False
-            Button4.Enabled = False
-        End If
+            Case "5.1"
+                Label2.Text = "Windows XP or Server 2003"
+                winxp = True
+                Button1.Enabled = True
+                Button2.Enabled = True
+                Button3.Enabled = True
+                Button4.Enabled = True
 
-        If version.StartsWith("5.1") Then
-            Label2.Text = "Windows XP or Server 2003"
-            winxp = True
-        End If
+            Case "5.2"
+                winxp = True
+                Button1.Enabled = True
+                Button2.Enabled = True
+                Button3.Enabled = True
+                Button4.Enabled = True
+            Case "6.0"
+                Label2.Text = "Windows Vista or Server 2008"
+                Button1.Enabled = True
+                Button2.Enabled = True
+                Button3.Enabled = True
+                Button4.Enabled = True
 
-        If version.StartsWith("5.2") Then
-            Label2.Text = "Windows XP or Server 2003"
-            winxp = True
-        End If
+            Case "6.1"
+                Label2.Text = "Windows 7 or Server 2008r2"
+                Button1.Enabled = True
+                Button2.Enabled = True
+                Button3.Enabled = True
+                Button4.Enabled = True
 
-        If version.StartsWith("6.0") Then
-            Label2.Text = "Windows Vista or Server 2008"
-        End If
+            Case "6.2"
+                Label2.Text = "Windows 8 or Server 2012"
+                win8higher = True
+                Button1.Enabled = True
+                Button2.Enabled = True
+                Button3.Enabled = True
+                Button4.Enabled = True
 
-        If version.StartsWith("6.1") Then
-            Label2.Text = "Windows 7 or Server 2008r2"
-        End If
+            Case "6.3"
+                Label2.Text = "Windows 8.1"
+                win8higher = True
+                Button1.Enabled = True
+                Button2.Enabled = True
+                Button3.Enabled = True
+                Button4.Enabled = True
 
-        If version.StartsWith("6.2") Then
-            Label2.Text = "Windows 8 or Server 2012"
-            win8higher = True
-        End If
+            Case "6.4", "10.0"
+                Label2.Text = "Windows 10"
+                win8higher = True
+                Button1.Enabled = True
+                Button2.Enabled = True
+                Button3.Enabled = True
+                Button4.Enabled = True
 
-        If version.StartsWith("6.3") Then
-            Label2.Text = "Windows 8.1"
-            win8higher = True
-        End If
-
-        If version.StartsWith("6.4") Then
-            Label2.Text = "Windows 10"
-            win8higher = True
-        End If
-
-        If version > "6.4" Then
-            Label2.Text = "Unsupported O.S"
-            win8higher = True
-            Button1.Enabled = False
-            Button2.Enabled = False
-            Button3.Enabled = False
-            Button4.Enabled = False
-        End If
+            Case Else
+                Label2.Text = "Unsupported OS"
+                log("Unsupported OS.")
+                Button1.Enabled = False
+                Button2.Enabled = False
+                Button3.Enabled = False
+                Button4.Enabled = False
+        End Select
 
         If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
@@ -5118,7 +5250,7 @@ Public Class Form1
         'The containing directory can only be deleted if the directory
         'is now completely empty and all files previously within
         'were deleted.
-        If di.GetFiles().Length = 0 Then
+        If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
             Try
                 di.Delete()
             Catch ex As Exception
