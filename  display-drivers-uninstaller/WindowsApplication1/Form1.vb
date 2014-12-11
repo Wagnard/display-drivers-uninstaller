@@ -555,10 +555,10 @@ Public Class Form1
         End If
 
         If Not Directory.Exists(filePath) Then
-            For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+            For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
                 If Not checkvariables.isnullorwhitespace(child) Then
                     If child.ToLower.Contains(filePath + "\") Then
-                        Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                        My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
                     End If
                 End If
             Next
@@ -579,10 +579,10 @@ Public Class Form1
             End If
 
             If Not Directory.Exists(filePath) Then
-                For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
                     If Not checkvariables.isnullorwhitespace(child) Then
                         If child.ToLower.Contains(filePath + "\") Then
-                            Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
                         End If
                     End If
                 Next
@@ -621,10 +621,10 @@ Public Class Form1
             End If
 
             If Not Directory.Exists(filePath) Then
-                For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
                     If Not checkvariables.isnullorwhitespace(child) Then
                         If child.ToLower.Contains(filePath + "\") Then
-                            Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
                         End If
                     End If
                 Next
@@ -696,10 +696,10 @@ Public Class Form1
         End If
 
         If Not Directory.Exists(filePath) Then
-            For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+            For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
                 If Not checkvariables.isnullorwhitespace(child) Then
                     If child.ToLower.Contains(filePath + "\") Then
-                        Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                        My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
                     End If
                 End If
             Next
@@ -886,10 +886,10 @@ Public Class Form1
             End Try
         End If
         If Not Directory.Exists(filePath) Then
-            For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+            For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
                 If Not checkvariables.isnullorwhitespace(child) Then
                     If child.ToLower.Contains(filePath + "\") Then
-                        Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                        My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
                     End If
                 End If
             Next
@@ -1665,10 +1665,10 @@ Public Class Form1
                                             End Try
                                         End If
                                         If Not Directory.Exists(filePath) Then
-                                            For Each childs As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                                            For Each childs As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
                                                 If Not checkvariables.isnullorwhitespace(childs) Then
                                                     If childs.ToLower.Contains(filePath + "\") Then
-                                                        Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(childs)
+                                                        My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(childs)
                                                     End If
                                                 End If
                                             Next
@@ -2600,10 +2600,10 @@ Public Class Form1
                 Catch ex As Exception
                 End Try
                 If Not Directory.Exists(filePath) Then
-                    For Each child As String In Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                    For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
                         If Not checkvariables.isnullorwhitespace(child) Then
                             If child.ToLower.Contains(filePath + "\") Then
-                                Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
                             End If
                         End If
                     Next
