@@ -752,18 +752,44 @@ Public Class Form1
                         End If
                     End If
                 Next
-                Try
-                    If Directory.GetDirectories(filePath).Length = 0 Then
-                        Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                        Catch ex As Exception
-                            log(ex.Message)
-                            TestDelete(filePath)
-                        End Try
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        log(ex.Message)
+                        TestDelete(filePath)
+                    End Try
+                End If
+            Catch ex As Exception
+                log(ex.Message)
+            End Try
+        End If
+
+        filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\AMD"
+        If Directory.Exists(filePath) Then
+            Try
+                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("kdb") Then
+                            Try
+                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(child)
+                            End Try
+                        End If
                     End If
-                Catch ex As Exception
-                End Try
+                Next
+                If Directory.GetDirectories(filePath).Length = 0 Then
+                    Try
+                        My.Computer.FileSystem.DeleteDirectory _
+                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    Catch ex As Exception
+                        log(ex.Message)
+                        TestDelete(filePath)
+                    End Try
+                End If
             Catch ex As Exception
                 log(ex.Message)
             End Try
@@ -842,7 +868,8 @@ Public Class Form1
         If Directory.Exists(filePath) Then
             For Each child As String In Directory.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("amdkmpfd") Then
+                    If child.ToLower.Contains("amdkmpfd") Or _
+                       child.ToLower.Contains("cim") Then
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
                             (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -865,6 +892,19 @@ Public Class Form1
                 End If
             Catch ex As Exception
             End Try
+        End If
+
+        If Not Directory.Exists(filePath) Then
+            For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains(filePath.ToLower + "\") Then
+                        Try
+                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
         End If
 
         filePath = Environment.GetFolderPath _
