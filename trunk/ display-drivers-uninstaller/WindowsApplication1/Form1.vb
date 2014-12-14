@@ -905,6 +905,16 @@ Public Class Form1
                     End If
                 End If
             Next
+            For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False).GetValueNames
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains(filePath.ToLower + "\") Then
+                        Try
+                            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True).DeleteValue(child)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
         End If
 
         filePath = Environment.GetFolderPath _
@@ -1441,13 +1451,8 @@ Public Class Form1
                     For Each childs As String In subregkey.GetSubKeyNames()
                         If checkvariables.isnullorwhitespace(childs) = False Then
                             If childs.ToLower.Contains("controlset") Then
-                                Try
-                                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                                      ("SYSTEM\" & childs & "\Enum\Root")
-                                Catch ex As Exception
-                                    Continue For
-                                End Try
-
                                 If regkey IsNot Nothing Then
                                     For Each child As String In regkey.GetSubKeyNames()
                                         If checkvariables.isnullorwhitespace(child) = False Then
@@ -1485,11 +1490,7 @@ Public Class Form1
             If subregkey IsNot Nothing Then
                 For Each child2 As String In subregkey.GetSubKeyNames()
                     If child2.ToLower.Contains("controlset") Then
-                        Try
-                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
-                        Catch ex As Exception
-                            Continue For
-                        End Try
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
                         If regkey IsNot Nothing Then
                             For Each child As String In regkey.GetValueNames()
                                 If checkvariables.isnullorwhitespace(child) = False Then
@@ -1683,11 +1684,14 @@ Public Class Form1
                         If child.ToLower.Contains("install") Then
                             'here we check the install path location in case CCC is not installed on the system drive.  A kill to explorer must be made
                             'to help cleaning in normal mode.
-                            log("Killing Explorer.exe")
-                            Dim appproc = process.GetProcessesByName("explorer")
-                            For i As Integer = 0 To appproc.Length - 1
-                                appproc(i).Kill()
-                            Next i
+                            If System.Windows.Forms.SystemInformation.BootMode <> BootMode.Normal Then
+                                log("Killing Explorer.exe")
+                                Dim appproc = process.GetProcessesByName("explorer")
+                                For i As Integer = 0 To appproc.Length - 1
+                                    appproc(i).Kill()
+                                Next i
+                            End If
+
                             Try
                                 If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("InstallDir")) Then
                                     filePath = regkey.OpenSubKey(child).GetValue("InstallDir").ToString
@@ -1730,6 +1734,16 @@ Public Class Form1
                                                     End If
                                                 End If
                                             Next
+                                            For Each childs As String In My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False).GetValueNames
+                                                If Not checkvariables.isnullorwhitespace(childs) Then
+                                                    If childs.ToLower.Contains(filePath.ToLower + "\") Then
+                                                        Try
+                                                            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True).DeleteValue(childs)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                End If
+                                            Next
                                         End If
                                     End If
                                 End If
@@ -1738,19 +1752,21 @@ Public Class Form1
                                 log(ex.Message + ex.StackTrace)
                             End Try
                             For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-                                If child2.ToLower.Contains("ati catalyst") Or _
-                                    child2.ToLower.Contains("ati mcat") Or _
-                                    child2.ToLower.Contains("avt") Or _
-                                    child2.ToLower.Contains("ccc") Or _
-                                    child2.ToLower.Contains("packages") Or _
-                                    child2.ToLower.Contains("wirelessdisplay") Or _
-                                    child2.ToLower.Contains("hydravision") Or _
-                                    child2.ToLower.Contains("avivo") Or _
-                                    child2.ToLower.Contains("steadyvideo") Then
-                                    Try
-                                        regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
-                                    Catch ex As Exception
-                                    End Try
+                                If Not checkvariables.isnullorwhitespace(child2) Then
+                                    If child2.ToLower.Contains("ati catalyst") Or _
+                                        child2.ToLower.Contains("ati mcat") Or _
+                                        child2.ToLower.Contains("avt") Or _
+                                        child2.ToLower.Contains("ccc") Or _
+                                        child2.ToLower.Contains("packages") Or _
+                                        child2.ToLower.Contains("wirelessdisplay") Or _
+                                        child2.ToLower.Contains("hydravision") Or _
+                                        child2.ToLower.Contains("avivo") Or _
+                                        child2.ToLower.Contains("steadyvideo") Then
+                                        Try
+                                            regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                        Catch ex As Exception
+                                        End Try
+                                    End If
                                 End If
                             Next
                             If regkey.OpenSubKey(child).SubKeyCount = 0 Then
@@ -6131,11 +6147,14 @@ Public Class Form1
                 cleanamdserviceprocess()
                 cleanamd()
 
-                log("Killing Explorer.exe")
-                Dim appproc = process.GetProcessesByName("explorer")
-                For i As Integer = 0 To appproc.Length - 1
-                    appproc(i).Kill()
-                Next i
+                If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+                    log("Killing Explorer.exe")
+                    Dim appproc = process.GetProcessesByName("explorer")
+                    For i As Integer = 0 To appproc.Length - 1
+                        appproc(i).Kill()
+                    Next i
+                End If
+
                 cleanamdfolders()
             End If
 
@@ -6143,11 +6162,15 @@ Public Class Form1
                 cleannvidiaserviceprocess()
                 cleannvidia()
 
-                log("Killing Explorer.exe")
-                Dim appproc = process.GetProcessesByName("explorer")
-                For i As Integer = 0 To appproc.Length - 1
-                    appproc(i).Kill()
-                Next i
+                If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+                    log("Killing Explorer.exe")
+                    Dim appproc = process.GetProcessesByName("explorer")
+                    For i As Integer = 0 To appproc.Length - 1
+                        appproc(i).Kill()
+                    Next i
+                End If
+
+
                 cleannvidiafolders()
                 checkpcieroot()
             End If
@@ -6155,10 +6178,15 @@ Public Class Form1
             If combobox1value = "INTEL" Then
                 cleanintelserviceprocess()
                 cleanintel()
-                Dim appproc = process.GetProcessesByName("explorer")
-                For i As Integer = 0 To appproc.Length - 1
-                    appproc(i).Kill()
-                Next i
+
+                If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+                    log("Killing Explorer.exe")
+                    Dim appproc = process.GetProcessesByName("explorer")
+                    For i As Integer = 0 To appproc.Length - 1
+                        appproc(i).Kill()
+                    Next i
+                End If
+
                 cleanintelfolders()
             End If
 
