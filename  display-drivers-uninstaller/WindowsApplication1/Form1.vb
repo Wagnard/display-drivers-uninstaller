@@ -1684,7 +1684,7 @@ Public Class Form1
                         If child.ToLower.Contains("install") Then
                             'here we check the install path location in case CCC is not installed on the system drive.  A kill to explorer must be made
                             'to help cleaning in normal mode.
-                            If System.Windows.Forms.SystemInformation.BootMode <> BootMode.Normal Then
+                            If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
                                 log("Killing Explorer.exe")
                                 Dim appproc = process.GetProcessesByName("explorer")
                                 For i As Integer = 0 To appproc.Length - 1
