@@ -717,7 +717,8 @@ Public Class Form1
             Next
         End If
 
-        filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
+        filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
         If Directory.Exists(filePath) Then
             Try
                 My.Computer.FileSystem.DeleteDirectory _
@@ -727,7 +728,8 @@ Public Class Form1
             End Try
         End If
 
-        filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
+        filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
         If Directory.Exists(filePath) Then
             Try
                 My.Computer.FileSystem.DeleteDirectory _
@@ -737,7 +739,8 @@ Public Class Form1
             End Try
         End If
 
-        filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\ATI"
+        filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.CommonApplicationData) + "\ATI"
         If Directory.Exists(filePath) Then
             Try
                 For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
@@ -766,7 +769,8 @@ Public Class Form1
             End Try
         End If
 
-        filePath = System.Environment.GetEnvironmentVariable("systemdrive") + "\ProgramData\AMD"
+        filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.CommonApplicationData) + "\AMD"
         If Directory.Exists(filePath) Then
             Try
                 For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
@@ -2439,6 +2443,7 @@ Public Class Form1
                         child.ToLower.Contains("geforce experience") Or _
                         child.ToLower.Contains("netservice") Or _
                         child.ToLower.Contains("shadowplay") Or _
+                        child.ToLower.Contains("nview") Or _
                         child.ToLower.Contains("nvstreamsvc") Then
                         Try
                             My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
@@ -2449,18 +2454,15 @@ Public Class Form1
                     End If
                 End If
             Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
-            Catch ex As Exception
-            End Try
+            If Directory.GetDirectories(filePath).Length = 0 Then
+                Try
+                    My.Computer.FileSystem.DeleteDirectory _
+                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
+                    log(ex.Message)
+                    TestDelete(filePath)
+                End Try
+            End If
         Catch ex As Exception
         End Try
 
@@ -3784,7 +3786,10 @@ Public Class Form1
                             If regkey IsNot Nothing Then
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
-                                        If child.ToLower.Contains("nvidia update") Then
+                                        If child.ToLower.StartsWith("nvidia update") Or _
+                                            child.ToLower.StartsWith("nvidia opengl driver") Or _
+                                            child.ToLower.StartsWith("nvwmi") Or _
+                                            child.ToLower.StartsWith("nview") Then
                                             regkey.DeleteSubKeyTree(child)
                                         End If
                                     End If
