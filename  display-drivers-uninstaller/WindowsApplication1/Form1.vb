@@ -988,6 +988,7 @@ Public Class Form1
                         child.ToLower.Contains("\resourceman") Or _
                         child.ToLower.Contains("\apm.") Or _
                         child.ToLower.Contains("\a4.found") Or _
+                        child.ToLower.Contains("\atixclib") Or _
                        child.ToLower.Contains("\dem.") Then
                         Try
                             My.Computer.FileSystem.DeleteDirectory _
@@ -5478,13 +5479,14 @@ Public Class Form1
 
     End Sub
 
-    Public Sub log(ByVal value As String)
+    Public Sub log(ByVal strmessage As String)
         Try
 
 
             If f.CheckBox2.Checked = True Then
                 Dim wlog As New IO.StreamWriter(locations, True)
-                wlog.WriteLine(DateTime.Now & " >> " & value)
+                wlog.WriteLine(DateTime.Now & " >> " & strmessage)
+                UpdateTextMethod2(strmessage)
                 wlog.Flush()
                 wlog.Dispose()
                 '  System.Threading.Thread.Sleep(10)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
@@ -6319,6 +6321,15 @@ Public Class Form1
                 Button4.Text = Button4.Text & buttontext(i)
             Next
 
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\button5.txt") '// add each line as String Array.
+            Button5.Text = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    Button5.Text = Button5.Text & vbNewLine
+                End If
+                Button5.Text = Button5.Text & buttontext(i)
+            Next
+
             Label11.Text = ("")
 
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label1.txt") '// add each line as String Array.
@@ -6452,6 +6463,19 @@ Public Class Form1
         End If
 
     End Sub
+    Public Sub UpdateTextMethod2(ByVal strMessage As String)
+
+        If TextBox1.InvokeRequired Then
+            Invoke(Sub() logf.TextBox1.Text = logf.TextBox1.Text + strMessage + vbNewLine)
+            Invoke(Sub() logf.TextBox1.Select(logf.TextBox1.Text.Length, 0))
+            Invoke(Sub() logf.TextBox1.ScrollToCaret())
+        Else
+            logf.TextBox1.Text = logf.TextBox1.Text + strMessage + vbNewLine
+            logf.TextBox1.Select(logf.TextBox1.Text.Length, 0)
+            logf.TextBox1.ScrollToCaret()
+        End If
+
+    End Sub
     Public Function GetREG_BINARY(ByVal Path As String, ByVal Value As String) As String
         Dim Data() As Byte = CType(Microsoft.Win32.Registry.GetValue(Path, Value, Nothing), Byte())
         If Data Is Nothing Then Return "N/A"
@@ -6472,6 +6496,10 @@ Public Class Form1
     Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
         options.Show()
         Me.Hide()
+    End Sub
+
+    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+        logf.Show()
     End Sub
 End Class
 Public Class checkvariables
@@ -6559,6 +6587,21 @@ Public Class CleanupEngine
 
     Dim checkvariables As New checkvariables
 
+    Public Sub deletesubregkey(ByVal regkeypath As RegistryKey, ByVal child As String)
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
+
+        If (regkeypath IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child)) Then
+            'Try
+            regkeypath.DeleteSubKeyTree(child)
+            f.UpdateTextMethod2(regkeypath.ToString + "\" + child + " - " + updateTextMethodmessage("39"))
+            'Catch ex As Exception
+            '    f.log(ex.Message + ex.StackTrace + " ----> " + regkeypath.ToString + "\" + child)
+            'End Try
+
+        End If
+
+    End Sub
     Public Sub classroot(ByVal classroot As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
         Dim regkey As RegistryKey
@@ -6587,7 +6630,8 @@ Public Class CleanupEngine
                                                         If Not checkvariables.isnullorwhitespace(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID")) Then
                                                             appid = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID").ToString
                                                             Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
+
+                                                                deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True), appid)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
@@ -6598,21 +6642,21 @@ Public Class CleanupEngine
                                                         If Not checkvariables.isnullorwhitespace(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("")) Then
                                                             typelib = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("").ToString
                                                             Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
                                                     Catch ex As Exception
                                                     End Try
 
-                                                    My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
+                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True), wantedvalue)
 
                                                 Catch ex As Exception
                                                 End Try
                                             End If
                                         End If
                                     End If
-                                    My.Computer.Registry.ClassesRoot.DeleteSubKeyTree(child)
+                                    deletesubregkey(My.Computer.Registry.ClassesRoot, child)
                                 End If
                             End If
                         Next
@@ -6642,7 +6686,7 @@ Public Class CleanupEngine
                                                             If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID")) Then
                                                                 appid = regkey.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID").ToString
                                                                 Try
-                                                                    regkey.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
+                                                                    deletesubregkey(regkey.OpenSubKey("AppID", True), appid)
                                                                 Catch ex As Exception
                                                                 End Try
                                                             End If
@@ -6653,21 +6697,21 @@ Public Class CleanupEngine
                                                             If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("")) Then
                                                                 typelib = regkey.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("").ToString
                                                                 Try
-                                                                    regkey.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                    deletesubregkey(regkey.OpenSubKey("TypeLib", True), typelib)
                                                                 Catch ex As Exception
                                                                 End Try
                                                             End If
                                                         Catch ex As Exception
                                                         End Try
 
-                                                        regkey.OpenSubKey("CLSID", True).DeleteSubKeyTree(wantedvalue)
+                                                        deletesubregkey(regkey.OpenSubKey("CLSID", True), wantedvalue)
 
                                                     Catch ex As Exception
                                                     End Try
                                                 End If
                                             End If
                                         End If
-                                        regkey.DeleteSubKeyTree(child)
+                                        deletesubregkey(regkey, child)
                                     End If
                                 End If
                             Next
@@ -6757,7 +6801,7 @@ Public Class CleanupEngine
                                                                 End Try
 
                                                                 Try
-                                                                    regkey.DeleteSubKeyTree(child)
+                                                                    deletesubregkey(regkey, child)
                                                                 Catch ex As Exception
                                                                 End Try
 
@@ -6775,7 +6819,7 @@ Public Class CleanupEngine
                                                                                     If checkvariables.isnullorwhitespace(wantedstring) = False Then
                                                                                         If wantedstring.Contains(child) Then
                                                                                             Try
-                                                                                                superregkey.DeleteSubKeyTree(child2)
+                                                                                                deletesubregkey(superregkey, child2)
                                                                                             Catch ex As Exception
                                                                                             End Try
                                                                                         End If
@@ -6800,7 +6844,7 @@ Public Class CleanupEngine
                                                                                     If checkvariables.isnullorwhitespace(wantedstring) = False Then
                                                                                         If wantedstring.Contains(child) Then
                                                                                             Try
-                                                                                                superregkey.DeleteSubKeyTree(child2)
+                                                                                                deletesubregkey(superregkey, child2)
                                                                                             Catch ex As Exception
                                                                                             End Try
                                                                                         End If
@@ -6871,11 +6915,11 @@ Public Class CleanupEngine
                                                 End Try
 
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    deletesubregkey(regkey, child)
                                                 Catch ex As Exception
                                                 End Try
                                                 Try
-                                                    My.Computer.Registry.ClassesRoot.OpenSubKey("Installer\Features", True).DeleteSubKeyTree(child)
+                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Installer\Features", True), child)
                                                 Catch ex As Exception
                                                 End Try
                                                 superregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
@@ -6892,7 +6936,7 @@ Public Class CleanupEngine
                                                                     If checkvariables.isnullorwhitespace(wantedstring) = False Then
                                                                         If wantedstring.Contains(child) Then
                                                                             Try
-                                                                                superregkey.DeleteSubKeyTree(child2)
+                                                                                deletesubregkey(superregkey, child2)
                                                                             Catch ex As Exception
                                                                             End Try
                                                                         End If
@@ -6939,11 +6983,11 @@ Public Class CleanupEngine
                                             If wantedvalue.ToLower.Contains(packages(i).ToLower) And _
                                                (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    deletesubregkey(regkey, child)
                                                 Catch ex As Exception
                                                 End Try
                                                 Try
-                                                    My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Installer\Features", True).DeleteSubKeyTree(child)
+                                                    deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Installer\Features", True), child)
                                                 Catch ex As Exception
                                                 End Try
 
@@ -6961,7 +7005,7 @@ Public Class CleanupEngine
                                                                     If checkvariables.isnullorwhitespace(wantedstring) = False Then
                                                                         If wantedstring.Contains(child) Then
                                                                             Try
-                                                                                superregkey.DeleteSubKeyTree(child2)
+                                                                                deletesubregkey(superregkey, child2)
                                                                             Catch ex As Exception
                                                                             End Try
                                                                         End If
@@ -7010,11 +7054,11 @@ Public Class CleanupEngine
                                                     If wantedvalue.ToLower.Contains(packages(i).ToLower) And _
                                                        (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
                                                         Try
-                                                            regkey.DeleteSubKeyTree(child)
+                                                            deletesubregkey(regkey, child)
                                                         Catch ex As Exception
                                                         End Try
                                                         Try
-                                                            My.Computer.Registry.Users.OpenSubKey(users & "\Software\Microsoft\Installer\Features", True).DeleteSubKeyTree(child)
+                                                            deletesubregkey(My.Computer.Registry.Users.OpenSubKey(users & "\Software\Microsoft\Installer\Features", True), child)
                                                         Catch ex As Exception
                                                         End Try
 
@@ -7032,7 +7076,7 @@ Public Class CleanupEngine
                                                                             If checkvariables.isnullorwhitespace(wantedstring) = False Then
                                                                                 If wantedstring.Contains(child) Then
                                                                                     Try
-                                                                                        superregkey.DeleteSubKeyTree(child2)
+                                                                                        deletesubregkey(superregkey, child2)
                                                                                     Catch ex As Exception
                                                                                     End Try
                                                                                 End If
@@ -7122,7 +7166,7 @@ Public Class CleanupEngine
         'Reason I put this in service is that the removal of this is based from its service.
         f.log("Control/Video CleanUP")
         Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", False)
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames
                     If checkvariables.isnullorwhitespace(child) = False Then
@@ -7132,21 +7176,22 @@ Public Class CleanupEngine
                                 If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
                                     If subregkey.GetValue("Service").ToString.ToLower = services(i).ToLower Then
                                         Try
-                                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
-                                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                                            deletesubregkey(regkey, child)
+                                            deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                                            Exit For
                                         Catch ex As Exception
                                         End Try
                                     End If
                                 End If
                             Next
-                        Else
-                            'Here, if subregkey is nothing, it mean \video doesnt exist, so we can delete it.
-                            'this is a general cleanUP we could say.
-                            Try
-                                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Control\Video\" & child)
-                                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                            Catch ex As Exception
-                            End Try
+                            'Else
+                            '    'Here, if subregkey is nothing, it mean \video doesnt exist, so we can delete it.
+                            '    'this is a general cleanUP we could say.
+                            '    Try
+                            '        deletesubregkey(regkey, child)
+                            '        deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                            '    Catch ex As Exception
+                            '    End Try
                         End If
                     End If
                 Next
@@ -7165,7 +7210,7 @@ Public Class CleanupEngine
         Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
 
         Try
-            If Not winxp Then
+            If Not winxp Then  'this does not exist on winxp so we skip if winxp detected
                 If win8higher Then
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                     If regkey IsNot Nothing Then
@@ -7176,7 +7221,7 @@ Public Class CleanupEngine
                                         If checkvariables.isnullorwhitespace(child) = False Then
                                             If child.ToLower.Replace("/", "\").Contains(driverfiles(i).ToLower) Then
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    deletesubregkey(regkey, child)
                                                 Catch ex As Exception
                                                     f.log(ex.Message & " @Pnplockdownfiles")
                                                 End Try
@@ -7199,7 +7244,7 @@ Public Class CleanupEngine
                                         If checkvariables.isnullorwhitespace(child) = False Then
                                             If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                                 Try
-                                                    regkey.DeleteValue(child)
+                                                    deletesubregkey(regkey, child)
                                                 Catch ex As Exception
                                                     f.log(ex.Message & " @Pnplockdownfiles")
                                                 End Try
@@ -7211,7 +7256,6 @@ Public Class CleanupEngine
                         Next
                     End If
                 End If
-
             End If
 
         Catch ex As Exception
@@ -7248,7 +7292,7 @@ Public Class CleanupEngine
                                                     If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("AppID")) Then
                                                         appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                         Try
-                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
+                                                            deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True), appid)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
@@ -7259,7 +7303,7 @@ Public Class CleanupEngine
                                                     If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child & "\TypeLib").GetValue("")) Then
                                                         typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                         Try
-                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                            deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
@@ -7267,7 +7311,7 @@ Public Class CleanupEngine
                                                 End Try
 
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    deletesubregkey(regkey, child)
                                                     Exit For
                                                 Catch ex As Exception
                                                     f.log(ex.Message + ex.StackTrace)
@@ -7303,7 +7347,7 @@ Public Class CleanupEngine
                                                     If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("AppID")) Then
                                                         appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                         Try
-                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
+                                                            deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True), appid)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
@@ -7314,14 +7358,14 @@ Public Class CleanupEngine
                                                     If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child & "\TypeLib").GetValue("")) Then
                                                         typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                         Try
-                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                            deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
                                                 Catch ex As Exception
                                                 End Try
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    deletesubregkey(regkey, child)
                                                     Exit For
                                                 Catch ex As Exception
                                                     f.log(ex.Message + ex.StackTrace)
@@ -7360,7 +7404,7 @@ Public Class CleanupEngine
                                                         If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("AppID")) Then
                                                             appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                             Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True).DeleteSubKeyTree(appid)
+                                                                deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True), appid)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
@@ -7371,7 +7415,7 @@ Public Class CleanupEngine
                                                         If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child & "\TypeLib").GetValue("")) Then
                                                             typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                             Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
@@ -7379,7 +7423,7 @@ Public Class CleanupEngine
                                                     End Try
 
                                                     Try
-                                                        regkey.DeleteSubKeyTree(child)
+                                                        deletesubregkey(regkey, child)
                                                         Exit For
                                                     Catch ex As Exception
                                                         f.log(ex.Message + ex.StackTrace)
@@ -7415,7 +7459,7 @@ Public Class CleanupEngine
                                                         If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("AppID")) Then
                                                             appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                             Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True).DeleteSubKeyTree(appid)
+                                                                deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True), appid)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
@@ -7426,14 +7470,14 @@ Public Class CleanupEngine
                                                         If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child & "\TypeLib").GetValue("")) Then
                                                             typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                             Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
                                                     Catch ex As Exception
                                                     End Try
                                                     Try
-                                                        regkey.DeleteSubKeyTree(child)
+                                                        deletesubregkey(regkey, child)
                                                         Exit For
                                                     Catch ex As Exception
                                                         f.log(ex.Message + ex.StackTrace)
@@ -7470,7 +7514,7 @@ Public Class CleanupEngine
                                                     If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("AppID")) Then
                                                         appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                         Try
-                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True).DeleteSubKeyTree(appid)
+                                                            deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True), appid)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
@@ -7481,14 +7525,14 @@ Public Class CleanupEngine
                                                     If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child & "\TypeLib").GetValue("")) Then
                                                         typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                         Try
-                                                            My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                            deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
                                                 Catch ex As Exception
                                                 End Try
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    deletesubregkey(regkey, child)
                                                     Exit For
                                                 Catch ex As Exception
                                                     f.log(ex.Message + ex.StackTrace)
@@ -7526,7 +7570,7 @@ Public Class CleanupEngine
                                                         If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("AppID")) Then
                                                             appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                             Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True).DeleteSubKeyTree(appid)
+                                                                deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True), appid)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
@@ -7537,14 +7581,14 @@ Public Class CleanupEngine
                                                         If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child & "\TypeLib").GetValue("")) Then
                                                             typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                             Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
                                                     Catch ex As Exception
                                                     End Try
                                                     Try
-                                                        regkey.DeleteSubKeyTree(child)
+                                                        deletesubregkey(regkey, child)
                                                         Exit For
                                                     Catch ex As Exception
                                                         f.log(ex.Message + ex.StackTrace)
@@ -7578,12 +7622,12 @@ Public Class CleanupEngine
                                             If checkvariables.isnullorwhitespace(wantedvalue) = False Then
 
                                                 Try
-                                                    regkey.DeleteSubKeyTree(wantedvalue)
+                                                    deletesubregkey(regkey, wantedvalue)
                                                 Catch ex As Exception
                                                 End Try
 
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    deletesubregkey(regkey, child)
                                                     Exit For
                                                 Catch ex As Exception
                                                 End Try
@@ -7616,12 +7660,12 @@ Public Class CleanupEngine
                                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
 
                                                     Try
-                                                        regkey.DeleteSubKeyTree(wantedvalue)
+                                                        deletesubregkey(regkey, wantedvalue)
                                                     Catch ex As Exception
                                                     End Try
 
                                                     Try
-                                                        regkey.DeleteSubKeyTree(child)
+                                                        deletesubregkey(regkey, child)
                                                         Exit For
                                                     Catch ex As Exception
                                                     End Try
@@ -7658,7 +7702,7 @@ Public Class CleanupEngine
                                                         If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue(""))) Then
                                                             If regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("").ToString.ToLower.Contains(clsidleftover(i).ToLower) Then
                                                                 Try
-                                                                    regkey.DeleteSubKeyTree(child)
+                                                                    deletesubregkey(regkey, child)
                                                                     f.log(child + " for " + clsidleftover(i))
                                                                     Exit For
                                                                 Catch ex As Exception
@@ -7712,14 +7756,14 @@ Public Class CleanupEngine
                                                         typelib = subregkey.OpenSubKey("TypeLib", False).GetValue("")
                                                         If checkvariables.isnullorwhitespace(typelib) = False Then
                                                             Try
-                                                                My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
                                                             Catch ex As Exception
                                                             End Try
                                                         End If
                                                     End If
                                                 End If
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    deletesubregkey(regkey, child)
                                                 Catch ex As Exception
                                                 End Try
                                             End If
@@ -7757,14 +7801,14 @@ Public Class CleanupEngine
                                                             typelib = subregkey.OpenSubKey("TypeLib", False).GetValue("")
                                                             If checkvariables.isnullorwhitespace(typelib) = False Then
                                                                 Try
-                                                                    My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True).DeleteSubKeyTree(typelib)
+                                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
                                                                 Catch ex As Exception
                                                                 End Try
                                                             End If
                                                         End If
                                                     End If
                                                     Try
-                                                        regkey.DeleteSubKeyTree(child)
+                                                        deletesubregkey(regkey, child)
                                                     Catch ex As Exception
                                                     End Try
                                                 End If
