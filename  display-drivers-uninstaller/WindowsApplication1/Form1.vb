@@ -6594,7 +6594,7 @@ Public Class CleanupEngine
         If (regkeypath IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child)) Then
             'Try
             regkeypath.DeleteSubKeyTree(child)
-            f.UpdateTextMethod2(regkeypath.ToString + "\" + child + " - " + updateTextMethodmessage("39"))
+            f.log(regkeypath.ToString + "\" + child + " - " + updateTextMethodmessage("39"))
             'Catch ex As Exception
             '    f.log(ex.Message + ex.StackTrace + " ----> " + regkeypath.ToString + "\" + child)
             'End Try
