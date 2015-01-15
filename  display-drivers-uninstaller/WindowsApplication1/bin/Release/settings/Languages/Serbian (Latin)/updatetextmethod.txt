@@ -37,3 +37,6 @@ Početak currentuser ,installer\products cleanup procedure
 Kraj currentuser ,installer\products cleanup pocedure
 Početak Process/Services CleanUP procedure...
 Process/Services CleanUP procedura završena
+Deleted.
+Value removed.
+File Deleted.

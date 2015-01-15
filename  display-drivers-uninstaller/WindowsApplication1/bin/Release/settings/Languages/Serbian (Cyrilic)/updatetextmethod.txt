@@ -37,3 +37,6 @@ Monitor-и и Hidden monitor-и уклоњени !
 Крај currentuser ,installer\products cleanup процедуре
 Почетак Process/Services CleanUP процедуре...
 Process/Services CleanUP процедура завршена
+Deleted.
+Value removed.
+File Deleted.

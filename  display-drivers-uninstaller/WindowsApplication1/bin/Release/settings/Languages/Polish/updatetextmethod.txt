@@ -37,3 +37,6 @@ Początek czyszczenia instalatora\produktów currentuser
 Koniec czyszczenia instalatora\produktów currentuser
 Czyszczenie procesów/usług...
 Czyszczenie cleanUP procesów/usług zakończone
+Deleted.
+Value removed.
+File Deleted.
