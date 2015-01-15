@@ -22,11 +22,12 @@ Imports System.Threading
 Imports System.Security.Principal
 Imports System.Management
 Imports System.Runtime.InteropServices
+Imports System.Text
 
 
 Public Class Form1
 
-    Dim f As new options
+    Dim f As New options
     Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
     Dim checkvariables As New checkvariables
     Dim identity = WindowsIdentity.GetCurrent()
@@ -133,16 +134,16 @@ Public Class Form1
                     End If
                 End If
 
-                ElseIf updates = 3 Then
-                    Try
-                        buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
-                        Label11.Text = ""
-                        Label11.Text = Label11.Text & buttontext("3")
-                    Catch ex As Exception
-                        Label11.Text = ("Unable to Fetch updates!!")
-                    End Try
-                End If
+            ElseIf updates = 3 Then
+                Try
+                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+                    Label11.Text = ""
+                    Label11.Text = Label11.Text & buttontext("3")
+                Catch ex As Exception
+                    Label11.Text = ("Unable to Fetch updates!!")
+                End Try
             End If
+        End If
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
@@ -435,8 +436,7 @@ Public Class Form1
             filePath = sysdrv + "\AMD"
 
             Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                deletedirectory(filePath)
             Catch ex As Exception
                 log(ex.Message)
                 TestDelete(filePath)
@@ -452,13 +452,13 @@ Public Class Form1
 
         filePath = Environment.GetEnvironmentVariable("windir")
         Try
-            My.Computer.FileSystem.DeleteFile(filePath + "\atiogl.xml")
+            deletefile(filePath + "\atiogl.xml")
         Catch ex As Exception
         End Try
 
         filePath = Environment.GetEnvironmentVariable("windir")
         Try
-            My.Computer.FileSystem.DeleteFile(filePath + "\ativpsrm.bin")
+            deletefile(filePath + "\ativpsrm.bin")
         Catch ex As Exception
         End Try
 
@@ -471,8 +471,7 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("ati.ace") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -483,8 +482,7 @@ Public Class Form1
             Try
                 If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(filePath)
                     Catch ex As Exception
                         log(ex.Message)
                         TestDelete(filePath)
@@ -501,8 +499,7 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("cim") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -513,8 +510,7 @@ Public Class Form1
             Try
                 If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(filePath)
                     Catch ex As Exception
                         log(ex.Message)
                         TestDelete(filePath)
@@ -532,8 +528,7 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("multimedia") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -543,8 +538,7 @@ Public Class Form1
             Next
             If Directory.GetDirectories(filePath).Length = 0 Then
                 Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    deletedirectory(filePath)
                     'on success, do this
 
                 Catch ex As Exception
@@ -559,7 +553,7 @@ Public Class Form1
                 If Not checkvariables.isnullorwhitespace(child) Then
                     If child.ToLower.Contains(filePath.ToLower + "\") Then
                         Try
-                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                            deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
                         Catch ex As Exception
                         End Try
                     End If
@@ -573,8 +567,7 @@ Public Class Form1
                        (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
             If Directory.Exists(filePath) Then
                 Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    deletedirectory(filePath)
                 Catch ex As Exception
                     log(ex.Message)
                     TestDelete(filePath)
@@ -586,7 +579,7 @@ Public Class Form1
                     If Not checkvariables.isnullorwhitespace(child) Then
                         If child.ToLower.Contains(filePath.ToLower + "\") Then
                             Try
-                                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                                deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -603,8 +596,7 @@ Public Class Form1
                             If child.ToLower.Contains("ati.ace") Or _
                                 child.ToLower.Contains("hydravision") Then
                                 Try
-                                    My.Computer.FileSystem.DeleteDirectory _
-                                    (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                    deletedirectory(child)
                                 Catch ex As Exception
                                     log(ex.Message)
                                     TestDelete(child)
@@ -615,8 +607,7 @@ Public Class Form1
                     Next
                     If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(filePath)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
@@ -631,7 +622,7 @@ Public Class Form1
                     If Not checkvariables.isnullorwhitespace(child) Then
                         If child.ToLower.Contains(filePath.ToLower + "\") Then
                             Try
-                                My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                                deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -644,7 +635,7 @@ Public Class Form1
             For i As Integer = 0 To files.Length - 1
                 If Not checkvariables.isnullorwhitespace(files(i)) Then
                     Try
-                        My.Computer.FileSystem.DeleteFile(files(i))
+                        deletefile(files(i))
                     Catch ex As Exception
                     End Try
                 End If
@@ -654,8 +645,7 @@ Public Class Form1
                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
             If Directory.Exists(filePath) Then
                 Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    deletedirectory(filePath)
                 Catch ex As Exception
                     log(ex.Message + "AMD APP")
                     TestDelete(filePath)
@@ -680,8 +670,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("multimedia") Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory _
-                                (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(child)
                             Catch ex As Exception
                                 log(ex.Message)
                                 TestDelete(child)
@@ -692,8 +681,7 @@ Public Class Form1
                 Try
                     If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(filePath)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
@@ -709,7 +697,7 @@ Public Class Form1
                 If Not checkvariables.isnullorwhitespace(child) Then
                     If child.ToLower.Contains(filePath.ToLower + "\") Then
                         Try
-                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                            deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
                         Catch ex As Exception
                         End Try
                     End If
@@ -721,8 +709,7 @@ Public Class Form1
 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
         If Directory.Exists(filePath) Then
             Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                deletedirectory(filePath)
             Catch ex As Exception
                 TestDelete(filePath)
             End Try
@@ -732,8 +719,7 @@ Public Class Form1
 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
         If Directory.Exists(filePath) Then
             Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                deletedirectory(filePath)
             Catch ex As Exception
                 TestDelete(filePath)
             End Try
@@ -747,7 +733,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("ace") Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(child)
                             Catch ex As Exception
                                 log(ex.Message)
                                 TestDelete(child)
@@ -757,8 +743,7 @@ Public Class Form1
                 Next
                 If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(filePath)
                     Catch ex As Exception
                         log(ex.Message)
                         TestDelete(filePath)
@@ -777,7 +762,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("kdb") Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(child)
                             Catch ex As Exception
                                 log(ex.Message)
                                 TestDelete(child)
@@ -787,8 +772,7 @@ Public Class Form1
                 Next
                 If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(filePath)
                     Catch ex As Exception
                         log(ex.Message)
                         TestDelete(filePath)
@@ -807,7 +791,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("ace") Then
                                 Try
-                                    My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                    deletedirectory(child)
                                 Catch ex As Exception
                                     log(ex.Message)
                                     TestDelete(child)
@@ -818,8 +802,7 @@ Public Class Form1
                     Try
                         If Directory.GetDirectories(filePath).Length = 0 Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory _
-                                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(filePath)
                             Catch ex As Exception
                                 log(ex.Message)
                                 TestDelete(filePath)
@@ -839,7 +822,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("ace") Then
                                 Try
-                                    My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                    deletedirectory(child)
                                 Catch ex As Exception
                                     log(ex.Message)
                                     TestDelete(child)
@@ -850,8 +833,7 @@ Public Class Form1
                     Try
                         If Directory.GetDirectories(filePath).Length = 0 Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory _
-                                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(filePath)
                             Catch ex As Exception
                                 log(ex.Message)
                                 TestDelete(filePath)
@@ -875,8 +857,7 @@ Public Class Form1
                     If child.ToLower.Contains("amdkmpfd") Or _
                        child.ToLower.Contains("cim") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -887,8 +868,7 @@ Public Class Form1
             Try
                 If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(filePath)
                     Catch ex As Exception
                         log(ex.Message)
                         TestDelete(filePath)
@@ -903,7 +883,7 @@ Public Class Form1
                 If Not checkvariables.isnullorwhitespace(child) Then
                     If child.ToLower.Contains(filePath.ToLower + "\") Then
                         Try
-                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                            deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
                         Catch ex As Exception
                         End Try
                     End If
@@ -913,7 +893,7 @@ Public Class Form1
                 If Not checkvariables.isnullorwhitespace(child) Then
                     If child.ToLower.Contains(filePath.ToLower + "\") Then
                         Try
-                            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True).DeleteValue(child)
+                            deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
                         Catch ex As Exception
                         End Try
                     End If
@@ -929,8 +909,7 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("ati.ace") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -941,8 +920,7 @@ Public Class Form1
             Try
                 If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(filePath)
                     Catch ex As Exception
                         log(ex.Message)
                         TestDelete(filePath)
@@ -956,7 +934,7 @@ Public Class Form1
                 If Not checkvariables.isnullorwhitespace(child) Then
                     If child.ToLower.Contains(filePath.ToLower + "\") Then
                         Try
-                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                            deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
                         Catch ex As Exception
                         End Try
                     End If
@@ -991,8 +969,7 @@ Public Class Form1
                         child.ToLower.Contains("\atixclib") Or _
                        child.ToLower.Contains("\dem.") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -1050,7 +1027,7 @@ Public Class Form1
                                                     wantedvalue2.ToLower.Contains("mmace procamp") Or _
                                                     wantedvalue2.ToLower.Contains("ati video") Then
                                                     Try
-                                                        My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("CLSID\" & child & "\Instance\" & child2)
+                                                        deletesubregkey(My.Computer.Registry.ClassesRoot, "CLSID\" & child & "\Instance\" & child2)
                                                     Catch ex As Exception
                                                     End Try
                                                 End If
@@ -1092,7 +1069,7 @@ Public Class Form1
                                                     wantedvalue2.ToLower.Contains("amd video") Or _
                                                     wantedvalue2.ToLower.Contains("ati video") Then
                                                         Try
-                                                            My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("Wow6432Node\CLSID\" & child & "\Instance\" & child2)
+                                                            deletesubregkey(My.Computer.Registry.ClassesRoot, "Wow6432Node\CLSID\" & child & "\Instance\" & child2)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
@@ -1125,13 +1102,13 @@ Public Class Form1
 
                                 For Each child2 As String In regkey.OpenSubKey("Categories", False).GetSubKeyNames
                                     Try
-                                        regkey.OpenSubKey("Categories\" & child2, True).DeleteSubKeyTree(child)
+                                        deletesubregkey(regkey.OpenSubKey("Categories\" & child2, True), child)
                                     Catch ex As Exception
                                     End Try
                                 Next
 
                                 Try
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -1158,13 +1135,13 @@ Public Class Form1
 
                                     For Each child2 As String In regkey.OpenSubKey("Categories", False).GetSubKeyNames
                                         Try
-                                            regkey.OpenSubKey("Categories\" & child2, True).DeleteSubKeyTree(child)
+                                            deletesubregkey(regkey.OpenSubKey("Categories\" & child2, True), child)
                                         Catch ex As Exception
                                         End Try
                                     Next
 
                                     Try
-                                        regkey.DeleteSubKeyTree(child)
+                                        deletesubregkey(regkey, child)
                                     Catch ex As Exception
                                     End Try
                                 End If
@@ -1199,7 +1176,7 @@ Public Class Form1
                                     Try
                                         If checkvariables.isnullorwhitespace(subregkey.OpenSubKey(childs, False).GetValue("Assembly")) = False Then
                                             If subregkey.OpenSubKey(childs, False).GetValue("Assembly").ToString.ToLower.Contains("aticccom") Then
-                                                regkey.DeleteSubKeyTree(child)
+                                                deletesubregkey(regkey, child)
                                             End If
                                         End If
                                     Catch ex As Exception
@@ -1226,7 +1203,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("ati.ace") Then
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
 
@@ -1246,8 +1223,8 @@ Public Class Form1
         'end of decom?
 
         Try
-            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" & _
-                                                         "Display\shellex\PropertySheetHandlers", True).DeleteSubKeyTree("ATIACE")
+            deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" & _
+                                                         "Display\shellex\PropertySheetHandlers", True), "ATIACE")
         Catch ex As Exception
         End Try
 
@@ -1261,7 +1238,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("amdocl") Then
                             Try
-                                regkey.DeleteValue(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -1269,7 +1246,7 @@ Public Class Form1
                 Next
                 If regkey.GetValueNames().Length = 0 Then
                     Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("Software\Khronos")
+                        deletesubregkey(My.Computer.Registry.LocalMachine, "Software\Khronos")
                     Catch ex As Exception
                     End Try
                 End If
@@ -1286,7 +1263,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("amdocl") Then
                                 Try
-                                    regkey.DeleteValue(child)
+                                    deletevalue(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -1294,7 +1271,7 @@ Public Class Form1
                     Next
                     If regkey.GetValueNames().Length = 0 Then
                         Try
-                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("Software\Wow6432Node\Khronos")
+                            deletesubregkey(My.Computer.Registry.LocalMachine, "Software\Wow6432Node\Khronos")
                         Catch ex As Exception
                         End Try
                     End If
@@ -1315,7 +1292,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("ati.ace") Then
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -1341,7 +1318,7 @@ Public Class Form1
                         If regkey.GetValue(child).ToString.ToLower.Contains("catalyst context menu extension") Or _
                             regkey.GetValue(child).ToString.ToLower.Contains("display cpl extension") Then
                             Try
-                                regkey.DeleteValue(child)
+                                deletevalue(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -1361,7 +1338,7 @@ Public Class Form1
                             If regkey.GetValue(child).ToString.ToLower.Contains("catalyst context menu extension") Or _
                                 regkey.GetValue(child).ToString.ToLower.Contains("display cpl extension") Then
                                 Try
-                                    regkey.DeleteValue(child)
+                                    deletevalue(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -1382,63 +1359,63 @@ Public Class Form1
 
         Try
 
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
+            deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
         Catch ex As Exception
         End Try
 
         Try
 
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
+            deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
         Catch ex As Exception
         End Try
 
         Try
 
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
+            deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
         Catch ex As Exception
         End Try
 
         Try
 
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
+            deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
         Catch ex As Exception
         End Try
 
         Try
 
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\amdkmdap")
+            deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\amdkmdap")
         Catch ex As Exception
         End Try
 
         If IntPtr.Size = 8 Then
             Try
 
-                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
+                deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
             Catch ex As Exception
             End Try
 
             Try
 
-                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
+                deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
             Catch ex As Exception
             End Try
         End If
 
         Try
 
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
+            deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
         Catch ex As Exception
         End Try
 
         Try
 
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
+            deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
         Catch ex As Exception
         End Try
 
         Try
 
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
+            deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
         Catch ex As Exception
         End Try
 
@@ -1464,7 +1441,7 @@ Public Class Form1
                                             If child.ToLower.Contains("legacy_amdkmdag") Then
 
                                                 Try
-                                                    My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SYSTEM\" & childs & "\Enum\Root\" & child)
+                                                    deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\" & childs & "\Enum\Root\" & child)
                                                 Catch ex As Exception
                                                     log(ex.Message & " Legacy_AMDKMDAG   (error)")
                                                 End Try
@@ -1501,7 +1478,7 @@ Public Class Form1
                                 If checkvariables.isnullorwhitespace(child) = False Then
                                     If child.Contains("AMDAPPSDKROOT") Then
                                         Try
-                                            regkey.DeleteValue(child)
+                                            deletesubregkey(regkey, child)
                                         Catch ex As Exception
                                         End Try
                                     End If
@@ -1573,29 +1550,29 @@ Public Class Form1
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If checkvariables.isnullorwhitespace(child) = False Then
                                         If child.ToLower.Contains("aceeventlog") Then
-                                            regkey.DeleteSubKeyTree(child)
+                                            deletesubregkey(regkey, child)
                                         End If
                                     End If
                                 Next
 
 
                                 Try
-                                    regkey.OpenSubKey("Application", True).DeleteSubKeyTree("ATIeRecord")
+                                    deletesubregkey(regkey.OpenSubKey("Application", True), "ATIeRecord")
                                 Catch ex As Exception
                                 End Try
 
                                 Try
-                                    regkey.OpenSubKey("System", True).DeleteSubKeyTree("amdkmdag")
+                                    deletesubregkey(regkey.OpenSubKey("System", True), "amdkmdag")
                                 Catch ex As Exception
                                 End Try
 
                                 Try
-                                    regkey.OpenSubKey("System", True).DeleteSubKeyTree("amdkmdap")
+                                    deletesubregkey(regkey.OpenSubKey("System", True), "amdkmdap")
                                 Catch ex As Exception
                                 End Try
                             End If
                             Try
-                                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services", True).DeleteSubKeyTree("Atierecord")
+                                deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services", True), "Atierecord")
                             Catch ex As Exception
                             End Try
                         End If
@@ -1618,7 +1595,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.Contains("ACE") Then
 
-                            regkey.DeleteSubKeyTree(child)
+                            deletesubregkey(regkey, child)
 
                         End If
                     End If
@@ -1637,7 +1614,7 @@ Public Class Form1
                         For Each child As String In regkey.GetSubKeyNames()
                             If checkvariables.isnullorwhitespace(child) = False Then
                                 If child.StartsWith("ATI") Then
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 End If
                             End If
                         Next
@@ -1658,7 +1635,7 @@ Public Class Form1
                         If child.ToLower.Contains("ace") Or _
                            child.ToLower.Contains("install") Then
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -1666,7 +1643,7 @@ Public Class Form1
                 Next
                 If regkey.SubKeyCount = 0 Then
                     Try
-                        My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("ATI")
+                        deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software", True), "ATI")
                     Catch ex As Exception
                     End Try
                 End If
@@ -1682,7 +1659,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("cbt") Then
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -1708,8 +1685,7 @@ Public Class Form1
                                                     childf.ToLower.Contains("amdkmpfd") Or _
                                                     childf.ToLower.Contains("cim") Then
                                                     Try
-                                                        My.Computer.FileSystem.DeleteDirectory _
-                                                        (childf, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                        deletedirectory(childf)
                                                     Catch ex As Exception
                                                         log(ex.Message)
                                                         TestDelete(childf)
@@ -1720,8 +1696,7 @@ Public Class Form1
 
                                         If Directory.GetDirectories(filePath).Length = 0 Then
                                             Try
-                                                My.Computer.FileSystem.DeleteDirectory _
-                                                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                                deletedirectory(filePath)
 
                                             Catch ex As Exception
                                                 log(ex.Message)
@@ -1733,7 +1708,7 @@ Public Class Form1
                                                 If Not checkvariables.isnullorwhitespace(childs) Then
                                                     If childs.ToLower.Contains(filePath.ToLower + "\") Then
                                                         Try
-                                                            My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(childs)
+                                                            deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), childs)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
@@ -1743,7 +1718,7 @@ Public Class Form1
                                                 If Not checkvariables.isnullorwhitespace(childs) Then
                                                     If childs.ToLower.Contains(filePath.ToLower + "\") Then
                                                         Try
-                                                            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True).DeleteValue(childs)
+                                                            deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True), childs)
                                                         Catch ex As Exception
                                                         End Try
                                                     End If
@@ -1768,7 +1743,7 @@ Public Class Form1
                                         child2.ToLower.Contains("avivo") Or _
                                         child2.ToLower.Contains("steadyvideo") Then
                                         Try
-                                            regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                            deletesubregkey(regkey.OpenSubKey(child, True), child2)
                                         Catch ex As Exception
                                         End Try
                                     End If
@@ -1776,7 +1751,7 @@ Public Class Form1
                             Next
                             If regkey.OpenSubKey(child).SubKeyCount = 0 Then
                                 Try
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -1785,7 +1760,7 @@ Public Class Form1
                 Next
                 If regkey.SubKeyCount = 0 Then
                     Try
-                        My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("ATI Technologies")
+                        deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software", True), "ATI Technologies")
                     Catch ex As Exception
                     End Try
                 End If
@@ -1803,7 +1778,7 @@ Public Class Form1
                            child.ToLower.Contains("fuel") Or _
                            child.ToLower.Contains("mftvdecoder") Then
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -1811,7 +1786,7 @@ Public Class Form1
                 Next
                 If regkey.SubKeyCount = 0 Then
                     Try
-                        My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("AMD")
+                        deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software", True), "AMD")
                     Catch ex As Exception
                     End Try
                 End If
@@ -1828,7 +1803,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("ace") Then
                                 Try
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -1836,7 +1811,7 @@ Public Class Form1
                     Next
                     If regkey.SubKeyCount = 0 Then
                         Try
-                            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True).DeleteSubKeyTree("ATI")
+                            deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True), "ATI")
                         Catch ex As Exception
                         End Try
                     End If
@@ -1849,13 +1824,13 @@ Public Class Form1
                             If child.ToLower.Contains("eeu") Or
                                child.ToLower.Contains("mftvdecoder") Then
 
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
 
                             End If
                         End If
                     Next
                     If regkey.SubKeyCount = 0 Then
-                        My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True).DeleteSubKeyTree("AMD")
+                        deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True), "AMD")
                     End If
                 End If
             Catch ex As Exception
@@ -1869,7 +1844,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("system wide settings") Then
                                 Try
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -1886,14 +1861,14 @@ Public Class Form1
                                         child2.ToLower.Contains("avivo") Or _
                                         child2.ToLower.Contains("steadyvideo") Then
                                         Try
-                                            regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                            deletesubregkey(regkey.OpenSubKey(child, True), child2)
                                         Catch ex As Exception
                                         End Try
                                     End If
                                 Next
                                 If regkey.OpenSubKey(child).SubKeyCount = 0 Then
                                     Try
-                                        regkey.DeleteSubKeyTree(child)
+                                        deletesubregkey(regkey, child)
                                     Catch ex As Exception
                                     End Try
                                 End If
@@ -1902,7 +1877,7 @@ Public Class Form1
                     Next
                     If regkey.SubKeyCount = 0 Then
                         Try
-                            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True).DeleteSubKeyTree("ATI Technologies")
+                            deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True), "ATI Technologies")
                         Catch ex As Exception
                         End Try
                     End If
@@ -1918,21 +1893,21 @@ Public Class Form1
                     regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Microsoft\Windows\CurrentVersion\Run", True)
                     If regkey IsNot Nothing Then
                         Try
-                            regkey.DeleteValue("HydraVisionDesktopManager")
+                            deletevalue(regkey, "HydraVisionDesktopManager")
                         Catch ex As Exception
 
                             log(ex.Message + " HydraVisionDesktopManager")
                         End Try
 
                         Try
-                            regkey.DeleteValue("Grid")
+                            deletevalue(regkey, "Grid")
                         Catch ex As Exception
 
                             log(ex.Message + " GRID")
                         End Try
 
                         Try
-                            regkey.DeleteValue("HydraVisionMDEngine")
+                            deletevalue(regkey, "HydraVisionMDEngine")
                         Catch ex As Exception
 
                             log(ex.Message + " HydraVisionMDEngine")
@@ -1966,7 +1941,7 @@ Public Class Form1
                                         If Not checkvariables.isnullorwhitespace(packages(i)) Then
                                             If wantedvalue.ToLower.Contains(packages(i)) Then
                                                 Try
-                                                    regkey.DeleteSubKeyTree(child)
+                                                    deletesubregkey(regkey, child)
                                                 Catch ex As Exception
                                                 End Try
                                             End If
@@ -1990,12 +1965,8 @@ Public Class Form1
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
                         If checkvariables.isnullorwhitespace(child) = False Then
-                            Try
-                                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                                 ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
                             If subregkey IsNot Nothing Then
                                 If checkvariables.isnullorwhitespace(subregkey.GetValue("DisplayName")) = False Then
                                     wantedvalue = subregkey.GetValue("DisplayName").ToString
@@ -2004,7 +1975,7 @@ Public Class Form1
                                             If Not checkvariables.isnullorwhitespace(packages(i)) Then
                                                 If wantedvalue.ToLower.Contains(packages(i)) Then
                                                     Try
-                                                        regkey.DeleteSubKeyTree(child)
+                                                        deletesubregkey(regkey, child)
                                                     Catch ex As Exception
                                                     End Try
                                                 End If
@@ -2029,7 +2000,7 @@ Public Class Form1
                     ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
                 If regkey IsNot Nothing Then
                     Try
-                        regkey.DeleteValue("StartCCC")
+                        deletevalue(regkey, "StartCCC")
 
                     Catch ex As Exception
 
@@ -2037,7 +2008,7 @@ Public Class Form1
                     End Try
                     Try
 
-                        regkey.DeleteValue("AMD AVT")
+                        deletevalue(regkey, "AMD AVT")
 
                     Catch ex As Exception
 
@@ -2070,7 +2041,7 @@ Public Class Form1
                         child.Contains("amdacpusl") Or _
                         child.Contains("cccutil") Then
                             Try
-                                regkey.DeleteValue(child)
+                                deletevalue(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -2101,7 +2072,7 @@ Public Class Form1
                         child.Contains("SlotMaximizer") Or _
                         child.Contains("cccutil") Then
                                 Try
-                                    regkey.DeleteValue(child)
+                                    deletevalue(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -2124,10 +2095,10 @@ Public Class Form1
                            child.Contains("ATI\CIM\") Or _
                            child.Contains("AMD APP\") Or _
                            child.Contains("AMD\SteadyVideo\") Or _
-                           child.Contains("HydraVision\")  Then
+                           child.Contains("HydraVision\") Then
 
                             Try
-                                regkey.DeleteValue(child)
+                                deletevalue(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -2157,7 +2128,7 @@ Public Class Form1
                                     If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                         If wantedvalue.Contains("SteadyVideoBHO") Then
                                             Try
-                                                regkey.DeleteSubKeyTree(child)
+                                                deletesubregkey(regkey, child)
                                             Catch ex As Exception
                                             End Try
                                         End If
@@ -2260,8 +2231,7 @@ Public Class Form1
         If removecamdnvidia = True Then
             filePath = sysdrv + "\NVIDIA"
             Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                deletedirectory(filePath)
             Catch ex As Exception
 
                 log(ex.Message)
@@ -2281,8 +2251,7 @@ Public Class Form1
                     End Try
 
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                    (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(child)
                     Catch ex As Exception
 
                         log(ex.Message + " Updatus directory delete")
@@ -2295,8 +2264,7 @@ Public Class Form1
                         log(ex.Message + " UpdatusUsers second pass")
                     End Try
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                    (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(child)
                     Catch ex As Exception
                         log(ex.Message + " Updatus directory delete")
                     End Try
@@ -2315,7 +2283,7 @@ Public Class Form1
                         If child.ToLower.Contains("nvbackend") Or _
                             child.ToLower.Contains("gfexperience") Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(child)
                             Catch ex As Exception
                                 log(ex.Message)
                                 TestDelete(child)
@@ -2326,8 +2294,7 @@ Public Class Form1
                 Try
                     If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(filePath)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
@@ -2346,7 +2313,7 @@ Public Class Form1
                         If child.ToLower.Contains("computecache") Or _
                             child.ToLower.Contains("glcache") Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(child)
                             Catch ex As Exception
                                 log(ex.Message)
                                 TestDelete(child)
@@ -2357,8 +2324,7 @@ Public Class Form1
                 Try
                     If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(filePath)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
@@ -2380,7 +2346,7 @@ Public Class Form1
                             child.ToLower.Contains("gfexperience") Or _
                             child.ToLower.Contains("shield apps") Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(child)
                             Catch ex As Exception
                                 log(ex.Message)
                             End Try
@@ -2390,8 +2356,7 @@ Public Class Form1
                 Try
                     If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(filePath)
                         Catch ex As Exception
                             log(ex.Message)
                         End Try
@@ -2412,7 +2377,7 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("updatus") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -2423,8 +2388,7 @@ Public Class Form1
             Try
                 If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(filePath)
                     Catch ex As Exception
                         log(ex.Message)
                         TestDelete(filePath)
@@ -2447,7 +2411,7 @@ Public Class Form1
                         child.ToLower.Contains("nview") Or _
                         child.ToLower.Contains("nvstreamsvc") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -2457,8 +2421,7 @@ Public Class Form1
             Next
             If Directory.GetDirectories(filePath).Length = 0 Then
                 Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    deletedirectory(filePath)
                 Catch ex As Exception
                     log(ex.Message)
                     TestDelete(filePath)
@@ -2474,7 +2437,7 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("3d vision") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -2485,8 +2448,7 @@ Public Class Form1
             Try
                 If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(filePath)
                     Catch ex As Exception
                         log(ex.Message)
                         TestDelete(filePath)
@@ -2526,8 +2488,7 @@ Public Class Form1
 
                         If (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory _
-                                (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(child)
                             Catch ex As Exception
                                 log(ex.Message)
                                 TestDelete(child)
@@ -2557,8 +2518,7 @@ Public Class Form1
                                    child2.ToLower.Contains("hdaudio.driver") Then
                                     If (removephysx Or Not ((Not removephysx) And child2.ToLower.Contains("physx"))) Then
                                         Try
-                                            My.Computer.FileSystem.DeleteDirectory _
-                                            (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                            deletedirectory(child2)
                                         Catch ex As Exception
                                             log(ex.Message)
                                             TestDelete(child2)
@@ -2570,8 +2530,7 @@ Public Class Form1
                         Try
                             If Directory.GetDirectories(child).Length = 0 Then
                                 Try
-                                    My.Computer.FileSystem.DeleteDirectory _
-                                        (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                    deletedirectory(child)
                                 Catch ex As Exception
                                     log(ex.Message)
                                     TestDelete(child)
@@ -2585,8 +2544,7 @@ Public Class Form1
             Try
                 If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(filePath)
                     Catch ex As Exception
                         log(ex.Message)
                         TestDelete(filePath)
@@ -2602,8 +2560,7 @@ Public Class Form1
             filePath = Environment.GetFolderPath _
                 (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
             Try
-                My.Computer.FileSystem.DeleteDirectory _
-                    (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                deletedirectory(filePath)
             Catch ex As Exception
             End Try
 
@@ -2629,8 +2586,7 @@ Public Class Form1
                            child.ToLower.Contains("update core") Then
                             If removephysx Then
                                 Try
-                                    My.Computer.FileSystem.DeleteDirectory _
-                                    (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                    deletedirectory(child)
                                 Catch ex As Exception
                                     log(ex.Message)
                                     TestDelete(child)
@@ -2640,8 +2596,7 @@ Public Class Form1
                                     'do nothing
                                 Else
                                     Try
-                                        My.Computer.FileSystem.DeleteDirectory _
-                                        (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                        deletedirectory(child)
                                     Catch ex As Exception
                                         log(ex.Message)
                                         TestDelete(child)
@@ -2654,8 +2609,7 @@ Public Class Form1
                 Try
                     If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(filePath)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
@@ -2672,8 +2626,7 @@ Public Class Form1
                 filePath = Environment.GetFolderPath _
                     (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
                 Try
-                    My.Computer.FileSystem.DeleteDirectory _
-                        (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    deletedirectory(filePath)
                 Catch ex As Exception
                 End Try
                 If Not Directory.Exists(filePath) Then
@@ -2681,7 +2634,7 @@ Public Class Form1
                         If Not checkvariables.isnullorwhitespace(child) Then
                             If child.ToLower.Contains(filePath.ToLower + "\") Then
                                 Try
-                                    My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(child)
+                                    deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -2700,7 +2653,7 @@ Public Class Form1
         For i As Integer = 0 To files.Length - 1
             If Not checkvariables.isnullorwhitespace(files(i)) Then
                 Try
-                    My.Computer.FileSystem.DeleteFile(files(i))
+                    deletefile(files(i))
                 Catch ex As Exception
                 End Try
             End If
@@ -2711,7 +2664,7 @@ Public Class Form1
         For i As Integer = 0 To files.Length - 1
             If Not checkvariables.isnullorwhitespace(files(i)) Then
                 Try
-                    My.Computer.FileSystem.DeleteFile(files(i))
+                    deletefile(files(i))
                 Catch ex As Exception
                 End Try
             End If
@@ -2719,8 +2672,7 @@ Public Class Form1
 
         filePath = Environment.GetEnvironmentVariable("windir")
         Try
-            My.Computer.FileSystem.DeleteDirectory _
-                    (filePath + "\Help\nvcpl", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            deletedirectory(filePath + "\Help\nvcpl")
         Catch ex As Exception
         End Try
 
@@ -2730,8 +2682,7 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("nv_cache") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -2742,8 +2693,7 @@ Public Class Form1
             Try
                 If Directory.GetDirectories(filePath).Length = 0 Then
                     Try
-                        My.Computer.FileSystem.DeleteDirectory _
-                            (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        deletedirectory(filePath)
                     Catch ex As Exception
                         log(ex.Message)
                         TestDelete(filePath)
@@ -2765,10 +2715,10 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("nv_cache") Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(child)
                             Catch ex As Exception
                                 log(ex.Message)
-                                TestDelete(filePath)
+                                TestDelete(child)
                             End Try
                         End If
                     End If
@@ -2776,8 +2726,7 @@ Public Class Form1
                 Try
                     If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(filePath)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
@@ -2795,10 +2744,10 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("geforceexperienceselfupdate") Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(child)
                             Catch ex As Exception
                                 log(ex.Message)
-                                TestDelete(filePath)
+                                TestDelete(child)
                             End Try
                         End If
                     End If
@@ -2806,8 +2755,7 @@ Public Class Form1
                 Try
                     If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(filePath)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
@@ -2825,10 +2773,10 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("nv_cache") Then
                             Try
-                                My.Computer.FileSystem.DeleteDirectory(child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                deletedirectory(child)
                             Catch ex As Exception
                                 log(ex.Message)
-                                TestDelete(filePath)
+                                TestDelete(child)
                             End Try
                         End If
                     End If
@@ -2836,8 +2784,7 @@ Public Class Form1
                 Try
                     If Directory.GetDirectories(filePath).Length = 0 Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                                (filePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(filePath)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(filePath)
@@ -2865,8 +2812,7 @@ Public Class Form1
                         child.ToLower.Contains("shadowplay") Or _
                        child.ToLower.Contains("nvidia.gfe") Then
                         Try
-                            My.Computer.FileSystem.DeleteDirectory _
-                            (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                            deletedirectory(child)
                         Catch ex As Exception
                             log(ex.Message)
                             TestDelete(child)
@@ -2901,7 +2847,7 @@ Public Class Form1
                                                     If Keyname.ToLower.Contains("nvstlink.exe") Or _
                                                        Keyname.ToLower.Contains("nvcpluir.dll") Then
                                                         Try
-                                                            subregkey.OpenSubKey(childs, True).DeleteValue(Keyname)
+                                                            deletevalue(subregkey.OpenSubKey(childs, True), Keyname)
                                                         Catch ex As Exception
                                                             log(ex.Message + ex.StackTrace)
                                                         End Try
@@ -2949,7 +2895,7 @@ Public Class Form1
                     If Not checkvariables.isnullorwhitespace(child) Then
                         If child.ToLower.Contains("nvidia_rebootneeded") Then
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                                 log(ex.Message + ex.StackTrace)
                             End Try
@@ -2978,7 +2924,7 @@ Public Class Form1
         'Cleaning PNPRessources.
         If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos", False) IsNot Nothing Then
             Try
-                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
+                deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
             Catch ex As Exception
                 log(ex.Message & "pnp resources khronos")
             End Try
@@ -2986,7 +2932,7 @@ Public Class Form1
 
         If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global\CoprocManager\OptimusEnhancements", False) IsNot Nothing Then
             Try
-                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global\CoprocManager\OptimusEnhancements")
+                deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global\CoprocManager\OptimusEnhancements")
             Catch ex As Exception
                 log(ex.Message & "pnp resources khronos")
             End Try
@@ -2994,7 +2940,7 @@ Public Class Form1
 
         If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension", False) IsNot Nothing Then
             Try
-                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
+                deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension")
             Catch ex As Exception
                 log(ex.Message & "pnp resources cpl extension")
             End Try
@@ -3002,7 +2948,7 @@ Public Class Form1
 
         If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation", False) IsNot Nothing Then
             Try
-                My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
+                deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
             Catch ex As Exception
                 log(ex.Message & "pnp ressources nvidia corporation")
             End Try
@@ -3011,7 +2957,7 @@ Public Class Form1
         If IntPtr.Size = 8 Then
             If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos", False) IsNot Nothing Then
                 Try
-                    My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
+                    deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
                 Catch ex As Exception
                     log(ex.Message & "pnpresources wow6432node khronos")
                 End Try
@@ -3042,7 +2988,7 @@ Public Class Form1
                                            wantedvalue.ToLower.ToString.Contains("nvidia network service") Or _
                                            wantedvalue.ToLower.ToString.Contains("nvidia update core") Then
                                             Try
-                                                regkey.DeleteValue(child)
+                                                deletevalue(regkey, child)
                                             Catch ex As Exception
                                             End Try
                                         End If
@@ -3081,31 +3027,29 @@ Public Class Form1
                                                     wantedvalue = regkey.OpenSubKey(childs).GetValue(child).ToString()
                                                 End If
                                                 If wantedvalue.ToString.ToLower.Contains("nvsvc") Then
-                                                    regkey.DeleteSubKeyTree(childs)
+                                                    deletesubregkey(regkey, childs)
                                                 End If
                                                 If wantedvalue.ToString.ToLower.Contains("video and display power management") Then
-                                                    Try
-                                                        subregkey2 = regkey.OpenSubKey(childs, True)
-                                                    Catch ex As Exception
-                                                        Continue For
-                                                    End Try
-                                                    For Each childinsubregkey2 As String In subregkey2.GetSubKeyNames()
-                                                        If checkvariables.isnullorwhitespace(childinsubregkey2) = False Then
-                                                            For Each childinsubregkey2value As String In subregkey2.OpenSubKey(childinsubregkey2).GetValueNames()
-                                                                If checkvariables.isnullorwhitespace(childinsubregkey2value) = False And childinsubregkey2value.ToString.ToLower.Contains("description") Then
-                                                                    If checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(childinsubregkey2).GetValue(childinsubregkey2value)) = False Then
-                                                                        wantedvalue2 = subregkey2.OpenSubKey(childinsubregkey2).GetValue(childinsubregkey2value).ToString
+                                                    subregkey2 = regkey.OpenSubKey(childs, True)
+                                                    If subregkey2 IsNot Nothing Then
+                                                        For Each childinsubregkey2 As String In subregkey2.GetSubKeyNames()
+                                                            If checkvariables.isnullorwhitespace(childinsubregkey2) = False Then
+                                                                For Each childinsubregkey2value As String In subregkey2.OpenSubKey(childinsubregkey2).GetValueNames()
+                                                                    If checkvariables.isnullorwhitespace(childinsubregkey2value) = False And childinsubregkey2value.ToString.ToLower.Contains("description") Then
+                                                                        If checkvariables.isnullorwhitespace(subregkey2.OpenSubKey(childinsubregkey2).GetValue(childinsubregkey2value)) = False Then
+                                                                            wantedvalue2 = subregkey2.OpenSubKey(childinsubregkey2).GetValue(childinsubregkey2value).ToString
+                                                                        End If
+                                                                        If wantedvalue2.ToString.ToLower.Contains("nvsvc") Then
+                                                                            Try
+                                                                                deletesubregkey(subregkey2, childinsubregkey2)
+                                                                            Catch ex As Exception
+                                                                            End Try
+                                                                        End If
                                                                     End If
-                                                                    If wantedvalue2.ToString.ToLower.Contains("nvsvc") Then
-                                                                        Try
-                                                                            subregkey2.DeleteSubKeyTree(childinsubregkey2)
-                                                                        Catch ex As Exception
-                                                                        End Try
-                                                                    End If
-                                                                End If
-                                                            Next
-                                                        End If
-                                                    Next
+                                                                Next
+                                                            End If
+                                                        Next
+                                                    End If
                                                 End If
                                             End If
                                         Next
@@ -3253,7 +3197,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("nvidia corporation\physx") Then
                                 Try
-                                    regkey.DeleteValue(child)
+                                    deletevalue(regkey, child)
                                 Catch ex As Exception
 
                                     log(ex.Message + " HKLM..CU\Installer\Folders")
@@ -3275,7 +3219,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("nvopencl") Then
                             Try
-                                regkey.DeleteValue(child)
+                                deletevalue(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -3283,7 +3227,7 @@ Public Class Form1
                 Next
                 If regkey.GetValueNames().Length = 0 Then
                     Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("Software\Khronos")
+                        deletesubregkey(My.Computer.Registry.LocalMachine, "Software\Khronos")
                     Catch ex As Exception
                     End Try
                 End If
@@ -3299,7 +3243,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("nvopencl") Then
                                 Try
-                                    regkey.DeleteValue(child)
+                                    deletevalue(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -3307,7 +3251,7 @@ Public Class Form1
                     Next
                     If regkey.GetValueNames().Length = 0 Then
                         Try
-                            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("Software\Wow6432Node\Khronos")
+                            deletesubregkey(My.Computer.Registry.LocalMachine, "Software\Wow6432Node\Khronos")
                         Catch ex As Exception
                         End Try
                     End If
@@ -3325,7 +3269,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("nvidia corporation") Then
                             Try
-                                regkey.DeleteValue(child)
+                                deletevalue(regkey, child)
                             Catch ex As Exception
                                 log(ex.Message + " SharedDLLS")
                             End Try
@@ -3346,7 +3290,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("nvidia corporation\physx") Then
                                 Try
-                                    regkey.DeleteValue(child)
+                                    deletevalue(regkey, child)
                                 Catch ex As Exception
                                     log(ex.Message + " SharedDLLS")
                                 End Try
@@ -3376,9 +3320,10 @@ Public Class Form1
                                                 child2.ToLower.Contains("nvcontrolpanel2") Or _
                                                 child2.ToLower.Contains("nvcontrolpanel") Or _
                                                 child2.ToLower.Contains("nvtray") Or _
+                                                child2.ToLower.Contains("nvstream") Or _
                                                 child2.ToLower.Contains("nvidia control panel") Then
                                                 Try
-                                                    regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                                    deletesubregkey(regkey.OpenSubKey(child, True), child2)
                                                 Catch ex As Exception
                                                 End Try
                                             End If
@@ -3386,7 +3331,7 @@ Public Class Form1
                                     Next
                                     If regkey.OpenSubKey(child).SubKeyCount = 0 Then
                                         Try
-                                            regkey.DeleteSubKeyTree(child)
+                                            deletesubregkey(regkey, child)
                                         Catch ex As Exception
                                         End Try
                                     End If
@@ -3414,7 +3359,7 @@ Public Class Form1
                                         child2.ToLower.Contains("nvcontrolpanel2") Or _
                                         child2.ToLower.Contains("nvidia control panel") Then
                                         Try
-                                            regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                            deletesubregkey(regkey.OpenSubKey(child, True), child2)
                                         Catch ex As Exception
                                         End Try
                                     End If
@@ -3422,7 +3367,7 @@ Public Class Form1
                             Next
                             If regkey.OpenSubKey(child).SubKeyCount = 0 Then
                                 Try
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -3441,7 +3386,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("ageia technologies") Then
                             If removephysx Then
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             End If
                         End If
                         If child.ToLower.Contains("nvidia corporation") Then
@@ -3460,7 +3405,7 @@ Public Class Form1
                                         child2.ToLower.Contains("uxd") Or _
                                         child2.ToLower.Contains("nvtray") Then
                                         Try
-                                            regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                            deletesubregkey(regkey.OpenSubKey(child, True), child2)
                                         Catch ex As Exception
                                         End Try
                                     End If
@@ -3468,7 +3413,7 @@ Public Class Form1
                             Next
                             If regkey.OpenSubKey(child).SubKeyCount = 0 Then
                                 Try
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -3488,7 +3433,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("ageia technologies") Then
                                 If removephysx Then
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 End If
                             End If
                             If child.ToLower.Contains("nvidia corporation") Then
@@ -3500,14 +3445,14 @@ Public Class Form1
                                            child2.ToLower.Contains("physx") Then
                                             If removephysx Then
                                                 Try
-                                                    regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                                    deletesubregkey(regkey.OpenSubKey(child, True), child2)
                                                 Catch ex As Exception
                                                 End Try
                                             Else
                                                 If child2.ToLower.Contains("physx") Then
                                                     'do nothing
                                                 Else
-                                                    regkey.OpenSubKey(child, True).DeleteSubKeyTree(child2)
+                                                    deletesubregkey(regkey.OpenSubKey(child, True), child2)
                                                 End If
                                             End If
                                         End If
@@ -3515,7 +3460,7 @@ Public Class Form1
                                 Next
                                 If regkey.OpenSubKey(child).SubKeyCount = 0 Then
                                     Try
-                                        regkey.DeleteSubKeyTree(child)
+                                        deletesubregkey(regkey, child)
                                     Catch ex As Exception
                                     End Try
                                 End If
@@ -3561,7 +3506,7 @@ Public Class Form1
                                 Continue For
                             End If
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -3572,7 +3517,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("DisplayName")) = False Then
                                 If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 End If
                             End If
                         End If
@@ -3616,7 +3561,7 @@ Public Class Form1
                             Continue For
                         End If
                         Try
-                            regkey.DeleteSubKeyTree(child)
+                            deletesubregkey(regkey, child)
                         Catch ex As Exception
                         End Try
                     End If
@@ -3627,7 +3572,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("DisplayName")) = False Then
                             If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             End If
                         End If
                     End If
@@ -3642,19 +3587,15 @@ Public Class Form1
           ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
             For Each child As String In regkey.GetSubKeyNames()
                 If checkvariables.isnullorwhitespace(child) = False Then
-                    Try
-                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList\" & child, False)
-                    Catch ex As Exception
-                        Continue For
-                    End Try
                     If subregkey IsNot Nothing Then
                         If checkvariables.isnullorwhitespace(subregkey.GetValue("ProfileImagePath")) = False Then
                             wantedvalue = subregkey.GetValue("ProfileImagePath").ToString
                             If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                 If wantedvalue.Contains("UpdatusUser") Then
                                     Try
-                                        regkey.DeleteSubKeyTree(child)
+                                        deletesubregkey(regkey, child)
                                     Catch ex As Exception
                                     End Try
                                 End If
@@ -3682,12 +3623,12 @@ Public Class Form1
                                     If wantedvalue.ToLower.Contains("nvidia control panel") Or _
                                        wantedvalue.ToLower.Contains("nvidia nview desktop manager") Then
                                         Try
-                                            regkey.DeleteSubKeyTree(child)
+                                            deletesubregkey(regkey, child)
                                         Catch ex As Exception
                                         End Try
                                         'special case only to nvidia afaik. there i a clsid for a control pannel that link from namespace.
                                         Try
-                                            My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).DeleteSubKeyTree(child)
+                                            deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True), child)
                                         Catch ex As Exception
                                         End Try
                                     End If
@@ -3714,7 +3655,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("gfexperience.exe") Then
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -3733,7 +3674,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("gfexperience.exe") Then
                                 Try
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -3760,7 +3701,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("nvidia.com/3dvision") Then
                                 Try
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -3791,7 +3732,7 @@ Public Class Form1
                                             child.ToLower.StartsWith("nvidia opengl driver") Or _
                                             child.ToLower.StartsWith("nvwmi") Or _
                                             child.ToLower.StartsWith("nview") Then
-                                            regkey.DeleteSubKeyTree(child)
+                                            deletesubregkey(regkey, child)
                                         End If
                                     End If
                                 Next
@@ -3815,9 +3756,9 @@ Public Class Form1
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
             If regkey IsNot Nothing Then
                 Try
-                    regkey.DeleteSubKeyTree("Global")
+                    deletesubregkey(regkey, "Global")
                     If regkey.SubKeyCount = 0 Then
-                        My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE", True).DeleteSubKeyTree("NVIDIA Corporation")
+                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE", True), "NVIDIA Corporation")
                     End If
                 Catch ex As Exception
                 End Try
@@ -3830,9 +3771,9 @@ Public Class Form1
                     regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
                     If regkey IsNot Nothing Then
                         Try
-                            regkey.DeleteSubKeyTree("Global")
+                            deletesubregkey(regkey, "Global")
                             If regkey.SubKeyCount = 0 Then
-                                My.Computer.Registry.Users.OpenSubKey(users & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE", True).DeleteSubKeyTree("NVIDIA Corporation")
+                                deletesubregkey(My.Computer.Registry.Users.OpenSubKey(users & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE", True), "NVIDIA Corporation")
                             End If
                         Catch ex As Exception
                         End Try
@@ -3846,9 +3787,9 @@ Public Class Form1
                 If Not checkvariables.isnullorwhitespace(child) Then
                     If child.ToLower.Contains("s-1-5") Then
                         Try
-                            My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True).DeleteSubKeyTree("Global")
+                            deletesubregkey(My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True), "Global")
                             If My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", False).SubKeyCount = 0 Then
-                                My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE", True).DeleteSubKeyTree("NVIDIA Corporation")
+                                deletesubregkey(My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE", True), "NVIDIA Corporation")
                             End If
                         Catch ex As Exception
                         End Try
@@ -3865,23 +3806,23 @@ Public Class Form1
       ("Software\Microsoft\Windows\CurrentVersion\Run", True)
             If regkey IsNot Nothing Then
                 Try
-                    regkey.DeleteValue("Nvtmru")
+                    deletevalue(regkey, "Nvtmru")
                 Catch ex As Exception
                     log(ex.Message + " Nvtmru")
                 End Try
 
                 Try
-                    regkey.DeleteValue("NvBackend")
+                    deletevalue(regkey, "NvBackend")
                 Catch ex As Exception
                 End Try
 
                 Try
-                    regkey.DeleteValue("nwiz")
+                    deletevalue(regkey, "nwiz")
                 Catch ex As Exception
                 End Try
 
                 Try
-                    regkey.DeleteValue("ShadowPlay")
+                    deletevalue(regkey, "ShadowPlay")
                 Catch ex As Exception
                     log(ex.Message + " ShadowPlay")
                 End Try
@@ -3896,7 +3837,7 @@ Public Class Form1
                     ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
                 If regkey IsNot Nothing Then
                     Try
-                        regkey.DeleteValue("StereoLinksInstall")
+                        deletevalue(regkey, "StereoLinksInstall")
                     Catch ex As Exception
                         log(ex.Message + " StereoLinksInstall")
                     End Try
@@ -3911,15 +3852,15 @@ Public Class Form1
 
         If remove3dtvplay Then
             Try
-                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("mpegfile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
+                deletesubregkey(My.Computer.Registry.ClassesRoot, "mpegfile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
             Catch ex As Exception
             End Try
             Try
-                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("WMVFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
+                deletesubregkey(My.Computer.Registry.ClassesRoot, "WMVFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
             Catch ex As Exception
             End Try
             Try
-                My.Computer.Registry.ClassesRoot.DeleteSubKeyTree("AVIFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
+                deletesubregkey(My.Computer.Registry.ClassesRoot, "AVIFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
             Catch ex As Exception
             End Try
         End If
@@ -3938,7 +3879,7 @@ Public Class Form1
                            regkey.GetValue(child).ToString.ToLower.Contains("openglshext extension") Or _
                            regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context menu extension") Then
                             Try
-                                regkey.DeleteValue(child)
+                                deletevalue(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -3958,7 +3899,7 @@ Public Class Form1
                             If Not checkvariables.isnullorwhitespace(childs) Then
                                 If childs.ToLower.Contains("nvcpl.cpl") Then
                                     Try
-                                        regkey.OpenSubKey(child, True).DeleteValue(childs)
+                                        deletevalue(regkey.OpenSubKey(child, True), childs)
                                     Catch ex As Exception
                                     End Try
                                 End If
@@ -3979,7 +3920,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If regkey.GetValue(child).ToString.ToLower.Contains("nvcpl desktopcontext class") Then
                                 Try
-                                    regkey.DeleteValue(child)
+                                    deletevalue(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -3996,22 +3937,22 @@ Public Class Form1
 
         'Shell ext
         Try
-            My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("NvCplDesktopContext")
+            deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True), "NvCplDesktopContext")
         Catch ex As Exception
         End Try
 
         Try
-            My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("00nView")
+            deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True), "00nView")
         Catch ex As Exception
         End Try
 
         Try
-            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("NvCplDesktopContext")
+            deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True), "NvCplDesktopContext")
         Catch ex As Exception
         End Try
 
         Try
-            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True).DeleteSubKeyTree("00nView")
+            deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True), "00nView")
         Catch ex As Exception
         End Try
 
@@ -4033,7 +3974,7 @@ Public Class Form1
         For i As Integer = 0 To files.Length - 1
             If Not checkvariables.isnullorwhitespace(files(i)) Then
                 Try
-                    My.Computer.FileSystem.DeleteFile(files(i))
+                    deletefile(files(i))
                 Catch ex As Exception
                 End Try
             End If
@@ -4074,7 +4015,7 @@ Public Class Form1
                            child.ToLower.Contains("opencl") Or _
                            child.ToLower.Contains("intel wireless display") Then
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -4082,7 +4023,7 @@ Public Class Form1
                 Next
                 If regkey.SubKeyCount = 0 Then
                     Try
-                        My.Computer.Registry.LocalMachine.OpenSubKey("Software", True).DeleteSubKeyTree("Intel")
+                        deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software", True), "Intel")
                     Catch ex As Exception
                     End Try
                 End If
@@ -4100,7 +4041,7 @@ Public Class Form1
                             If checkvariables.isnullorwhitespace(child) = False Then
                                 If child.ToLower.Contains("display") Then
                                     Try
-                                        regkey.DeleteSubKeyTree(child)
+                                        deletesubregkey(regkey, child)
                                     Catch ex As Exception
                                     End Try
                                 End If
@@ -4108,7 +4049,7 @@ Public Class Form1
                         Next
                         If regkey.SubKeyCount = 0 Then
                             Try
-                                My.Computer.Registry.Users.OpenSubKey(users & "\Software", True).DeleteSubKeyTree("Intel")
+                                deletesubregkey(My.Computer.Registry.Users.OpenSubKey(users & "\Software", True), "Intel")
                             Catch ex As Exception
                             End Try
                         End If
@@ -4130,7 +4071,7 @@ Public Class Form1
                                child.ToLower.Contains("opencl") Or _
                                child.ToLower.Contains("intel wireless display") Then
                                 Try
-                                    regkey.DeleteSubKeyTree(child)
+                                    deletesubregkey(regkey, child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -4138,7 +4079,7 @@ Public Class Form1
                     Next
                     If regkey.SubKeyCount = 0 Then
                         Try
-                            My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True).DeleteSubKeyTree("Intel")
+                            deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True), "Intel")
                         Catch ex As Exception
                         End Try
                     End If
@@ -4154,19 +4095,19 @@ Public Class Form1
       ("Software\Microsoft\Windows\CurrentVersion\Run", True)
             If regkey IsNot Nothing Then
                 Try
-                    regkey.DeleteValue("IgfxTray")
+                    deletevalue(regkey, "IgfxTray")
                 Catch ex As Exception
                     log(ex.Message + " IgfxTray")
                 End Try
 
                 Try
-                    regkey.DeleteValue("Persistence")
+                    deletevalue(regkey, "Persistence")
                 Catch ex As Exception
                     log(ex.Message + " Persistence")
                 End Try
 
                 Try
-                    regkey.DeleteValue("HotKeysCmds")
+                    deletevalue(regkey, "HotKeysCmds")
                 Catch ex As Exception
                     log(ex.Message + " HotKeysCmds")
                 End Try
@@ -4185,7 +4126,7 @@ Public Class Form1
                            child.ToLower.Contains("igfxosp") Or _
                             child.ToLower.Contains("igfxdtcm") Then
 
-                            regkey.DeleteSubKeyTree(child)
+                            deletesubregkey(regkey, child)
 
                         End If
                     End If
@@ -4220,7 +4161,7 @@ Public Class Form1
                                             If Not checkvariables.isnullorwhitespace(packages(i)) Then
                                                 If wantedvalue.ToLower.Contains(packages(i)) Then
                                                     Try
-                                                        regkey.DeleteSubKeyTree(child)
+                                                        deletesubregkey(regkey, child)
                                                     Catch ex As Exception
                                                     End Try
                                                 End If
@@ -4243,7 +4184,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("igfxcpl") Then
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -4266,7 +4207,7 @@ Public Class Form1
                                 If Not checkvariables.isnullorwhitespace(classroot(i)) Then
                                     If child.ToLower.Contains(classroot(i).ToLower) Then
                                         Try
-                                            regkey.DeleteSubKeyTree(child)
+                                            deletesubregkey(regkey, child)
                                         Catch ex As Exception
                                         End Try
                                     End If
@@ -4287,7 +4228,7 @@ Public Class Form1
                     If Not checkvariables.isnullorwhitespace(child) Then
                         If child.ToLower.Contains("igfx") Then
                             Try
-                                regkey.DeleteSubKeyTree(child)
+                                deletesubregkey(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
@@ -4295,7 +4236,7 @@ Public Class Form1
                 Next
                 If regkey.SubKeyCount = 0 Then
                     Try
-                        My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify")
+                        deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify")
                     Catch ex As Exception
                     End Try
                 End If
@@ -4339,7 +4280,7 @@ Public Class Form1
 
                                                         Try
 
-                                                            subregkey.OpenSubKey(childs, True).DeleteValue("UpperFilters")
+                                                            deletevalue(subregkey.OpenSubKey(childs, True), "UpperFilters")
                                                             If (upfiler IsNot Nothing) AndAlso (Not upfiler.Length < 1) Then
                                                                 subregkey.OpenSubKey(childs, True).SetValue("UpperFilters", upfiler, RegistryValueKind.MultiString)
                                                             End If
@@ -4588,24 +4529,24 @@ Public Class Form1
             'read config file
 
             If settings.getconfig("logbox") = "true" Then
-                f.checkbox2.Checked = True
+                f.CheckBox2.Checked = True
 
             Else
-                f.checkbox2.Checked = False
+                f.CheckBox2.Checked = False
             End If
 
             If settings.getconfig("remove3dtvplay") = "true" Then
-                f.checkbox4.Checked = True
+                f.CheckBox4.Checked = True
                 remove3dtvplay = True
             Else
-                f.checkbox4.Checked = False
+                f.CheckBox4.Checked = False
                 remove3dtvplay = False
             End If
 
             If settings.getconfig("systemrestore") = "true" Then
-                f.checkbox5.Checked = True
+                f.CheckBox5.Checked = True
             Else
-                f.checkbox5.Checked = False
+                f.CheckBox5.Checked = False
             End If
 
             If settings.getconfig("removephysx") = "true" Then
@@ -5023,22 +4964,22 @@ Public Class Form1
                                     Continue For
                                 End If
 
-                        array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
+                                array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
 
-                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) AndAlso Not (array.Length - 1) Then
-                            For i As Integer = 0 To array.Length - 1
-                                If array(i).ToLower.Contains("pci\cc_03") Then
-                                    If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) Then
-                                        currentdriverversion = subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessage("17") + " " + currentdriverversion)
-                                        log("Not Correctly Installed GPU : " + currentdriverversion)
-                                        UpdateTextMethod("--------------")
-                                        log("--------------")
-                                        Exit For  'we exit as we have found what we were looking for
-                                    End If
+                                If (array IsNot Nothing) AndAlso Not (array.Length < 1) AndAlso Not (array.Length - 1) Then
+                                    For i As Integer = 0 To array.Length - 1
+                                        If array(i).ToLower.Contains("pci\cc_03") Then
+                                            If Not checkvariables.isnullorwhitespace(subregkey.OpenSubKey(child2).GetValue("DeviceDesc")) Then
+                                                currentdriverversion = subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString
+                                                UpdateTextMethod(UpdateTextMethodmessage("17") + " " + currentdriverversion)
+                                                log("Not Correctly Installed GPU : " + currentdriverversion)
+                                                UpdateTextMethod("--------------")
+                                                log("--------------")
+                                                Exit For  'we exit as we have found what we were looking for
+                                            End If
+                                        End If
+                                    Next
                                 End If
-                            Next
-                        End If
                             Next
                         End If
                     End If
@@ -5124,7 +5065,7 @@ Public Class Form1
                     End If
 
                 Case BootMode.Normal
-                    
+
                     safemode = False
 
                     If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
@@ -5456,7 +5397,7 @@ Public Class Form1
         End If
 
         If combobox1value = "AMD" Then
-            
+
             If settings.getconfig("removeamdaudiobus") = "true" Then
                 f.CheckBox3.Checked = True
                 removeamdaudiobus = True
@@ -6426,8 +6367,7 @@ Public Class Form1
                                    child2.ToLower.Contains("hdaudio.driver") Then
                                     If (removephysx Or Not ((Not removephysx) And child2.ToLower.Contains("physx"))) Then
                                         Try
-                                            My.Computer.FileSystem.DeleteDirectory _
-                                            (child2, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                            deletedirectory(child2)
                                         Catch ex As Exception
                                         End Try
                                     End If
@@ -6437,8 +6377,7 @@ Public Class Form1
                         Try
                             If Directory.GetDirectories(child).Length = 0 Then
                                 Try
-                                    My.Computer.FileSystem.DeleteDirectory _
-                                        (child, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                                    deletedirectory(child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -6501,6 +6440,27 @@ Public Class Form1
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
         logf.Show()
     End Sub
+
+
+    Public Sub deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
+
+        CleanupEngine.deletesubregkey(value1, value2)
+
+    End Sub
+
+    Private Sub deletedirectory(ByVal directory As String)
+        CleanupEngine.deletedirectory(directory)
+    End Sub
+    Private Sub deletefile(ByVal file As String)
+        CleanupEngine.deletefile(file)
+    End Sub
+
+    Public Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
+
+        CleanupEngine.deletevalue(value1, value2)
+
+    End Sub
+
 End Class
 Public Class checkvariables
 
@@ -6602,6 +6562,51 @@ Public Class CleanupEngine
         End If
 
     End Sub
+
+    Public Sub deletedirectory(ByVal directorypath As String)
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
+
+        If (directorypath IsNot Nothing) Then
+
+            My.Computer.FileSystem.DeleteDirectory _
+                    (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            f.log(directorypath + " - " + updateTextMethodmessage("39"))
+
+
+        End If
+
+    End Sub
+
+    Public Sub deletefile(ByVal filepath As String)
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
+
+        If (Not checkvariables.isnullorwhitespace(filepath)) Then
+
+            deletefile(filepath) 'filepath here include the file too.
+
+            f.log(filepath + " - " + updateTextMethodmessage("41"))
+        End If
+
+    End Sub
+
+    Public Sub deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String)
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
+
+        If (regkeypath IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child)) Then
+            'Try
+            regkeypath.DeleteValue(child)
+            f.log(regkeypath.ToString + "\" + child + " - " + updateTextMethodmessage("40"))
+            'Catch ex As Exception
+            '    f.log(ex.Message + ex.StackTrace + " ----> " + regkeypath.ToString + "\" + child)
+            'End Try
+
+        End If
+
+    End Sub
+
     Public Sub classroot(ByVal classroot As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
         Dim regkey As RegistryKey
@@ -6737,7 +6742,7 @@ Public Class CleanupEngine
         Dim removephysx As Boolean = removephysx
         Dim msgboxmessage As String() = f.msgboxmessage
         Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
-        f.UpdateTextMethod(UpdateTextMethodmessage("29"))
+        f.UpdateTextMethod(updateTextMethodmessage("29"))
 
         Try
             f.log("-Starting S-1-5-xx region cleanUP")
@@ -6774,12 +6779,12 @@ Public Class CleanupEngine
                                                                 Try
                                                                     If (Not checkvariables.isnullorwhitespace(subregkey.GetValue("LocalPackage"))) AndAlso _
                                                                       subregkey.GetValue("LocalPackage").ToString.ToLower.Contains(".msi") Then
-                                                                        My.Computer.FileSystem.DeleteFile(subregkey.GetValue("LocalPackage").ToString)
+                                                                        deletefile(subregkey.GetValue("LocalPackage").ToString)
                                                                     End If
                                                                 Catch ex As Exception
                                                                 End Try
 
-                                                               
+
                                                                 Try
                                                                     If (Not checkvariables.isnullorwhitespace(subregkey.GetValue("UninstallString"))) AndAlso _
                                                                       subregkey.GetValue("UninstallString").ToString.ToLower.Contains("{") Then
@@ -6790,8 +6795,8 @@ Public Class CleanupEngine
                   ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
                                                                             If Not checkvariables.isnullorwhitespace(subkeyname) Then
                                                                                 If subkeyname.ToLower.Contains(folder.ToLower) Then
-                                                                                    My.Computer.Registry.LocalMachine.OpenSubKey _
-                  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(subkeyname)
+                                                                                    deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey _
+                  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True), subkeyname)
                                                                                 End If
                                                                             End If
                                                                         Next
@@ -6904,8 +6909,8 @@ Public Class CleanupEngine
 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
                                                             If Not checkvariables.isnullorwhitespace(subkeyname) Then
                                                                 If subkeyname.ToLower.Contains(folder.ToLower) Then
-                                                                    My.Computer.Registry.LocalMachine.OpenSubKey _
-  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True).DeleteValue(subkeyname)
+                                                                    deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey _
+  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True), subkeyname)
                                                                 End If
                                                             End If
                                                         Next
@@ -7840,12 +7845,12 @@ Public Class CleanupEngine
                     filePath = System.Environment.SystemDirectory
 
                     Try
-                        My.Computer.FileSystem.DeleteFile(filePath & "\" & driverfiles(i))
+                        deletefile(filePath & "\" & driverfiles(i))
                     Catch ex As Exception
                     End Try
 
                     Try
-                        My.Computer.FileSystem.DeleteFile(filePath + "\Drivers\" + driverfiles(i))
+                        deletefile(filePath + "\Drivers\" + driverfiles(i))
                     Catch ex As Exception
                     End Try
 
@@ -7861,7 +7866,7 @@ Public Class CleanupEngine
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                 Try
-                                    My.Computer.FileSystem.DeleteFile(child)
+                                    deletefile(child)
                                 Catch ex As Exception
                                 End Try
                             End If
@@ -7873,16 +7878,23 @@ Public Class CleanupEngine
             f.log("info: " + ex.Message)
         End Try
 
+        Const CSIDL_WINDOWS As Integer = &H29
+        Dim winPath As New StringBuilder(300)
+        If WindowsApi.SHGetFolderPath(Nothing, CSIDL_WINDOWS, Nothing, 0, winPath) <> 0 Then
+            Throw New ApplicationException("Can't get window's directory")
+        End If
+
+
         If IntPtr.Size = 8 Then
             For i As Integer = 0 To driverfiles.Length - 1
                 If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
                     If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
-                        filePath = Environment.GetEnvironmentVariable("windir")
-                        For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\SysWOW64", FileIO.SearchOption.SearchTopLevelOnly, "*.log")
+
+                        For Each child As String In My.Computer.FileSystem.GetFiles(winPath.ToString, FileIO.SearchOption.SearchTopLevelOnly, "*.log")
                             If checkvariables.isnullorwhitespace(child) = False Then
                                 If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                     Try
-                                        My.Computer.FileSystem.DeleteFile(child)
+                                        deletefile(child)
                                     Catch ex As Exception
                                     End Try
                                 End If
@@ -7890,12 +7902,12 @@ Public Class CleanupEngine
                         Next
 
                         Try
-                            My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\Drivers\" + driverfiles(i))
+                            deletefile(winPath.ToString + "\Drivers\" + driverfiles(i))
                         Catch ex As Exception
                         End Try
 
                         Try
-                            My.Computer.FileSystem.DeleteFile(filePath + "\SysWOW64\" + driverfiles(i))
+                            deletefile(winPath.ToString + "\" + driverfiles(i))
                         Catch ex As Exception
                         End Try
                     End If
@@ -7905,6 +7917,11 @@ Public Class CleanupEngine
     End Sub
 End Class
 Public Class WindowsApi
+
+    <DllImport("shell32.dll")> _
+    Public Shared Function SHGetFolderPath(ByVal hwndOwner As IntPtr, ByVal nFolder As Int32, ByVal hToken As IntPtr, ByVal dwFlags As Int32, ByVal pszPath As StringBuilder) As Int32
+    End Function
+
 
     <DllImport("kernel32.dll", EntryPoint:="WTSGetActiveConsoleSessionId", SetLastError:=True)> _
     Public Shared Function WTSGetActiveConsoleSessionId() As UInteger
