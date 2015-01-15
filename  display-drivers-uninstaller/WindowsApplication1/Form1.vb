@@ -6584,7 +6584,7 @@ Public Class CleanupEngine
 
         If (Not checkvariables.isnullorwhitespace(filepath)) Then
 
-            deletefile(filepath) 'filepath here include the file too.
+            My.Computer.FileSystem.DeleteFile(filepath) 'filepath here include the file too.
 
             f.log(filepath + " - " + updateTextMethodmessage("41"))
         End If
@@ -7189,14 +7189,14 @@ Public Class CleanupEngine
                                     End If
                                 End If
                             Next
-                            'Else
-                            '    'Here, if subregkey is nothing, it mean \video doesnt exist, so we can delete it.
-                            '    'this is a general cleanUP we could say.
-                            '    Try
-                            '        deletesubregkey(regkey, child)
-                            '        deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                            '    Catch ex As Exception
-                            '    End Try
+                        Else
+                            'Here, if subregkey is nothing, it mean \video doesnt exist, so we can delete it.
+                            'this is a general cleanUP we could say.
+                            Try
+                                deletesubregkey(regkey, child)
+                                deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                            Catch ex As Exception
+                            End Try
                         End If
                     End If
                 Next
