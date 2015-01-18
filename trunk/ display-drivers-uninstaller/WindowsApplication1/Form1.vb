@@ -7249,7 +7249,7 @@ Public Class CleanupEngine
                                         If checkvariables.isnullorwhitespace(child) = False Then
                                             If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                                 Try
-                                                    deletesubregkey(regkey, child)
+                                                    deletevalue(regkey, child)
                                                 Catch ex As Exception
                                                     f.log(ex.Message & " @Pnplockdownfiles")
                                                 End Try
