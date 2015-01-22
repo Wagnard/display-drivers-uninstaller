@@ -2733,7 +2733,8 @@ Public Class Form1
             Try
                 For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("nv_cache") Then
+                        If child.ToLower.Contains("nv_cache") Or _
+                            child.ToLower.Contains("displaydriver") Then
                             Try
                                 deletedirectory(child)
                             Catch ex As Exception
@@ -2814,6 +2815,44 @@ Public Class Form1
                 End Try
             Catch ex As Exception
             End Try
+
+            'windows 8+ only (store apps nv_cache cleanup)
+            Try
+                If win8higher Then
+                    Dim prefilePath As String = filepaths + "\AppData\Local\Packages"
+                    For Each childs As String In My.Computer.FileSystem.GetDirectories(prefilePath)
+                        If Not checkvariables.isnullorwhitespace(childs) Then
+                            filePath = childs + "\AC\Temp\NVIDIA Corporation"
+
+                            If Directory.Exists(filePath) Then
+                                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                                    If checkvariables.isnullorwhitespace(child) = False Then
+                                        If child.ToLower.Contains("nv_cache") Then
+                                            Try
+                                                deletedirectory(child)
+                                            Catch ex As Exception
+                                                log(ex.Message)
+                                                TestDelete(child)
+                                            End Try
+                                        End If
+                                    End If
+                                Next
+
+                                If Directory.GetDirectories(filePath).Length = 0 Then
+                                    Try
+                                        deletedirectory(filePath)
+                                    Catch ex As Exception
+                                        log(ex.Message)
+                                        TestDelete(filePath)
+                                    End Try
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+            End Try
+
         Next
 
         'Cleaning the GFE 2.0.1 and earlier assemblies.
@@ -2850,7 +2889,6 @@ Public Class Form1
         'Note: this MUST be done after cleaning the folders.
         log("MuiCache CleanUP")
         Try
-
             For Each regusers As String In My.Computer.Registry.Users.GetSubKeyNames
                 If Not checkvariables.isnullorwhitespace(regusers) Then
                     regkey = My.Computer.Registry.Users.OpenSubKey(regusers & "\software\classes\local settings\muicache", False)
@@ -2865,6 +2903,7 @@ Public Class Form1
                                                 If Not checkvariables.isnullorwhitespace(Keyname) Then
 
                                                     If Keyname.ToLower.Contains("nvstlink.exe") Or _
+                                                       Keyname.ToLower.Contains("gfexperience.exe") Or _
                                                        Keyname.ToLower.Contains("nvcpluir.dll") Then
                                                         Try
                                                             deletevalue(subregkey.OpenSubKey(childs, True), Keyname)
@@ -2876,6 +2915,33 @@ Public Class Form1
                                             Next
                                         End If
                                     Next
+                                End If
+                            End If
+                        Next
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+
+        Try
+            For Each regusers As String In My.Computer.Registry.Users.GetSubKeyNames
+                If Not checkvariables.isnullorwhitespace(regusers) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey(regusers & "\software\classes\local settings\software\microsoft\windows\shell\muicache", True)
+                    If regkey IsNot Nothing Then
+                    
+                        For Each Keyname As String In regkey.GetValueNames
+                            If Not checkvariables.isnullorwhitespace(Keyname) Then
+
+                                If Keyname.ToLower.Contains("nvstlink.exe") Or _
+                                   Keyname.ToLower.Contains("gfexperience.exe") Or _
+                                   Keyname.ToLower.Contains("nvcpluir.dll") Then
+                                    Try
+                                        deletevalue(regkey, Keyname)
+                                    Catch ex As Exception
+                                        log(ex.Message + ex.StackTrace)
+                                    End Try
                                 End If
                             End If
                         Next
@@ -3026,7 +3092,7 @@ Public Class Form1
         '--------------------------
         'End Firewall entry cleanup
         '--------------------------
-
+        log("End Firewall CleanUP")
         '--------------------------
         'Power Settings CleanUP
         '--------------------------
@@ -3087,11 +3153,13 @@ Public Class Form1
         '--------------------------
         'End Power Settings CleanUP
         '--------------------------
-
+        log("End Power Settings Cleanup")
 
         '--------------------------------
         'System environement path cleanup
         '--------------------------------
+
+
         If removephysx Then
             log("System environement CleanUP")
             Try
@@ -3138,6 +3206,8 @@ Public Class Form1
         '-------------------------------------
         'end system environement patch cleanup
         '-------------------------------------
+        log("End System environement path cleanup")
+
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
@@ -3279,30 +3349,32 @@ Public Class Form1
             Catch ex As Exception
             End Try
         End If
-        log("SharedDlls CleanUP")
+        'log("SharedDlls CleanUP")
 
         Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-         ("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetValueNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("nvidia corporation") Then
-                            Try
-                                deletevalue(regkey, child)
-                            Catch ex As Exception
-                                log(ex.Message + " SharedDLLS")
-                            End Try
+            If removephysx Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+             ("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("nvidia corporation\physx") Then
+                                Try
+                                    deletevalue(regkey, child)
+                                Catch ex As Exception
+                                    log(ex.Message + " SharedDLLS")
+                                End Try
+                            End If
                         End If
-                    End If
-                Next
+                    Next
+                End If
             End If
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
 
         Try
-            If IntPtr.Size = 8 Then
+            If IntPtr.Size = 8 AndAlso removephysx Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
              ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
                 If regkey IsNot Nothing Then
@@ -3662,12 +3734,10 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
-        log("ngenservice Clean")
-
-
         '----------------------
         '.net ngenservice clean
         '----------------------
+        log("ngenservice Clean")
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
             If regkey IsNot Nothing Then
@@ -3705,7 +3775,7 @@ Public Class Form1
                 log(ex.StackTrace)
             End Try
         End If
-
+        log("End ngenservice Clean")
         '-----------------------------
         'End of .net ngenservice clean
         '-----------------------------
@@ -3764,7 +3834,7 @@ Public Class Form1
         Catch ex As Exception
             log(ex.Message + ex.StackTrace)
         End Try
-
+        log("End Remove eventviewer stuff")
         '---------------------------
         'end remove event view stuff
         '---------------------------
@@ -3886,7 +3956,7 @@ Public Class Form1
         End If
 
         '-----------------------------
-        'Shell extensions\aprouved
+        'Shell extensions\aproved
         '-----------------------------
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
@@ -3975,6 +4045,40 @@ Public Class Form1
             deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True), "00nView")
         Catch ex As Exception
         End Try
+
+        'Cleaning of some "open with application" related to 3d vision
+        regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("jpsfile\shell\open\command", True)
+        If regkey IsNot Nothing Then
+            If (Not checkvariables.isnullorwhitespace(regkey.GetValue(""))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
+                ("nvstview") Then
+                Try
+                    deletesubregkey(My.Computer.Registry.ClassesRoot, "jpsfile")
+                Catch ex As Exception
+                End Try
+            End If
+        End If
+        regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("mpofile\shell\open\command", True)
+        If regkey IsNot Nothing Then
+            If (Not checkvariables.isnullorwhitespace(regkey.GetValue(""))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
+                ("nvstview") Then
+                Try
+                    deletesubregkey(My.Computer.Registry.ClassesRoot, "mpofile")
+                Catch ex As Exception
+                End Try
+            End If
+        End If
+
+        regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("pnsfile\shell\open\command", True)
+        If regkey IsNot Nothing Then
+            If (Not checkvariables.isnullorwhitespace(regkey.GetValue(""))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
+                ("nvstview") Then
+                Try
+                    deletesubregkey(My.Computer.Registry.ClassesRoot, "pnsfile")
+                Catch ex As Exception
+                End Try
+            End If
+        End If
+
 
         UpdateTextMethod("-End of Registry Cleaning")
 
