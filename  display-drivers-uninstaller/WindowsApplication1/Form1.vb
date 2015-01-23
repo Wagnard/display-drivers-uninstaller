@@ -4508,16 +4508,46 @@ Public Class Form1
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         CheckForIllegalCrossThreadCalls = True
-
+        Dim webAddress As String = ""
         'We try to create config.cfg if non existant.
         If Not (File.Exists(Application.StartupPath & "\settings\config.cfg")) Then
             myExe = Application.StartupPath & "\settings\config.cfg"
             System.IO.File.WriteAllBytes(myExe, My.Resources.config)
         End If
 
-        'we check if the donate is trigger here directly.
+        'we check if the donate/guru3dnvidia/gugu3damd/geforce/dduhome is trigger here directly.
         If settings.getconfig("donate") = True Then
-            Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+            webAddress = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+        End If
+
+        If settings.getconfig("guru3dnvidia") = True Then
+            webAddress = "http://forums.guru3d.com/showthread.php?t=379506"
+        End If
+
+        If settings.getconfig("guru3damd") = True Then
+
+            webAddress = "http://forums.guru3d.com/showthread.php?t=379505"
+        End If
+
+        If settings.getconfig("geforce") = True Then
+
+            webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
+        End If
+
+        If settings.getconfig("dduhome") = True Then
+            webAddress = "http://www.wagnardmobile.com"
+        End If
+
+        If settings.getconfig("svn") = True Then
+            webAddress = "https://code.google.com/p/display-drivers-uninstaller/source/list"
+        End If
+
+        If settings.getconfig("donate") = True Or _
+           settings.getconfig("guru3dnvidia") = True Or _
+           settings.getconfig("guru3damd") = True Or _
+           settings.getconfig("geforce") = True Or _
+           settings.getconfig("svn") = True Or _
+           settings.getconfig("dduhome") = True Then
 
             processinfo.FileName = webAddress
             processinfo.Arguments = Nothing
@@ -4529,6 +4559,11 @@ Public Class Form1
             process.Start()
 
             settings.setconfig("donate", "false")
+            settings.setconfig("guru3dnvidia", "false")
+            settings.setconfig("guru3damd", "false")
+            settings.setconfig("geforce", "false")
+            settings.setconfig("dduhome", "false")
+            settings.setconfig("svn", "false")
             Try
                 If System.IO.File.Exists(Application.StartupPath + "\DDU.bat") = True Then
                     System.IO.File.Delete(Application.StartupPath + "\DDU.bat")
@@ -5591,23 +5626,143 @@ Public Class Form1
     End Sub
 
     Private Sub VisitGuru3dNVIDIAThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dNVIDIAThreadToolStripMenuItem.Click
-        process.Start("http://forums.guru3d.com/showthread.php?t=379506")
+        'process.Start("http://forums.guru3d.com/showthread.php?t=379506")
+        settings.setconfig("guru3dnvidia", "true")
+
+        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+        ' process.Start(webAddress)
+        'Create the ddu.bat file
+        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+        sw.Flush()
+        sw.Close()
+
+        Dim UserTokenHandle As IntPtr = IntPtr.Zero
+        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+        Dim StartInfo As New WindowsApi.STARTUPINFOW
+        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+        If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+        Else
+            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+        End If
+
+        If Not UserTokenHandle = IntPtr.Zero Then
+            WindowsApi.CloseHandle(UserTokenHandle)
+        End If
     End Sub
 
     Private Sub VisitGuru3dAMDThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dAMDThreadToolStripMenuItem.Click
-        process.Start("http://forums.guru3d.com/showthread.php?t=379505")
+        ' process.Start("http://forums.guru3d.com/showthread.php?t=379505")
+        settings.setconfig("guru3damd", "true")
+
+        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+        ' process.Start(webAddress)
+        'Create the ddu.bat file
+        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+        sw.Flush()
+        sw.Close()
+
+        Dim UserTokenHandle As IntPtr = IntPtr.Zero
+        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+        Dim StartInfo As New WindowsApi.STARTUPINFOW
+        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+        If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+        Else
+            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+        End If
+
+        If Not UserTokenHandle = IntPtr.Zero Then
+            WindowsApi.CloseHandle(UserTokenHandle)
+        End If
     End Sub
 
     Private Sub VisitGeforceThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGeforceThreadToolStripMenuItem.Click
-        process.Start("https://forums.geforce.com/default/topic/550192/geforce-drivers/display-driver-uninstaller-ddu-v6-2/")
+        'process.Start("https://forums.geforce.com/default/topic/550192/geforce-drivers/display-driver-uninstaller-ddu-v6-2/")
+        settings.setconfig("geforce", "true")
+
+        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+        ' process.Start(webAddress)
+        'Create the ddu.bat file
+        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+        sw.Flush()
+        sw.Close()
+
+        Dim UserTokenHandle As IntPtr = IntPtr.Zero
+        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+        Dim StartInfo As New WindowsApi.STARTUPINFOW
+        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+        If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+        Else
+            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+        End If
+
+        If Not UserTokenHandle = IntPtr.Zero Then
+            WindowsApi.CloseHandle(UserTokenHandle)
+        End If
     End Sub
 
     Private Sub SVNToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SVNToolStripMenuItem.Click
-        process.Start("https://code.google.com/p/display-drivers-uninstaller/source/list")
+        ' process.Start("https://code.google.com/p/display-drivers-uninstaller/source/list")
+        settings.setconfig("svn", "true")
+
+        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+        ' process.Start(webAddress)
+        'Create the ddu.bat file
+        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+        sw.Flush()
+        sw.Close()
+
+        Dim UserTokenHandle As IntPtr = IntPtr.Zero
+        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+        Dim StartInfo As New WindowsApi.STARTUPINFOW
+        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+        If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+        Else
+            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+        End If
+
+        If Not UserTokenHandle = IntPtr.Zero Then
+            WindowsApi.CloseHandle(UserTokenHandle)
+        End If
     End Sub
 
     Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomepageToolStripMenuItem.Click
-        process.Start("http://www.wagnardmobile.com")
+        ' process.Start("http://www.wagnardmobile.com")
+        settings.setconfig("dduhome", "true")
+
+        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+        ' process.Start(webAddress)
+        'Create the ddu.bat file
+        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+        sw.Flush()
+        sw.Close()
+
+        Dim UserTokenHandle As IntPtr = IntPtr.Zero
+        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+        Dim StartInfo As New WindowsApi.STARTUPINFOW
+        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+        If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+        Else
+            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+        End If
+
+        If Not UserTokenHandle = IntPtr.Zero Then
+            WindowsApi.CloseHandle(UserTokenHandle)
+        End If
     End Sub
 
 
