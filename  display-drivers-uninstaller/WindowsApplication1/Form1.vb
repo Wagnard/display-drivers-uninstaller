@@ -495,25 +495,27 @@ Public Class Form1
 
         filePath = Environment.GetFolderPath _
             (Environment.SpecialFolder.ProgramFiles) + "\ATI"
-        For Each child As String In Directory.GetDirectories(filePath)
-            If checkvariables.isnullorwhitespace(child) = False Then
-                If child.ToLower.Contains("cim") Then
-                    Try
-                        deletedirectory(child)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(child)
-                    End Try
+        If Directory.Exists(filePath) Then
+            For Each child As String In Directory.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("cim") Then
+                        Try
+                            deletedirectory(child)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(child)
+                        End Try
+                    End If
                 End If
+            Next
+            If Directory.GetDirectories(filePath).Length = 0 Then
+                Try
+                    deletedirectory(filePath)
+                Catch ex As Exception
+                    log(ex.Message)
+                    TestDelete(filePath)
+                End Try
             End If
-        Next
-        If Directory.GetDirectories(filePath).Length = 0 Then
-            Try
-                deletedirectory(filePath)
-            Catch ex As Exception
-                log(ex.Message)
-                TestDelete(filePath)
-            End Try
         End If
         If Not Directory.Exists(filePath) Then
             CleanupEngine.shareddlls(filePath)
