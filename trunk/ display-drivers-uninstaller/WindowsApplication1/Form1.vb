@@ -1198,7 +1198,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("amdocl") Then
                             Try
-                                deletesubregkey(regkey, child)
+                                deletevalue(regkey, child)
                             Catch ex As Exception
                             End Try
                         End If
