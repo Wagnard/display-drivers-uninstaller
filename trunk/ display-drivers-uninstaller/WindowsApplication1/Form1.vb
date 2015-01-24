@@ -732,9 +732,9 @@ Public Class Form1
                     TestDelete(filePath)
                 End Try
             End If
-            If Not Directory.Exists(filePath) Then
-                CleanupEngine.shareddlls(filePath)
-            End If
+        End If
+        If Not Directory.Exists(filePath) Then
+            CleanupEngine.shareddlls(filePath)
         End If
 
         filePath = Environment.GetFolderPath _
@@ -763,9 +763,9 @@ Public Class Form1
                     TestDelete(filePath)
                 End Try
             End If
-            If Not Directory.Exists(filePath) Then
-                CleanupEngine.shareddlls(filePath)
-            End If
+        End If
+        If Not Directory.Exists(filePath) Then
+            CleanupEngine.shareddlls(filePath)
         End If
 
         For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(userpth))
@@ -794,9 +794,9 @@ Public Class Form1
                         TestDelete(filePath)
                     End Try
                 End If
-                If Not Directory.Exists(filePath) Then
-                    CleanupEngine.shareddlls(filePath)
-                End If
+            End If
+            If Not Directory.Exists(filePath) Then
+                CleanupEngine.shareddlls(filePath)
             End If
 
             filePath = filepaths + "\AppData\Local\ATI"
@@ -824,9 +824,9 @@ Public Class Form1
                         TestDelete(filePath)
                     End Try
                 End If
-                If Not Directory.Exists(filePath) Then
-                    CleanupEngine.shareddlls(filePath)
-                End If
+            End If
+            If Not Directory.Exists(filePath) Then
+                CleanupEngine.shareddlls(filePath)
             End If
         Next
 
@@ -886,25 +886,23 @@ Public Class Form1
                     End If
                 End If
             Next
-            Try
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        deletedirectory(filePath)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
-            Catch ex As Exception
-            End Try
+            If Directory.GetDirectories(filePath).Length = 0 Then
+                Try
+                    deletedirectory(filePath)
+                Catch ex As Exception
+                    log(ex.Message)
+                    TestDelete(filePath)
+                End Try
+            End If
         End If
         If Not Directory.Exists(filePath) Then
             CleanupEngine.shareddlls(filePath)
         End If
         'Cleaning the CCC assemblies.
 
-        Try
-            filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_64"
+
+        filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_64"
+        If Directory.Exists(filePath) Then
             For Each child As String In Directory.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.EndsWith("\mom") Or _
@@ -940,9 +938,8 @@ Public Class Form1
                     End If
                 End If
             Next
-        Catch ex As Exception
-            log(ex.Message)
-        End Try
+        End If
+
     End Sub
     Private Sub cleanamd()
         UpdateTextMethod(UpdateTextMethodmessage("2"))
@@ -2341,10 +2338,10 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        Try
-            filePath = Environment.GetFolderPath _
-      (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 
+        filePath = Environment.GetFolderPath _
+  (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
+        If Directory.Exists(filePath) Then
             For Each child As String In Directory.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("control panel client") Or _
@@ -2435,31 +2432,31 @@ Public Class Form1
                     TestDelete(filePath)
                 End Try
             End If
-            If Not Directory.Exists(filePath) Then
-                CleanupEngine.shareddlls(filePath)
-            End If
-        Catch ex As Exception
-        End Try
+        End If
+        If Not Directory.Exists(filePath) Then
+            CleanupEngine.shareddlls(filePath)
+        End If
 
-        Try
 
-            filePath = Environment.GetFolderPath _
-                (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
+
+
+        filePath = Environment.GetFolderPath _
+            (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
+        If Directory.Exists(filePath) Then
             Try
                 deletedirectory(filePath)
             Catch ex As Exception
             End Try
-            If Not Directory.Exists(filePath) Then
-                CleanupEngine.shareddlls(filePath)
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
+        End If
+        If Not Directory.Exists(filePath) Then
+            CleanupEngine.shareddlls(filePath)
+        End If
 
-        Try
-            If IntPtr.Size = 8 Then
-                filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
+
+        If IntPtr.Size = 8 Then
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
+            If Directory.Exists(filePath) Then
                 For Each child As String In Directory.GetDirectories(filePath)
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("3d vision") Or _
@@ -2506,28 +2503,28 @@ Public Class Form1
                         TestDelete(filePath)
                     End Try
                 End If
-                If Not Directory.Exists(filePath) Then
-                    CleanupEngine.shareddlls(filePath)
-                End If
             End If
-        Catch ex As Exception
-        End Try
+            If Not Directory.Exists(filePath) Then
+                CleanupEngine.shareddlls(filePath)
+            End If
+        End If
 
-        Try
-            If IntPtr.Size = 8 Then
-                filePath = Environment.GetFolderPath _
-                    (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
+
+
+        If IntPtr.Size = 8 Then
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
+            If Directory.Exists(filePath) Then
                 Try
                     deletedirectory(filePath)
                 Catch ex As Exception
                 End Try
-            If Not Directory.Exists(filePath) Then
-                    CleanupEngine.shareddlls(filePath)
-                End If
             End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
+            If Not Directory.Exists(filePath) Then
+                CleanupEngine.shareddlls(filePath)
+            End If
+        End If
+
 
         CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
 
