@@ -2891,12 +2891,22 @@ Public Class Form1
             End Try
         End If
 
-        If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global\CoprocManager\OptimusEnhancements", False) IsNot Nothing Then
+        If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global", False) IsNot Nothing Then
             Try
-                deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\Global\CoprocManager\OptimusEnhancements")
+                deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation\global")
             Catch ex As Exception
                 log(ex.Message & "pnp resources khronos")
             End Try
+        End If
+
+        If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation", False) IsNot Nothing Then
+            If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation", False).SubKeyCount = 0 Then
+                Try
+                    deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation")
+                Catch ex As Exception
+                    log(ex.Message & "pnp resources khronos")
+                End Try
+            End If
         End If
 
         If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\Display\shellex\PropertySheetHandlers\NVIDIA CPL Extension", False) IsNot Nothing Then
@@ -3440,6 +3450,7 @@ Public Class Form1
                         child.ToLower.Contains("_display.update") Or _
                         child.ToLower.Contains("_display.nview") Or _
                         child.ToLower.Contains("_display.nvwmi") Or _
+                        child.ToLower.Contains("_display.gamemonitor") Or _
                         child.ToLower.Contains("_nvidia.update") Or _
                         child.ToLower.Contains("_gfexperience") Or _
                         child.ToLower.Contains("_hdaudio.driver") Or _
