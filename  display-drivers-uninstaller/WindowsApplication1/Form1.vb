@@ -2035,6 +2035,11 @@ Public Class Form1
                 appproc(i).Kill()
             Next i
 
+            appproc = process.GetProcessesByName("nvgamemonitor")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
+
             appproc = process.GetProcessesByName("nvstreamsvc")
             For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
@@ -2363,6 +2368,7 @@ Public Class Form1
                        child.ToLower.Contains("shield") Or _
                        child.ToLower.Contains("nview") Or _
                        child.ToLower.Contains("nvidia wmi provider") Or _
+                       child.ToLower.Contains("gamemonitor") Or _
                        child.ToLower.Contains("update core") Then
 
                         If (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
@@ -2384,6 +2390,7 @@ Public Class Form1
                                    child2.ToLower.Contains("display.nvirusb") Or _
                                    child2.ToLower.Contains("display.physx") Or _
                                    child2.ToLower.Contains("display.update") Or _
+                                   child2.ToLower.Contains("display.gamemonitor") Or _
                                    child2.ToLower.Contains("gfexperience") Or _
                                    child2.ToLower.Contains("nvidia.update") Or _
                                    child2.ToLower.Contains("installer2\installer") Or _
@@ -2487,9 +2494,9 @@ Public Class Form1
                                         TestDelete(child)
                                     End Try
                                 End If
-                                If Not Directory.Exists(child) Then
-                                    CleanupEngine.shareddlls(child)
-                                End If
+                            End If
+                            If Not Directory.Exists(child) Then
+                                CleanupEngine.shareddlls(child)
                             End If
                         End If
                     End If
@@ -2811,6 +2818,14 @@ Public Class Form1
         Catch ex As Exception
             log(ex.Message + ex.StackTrace)
         End Try
+
+        If removephysx Then
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation\physx"
+            CleanupEngine.shareddlls(filePath)
+            filePath = Environment.GetFolderPath _
+                (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation\physx"
+        End If
 
     End Sub
 
@@ -3137,30 +3152,6 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
-
-        Try
-            If removephysx Then
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                        ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetValueNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("nvidia corporation\physx") Then
-                                Try
-                                    deletevalue(regkey, child)
-                                Catch ex As Exception
-
-                                    log(ex.Message + " HKLM..CU\Installer\Folders")
-                                End Try
-                            End If
-                        End If
-                    Next
-                End If
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
         'remove opencl registry Khronos
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Khronos\OpenCL\Vendors", True)
@@ -3186,28 +3177,26 @@ Public Class Form1
         End Try
 
         If IntPtr.Size = 8 Then
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Khronos\OpenCL\Vendors", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetValueNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("nvopencl") Then
-                                Try
-                                    deletevalue(regkey, child)
-                                Catch ex As Exception
-                                End Try
-                            End If
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Khronos\OpenCL\Vendors", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetValueNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("nvopencl") Then
+                            Try
+                                deletevalue(regkey, child)
+                            Catch ex As Exception
+                            End Try
                         End If
-                    Next
-                    If regkey.GetValueNames().Length = 0 Then
-                        Try
-                            deletesubregkey(My.Computer.Registry.LocalMachine, "Software\Wow6432Node\Khronos")
-                        Catch ex As Exception
-                        End Try
                     End If
+                Next
+                If regkey.GetValueNames().Length = 0 Then
+                    Try
+                        deletesubregkey(My.Computer.Registry.LocalMachine, "Software\Wow6432Node\Khronos")
+                    Catch ex As Exception
+                    End Try
                 End If
-            Catch ex As Exception
-            End Try
+            End If
+
         End If
 
 
@@ -3253,42 +3242,87 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
-        Try
-            regkey = My.Computer.Registry.Users.OpenSubKey(".DEFAULT\Software", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("nvidia corporation") Then
-                            For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-                                If checkvariables.isnullorwhitespace(child2) = False Then
-                                    If child2.ToLower.Contains("global") Or _
-                                       child2.ToLower.Contains("nvbackend") Or _
-                                       child2.ToLower.Contains("nvidia update core") Or _
-                                        child2.ToLower.Contains("nvcontrolpanel2") Or _
-                                        child2.ToLower.Contains("nvidia control panel") Then
-                                        Try
-                                            deletesubregkey(regkey.OpenSubKey(child, True), child2)
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
+
+        regkey = My.Computer.Registry.Users.OpenSubKey(".DEFAULT\Software", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetSubKeyNames()
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("nvidia corporation") Then
+                        For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child2) = False Then
+                                If child2.ToLower.Contains("global") Or _
+                                   child2.ToLower.Contains("nvbackend") Or _
+                                   child2.ToLower.Contains("nvidia update core") Or _
+                                    child2.ToLower.Contains("nvcontrolpanel2") Or _
+                                    child2.ToLower.Contains("nvidia control panel") Then
+                                    Try
+                                        deletesubregkey(regkey.OpenSubKey(child, True), child2)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
-                            Next
-                            If regkey.OpenSubKey(child).SubKeyCount = 0 Then
-                                Try
-                                    deletesubregkey(regkey, child)
-                                Catch ex As Exception
-                                End Try
                             End If
+                        Next
+                        If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+                            Try
+                                deletesubregkey(regkey, child)
+                            Catch ex As Exception
+                            End Try
                         End If
                     End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
+                End If
+            Next
+        End If
 
-        Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetSubKeyNames()
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("ageia technologies") Then
+                        If removephysx Then
+                            Try
+                                deletesubregkey(regkey, child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                    If child.ToLower.Contains("nvidia corporation") Then
+                        For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child2) = False Then
+                                If child2.ToLower.Contains("global") Or _
+                                   child2.ToLower.Contains("installer") Or _
+                                   child2.ToLower.Contains("logging") Or _
+                                    child2.ToLower.Contains("installer2") Or _
+                                    child2.ToLower.Contains("nvidia update core") Or _
+                                    child2.ToLower.Contains("nvcontrolpanel") Or _
+                                    child2.ToLower.Contains("nvcontrolpanel2") Or _
+                                    child2.ToLower.Contains("nvstream") Or _
+                                    child2.ToLower.Contains("nvstreamc") Or _
+                                    child2.ToLower.Contains("nvstreamsrv") Or _
+                                    child2.ToLower.Contains("uxd") Or _
+                                    child2.ToLower.Contains("nvtray") Then
+                                    Try
+                                        deletesubregkey(regkey.OpenSubKey(child, True), child2)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            End If
+                        Next
+                        If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+                            Try
+                                deletesubregkey(regkey, child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+
+
+        If IntPtr.Size = 8 Then
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
@@ -3301,21 +3335,24 @@ Public Class Form1
                             For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
                                 If checkvariables.isnullorwhitespace(child2) = False Then
                                     If child2.ToLower.Contains("global") Or _
-                                       child2.ToLower.Contains("installer") Or _
-                                       child2.ToLower.Contains("logging") Or _
-                                        child2.ToLower.Contains("installer2") Or _
-                                        child2.ToLower.Contains("nvidia update core") Or _
-                                        child2.ToLower.Contains("nvcontrolpanel") Or _
-                                        child2.ToLower.Contains("nvcontrolpanel2") Or _
-                                        child2.ToLower.Contains("nvstream") Or _
-                                        child2.ToLower.Contains("nvstreamc") Or _
-                                        child2.ToLower.Contains("nvstreamsrv") Or _
-                                        child2.ToLower.Contains("uxd") Or _
-                                        child2.ToLower.Contains("nvtray") Then
-                                        Try
-                                            deletesubregkey(regkey.OpenSubKey(child, True), child2)
-                                        Catch ex As Exception
-                                        End Try
+                                        child2.ToLower.Contains("logging") Or _
+                                       child2.ToLower.Contains("installer2") Or _
+                                       child2.ToLower.Contains("physx") Then
+                                        If removephysx Then
+                                            Try
+                                                deletesubregkey(regkey.OpenSubKey(child, True), child2)
+                                            Catch ex As Exception
+                                            End Try
+                                        Else
+                                            If child2.ToLower.Contains("physx") Then
+                                                'do nothing
+                                            Else
+                                                Try
+                                                    deletesubregkey(regkey.OpenSubKey(child, True), child2)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
+                                        End If
                                     End If
                                 End If
                             Next
@@ -3329,64 +3366,15 @@ Public Class Form1
                     End If
                 Next
             End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
+        End If
 
-        Try
-            If IntPtr.Size = 8 Then
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("ageia technologies") Then
-                                If removephysx Then
-                                    deletesubregkey(regkey, child)
-                                End If
-                            End If
-                            If child.ToLower.Contains("nvidia corporation") Then
-                                For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-                                    If checkvariables.isnullorwhitespace(child2) = False Then
-                                        If child2.ToLower.Contains("global") Or _
-                                            child2.ToLower.Contains("logging") Or _
-                                           child2.ToLower.Contains("installer2") Or _
-                                           child2.ToLower.Contains("physx") Then
-                                            If removephysx Then
-                                                Try
-                                                    deletesubregkey(regkey.OpenSubKey(child, True), child2)
-                                                Catch ex As Exception
-                                                End Try
-                                            Else
-                                                If child2.ToLower.Contains("physx") Then
-                                                    'do nothing
-                                                Else
-                                                    deletesubregkey(regkey.OpenSubKey(child, True), child2)
-                                                End If
-                                            End If
-                                        End If
-                                    End If
-                                Next
-                                If regkey.OpenSubKey(child).SubKeyCount = 0 Then
-                                    Try
-                                        deletesubregkey(regkey, child)
-                                    Catch ex As Exception
-                                    End Try
-                                End If
-                            End If
-                        End If
-                    Next
-                End If
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
 
-        Try
-            If IntPtr.Size = 8 Then
 
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                    ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+        If IntPtr.Size = 8 Then
 
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+            If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("display.3dvision") Or _
@@ -3397,6 +3385,7 @@ Public Class Form1
                             child.ToLower.Contains("_display.nvirusb") Or _
                             child.ToLower.Contains("_display.physx") Or _
                             child.ToLower.Contains("_display.update") Or _
+                            child.ToLower.Contains("_display.gamemonitor") Or _
                             child.ToLower.Contains("_gfexperience") Or _
                             child.ToLower.Contains("_hdaudio.driver") Or _
                             child.ToLower.Contains("_installer") Or _
@@ -3432,13 +3421,13 @@ Public Class Form1
                     Next
                 End If
             End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
+        End If
 
-        Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-          ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+
+
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+      ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+        If regkey IsNot Nothing Then
             For Each child As String In regkey.GetSubKeyNames()
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("display.3dvision") Or _
@@ -3486,13 +3475,13 @@ Public Class Form1
                     End If
                 Next
             End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
+        End If
 
-        Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-          ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
+
+
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+      ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
+        If regkey IsNot Nothing Then
             For Each child As String In regkey.GetSubKeyNames()
                 If checkvariables.isnullorwhitespace(child) = False Then
                     subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -3512,50 +3501,62 @@ Public Class Form1
                     End If
                 End If
             Next
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
+        End If
 
-        Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-          ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+      ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetSubKeyNames()
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\" & child, False)
-                        If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
-                                wantedvalue = subregkey.GetValue("").ToString
-                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                    If wantedvalue.ToLower.Contains("nvidia control panel") Or _
-                                       wantedvalue.ToLower.Contains("nvidia nview desktop manager") Then
-                                        Try
-                                            deletesubregkey(regkey, child)
-                                        Catch ex As Exception
-                                        End Try
-                                        'special case only to nvidia afaik. there i a clsid for a control pannel that link from namespace.
-                                        Try
-                                            deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True), child)
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
+                    If subregkey IsNot Nothing Then
+                        If checkvariables.isnullorwhitespace(subregkey.GetValue("")) = False Then
+                            wantedvalue = subregkey.GetValue("").ToString
+                            If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                If wantedvalue.ToLower.Contains("nvidia control panel") Or _
+                                   wantedvalue.ToLower.Contains("nvidia nview desktop manager") Then
+                                    Try
+                                        deletesubregkey(regkey, child)
+                                    Catch ex As Exception
+                                    End Try
+                                    'special case only to nvidia afaik. there i a clsid for a control pannel that link from namespace.
+                                    Try
+                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True), child)
+                                    Catch ex As Exception
+                                    End Try
                                 End If
                             End If
                         End If
                     End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
+                End If
+            Next
+        End If
+
 
         '----------------------
         '.net ngenservice clean
         '----------------------
         log("ngenservice Clean")
-        Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
+
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetSubKeyNames()
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("gfexperience.exe") Then
+                        Try
+                            deletesubregkey(regkey, child)
+                        Catch ex As Exception
+                        End Try
+                    End If
+                End If
+            Next
+        End If
+
+        If IntPtr.Size = 8 Then
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
@@ -3568,28 +3569,6 @@ Public Class Form1
                     End If
                 Next
             End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
-        If IntPtr.Size = 8 Then
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("gfexperience.exe") Then
-                                Try
-                                    deletesubregkey(regkey, child)
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                log(ex.StackTrace)
-            End Try
         End If
         log("End ngenservice Clean")
         '-----------------------------
@@ -3599,24 +3578,35 @@ Public Class Form1
         '-----------------------------
         'Mozilla plugins
         '-----------------------------
-        If IntPtr.Size = 8 Then
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\MozillaPlugins", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("nvidia.com/3dvision") Then
-                                Try
-                                    deletesubregkey(regkey, child)
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        End If
-                    Next
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\MozillaPlugins", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetSubKeyNames()
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.Contains("nvidia.com/3dvision") Then
+                        Try
+                            deletesubregkey(regkey, child)
+                        Catch ex As Exception
+                        End Try
+                    End If
                 End If
-            Catch ex As Exception
-                log(ex.StackTrace)
-            End Try
+            Next
+        End If
+
+
+        If IntPtr.Size = 8 Then
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\MozillaPlugins", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("nvidia.com/3dvision") Then
+                            Try
+                                deletesubregkey(regkey, child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+            End If
         End If
 
 
@@ -3624,32 +3614,30 @@ Public Class Form1
         'remove event view stuff
         '-----------------------
         log("Remove eventviewer stuff")
-        Try
-            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
-            If subregkey IsNot Nothing Then
-                For Each child2 As String In subregkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child2) = False Then
-                        If child2.ToLower.Contains("controlset") Then
-                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog\Application", True)
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetSubKeyNames()
-                                    If checkvariables.isnullorwhitespace(child) = False Then
-                                        If child.ToLower.StartsWith("nvidia update") Or _
-                                            child.ToLower.StartsWith("nvidia opengl driver") Or _
-                                            child.ToLower.StartsWith("nvwmi") Or _
-                                            child.ToLower.StartsWith("nview") Then
-                                            deletesubregkey(regkey, child)
-                                        End If
+
+        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+        If subregkey IsNot Nothing Then
+            For Each child2 As String In subregkey.GetSubKeyNames()
+                If checkvariables.isnullorwhitespace(child2) = False Then
+                    If child2.ToLower.Contains("controlset") Then
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog\Application", True)
+                        If regkey IsNot Nothing Then
+                            For Each child As String In regkey.GetSubKeyNames()
+                                If checkvariables.isnullorwhitespace(child) = False Then
+                                    If child.ToLower.StartsWith("nvidia update") Or _
+                                        child.ToLower.StartsWith("nvidia opengl driver") Or _
+                                        child.ToLower.StartsWith("nvwmi") Or _
+                                        child.ToLower.StartsWith("nview") Then
+                                        deletesubregkey(regkey, child)
                                     End If
-                                Next
-                            End If
+                                End If
+                            Next
                         End If
                     End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.Message + ex.StackTrace)
-        End Try
+                End If
+            Next
+        End If
+
         log("End Remove eventviewer stuff")
         '---------------------------
         'end remove event view stuff
@@ -3658,19 +3646,21 @@ Public Class Form1
         '---------------------------
         'virtual store
         '---------------------------
-        Try
-            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
-            If regkey IsNot Nothing Then
+
+        regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
+        If regkey IsNot Nothing Then
+            Try
+                deletesubregkey(regkey, "Global")
+            Catch ex As Exception
+            End Try
+            If regkey.SubKeyCount = 0 Then
                 Try
-                    deletesubregkey(regkey, "Global")
-                    If regkey.SubKeyCount = 0 Then
-                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE", True), "NVIDIA Corporation")
-                    End If
+                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE", True), "NVIDIA Corporation")
                 Catch ex As Exception
                 End Try
             End If
-        Catch ex As Exception
-        End Try
+        End If
+
         Try
             For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
                 If Not checkvariables.isnullorwhitespace(users) Then
@@ -3678,16 +3668,20 @@ Public Class Form1
                     If regkey IsNot Nothing Then
                         Try
                             deletesubregkey(regkey, "Global")
-                            If regkey.SubKeyCount = 0 Then
-                                deletesubregkey(My.Computer.Registry.Users.OpenSubKey(users & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE", True), "NVIDIA Corporation")
-                            End If
                         Catch ex As Exception
                         End Try
+                        If regkey.SubKeyCount = 0 Then
+                            Try
+                                deletesubregkey(My.Computer.Registry.Users.OpenSubKey(users & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE", True), "NVIDIA Corporation")
+                            Catch ex As Exception
+                            End Try
+                        End If
                     End If
                 End If
             Next
         Catch ex As Exception
         End Try
+
         Try
             For Each child As String In My.Computer.Registry.Users.GetSubKeyNames()
                 If Not checkvariables.isnullorwhitespace(child) Then
@@ -3731,6 +3725,17 @@ Public Class Form1
                     deletevalue(regkey, "ShadowPlay")
                 Catch ex As Exception
                     log(ex.Message + " ShadowPlay")
+                End Try
+
+                Try
+                    deletevalue(regkey, "StereoLinksInstall")
+                Catch ex As Exception
+                    log(ex.Message + " StereoLinksInstall")
+                End Try
+                Try
+                    deletevalue(regkey, "NvGameMonitor")
+                Catch ex As Exception
+                    log(ex.Message + " NvGameMonitor")
                 End Try
             End If
         Catch ex As Exception
@@ -3796,46 +3801,42 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
-        Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Extended Properties", False)
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        For Each childs As String In regkey.OpenSubKey(child).GetValueNames()
-                            If Not checkvariables.isnullorwhitespace(childs) Then
-                                If childs.ToLower.Contains("nvcpl.cpl") Then
-                                    Try
-                                        deletevalue(regkey.OpenSubKey(child, True), childs)
-                                    Catch ex As Exception
-                                    End Try
-                                End If
-                            End If
-                        Next
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
 
-        If IntPtr.Size = 8 Then
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetValueNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If regkey.GetValue(child).ToString.ToLower.Contains("nvcpl desktopcontext class") Then
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Extended Properties", False)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetSubKeyNames()
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    For Each childs As String In regkey.OpenSubKey(child).GetValueNames()
+                        If Not checkvariables.isnullorwhitespace(childs) Then
+                            If childs.ToLower.Contains("nvcpl.cpl") Then
                                 Try
-                                    deletevalue(regkey, child)
+                                    deletevalue(regkey.OpenSubKey(child, True), childs)
                                 Catch ex As Exception
                                 End Try
                             End If
                         End If
                     Next
                 End If
-            Catch ex As Exception
-                log(ex.StackTrace)
-            End Try
+            Next
+        End If
+
+
+        If IntPtr.Size = 8 Then
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetValueNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If regkey.GetValue(child).ToString.ToLower.Contains("nvcpl desktopcontext class") Then
+                            Try
+                                deletevalue(regkey, child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+            End If
+
         End If
         '-----------------------------
         'End Shell extensions\aprouved
