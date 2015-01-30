@@ -4463,6 +4463,11 @@ Public Class Form1
 
             Case "6.3"
                 Label2.Text = "Windows 8.1"
+                If Not checkvariables.isnullorwhitespace(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber")) Then
+                    If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber") = "10" Then
+                        Label2.Text = "Windows 10"
+                    End If
+                End If
                 win8higher = True
                 Button1.Enabled = True
                 Button2.Enabled = True
@@ -4685,7 +4690,7 @@ Public Class Form1
 
             Dim arch As Boolean
 
-            version = My.Computer.Info.OSVersion
+
             Me.ComboBox1.SelectedIndex = 0
             If IntPtr.Size = 8 Then
 
@@ -4874,6 +4879,10 @@ Public Class Form1
                                         Else
                                             If Not checkvariables.isnullorwhitespace(subregkey.GetValue("HardwareInformation.BiosString")) Then
                                                 currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
+                                                For i As Integer = 0 To 9
+                                                    'this is a little fix to correctly show the vbios version info
+                                                    currentdriverversion = currentdriverversion.Replace("." + i.ToString + ".", ".0" + i.ToString + ".")
+                                                Next
                                                 UpdateTextMethod("Vbios :" + " " + currentdriverversion)
                                                 log("Vbios : " + currentdriverversion)
                                             End If
@@ -6290,12 +6299,14 @@ Public Class Form1
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+
         If version >= "6.1" Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
                 regkey.SetValue("SearchOrderConfig", 1)
                 MsgBox(msgboxmessage("10"))
             Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
             End Try
         End If
         If version >= "6.0" And version < "6.1" Then
@@ -6304,6 +6315,7 @@ Public Class Form1
                 regkey.SetValue("DontSearchWindowsUpdate", 0)
                 MsgBox(msgboxmessage("10"))
             Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
             End Try
         End If
     End Sub
