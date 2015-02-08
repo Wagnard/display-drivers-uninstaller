@@ -37,6 +37,6 @@ HD аудіо адаптери видалено!
 Кінець очищення  currentuser ,installer\products
 Очищення process/services...
 Очищення process/services завершено
-Deleted.
-Value removed.
-File Deleted.
+Видалено.
+Значення видалено.
+Файл видалено.
