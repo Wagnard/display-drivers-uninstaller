@@ -584,6 +584,7 @@ Public Class Form1
                     For Each child As String In Directory.GetDirectories(filePath)
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("ati.ace") Or _
+                                child.ToLower.Contains("application profiles") Or _
                                 child.ToLower.Contains("hydravision") Then
                                 Try
                                     deletedirectory(child)
@@ -631,6 +632,19 @@ Public Class Form1
                 Catch ex As Exception
                     log(ex.Message + "AMD APP")
                     TestDelete(filePath)
+                End Try
+            End If
+            If Not Directory.Exists(filePath) Then
+                CleanupEngine.shareddlls(filePath)
+            End If
+
+            filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
+            If Directory.Exists(filePath) Then
+                Try
+                    TestDelete(filePath)
+                Catch ex As Exception
+                    log(ex.Message + "SteadyVideo testdelete")
                 End Try
             End If
             If Not Directory.Exists(filePath) Then
@@ -1745,7 +1759,8 @@ Public Class Form1
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
                         If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("ace") Then
+                            If child.ToLower.Contains("ace") Or _
+                               child.ToLower.Contains("appprofiles") Then
                                 Try
                                     deletesubregkey(regkey, child)
                                 Catch ex As Exception
@@ -2770,6 +2785,7 @@ Public Class Form1
                                                 If Not checkvariables.isnullorwhitespace(Keyname) Then
 
                                                     If Keyname.ToLower.Contains("nvstlink.exe") Or _
+                                                        Keyname.ToLower.Contains("nvstview.exe") Or _
                                                        Keyname.ToLower.Contains("gfexperience.exe") Or _
                                                        Keyname.ToLower.Contains("nvcpluir.dll") Then
                                                         Try
@@ -2802,6 +2818,7 @@ Public Class Form1
                             If Not checkvariables.isnullorwhitespace(Keyname) Then
 
                                 If Keyname.ToLower.Contains("nvstlink.exe") Or _
+                                    Keyname.ToLower.Contains("nvstview.exe") Or _
                                    Keyname.ToLower.Contains("gfexperience.exe") Or _
                                    Keyname.ToLower.Contains("nvcpluir.dll") Then
                                     Try
@@ -5083,40 +5100,67 @@ Public Class Form1
                             'do nothing and continue without safe mode
                         ElseIf resultmsgbox = DialogResult.Yes Then
 
+                            If Not win8higher Then
+                                Dim setbcdedit As New ProcessStartInfo
+                                setbcdedit.FileName = "cmd.exe"
+                                setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
+                                setbcdedit.UseShellExecute = False
+                                setbcdedit.CreateNoWindow = True
+                                setbcdedit.RedirectStandardOutput = False
+                                Dim processstopservice As New Process
+                                processstopservice.StartInfo = setbcdedit
+                                processstopservice.Start()
+                                processstopservice.WaitForExit()
+                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+                                If regkey IsNot Nothing Then
+                                    Try
+                                        regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
+                                        regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+                                    Catch ex As Exception
+                                        log(ex.Message & ex.StackTrace)
+                                    End Try
 
-                            Dim setbcdedit As New ProcessStartInfo
-                            setbcdedit.FileName = "cmd.exe"
-                            setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
-                            setbcdedit.UseShellExecute = False
-                            setbcdedit.CreateNoWindow = True
-                            setbcdedit.RedirectStandardOutput = False
-                            Dim processstopservice As New Process
-                            processstopservice.StartInfo = setbcdedit
-                            processstopservice.Start()
-                            processstopservice.WaitForExit()
-                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-                            If regkey IsNot Nothing Then
-                                Try
-                                    regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
-                                    regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
-                                Catch ex As Exception
-                                    log(ex.Message & ex.StackTrace)
-                                End Try
+                                End If
+                                preventclose = False
+                                Me.TopMost = False
+                                processinfo.FileName = "shutdown"
+                                processinfo.Arguments = "/r /t 0"
+                                processinfo.WindowStyle = ProcessWindowStyle.Hidden
+                                processinfo.UseShellExecute = True
+                                processinfo.CreateNoWindow = True
+                                processinfo.RedirectStandardOutput = False
 
+                                process.StartInfo = processinfo
+                                process.Start()
+                                Me.Close()
+
+                                Exit Sub
+                            Else
+                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+                                If regkey IsNot Nothing Then
+                                    Try
+                                        regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
+                                        regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+                                    Catch ex As Exception
+                                        log(ex.Message & ex.StackTrace)
+                                    End Try
+
+                                End If
+                                preventclose = False
+                                Me.TopMost = False
+                                log("Restarting Computer ")
+                                processinfo.FileName = "shutdown"
+                                processinfo.Arguments = "/r /o /t 0"
+                                processinfo.WindowStyle = ProcessWindowStyle.Hidden
+                                processinfo.UseShellExecute = True
+                                processinfo.CreateNoWindow = True
+                                processinfo.RedirectStandardOutput = False
+
+                                process.StartInfo = processinfo
+                                process.Start()
+                                Invoke(Sub() Me.Close())
+                                Exit Sub
                             End If
-                            preventclose = False
-                            Me.TopMost = False
-                            processinfo.FileName = "shutdown"
-                            processinfo.Arguments = "/r /t 0"
-                            processinfo.WindowStyle = ProcessWindowStyle.Hidden
-                            processinfo.UseShellExecute = True
-                            processinfo.CreateNoWindow = True
-                            processinfo.RedirectStandardOutput = False
-
-                            process.StartInfo = processinfo
-                            process.Start()
-                            Me.Close()
-                            Exit Sub
                         End If
                     Else
                         MsgBox(msgboxmessage("7"))
