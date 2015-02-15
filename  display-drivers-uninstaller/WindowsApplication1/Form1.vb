@@ -4871,7 +4871,7 @@ Public Class Form1
                                         UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
                                         log("GPU #" + child + " Detected : " + currentdriverversion)
                                     Else
-                                        If (Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc"))) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
+                                        If (subregkey.GetValue("DriverDesc") IsNot Nothing) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
                                             UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
                                             log("GPU #" + child + " Detected : " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
                                         Else
