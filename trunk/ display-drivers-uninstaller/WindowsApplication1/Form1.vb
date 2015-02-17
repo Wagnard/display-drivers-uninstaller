@@ -2394,6 +2394,9 @@ Public Class Form1
                                 TestDelete(child)
                             End Try
                         End If
+                        If Not Directory.Exists(child) Then
+                            CleanupEngine.shareddlls(child)
+                        End If
                     End If
                     If child.ToLower.Contains("installer2") Then
                         For Each child2 As String In Directory.GetDirectories(child)
@@ -3326,12 +3329,25 @@ Public Class Form1
                                     child2.ToLower.Contains("nvstream") Or _
                                     child2.ToLower.Contains("nvstreamc") Or _
                                     child2.ToLower.Contains("nvstreamsrv") Or _
+                                    child2.ToLower.Contains("physx_systemsoftware") Or _
+                                    child2.ToLower.Contains("physxupdateloader") Or _
                                     child2.ToLower.Contains("uxd") Or _
                                     child2.ToLower.Contains("nvtray") Then
-                                    Try
-                                        deletesubregkey(regkey.OpenSubKey(child, True), child2)
-                                    Catch ex As Exception
-                                    End Try
+                                    If removephysx Then
+                                        Try
+                                            deletesubregkey(regkey.OpenSubKey(child, True), child2)
+                                        Catch ex As Exception
+                                        End Try
+                                    Else
+                                        If child2.ToLower.Contains("physx") Then
+                                            'do nothing
+                                        Else
+                                            Try
+                                                deletesubregkey(regkey.OpenSubKey(child, True), child2)
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                    End If
                                 End If
                             End If
                         Next
@@ -3363,6 +3379,8 @@ Public Class Form1
                                 If checkvariables.isnullorwhitespace(child2) = False Then
                                     If child2.ToLower.Contains("global") Or _
                                         child2.ToLower.Contains("logging") Or _
+                                        child2.ToLower.Contains("physx_systemsoftware") Or _
+                                        child2.ToLower.Contains("physxupdateloader") Or _
                                        child2.ToLower.Contains("installer2") Or _
                                        child2.ToLower.Contains("physx") Then
                                         If removephysx Then
