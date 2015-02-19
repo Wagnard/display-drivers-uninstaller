@@ -3684,6 +3684,30 @@ Public Class Form1
             Next
         End If
 
+        subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+        If subregkey IsNot Nothing Then
+            For Each child2 As String In subregkey.GetSubKeyNames()
+                If checkvariables.isnullorwhitespace(child2) = False Then
+                    If child2.ToLower.Contains("controlset") Then
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog\System", True)
+                        If regkey IsNot Nothing Then
+                            For Each child As String In regkey.GetSubKeyNames()
+                                If checkvariables.isnullorwhitespace(child) = False Then
+                                    If child.ToLower.StartsWith("nvidia update") Or _
+                                        child.ToLower.StartsWith("nvidia opengl driver") Or _
+                                        child.ToLower.StartsWith("nvwmi") Or _
+                                        child.ToLower.StartsWith("nv") Or _
+                                        child.ToLower.StartsWith("nview") Then
+                                        deletesubregkey(regkey, child)
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
         log("End Remove eventviewer stuff")
         '---------------------------
         'end remove event view stuff
@@ -3755,6 +3779,18 @@ Public Class Form1
                     deletevalue(regkey, "Nvtmru")
                 Catch ex As Exception
                     log(ex.Message + " Nvtmru")
+                End Try
+
+                Try
+                    deletevalue(regkey, "NvCplDaemon")
+                Catch ex As Exception
+                    log(ex.Message + " NvCplDaemon")
+                End Try
+
+                Try
+                    deletevalue(regkey, "NvMediaCenter")
+                Catch ex As Exception
+                    log(ex.Message + " NvMediaCenter")
                 End Try
 
                 Try
@@ -3942,6 +3978,10 @@ Public Class Form1
             End If
         End If
 
+        Try
+            deletesubregkey(My.Computer.Registry.ClassesRoot, ".tvp")  'CrazY_Milojko
+        Catch ex As Exception
+        End Try
 
         UpdateTextMethod("-End of Registry Cleaning")
 
