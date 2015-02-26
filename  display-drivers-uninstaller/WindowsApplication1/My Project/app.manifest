@@ -25,6 +25,11 @@
     </security>
   </trustInfo>
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <asmv1:application>
+      <asmv1:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">
+        <dpiAware>true</dpiAware>
+      </asmv1:windowsSettings>
+    </asmv1:application>
     <application>
       <!-- A list of all Windows versions that this application is designed to work with. 
       Windows will automatically select the most compatible environment.-->
