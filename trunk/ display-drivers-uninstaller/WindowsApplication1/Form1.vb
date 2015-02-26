@@ -45,7 +45,8 @@ Public Class Form1
     Public winxp As Boolean = False
     Dim stopme As Boolean = False
     Public Shared removemonitor As Boolean
-    Public Shared removecamdnvidia As Boolean
+    Public Shared removecamd As Boolean
+    Public Shared removecnvidia As Boolean
     Public Shared removephysx As Boolean
     Public Shared removeamdaudiobus As Boolean
     Public Shared remove3dtvplay As Boolean
@@ -432,7 +433,7 @@ Public Class Form1
         log("Cleaning Directory (Please Wait...)")
 
 
-        If removecamdnvidia Then
+        If removecamd Then
             filePath = sysdrv + "\AMD"
 
             Try
@@ -2127,7 +2128,7 @@ Public Class Form1
         log("Cleaning Directory")
 
 
-        If removecamdnvidia = True Then
+        If removecnvidia = True Then
             filePath = sysdrv + "\NVIDIA"
             Try
                 deletedirectory(filePath)
@@ -4628,15 +4629,15 @@ Public Class Form1
                 removephysx = False
             End If
 
-            If ComboBox1.Text = "AMD" Then
-                If settings.getconfig("removeamdaudiobus") = "true" Then
-                    f.CheckBox3.Checked = True
-                    removeamdaudiobus = True
-                Else
-                    f.CheckBox3.Checked = False
-                    removeamdaudiobus = False
-                End If
+
+            If settings.getconfig("removeamdaudiobus") = "true" Then
+                f.CheckBox7.Checked = True
+                removeamdaudiobus = True
+            Else
+                f.CheckBox7.Checked = True
+                removeamdaudiobus = True
             End If
+
             If settings.getconfig("removemonitor") = "true" Then
                 f.CheckBox6.Checked = True
                 removemonitor = True
@@ -4645,12 +4646,20 @@ Public Class Form1
                 removemonitor = False
             End If
 
-            If settings.getconfig("removecamdnvidia") = "true" Then
+            If settings.getconfig("removecnvidia") = "true" Then
                 f.CheckBox1.Checked = True
-                removecamdnvidia = True
+                removecnvidia = True
             Else
                 f.CheckBox1.Checked = False
-                removecamdnvidia = False
+                removecnvidia = False
+            End If
+
+            If settings.getconfig("removecamd") = "true" Then
+                f.CheckBox8.Checked = True
+                removecamd = True
+            Else
+                f.CheckBox8.Checked = False
+                removecamd = False
             End If
 
             '----------------
@@ -8178,14 +8187,12 @@ Public Class CleanupEngine
             End If
         End If
     End Sub
-
 End Class
 Public Class WindowsApi
 
     <DllImport("shell32.dll")> _
     Public Shared Function SHGetFolderPath(ByVal hwndOwner As IntPtr, ByVal nFolder As Int32, ByVal hToken As IntPtr, ByVal dwFlags As Int32, ByVal pszPath As StringBuilder) As Int32
     End Function
-
 
     <DllImport("kernel32.dll", EntryPoint:="WTSGetActiveConsoleSessionId", SetLastError:=True)> _
     Public Shared Function WTSGetActiveConsoleSessionId() As UInteger

@@ -95,25 +95,25 @@ Public Class options
             CheckBox5.Checked = False
         End If
 
-        If combobox1value = "NVIDIA" Then
-            If settings.getconfig("removephysx") = "true" Then
-                CheckBox3.Checked = True
-                removephysx = True
-            Else
-                CheckBox3.Checked = False
-                removephysx = False
-            End If
+
+        If settings.getconfig("removephysx") = "true" Then
+            CheckBox3.Checked = True
+            removephysx = True
+        Else
+            CheckBox3.Checked = False
+            removephysx = False
         End If
 
-        If combobox1value = "AMD" Then
-            If settings.getconfig("removeamdaudiobus") = "true" Then
-                CheckBox3.Checked = True
-                removeamdaudiobus = True
-            Else
-                CheckBox3.Checked = False
-                removeamdaudiobus = False
-            End If
+
+
+        If settings.getconfig("removeamdaudiobus") = "true" Then
+            CheckBox7.Checked = True
+            removeamdaudiobus = True
+        Else
+            CheckBox7.Checked = False
+            removeamdaudiobus = False
         End If
+
 
         If settings.getconfig("removemonitor") = "true" Then
             CheckBox6.Checked = True
@@ -123,42 +123,20 @@ Public Class options
             removemonitor = False
         End If
 
-        If settings.getconfig("removecamdnvidia") = "true" Then
+        If settings.getconfig("removecnvidia") = "true" Then
             CheckBox1.Checked = True
-            removecamdnvidia = True
+            removecnvidia = True
         Else
             CheckBox1.Checked = False
-            removecamdnvidia = False
+            removecnvidia = False
         End If
 
-        'Check some values.
-        If combobox1value = "NVIDIA" Then
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3.txt") '// add each line as String Array.
-            CheckBox3.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    CheckBox3.Text = CheckBox3.Text
-                End If
-                CheckBox3.Text = CheckBox3.Text & buttontext(i)
-            Next
-            CheckBox3.Visible = True
-            CheckBox4.Visible = True
-        End If
-        If combobox1value = "AMD" Then
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3amd.txt") '// add each line as String Array.
-            CheckBox3.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    CheckBox3.Text = CheckBox3.Text
-                End If
-                CheckBox3.Text = CheckBox3.Text & buttontext(i)
-            Next
-            CheckBox3.Visible = True
-            CheckBox4.Visible = False
-        End If
-        If combobox1value = "INTEL" Then
-            CheckBox3.Visible = False
-            CheckBox4.Visible = False
+        If settings.getconfig("removecamd") = "true" Then
+            CheckBox8.Checked = True
+            removecamd = True
+        Else
+            CheckBox8.Checked = False
+            removecamd = False
         End If
 
         'Init language for checkboxes
@@ -198,16 +176,16 @@ Public Class options
             CheckBox3.Text = CheckBox3.Text & buttontext(i)
         Next
 
-        If combobox1value = "AMD" Then
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3amd.txt") '// add each line as String Array.
-            CheckBox3.Text = ""
-            For i As Integer = 0 To buttontext.Length - 1
-                If i <> 0 Then
-                    CheckBox3.Text = CheckBox3.Text
-                End If
-                CheckBox3.Text = CheckBox3.Text & buttontext(i)
-            Next
-        End If
+
+        buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox7amd.txt") '// add each line as String Array.
+        CheckBox7.Text = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                CheckBox7.Text = CheckBox7.Text
+            End If
+            CheckBox7.Text = CheckBox7.Text & buttontext(i)
+        Next
+
 
         buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox5.txt") '// add each line as String Array.
         CheckBox5.Text = ""
@@ -225,6 +203,15 @@ Public Class options
                 CheckBox6.Text = CheckBox6.Text
             End If
             CheckBox6.Text = CheckBox6.Text & buttontext(i)
+        Next
+
+        buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox8.txt") '// add each line as String Array.
+        CheckBox8.Text = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                CheckBox8.Text = CheckBox8.Text
+            End If
+            CheckBox8.Text = CheckBox8.Text & buttontext(i)
         Next
 
     End Sub
@@ -246,12 +233,39 @@ Public Class options
 
     Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
         If CheckBox1.Checked = True Then
-            setconfig("removecamdnvidia", "true")
-            removecamdnvidia = True
+            setconfig("removecnvidia", "true")
+            removecnvidia = True
 
         Else
-            setconfig("removecamdnvidia", "false")
-            removecamdnvidia = False
+            setconfig("removecnvidia", "false")
+            removecnvidia = False
         End If
+    End Sub
+
+    Private Sub CheckBox8_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox8.CheckedChanged
+        If CheckBox8.Checked = True Then
+            setconfig("removecamd", "true")
+            removecamd = True
+
+        Else
+            setconfig("removecamd", "false")
+            removecamd = False
+        End If
+    End Sub
+
+    Private Sub CheckBox7_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox7.CheckedChanged
+
+        If CheckBox7.Checked = True Then
+            setconfig("removeamdaudiobus", "true")
+            removeamdaudiobus = True
+        Else
+            setconfig("removeamdaudiobus", "false")
+            removeamdaudiobus = False
+        End If
+
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Me.Close()
     End Sub
 End Class
