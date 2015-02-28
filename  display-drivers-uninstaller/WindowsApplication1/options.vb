@@ -139,6 +139,14 @@ Public Class options
             removecamd = False
         End If
 
+        If settings.getconfig("win8directsm") Then
+            CheckBox9.Checked = True
+            directsm = True
+        Else
+            CheckBox9.Checked = False
+            directsm = False
+        End If
+
         'Init language for checkboxes
         buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox1.txt") '// add each line as String Array.
         CheckBox1.Text = ""
@@ -267,5 +275,15 @@ Public Class options
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Me.Close()
+    End Sub
+
+    Private Sub CheckBox9_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox9.CheckedChanged
+        If CheckBox9.Checked = True Then
+            setconfig("win8directsm", "true")
+            removeamdaudiobus = True
+        Else
+            setconfig("win8directsm", "false")
+            removeamdaudiobus = False
+        End If
     End Sub
 End Class
