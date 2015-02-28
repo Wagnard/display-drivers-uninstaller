@@ -50,6 +50,8 @@ Public Class Form1
     Public Shared removephysx As Boolean
     Public Shared removeamdaudiobus As Boolean
     Public Shared remove3dtvplay As Boolean
+    Public Shared directsm As Boolean
+
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
@@ -3884,6 +3886,11 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
+        Try
+            deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" & _
+                                                         "Display\shellex\PropertySheetHandlers", True), "NVIDIA CPL Extension")
+        Catch ex As Exception
+        End Try
 
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Extended Properties", False)
         If regkey IsNot Nothing Then
@@ -4662,6 +4669,14 @@ Public Class Form1
                 removecamd = False
             End If
 
+            If settings.getconfig("win8directsm") = "true" Then
+                f.CheckBox9.Checked = True
+                directsm = True
+            Else
+                f.CheckBox9.Checked = False
+                directsm = False
+            End If
+
             '----------------
             'language section
             '----------------
@@ -5167,7 +5182,7 @@ Public Class Form1
                             'do nothing and continue without safe mode
                         ElseIf resultmsgbox = DialogResult.Yes Then
 
-                            If Not win8higher Then
+                            If Not win8higher Or (win8higher AndAlso directsm) Then
                                 Dim setbcdedit As New ProcessStartInfo
                                 setbcdedit.FileName = "cmd.exe"
                                 setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
@@ -5870,63 +5885,63 @@ Public Class Form1
             ' ----------------------
             ' Removing the videocard
             ' ----------------------
+            For a = 1 To 2   'loop 2 time here for nVidia SLI pupose in normal mode.
+                Try
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames
+                            If Not checkvariables.isnullorwhitespace(child) AndAlso _
+                                   (child.ToLower.Contains("ven_10de") Or _
+                                   child.ToLower.Contains("ven_8086") Or _
+                                   child.ToLower.Contains("ven_1002")) Then
 
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames
-                        If Not checkvariables.isnullorwhitespace(child) AndAlso _
-                               (child.ToLower.Contains("ven_10de") Or _
-                               child.ToLower.Contains("ven_8086") Or _
-                               child.ToLower.Contains("ven_1002")) Then
+                                subregkey = regkey.OpenSubKey(child)
+                                If subregkey IsNot Nothing Then
 
-                            subregkey = regkey.OpenSubKey(child)
-                            If subregkey IsNot Nothing Then
+                                    For Each child2 As String In subregkey.GetSubKeyNames
 
-                                For Each child2 As String In subregkey.GetSubKeyNames
+                                        If subregkey.OpenSubKey(child2) Is Nothing Then
+                                            Continue For
+                                        End If
 
-                                    If subregkey.OpenSubKey(child2) Is Nothing Then
-                                        Continue For
-                                    End If
+                                        array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
 
-                                    array = subregkey.OpenSubKey(child2).GetValue("CompatibleIDs")
+                                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                            For i As Integer = 0 To array.Length - 1
 
-                                    If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                        For i As Integer = 0 To array.Length - 1
+                                                If Not checkvariables.isnullorwhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
 
-                                            If Not checkvariables.isnullorwhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
+                                                    vendid = child & "\" & child2
 
-                                                vendid = child & "\" & child2
+                                                    If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+                                                        processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                                        processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
+                                                        processinfo.UseShellExecute = False
+                                                        processinfo.CreateNoWindow = True
+                                                        processinfo.RedirectStandardOutput = True
+                                                        process.StartInfo = processinfo
 
-                                                If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-                                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                                    processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
-                                                    processinfo.UseShellExecute = False
-                                                    processinfo.CreateNoWindow = True
-                                                    processinfo.RedirectStandardOutput = True
-                                                    process.StartInfo = processinfo
-
-                                                    process.Start()
-                                                    reply2 = process.StandardOutput.ReadToEnd
-                                                    process.StandardOutput.Close()
-                                                    process.Close()
-                                                    'process.WaitForExit()
-                                                    log(reply2)
-
+                                                        process.Start()
+                                                        reply2 = process.StandardOutput.ReadToEnd
+                                                        process.StandardOutput.Close()
+                                                        process.Close()
+                                                        'process.WaitForExit()
+                                                        log(reply2)
+                                                    End If
+                                                    Exit For   'the card is removed so we exit the loop from here.
                                                 End If
-                                                Exit For   'the card is removed so we exit the loop from here.
-                                            End If
-                                        Next
-                                    End If
-                                Next
+                                            Next
+                                        End If
+                                    Next
+                                End If
                             End If
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                MsgBox(msgboxmessage("5"))
-                log(ex.Message + ex.StackTrace)
-            End Try
+                        Next
+                    End If
+                Catch ex As Exception
+                    MsgBox(msgboxmessage("5"))
+                    log(ex.Message + ex.StackTrace)
+                End Try
+            Next
 
             UpdateTextMethod(UpdateTextMethodmessage("23"))
             log("DDUDR Remove Display Driver: Complete.")
@@ -6291,7 +6306,6 @@ Public Class Form1
                                             process.StandardOutput.Close()
                                             process.Close()
                                             'process.WaitForExit()
-                                            log(reply2)
                                         End If
                                     Next
                                 End If

@@ -37,6 +37,7 @@ Partial Class options
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.CheckBox9 = New System.Windows.Forms.CheckBox()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -45,7 +46,7 @@ Partial Class options
         'CheckBox6
         '
         Me.CheckBox6.AutoSize = True
-        Me.CheckBox6.Location = New System.Drawing.Point(371, 106)
+        Me.CheckBox6.Location = New System.Drawing.Point(361, 106)
         Me.CheckBox6.Name = "CheckBox6"
         Me.CheckBox6.Size = New System.Drawing.Size(307, 17)
         Me.CheckBox6.TabIndex = 34
@@ -55,7 +56,7 @@ Partial Class options
         'CheckBox5
         '
         Me.CheckBox5.AutoSize = True
-        Me.CheckBox5.Location = New System.Drawing.Point(371, 84)
+        Me.CheckBox5.Location = New System.Drawing.Point(361, 84)
         Me.CheckBox5.Name = "CheckBox5"
         Me.CheckBox5.Size = New System.Drawing.Size(153, 17)
         Me.CheckBox5.TabIndex = 33
@@ -85,7 +86,7 @@ Partial Class options
         'CheckBox2
         '
         Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(371, 62)
+        Me.CheckBox2.Location = New System.Drawing.Point(361, 62)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(267, 17)
         Me.CheckBox2.TabIndex = 30
@@ -167,7 +168,7 @@ Partial Class options
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(446, 9)
+        Me.Label2.Location = New System.Drawing.Point(436, 9)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(111, 15)
         Me.Label2.TabIndex = 41
@@ -182,11 +183,22 @@ Partial Class options
         Me.Button1.Text = "Close"
         Me.Button1.UseVisualStyleBackColor = True
         '
+        'CheckBox9
+        '
+        Me.CheckBox9.AutoSize = True
+        Me.CheckBox9.Location = New System.Drawing.Point(361, 129)
+        Me.CheckBox9.Name = "CheckBox9"
+        Me.CheckBox9.Size = New System.Drawing.Size(204, 17)
+        Me.CheckBox9.TabIndex = 43
+        Me.CheckBox9.Text = "Enable Windows 8+ Direct safe mode"
+        Me.CheckBox9.UseVisualStyleBackColor = True
+        '
         'options
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(689, 496)
+        Me.Controls.Add(Me.CheckBox9)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
@@ -228,4 +240,5 @@ Partial Class options
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents CheckBox9 As System.Windows.Forms.CheckBox
 End Class
