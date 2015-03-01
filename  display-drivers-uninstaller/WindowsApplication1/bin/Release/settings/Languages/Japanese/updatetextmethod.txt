@@ -37,6 +37,6 @@ HKEY_USERS内のInstaller\Productsのクリーンアップを開始
 HKEY_USERS内のInstaller\Productsのクリーンアップを終了
 プロセス/サービスのクリーンアップを実行中...
 プロセス/サービスのクリーンアップが完了しました
-Deleted.
-Value removed.
-File Deleted.
+削除されました。
+値が削除されました。
+ファイルが削除されました。
