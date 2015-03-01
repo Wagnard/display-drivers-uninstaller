@@ -222,6 +222,15 @@ Public Class options
             CheckBox8.Text = CheckBox8.Text & buttontext(i)
         Next
 
+        buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox9.txt") '// add each line as String Array.
+        CheckBox9.Text = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                CheckBox9.Text = CheckBox9.Text
+            End If
+            CheckBox9.Text = CheckBox9.Text & buttontext(i)
+        Next
+
     End Sub
 
     Private Sub options_close(sender As Object, e As EventArgs) Handles MyBase.FormClosed
