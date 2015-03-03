@@ -5186,6 +5186,7 @@ Public Class Form1
                         ElseIf resultmsgbox = DialogResult.Yes Then
 
                             If Not win8higher Or (win8higher AndAlso directsm) Then
+
                                 Dim setbcdedit As New ProcessStartInfo
                                 setbcdedit.FileName = "cmd.exe"
                                 setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
@@ -5221,6 +5222,7 @@ Public Class Form1
 
                                 Exit Sub
                             Else
+                                MsgBox(msgboxmessage("12"), MsgBoxStyle.Information)
                                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
                                 If regkey IsNot Nothing Then
                                     Try
