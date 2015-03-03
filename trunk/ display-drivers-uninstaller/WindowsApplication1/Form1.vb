@@ -4756,6 +4756,9 @@ Public Class Form1
                 ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("jv") Then
                     ComboBox2.SelectedIndex = ComboBox2.FindString("Japanese")
 
+                ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("bg") Then
+                    ComboBox2.SelectedIndex = ComboBox2.FindString("Bulgarian")
+
                 ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("uk") Then
                     ComboBox2.SelectedIndex = ComboBox2.FindString("Ukrainian")
 
