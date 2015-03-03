@@ -10,3 +10,4 @@ DDU je promenio podešavanja koja ne dozvoljavaju automatsku instalaciju drajver
 Uklanjanje drajvera ja završeno! Da li želite da izađete iz programa?
 Završeno!
 Niste u Windows Safe Mode-u. Preporučljivo je da restartujete Windows u Safe Mode-u da bi izbegli moguće probleme., Želite li da sada startujete Windows u Safe Mode-u?"
+Here is what you need to select at the blue recovery screen : Troubleshoot-> advanced options -> startup Settings.

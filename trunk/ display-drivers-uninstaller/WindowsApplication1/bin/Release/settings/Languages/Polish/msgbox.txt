@@ -10,3 +10,4 @@ DDU zmienił ustawienia, które zapobiegają automatycznej aktualizacji sterowni
 Usuwanie zakończone! Czy chcesz teraz zamknąć program?
 Zrobione!
 System nie jest uruchomiony w trybie awaryjnym. Jest wysoce zalecane aby zrestartować system do trybu awaryjnego aby uniknąć możliwych problemów. Czy uruchomić ponownie system do Trybu Awaryjnego?
+Here is what you need to select at the blue recovery screen : Troubleshoot-> advanced options -> startup Settings.
