@@ -105,6 +105,7 @@ Public Class Form1
                     buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("1")
+                    Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("1"), ToolTipIcon.Info)
                 Catch ex As Exception
                     Label11.Text = ("No Updates found. Program is up to date.")
                 End Try
@@ -115,6 +116,8 @@ Public Class Form1
                     buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("2")
+                    Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("2"), ToolTipIcon.Info)
+
                 Catch ex As Exception
                     Label11.Text = ("Updates found! Expect limited support on older versions than the most recent.")
                 End Try
@@ -142,6 +145,7 @@ Public Class Form1
                     buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("3")
+                    Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("3"), ToolTipIcon.Info)
                 Catch ex As Exception
                     Label11.Text = ("Unable to Fetch updates!!")
                 End Try
@@ -4930,7 +4934,8 @@ Public Class Form1
             End If
 
             Me.TopMost = True
-
+            NotifyIcon1.Visible = True
+            Checkupdates2()
             'MsgBox(msgboxmessage("4"), MsgBoxStyle.Information)
 
 
@@ -5265,7 +5270,7 @@ Public Class Form1
             Me.Close()
             Exit Sub
         End Try
-
+        NotifyIcon1.Text = "DDU Version: " + Application.ProductVersion
     End Sub
     Sub systemrestore()
         Select Case System.Windows.Forms.SystemInformation.BootMode
@@ -6707,6 +6712,14 @@ Public Class Form1
         If Not preventclose Then
             Me.Close()
         End If
+    End Sub
+
+    Private Sub NotifyIcon1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles NotifyIcon1.MouseDoubleClick
+        Me.WindowState = FormWindowState.Normal
+    End Sub
+
+    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
+        Checkupdates2()
     End Sub
 End Class
 Public Class checkvariables
