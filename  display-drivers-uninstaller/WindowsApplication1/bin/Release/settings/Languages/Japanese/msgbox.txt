@@ -10,4 +10,4 @@ DDUは Windows Update でドライバーを自動的にダウンロードしな�
 クリーンアンインストールが完了しました！ プログラムを終了しますか？
 完了！
 現在セーフモードではありません。不具合を回避するためにセーフモードで再起動することを強く推奨します。セーフモードで再起動しますか？
-Here is what you need to select at the blue recovery screen : Troubleshoot-> advanced options -> startup Settings.
+水色の回復画面で次のように選択する必要があります:「オプションの選択」→「トラブルシューティング」→「詳細オプション」→「スタートアップ設定」→ 再起動

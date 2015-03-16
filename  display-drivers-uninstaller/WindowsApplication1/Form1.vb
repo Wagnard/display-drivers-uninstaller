@@ -6703,6 +6703,11 @@ Public Class Form1
 
     End Sub
 
+    Private Sub ToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
+        If Not preventclose Then
+            Me.Close()
+        End If
+    End Sub
 End Class
 Public Class checkvariables
 
