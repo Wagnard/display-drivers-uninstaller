@@ -4,4 +4,4 @@ DDU  - Display Driver Uninstaller is a driver removal utility that can help you 
 
 The AMD/NVIDIA/Intel video drivers can normally be uninstalled from the Windows Control panel, this driver uninstaller program was designed to be used in cases where the standard driver uninstall fails, or anyway when you need to thoroughly delete NVIDIA and ATI video card drivers.
 
-Homepage : http://www.wagnardmobile.com 
+DOWNLOAD : http://www.wagnardmobile.com 
