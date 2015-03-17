@@ -56,8 +56,8 @@ Partial Class Form1
         Me.Button5 = New System.Windows.Forms.Button()
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -245,7 +245,7 @@ Partial Class Form1
         '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(396, 380)
+        Me.Button4.Location = New System.Drawing.Point(396, 400)
         Me.Button4.Name = "Button4"
         Me.Button4.Size = New System.Drawing.Size(191, 62)
         Me.Button4.TabIndex = 23
@@ -301,7 +301,7 @@ Partial Class Form1
         '
         'Button5
         '
-        Me.Button5.Location = New System.Drawing.Point(396, 314)
+        Me.Button5.Location = New System.Drawing.Point(396, 344)
         Me.Button5.Name = "Button5"
         Me.Button5.Size = New System.Drawing.Size(191, 27)
         Me.Button5.TabIndex = 26
@@ -319,17 +319,17 @@ Partial Class Form1
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
         Me.ContextMenuStrip1.Size = New System.Drawing.Size(154, 48)
         '
-        'ToolStripMenuItem2
-        '
-        Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(153, 22)
-        Me.ToolStripMenuItem2.Text = "Exit"
-        '
         'ToolStripMenuItem3
         '
         Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
         Me.ToolStripMenuItem3.Size = New System.Drawing.Size(153, 22)
         Me.ToolStripMenuItem3.Text = "Check Updates"
+        '
+        'ToolStripMenuItem2
+        '
+        Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(153, 22)
+        Me.ToolStripMenuItem2.Text = "Exit"
         '
         'Form1
         '

@@ -26,7 +26,13 @@ Imports System.Text
 
 
 Public Class Form1
-
+    Dim trd As Thread
+    Dim backgroundworkcomplete = True
+    Dim arguments As String() = Environment.GetCommandLineArgs()
+    Dim silent As Boolean = False
+    Dim argcleanamd As Boolean = False
+    Dim argcleanintel As Boolean = False
+    Dim argcleannvidia As Boolean = False
     Dim f As New options
     Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
     Dim checkvariables As New checkvariables
@@ -157,7 +163,7 @@ Public Class Form1
         reboot = True
         combobox1value = ComboBox1.Text
         systemrestore()
-        BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
+        BackgroundWorker1.RunWorkerAsync()
 
     End Sub
 
@@ -3530,7 +3536,61 @@ Public Class Form1
             End If
         End If
 
+        regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+      ("Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetValueNames()
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains("gfexperience.exe") Then
+                        deletevalue(regkey, child)
+                    End If
+                End If
+            Next
+        End If
 
+        regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
+("Software\Microsoft\.NETFramework\SQM\Apps", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains("gfexperience.exe") Then
+                        deletesubregkey(regkey, child)
+                    End If
+                End If
+            Next
+        End If
+
+        For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+            If Not checkvariables.isnullorwhitespace(users) Then
+                regkey = My.Computer.Registry.Users.OpenSubKey _
+        (users + "\Software\Microsoft\.NETFramework\SQM\Apps", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If Not checkvariables.isnullorwhitespace(child) Then
+                            If child.ToLower.Contains("gfexperience.exe") Then
+                                deletesubregkey(regkey, child)
+                            End If
+                        End If
+                    Next
+                End If
+            End If
+        Next
+
+        For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+            If Not checkvariables.isnullorwhitespace(users) Then
+                regkey = My.Computer.Registry.Users.OpenSubKey _
+        (users + "\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If Not checkvariables.isnullorwhitespace(child) Then
+                            If child.ToLower.Contains("gfexperience.exe") Then
+                                deletevalue(regkey, child)
+                            End If
+                        End If
+                    Next
+                End If
+            End If
+        Next
 
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
       ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
@@ -4582,6 +4642,7 @@ Public Class Form1
             My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
         End If
 
+
         Try
 
 
@@ -4775,19 +4836,14 @@ Public Class Form1
 
             End If
 
-            '------------
-            'Check update
-            '------------
+
             Try
                 buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
                 Label11.Text = ""
                 Label11.Text = Label11.Text & buttontext("0")
             Catch ex As Exception
             End Try
-            Checkupdates2()
-            If closeapp Then
-                Exit Sub
-            End If
+
 
 
             '----------------------
@@ -4892,6 +4948,53 @@ Public Class Form1
                 End If
             End If
 
+            'processing arguments
+            Dim arg As String = String.Join(" ", arguments, 1, arguments.Length - 1)
+            arg = arg.ToLower.Replace("  ", " ")
+
+
+            If Not checkvariables.isnullorwhitespace(arg) Then
+                If Not arg = " " Then
+                    If arg.Contains("-silent") Then
+                        silent = True
+                        Me.WindowState = FormWindowState.Minimized
+                        settings.setconfig("logbox", "false")
+                        settings.setconfig("systemrestore", "false")
+                        settings.setconfig("removemonitor", "false")
+                        settings.setconfig("win8directsm", "false")
+                    Else
+                        Checkupdates2()
+                        If closeapp Then
+                            Exit Sub
+                        End If
+                    End If
+
+
+                    If arg.Contains("-Logging") Then
+                        settings.setconfig("logbox", "true")
+                    End If
+                    If arg.Contains("-createsystemrestorepoint") Then
+                        settings.setconfig("systemrestore", "true")
+                    End If
+                    If arg.Contains("-removemonitors") Then
+                        settings.setconfig("removemonitor", "true")
+                    End If
+
+                    If arg.Contains("-enablewin8directsafemode") Then
+                        settings.setconfig("win8directsm", "true")
+                    End If
+
+                    If arg.Contains("-cleanamd") Then
+                        argcleanamd = True
+                    End If
+                    If arg.Contains("-cleanintel") Then
+                        argcleanintel = True
+                    End If
+                    If arg.Contains("-cleannvidia") Then
+                        argcleannvidia = True
+                    End If
+                End If
+            End If
             'here I check if the process is running on system user account. if not, make it so.
 
             If Not MyIdentity.IsSystem Then
@@ -4921,7 +5024,7 @@ Public Class Form1
                 processstopservice.WaitForExit()
 
                 processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\paexec.exe"
-                processinfo.Arguments = "-noname -i -s " & Chr(34) & Application.StartupPath & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34)
+                processinfo.Arguments = "-noname -i -s " & Chr(34) & Application.StartupPath & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + arg
                 processinfo.UseShellExecute = False
                 processinfo.CreateNoWindow = True
                 processinfo.RedirectStandardOutput = False
@@ -5131,136 +5234,134 @@ Public Class Form1
                 log(ex.Message + ex.StackTrace)
             End Try
 
-            If enduro Then
-                MsgBox(msgboxmessage("6"), MsgBoxStyle.Critical)
-            End If
+            If Not silent Then
 
-            'This code checks to see which mode Windows has booted up in.
-            Select Case System.Windows.Forms.SystemInformation.BootMode
-                Case BootMode.FailSafe
-                    'The computer was booted using only the basic files and drivers.
-                    'This is the same as Safe Mode
-                    safemode = True
-                    log("We are in Safe Mode")
-                    If winxp = False Then
-                        Dim setbcdedit As New ProcessStartInfo
-                        setbcdedit.FileName = "cmd.exe"
-                        setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-                        setbcdedit.UseShellExecute = False
-                        setbcdedit.CreateNoWindow = True
-                        setbcdedit.RedirectStandardOutput = False
-                        Dim processstopservice As New Process
-                        processstopservice.StartInfo = setbcdedit
-                        processstopservice.Start()
-                        processstopservice.WaitForExit()
-                    End If
-                Case BootMode.FailSafeWithNetwork
-                    'The computer was booted using the basic files, drivers, and services necessary to start networking.
-                    'This is the same as Safe Mode with Networking
-                    'I am also removing the auto go into safemode with bcdedit
-                    log("We are in Safe Mode with Networking")
-                    safemode = True
-                    If winxp = False Then
-                        Dim setbcdedit As New ProcessStartInfo
-                        setbcdedit.FileName = "cmd.exe"
-                        setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-                        setbcdedit.UseShellExecute = False
-                        setbcdedit.CreateNoWindow = True
-                        setbcdedit.RedirectStandardOutput = False
-                        Dim processstopservice As New Process
-                        processstopservice.StartInfo = setbcdedit
-                        processstopservice.Start()
-                        processstopservice.WaitForExit()
-                    End If
-
-                Case BootMode.Normal
-
-                    safemode = False
-                    log("We are not in Safe Mode")
-                    If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
-
-                        Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessage("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-                        If resultmsgbox = DialogResult.Cancel Then
-
-                            preventclose = False
-                            Me.TopMost = False
-                            Me.Close()
-                            Exit Sub
-                        ElseIf resultmsgbox = DialogResult.No Then
-                            'do nothing and continue without safe mode
-                        ElseIf resultmsgbox = DialogResult.Yes Then
-
-                            If Not win8higher Or (win8higher AndAlso directsm) Then
-
-                                Dim setbcdedit As New ProcessStartInfo
-                                setbcdedit.FileName = "cmd.exe"
-                                setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
-                                setbcdedit.UseShellExecute = False
-                                setbcdedit.CreateNoWindow = True
-                                setbcdedit.RedirectStandardOutput = False
-                                Dim processstopservice As New Process
-                                processstopservice.StartInfo = setbcdedit
-                                processstopservice.Start()
-                                processstopservice.WaitForExit()
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-                                If regkey IsNot Nothing Then
-                                    Try
-                                        regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
-                                        regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
-                                    Catch ex As Exception
-                                        log(ex.Message & ex.StackTrace)
-                                    End Try
-
-                                End If
-                                preventclose = False
-                                Me.TopMost = False
-                                processinfo.FileName = "shutdown"
-                                processinfo.Arguments = "/r /t 0"
-                                processinfo.WindowStyle = ProcessWindowStyle.Hidden
-                                processinfo.UseShellExecute = True
-                                processinfo.CreateNoWindow = True
-                                processinfo.RedirectStandardOutput = False
-
-                                process.StartInfo = processinfo
-                                process.Start()
-                                Me.Close()
-
-                                Exit Sub
-                            Else
-                                MsgBox(msgboxmessage("12"), MsgBoxStyle.Information)
-                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-                                If regkey IsNot Nothing Then
-                                    Try
-                                        regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
-                                        regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
-                                    Catch ex As Exception
-                                        log(ex.Message & ex.StackTrace)
-                                    End Try
-
-                                End If
-                                preventclose = False
-                                Me.TopMost = False
-                                log("Restarting Computer ")
-                                processinfo.FileName = "shutdown"
-                                processinfo.Arguments = "/r /o /t 0"
-                                processinfo.WindowStyle = ProcessWindowStyle.Hidden
-                                processinfo.UseShellExecute = True
-                                processinfo.CreateNoWindow = True
-                                processinfo.RedirectStandardOutput = False
-
-                                process.StartInfo = processinfo
-                                process.Start()
-                                Invoke(Sub() Me.Close())
-                                Exit Sub
-                            End If
+                'This code checks to see which mode Windows has booted up in.
+                Select Case System.Windows.Forms.SystemInformation.BootMode
+                    Case BootMode.FailSafe
+                        'The computer was booted using only the basic files and drivers.
+                        'This is the same as Safe Mode
+                        safemode = True
+                        log("We are in Safe Mode")
+                        If winxp = False Then
+                            Dim setbcdedit As New ProcessStartInfo
+                            setbcdedit.FileName = "cmd.exe"
+                            setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
+                            setbcdedit.UseShellExecute = False
+                            setbcdedit.CreateNoWindow = True
+                            setbcdedit.RedirectStandardOutput = False
+                            Dim processstopservice As New Process
+                            processstopservice.StartInfo = setbcdedit
+                            processstopservice.Start()
+                            processstopservice.WaitForExit()
                         End If
-                    Else
-                        MsgBox(msgboxmessage("7"))
-                    End If
+                    Case BootMode.FailSafeWithNetwork
+                        'The computer was booted using the basic files, drivers, and services necessary to start networking.
+                        'This is the same as Safe Mode with Networking
+                        'I am also removing the auto go into safemode with bcdedit
+                        log("We are in Safe Mode with Networking")
+                        safemode = True
+                        If winxp = False Then
+                            Dim setbcdedit As New ProcessStartInfo
+                            setbcdedit.FileName = "cmd.exe"
+                            setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
+                            setbcdedit.UseShellExecute = False
+                            setbcdedit.CreateNoWindow = True
+                            setbcdedit.RedirectStandardOutput = False
+                            Dim processstopservice As New Process
+                            processstopservice.StartInfo = setbcdedit
+                            processstopservice.Start()
+                            processstopservice.WaitForExit()
+                        End If
 
-            End Select
-            Me.TopMost = False
+                    Case BootMode.Normal
 
+                        safemode = False
+                        log("We are not in Safe Mode")
+                        If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
+
+                            Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessage("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                            If resultmsgbox = DialogResult.Cancel Then
+
+                                preventclose = False
+                                Me.TopMost = False
+                                Me.Close()
+                                Exit Sub
+                            ElseIf resultmsgbox = DialogResult.No Then
+                                'do nothing and continue without safe mode
+                            ElseIf resultmsgbox = DialogResult.Yes Then
+
+                                If Not win8higher Or (win8higher AndAlso directsm) Then
+
+                                    Dim setbcdedit As New ProcessStartInfo
+                                    setbcdedit.FileName = "cmd.exe"
+                                    setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
+                                    setbcdedit.UseShellExecute = False
+                                    setbcdedit.CreateNoWindow = True
+                                    setbcdedit.RedirectStandardOutput = False
+                                    Dim processstopservice As New Process
+                                    processstopservice.StartInfo = setbcdedit
+                                    processstopservice.Start()
+                                    processstopservice.WaitForExit()
+                                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+                                    If regkey IsNot Nothing Then
+                                        Try
+                                            regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
+                                            regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+                                        Catch ex As Exception
+                                            log(ex.Message & ex.StackTrace)
+                                        End Try
+
+                                    End If
+                                    preventclose = False
+                                    Me.TopMost = False
+                                    processinfo.FileName = "shutdown"
+                                    processinfo.Arguments = "/r /t 0"
+                                    processinfo.WindowStyle = ProcessWindowStyle.Hidden
+                                    processinfo.UseShellExecute = True
+                                    processinfo.CreateNoWindow = True
+                                    processinfo.RedirectStandardOutput = False
+
+                                    process.StartInfo = processinfo
+                                    process.Start()
+                                    Me.Close()
+
+                                    Exit Sub
+                                Else
+                                    MsgBox(msgboxmessage("12"), MsgBoxStyle.Information)
+                                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+                                    If regkey IsNot Nothing Then
+                                        Try
+                                            regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
+                                            regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+                                        Catch ex As Exception
+                                            log(ex.Message & ex.StackTrace)
+                                        End Try
+
+                                    End If
+                                    preventclose = False
+                                    Me.TopMost = False
+                                    log("Restarting Computer ")
+                                    processinfo.FileName = "shutdown"
+                                    processinfo.Arguments = "/r /o /t 0"
+                                    processinfo.WindowStyle = ProcessWindowStyle.Hidden
+                                    processinfo.UseShellExecute = True
+                                    processinfo.CreateNoWindow = True
+                                    processinfo.RedirectStandardOutput = False
+
+                                    process.StartInfo = processinfo
+                                    process.Start()
+                                    Invoke(Sub() Me.Close())
+                                    Exit Sub
+                                End If
+                            End If
+                        Else
+                            MsgBox(msgboxmessage("7"))
+                        End If
+
+                End Select
+                Me.TopMost = False
+            End If
             getoeminfo()
 
         Catch ex As Exception
@@ -5270,7 +5371,45 @@ Public Class Form1
             Me.Close()
             Exit Sub
         End Try
+
         NotifyIcon1.Text = "DDU Version: " + Application.ProductVersion
+
+        trd = New Thread(AddressOf ThreadTask)
+        trd.IsBackground = True
+        trd.Start()
+
+
+
+    End Sub
+    Private Sub Form1_Shown(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Shown
+        If silent Then
+            Me.Hide()
+        End If
+    End Sub
+    Private Sub ThreadTask()
+
+        If argcleanamd Then
+            backgroundworkcomplete = False
+            cleananddonothing("AMD")
+        End If
+        Do Until backgroundworkcomplete
+            System.Threading.Thread.Sleep(10)
+        Loop
+        If argcleannvidia Then
+            backgroundworkcomplete = False
+            cleananddonothing("NVIDIA")
+        End If
+        Do Until backgroundworkcomplete
+            System.Threading.Thread.Sleep(10)
+        Loop
+        If argcleanintel Then
+            backgroundworkcomplete = False
+            cleananddonothing("INTEL")
+        End If
+        If silent Then
+            preventclose = False
+            Invoke(Sub() Me.Close())
+        End If
     End Sub
     Sub systemrestore()
         Select Case System.Windows.Forms.SystemInformation.BootMode
@@ -5489,28 +5628,28 @@ Public Class Form1
         shutdown = False
         combobox1value = ComboBox1.Text
         systemrestore()
-        BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
-    End Sub
+        BackgroundWorker1.RunWorkerAsync()
 
+    End Sub
+    Private Sub cleananddonothing(ByVal gpu As String)
+        reboot = False
+        shutdown = False
+        systemrestore()
+        Invoke(Sub() ComboBox1.Text = gpu)
+        BackgroundWorker1.RunWorkerAsync()
+
+    End Sub
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         reboot = False
         shutdown = True
         combobox1value = ComboBox1.Text
         systemrestore()
-        BackgroundWorker1.RunWorkerAsync(ComboBox1.Text)
+        BackgroundWorker1.RunWorkerAsync()
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
         combobox1value = ComboBox1.Text
         If combobox1value = "NVIDIA" Then
-
-            If settings.getconfig("removephysx") = "true" Then
-                f.CheckBox3.Checked = True
-                removephysx = True
-            Else
-                f.CheckBox3.Checked = False
-                removephysx = False
-            End If
 
             PictureBox2.Location = New Point(286 * (picturebox2originalx / 333), 92 * (picturebox2originaly / 92))
             PictureBox2.Size = New Size(252, 123)
@@ -5519,20 +5658,13 @@ Public Class Form1
 
         If combobox1value = "AMD" Then
 
-            If settings.getconfig("removeamdaudiobus") = "true" Then
-                f.CheckBox3.Checked = True
-                removeamdaudiobus = True
-            Else
-                f.CheckBox3.Checked = False
-                removeamdaudiobus = False
-            End If
 
             PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
             PictureBox2.Size = New Size(158, 126)
             PictureBox2.Image = My.Resources.RadeonLogo1
         End If
 
-        If ComboBox1.Text = "INTEL" Then
+        If combobox1value = "INTEL" Then
 
             PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
             PictureBox2.Size = New Size(158, 126)
@@ -6392,13 +6524,11 @@ Public Class Form1
     Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object, _
                              ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
                              Handles BackgroundWorker1.RunWorkerCompleted
+        Try
 
+            If stopme = True Then
+                'Scan for new hardware to not let users into a non working state.
 
-        If stopme = True Then
-            'Scan for new hardware to not let users into a non working state.
-
-
-            Try
                 Dim scan As New ProcessStartInfo
                 scan.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
                 scan.Arguments = "rescan"
@@ -6409,28 +6539,34 @@ Public Class Form1
                 proc4.StartInfo = scan
                 proc4.Start()
                 proc4.WaitForExit()
-            Catch ex As Exception
-            End Try
-            'then quit
-            preventclose = False
-            Me.Close()
-            Exit Sub
-        End If
-        Button1.Enabled = True
-        Button2.Enabled = True
-        Button3.Enabled = True
-        ComboBox1.Enabled = True
-        MenuStrip1.Enabled = True
 
-        If Not reboot And Not shutdown Then
-            If MsgBox(msgboxmessage("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
-                'do nothing
-            Else
+                'then quit
                 preventclose = False
                 Me.Close()
+                Exit Sub
             End If
-        End If
-        preventclose = False
+            Invoke(Sub() Button1.Enabled = True)
+            Invoke(Sub() Button2.Enabled = True)
+            Invoke(Sub() Button3.Enabled = True)
+            Invoke(Sub() ComboBox1.Enabled = True)
+            Invoke(Sub() MenuStrip1.Enabled = True)
+
+            If Not silent And Not reboot And Not shutdown Then
+                If MsgBox(msgboxmessage("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
+                    'do nothing
+                Else
+                    preventclose = False
+                    Invoke(Sub() Me.Close())
+                End If
+            End If
+            preventclose = False
+            backgroundworkcomplete = True
+
+
+        Catch ex As Exception
+            preventclose = False
+            log(ex.Message + ex.StackTrace)
+        End Try
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
@@ -6715,7 +6851,9 @@ Public Class Form1
     End Sub
 
     Private Sub NotifyIcon1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles NotifyIcon1.MouseDoubleClick
-        Me.WindowState = FormWindowState.Normal
+        If Not silent Then
+            Me.WindowState = FormWindowState.Normal
+        End If
     End Sub
 
     Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
