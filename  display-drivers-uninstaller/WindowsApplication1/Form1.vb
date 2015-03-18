@@ -26,6 +26,7 @@ Imports System.Text
 
 
 Public Class Form1
+    Public Shared arg As String
     Dim trd As Thread
     Dim backgroundworkcomplete = True
     Dim arguments As String() = Environment.GetCommandLineArgs()
@@ -33,6 +34,7 @@ Public Class Form1
     Dim argcleanamd As Boolean = False
     Dim argcleanintel As Boolean = False
     Dim argcleannvidia As Boolean = False
+    Dim restart As Boolean = False
     Dim f As New options
     Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
     Dim checkvariables As New checkvariables
@@ -56,7 +58,7 @@ Public Class Form1
     Public Shared removephysx As Boolean
     Public Shared removeamdaudiobus As Boolean
     Public Shared remove3dtvplay As Boolean
-    Public Shared directsm As Boolean
+
 
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
@@ -83,7 +85,7 @@ Public Class Form1
     Public Shared settings As New genericfunction
     Dim CleanupEngine As New CleanupEngine
     Dim enduro As Boolean = False
-    Dim preventclose As Boolean = False
+    Public Shared preventclose As Boolean = False
     Dim filePath As String
     Public Shared combobox1value As String = Nothing
     Public Shared combobox2value As String = Nothing
@@ -134,15 +136,13 @@ Public Class Form1
                     If result = MsgBoxResult.Yes Then
                         process.Start("http://www.wagnardmobile.com")
                         closeapp = True
-                        preventclose = False
-                        Me.Close()
+                        closeddu()
                         Exit Sub
                     ElseIf result = MsgBoxResult.No Then
                         MsgBox(msgboxmessage("1"))
                     ElseIf result = MsgBoxResult.Cancel Then
                         closeapp = True
-                        preventclose = False
-                        Me.Close()
+                        closeddu()
                     End If
                 End If
 
@@ -4425,7 +4425,7 @@ Public Class Form1
 
             process.StartInfo = processinfo
             process.Start()
-            Invoke(Sub() Me.Close())
+            closeddu()
             Exit Sub
         End If
         If shutdown Then
@@ -4439,7 +4439,7 @@ Public Class Form1
 
             process.StartInfo = processinfo
             process.Start()
-            Invoke(Sub() Me.Close())
+            closeddu()
             Exit Sub
         End If
         If reboot = False And shutdown = False Then
@@ -4470,7 +4470,7 @@ Public Class Form1
         End If
         If MyIdentity.IsSystem Then
             Try
-                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
+                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\Cur_loadrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
             Catch ex As Exception
             End Try
             Try
@@ -4545,8 +4545,7 @@ Public Class Form1
                 End If
             Catch ex As Exception
             End Try
-            preventclose = False
-            Me.Close()
+            closeddu()
             Exit Sub
         End If
 
@@ -4556,8 +4555,7 @@ Public Class Form1
         If Not isElevated Then
 
             MsgBox(msgboxmessage("2"), MsgBoxStyle.Critical)
-            preventclose = False
-            Me.Close()
+            closeddu()
             Exit Sub
         End If
 
@@ -4734,13 +4732,7 @@ Public Class Form1
                 removecamd = False
             End If
 
-            If settings.getconfig("win8directsm") = "true" Then
-                f.CheckBox9.Checked = True
-                directsm = True
-            Else
-                f.CheckBox9.Checked = False
-                directsm = False
-            End If
+
 
             '----------------
             'language section
@@ -4949,7 +4941,8 @@ Public Class Form1
             End If
 
             'processing arguments
-            Dim arg As String = String.Join(" ", arguments, 1, arguments.Length - 1)
+
+            arg = String.Join(" ", arguments, 1, arguments.Length - 1)
             arg = arg.ToLower.Replace("  ", " ")
 
 
@@ -4961,7 +4954,6 @@ Public Class Form1
                         settings.setconfig("logbox", "false")
                         settings.setconfig("systemrestore", "false")
                         settings.setconfig("removemonitor", "false")
-                        settings.setconfig("win8directsm", "false")
                     Else
                         Checkupdates2()
                         If closeapp Then
@@ -4970,7 +4962,7 @@ Public Class Form1
                     End If
 
 
-                    If arg.Contains("-Logging") Then
+                    If arg.Contains("-logging") Then
                         settings.setconfig("logbox", "true")
                     End If
                     If arg.Contains("-createsystemrestorepoint") Then
@@ -4979,11 +4971,12 @@ Public Class Form1
                     If arg.Contains("-removemonitors") Then
                         settings.setconfig("removemonitor", "true")
                     End If
-
-                    If arg.Contains("-enablewin8directsafemode") Then
-                        settings.setconfig("win8directsm", "true")
+                    If arg.Contains("-restart") Then
+                        restart = True
                     End If
-
+                    If arg.Contains("-removeamdaudiobus") Then
+                        settings.setconfig("removeamdaudiobus", "true")
+                    End If
                     If arg.Contains("-cleanamd") Then
                         argcleanamd = True
                     End If
@@ -5031,8 +5024,7 @@ Public Class Form1
 
                 process.StartInfo = processinfo
                 process.Start()
-                preventclose = False
-                Me.Close()
+                closeddu()
                 Exit Sub
             End If
 
@@ -5277,83 +5269,25 @@ Public Class Form1
                     Case BootMode.Normal
 
                         safemode = False
-                        log("We are not in Safe Mode")
-                        If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
 
+                        log("We are not in Safe Mode")
+
+                        If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
+                            If restart Then
+                                restartinsafemode()
+                            End If
                             Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessage("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                             If resultmsgbox = DialogResult.Cancel Then
 
-                                preventclose = False
+
                                 Me.TopMost = False
-                                Me.Close()
+                                closeddu()
                                 Exit Sub
                             ElseIf resultmsgbox = DialogResult.No Then
                                 'do nothing and continue without safe mode
                             ElseIf resultmsgbox = DialogResult.Yes Then
 
-                                If Not win8higher Or (win8higher AndAlso directsm) Then
-
-                                    Dim setbcdedit As New ProcessStartInfo
-                                    setbcdedit.FileName = "cmd.exe"
-                                    setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
-                                    setbcdedit.UseShellExecute = False
-                                    setbcdedit.CreateNoWindow = True
-                                    setbcdedit.RedirectStandardOutput = False
-                                    Dim processstopservice As New Process
-                                    processstopservice.StartInfo = setbcdedit
-                                    processstopservice.Start()
-                                    processstopservice.WaitForExit()
-                                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-                                    If regkey IsNot Nothing Then
-                                        Try
-                                            regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
-                                            regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
-                                        Catch ex As Exception
-                                            log(ex.Message & ex.StackTrace)
-                                        End Try
-
-                                    End If
-                                    preventclose = False
-                                    Me.TopMost = False
-                                    processinfo.FileName = "shutdown"
-                                    processinfo.Arguments = "/r /t 0"
-                                    processinfo.WindowStyle = ProcessWindowStyle.Hidden
-                                    processinfo.UseShellExecute = True
-                                    processinfo.CreateNoWindow = True
-                                    processinfo.RedirectStandardOutput = False
-
-                                    process.StartInfo = processinfo
-                                    process.Start()
-                                    Me.Close()
-
-                                    Exit Sub
-                                Else
-                                    MsgBox(msgboxmessage("12"), MsgBoxStyle.Information)
-                                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-                                    If regkey IsNot Nothing Then
-                                        Try
-                                            regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) & Chr(34))
-                                            regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
-                                        Catch ex As Exception
-                                            log(ex.Message & ex.StackTrace)
-                                        End Try
-
-                                    End If
-                                    preventclose = False
-                                    Me.TopMost = False
-                                    log("Restarting Computer ")
-                                    processinfo.FileName = "shutdown"
-                                    processinfo.Arguments = "/r /o /t 0"
-                                    processinfo.WindowStyle = ProcessWindowStyle.Hidden
-                                    processinfo.UseShellExecute = True
-                                    processinfo.CreateNoWindow = True
-                                    processinfo.RedirectStandardOutput = False
-
-                                    process.StartInfo = processinfo
-                                    process.Start()
-                                    Invoke(Sub() Me.Close())
-                                    Exit Sub
-                                End If
+                                restartinsafemode()
                             End If
                         Else
                             MsgBox(msgboxmessage("7"))
@@ -5367,8 +5301,7 @@ Public Class Form1
         Catch ex As Exception
             MsgBox(ex.Message + ex.StackTrace)
             log(ex.Message + ex.StackTrace)
-            preventclose = False
-            Me.Close()
+            closeddu()
             Exit Sub
         End Try
 
@@ -5380,6 +5313,54 @@ Public Class Form1
 
 
 
+    End Sub
+    Private Sub restartinsafemode()
+
+        Me.TopMost = False
+        Dim setbcdedit As New ProcessStartInfo
+        setbcdedit.FileName = "cmd.exe"
+        setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
+        setbcdedit.UseShellExecute = False
+        setbcdedit.CreateNoWindow = True
+        setbcdedit.RedirectStandardOutput = False
+        Dim processstopservice As New Process
+        processstopservice.StartInfo = setbcdedit
+        processstopservice.Start()
+        processstopservice.WaitForExit()
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+        If regkey IsNot Nothing Then
+            Try
+                regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) + " " + arg & Chr(34))
+                regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+            Catch ex As Exception
+                log(ex.Message & ex.StackTrace)
+            End Try
+
+        End If
+
+
+
+        processinfo.FileName = "shutdown"
+        processinfo.Arguments = "/r /t 0"
+        processinfo.WindowStyle = ProcessWindowStyle.Hidden
+        processinfo.UseShellExecute = True
+        processinfo.CreateNoWindow = True
+        processinfo.RedirectStandardOutput = False
+
+        process.StartInfo = processinfo
+        process.Start()
+        closeddu()
+
+
+
+    End Sub
+    Public Shared Sub closeddu()
+        If Form1.InvokeRequired Then
+            Form1.Invoke(New MethodInvoker(AddressOf closeddu))
+        Else
+            preventclose = False
+            Form1.Close()
+        End If
     End Sub
     Private Sub Form1_Shown(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Shown
         If silent Then
@@ -5408,7 +5389,7 @@ Public Class Form1
         End If
         If silent Then
             preventclose = False
-            Invoke(Sub() Me.Close())
+            closeddu()
         End If
     End Sub
     Sub systemrestore()
@@ -6541,8 +6522,7 @@ Public Class Form1
                 proc4.WaitForExit()
 
                 'then quit
-                preventclose = False
-                Me.Close()
+                closeddu()
                 Exit Sub
             End If
             Invoke(Sub() Button1.Enabled = True)
@@ -6555,8 +6535,8 @@ Public Class Form1
                 If MsgBox(msgboxmessage("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                     'do nothing
                 Else
-                    preventclose = False
-                    Invoke(Sub() Me.Close())
+                    closeddu()
+                    Exit Sub
                 End If
             End If
             preventclose = False
