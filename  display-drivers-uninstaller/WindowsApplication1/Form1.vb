@@ -4483,6 +4483,12 @@ Public Class Form1
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         CheckForIllegalCrossThreadCalls = True
+        Try
+            If System.IO.File.Exists(Application.StartupPath + "\DDU.bat") = True Then
+                System.IO.File.Delete(Application.StartupPath + "\DDU.bat")
+            End If
+        Catch ex As Exception
+        End Try
         Dim webAddress As String = ""
         'We try to create config.cfg if non existant.
         If Not (File.Exists(Application.StartupPath & "\settings\config.cfg")) Then
@@ -4539,12 +4545,7 @@ Public Class Form1
             settings.setconfig("geforce", "false")
             settings.setconfig("dduhome", "false")
             settings.setconfig("svn", "false")
-            Try
-                If System.IO.File.Exists(Application.StartupPath + "\DDU.bat") = True Then
-                    System.IO.File.Delete(Application.StartupPath + "\DDU.bat")
-                End If
-            Catch ex As Exception
-            End Try
+
             closeddu()
             Exit Sub
         End If
@@ -5330,7 +5331,11 @@ Public Class Form1
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
         If regkey IsNot Nothing Then
             Try
-                regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath & "\" & IO.Path.GetFileName(Application.ExecutablePath) + " " + arg & Chr(34))
+                Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+                sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
+                sw.Flush()
+                sw.Close()
+                regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath + "\ddu.bat" & Chr(34))
                 regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
             Catch ex As Exception
                 log(ex.Message & ex.StackTrace)
