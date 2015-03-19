@@ -30,11 +30,12 @@ Public Class Form1
     Dim trd As Thread
     Dim backgroundworkcomplete = True
     Dim arguments As String() = Environment.GetCommandLineArgs()
-    Dim silent As Boolean = False
+    Public Shared silent As Boolean = False
     Dim argcleanamd As Boolean = False
     Dim argcleanintel As Boolean = False
     Dim argcleannvidia As Boolean = False
-    Dim restart As Boolean = False
+    Public Shared nbclean As Integer = 0
+    Public Shared restart As Boolean = False
     Dim f As New options
     Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
     Dim checkvariables As New checkvariables
@@ -4464,13 +4465,15 @@ Public Class Form1
 
     End Sub
     Private Sub Form1_close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
+
         If preventclose Then
             e.Cancel = True
             Exit Sub
         End If
+
         If MyIdentity.IsSystem Then
             Try
-                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\Cur_loadrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
+                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
             Catch ex As Exception
             End Try
             Try
@@ -4478,6 +4481,7 @@ Public Class Form1
             Catch ex As Exception
             End Try
         End If
+
     End Sub
 
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -4955,6 +4959,7 @@ Public Class Form1
                         settings.setconfig("logbox", "false")
                         settings.setconfig("systemrestore", "false")
                         settings.setconfig("removemonitor", "false")
+                        settings.setconfig("removeamdaudiobus", "false")
                     Else
                         Checkupdates2()
                         If closeapp Then
@@ -4980,12 +4985,15 @@ Public Class Form1
                     End If
                     If arg.Contains("-cleanamd") Then
                         argcleanamd = True
+                        nbclean = nbclean + 1
                     End If
                     If arg.Contains("-cleanintel") Then
                         argcleanintel = True
+                        nbclean = nbclean + 1
                     End If
                     If arg.Contains("-cleannvidia") Then
                         argcleannvidia = True
+                        nbclean = nbclean + 1
                     End If
                 End If
             End If
@@ -5274,21 +5282,22 @@ Public Class Form1
                         log("We are not in Safe Mode")
 
                         If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
-                            If restart Then
+                            If restart Then  'restart command line argument
                                 restartinsafemode()
-                            End If
-                            Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessage("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-                            If resultmsgbox = DialogResult.Cancel Then
+                            Else
+                                Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessage("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                                If resultmsgbox = DialogResult.Cancel Then
 
 
-                                Me.TopMost = False
-                                closeddu()
-                                Exit Sub
-                            ElseIf resultmsgbox = DialogResult.No Then
-                                'do nothing and continue without safe mode
-                            ElseIf resultmsgbox = DialogResult.Yes Then
+                                    Me.TopMost = False
+                                    closeddu()
+                                    Exit Sub
+                                ElseIf resultmsgbox = DialogResult.No Then
+                                    'do nothing and continue without safe mode
+                                ElseIf resultmsgbox = DialogResult.Yes Then
 
-                                restartinsafemode()
+                                    restartinsafemode()
+                                End If
                             End If
                         Else
                             MsgBox(msgboxmessage("7"))
@@ -5317,6 +5326,7 @@ Public Class Form1
     End Sub
     Private Sub restartinsafemode()
 
+        systemrestore() 'we try to do a system restore if allowed before going into safemode.
         Me.TopMost = False
         Dim setbcdedit As New ProcessStartInfo
         setbcdedit.FileName = "cmd.exe"
@@ -5359,12 +5369,18 @@ Public Class Form1
 
 
     End Sub
-    Public Shared Sub closeddu()
-        If Form1.InvokeRequired Then
-            Form1.Invoke(New MethodInvoker(AddressOf closeddu))
+    Private Sub closeddu()
+        If Me.InvokeRequired Then
+            Me.Invoke(New MethodInvoker(AddressOf Me.closeddu))
         Else
-            preventclose = False
-            Form1.Close()
+            Try
+                preventclose = False
+
+                Me.Close()
+
+            Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
+            End Try
         End If
     End Sub
     Private Sub Form1_Shown(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Shown
@@ -5374,28 +5390,51 @@ Public Class Form1
     End Sub
     Private Sub ThreadTask()
 
-        If argcleanamd Then
-            backgroundworkcomplete = False
-            cleananddonothing("AMD")
-        End If
-        Do Until backgroundworkcomplete
-            System.Threading.Thread.Sleep(10)
-        Loop
-        If argcleannvidia Then
-            backgroundworkcomplete = False
-            cleananddonothing("NVIDIA")
-        End If
-        Do Until backgroundworkcomplete
-            System.Threading.Thread.Sleep(10)
-        Loop
-        If argcleanintel Then
-            backgroundworkcomplete = False
-            cleananddonothing("INTEL")
-        End If
-        If silent Then
-            preventclose = False
-            closeddu()
-        End If
+        Try
+            If argcleanamd Then
+                backgroundworkcomplete = False
+                cleananddonothing("AMD")
+            End If
+            Do Until backgroundworkcomplete
+                System.Threading.Thread.Sleep(10)
+            Loop
+            If argcleannvidia Then
+                backgroundworkcomplete = False
+                cleananddonothing("NVIDIA")
+            End If
+            Do Until backgroundworkcomplete
+                System.Threading.Thread.Sleep(10)
+            Loop
+            If argcleanintel Then
+                backgroundworkcomplete = False
+                cleananddonothing("INTEL")
+            End If
+            Do Until backgroundworkcomplete
+                System.Threading.Thread.Sleep(10)
+            Loop
+            If restart Then
+                preventclose = False
+                log("Restarting Computer ")
+                processinfo.FileName = "shutdown"
+                processinfo.Arguments = "/r /t 0"
+                processinfo.WindowStyle = ProcessWindowStyle.Hidden
+                processinfo.UseShellExecute = True
+                processinfo.CreateNoWindow = True
+                processinfo.RedirectStandardOutput = False
+
+                process.StartInfo = processinfo
+                process.Start()
+                closeddu()
+                Exit Sub
+            End If
+
+            If silent And (Not restart) Then
+                preventclose = False
+                closeddu()
+            End If
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
     End Sub
     Sub systemrestore()
         Select Case System.Windows.Forms.SystemInformation.BootMode
@@ -5619,6 +5658,14 @@ Public Class Form1
     End Sub
     Private Sub cleananddonothing(ByVal gpu As String)
         reboot = False
+        shutdown = False
+        systemrestore()
+        Invoke(Sub() ComboBox1.Text = gpu)
+        BackgroundWorker1.RunWorkerAsync()
+
+    End Sub
+    Private Sub cleanandandreboot(ByVal gpu As String)
+        reboot = True
         shutdown = False
         systemrestore()
         Invoke(Sub() ComboBox1.Text = gpu)
@@ -6536,7 +6583,7 @@ Public Class Form1
             Invoke(Sub() ComboBox1.Enabled = True)
             Invoke(Sub() MenuStrip1.Enabled = True)
 
-            If Not silent And Not reboot And Not shutdown Then
+            If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
                 If MsgBox(msgboxmessage("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                     'do nothing
                 Else

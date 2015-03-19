@@ -161,7 +161,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Display Driver Uninstaller.exe.config" />
     <None Include="My Project\app.manifest">
       <SubType>Designer</SubType>
     </None>
@@ -210,8 +209,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DDU.ico" />
-    <Content Include="Display Driver Uninstaller.exe" />
-    <Content Include="Display Driver Uninstaller.pdb" />
     <Content Include="Resources\ddu logo3.png" />
     <None Include="Resources\NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg" />
     <None Include="Resources\paexec.exe" />
