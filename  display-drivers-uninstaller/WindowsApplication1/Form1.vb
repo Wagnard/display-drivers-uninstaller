@@ -26,16 +26,16 @@ Imports System.Text
 
 
 Public Class Form1
-    Public Shared arg As String
+    Dim arg As String
     Dim trd As Thread
     Dim backgroundworkcomplete = True
     Dim arguments As String() = Environment.GetCommandLineArgs()
-    Public Shared silent As Boolean = False
+    Dim silent As Boolean = False
     Dim argcleanamd As Boolean = False
     Dim argcleanintel As Boolean = False
     Dim argcleannvidia As Boolean = False
-    Public Shared nbclean As Integer = 0
-    Public Shared restart As Boolean = False
+    Dim nbclean As Integer = 0
+    Dim restart As Boolean = False
     Dim f As New options
     Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
     Dim checkvariables As New checkvariables
@@ -4953,13 +4953,13 @@ Public Class Form1
 
             If Not checkvariables.isnullorwhitespace(arg) Then
                 If Not arg = " " Then
+                    settings.setconfig("logbox", "false")
+                    settings.setconfig("systemrestore", "false")
+                    settings.setconfig("removemonitor", "false")
+                    settings.setconfig("removeamdaudiobus", "false")
                     If arg.Contains("-silent") Then
                         silent = True
                         Me.WindowState = FormWindowState.Minimized
-                        settings.setconfig("logbox", "false")
-                        settings.setconfig("systemrestore", "false")
-                        settings.setconfig("removemonitor", "false")
-                        settings.setconfig("removeamdaudiobus", "false")
                     Else
                         Checkupdates2()
                         If closeapp Then
@@ -5235,56 +5235,57 @@ Public Class Form1
                 log(ex.Message + ex.StackTrace)
             End Try
 
-            If Not silent Then
 
-                'This code checks to see which mode Windows has booted up in.
-                Select Case System.Windows.Forms.SystemInformation.BootMode
-                    Case BootMode.FailSafe
-                        'The computer was booted using only the basic files and drivers.
-                        'This is the same as Safe Mode
-                        safemode = True
-                        log("We are in Safe Mode")
-                        If winxp = False Then
-                            Dim setbcdedit As New ProcessStartInfo
-                            setbcdedit.FileName = "cmd.exe"
-                            setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-                            setbcdedit.UseShellExecute = False
-                            setbcdedit.CreateNoWindow = True
-                            setbcdedit.RedirectStandardOutput = False
-                            Dim processstopservice As New Process
-                            processstopservice.StartInfo = setbcdedit
-                            processstopservice.Start()
-                            processstopservice.WaitForExit()
-                        End If
-                    Case BootMode.FailSafeWithNetwork
-                        'The computer was booted using the basic files, drivers, and services necessary to start networking.
-                        'This is the same as Safe Mode with Networking
-                        'I am also removing the auto go into safemode with bcdedit
-                        log("We are in Safe Mode with Networking")
-                        safemode = True
-                        If winxp = False Then
-                            Dim setbcdedit As New ProcessStartInfo
-                            setbcdedit.FileName = "cmd.exe"
-                            setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-                            setbcdedit.UseShellExecute = False
-                            setbcdedit.CreateNoWindow = True
-                            setbcdedit.RedirectStandardOutput = False
-                            Dim processstopservice As New Process
-                            processstopservice.StartInfo = setbcdedit
-                            processstopservice.Start()
-                            processstopservice.WaitForExit()
-                        End If
 
-                    Case BootMode.Normal
+            'This code checks to see which mode Windows has booted up in.
+            Select Case System.Windows.Forms.SystemInformation.BootMode
+                Case BootMode.FailSafe
+                    'The computer was booted using only the basic files and drivers.
+                    'This is the same as Safe Mode
+                    safemode = True
+                    log("We are in Safe Mode")
+                    If winxp = False Then
+                        Dim setbcdedit As New ProcessStartInfo
+                        setbcdedit.FileName = "cmd.exe"
+                        setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
+                        setbcdedit.UseShellExecute = False
+                        setbcdedit.CreateNoWindow = True
+                        setbcdedit.RedirectStandardOutput = False
+                        Dim processstopservice As New Process
+                        processstopservice.StartInfo = setbcdedit
+                        processstopservice.Start()
+                        processstopservice.WaitForExit()
+                    End If
+                Case BootMode.FailSafeWithNetwork
+                    'The computer was booted using the basic files, drivers, and services necessary to start networking.
+                    'This is the same as Safe Mode with Networking
+                    'I am also removing the auto go into safemode with bcdedit
+                    log("We are in Safe Mode with Networking")
+                    safemode = True
+                    If winxp = False Then
+                        Dim setbcdedit As New ProcessStartInfo
+                        setbcdedit.FileName = "cmd.exe"
+                        setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
+                        setbcdedit.UseShellExecute = False
+                        setbcdedit.CreateNoWindow = True
+                        setbcdedit.RedirectStandardOutput = False
+                        Dim processstopservice As New Process
+                        processstopservice.StartInfo = setbcdedit
+                        processstopservice.Start()
+                        processstopservice.WaitForExit()
+                    End If
 
-                        safemode = False
+                Case BootMode.Normal
 
-                        log("We are not in Safe Mode")
+                    safemode = False
 
-                        If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
-                            If restart Then  'restart command line argument
-                                restartinsafemode()
-                            Else
+                    log("We are not in Safe Mode")
+
+                    If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
+                        If restart Then  'restart command line argument
+                            restartinsafemode()
+                        Else
+                            If Not silent Then
                                 Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessage("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                                 If resultmsgbox = DialogResult.Cancel Then
 
@@ -5299,13 +5300,14 @@ Public Class Form1
                                     restartinsafemode()
                                 End If
                             End If
-                        Else
-                            MsgBox(msgboxmessage("7"))
-                        End If
+                    End If
+                    Else
+                        MsgBox(msgboxmessage("7"))
+                    End If
 
-                End Select
-                Me.TopMost = False
-            End If
+            End Select
+            Me.TopMost = False
+
             getoeminfo()
 
         Catch ex As Exception
@@ -5327,6 +5329,7 @@ Public Class Form1
     Private Sub restartinsafemode()
 
         systemrestore() 'we try to do a system restore if allowed before going into safemode.
+        log("restarting in safemode")
         Me.TopMost = False
         Dim setbcdedit As New ProcessStartInfo
         setbcdedit.FileName = "cmd.exe"
@@ -5429,7 +5432,6 @@ Public Class Form1
             End If
 
             If silent And (Not restart) Then
-                preventclose = False
                 closeddu()
             End If
         Catch ex As Exception
