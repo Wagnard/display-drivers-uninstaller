@@ -6252,6 +6252,59 @@ Public Class Form1
 
                 UpdateTextMethod(UpdateTextMethodmessage("26"))
 
+                Try
+                    'removing NVIDIA SHIELD Wireless Controller Trackpad
+                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                    processinfo.Arguments = "findall =MOUSE"
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = True
+
+                    'creation dun process fantome pour le wait on exit.
+
+                    process.StartInfo = processinfo
+                    process.Start()
+                    reply = process.StandardOutput.ReadToEnd
+                    process.StandardOutput.Close()
+                    process.Close()
+                    'process.WaitForExit()
+
+                    Try
+                        card1 = reply.IndexOf("HID\")
+                    Catch ex As Exception
+                    End Try
+
+                    While card1 > -1
+
+                        position2 = reply.IndexOf(":", card1)
+                        vendid = reply.Substring(card1, position2 - card1).Trim
+                        If vendid.ToLower.Contains("hid\vid_0955&pid_7210") Then
+                            log("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
+
+                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                            processinfo.Arguments = "remove =MOUSE " & Chr(34) & vendid & Chr(34)
+                            processinfo.UseShellExecute = False
+                            processinfo.CreateNoWindow = True
+                            processinfo.RedirectStandardOutput = True
+                            process.StartInfo = processinfo
+
+                            process.Start()
+                            reply2 = process.StandardOutput.ReadToEnd
+                            process.StandardOutput.Close()
+                            process.Close()
+                            'process.WaitForExit()
+                            log(reply2)
+
+
+                        End If
+                        card1 = reply.IndexOf("HID\", card1 + 1)
+
+                    End While
+
+                Catch ex As Exception
+                    MsgBox(msgboxmessage("5"))
+                    log(ex.Message + ex.StackTrace)
+                End Try
 
                 'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
                 Try
