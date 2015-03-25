@@ -3764,7 +3764,6 @@ Public Class Form1
                                     If child.ToLower.StartsWith("nvidia update") Or _
                                         child.ToLower.StartsWith("nvidia opengl driver") Or _
                                         child.ToLower.StartsWith("nvwmi") Or _
-                                        child.ToLower.StartsWith("nv") Or _
                                         child.ToLower.StartsWith("nview") Then
                                         deletesubregkey(regkey, child)
                                     End If
