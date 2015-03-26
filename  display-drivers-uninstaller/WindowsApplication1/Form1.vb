@@ -483,7 +483,9 @@ Public Class Form1
 
             For Each child As String In Directory.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("ati.ace") Then
+                    If child.ToLower.Contains("ati.ace") Or _
+                       child.ToLower.Contains("application profiles") Or _
+                       child.ToLower.Contains("hydravision") Then
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
@@ -1621,6 +1623,7 @@ Public Class Form1
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("ace") Or _
+                            child.ToLower.Contains("appprofiles") Or _
                            child.ToLower.Contains("install") Then
                             Try
                                 deletesubregkey(regkey, child)
@@ -1646,6 +1649,12 @@ Public Class Form1
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("cbt") Then
+                            Try
+                                deletesubregkey(regkey, child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                        If child.ToLower.Contains("cds") Then
                             Try
                                 deletesubregkey(regkey, child)
                             Catch ex As Exception
@@ -1713,6 +1722,8 @@ Public Class Form1
                                         child2.ToLower.Contains("wirelessdisplay") Or _
                                         child2.ToLower.Contains("hydravision") Or _
                                         child2.ToLower.Contains("avivo") Or _
+                                        child2.ToLower.Contains("ati display driver") Or _
+                                        child2.ToLower.Contains("installed drivers") Or _
                                         child2.ToLower.Contains("steadyvideo") Then
                                         Try
                                             deletesubregkey(regkey.OpenSubKey(child, True), child2)
@@ -2756,8 +2767,8 @@ Public Class Form1
 
         'Cleaning the GFE 2.0.1 and earlier assemblies.
 
-        Try
-            filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_32"
+        filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_32"
+        If Directory.Exists(filePath) Then
             For Each child As String In Directory.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("gfexperience") Or _
@@ -2778,9 +2789,8 @@ Public Class Form1
                     End If
                 End If
             Next
-        Catch ex As Exception
-            log(ex.Message)
-        End Try
+        End If
+
 
         '-----------------
         'MUI cache cleanUP
@@ -5563,6 +5573,7 @@ Public Class Form1
         If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
             Try
                 di.Delete()
+                log(di.ToString + " - " + UpdateTextMethodmessage("41"))
             Catch ex As Exception
                 log(ex.Message + ex.StackTrace)
             End Try
@@ -8323,6 +8334,7 @@ Public Class CleanupEngine
     End Sub
     Public Sub folderscleanup(ByVal driverfiles As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim winxp = f.winxp
         Dim filePath As String
         Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
 
@@ -8342,6 +8354,12 @@ Public Class CleanupEngine
                     Catch ex As Exception
                     End Try
 
+                    If winxp Then
+                        Try
+                            deletefile(filePath + "\Drivers\dllcache\" + driverfiles(i))
+                        Catch ex As Exception
+                        End Try
+                    End If
                 End If
             End If
         Next
