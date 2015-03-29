@@ -4533,7 +4533,7 @@ Public Class Form1
         End If
 
         If settings.getconfig("svn") = True Then
-            webAddress = "https://code.google.com/p/display-drivers-uninstaller/source/list"
+            webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
         End If
 
         If settings.getconfig("donate") = True Or _
