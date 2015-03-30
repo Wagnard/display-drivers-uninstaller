@@ -125,7 +125,11 @@ Public Class Form1
                     buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("2")
-                    Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("2"), ToolTipIcon.Info)
+                    Try
+                        Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("2"), ToolTipIcon.Info)
+                    Catch ex As Exception
+                    End Try
+
 
                 Catch ex As Exception
                     Label11.Text = ("Updates found! Expect limited support on older versions than the most recent.")
@@ -4849,6 +4853,10 @@ Public Class Form1
                 Label11.Text = Label11.Text & buttontext("0")
             Catch ex As Exception
             End Try
+            Checkupdates2()
+            If closeapp Then
+                Exit Sub
+            End If
 
 
 
