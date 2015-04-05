@@ -3068,29 +3068,17 @@ Public Class Form1
                                     If checkvariables.isnullorwhitespace(child) = False Then
                                         If child.Contains("Path") Then
                                             If Not checkvariables.isnullorwhitespace(regkey.GetValue(child).ToString()) Then
-                                                wantedvalue = regkey.GetValue(child).ToString()
+                                                wantedvalue = regkey.GetValue(child).ToString.ToLower
                                                 Try
                                                     Select Case True
-                                                        Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
-                                                            wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
+                                                        Case wantedvalue.Contains(sysdrv & "\program files (x86)\nvidia corporation\physx\common;")
+                                                            wantedvalue = wantedvalue.Replace(sysdrv & "\program files (x86)\nvidia corporation\physx\common;", "")
                                                             Try
                                                                 regkey.SetValue(child, wantedvalue)
                                                             Catch ex As Exception
                                                             End Try
-                                                        Case wantedvalue.Contains(sysdrv.ToLower & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;")
-                                                            wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common;", "")
-                                                            Try
-                                                                regkey.SetValue(child, wantedvalue)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        Case wantedvalue.Contains(";" + sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common")
-                                                            wantedvalue = wantedvalue.Replace(";" + sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common", "")
-                                                            Try
-                                                                regkey.SetValue(child, wantedvalue)
-                                                            Catch ex As Exception
-                                                            End Try
-                                                        Case wantedvalue.Contains(";" + sysdrv.ToLower & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common")
-                                                            wantedvalue = wantedvalue.Replace(";" + sysdrv.ToLower & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common", "")
+                                                        Case wantedvalue.Contains(";" + sysdrv & "\program files (x86)\nvidia corporation\physx\common")
+                                                            wantedvalue = wantedvalue.Replace(";" + sysdrv & "\program files (x86)\nvidia corporation\physx\common", "")
                                                             Try
                                                                 regkey.SetValue(child, wantedvalue)
                                                             Catch ex As Exception
