@@ -26,6 +26,7 @@ Imports System.Text
 
 
 Public Class Form1
+    Dim catalog As String
     Dim arg As String
     Dim trd As Thread
     Dim backgroundworkcomplete = True
@@ -182,79 +183,8 @@ Public Class Form1
         Dim proc3 As New Diagnostics.Process
         processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
         processinfo.Arguments = "dp_enum"
-        'processinfo.UseShellExecute = False
-        'processinfo.CreateNoWindow = True
-        'processinfo.RedirectStandardOutput = True
-
-        ''creation dun process fantome pour le wait on exit.
-
-
-        'process.Start()
-        'reply = process.StandardOutput.ReadToEnd
-        'process.WaitForExit()
-
-
-        'Preparing to read output.
-
-        'Dim oem As Integer = Nothing
-        'Try
-        '    oem = reply.IndexOf("oem")
-        'Catch ex As Exception
-        'End Try
 
         UpdateTextMethod(UpdateTextMethodmessage("0"))
-
-        'While oem > -1 And oem <> Nothing
-        '    Dim position As Integer = reply.IndexOf("Provider:", oem)
-        '    Dim classs As Integer = reply.IndexOf("Class:", oem)
-        '    Dim inf As Integer = reply.IndexOf(".inf", oem)
-        '    If classs > -1 Then 'I saw that sometimes, there could be no class on some oems (winxp)
-        '        If reply.Substring(position, classs - position).Contains(provider) Or _
-        '           reply.Substring(position, classs - position).ToLower.Contains("ati tech") Or _
-        '            reply.Substring(position, classs - position).ToLower.Contains("amd") Then
-        '            Dim part As String = reply.Substring(oem, inf - oem)
-        '            log(part + " Found")
-        '            Dim deloem As New Diagnostics.ProcessStartInfo
-
-        '            deloem.Arguments = "dp_delete " + Chr(34) + part + ".inf" + Chr(34)
-        '            Try
-        '                For Each child As String In IO.File.ReadAllLines(Environment.GetEnvironmentVariable("windir") & "\inf\" & part & ".inf")
-        '                    If child.ToLower.Trim.Replace(" ", "").Contains("class=display") Or _
-        '                        child.ToLower.Trim.Replace(" ", "").Contains("class=media") Then
-        '                        deloem.Arguments = "-f dp_delete " + Chr(34) + part + ".inf" + Chr(34)
-        '                    End If
-        '                Next
-        '            Catch ex As Exception
-        '            End Try
-
-        '            'Uninstall Driver from driver store  delete from (oemxx.inf)
-        '            log(deloem.Arguments)
-        '            deloem.UseShellExecute = False
-        '            deloem.CreateNoWindow = True
-        '            deloem.RedirectStandardOutput = True
-        '            'creation dun process fantome pour le wait on exit.
-        '            Dim proc3 As New Diagnostics.Process
-        '            Invoke(Sub() TextBox1.Text = TextBox1.Text + "Executing Driver Store cleanUP(Delete OEM)..." + vbNewLine)
-        '            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        '            Invoke(Sub() TextBox1.ScrollToCaret())
-        '            log("Executing Driver Store CleanUP(delete OEM)...")
-        '            proc3.StartInfo = deloem
-        '            proc3.Start()
-        '            reply2 = proc3.StandardOutput.ReadToEnd
-        '            proc3.WaitForExit()
-
-
-        '            Invoke(Sub() TextBox1.Text = TextBox1.Text + reply2 + vbNewLine)
-        '            Invoke(Sub() TextBox1.Select(TextBox1.Text.Length, 0))
-        '            Invoke(Sub() TextBox1.ScrollToCaret())
-        '            log(reply2)
-
-        '        End If
-        '    End If
-        '    oem = reply.IndexOf("oem", oem + 1)
-        'End While
-
-
 
         Try
             For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
@@ -268,6 +198,8 @@ Public Class Form1
                                 If child.EndsWith("%") Then
                                     For Each providers As String In IO.File.ReadAllLines(infs)
                                         If Not checkvariables.isnullorwhitespace(providers) Then
+
+
 
                                             providers = providers.Replace(" ", "").Replace(vbTab, "")
                                             If Not checkvariables.isnullorwhitespace(providers) AndAlso providers.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso _
@@ -289,7 +221,18 @@ Public Class Form1
                                                         Next
                                                     Catch ex As Exception
                                                     End Try
+
+                                                    'before removing the oem we try to get the original inf name (win8+)
+                                                    If win8higher Then
+                                                        Try
+                                                            catalog = My.Computer.Registry.LocalMachine.OpenSubKey("DRIVERS\DriverDatabase\DriverInfFiles\" & infs.Substring(infs.IndexOf("oem"))).GetValue("Active").ToString
+                                                            catalog = catalog.Substring(0, catalog.IndexOf("inf_") + 3)
+                                                        Catch ex As Exception
+                                                            catalog = ""
+                                                        End Try
+                                                    End If
                                                     'Uninstall Driver from driver store  delete from (oemxx.inf)
+
                                                     log(deloem.Arguments)
                                                     deloem.UseShellExecute = False
                                                     deloem.CreateNoWindow = True
@@ -304,6 +247,10 @@ Public Class Form1
                                                     proc3.Close()
                                                     UpdateTextMethod(reply2)
                                                     log(reply2)
+                                                    'check if the oem was remove to process to the pnplockdownfile if necessary
+                                                    If win8higher AndAlso (Not System.IO.File.Exists(Environment.GetEnvironmentVariable("windir") & "\inf\" + infs.Substring(infs.IndexOf("oem")))) AndAlso (Not checkvariables.isnullorwhitespace(catalog)) Then
+                                                        CleanupEngine.prePnplockdownfiles(catalog)
+                                                    End If
                                                     Exit For
                                                 End If
                                             End If
@@ -328,7 +275,15 @@ Public Class Form1
                                             Next
                                         Catch ex As Exception
                                         End Try
-
+                                        'before removing the oem we try to get the original inf name (win8+)
+                                        If win8higher Then
+                                            Try
+                                                catalog = My.Computer.Registry.LocalMachine.OpenSubKey("DRIVERS\DriverDatabase\DriverInfFiles\" & infs.Substring(infs.IndexOf("oem"))).GetValue("Active").ToString
+                                                catalog = catalog.Substring(0, catalog.IndexOf("inf_") + 3)
+                                            Catch ex As Exception
+                                                catalog = ""
+                                            End Try
+                                        End If
                                         'Uninstall Driver from driver store  delete from (oemxx.inf)
                                         log(deloem.Arguments)
                                         deloem.UseShellExecute = False
@@ -345,6 +300,9 @@ Public Class Form1
 
                                         UpdateTextMethod(reply2)
                                         log(reply2)
+                                        If win8higher AndAlso (Not System.IO.File.Exists(Environment.GetEnvironmentVariable("windir") & "\inf\" + infs.Substring(infs.IndexOf("oem")))) Then
+                                            CleanupEngine.prePnplockdownfiles(catalog)
+                                        End If
                                         Exit For
                                     End If
                                 End If
@@ -7692,6 +7650,41 @@ Public Class CleanupEngine
             f.log(ex.Message + ex.StackTrace)
         End Try
     End Sub
+    Public Sub prePnplockdownfiles(ByVal oeminf As String)
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim regkey As RegistryKey
+        Dim winxp = f.winxp
+        Dim win8higher = f.win8higher
+        Dim processinfo As New ProcessStartInfo
+        Dim process As New Process
+        Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
+
+        Try
+            If win8higher Then
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
+                If regkey IsNot Nothing Then
+                    If Not checkvariables.isnullorwhitespace(oeminf) Then
+                        If Not (donotremoveamdhdaudiobusfiles AndAlso oeminf.ToLower.Contains("amdkmafd.sys")) Then
+                            For Each child As String In regkey.GetSubKeyNames()
+                                If checkvariables.isnullorwhitespace(child) = False Then
+                                    If (Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("Source"))) AndAlso regkey.OpenSubKey(child).GetValue("Source").ToString.ToLower.Contains(oeminf.ToLower) Then
+                                        Try
+                                            deletesubregkey(regkey, child)
+                                        Catch ex As Exception
+                                            f.log(ex.Message & " @Pnplockdownfiles")
+                                        End Try
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+            f.log(ex.Message + ex.StackTrace)
+        End Try
+
+    End Sub
     Public Sub Pnplockdownfiles(ByVal driverfiles As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
         Dim regkey As RegistryKey
@@ -7708,7 +7701,7 @@ Public Class CleanupEngine
                     If regkey IsNot Nothing Then
                         For i As Integer = 0 To driverfiles.Length - 1
                             If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                                If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
+                                If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd.sys")) Then
                                     For Each child As String In regkey.GetSubKeyNames()
                                         If checkvariables.isnullorwhitespace(child) = False Then
                                             If child.ToLower.Replace("/", "\").Contains(driverfiles(i).ToLower) Then
