@@ -64,7 +64,7 @@ Public Class Form1
 
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
-    Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive")
+    Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
     Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
     Dim checkupdatethread As Thread = Nothing
     Public updates As Integer = Nothing
@@ -1436,40 +1436,41 @@ Public Class Form1
                                     End If
                                     If child.Contains("Path") Then
                                         If checkvariables.isnullorwhitespace(regkey.GetValue(child)) = False Then
-                                            wantedvalue = regkey.GetValue(child).ToString
+                                            wantedvalue = regkey.GetValue(child).ToString.ToLower
                                             Try
                                                 Select Case True
-                                                    Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\AMD APP\bin\x86_64;")
-                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\AMD APP\bin\x86_64;", "")
+                                                    Case wantedvalue.Contains(";" + sysdrv & "\program files (x86)\amd app\bin\x86_64")
+                                                        wantedvalue = wantedvalue.Replace(";" + sysdrv & "\program files (x86)\amd app\bin\x86_64", "")
                                                         regkey.SetValue(child, wantedvalue)
 
-                                                    Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\AMD APP\bin\x86;")
-                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\AMD APP\bin\x86;", "")
+                                                    Case wantedvalue.Contains(sysdrv & "\program files (x86)\amd app\bin\x86_64;")
+                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\program files (x86)\amd app\bin\x86_64;", "")
                                                         regkey.SetValue(child, wantedvalue)
 
-                                                    Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;")
-                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;", "")
+                                                    Case wantedvalue.Contains(";" + sysdrv & "\program files (x86)\amd app\bin\x86")
+                                                        wantedvalue = wantedvalue.Replace(";" + sysdrv & "\program files (x86)\amd app\bin\x86", "")
                                                         regkey.SetValue(child, wantedvalue)
 
-                                                    Case wantedvalue.Contains(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static")
-                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static", "")
+                                                    Case wantedvalue.Contains(sysdrv & "\program files (x86)\amd app\bin\x86;")
+                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\program files (x86)\amd app\bin\x86;", "")
                                                         regkey.SetValue(child, wantedvalue)
 
-                                                    Case wantedvalue.Contains(sysdrv.ToLower & "\Program Files (x86)\AMD APP\bin\x86_64;")
-                                                        wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "\Program Files (x86)\AMD APP\bin\x86_64;", "")
+                                                    Case wantedvalue.Contains(";" + sysdrv & "\program Files (x86)\ati technologies\ati.ace\core-static")
+                                                        wantedvalue = wantedvalue.Replace(";" + sysdrv & "\program Files (x86)\ati technologies\ati.ace\core-static", "")
                                                         regkey.SetValue(child, wantedvalue)
 
-                                                    Case wantedvalue.Contains(sysdrv.ToLower & "\Program Files (x86)\AMD APP\bin\x86;")
-                                                        wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "\Program Files (x86)\AMD APP\bin\x86;", "")
+                                                    Case wantedvalue.Contains(sysdrv & "\program Files (x86)\ati technologies\ati.ace\core-static;")
+                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\program Files (x86)\ati technologies\ati.ace\core-static;", "")
                                                         regkey.SetValue(child, wantedvalue)
 
-                                                    Case wantedvalue.Contains(sysdrv.ToLower & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;")
-                                                        wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;", "")
+                                                    Case wantedvalue.Contains(";" + sysdrv & "\program Files (x86)\amd\ati.ace\core-static")
+                                                        wantedvalue = wantedvalue.Replace(";" + sysdrv & "\program Files (x86)\ati technologies\ati.ace\core-static", "")
                                                         regkey.SetValue(child, wantedvalue)
 
-                                                    Case wantedvalue.Contains(sysdrv.ToLower & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static")
-                                                        wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static", "")
+                                                    Case wantedvalue.Contains(sysdrv & "\program Files (x86)\amd\ati.ace\core-static;")
+                                                        wantedvalue = wantedvalue.Replace(sysdrv & "\program Files (x86)\ati technologies\ati.ace\core-static;", "")
                                                         regkey.SetValue(child, wantedvalue)
+
                                                 End Select
                                             Catch ex As Exception
                                             End Try
@@ -1667,6 +1668,9 @@ Public Class Form1
                                         End If
                                         If Not Directory.Exists(filePath) Then
                                             CleanupEngine.shareddlls(filePath)
+                                            'here we will do a specian environement path cleanup as there is chances that the installation is
+                                            'somewhere else.
+                                            amdenvironementpath(filePath)
                                         End If
                                     End If
                                 End If
@@ -3079,6 +3083,18 @@ Public Class Form1
                                                                 regkey.SetValue(child, wantedvalue)
                                                             Catch ex As Exception
                                                             End Try
+                                                        Case wantedvalue.Contains(";" + sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common")
+                                                            wantedvalue = wantedvalue.Replace(";" + sysdrv & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common", "")
+                                                            Try
+                                                                regkey.SetValue(child, wantedvalue)
+                                                            Catch ex As Exception
+                                                            End Try
+                                                        Case wantedvalue.Contains(";" + sysdrv.ToLower & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common")
+                                                            wantedvalue = wantedvalue.Replace(";" + sysdrv.ToLower & "\Program Files (x86)\NVIDIA Corporation\PhysX\Common", "")
+                                                            Try
+                                                                regkey.SetValue(child, wantedvalue)
+                                                            Catch ex As Exception
+                                                            End Try
                                                     End Select
                                                 Catch ex As Exception
                                                 End Try
@@ -3100,6 +3116,7 @@ Public Class Form1
         log("End System environement path cleanup")
 
         Try
+            sysdrv = sysdrv.ToUpper
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
             If regkey IsNot Nothing Then
@@ -3128,6 +3145,7 @@ Public Class Form1
                     End Try
                 End If
             End If
+            sysdrv = sysdrv.ToLower
         Catch ex As Exception
             log(ex.StackTrace)
         End Try
@@ -4031,6 +4049,76 @@ Public Class Form1
 
         log("End of Registry Cleaning")
 
+    End Sub
+    Private Sub amdenvironementpath(ByVal filepath As String)
+        '--------------------------------
+        'System environement path cleanup
+        '--------------------------------
+
+        log("System environement cleanUP")
+        filepath = filepath.ToLower
+        Try
+            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+            If subregkey IsNot Nothing Then
+                For Each child2 As String In subregkey.GetSubKeyNames()
+                    If child2.ToLower.Contains("controlset") Then
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
+                        If regkey IsNot Nothing Then
+                            For Each child As String In regkey.GetValueNames()
+                                If checkvariables.isnullorwhitespace(child) = False Then
+                                    If child.Contains("Path") Then
+                                        If checkvariables.isnullorwhitespace(regkey.GetValue(child)) = False Then
+                                            wantedvalue = regkey.GetValue(child).ToString.ToLower
+                                            Try
+                                                Select Case True
+                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86_64")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86_64", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86_64;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86_64;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                End Select
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+        'end system environement patch cleanup
     End Sub
     Private Sub cleanintelfolders()
 
