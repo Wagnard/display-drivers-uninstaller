@@ -73,14 +73,7 @@ Public Class Form1
     Dim version As String = Nothing
     Dim card1 As Integer = Nothing
     Dim position2 As Integer = Nothing
-    Dim wantedvalue2 As String = Nothing
-    Dim subregkey As RegistryKey = Nothing
-    Dim subregkey2 As RegistryKey = Nothing
-    Dim superkey As RegistryKey = Nothing
-    Dim wantedvalue As String = Nothing
-    Dim regkey As RegistryKey = Nothing
     Dim currentdriverversion As String = Nothing
-    Dim packages As String()
     Dim safemode As Boolean = False
     Dim myExe As String
     Dim checkupdates As New genericfunction
@@ -88,13 +81,12 @@ Public Class Form1
     Dim CleanupEngine As New CleanupEngine
     Dim enduro As Boolean = False
     Public Shared preventclose As Boolean = False
-    Dim filePath As String
     Public Shared combobox1value As String = Nothing
     Public Shared combobox2value As String = Nothing
     Dim buttontext As String()
     Dim closeapp As String = False
     Public ddudrfolder As String
-    Dim array() As String
+
     Public donotremoveamdhdaudiobusfiles As Boolean = True
     Public msgboxmessage As String()
     Public UpdateTextMethodmessage As String()
@@ -402,6 +394,7 @@ Public Class Form1
         System.Threading.Thread.Sleep(10)
     End Sub
     Private Sub cleanamdfolders()
+        Dim filePath As String = Nothing
         'Delete AMD data Folders
         UpdateTextMethod(UpdateTextMethodmessage("1"))
 
@@ -934,6 +927,16 @@ Public Class Form1
 
     End Sub
     Private Sub cleanamd()
+
+        Dim regkey As RegistryKey = Nothing
+        Dim subregkey As RegistryKey = Nothing
+        Dim subregkey2 As RegistryKey = Nothing
+        Dim wantedvalue As String = Nothing
+        Dim wantedvalue2 As String = Nothing
+        Dim superkey As RegistryKey = Nothing
+        Dim filePath As String = Nothing
+        Dim packages As String()
+
         UpdateTextMethod(UpdateTextMethodmessage("2"))
         log("Cleaning known Regkeys")
 
@@ -1670,7 +1673,7 @@ Public Class Form1
                                             CleanupEngine.shareddlls(filePath)
                                             'here we will do a specian environement path cleanup as there is chances that the installation is
                                             'somewhere else.
-                                            amdenvironementpath(filePath)
+                                            CleanupEngine.amdenvironementpath(filePath)
                                         End If
                                     End If
                                 End If
@@ -1715,7 +1718,7 @@ Public Class Form1
                 End If
             End If
         Catch ex As Exception
-            log(ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
 
         Try
@@ -2096,7 +2099,9 @@ Public Class Form1
     End Sub
 
     Private Sub cleannvidiafolders()
-
+        Dim regkey As RegistryKey = Nothing
+        Dim subregkey As RegistryKey = Nothing
+        Dim filePath As String = Nothing
         'Delete NVIDIA data Folders
         'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
 
@@ -2840,7 +2845,11 @@ Public Class Form1
     End Sub
 
     Private Sub cleannvidia()
-
+        Dim regkey As RegistryKey = Nothing
+        Dim subregkey As RegistryKey = Nothing
+        Dim subregkey2 As RegistryKey = Nothing
+        Dim wantedvalue As String = Nothing
+        Dim wantedvalue2 As String = Nothing
         '-----------------
         'Registry Cleaning
         '-----------------
@@ -4038,77 +4047,10 @@ Public Class Form1
         log("End of Registry Cleaning")
 
     End Sub
-    Private Sub amdenvironementpath(ByVal filepath As String)
-        '--------------------------------
-        'System environement path cleanup
-        '--------------------------------
 
-        log("System environement cleanUP")
-        filepath = filepath.ToLower
-        Try
-            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
-            If subregkey IsNot Nothing Then
-                For Each child2 As String In subregkey.GetSubKeyNames()
-                    If child2.ToLower.Contains("controlset") Then
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetValueNames()
-                                If checkvariables.isnullorwhitespace(child) = False Then
-                                    If child.Contains("Path") Then
-                                        If checkvariables.isnullorwhitespace(regkey.GetValue(child)) = False Then
-                                            wantedvalue = regkey.GetValue(child).ToString.ToLower
-                                            Try
-                                                Select Case True
-                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86_64")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86_64", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86_64;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86_64;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                End Select
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                    End If
-                                End If
-                            Next
-                        End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
-        'end system environement patch cleanup
-    End Sub
     Private Sub cleanintelfolders()
+
+        Dim filePath As String = Nothing
 
         UpdateTextMethod(UpdateTextMethodmessage("4"))
 
@@ -4139,6 +4081,11 @@ Public Class Form1
 
     End Sub
     Private Sub cleanintel()
+
+        Dim regkey As RegistryKey = Nothing
+        Dim subregkey As RegistryKey = Nothing
+        Dim wantedvalue As String = Nothing
+        Dim packages As String()
 
         UpdateTextMethod(UpdateTextMethodmessage("5"))
 
@@ -4396,6 +4343,10 @@ Public Class Form1
     End Sub
     Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
 
+        Dim regkey As RegistryKey = Nothing
+        Dim subregkey As RegistryKey = Nothing
+        Dim array() As String
+
         UpdateTextMethod(UpdateTextMethodmessage("7"))
 
         log("Starting the removal of nVidia Optimus UpperFilter if present.")
@@ -4533,7 +4484,12 @@ Public Class Form1
 
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        Dim regkey As RegistryKey = Nothing
+        Dim subregkey As RegistryKey = Nothing
+
         CheckForIllegalCrossThreadCalls = True
+
+
         Try
             If System.IO.File.Exists(Application.StartupPath + "\DDU.bat") = True Then
                 System.IO.File.Delete(Application.StartupPath + "\DDU.bat")
@@ -5315,6 +5271,11 @@ Public Class Form1
 
     End Sub
     Private Sub gpuidentify(ByVal gpu As String)
+
+        Dim regkey As RegistryKey = Nothing
+        Dim subregkey As RegistryKey = Nothing
+        Dim array() As String
+
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
 
@@ -5358,6 +5319,8 @@ Public Class Form1
         End Try
     End Sub
     Private Sub restartinsafemode()
+
+        Dim regkey As RegistryKey = Nothing
 
         systemrestore() 'we try to do a system restore if allowed before going into safemode.
         log("restarting in safemode")
@@ -5931,6 +5894,9 @@ Public Class Form1
                      ByVal e As System.ComponentModel.DoWorkEventArgs) _
                      Handles BackgroundWorker1.DoWork
 
+        Dim regkey As RegistryKey = Nothing
+        Dim subregkey As RegistryKey = Nothing
+        Dim array() As String
 
         UpdateTextMethod(UpdateTextMethodmessage("19"))
 
@@ -6690,6 +6656,8 @@ Public Class Form1
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
 
+        Dim regkey As RegistryKey = Nothing
+
         If version >= "6.1" Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
@@ -6834,6 +6802,9 @@ Public Class Form1
     End Sub
 
     Private Sub temporarynvidiaspeedup()   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
+
+        Dim filePath As String = Nothing
+
         Try
             filePath = Environment.GetFolderPath _
       (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
@@ -7063,6 +7034,82 @@ End Class
 Public Class CleanupEngine
 
     Dim checkvariables As New checkvariables
+
+    Public Sub amdenvironementpath(ByVal filepath As String)
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim regkey As RegistryKey
+        Dim subregkey As RegistryKey
+        Dim wantedvalue As String = Nothing
+
+        '--------------------------------
+        'System environement path cleanup
+        '--------------------------------
+
+        f.log("System environement cleanUP")
+        filepath = filepath.ToLower
+        Try
+            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+            If subregkey IsNot Nothing Then
+                For Each child2 As String In subregkey.GetSubKeyNames()
+                    If child2.ToLower.Contains("controlset") Then
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
+                        If regkey IsNot Nothing Then
+                            For Each child As String In regkey.GetValueNames()
+                                If checkvariables.isnullorwhitespace(child) = False Then
+                                    If child.Contains("Path") Then
+                                        If checkvariables.isnullorwhitespace(regkey.GetValue(child)) = False Then
+                                            wantedvalue = regkey.GetValue(child).ToString.ToLower
+                                            Try
+                                                Select Case True
+                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86_64")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86_64", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86_64;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86_64;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                End Select
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            f.log(ex.Message + ex.StackTrace)
+        End Try
+
+        'end system environement patch cleanup
+    End Sub
 
     Public Sub deletesubregkey(ByVal regkeypath As RegistryKey, ByVal child As String)
         Dim f As Form1 = My.Application.OpenForms("Form1")
@@ -7710,6 +7757,15 @@ Public Class CleanupEngine
                                     End If
                                 End If
                             Next
+                            If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
+                                If subregkey.GetValue("Service").ToString.ToLower = "basicdisplay" Then
+                                    Try
+                                        deletesubregkey(regkey, child)
+                                        deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            End If
                         Else
                             'Here, if subregkey is nothing, it mean \video doesnt exist, so we can delete it.
                             'this is a general cleanUP we could say.
