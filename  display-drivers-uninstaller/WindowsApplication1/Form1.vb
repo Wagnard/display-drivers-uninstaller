@@ -65,6 +65,7 @@ Public Class Form1
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
+    Dim windir As String = System.Environment.GetEnvironmentVariable("windir").ToLower
     Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
     Dim checkupdatethread As Thread = Nothing
     Public updates As Integer = Nothing
@@ -1673,7 +1674,7 @@ Public Class Form1
                                             CleanupEngine.shareddlls(filePath)
                                             'here we will do a specian environement path cleanup as there is chances that the installation is
                                             'somewhere else.
-                                            CleanupEngine.amdenvironementpath(filePath)
+                                            amdenvironementpath(filePath)
                                         End If
                                     End If
                                 End If
@@ -6026,6 +6027,7 @@ Public Class Form1
                     log(ex.Message + ex.StackTrace)
                 End Try
 
+
                 'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
                 Try
                     donotremoveamdhdaudiobusfiles = False
@@ -6056,6 +6058,8 @@ Public Class Form1
                 End Try
 
             End If
+
+  
 
             ' ----------------------
             ' Removing the videocard
@@ -6549,6 +6553,62 @@ Public Class Form1
             End If
             UpdateTextMethod(UpdateTextMethodmessage("28"))
 
+            'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont what that
+            'espcially if we are not using an AMD GPU
+
+
+            Try
+                log("Checking and Removing AMDKMPFD if present")
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("pnp0a08") Or _
+                               child.ToLower.Contains("pnp0a03") Then
+                                subregkey = regkey.OpenSubKey(child)
+                                If subregkey IsNot Nothing Then
+                                    For Each child2 As String In subregkey.GetSubKeyNames()
+                                        If Not checkvariables.isnullorwhitespace(child2) Then
+                                            array = subregkey.OpenSubKey(child2).GetValue("LowerFilters")
+                                            If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                                For i As Integer = 0 To array.Length - 1
+                                                    If Not checkvariables.isnullorwhitespace(array(i)) Then
+                                                        If array(i).ToLower.Contains("amdkmpfd") Then
+                                                            log("Found an AMDKMPFD! in " + child)
+                                                            Try
+                                                                log("array result: " + array(i))
+                                                            Catch ex As Exception
+                                                            End Try
+                                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                                            processinfo.Arguments = "update " & windir & "\inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
+                                                            processinfo.UseShellExecute = False
+                                                            processinfo.CreateNoWindow = True
+                                                            processinfo.RedirectStandardOutput = True
+                                                            process.StartInfo = processinfo
+
+                                                            process.Start()
+                                                            reply2 = process.StandardOutput.ReadToEnd
+                                                            'process.WaitForExit()
+                                                            process.StandardOutput.Close()
+                                                            process.Close()
+                                                            log(reply2)
+                                                            log(child + " Restored.")
+                                                            CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+                                                        End If
+                                                    End If
+                                                Next
+                                            End If
+                                        End If
+                                    Next
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
+            End Try
+
             If combobox1value = "AMD" Then
                 cleanamdserviceprocess()
                 cleanamd()
@@ -6949,6 +7009,84 @@ Public Class Form1
     Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
         Checkupdates2()
     End Sub
+
+    Private Sub amdenvironementpath(ByVal filepath As String)
+
+        Dim regkey As RegistryKey
+        Dim subregkey As RegistryKey
+        Dim wantedvalue As String = Nothing
+
+        '--------------------------------
+        'System environement path cleanup
+        '--------------------------------
+
+        log("System environement cleanUP")
+        filepath = filepath.ToLower
+        Try
+            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+            If subregkey IsNot Nothing Then
+                For Each child2 As String In subregkey.GetSubKeyNames()
+                    If child2.ToLower.Contains("controlset") Then
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
+                        If regkey IsNot Nothing Then
+                            For Each child As String In regkey.GetValueNames()
+                                If checkvariables.isnullorwhitespace(child) = False Then
+                                    If child.Contains("Path") Then
+                                        If checkvariables.isnullorwhitespace(regkey.GetValue(child)) = False Then
+                                            wantedvalue = regkey.GetValue(child).ToString.ToLower
+                                            Try
+                                                Select Case True
+                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86_64")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86_64", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86_64;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86_64;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
+                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
+                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
+                                                        regkey.SetValue(child, wantedvalue)
+
+                                                End Select
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+
+        'end system environement patch cleanup
+    End Sub
+
+
 End Class
 Public Class checkvariables
 
@@ -7029,87 +7167,12 @@ Public Class genericfunction
         Catch ex As Exception
         End Try
     End Sub
+
 End Class
 
 Public Class CleanupEngine
 
     Dim checkvariables As New checkvariables
-
-    Public Sub amdenvironementpath(ByVal filepath As String)
-        Dim f As Form1 = My.Application.OpenForms("Form1")
-        Dim regkey As RegistryKey
-        Dim subregkey As RegistryKey
-        Dim wantedvalue As String = Nothing
-
-        '--------------------------------
-        'System environement path cleanup
-        '--------------------------------
-
-        f.log("System environement cleanUP")
-        filepath = filepath.ToLower
-        Try
-            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
-            If subregkey IsNot Nothing Then
-                For Each child2 As String In subregkey.GetSubKeyNames()
-                    If child2.ToLower.Contains("controlset") Then
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetValueNames()
-                                If checkvariables.isnullorwhitespace(child) = False Then
-                                    If child.Contains("Path") Then
-                                        If checkvariables.isnullorwhitespace(regkey.GetValue(child)) = False Then
-                                            wantedvalue = regkey.GetValue(child).ToString.ToLower
-                                            Try
-                                                Select Case True
-                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86_64")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86_64", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86_64;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86_64;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                End Select
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                    End If
-                                End If
-                            Next
-                        End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            f.log(ex.Message + ex.StackTrace)
-        End Try
-
-        'end system environement patch cleanup
-    End Sub
 
     Public Sub deletesubregkey(ByVal regkeypath As RegistryKey, ByVal child As String)
         Dim f As Form1 = My.Application.OpenForms("Form1")
@@ -7693,6 +7756,7 @@ Public Class CleanupEngine
             For i As Integer = 0 To services.Length - 1
                 If Not checkvariables.isnullorwhitespace(services(i)) Then
                     If regkey.OpenSubKey(services(i), False) IsNot Nothing Then
+
                         If Not (donotremoveamdhdaudiobusfiles AndAlso services(i).ToLower.Contains("amdkmafd")) Then
 
                             Dim stopservice As New ProcessStartInfo
@@ -7724,6 +7788,7 @@ Public Class CleanupEngine
                             processstopservice.WaitForExit()
 
                         End If
+
                     End If
                 End If
 
