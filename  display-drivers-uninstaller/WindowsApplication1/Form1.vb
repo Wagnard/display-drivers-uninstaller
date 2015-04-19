@@ -6558,7 +6558,7 @@ Public Class Form1
 
 
             Try
-                log("Checking and Removing AMDKMPFD if present")
+                log("Checking and Removing AMDKMPFD Filter if present")
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
@@ -6680,7 +6680,7 @@ Public Class Form1
         Dim iskmpfdpresent As Boolean = False
 
         Try
-            log("Checking and Removing AMDKMPFD if present")
+            log("Checking if AMDKMPFD is present before Service removal")
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
