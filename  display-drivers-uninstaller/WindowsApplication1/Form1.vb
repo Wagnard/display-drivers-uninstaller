@@ -52,6 +52,7 @@ Public Class Form1
     Dim reboot As Boolean = False
     Dim shutdown As Boolean = False
     Public win8higher As Boolean = False
+    Public win10 As Boolean = False
     Public winxp As Boolean = False
     Dim stopme As Boolean = False
     Public Shared removemonitor As Boolean
@@ -4620,6 +4621,7 @@ Public Class Form1
                 If Not checkvariables.isnullorwhitespace(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber")) Then
                     If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber") = "10" Then
                         Label2.Text = "Windows 10"
+                        win10 = True
                     End If
                 End If
                 win8higher = True
@@ -4631,6 +4633,7 @@ Public Class Form1
             Case "6.4", "10.0"
                 Label2.Text = "Windows 10"
                 win8higher = True
+                win10 = True
                 Button1.Enabled = True
                 Button2.Enabled = True
                 Button3.Enabled = True
@@ -6580,7 +6583,11 @@ Public Class Form1
                                                             Catch ex As Exception
                                                             End Try
                                                             processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                                            processinfo.Arguments = "update " & windir & "\inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
+                                                            If win10 Then
+                                                                processinfo.Arguments = "update " & windir & "\inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
+                                                            Else
+                                                                processinfo.Arguments = "update " & windir & "\inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
+                                                            End If
                                                             processinfo.UseShellExecute = False
                                                             processinfo.CreateNoWindow = True
                                                             processinfo.RedirectStandardOutput = True
