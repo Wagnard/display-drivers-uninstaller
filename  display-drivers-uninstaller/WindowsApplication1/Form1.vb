@@ -6593,7 +6593,10 @@ Public Class Form1
                                                             process.Close()
                                                             log(reply2)
                                                             log(child + " Restored.")
-                                                            CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+
+                                                            If checkamdkmapfd() Then
+                                                                CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+                                                            End If
                                                         End If
                                                     End If
                                                 Next
@@ -6667,6 +6670,55 @@ Public Class Form1
         End Try
 
     End Sub
+    Private Function checkamdkmapfd() As Boolean
+
+        Dim regkey As RegistryKey = Nothing
+        Dim subregkey As RegistryKey = Nothing
+        Dim array As String() = Nothing
+        Dim iskmpfdpresent As Boolean = False
+
+        Try
+            log("Checking and Removing AMDKMPFD if present")
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("pnp0a08") Or _
+                           child.ToLower.Contains("pnp0a03") Then
+                            subregkey = regkey.OpenSubKey(child)
+                            If subregkey IsNot Nothing Then
+                                For Each child2 As String In subregkey.GetSubKeyNames()
+                                    If Not checkvariables.isnullorwhitespace(child2) Then
+                                        Array = subregkey.OpenSubKey(child2).GetValue("LowerFilters")
+                                        If (Array IsNot Nothing) AndAlso Not (Array.Length < 1) Then
+                                            For i As Integer = 0 To Array.Length - 1
+                                                If Not checkvariables.isnullorwhitespace(Array(i)) Then
+                                                    If Array(i).ToLower.Contains("amdkmpfd") Then
+                                                        log("Found an AMDKMPFD! in " + child)
+                                                        log("We do not remove the AMDKMPFP service yet")
+                                                        iskmpfdpresent = True
+
+                                                    End If
+                                                End If
+                                            Next
+                                        End If
+                                    End If
+                                Next
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+        If iskmpfdpresent Then
+            Return True
+        Else
+            Return False
+        End If
+
+    End Function
     Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object, _
                              ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
                              Handles BackgroundWorker1.RunWorkerCompleted
@@ -7822,23 +7874,37 @@ Public Class CleanupEngine
                                     End If
                                 End If
                             Next
-                            If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
-                                If subregkey.GetValue("Service").ToString.ToLower = "basicdisplay" Then
-                                    Try
-                                        deletesubregkey(regkey, child)
-                                        deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                                    Catch ex As Exception
-                                    End Try
+                            If f.win8higher Then
+                                If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
+                                    If subregkey.GetValue("Service").ToString.ToLower = "basicdisplay" Then
+                                        Try
+                                            deletesubregkey(regkey, child)
+                                            deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                                        Catch ex As Exception
+                                        End Try
+                                    End If
+                                End If
+                            Else
+                                If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
+                                    If subregkey.GetValue("Service").ToString.ToLower = "vga" Then
+                                        Try
+                                            deletesubregkey(regkey, child)
+                                            deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                                        Catch ex As Exception
+                                        End Try
+                                    End If
                                 End If
                             End If
                         Else
                             'Here, if subregkey is nothing, it mean \video doesnt exist, so we can delete it.
                             'this is a general cleanUP we could say.
-                            Try
-                                deletesubregkey(regkey, child)
-                                deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                            Catch ex As Exception
-                            End Try
+                            If regkey.OpenSubKey(child + "\0000") Is Nothing Then
+                                Try
+                                    deletesubregkey(regkey, child)
+                                    deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                                Catch ex As Exception
+                                End Try
+                            End If
                         End If
                     End If
                 Next
