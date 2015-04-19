@@ -6594,9 +6594,6 @@ Public Class Form1
                                                             log(reply2)
                                                             log(child + " Restored.")
 
-                                                            If Not checkamdkmapfd() Then
-                                                                CleanupEngine.cleanserviceprocess({"amdkmpfd"})
-                                                            End If
                                                         End If
                                                     End If
                                                 Next
@@ -6611,6 +6608,11 @@ Public Class Form1
             Catch ex As Exception
                 log(ex.Message + ex.StackTrace)
             End Try
+
+            'We now try to remove the service AMDPMPFD if its lowerfilter is not found
+            If Not checkamdkmapfd() Then
+                CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+            End If
 
             If combobox1value = "AMD" Then
                 cleanamdserviceprocess()
