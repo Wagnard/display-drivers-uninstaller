@@ -6610,8 +6610,10 @@ Public Class Form1
             End Try
 
             'We now try to remove the service AMDPMPFD if its lowerfilter is not found
-            If Not checkamdkmapfd() Then
-                CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+            If reboot Or shutdown Then
+                If Not checkamdkmapfd() Then
+                    CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+                End If
             End If
 
             If combobox1value = "AMD" Then
