@@ -6594,7 +6594,7 @@ Public Class Form1
                                                             log(reply2)
                                                             log(child + " Restored.")
 
-                                                            If checkamdkmapfd() Then
+                                                            If Not checkamdkmapfd() Then
                                                                 CleanupEngine.cleanserviceprocess({"amdkmpfd"})
                                                             End If
                                                         End If
