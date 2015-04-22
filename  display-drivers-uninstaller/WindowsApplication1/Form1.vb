@@ -106,7 +106,7 @@ Public Class Form1
         Else
             If updates = 1 Then
                 Try
-                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("1")
                     Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("1"), ToolTipIcon.Info)
@@ -117,7 +117,7 @@ Public Class Form1
             ElseIf updates = 2 Then
 
                 Try
-                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("2")
                     Try
@@ -131,7 +131,7 @@ Public Class Form1
                 End Try
 
                 If Not MyIdentity.IsSystem Then    'we dont want to open a webpage when the app is under "System" user.
-                    Dim result = MsgBox(msgboxmessage("0"), MsgBoxStyle.YesNoCancel)
+                    Dim result = MsgBox(msgboxmessagefn("0"), MsgBoxStyle.YesNoCancel)
 
                     If result = MsgBoxResult.Yes Then
                         process.Start("http://www.wagnardmobile.com")
@@ -139,7 +139,7 @@ Public Class Form1
                         closeddu()
                         Exit Sub
                     ElseIf result = MsgBoxResult.No Then
-                        MsgBox(msgboxmessage("1"))
+                        MsgBox(msgboxmessagefn("1"))
                     ElseIf result = MsgBoxResult.Cancel Then
                         closeapp = True
                         closeddu()
@@ -148,7 +148,7 @@ Public Class Form1
 
             ElseIf updates = 3 Then
                 Try
-                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("3")
                     Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("3"), ToolTipIcon.Info)
@@ -178,7 +178,7 @@ Public Class Form1
         processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
         processinfo.Arguments = "dp_enum"
 
-        UpdateTextMethod(UpdateTextMethodmessage("0"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("0"))
 
         Try
             For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
@@ -398,7 +398,7 @@ Public Class Form1
     Private Sub cleanamdfolders()
         Dim filePath As String = Nothing
         'Delete AMD data Folders
-        UpdateTextMethod(UpdateTextMethodmessage("1"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("1"))
 
         log("Cleaning Directory (Please Wait...)")
 
@@ -939,7 +939,7 @@ Public Class Form1
         Dim filePath As String = Nothing
         Dim packages As String()
 
-        UpdateTextMethod(UpdateTextMethodmessage("2"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("2"))
         log("Cleaning known Regkeys")
 
 
@@ -2107,7 +2107,7 @@ Public Class Form1
         'Delete NVIDIA data Folders
         'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
 
-        UpdateTextMethod(UpdateTextMethodmessage("3"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("3"))
         log("Cleaning UpdatusUser users ac if present")
 
         Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName.ToString())
@@ -2120,7 +2120,7 @@ Public Class Form1
         Catch ex As Exception
         End Try
 
-        UpdateTextMethod(UpdateTextMethodmessage("4"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("4"))
 
         log("Cleaning Directory")
 
@@ -2855,7 +2855,7 @@ Public Class Form1
         '-----------------
         'Registry Cleaning
         '-----------------
-        UpdateTextMethod(UpdateTextMethodmessage("5"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("5"))
         log("Starting reg cleanUP... May take a minute or two.")
 
 
@@ -4054,7 +4054,7 @@ Public Class Form1
 
         Dim filePath As String = Nothing
 
-        UpdateTextMethod(UpdateTextMethodmessage("4"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("4"))
 
         log("Cleaning Directory")
 
@@ -4089,7 +4089,7 @@ Public Class Form1
         Dim wantedvalue As String = Nothing
         Dim packages As String()
 
-        UpdateTextMethod(UpdateTextMethodmessage("5"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("5"))
 
         log("Cleaning registry")
 
@@ -4341,7 +4341,7 @@ Public Class Form1
             log(ex.Message + ex.StackTrace)
         End Try
 
-        UpdateTextMethod(UpdateTextMethodmessage("6"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("6"))
     End Sub
     Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
 
@@ -4349,7 +4349,7 @@ Public Class Form1
         Dim subregkey As RegistryKey = Nothing
         Dim array() As String
 
-        UpdateTextMethod(UpdateTextMethodmessage("7"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("7"))
 
         log("Starting the removal of nVidia Optimus UpperFilter if present.")
 
@@ -4400,7 +4400,7 @@ Public Class Form1
                 Next
             End If
         Catch ex As Exception
-            MsgBox(msgboxmessage("5"))
+            MsgBox(msgboxmessagefn("5"))
             log(ex.Message + ex.StackTrace)
         End Try
     End Sub
@@ -4444,7 +4444,7 @@ Public Class Form1
             Exit Sub
         End If
         If reboot = False And shutdown = False Then
-            UpdateTextMethod(UpdateTextMethodmessage("8"))
+            UpdateTextMethod(UpdateTextMethodmessagefn("8"))
             log("Scanning for new device...")
             Dim proc4 As New Process
             proc4.StartInfo = scan
@@ -4459,7 +4459,7 @@ Public Class Form1
             End If
 
         End If
-        UpdateTextMethod(UpdateTextMethodmessage("9"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("9"))
 
         log("Clean uninstall completed!")
 
@@ -4572,7 +4572,7 @@ Public Class Form1
 
         If Not isElevated Then
 
-            MsgBox(msgboxmessage("2"), MsgBoxStyle.Critical)
+            MsgBox(msgboxmessagefn("2"), MsgBoxStyle.Critical)
             closeddu()
             Exit Sub
         End If
@@ -4757,7 +4757,7 @@ Public Class Form1
             '----------------
             'language section
             '----------------
-            combobox2value = ComboBox2.Text
+
             Dim diChild() As String = Directory.GetDirectories(Application.StartupPath & "\settings\Languages")
             Dim list(diChild.Length - 1) As String
             For i As Integer = 0 To diChild.Length - 1
@@ -4848,9 +4848,10 @@ Public Class Form1
 
             End If
 
+            combobox2value = ComboBox2.Text
 
             Try
-                buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\label11.txt") '// add each line as String Array.
+                buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
                 Label11.Text = ""
                 Label11.Text = Label11.Text & buttontext("0")
             Catch ex As Exception
@@ -4948,7 +4949,7 @@ Public Class Form1
 
             If arch = True Then
                 If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x64\ddudr.exe") Then
-                    MsgBox(msgboxmessage("3"), MsgBoxStyle.Critical)
+                    MsgBox(msgboxmessagefn("3"), MsgBoxStyle.Critical)
                     Button1.Enabled = False
                     Button2.Enabled = False
                     Button3.Enabled = False
@@ -4956,7 +4957,7 @@ Public Class Form1
                 End If
             ElseIf arch = False Then
                 If Not My.Computer.FileSystem.FileExists(Application.StartupPath & "\x86\ddudr.exe") Then
-                    MsgBox(msgboxmessage("3"), MsgBoxStyle.Critical)
+                    MsgBox(msgboxmessagefn("3"), MsgBoxStyle.Critical)
                     Button1.Enabled = False
                     Button2.Enabled = False
                     Button3.Enabled = False
@@ -5019,7 +5020,7 @@ Public Class Form1
 
             'We check if there are any reboot from windows update pending. and if so we quit.
             If winupdatepending Then
-                MsgBox("There is a pending Reboot, please reboot before using DDU")
+                MsgBox(msgboxmessagefn("13"))
                 closeddu()
                 Exit Sub
             End If
@@ -5068,11 +5069,11 @@ Public Class Form1
             Me.TopMost = True
             NotifyIcon1.Visible = True
             Checkupdates2()
-            'MsgBox(msgboxmessage("4"), MsgBoxStyle.Information)
+            'MsgBox(msgboxmessagefn("4"), MsgBoxStyle.Information)
 
 
 
-            UpdateTextMethod(UpdateTextMethodmessage("10") + Application.ProductVersion)
+            UpdateTextMethod(UpdateTextMethodmessagefn("10") + Application.ProductVersion)
             log("DDU Version: " + Application.ProductVersion)
             log("OS: " + Label2.Text)
             log("Architecture: " & ddudrfolder)
@@ -5090,16 +5091,16 @@ Public Class Form1
 
                                     If Not checkvariables.isnullorwhitespace(subregkey.GetValue("Device Description")) Then
                                         currentdriverversion = subregkey.GetValue("Device Description").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
+                                        UpdateTextMethod(UpdateTextMethodmessagefn("11") + " " + child + " " + UpdateTextMethodmessagefn("12") + " " + currentdriverversion)
                                         log("GPU #" + child + " Detected : " + currentdriverversion)
                                     Else
                                         If (subregkey.GetValue("DriverDesc") IsNot Nothing) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
-                                            UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
+                                            UpdateTextMethod(UpdateTextMethodmessagefn("11") + " " + child + " " + UpdateTextMethodmessagefn("12") + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
                                             log("GPU #" + child + " Detected : " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
                                         Else
                                             If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverDesc")) Then
                                                 currentdriverversion = subregkey.GetValue("DriverDesc").ToString
-                                                UpdateTextMethod(UpdateTextMethodmessage("11") + " " + child + " " + UpdateTextMethodmessage("12") + " " + currentdriverversion)
+                                                UpdateTextMethod(UpdateTextMethodmessagefn("11") + " " + child + " " + UpdateTextMethodmessagefn("12") + " " + currentdriverversion)
                                                 log("GPU #" + child + " Detected : " + currentdriverversion)
                                             End If
                                         End If
@@ -5107,7 +5108,7 @@ Public Class Form1
                                     End If
                                     If Not checkvariables.isnullorwhitespace(subregkey.GetValue("MatchingDeviceId")) Then
                                         currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessage("13") + " " + currentdriverversion)
+                                        UpdateTextMethod(UpdateTextMethodmessagefn("13") + " " + currentdriverversion)
                                         log("GPU DeviceId : " + currentdriverversion)
                                     End If
 
@@ -5132,17 +5133,17 @@ Public Class Form1
 
                                     If Not checkvariables.isnullorwhitespace(subregkey.GetValue("DriverVersion")) Then
                                         currentdriverversion = subregkey.GetValue("DriverVersion").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessage("14") + " " + currentdriverversion)
+                                        UpdateTextMethod(UpdateTextMethodmessagefn("14") + " " + currentdriverversion)
                                         log("Detected Driver(s) Version(s) : " + currentdriverversion)
                                     End If
                                     If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfPath")) Then
                                         currentdriverversion = subregkey.GetValue("InfPath").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessage("15") + " " + currentdriverversion)
+                                        UpdateTextMethod(UpdateTextMethodmessagefn("15") + " " + currentdriverversion)
                                         log("INF : " + currentdriverversion)
                                     End If
                                     If Not checkvariables.isnullorwhitespace(subregkey.GetValue("InfSection")) Then
                                         currentdriverversion = subregkey.GetValue("InfSection").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessage("16") + " " + currentdriverversion)
+                                        UpdateTextMethod(UpdateTextMethodmessagefn("16") + " " + currentdriverversion)
                                         log("INF Section : " + currentdriverversion)
                                     End If
                                 End If
@@ -5251,7 +5252,7 @@ Public Class Form1
                             restartinsafemode()
                         Else
                             If Not silent Then
-                                Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessage("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                                Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
                                 If resultmsgbox = DialogResult.Cancel Then
 
 
@@ -5267,7 +5268,7 @@ Public Class Form1
                             End If
                         End If
                     Else
-                        MsgBox(msgboxmessage("7"))
+                        MsgBox(msgboxmessagefn("7"))
                     End If
 
             End Select
@@ -5335,7 +5336,7 @@ Public Class Form1
                 End If
             Next
         Catch ex As Exception
-            MsgBox(msgboxmessage("5"))
+            MsgBox(msgboxmessagefn("5"))
             log(ex.Message + ex.StackTrace)
         End Try
     End Sub
@@ -5542,7 +5543,7 @@ Public Class Form1
     End Sub
 
     Public Sub TestDelete(ByVal folder As String)
-        ' UpdateTextMethod(UpdateTextMethodmessage("18"))
+        ' UpdateTextMethod(UpdateTextMethodmessagefn("18"))
         'log("Deleting some specials folders, it could take some times...")
         'ensure that this folder can be accessed with current user ac.
         If Not Directory.Exists(folder) Then
@@ -5579,7 +5580,7 @@ Public Class Form1
         If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
             Try
                 di.Delete()
-                log(di.ToString + " - " + UpdateTextMethodmessage("41"))
+                log(di.ToString + " - " + UpdateTextMethodmessagefn("41"))
             Catch ex As Exception
                 log(ex.Message + ex.StackTrace)
             End Try
@@ -5919,7 +5920,7 @@ Public Class Form1
         Dim subregkey As RegistryKey = Nothing
         Dim array() As String
 
-        UpdateTextMethod(UpdateTextMethodmessage("19"))
+        UpdateTextMethod(UpdateTextMethodmessagefn("19"))
 
         preventclose = True
         Invoke(Sub() Button1.Enabled = False)
@@ -5933,7 +5934,7 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
                 If regkey.GetValue("SearchOrderConfig").ToString <> 0 Then
                     regkey.SetValue("SearchOrderConfig", 0)
-                    MsgBox(msgboxmessage("8"))
+                    MsgBox(msgboxmessagefn("8"))
                 End If
             Catch ex As Exception
             End Try
@@ -5943,7 +5944,7 @@ Public Class Form1
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
                 If regkey.GetValue("DontSearchWindowsUpdate").ToString <> 1 Then
                     regkey.SetValue("DontSearchWindowsUpdate", 1)
-                    MsgBox(msgboxmessage("8"))
+                    MsgBox(msgboxmessagefn("8"))
                 End If
             Catch ex As Exception
             End Try
@@ -5966,9 +5967,9 @@ Public Class Form1
                 provider = "Intel"
             End If
 
-            UpdateTextMethod(UpdateTextMethodmessage("20") + " " & combobox1value & " " + UpdateTextMethodmessage("21"))
+            UpdateTextMethod(UpdateTextMethodmessagefn("20") + " " & combobox1value & " " + UpdateTextMethodmessagefn("21"))
             log("Uninstalling " + combobox1value + " driver ...")
-            UpdateTextMethod(UpdateTextMethodmessage("22"))
+            UpdateTextMethod(UpdateTextMethodmessagefn("22"))
 
             Try
                 If combobox1value = "NVIDIA" Then
@@ -6079,7 +6080,7 @@ Public Class Form1
 
             End If
 
-  
+
 
             ' ----------------------
             ' Removing the videocard
@@ -6137,17 +6138,17 @@ Public Class Form1
                         Next
                     End If
                 Catch ex As Exception
-                    MsgBox(msgboxmessage("5"))
+                    MsgBox(msgboxmessagefn("5"))
                     log(ex.Message + ex.StackTrace)
                 End Try
             Next
 
-            UpdateTextMethod(UpdateTextMethodmessage("23"))
+            UpdateTextMethod(UpdateTextMethodmessagefn("23"))
             log("DDUDR Remove Display Driver: Complete.")
 
             cleandriverstore()
 
-            UpdateTextMethod(UpdateTextMethodmessage("24"))
+            UpdateTextMethod(UpdateTextMethodmessagefn("24"))
             log("Executing DDUDR Remove Audio controler.")
 
             Try
@@ -6192,11 +6193,11 @@ Public Class Form1
                     Next
                 End If
             Catch ex As Exception
-                MsgBox(msgboxmessage("5"))
+                MsgBox(msgboxmessagefn("5"))
                 log(ex.Message + ex.StackTrace)
             End Try
 
-            UpdateTextMethod(UpdateTextMethodmessage("25"))
+            UpdateTextMethod(UpdateTextMethodmessagefn("25"))
 
 
             log("DDUDR Remove Audio controler Complete.")
@@ -6268,11 +6269,11 @@ Public Class Form1
                     End While
 
                 Catch ex As Exception
-                    MsgBox(msgboxmessage("5"))
+                    MsgBox(msgboxmessagefn("5"))
                     log(ex.Message + ex.StackTrace)
                 End Try
 
-                UpdateTextMethod(UpdateTextMethodmessage("26"))
+                UpdateTextMethod(UpdateTextMethodmessagefn("26"))
 
                 Try
                     'removing NVIDIA SHIELD Wireless Controller Trackpad
@@ -6324,7 +6325,7 @@ Public Class Form1
                     End While
 
                 Catch ex As Exception
-                    MsgBox(msgboxmessage("5"))
+                    MsgBox(msgboxmessagefn("5"))
                     log(ex.Message + ex.StackTrace)
                 End Try
 
@@ -6371,7 +6372,7 @@ Public Class Form1
                         Next
                     End If
                 Catch ex As Exception
-                    MsgBox(msgboxmessage("5"))
+                    MsgBox(msgboxmessagefn("5"))
                     log(ex.Message + ex.StackTrace)
                 End Try
 
@@ -6412,7 +6413,7 @@ Public Class Form1
                         Next
                     End If
                 Catch ex As Exception
-                    MsgBox(msgboxmessage("5"))
+                    MsgBox(msgboxmessagefn("5"))
                     log(ex.Message + ex.StackTrace)
                 End Try
 
@@ -6456,7 +6457,7 @@ Public Class Form1
                         Next
                     End If
                 Catch ex As Exception
-                    MsgBox(msgboxmessage("5"))
+                    MsgBox(msgboxmessagefn("5"))
                     log(ex.Message + ex.StackTrace)
                 End Try
 
@@ -6514,7 +6515,7 @@ Public Class Form1
                         Next
                     End If
                 Catch ex As Exception
-                    MsgBox(msgboxmessage("5"))
+                    MsgBox(msgboxmessagefn("5"))
                     log(ex.Message + ex.StackTrace)
                 End Try
             End If
@@ -6565,13 +6566,13 @@ Public Class Form1
                         Next
                     End If
                 Catch ex As Exception
-                    MsgBox(msgboxmessage("5"))
+                    MsgBox(msgboxmessagefn("5"))
                     log(ex.Message + ex.StackTrace)
                 End Try
 
-                UpdateTextMethod(UpdateTextMethodmessage("27"))
+                UpdateTextMethod(UpdateTextMethodmessagefn("27"))
             End If
-            UpdateTextMethod(UpdateTextMethodmessage("28"))
+            UpdateTextMethod(UpdateTextMethodmessagefn("28"))
 
             'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont what that
             'espcially if we are not using an AMD GPU
@@ -6693,7 +6694,7 @@ Public Class Form1
 
         Catch ex As Exception
             log(ex.Message & ex.StackTrace)
-            MsgBox(msgboxmessage("5"), MsgBoxStyle.Critical)
+            MsgBox(msgboxmessagefn("5"), MsgBoxStyle.Critical)
             stopme = True
         End Try
 
@@ -6777,7 +6778,7 @@ Public Class Form1
             Invoke(Sub() MenuStrip1.Enabled = True)
 
             If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
-                If MsgBox(msgboxmessage("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
+                If MsgBox(msgboxmessagefn("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                     'do nothing
                 Else
                     closeddu()
@@ -6802,7 +6803,7 @@ Public Class Form1
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
                 regkey.SetValue("SearchOrderConfig", 1)
-                MsgBox(msgboxmessage("10"))
+                MsgBox(msgboxmessagefn("10"))
             Catch ex As Exception
                 log(ex.Message + ex.StackTrace)
             End Try
@@ -6811,7 +6812,7 @@ Public Class Form1
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
                 regkey.SetValue("DontSearchWindowsUpdate", 0)
-                MsgBox(msgboxmessage("10"))
+                MsgBox(msgboxmessagefn("10"))
             Catch ex As Exception
                 log(ex.Message + ex.StackTrace)
             End Try
@@ -6924,13 +6925,30 @@ Public Class Form1
                 Label10.Text = Label10.Text & buttontext(i)
             Next
 
-            msgboxmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\msgbox.txt") '// add each line as String Array.
-            UpdateTextMethodmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & ComboBox2.Text & "\updatetextmethod.txt") '// add each line as String Array.
         Catch ex As Exception
             log(ex.Message)
         End Try
     End Sub
+    Public Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
+        UpdateTextMethodmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\updatetextmethod.txt") '// add each line as String Array.
 
+        If UpdateTextMethodmessage.Length - 1 <= number AndAlso Not checkvariables.isnullorwhitespace(UpdateTextMethodmessage(number)) Then
+            Return UpdateTextMethodmessage(number)
+        Else 'we fall back to English by default if the other language return an empty line at the zone we requested.
+            UpdateTextMethodmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\updatetextmethod.txt") '// add each line as String Array. '// add each line as String Array.
+            Return UpdateTextMethodmessage(number)
+        End If
+    End Function
+    Public Function msgboxmessagefn(ByVal number As Integer) As String
+        msgboxmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\msgbox.txt") '// add each line as String Array.
+
+        If msgboxmessage.Length - 1 >= number AndAlso Not checkvariables.isnullorwhitespace(msgboxmessage(number)) Then
+            Return msgboxmessage(number)
+        Else 'we fall back to English by default if the other language return an empty line at the zone we requested.
+            msgboxmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\msgbox.txt") '// add each line as String Array.
+            Return msgboxmessage(number)
+        End If
+    End Function
     Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
         combobox2value = ComboBox2.Text
         settings.setconfig("language", combobox2value)
@@ -7254,31 +7272,47 @@ Public Class CleanupEngine
 
     Dim checkvariables As New checkvariables
 
-    Public Sub deletesubregkey(ByVal regkeypath As RegistryKey, ByVal child As String)
+    Private Function msgboxmessagefn(ByVal number As Integer) As String
         Dim f As Form1 = My.Application.OpenForms("Form1")
-        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
+        Return f.msgboxmessagefn(number)
+    End Function
+    Private Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Return f.UpdateTextMethodmessagefn(number)
+    End Function
+    Private Sub updatetextmethod(strmessage As String)
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        f.UpdateTextMethod(strmessage)
+    End Sub
+    Private Sub log(strmessage As String)
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        f.log(strmessage)
+    End Sub
+    Public Sub TestDelete(ByVal folder As String)
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        f.TestDelete(folder)
+    End Sub
+    Public Sub deletesubregkey(ByVal regkeypath As RegistryKey, ByVal child As String)
 
         If (regkeypath IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child)) Then
             'Try
             regkeypath.DeleteSubKeyTree(child)
-            f.log(regkeypath.ToString + "\" + child + " - " + updateTextMethodmessage("39"))
+            log(regkeypath.ToString + "\" + child + " - " + updateTextMethodmessagefn("39"))
             'Catch ex As Exception
-            '    f.log(ex.Message + ex.StackTrace + " ----> " + regkeypath.ToString + "\" + child)
+            '    log(ex.Message + ex.StackTrace + " ----> " + regkeypath.ToString + "\" + child)
             'End Try
 
         End If
-
     End Sub
 
     Public Sub deletedirectory(ByVal directorypath As String)
-        Dim f As Form1 = My.Application.OpenForms("Form1")
-        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
+
 
         If Not checkvariables.isnullorwhitespace(directorypath) Then
 
             My.Computer.FileSystem.DeleteDirectory _
                     (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            f.log(directorypath + " - " + updateTextMethodmessage("39"))
+            log(directorypath + " - " + UpdateTextMethodmessagefn("39"))
 
 
         End If
@@ -7286,28 +7320,26 @@ Public Class CleanupEngine
     End Sub
 
     Public Sub deletefile(ByVal filepath As String)
-        Dim f As Form1 = My.Application.OpenForms("Form1")
-        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
+
 
         If Not checkvariables.isnullorwhitespace(filepath) Then
 
             My.Computer.FileSystem.DeleteFile(filepath) 'filepath here include the file too.
 
-            f.log(filepath + " - " + updateTextMethodmessage("41"))
+            log(filepath + " - " + UpdateTextMethodmessagefn("41"))
         End If
 
     End Sub
 
     Public Sub deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String)
-        Dim f As Form1 = My.Application.OpenForms("Form1")
-        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
+
 
         If (regkeypath IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child)) Then
             'Try
             regkeypath.DeleteValue(child)
-            f.log(regkeypath.ToString + "\" + child + " - " + updateTextMethodmessage("40"))
+            log(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn("40"))
             'Catch ex As Exception
-            '    f.log(ex.Message + ex.StackTrace + " ----> " + regkeypath.ToString + "\" + child)
+            '    log(ex.Message + ex.StackTrace + " ----> " + regkeypath.ToString + "\" + child)
             'End Try
 
         End If
@@ -7315,14 +7347,14 @@ Public Class CleanupEngine
     End Sub
 
     Public Sub classroot(ByVal classroot As String())
-        Dim f As Form1 = My.Application.OpenForms("Form1")
+
         Dim regkey As RegistryKey
         Dim subregkey As RegistryKey
         Dim wantedvalue As String = Nothing
         Dim appid As String = Nothing
         Dim typelib As String = Nothing
 
-        f.log("Begin classroot CleanUP")
+        log("Begin classroot CleanUP")
 
         Try
             regkey = My.Computer.Registry.ClassesRoot
@@ -7376,7 +7408,7 @@ Public Class CleanupEngine
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.Message + ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
 
         If IntPtr.Size = 8 Then
@@ -7431,15 +7463,15 @@ Public Class CleanupEngine
                     Next
                 End If
             Catch ex As Exception
-                f.log(ex.Message + ex.StackTrace)
+                log(ex.Message + ex.StackTrace)
             End Try
         End If
 
-        f.log("End classroot CleanUP")
+        log("End classroot CleanUP")
     End Sub
 
     Public Sub installer(ByVal packages As String())
-        Dim f As Form1 = My.Application.OpenForms("Form1")
+
         Dim regkey As RegistryKey
         Dim basekey As RegistryKey
         Dim superregkey As RegistryKey
@@ -7447,12 +7479,11 @@ Public Class CleanupEngine
         Dim subsuperregkey As RegistryKey
         Dim wantedvalue As String = Nothing
         Dim removephysx As Boolean = removephysx
-        Dim msgboxmessage As String() = f.msgboxmessage
-        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
-        f.UpdateTextMethod(updateTextMethodmessage("29"))
+
+        updatetextmethod(UpdateTextMethodmessagefn("29"))
 
         Try
-            f.log("-Starting S-1-5-xx region cleanUP")
+            log("-Starting S-1-5-xx region cleanUP")
             basekey = My.Computer.Registry.LocalMachine.OpenSubKey _
                   ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
             If basekey IsNot Nothing Then
@@ -7497,7 +7528,7 @@ Public Class CleanupEngine
                                                                       subregkey.GetValue("UninstallString").ToString.ToLower.Contains("{") Then
                                                                         Dim folder As String = subregkey.GetValue("UninstallString").ToString
                                                                         folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
-                                                                        f.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
+                                                                        testdelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
                                                                         If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
                                                                             For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
                       ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
@@ -7511,7 +7542,7 @@ Public Class CleanupEngine
                                                                         End If
                                                                     End If
                                                                 Catch ex As Exception
-                                                                    f.log(ex.Message + ex.StackTrace)
+                                                                    log(ex.Message + ex.StackTrace)
                                                                 End Try
 
                                                                 Try
@@ -7581,14 +7612,14 @@ Public Class CleanupEngine
                     End If
                 Next
             End If
-            f.UpdateTextMethod(updateTextMethodmessage("30"))
-            f.log("-End of S-1-5-xx region cleanUP")
+            updatetextmethod(UpdateTextMethodmessagefn("30"))
+            log("-End of S-1-5-xx region cleanUP")
         Catch ex As Exception
-            MsgBox(msgboxmessage("5"))
-            f.log(ex.Message + ex.StackTrace)
+            MsgBox(msgboxmessagefn("5"))
+            log(ex.Message + ex.StackTrace)
         End Try
 
-        f.UpdateTextMethod(updateTextMethodmessage("31"))
+        updatetextmethod(UpdateTextMethodmessagefn("31"))
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
       ("Installer\Products", True)
@@ -7613,7 +7644,7 @@ Public Class CleanupEngine
                                                       subregkey.GetValue("ProductIcon").ToString.ToLower.Contains("{") Then
                                                         Dim folder As String = subregkey.GetValue("ProductIcon").ToString
                                                         folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
-                                                        f.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
+                                                        testdelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
                                                         If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
                                                             For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
     ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
@@ -7627,7 +7658,7 @@ Public Class CleanupEngine
                                                         End If
                                                     End If
                                                 Catch ex As Exception
-                                                    f.log(ex.Message + ex.StackTrace)
+                                                    log(ex.Message + ex.StackTrace)
                                                 End Try
 
                                                 Try
@@ -7671,14 +7702,14 @@ Public Class CleanupEngine
                     End If
                 Next
             End If
-            f.UpdateTextMethod(updateTextMethodmessage("32"))
+            updatetextmethod(UpdateTextMethodmessagefn("32"))
         Catch ex As Exception
-            MsgBox(msgboxmessage("5"))
-            f.log(ex.Message + ex.StackTrace)
+            MsgBox(msgboxmessagefn("5"))
+            log(ex.Message + ex.StackTrace)
         End Try
 
 
-        f.UpdateTextMethod(updateTextMethodmessage("33"))
+        updatetextmethod(UpdateTextMethodmessagefn("33"))
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -7740,13 +7771,13 @@ Public Class CleanupEngine
                     End If
                 Next
             End If
-            f.UpdateTextMethod(updateTextMethodmessage("34"))
+            updatetextmethod(UpdateTextMethodmessagefn("34"))
         Catch ex As Exception
-            MsgBox(msgboxmessage("5"))
-            f.log(ex.Message + ex.StackTrace)
+            MsgBox(msgboxmessagefn("5"))
+            log(ex.Message + ex.StackTrace)
         End Try
 
-        f.UpdateTextMethod(updateTextMethodmessage("35"))
+        updatetextmethod(UpdateTextMethodmessagefn("35"))
         Try
             For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
                 If Not checkvariables.isnullorwhitespace(users) Then
@@ -7813,22 +7844,21 @@ Public Class CleanupEngine
                     End If
                 End If
             Next
-            f.UpdateTextMethod(updateTextMethodmessage("36"))
+            updatetextmethod(UpdateTextMethodmessagefn("36"))
         Catch ex As Exception
-            MsgBox(msgboxmessage("5"))
-            f.log(ex.Message + ex.StackTrace)
+            MsgBox(msgboxmessagefn("5"))
+            log(ex.Message + ex.StackTrace)
         End Try
 
     End Sub
     Public Sub cleanserviceprocess(ByVal services As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
         Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
-        Dim updateTextMethodmessage As String() = f.UpdateTextMethodmessage
         Dim regkey As RegistryKey
         Dim subregkey As RegistryKey
 
-        f.UpdateTextMethod(updateTextMethodmessage("37"))
-        f.log("Cleaning Process/Services...")
+        updatetextmethod(UpdateTextMethodmessagefn("37"))
+        log("Cleaning Process/Services...")
 
         'STOP AMD service
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Services", False)
@@ -7849,16 +7879,16 @@ Public Class CleanupEngine
 
                             Dim processstopservice As New Process
                             processstopservice.StartInfo = stopservice
-                            f.UpdateTextMethod("Stopping service : " & services(i))
-                            f.log("Stopping service : " & services(i))
+                            updatetextmethod("Stopping service : " & services(i))
+                            log("Stopping service : " & services(i))
                             processstopservice.Start()
                             processstopservice.WaitForExit()
 
                             stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
 
                             processstopservice.StartInfo = stopservice
-                            f.UpdateTextMethod("Deleting service : " & services(i))
-                            f.log("Deleting service : " & services(i))
+                            updatetextmethod("Deleting service : " & services(i))
+                            log("Deleting service : " & services(i))
                             processstopservice.Start()
                             processstopservice.WaitForExit()
 
@@ -7875,14 +7905,14 @@ Public Class CleanupEngine
                 System.Threading.Thread.Sleep(10)
             Next
         End If
-        f.UpdateTextMethod(updateTextMethodmessage("38"))
-        f.log("Process/Services CleanUP Complete")
+        updatetextmethod(UpdateTextMethodmessagefn("38"))
+        log("Process/Services CleanUP Complete")
 
         '-------------
         'control/video
         '-------------
         'Reason I put this in service is that the removal of this is based from its service.
-        f.log("Control/Video CleanUP")
+        log("Control/Video CleanUP")
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", True)
             If regkey IsNot Nothing Then
@@ -7938,7 +7968,7 @@ Public Class CleanupEngine
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.Message + ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
     End Sub
     Public Sub prePnplockdownfiles(ByVal oeminf As String)
@@ -7962,7 +7992,7 @@ Public Class CleanupEngine
                                         Try
                                             deletesubregkey(regkey, child)
                                         Catch ex As Exception
-                                            f.log(ex.Message & " @Pnplockdownfiles")
+                                            log(ex.Message & " @Pnplockdownfiles")
                                         End Try
                                     End If
                                 End If
@@ -7972,7 +8002,7 @@ Public Class CleanupEngine
                 End If
             End If
         Catch ex As Exception
-            f.log(ex.Message + ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
 
     End Sub
@@ -7999,7 +8029,7 @@ Public Class CleanupEngine
                                                 Try
                                                     deletesubregkey(regkey, child)
                                                 Catch ex As Exception
-                                                    f.log(ex.Message & " @Pnplockdownfiles")
+                                                    log(ex.Message & " @Pnplockdownfiles")
                                                 End Try
                                             End If
                                         End If
@@ -8022,7 +8052,7 @@ Public Class CleanupEngine
                                                 Try
                                                     deletevalue(regkey, child)
                                                 Catch ex As Exception
-                                                    f.log(ex.Message & " @Pnplockdownfiles")
+                                                    log(ex.Message & " @Pnplockdownfiles")
                                                 End Try
                                             End If
                                         End If
@@ -8035,20 +8065,20 @@ Public Class CleanupEngine
             End If
 
         Catch ex As Exception
-            f.log(ex.StackTrace)
+            log(ex.StackTrace)
         End Try
 
     End Sub
 
     Public Sub clsidleftover(ByVal clsidleftover As String())
-        Dim f As Form1 = My.Application.OpenForms("Form1")
+
         Dim regkey As RegistryKey
         Dim subregkey As RegistryKey
         Dim wantedvalue As String
         Dim appid As String = Nothing
         Dim typelib As String = Nothing
 
-        f.log("Begin clsidleftover CleanUP")
+        log("Begin clsidleftover CleanUP")
 
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
@@ -8090,7 +8120,7 @@ Public Class CleanupEngine
                                                     deletesubregkey(regkey, child)
                                                     Exit For
                                                 Catch ex As Exception
-                                                    f.log(ex.Message + ex.StackTrace)
+                                                    log(ex.Message + ex.StackTrace)
                                                 End Try
                                             End If
                                         End If
@@ -8102,7 +8132,7 @@ Public Class CleanupEngine
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.Message + ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
 
         Try
@@ -8144,7 +8174,7 @@ Public Class CleanupEngine
                                                     deletesubregkey(regkey, child)
                                                     Exit For
                                                 Catch ex As Exception
-                                                    f.log(ex.Message + ex.StackTrace)
+                                                    log(ex.Message + ex.StackTrace)
                                                 End Try
                                             End If
                                         End If
@@ -8156,7 +8186,7 @@ Public Class CleanupEngine
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.Message + ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
 
 
@@ -8202,7 +8232,7 @@ Public Class CleanupEngine
                                                         deletesubregkey(regkey, child)
                                                         Exit For
                                                     Catch ex As Exception
-                                                        f.log(ex.Message + ex.StackTrace)
+                                                        log(ex.Message + ex.StackTrace)
                                                     End Try
                                                 End If
                                             End If
@@ -8214,7 +8244,7 @@ Public Class CleanupEngine
                     Next
                 End If
             Catch ex As Exception
-                f.log(ex.Message + ex.StackTrace)
+                log(ex.Message + ex.StackTrace)
             End Try
 
             Try
@@ -8256,7 +8286,7 @@ Public Class CleanupEngine
                                                         deletesubregkey(regkey, child)
                                                         Exit For
                                                     Catch ex As Exception
-                                                        f.log(ex.Message + ex.StackTrace)
+                                                        log(ex.Message + ex.StackTrace)
                                                     End Try
                                                 End If
                                             End If
@@ -8268,7 +8298,7 @@ Public Class CleanupEngine
                     Next
                 End If
             Catch ex As Exception
-                f.log(ex.Message + ex.StackTrace)
+                log(ex.Message + ex.StackTrace)
             End Try
         End If
 
@@ -8311,7 +8341,7 @@ Public Class CleanupEngine
                                                     deletesubregkey(regkey, child)
                                                     Exit For
                                                 Catch ex As Exception
-                                                    f.log(ex.Message + ex.StackTrace)
+                                                    log(ex.Message + ex.StackTrace)
                                                 End Try
                                             End If
                                         End If
@@ -8323,7 +8353,7 @@ Public Class CleanupEngine
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.Message + ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
 
         If IntPtr.Size = 8 Then
@@ -8367,7 +8397,7 @@ Public Class CleanupEngine
                                                         deletesubregkey(regkey, child)
                                                         Exit For
                                                     Catch ex As Exception
-                                                        f.log(ex.Message + ex.StackTrace)
+                                                        log(ex.Message + ex.StackTrace)
                                                     End Try
                                                 End If
                                             End If
@@ -8379,7 +8409,7 @@ Public Class CleanupEngine
                     Next
                 End If
             Catch ex As Exception
-                f.log(ex.Message + ex.StackTrace)
+                log(ex.Message + ex.StackTrace)
             End Try
         End If
 
@@ -8417,7 +8447,7 @@ Public Class CleanupEngine
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.Message + ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
 
         If IntPtr.Size = 8 Then
@@ -8455,13 +8485,13 @@ Public Class CleanupEngine
                     Next
                 End If
             Catch ex As Exception
-                f.log(ex.Message + ex.StackTrace)
+                log(ex.Message + ex.StackTrace)
             End Try
         End If
 
 
         'clean orphan typelib.....
-        f.log("Orphan cleanUp")
+        log("Orphan cleanUp")
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
             If regkey IsNot Nothing Then
@@ -8479,7 +8509,7 @@ Public Class CleanupEngine
                                                             If regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("").ToString.ToLower.Contains(clsidleftover(i).ToLower) Then
                                                                 Try
                                                                     deletesubregkey(regkey, child)
-                                                                    f.log(child + " for " + clsidleftover(i))
+                                                                    log(child + " for " + clsidleftover(i))
                                                                     Exit For
                                                                 Catch ex As Exception
                                                                 End Try
@@ -8497,20 +8527,20 @@ Public Class CleanupEngine
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.Message + ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
 
-        f.log("End clsidleftover CleanUP")
+        log("End clsidleftover CleanUP")
     End Sub
 
     Public Sub interfaces(ByVal interfaces As String())
-        Dim f As Form1 = My.Application.OpenForms("Form1")
+
         Dim regkey As RegistryKey
         Dim subregkey As RegistryKey
         Dim wantedvalue As String
         Dim typelib As String = Nothing
 
-        f.log("Start Interface CleanUP")
+        log("Start Interface CleanUP")
 
         Try
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
@@ -8552,7 +8582,7 @@ Public Class CleanupEngine
                 Next
             End If
         Catch ex As Exception
-            f.log(ex.StackTrace)
+            log(ex.StackTrace)
         End Try
 
         If IntPtr.Size = 8 Then
@@ -8597,12 +8627,12 @@ Public Class CleanupEngine
                     Next
                 End If
             Catch ex As Exception
-                f.log(ex.StackTrace)
+                log(ex.StackTrace)
             End Try
 
         End If
 
-        f.log("END Interface CleanUP")
+        log("END Interface CleanUP")
     End Sub
     Public Sub folderscleanup(ByVal driverfiles As String())
         Dim f As Form1 = My.Application.OpenForms("Form1")
@@ -8653,14 +8683,14 @@ Public Class CleanupEngine
                 End If
             Next
         Catch ex As Exception
-            f.log("info: " + ex.Message)
+            log("info: " + ex.Message)
         End Try
 
         Const CSIDL_WINDOWS As Integer = &H29
         Dim winPath As New StringBuilder(300)
         If WindowsApi.SHGetFolderPath(Nothing, CSIDL_WINDOWS, Nothing, 0, winPath) <> 0 Then
             Throw New ApplicationException("Can't get window's sysWOW64 directory")
-            f.log("Can't get window's sysWOW64 directory")
+            log("Can't get window's sysWOW64 directory")
         End If
 
 
