@@ -4483,7 +4483,15 @@ Public Class Form1
         End If
 
     End Sub
-
+    Private Function winupdatepending() As Boolean
+        Dim regkey As RegistryKey = Nothing
+        regkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
+        If regkey IsNot Nothing Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Dim regkey As RegistryKey = Nothing
@@ -5008,6 +5016,15 @@ Public Class Form1
                     End If
                 End If
             End If
+
+            'We check if there are any reboot from windows update pending. and if so we quit.
+            If winupdatepending Then
+                MsgBox("There is a pending Reboot, please reboot before using DDU")
+                closeddu()
+                Exit Sub
+            End If
+
+
             'here I check if the process is running on system user account. if not, make it so.
 
             If Not MyIdentity.IsSystem Then
