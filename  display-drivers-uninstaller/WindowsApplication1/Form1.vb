@@ -1894,7 +1894,7 @@ Public Class Form1
                                 If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                     For i As Integer = 0 To packages.Length - 1
                                         If Not checkvariables.isnullorwhitespace(packages(i)) Then
-                                            If wantedvalue.ToLower.Contains(packages(i)) Then
+                                            If wantedvalue.ToLower.Contains(packages(i).ToLower) Then
                                                 Try
                                                     deletesubregkey(regkey, child)
                                                 Catch ex As Exception
@@ -1928,7 +1928,7 @@ Public Class Form1
                                     If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                         For i As Integer = 0 To packages.Length - 1
                                             If Not checkvariables.isnullorwhitespace(packages(i)) Then
-                                                If wantedvalue.ToLower.Contains(packages(i)) Then
+                                                If wantedvalue.ToLower.Contains(packages(i).ToLower) Then
                                                     Try
                                                         deletesubregkey(regkey, child)
                                                     Catch ex As Exception
@@ -4255,7 +4255,7 @@ Public Class Form1
                                     If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                         For i As Integer = 0 To packages.Length - 1
                                             If Not checkvariables.isnullorwhitespace(packages(i)) Then
-                                                If wantedvalue.ToLower.Contains(packages(i)) Then
+                                                If wantedvalue.ToLower.Contains(packages(i).ToLower) Then
                                                     Try
                                                         deletesubregkey(regkey, child)
                                                     Catch ex As Exception
@@ -8420,7 +8420,7 @@ Public Class CleanupEngine
                     If checkvariables.isnullorwhitespace(child) = False Then
                         For i As Integer = 0 To clsidleftover.Length - 1
                             If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
-                                If child.ToLower.Contains(clsidleftover(i)) Then
+                                If child.ToLower.Contains(clsidleftover(i).ToLower) Then
                                     subregkey = regkey.OpenSubKey(child)
                                     If subregkey IsNot Nothing Then
                                         If checkvariables.isnullorwhitespace(subregkey.GetValue("AppID")) = False Then
@@ -8458,7 +8458,7 @@ Public Class CleanupEngine
                         If checkvariables.isnullorwhitespace(child) = False Then
                             For i As Integer = 0 To clsidleftover.Length - 1
                                 If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
-                                    If child.ToLower.Contains(clsidleftover(i)) Then
+                                    If child.ToLower.Contains(clsidleftover(i).ToLower) Then
                                         subregkey = regkey.OpenSubKey(child)
                                         If subregkey IsNot Nothing Then
                                             If checkvariables.isnullorwhitespace(subregkey.GetValue("AppID")) = False Then
