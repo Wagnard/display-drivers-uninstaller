@@ -68,7 +68,7 @@ Partial Class Form1
         '
         Me.Button1.Location = New System.Drawing.Point(12, 92)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(195, 70)
+        Me.Button1.Size = New System.Drawing.Size(195, 48)
         Me.Button1.TabIndex = 0
         Me.Button1.UseVisualStyleBackColor = True
         '
@@ -104,7 +104,7 @@ Partial Class Form1
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.ForeColor = System.Drawing.Color.DarkSlateGray
-        Me.Label4.Location = New System.Drawing.Point(5, 481)
+        Me.Label4.Location = New System.Drawing.Point(9, 458)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(19, 13)
         Me.Label4.TabIndex = 4
@@ -112,18 +112,18 @@ Partial Class Form1
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(12, 344)
+        Me.TextBox1.Location = New System.Drawing.Point(8, 288)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ReadOnly = True
         Me.TextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TextBox1.Size = New System.Drawing.Size(379, 134)
+        Me.TextBox1.Size = New System.Drawing.Size(379, 156)
         Me.TextBox1.TabIndex = 6
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(12, 328)
+        Me.Label5.Location = New System.Drawing.Point(12, 272)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(61, 13)
         Me.Label5.TabIndex = 7
@@ -155,7 +155,7 @@ Partial Class Form1
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsToolStripMenuItem, Me.ToolStripMenuItem1})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(600, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(609, 24)
         Me.MenuStrip1.TabIndex = 14
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -216,17 +216,17 @@ Partial Class Form1
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(12, 168)
+        Me.Button2.Location = New System.Drawing.Point(12, 146)
         Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(195, 70)
+        Me.Button2.Size = New System.Drawing.Size(195, 48)
         Me.Button2.TabIndex = 15
         Me.Button2.UseVisualStyleBackColor = True
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(12, 244)
+        Me.Button3.Location = New System.Drawing.Point(12, 200)
         Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(195, 70)
+        Me.Button3.Size = New System.Drawing.Size(195, 48)
         Me.Button3.TabIndex = 16
         Me.Button3.UseVisualStyleBackColor = True
         '
@@ -245,9 +245,9 @@ Partial Class Form1
         '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(396, 400)
+        Me.Button4.Location = New System.Drawing.Point(396, 387)
         Me.Button4.Name = "Button4"
-        Me.Button4.Size = New System.Drawing.Size(191, 62)
+        Me.Button4.Size = New System.Drawing.Size(191, 43)
         Me.Button4.TabIndex = 23
         Me.Button4.UseVisualStyleBackColor = True
         '
@@ -255,7 +255,7 @@ Partial Class Form1
         '
         Me.ComboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox2.FormattingEnabled = True
-        Me.ComboBox2.Location = New System.Drawing.Point(467, 501)
+        Me.ComboBox2.Location = New System.Drawing.Point(486, 473)
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(121, 21)
         Me.ComboBox2.TabIndex = 24
@@ -263,7 +263,7 @@ Partial Class Form1
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(402, 504)
+        Me.Label12.Location = New System.Drawing.Point(419, 476)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(61, 13)
         Me.Label12.TabIndex = 25
@@ -281,7 +281,7 @@ Partial Class Form1
         '
         Me.PictureBox1.Image = Global.WindowsApplication1.My.Resources.Resources.btn_donate_LG
         Me.PictureBox1.InitialImage = CType(resources.GetObject("PictureBox1.InitialImage"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(495, 468)
+        Me.PictureBox1.Location = New System.Drawing.Point(486, 500)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(92, 26)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
@@ -335,7 +335,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(600, 526)
+        Me.ClientSize = New System.Drawing.Size(609, 533)
         Me.Controls.Add(Me.Button5)
         Me.Controls.Add(Me.Label12)
         Me.Controls.Add(Me.ComboBox2)

@@ -153,7 +153,7 @@ Public Class Form1
                     Label11.Text = Label11.Text & buttontext("3")
                     Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("3"), ToolTipIcon.Info)
                 Catch ex As Exception
-                    Label11.Text = ("Unable to Fetch updates!!")
+                    Label11.Text = ("Unable to Fetch updates!")
                 End Try
             End If
         End If
@@ -4505,6 +4505,7 @@ Public Class Form1
                 System.IO.File.Delete(Application.StartupPath + "\DDU.bat")
             End If
         Catch ex As Exception
+            'This exception is not important, so do nothing and be silent about it.
         End Try
         Dim webAddress As String = ""
         'We try to create config.cfg if non existant.
@@ -5027,7 +5028,6 @@ Public Class Form1
 
 
             'here I check if the process is running on system user account. if not, make it so.
-
             If Not MyIdentity.IsSystem Then
                 Dim stopservice As New ProcessStartInfo
                 stopservice.FileName = "cmd.exe"
@@ -7065,7 +7065,7 @@ Public Class Form1
 
     Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
         options.Show()
-        Me.Hide()
+        options.TopMost = True
     End Sub
 
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click

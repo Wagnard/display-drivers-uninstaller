@@ -58,7 +58,7 @@ Partial Class logf
         Me.KeyPreview = True
         Me.Margin = New System.Windows.Forms.Padding(2)
         Me.Name = "logf"
-        Me.Text = "log"
+        Me.Text = "Extended Log"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
