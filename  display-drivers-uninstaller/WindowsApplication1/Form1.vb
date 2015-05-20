@@ -2032,6 +2032,33 @@ Public Class Form1
                 log(ex.StackTrace)
             End Try
         End If
+
+        'prevent CCC reinstalltion (comes from drivers installed from windows updates)
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetValueNames()
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    If child.ToLower.Contains("launchwuapp") Then
+                        regkey.DeleteValue(child)
+                    End If
+                End If
+            Next
+
+        End If
+
+        If IntPtr.Size = 8 Then
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\RunOnce", True)
+            If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetValueNames()
+                    If Not checkvariables.isnullorwhitespace(child) Then
+                        If child.ToLower.Contains("launchwuapp") Then
+                            regkey.DeleteValue(child)
+                        End If
+                    End If
+                Next
+            End If
+        End If
+
     End Sub
 
     Private Sub cleannvidiaserviceprocess()
