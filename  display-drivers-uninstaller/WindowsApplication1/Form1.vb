@@ -159,7 +159,15 @@ Public Class Form1
         End If
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
+        'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
+        KillP("MSIAfterburner")
+        KillP("EVGAPrecisionX")  'unsure if this is actually the EVGA precision X' process name, I was too lazy to install precision X just to see the exe name
+        KillP("RTSS")
+        KillP("RTSSHooksLoader64")
+        KillP("EncoderServer64")
+        KillP("RTSSHooksLoader")
+        KillP("EncoderServer")
+        'this shouldn't be slow, so it isn't on a thread/background worker
         reboot = True
         combobox1value = ComboBox1.Text
         systemrestore()
@@ -2049,7 +2057,7 @@ Public Class Form1
         If IntPtr.Size = 8 Then
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\RunOnce", True)
             If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetValueNames()
+                For Each child As String In regkey.GetValueNames()
                     If Not checkvariables.isnullorwhitespace(child) Then
                         If child.ToLower.Contains("launchwuapp") Then
                             regkey.DeleteValue(child)
@@ -5695,12 +5703,33 @@ Public Class Form1
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        reboot = False
-        shutdown = False
-        combobox1value = ComboBox1.Text
-        systemrestore()
-        BackgroundWorker1.RunWorkerAsync()
+        'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
+        KillP("MSIAfterburner")
+        KillP("EVGAPrecisionX")  'unsure if this is actually the EVGA precision X' process name, I was too lazy to install precision X just to see the exe name
+        KillP("RTSS")
+        KillP("RTSSHooksLoader64")
+        KillP("EncoderServer64")
+        KillP("RTSSHooksLoader")
+        KillP("EncoderServer")
+        'this shouldn't be slow, so it isn't on a thread/background worker
+            reboot = False
+            shutdown = False
+            combobox1value = ComboBox1.Text
+            systemrestore()
+            BackgroundWorker1.RunWorkerAsync()
 
+    End Sub
+    Private Sub KillP(processname As String)
+        Dim processList() As Process
+        processList = process.GetProcessesByName(processname)
+
+        For Each proc As Process In processList
+            Try
+                proc.Kill()
+            Catch ex As Exception
+                log("!! ERROR !! Failed to kill process(es): " & ex.Message)
+            End Try
+        Next
     End Sub
     Private Sub cleananddonothing(ByVal gpu As String)
         reboot = False
@@ -5719,6 +5748,15 @@ Public Class Form1
 
     End Sub
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
+        KillP("MSIAfterburner")
+        KillP("EVGAPrecisionX")  'unsure if this is actually the EVGA precision X' process name, I was too lazy to install precision X just to see the exe name
+        KillP("RTSS")
+        KillP("RTSSHooksLoader64")
+        KillP("EncoderServer64")
+        KillP("RTSSHooksLoader")
+        KillP("EncoderServer")
+        'this shouldn't be slow, so it isn't on a thread/background worker
         reboot = False
         shutdown = True
         combobox1value = ComboBox1.Text
