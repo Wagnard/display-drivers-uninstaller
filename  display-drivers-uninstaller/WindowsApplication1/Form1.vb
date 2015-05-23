@@ -160,16 +160,9 @@ Public Class Form1
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-        KillP("MSIAfterburner")
-        KillP("PrecisionX_x64") ' Not sure for the x86 one...
-        KillP("PrecisionXServer_x64")
-        KillP("PrecisionXServer")
-        KillP("RTSS")
-        KillP("RTSSHooksLoader64")
-        KillP("EncoderServer64")
-        KillP("RTSSHooksLoader")
-        KillP("EncoderServer")
+       KillGPUStatsProcesses()
         'this shouldn't be slow, so it isn't on a thread/background worker
+
         reboot = True
         combobox1value = ComboBox1.Text
         systemrestore()
@@ -5706,16 +5699,9 @@ Public Class Form1
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-        KillP("MSIAfterburner")
-        KillP("PrecisionX_x64") ' Not sure for the x86 one...
-        KillP("PrecisionXServer_x64")
-        KillP("PrecisionXServer")
-        KillP("RTSS")
-        KillP("RTSSHooksLoader64")
-        KillP("EncoderServer64")
-        KillP("RTSSHooksLoader")
-        KillP("EncoderServer")
+        KillGPUStatsProcesses()
         'this shouldn't be slow, so it isn't on a thread/background worker
+
             reboot = False
             shutdown = False
             combobox1value = ComboBox1.Text
@@ -5735,6 +5721,18 @@ Public Class Form1
             End Try
         Next
     End Sub
+    Private Sub KillGPUStatsProcesses()
+        KillP("MSIAfterburner")
+        KillP("PrecisionX_x64") ' Not sure for the x86 one...      Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
+        KillP("PrecisionXServer_x64")
+        KillP("PrecisionXServer")
+        KillP("PrecisionX")
+        KillP("RTSS")
+        KillP("RTSSHooksLoader64")
+        KillP("EncoderServer64")
+        KillP("RTSSHooksLoader")
+        KillP("EncoderServer")
+    End Sub
     Private Sub cleananddonothing(ByVal gpu As String)
         reboot = False
         shutdown = False
@@ -5753,16 +5751,9 @@ Public Class Form1
     End Sub
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-        KillP("MSIAfterburner")
-        KillP("PrecisionX_x64") ' Not sure for the x86 one...
-        KillP("PrecisionXServer_x64")
-        KillP("PrecisionXServer")
-        KillP("RTSS")
-        KillP("RTSSHooksLoader64")
-        KillP("EncoderServer64")
-        KillP("RTSSHooksLoader")
-        KillP("EncoderServer")
+     KillGPUStatsProcesses()
         'this shouldn't be slow, so it isn't on a thread/background worker
+
         reboot = False
         shutdown = True
         combobox1value = ComboBox1.Text
