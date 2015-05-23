@@ -161,7 +161,9 @@ Public Class Form1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
         KillP("MSIAfterburner")
-        KillP("EVGAPrecisionX")  'unsure if this is actually the EVGA precision X' process name, I was too lazy to install precision X just to see the exe name
+        KillP("PrecisionX_x64") ' Not sure for the x86 one...
+        KillP("PrecisionXServer_x64")
+        KillP("PrecisionXServer")
         KillP("RTSS")
         KillP("RTSSHooksLoader64")
         KillP("EncoderServer64")
@@ -5705,7 +5707,9 @@ Public Class Form1
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
         KillP("MSIAfterburner")
-        KillP("EVGAPrecisionX")  'unsure if this is actually the EVGA precision X' process name, I was too lazy to install precision X just to see the exe name
+        KillP("PrecisionX_x64") ' Not sure for the x86 one...
+        KillP("PrecisionXServer_x64")
+        KillP("PrecisionXServer")
         KillP("RTSS")
         KillP("RTSSHooksLoader64")
         KillP("EncoderServer64")
@@ -5750,7 +5754,9 @@ Public Class Form1
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
         KillP("MSIAfterburner")
-        KillP("EVGAPrecisionX")  'unsure if this is actually the EVGA precision X' process name, I was too lazy to install precision X just to see the exe name
+        KillP("PrecisionX_x64") ' Not sure for the x86 one...
+        KillP("PrecisionXServer_x64")
+        KillP("PrecisionXServer")
         KillP("RTSS")
         KillP("RTSSHooksLoader64")
         KillP("EncoderServer64")
