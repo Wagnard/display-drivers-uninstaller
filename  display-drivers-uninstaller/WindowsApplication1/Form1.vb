@@ -5702,11 +5702,11 @@ Public Class Form1
         KillGPUStatsProcesses()
         'this shouldn't be slow, so it isn't on a thread/background worker
 
-            reboot = False
-            shutdown = False
-            combobox1value = ComboBox1.Text
-            systemrestore()
-            BackgroundWorker1.RunWorkerAsync()
+        reboot = False
+        shutdown = False
+        combobox1value = ComboBox1.Text
+        systemrestore()
+        BackgroundWorker1.RunWorkerAsync()
 
     End Sub
     Private Sub KillP(processname As String)
@@ -5751,7 +5751,7 @@ Public Class Form1
     End Sub
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-     KillGPUStatsProcesses()
+        KillGPUStatsProcesses()
         'this shouldn't be slow, so it isn't on a thread/background worker
 
         reboot = False
@@ -7464,8 +7464,8 @@ Public Class CleanupEngine
                                     End If
                                     'here I remove the mediafoundationkeys if present
                                     'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
-                                    deletesubregkey(regkey.OpenSubKey("MediaFoundation\Transform", True), child)
-                                    deletesubregkey(regkey.OpenSubKey("MediaFoundation\Transform\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
+                                    deletesubregkey(regkey.OpenSubKey("MediaFoundation\Transforms", True), child)
+                                    deletesubregkey(regkey.OpenSubKey("MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
                                     deletesubregkey(regkey, child)
                                 End If
                             End If
@@ -7523,8 +7523,8 @@ Public Class CleanupEngine
                                         End If
                                         'here I remove the mediafoundationkeys if present
                                         'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
-                                        deletesubregkey(regkey.OpenSubKey("MediaFoundation\Transform", True), child)
-                                        deletesubregkey(regkey.OpenSubKey("MediaFoundation\Transform\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
+                                        deletesubregkey(regkey.OpenSubKey("MediaFoundation\Transforms", True), child)
+                                        deletesubregkey(regkey.OpenSubKey("MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
                                         deletesubregkey(regkey, child)
                                     End If
                                 End If
@@ -8189,8 +8189,8 @@ Public Class CleanupEngine
                                                 Try
                                                     'here I remove the mediafoundationkeys if present
                                                     'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
-                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transform", True), child)
-                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transform\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
+                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transforms", True), child)
+                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
                                                     deletesubregkey(regkey, child)
                                                     Exit For
                                                 Catch ex As Exception
@@ -8247,8 +8247,8 @@ Public Class CleanupEngine
                                                 Try
                                                     'here I remove the mediafoundationkeys if present
                                                     'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
-                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transform", True), child)
-                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transform\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
+                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transforms", True), child)
+                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
                                                     deletesubregkey(regkey, child)
                                                     Exit For
                                                 Catch ex As Exception
@@ -8309,8 +8309,8 @@ Public Class CleanupEngine
                                                     Try
                                                         'here I remove the mediafoundationkeys if present
                                                         'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
-                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transform", True), child)
-                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transform\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
+                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms", True), child)
+                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
                                                         deletesubregkey(regkey, child)
                                                         Exit For
                                                     Catch ex As Exception
@@ -8367,8 +8367,8 @@ Public Class CleanupEngine
                                                     Try
                                                         'here I remove the mediafoundationkeys if present
                                                         'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
-                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transform", True), child)
-                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transform\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
+                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms", True), child)
+                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
                                                         deletesubregkey(regkey, child)
                                                         Exit For
                                                     Catch ex As Exception
@@ -8426,8 +8426,8 @@ Public Class CleanupEngine
                                                 Try
                                                     'here I remove the mediafoundationkeys if present
                                                     'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
-                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transform", True), child)
-                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transform\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
+                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transforms", True), child)
+                                                    deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
                                                     deletesubregkey(regkey, child)
                                                     Exit For
                                                 Catch ex As Exception
@@ -8486,8 +8486,8 @@ Public Class CleanupEngine
                                                     Try
                                                         'here I remove the mediafoundationkeys if present
                                                         'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
-                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transform", True), child)
-                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transform\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
+                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms", True), child)
+                                                        deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child)
                                                         deletesubregkey(regkey, child)
                                                         Exit For
                                                     Catch ex As Exception
