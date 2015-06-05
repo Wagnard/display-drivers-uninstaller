@@ -761,59 +761,69 @@ Public Class Form1
         For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(userpth))
             filePath = filepaths + "\AppData\Roaming\ATI"
             If Directory.Exists(filePath) Then
-                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("ace") Then
-                            Try
-                                deletedirectory(child)
-                            Catch ex As Exception
-                                log(ex.Message)
-                                TestDelete(child)
-                            End Try
-                            If Not Directory.Exists(child) Then
-                                CleanupEngine.shareddlls(child)
+                Try
+                    For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("ace") Then
+                                Try
+                                    deletedirectory(child)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                    TestDelete(child)
+                                End Try
+                                If Not Directory.Exists(child) Then
+                                    CleanupEngine.shareddlls(child)
+                                End If
                             End If
                         End If
+                    Next
+                    If Directory.GetDirectories(filePath).Length = 0 Then
+                        Try
+                            deletedirectory(filePath)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(filePath)
+                        End Try
                     End If
-                Next
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        deletedirectory(filePath)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
+                Catch ex As Exception
+                    log("Possible permission issue detected on : " + filePath)
+                End Try
             End If
+
             If Not Directory.Exists(filePath) Then
                 CleanupEngine.shareddlls(filePath)
             End If
 
+
             filePath = filepaths + "\AppData\Local\ATI"
             If Directory.Exists(filePath) Then
-                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("ace") Then
-                            Try
-                                deletedirectory(child)
-                            Catch ex As Exception
-                                log(ex.Message)
-                                TestDelete(child)
-                            End Try
-                            If Not Directory.Exists(child) Then
-                                CleanupEngine.shareddlls(child)
+                Try
+                    For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("ace") Then
+                                Try
+                                    deletedirectory(child)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                    TestDelete(child)
+                                End Try
+                                If Not Directory.Exists(child) Then
+                                    CleanupEngine.shareddlls(child)
+                                End If
                             End If
                         End If
+                    Next
+                    If Directory.GetDirectories(filePath).Length = 0 Then
+                        Try
+                            deletedirectory(filePath)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(filePath)
+                        End Try
                     End If
-                Next
-                If Directory.GetDirectories(filePath).Length = 0 Then
-                    Try
-                        deletedirectory(filePath)
-                    Catch ex As Exception
-                        log(ex.Message)
-                        TestDelete(filePath)
-                    End Try
-                End If
+                Catch ex As Exception
+                    log("Possible permission issue detected on : " + filePath)
+                End Try
             End If
             If Not Directory.Exists(filePath) Then
                 CleanupEngine.shareddlls(filePath)
@@ -6052,6 +6062,7 @@ Public Class Form1
 
                 Try
                     If combobox1value = "AMD" Then
+                        Dim removed As Boolean = False
                         log("Trying to remove the AMD HD Audio BUS")
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
                         If regkey IsNot Nothing Then
@@ -6062,6 +6073,7 @@ Public Class Form1
                                             subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
                                             If subregkey IsNot Nothing Then
                                                 For Each child2 As String In subregkey.GetSubKeyNames()
+                                                    removed = False
                                                     If checkvariables.isnullorwhitespace(child2) = False Then
                                                         If child2.ToLower.Contains("ven_1002") Then
                                                             For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
@@ -6090,9 +6102,13 @@ Public Class Form1
                                                                                     process.Close()
                                                                                     log(reply2)
                                                                                     log("AMD HD Audio Bus Removed !")
+                                                                                    removed = True
                                                                                 End If
                                                                             End If
                                                                         Next
+                                                                    End If
+                                                                    If removed Then
+                                                                        Exit For
                                                                     End If
                                                                 End If
                                                             Next
