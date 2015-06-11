@@ -98,7 +98,9 @@ Public Class Form1
     Private Sub Checkupdates2()
         AccessUI()
     End Sub
-
+    Public Function getremovephysx() As Boolean
+        Return removephysx
+    End Function
     Private Sub AccessUI()
         Dim updates As Integer = checkupdates.checkupdates
         If Me.InvokeRequired Then
@@ -109,7 +111,7 @@ Public Class Form1
                     buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("1")
-                    Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("1"), ToolTipIcon.Info)
+                    ' Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("1"), ToolTipIcon.Info)
                 Catch ex As Exception
                     Label11.Text = ("No Updates found. Program is up to date.")
                 End Try
@@ -121,7 +123,7 @@ Public Class Form1
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("2")
                     Try
-                        Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("2"), ToolTipIcon.Info)
+                        ' Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("2"), ToolTipIcon.Info)
                     Catch ex As Exception
                     End Try
 
@@ -151,7 +153,7 @@ Public Class Form1
                     buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("3")
-                    Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("3"), ToolTipIcon.Info)
+                    'Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("3"), ToolTipIcon.Info)
                 Catch ex As Exception
                     Label11.Text = ("Unable to Fetch updates!")
                 End Try
@@ -445,6 +447,7 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("ati.ace") Or _
                        child.ToLower.Contains("application profiles") Or _
+                       child.ToLower.EndsWith("\px") Or _
                        child.ToLower.Contains("hydravision") Then
                         Try
                             deletedirectory(child)
@@ -561,6 +564,7 @@ Public Class Form1
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("ati.ace") Or _
                                 child.ToLower.Contains("application profiles") Or _
+                                child.ToLower.EndsWith("\px") Or _
                                 child.ToLower.Contains("hydravision") Then
                                 Try
                                     deletedirectory(child)
@@ -2414,7 +2418,7 @@ Public Class Form1
                        child.ToLower.Contains("geforce experience") Or _
                        child.ToLower.Contains("nvstreamc") Or _
                        child.ToLower.Contains("nvstreamsrv") Or _
-                       child.ToLower.Contains("physx") Or _
+                       child.ToLower.EndsWith("\physx") Or _
                        child.ToLower.Contains("nvstreamsrv") Or _
                        child.ToLower.Contains("shadowplay") Or _
                        child.ToLower.Contains("update common") Or _
@@ -2422,70 +2426,71 @@ Public Class Form1
                        child.ToLower.Contains("nview") Or _
                        child.ToLower.Contains("nvidia wmi provider") Or _
                        child.ToLower.Contains("gamemonitor") Or _
+                       child.ToLower.Contains("nvgsync") Or _
                        child.ToLower.Contains("update core") Then
 
-                        If (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
-                            Try
-                                deletedirectory(child)
-                            Catch ex As Exception
-                                log(ex.Message)
-                                TestDelete(child)
-                            End Try
-                        End If
+
+                        Try
+                            deletedirectory(child)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(child)
+                        End Try
+
                         If Not Directory.Exists(child) Then
                             CleanupEngine.shareddlls(child)
                         End If
                     End If
-                    If child.ToLower.Contains("installer2") Then
-                        For Each child2 As String In Directory.GetDirectories(child)
-                            If checkvariables.isnullorwhitespace(child2) = False Then
-                                If child2.ToLower.Contains("display.3dvision") Or _
-                                   child2.ToLower.Contains("display.controlpanel") Or _
-                                   child2.ToLower.Contains("display.driver") Or _
-                                   child2.ToLower.Contains("display.gfexperience") Or _
-                                   child2.ToLower.Contains("display.nvirusb") Or _
-                                   child2.ToLower.Contains("display.physx") Or _
-                                   child2.ToLower.Contains("display.update") Or _
-                                   child2.ToLower.Contains("display.gamemonitor") Or _
-                                   child2.ToLower.Contains("gfexperience") Or _
-                                   child2.ToLower.Contains("nvidia.update") Or _
-                                   child2.ToLower.Contains("installer2\installer") Or _
-                                   child2.ToLower.Contains("network.service") Or _
-                                   child2.ToLower.Contains("miracast.virtualaudio") Or _
-                                   child2.ToLower.Contains("shadowplay") Or _
-                                   child2.ToLower.Contains("update.core") Or _
-                                   child2.ToLower.Contains("virtualaudio.driver") Or _
-                                   child2.ToLower.Contains("coretemp") Or _
-                                   child2.ToLower.Contains("shield") Or _
-                                   child2.ToLower.Contains("hdaudio.driver") Then
-                                    If (removephysx Or Not ((Not removephysx) And child2.ToLower.Contains("physx"))) Then
-                                        Try
-                                            deletedirectory(child2)
-                                        Catch ex As Exception
-                                            log(ex.Message)
-                                            TestDelete(child2)
-                                        End Try
-                                    End If
+                        If child.ToLower.Contains("installer2") Then
+                            For Each child2 As String In Directory.GetDirectories(child)
+                                If checkvariables.isnullorwhitespace(child2) = False Then
+                                    If child2.ToLower.Contains("display.3dvision") Or _
+                                       child2.ToLower.Contains("display.controlpanel") Or _
+                                       child2.ToLower.Contains("display.driver") Or _
+                                       child2.ToLower.Contains("display.gfexperience") Or _
+                                       child2.ToLower.Contains("display.nvirusb") Or _
+                                       child2.ToLower.Contains("display.physx") Or _
+                                       child2.ToLower.Contains("display.update") Or _
+                                       child2.ToLower.Contains("display.gamemonitor") Or _
+                                       child2.ToLower.Contains("gfexperience") Or _
+                                       child2.ToLower.Contains("nvidia.update") Or _
+                                       child2.ToLower.Contains("installer2\installer") Or _
+                                       child2.ToLower.Contains("network.service") Or _
+                                       child2.ToLower.Contains("miracast.virtualaudio") Or _
+                                       child2.ToLower.Contains("shadowplay") Or _
+                                       child2.ToLower.Contains("update.core") Or _
+                                       child2.ToLower.Contains("virtualaudio.driver") Or _
+                                       child2.ToLower.Contains("coretemp") Or _
+                                       child2.ToLower.Contains("shield") Or _
+                                       child2.ToLower.Contains("hdaudio.driver") Then
+
+                                    Try
+                                        deletedirectory(child2)
+                                    Catch ex As Exception
+                                        log(ex.Message)
+                                        TestDelete(child2)
+                                    End Try
+
                                     If Not Directory.Exists(child2) Then
                                         CleanupEngine.shareddlls(child2)
                                     End If
                                 End If
                             End If
-                        Next
+                            Next
 
-                        If Directory.GetDirectories(child).Length = 0 Then
-                            Try
-                                deletedirectory(child)
-                            Catch ex As Exception
-                                log(ex.Message)
-                                TestDelete(child)
-                            End Try
-                        End If
-                        If Not Directory.Exists(child) Then
-                            CleanupEngine.shareddlls(child)
+                            If Directory.GetDirectories(child).Length = 0 Then
+                                Try
+                                    deletedirectory(child)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                    TestDelete(child)
+                                End Try
+                            End If
+                            If Not Directory.Exists(child) Then
+                                CleanupEngine.shareddlls(child)
+                            End If
                         End If
                     End If
-                End If
             Next
             If Directory.GetDirectories(filePath).Length = 0 Then
                 Try
@@ -2530,7 +2535,8 @@ Public Class Form1
                            child.ToLower.Contains("nvstreamc") Or _
                            child.ToLower.Contains("nvstreamsrv") Or _
                            child.ToLower.Contains("update common") Or _
-                           child.ToLower.Contains("\physx") Or _
+                           child.ToLower.Contains("nvgsync") Or _
+                           child.ToLower.EndsWith("\physx") Or _
                            child.ToLower.Contains("update core") Then
                             If removephysx Then
                                 Try
@@ -7070,12 +7076,11 @@ Public Class Form1
                                    child2.ToLower.Contains("coretemp") Or _
                                    child2.ToLower.Contains("shield") Or _
                                    child2.ToLower.Contains("hdaudio.driver") Then
-                                    If (removephysx Or Not ((Not removephysx) And child2.ToLower.Contains("physx"))) Then
-                                        Try
-                                            deletedirectory(child2)
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
+                                    Try
+                                        deletedirectory(child2)
+                                    Catch ex As Exception
+                                    End Try
+
                                     If Not Directory.Exists(child2) Then
                                         CleanupEngine.shareddlls(child2)
                                     End If
@@ -7384,14 +7389,15 @@ Public Class CleanupEngine
     End Sub
 
     Public Sub deletedirectory(ByVal directorypath As String)
-
-
+        Dim f As Form1 = My.Application.OpenForms("Form1")
+        Dim removephysx As Boolean = f.getremovephysx
         If Not checkvariables.isnullorwhitespace(directorypath) Then
 
-            My.Computer.FileSystem.DeleteDirectory _
-                    (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-            log(directorypath + " - " + UpdateTextMethodmessagefn("39"))
-
+            If (removephysx Or Not ((Not removephysx) And directorypath.ToLower.Contains("physx"))) Then
+                My.Computer.FileSystem.DeleteDirectory _
+                        (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                log(directorypath + " - " + UpdateTextMethodmessagefn("39"))
+            End If
 
         End If
 
@@ -7569,14 +7575,14 @@ Public Class CleanupEngine
     End Sub
 
     Public Sub installer(ByVal packages As String())
-
+        Dim f As Form1 = My.Application.OpenForms("Form1")
         Dim regkey As RegistryKey
         Dim basekey As RegistryKey
         Dim superregkey As RegistryKey
         Dim subregkey As RegistryKey
         Dim subsuperregkey As RegistryKey
         Dim wantedvalue As String = Nothing
-        Dim removephysx As Boolean = removephysx
+        Dim removephysx As Boolean = f.getremovephysx
 
         updatetextmethod(UpdateTextMethodmessagefn("29"))
 
