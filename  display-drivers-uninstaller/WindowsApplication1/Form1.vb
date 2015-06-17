@@ -61,6 +61,7 @@ Public Class Form1
     Public Shared removephysx As Boolean
     Public Shared removeamdaudiobus As Boolean
     Public Shared remove3dtvplay As Boolean
+    Public Shared removeamdkmpfd As Boolean
 
 
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
@@ -4771,9 +4772,18 @@ Public Class Form1
                 f.CheckBox7.Checked = True
                 removeamdaudiobus = True
             Else
-                f.CheckBox7.Checked = True
-                removeamdaudiobus = True
+                f.CheckBox7.Checked = False
+                removeamdaudiobus = False
             End If
+
+            If settings.getconfig("removeamdkmpfd") = "true" Then
+                f.CheckBox9.Checked = True
+                removeamdkmpfd = True
+            Else
+                f.CheckBox9.Checked = False
+                removeamdkmpfd = False
+            End If
+
 
             If settings.getconfig("removemonitor") = "true" Then
                 f.CheckBox6.Checked = True
@@ -5024,6 +5034,8 @@ Public Class Form1
                     settings.setconfig("systemrestore", "false")
                     settings.setconfig("removemonitor", "false")
                     settings.setconfig("removeamdaudiobus", "false")
+                    settings.setconfig("removeamdkmpfd", "false")
+
                     If arg.Contains("-silent") Then
                         silent = True
                         Me.WindowState = FormWindowState.Minimized
@@ -5049,6 +5061,9 @@ Public Class Form1
                     End If
                     If arg.Contains("-removeamdaudiobus") Then
                         settings.setconfig("removeamdaudiobus", "true")
+                    End If
+                    If arg.Contains("-removeamdkmpfd") Then
+                        settings.setconfig("removeamdkmpfd", "true")
                     End If
                     If arg.Contains("-cleanamd") Then
                         argcleanamd = True
@@ -6661,67 +6676,68 @@ Public Class Form1
             'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont what that
             'espcially if we are not using an AMD GPU
 
+            If removeamdkmpfd Then
+                Try
+                    log("Checking and Removing AMDKMPFD Filter if present")
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child) = False Then
+                                If child.ToLower.Contains("pnp0a08") Or _
+                                   child.ToLower.Contains("pnp0a03") Then
+                                    subregkey = regkey.OpenSubKey(child)
+                                    If subregkey IsNot Nothing Then
+                                        For Each child2 As String In subregkey.GetSubKeyNames()
+                                            If Not checkvariables.isnullorwhitespace(child2) Then
+                                                array = subregkey.OpenSubKey(child2).GetValue("LowerFilters")
+                                                If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                                    For i As Integer = 0 To array.Length - 1
+                                                        If Not checkvariables.isnullorwhitespace(array(i)) Then
+                                                            If array(i).ToLower.Contains("amdkmpfd") Then
+                                                                log("Found an AMDKMPFD! in " + child)
+                                                                Try
+                                                                    log("array result: " + array(i))
+                                                                Catch ex As Exception
+                                                                End Try
+                                                                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                                                If win10 Then
+                                                                    processinfo.Arguments = "update " & windir & "\inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
+                                                                Else
+                                                                    processinfo.Arguments = "update " & windir & "\inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
+                                                                End If
+                                                                processinfo.UseShellExecute = False
+                                                                processinfo.CreateNoWindow = True
+                                                                processinfo.RedirectStandardOutput = True
+                                                                process.StartInfo = processinfo
 
-            Try
-                log("Checking and Removing AMDKMPFD Filter if present")
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("pnp0a08") Or _
-                               child.ToLower.Contains("pnp0a03") Then
-                                subregkey = regkey.OpenSubKey(child)
-                                If subregkey IsNot Nothing Then
-                                    For Each child2 As String In subregkey.GetSubKeyNames()
-                                        If Not checkvariables.isnullorwhitespace(child2) Then
-                                            array = subregkey.OpenSubKey(child2).GetValue("LowerFilters")
-                                            If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                                For i As Integer = 0 To array.Length - 1
-                                                    If Not checkvariables.isnullorwhitespace(array(i)) Then
-                                                        If array(i).ToLower.Contains("amdkmpfd") Then
-                                                            log("Found an AMDKMPFD! in " + child)
-                                                            Try
-                                                                log("array result: " + array(i))
-                                                            Catch ex As Exception
-                                                            End Try
-                                                            processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                                            If win10 Then
-                                                                processinfo.Arguments = "update " & windir & "\inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
-                                                            Else
-                                                                processinfo.Arguments = "update " & windir & "\inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
+                                                                process.Start()
+                                                                reply2 = process.StandardOutput.ReadToEnd
+                                                                'process.WaitForExit()
+                                                                process.StandardOutput.Close()
+                                                                process.Close()
+                                                                log(reply2)
+                                                                log(child + " Restored.")
+
                                                             End If
-                                                            processinfo.UseShellExecute = False
-                                                            processinfo.CreateNoWindow = True
-                                                            processinfo.RedirectStandardOutput = True
-                                                            process.StartInfo = processinfo
-
-                                                            process.Start()
-                                                            reply2 = process.StandardOutput.ReadToEnd
-                                                            'process.WaitForExit()
-                                                            process.StandardOutput.Close()
-                                                            process.Close()
-                                                            log(reply2)
-                                                            log(child + " Restored.")
-
                                                         End If
-                                                    End If
-                                                Next
+                                                    Next
+                                                End If
                                             End If
-                                        End If
-                                    Next
+                                        Next
+                                    End If
                                 End If
                             End If
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
-            End Try
+                        Next
+                    End If
+                Catch ex As Exception
+                    log(ex.Message + ex.StackTrace)
+                End Try
 
-            'We now try to remove the service AMDPMPFD if its lowerfilter is not found
-            If reboot Or shutdown Then
-                If Not checkamdkmapfd() Then
-                    CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+                'We now try to remove the service AMDPMPFD if its lowerfilter is not found
+                If reboot Or shutdown Then
+                    If Not checkamdkmapfd() Then
+                        CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+                    End If
                 End If
             End If
 

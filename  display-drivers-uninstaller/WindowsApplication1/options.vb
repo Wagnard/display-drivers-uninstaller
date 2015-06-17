@@ -43,16 +43,6 @@ Public Class options
 
         End If
 
-
-        If combobox1value = "AMD" Then
-            If CheckBox3.Checked = True Then
-                setconfig("removeamdaudiobus", "true")
-                removeamdaudiobus = True
-            Else
-                setconfig("removeamdaudiobus", "false")
-                removeamdaudiobus = False
-            End If
-        End If
     End Sub
 
     Public Sub setconfig(ByVal name As String, ByVal setvalue As String)
@@ -115,6 +105,15 @@ Public Class options
             CheckBox7.Checked = False
             removeamdaudiobus = False
         End If
+
+        If settings.getconfig("removeamdkmpfd") = "true" Then
+            CheckBox9.Checked = True
+            removeamdkmpfd = True
+        Else
+            CheckBox9.Checked = False
+            removeamdkmpfd = False
+        End If
+
 
 
         If settings.getconfig("removemonitor") = "true" Then
@@ -275,4 +274,14 @@ Public Class options
     End Sub
 
 
+    Private Sub CheckBox9_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox9.CheckedChanged
+        If CheckBox9.Checked = True Then
+            setconfig("removeamdkmpfd", "true")
+            removeamdkmpfd = True
+
+        Else
+            setconfig("removeamdkmpfd", "false")
+            removeamdkmpfd = False
+        End If
+    End Sub
 End Class
