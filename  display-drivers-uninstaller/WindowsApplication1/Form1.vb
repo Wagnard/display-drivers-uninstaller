@@ -8052,29 +8052,29 @@ Public Class CleanupEngine
                                     End If
                                 End If
                             Next
-                            If f.win8higher Then
-                                If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
-                                    If subregkey.GetValue("Service").ToString.ToLower = "basicdisplay" Then
-                                        Try
-                                            deletesubregkey(regkey, child)
-                                            deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
-                                End If
-                            Else
-                                If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
-                                    If subregkey.GetValue("Service").ToString.ToLower = "vga" Then
-                                        Try
-                                            deletesubregkey(regkey, child)
-                                            deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
-                                End If
-                            End If
+                            'If f.win8higher Then
+                            '    If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
+                            '        If subregkey.GetValue("Service").ToString.ToLower = "basicdisplay" Then
+                            '            Try
+                            '                deletesubregkey(regkey, child)
+                            '                deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                            '            Catch ex As Exception
+                            '            End Try
+                            '        End If
+                            '    End If
+                            'Else
+                            '    If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
+                            '        If subregkey.GetValue("Service").ToString.ToLower = "vga" Then
+                            '            Try
+                            '                deletesubregkey(regkey, child)
+                            '                deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+                            '            Catch ex As Exception
+                            '            End Try
+                            '        End If
+                            '    End If
+                            'End If
                         Else
-                            'Here, if subregkey is nothing, it mean \video doesnt exist, so we can delete it.
+                            'Here, if subregkey is nothing, it mean \video doesnt exist and is no \0000, we can delete it.
                             'this is a general cleanUP we could say.
                             If regkey.OpenSubKey(child + "\0000") Is Nothing Then
                                 Try
