@@ -142,7 +142,11 @@ Public Class options
 
 
         'Init language for checkboxes
-        buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox1.txt") '// add each line as String Array.
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox1.txt") '// add each line as String Array.
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\checkbox1.txt") '// add each line as String Array.
+        End Try
         CheckBox1.Text = ""
         For i As Integer = 0 To buttontext.Length - 1
             If i <> 0 Then
@@ -151,7 +155,12 @@ Public Class options
             CheckBox1.Text = CheckBox1.Text & buttontext(i)
         Next
 
-        buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox2.txt") '// add each line as String Array.
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox2.txt") '// add each line as String Array.
+
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\checkbox2.txt") '// add each line as String Array.
+        End Try
         CheckBox2.Text = ""
         For i As Integer = 0 To buttontext.Length - 1
             If i <> 0 Then
@@ -216,7 +225,11 @@ Public Class options
             CheckBox8.Text = CheckBox8.Text & buttontext(i)
         Next
 
-        buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox9.txt") '// add each line as String Array.
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox9.txt") '// add each line as String Array.
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\checkbox9.txt") '// add each line as String Array.
+        End Try
         CheckBox9.Text = ""
         For i As Integer = 0 To buttontext.Length - 1
             If i <> 0 Then
