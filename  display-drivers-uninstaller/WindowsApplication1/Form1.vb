@@ -25,6 +25,8 @@ Imports System.Runtime.InteropServices
 Imports System.Text
 
 
+
+
 Public Class Form1
     Dim catalog As String
     Dim arg As String
@@ -163,7 +165,7 @@ Public Class Form1
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-       KillGPUStatsProcesses()
+        KillGPUStatsProcesses()
         'this shouldn't be slow, so it isn't on a thread/background worker
 
         reboot = True
@@ -690,6 +692,7 @@ Public Class Form1
                 TestDelete(filePath)
             End Try
         End If
+
 
         filePath = Environment.GetFolderPath _
 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
@@ -2442,28 +2445,28 @@ Public Class Form1
                             CleanupEngine.shareddlls(child)
                         End If
                     End If
-                        If child.ToLower.Contains("installer2") Then
-                            For Each child2 As String In Directory.GetDirectories(child)
-                                If checkvariables.isnullorwhitespace(child2) = False Then
-                                    If child2.ToLower.Contains("display.3dvision") Or _
-                                       child2.ToLower.Contains("display.controlpanel") Or _
-                                       child2.ToLower.Contains("display.driver") Or _
-                                       child2.ToLower.Contains("display.gfexperience") Or _
-                                       child2.ToLower.Contains("display.nvirusb") Or _
-                                       child2.ToLower.Contains("display.physx") Or _
-                                       child2.ToLower.Contains("display.update") Or _
-                                       child2.ToLower.Contains("display.gamemonitor") Or _
-                                       child2.ToLower.Contains("gfexperience") Or _
-                                       child2.ToLower.Contains("nvidia.update") Or _
-                                       child2.ToLower.Contains("installer2\installer") Or _
-                                       child2.ToLower.Contains("network.service") Or _
-                                       child2.ToLower.Contains("miracast.virtualaudio") Or _
-                                       child2.ToLower.Contains("shadowplay") Or _
-                                       child2.ToLower.Contains("update.core") Or _
-                                       child2.ToLower.Contains("virtualaudio.driver") Or _
-                                       child2.ToLower.Contains("coretemp") Or _
-                                       child2.ToLower.Contains("shield") Or _
-                                       child2.ToLower.Contains("hdaudio.driver") Then
+                    If child.ToLower.Contains("installer2") Then
+                        For Each child2 As String In Directory.GetDirectories(child)
+                            If checkvariables.isnullorwhitespace(child2) = False Then
+                                If child2.ToLower.Contains("display.3dvision") Or _
+                                   child2.ToLower.Contains("display.controlpanel") Or _
+                                   child2.ToLower.Contains("display.driver") Or _
+                                   child2.ToLower.Contains("display.gfexperience") Or _
+                                   child2.ToLower.Contains("display.nvirusb") Or _
+                                   child2.ToLower.Contains("display.physx") Or _
+                                   child2.ToLower.Contains("display.update") Or _
+                                   child2.ToLower.Contains("display.gamemonitor") Or _
+                                   child2.ToLower.Contains("gfexperience") Or _
+                                   child2.ToLower.Contains("nvidia.update") Or _
+                                   child2.ToLower.Contains("installer2\installer") Or _
+                                   child2.ToLower.Contains("network.service") Or _
+                                   child2.ToLower.Contains("miracast.virtualaudio") Or _
+                                   child2.ToLower.Contains("shadowplay") Or _
+                                   child2.ToLower.Contains("update.core") Or _
+                                   child2.ToLower.Contains("virtualaudio.driver") Or _
+                                   child2.ToLower.Contains("coretemp") Or _
+                                   child2.ToLower.Contains("shield") Or _
+                                   child2.ToLower.Contains("hdaudio.driver") Then
 
                                     Try
                                         deletedirectory(child2)
@@ -2477,21 +2480,21 @@ Public Class Form1
                                     End If
                                 End If
                             End If
-                            Next
+                        Next
 
-                            If Directory.GetDirectories(child).Length = 0 Then
-                                Try
-                                    deletedirectory(child)
-                                Catch ex As Exception
-                                    log(ex.Message)
-                                    TestDelete(child)
-                                End Try
-                            End If
-                            If Not Directory.Exists(child) Then
-                                CleanupEngine.shareddlls(child)
-                            End If
+                        If Directory.GetDirectories(child).Length = 0 Then
+                            Try
+                                deletedirectory(child)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(child)
+                            End Try
+                        End If
+                        If Not Directory.Exists(child) Then
+                            CleanupEngine.shareddlls(child)
                         End If
                     End If
+                End If
             Next
             If Directory.GetDirectories(filePath).Length = 0 Then
                 Try
@@ -4556,7 +4559,7 @@ Public Class Form1
         End Try
         Dim webAddress As String = ""
         'We try to create config.cfg if non existant.
-        If Not (File.Exists(Application.StartupPath & "\settings\config.cfg")) Then
+        If Not System.IO.File.Exists(Application.StartupPath & "\settings\config.cfg") Then
             myExe = Application.StartupPath & "\settings\config.cfg"
             System.IO.File.WriteAllBytes(myExe, My.Resources.config)
         End If
@@ -4713,7 +4716,7 @@ Public Class Form1
 
 
             'We try to create config.cfg if non existant.
-            If Not (File.Exists(Application.StartupPath & "\settings\config.cfg")) Then
+            If Not System.IO.File.Exists(Application.StartupPath & "\settings\config.cfg") Then
                 myExe = Application.StartupPath & "\settings\config.cfg"
                 System.IO.File.WriteAllBytes(myExe, My.Resources.config)
             End If
@@ -5081,7 +5084,7 @@ Public Class Form1
             End If
 
             'We check if there are any reboot from windows update pending. and if so we quit.
-            If winupdatepending Then
+            If winupdatepending() Then
                 MsgBox(msgboxmessagefn("13"))
                 closeddu()
                 Exit Sub
@@ -5421,7 +5424,7 @@ Public Class Form1
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
         If regkey IsNot Nothing Then
             Try
-                Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+                Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
                 sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
                 sw.Flush()
                 sw.Close()
@@ -5843,7 +5846,7 @@ Public Class Form1
         'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
         ' process.Start(webAddress)
         'Create the ddu.bat file
-        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
         sw.Flush()
         sw.Close()
@@ -5871,7 +5874,7 @@ Public Class Form1
         'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
         ' process.Start(webAddress)
         'Create the ddu.bat file
-        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
         sw.Flush()
         sw.Close()
@@ -5899,7 +5902,7 @@ Public Class Form1
         'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
         ' process.Start(webAddress)
         'Create the ddu.bat file
-        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
         sw.Flush()
         sw.Close()
@@ -5927,7 +5930,7 @@ Public Class Form1
         'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
         ' process.Start(webAddress)
         'Create the ddu.bat file
-        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
         sw.Flush()
         sw.Close()
@@ -5955,7 +5958,7 @@ Public Class Form1
         'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
         ' process.Start(webAddress)
         'Create the ddu.bat file
-        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
         sw.Flush()
         sw.Close()
@@ -5983,7 +5986,7 @@ Public Class Form1
         'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
         ' process.Start(webAddress)
         'Create the ddu.bat file
-        Dim sw As StreamWriter = File.CreateText(Application.StartupPath + "\DDU.bat")
+        Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
         sw.Flush()
         sw.Close()
@@ -6818,11 +6821,11 @@ Public Class Form1
                             If subregkey IsNot Nothing Then
                                 For Each child2 As String In subregkey.GetSubKeyNames()
                                     If Not checkvariables.isnullorwhitespace(child2) Then
-                                        Array = subregkey.OpenSubKey(child2).GetValue("LowerFilters")
-                                        If (Array IsNot Nothing) AndAlso Not (Array.Length < 1) Then
-                                            For i As Integer = 0 To Array.Length - 1
-                                                If Not checkvariables.isnullorwhitespace(Array(i)) Then
-                                                    If Array(i).ToLower.Contains("amdkmpfd") Then
+                                        array = subregkey.OpenSubKey(child2).GetValue("LowerFilters")
+                                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                            For i As Integer = 0 To array.Length - 1
+                                                If Not checkvariables.isnullorwhitespace(array(i)) Then
+                                                    If array(i).ToLower.Contains("amdkmpfd") Then
                                                         log("Found an AMDKMPFD! in " + child)
                                                         log("We do not remove the AMDKMPFP service yet")
                                                         iskmpfdpresent = True
@@ -7282,7 +7285,6 @@ Public Class Form1
 
         'end system environement patch cleanup
     End Sub
-
 
 End Class
 Public Class checkvariables

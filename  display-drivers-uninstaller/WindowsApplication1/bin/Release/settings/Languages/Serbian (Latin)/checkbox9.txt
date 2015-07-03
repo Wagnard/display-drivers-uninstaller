@@ -1,1 +1,1 @@
-﻿Omogući Windows 8+ Direct Safe Mode.
+﻿Ukloni drajver/filter AMDKMPFD (preporučljivo napraviti rezervnu kopiju za AMD čipset-e)
