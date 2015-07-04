@@ -164,6 +164,7 @@ Public Class Form1
         End If
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        disabledriversearch()
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
         KillGPUStatsProcesses()
         'this shouldn't be slow, so it isn't on a thread/background worker
@@ -5732,6 +5733,7 @@ Public Class Form1
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        disabledriversearch()
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
         KillGPUStatsProcesses()
         'this shouldn't be slow, so it isn't on a thread/background worker
@@ -5784,6 +5786,7 @@ Public Class Form1
 
     End Sub
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        disabledriversearch()
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
         KillGPUStatsProcesses()
         'this shouldn't be slow, so it isn't on a thread/background worker
@@ -6006,25 +6009,8 @@ Public Class Form1
             WindowsApi.CloseHandle(UserTokenHandle)
         End If
     End Sub
-
-
-    Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
-                     ByVal e As System.ComponentModel.DoWorkEventArgs) _
-                     Handles BackgroundWorker1.DoWork
-
+    Private Sub disabledriversearch()
         Dim regkey As RegistryKey = Nothing
-        Dim subregkey As RegistryKey = Nothing
-        Dim array() As String
-
-        UpdateTextMethod(UpdateTextMethodmessagefn("19"))
-
-        preventclose = True
-        Invoke(Sub() Button1.Enabled = False)
-        Invoke(Sub() Button2.Enabled = False)
-        Invoke(Sub() Button3.Enabled = False)
-        Invoke(Sub() ComboBox1.Enabled = False)
-        Invoke(Sub() MenuStrip1.Enabled = False)
-
         If version >= "6.1" Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
@@ -6045,6 +6031,26 @@ Public Class Form1
             Catch ex As Exception
             End Try
         End If
+    End Sub
+
+
+    Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, _
+                     ByVal e As System.ComponentModel.DoWorkEventArgs) _
+                     Handles BackgroundWorker1.DoWork
+
+        Dim regkey As RegistryKey = Nothing
+        Dim subregkey As RegistryKey = Nothing
+        Dim array() As String
+
+        UpdateTextMethod(UpdateTextMethodmessagefn("19"))
+
+        preventclose = True
+        Invoke(Sub() Button1.Enabled = False)
+        Invoke(Sub() Button2.Enabled = False)
+        Invoke(Sub() Button3.Enabled = False)
+        Invoke(Sub() ComboBox1.Enabled = False)
+        Invoke(Sub() MenuStrip1.Enabled = False)
+
 
         Try
 
