@@ -1,0 +1,2 @@
+﻿Temizledikten sonra yeniden başlatma
+(Siyah ekran gibi sorunlara neden olabilir)

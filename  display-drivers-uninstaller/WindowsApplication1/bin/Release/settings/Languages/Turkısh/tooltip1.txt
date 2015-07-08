@@ -1,0 +1,2 @@
+﻿Mevcut ve onceki sürücüleri kaldırın, sonra bilgisayarı yeniden başlatın.
+(Tavsiye Edilir)

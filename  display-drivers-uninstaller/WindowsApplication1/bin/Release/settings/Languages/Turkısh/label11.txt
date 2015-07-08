@@ -1,0 +1,4 @@
+﻿Guncellemeler kontrol ediliyor ...
+Hicbir Guncelleme bulunamadı. Program gunceldir.
+Guncellemeler bulundu! En son surumden daha eski surumlerde sınırlı destek veriyoruz.
+Güncellestirmeler yapılamıyor!
