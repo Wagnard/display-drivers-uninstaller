@@ -2061,7 +2061,7 @@ Public Class Form1
             For Each child As String In regkey.GetValueNames()
                 If Not checkvariables.isnullorwhitespace(child) Then
                     If child.ToLower.Contains("launchwuapp") Then
-                        regkey.DeleteValue(child)
+                        deletevalue(regkey, child)
                     End If
                 End If
             Next
@@ -2074,11 +2074,30 @@ Public Class Form1
                 For Each child As String In regkey.GetValueNames()
                     If Not checkvariables.isnullorwhitespace(child) Then
                         If child.ToLower.Contains("launchwuapp") Then
-                            regkey.DeleteValue(child)
+                            deletevalue(regkey, child)
                         End If
                     End If
                 Next
             End If
+        End If
+
+        'Saw on Win 10 cat 15.7
+        log("AudioEngine CleanUP")
+        regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AudioEngine\AudioProcessingObjects", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(child) Then
+                    Try
+                        If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("FriendlyName")) Then
+                            If regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("cdelayapogfx") Then
+                                deletesubregkey(regkey, child)
+                            End If
+                        End If
+                    Catch ex As Exception
+                        log(ex.Message + ex.StackTrace)
+                    End Try
+                End If
+            Next
         End If
 
     End Sub
@@ -8153,7 +8172,7 @@ Public Class CleanupEngine
                                 If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd.sys")) Then
                                     For Each child As String In regkey.GetSubKeyNames()
                                         If checkvariables.isnullorwhitespace(child) = False Then
-                                            If child.ToLower.Replace("/", "\").Contains(driverfiles(i).ToLower) Then
+                                            If child.ToLower.Replace("/", "\").Contains("\" + driverfiles(i).ToLower) Then
                                                 Try
                                                     deletesubregkey(regkey, child)
                                                 Catch ex As Exception
