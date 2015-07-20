@@ -1,1 +1,1 @@
-﻿Vrati podešavanja Windows automatske instalacije drajvera na Default
+﻿Windows automatsku instalaciju drajvera vrati na Default (uključi)
