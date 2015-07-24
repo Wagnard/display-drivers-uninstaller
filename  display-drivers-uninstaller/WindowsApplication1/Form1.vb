@@ -64,6 +64,7 @@ Public Class Form1
     Public Shared removeamdaudiobus As Boolean
     Public Shared remove3dtvplay As Boolean
     Public Shared removeamdkmpfd As Boolean
+    Public Shared safemodemb As Boolean
 
 
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
@@ -5056,6 +5057,7 @@ Public Class Form1
                     settings.setconfig("logbox", "false")
                     settings.setconfig("systemrestore", "false")
                     settings.setconfig("removemonitor", "false")
+                    settings.setconfig("showsafemodebox", "true")
                     settings.setconfig("removeamdaudiobus", "false")
                     settings.setconfig("removeamdkmpfd", "false")
 
@@ -5078,6 +5080,9 @@ Public Class Form1
                     End If
                     If arg.Contains("-removemonitors") Then
                         settings.setconfig("removemonitor", "true")
+                    End If
+                    If arg.Contains("-nosafemode") Then
+                        settings.setconfig("showsafemodebox", "false")
                     End If
                     If arg.Contains("-restart") Then
                         restart = True
@@ -5102,6 +5107,16 @@ Public Class Form1
                     End If
                 End If
             End If
+
+            'this code is down here because of how the safe mode is handled and variables and stuff and it's 4am and I can't explain this well but this works so yeah, - Shady
+            If settings.getconfig("showsafemodebox") = "false" Then
+                f.CheckBox10.Checked = False
+                safemodemb = False
+            Else
+                f.CheckBox10.Checked = True
+                safemodemb = True
+            End If
+
 
             'We check if there are any reboot from windows update pending. and if so we quit.
             If winupdatepending() Then
@@ -5331,23 +5346,25 @@ Public Class Form1
 
                     log("We are not in Safe Mode")
 
-                    If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception
+                    If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
                         If restart Then  'restart command line argument
                             restartinsafemode()
                         Else
-                            If Not silent Then
-                                Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-                                If resultmsgbox = DialogResult.Cancel Then
+                            If safemodemb = True Then
+                                If Not silent Then
+                                    Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                                    If resultmsgbox = DialogResult.Cancel Then
 
 
-                                    Me.TopMost = False
-                                    closeddu()
-                                    Exit Sub
-                                ElseIf resultmsgbox = DialogResult.No Then
-                                    'do nothing and continue without safe mode
-                                ElseIf resultmsgbox = DialogResult.Yes Then
+                                        Me.TopMost = False
+                                        closeddu()
+                                        Exit Sub
+                                    ElseIf resultmsgbox = DialogResult.No Then
+                                        'do nothing and continue without safe mode
+                                    ElseIf resultmsgbox = DialogResult.Yes Then
 
-                                    restartinsafemode()
+                                        restartinsafemode()
+                                    End If
                                 End If
                             End If
                         End If
@@ -7006,7 +7023,9 @@ Public Class Form1
                 Button5.Text = Button5.Text & buttontext(i)
             Next
 
+
             Label11.Text = ("")
+
 
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label1.txt") '// add each line as String Array.
             Label1.Text = ""
@@ -7052,6 +7071,8 @@ Public Class Form1
                 End If
                 Label10.Text = Label10.Text & buttontext(i)
             Next
+
+            Checkupdates2()
 
         Catch ex As Exception
             log(ex.Message)
