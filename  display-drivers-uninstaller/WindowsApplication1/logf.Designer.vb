@@ -34,6 +34,7 @@ Partial Class logf
         Me.TextBox1.Margin = New System.Windows.Forms.Padding(2)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.ReadOnly = True
         Me.TextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.TextBox1.Size = New System.Drawing.Size(581, 428)
         Me.TextBox1.TabIndex = 0
