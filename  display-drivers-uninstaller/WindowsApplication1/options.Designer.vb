@@ -47,7 +47,7 @@ Partial Class options
         'CheckBox6
         '
         Me.CheckBox6.AutoSize = True
-        Me.CheckBox6.Location = New System.Drawing.Point(361, 106)
+        Me.CheckBox6.Location = New System.Drawing.Point(357, 121)
         Me.CheckBox6.Name = "CheckBox6"
         Me.CheckBox6.Size = New System.Drawing.Size(307, 17)
         Me.CheckBox6.TabIndex = 34
@@ -57,7 +57,7 @@ Partial Class options
         'CheckBox5
         '
         Me.CheckBox5.AutoSize = True
-        Me.CheckBox5.Location = New System.Drawing.Point(361, 84)
+        Me.CheckBox5.Location = New System.Drawing.Point(357, 80)
         Me.CheckBox5.Name = "CheckBox5"
         Me.CheckBox5.Size = New System.Drawing.Size(153, 17)
         Me.CheckBox5.TabIndex = 33
@@ -67,7 +67,7 @@ Partial Class options
         'CheckBox4
         '
         Me.CheckBox4.AutoSize = True
-        Me.CheckBox4.Location = New System.Drawing.Point(12, 158)
+        Me.CheckBox4.Location = New System.Drawing.Point(12, 142)
         Me.CheckBox4.Name = "CheckBox4"
         Me.CheckBox4.Size = New System.Drawing.Size(120, 17)
         Me.CheckBox4.TabIndex = 32
@@ -77,7 +77,7 @@ Partial Class options
         'CheckBox3
         '
         Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Location = New System.Drawing.Point(12, 181)
+        Me.CheckBox3.Location = New System.Drawing.Point(12, 172)
         Me.CheckBox3.Name = "CheckBox3"
         Me.CheckBox3.Size = New System.Drawing.Size(99, 17)
         Me.CheckBox3.TabIndex = 31
@@ -87,7 +87,7 @@ Partial Class options
         'CheckBox2
         '
         Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(361, 62)
+        Me.CheckBox2.Location = New System.Drawing.Point(357, 45)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(267, 17)
         Me.CheckBox2.TabIndex = 30
@@ -108,7 +108,7 @@ Partial Class options
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.WindowsApplication1.My.Resources.Resources.RadeonLogo1
-        Me.PictureBox1.Location = New System.Drawing.Point(12, 235)
+        Me.PictureBox1.Location = New System.Drawing.Point(12, 227)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(110, 90)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -118,7 +118,7 @@ Partial Class options
         'PictureBox2
         '
         Me.PictureBox2.Image = Global.WindowsApplication1.My.Resources.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
-        Me.PictureBox2.Location = New System.Drawing.Point(12, 62)
+        Me.PictureBox2.Location = New System.Drawing.Point(12, 36)
         Me.PictureBox2.Name = "PictureBox2"
         Me.PictureBox2.Size = New System.Drawing.Size(172, 90)
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -138,7 +138,7 @@ Partial Class options
         'CheckBox7
         '
         Me.CheckBox7.AutoSize = True
-        Me.CheckBox7.Location = New System.Drawing.Point(12, 331)
+        Me.CheckBox7.Location = New System.Drawing.Point(12, 320)
         Me.CheckBox7.Name = "CheckBox7"
         Me.CheckBox7.Size = New System.Drawing.Size(222, 17)
         Me.CheckBox7.TabIndex = 38
@@ -148,7 +148,7 @@ Partial Class options
         'CheckBox8
         '
         Me.CheckBox8.AutoSize = True
-        Me.CheckBox8.Location = New System.Drawing.Point(12, 354)
+        Me.CheckBox8.Location = New System.Drawing.Point(12, 351)
         Me.CheckBox8.Name = "CheckBox8"
         Me.CheckBox8.Size = New System.Drawing.Size(301, 17)
         Me.CheckBox8.TabIndex = 39
@@ -169,7 +169,7 @@ Partial Class options
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(436, 9)
+        Me.Label2.Location = New System.Drawing.Point(399, 9)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(111, 15)
         Me.Label2.TabIndex = 41
@@ -177,7 +177,7 @@ Partial Class options
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(593, 485)
+        Me.Button1.Location = New System.Drawing.Point(549, 485)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 42
@@ -187,7 +187,7 @@ Partial Class options
         'CheckBox9
         '
         Me.CheckBox9.AutoSize = True
-        Me.CheckBox9.Location = New System.Drawing.Point(12, 377)
+        Me.CheckBox9.Location = New System.Drawing.Point(12, 385)
         Me.CheckBox9.Name = "CheckBox9"
         Me.CheckBox9.Size = New System.Drawing.Size(299, 17)
         Me.CheckBox9.TabIndex = 45
@@ -197,7 +197,7 @@ Partial Class options
         'CheckBox10
         '
         Me.CheckBox10.AutoSize = True
-        Me.CheckBox10.Location = New System.Drawing.Point(361, 129)
+        Me.CheckBox10.Location = New System.Drawing.Point(357, 158)
         Me.CheckBox10.Name = "CheckBox10"
         Me.CheckBox10.Size = New System.Drawing.Size(223, 17)
         Me.CheckBox10.TabIndex = 46
@@ -208,7 +208,7 @@ Partial Class options
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(689, 520)
+        Me.ClientSize = New System.Drawing.Size(675, 520)
         Me.Controls.Add(Me.CheckBox10)
         Me.Controls.Add(Me.CheckBox9)
         Me.Controls.Add(Me.Button1)

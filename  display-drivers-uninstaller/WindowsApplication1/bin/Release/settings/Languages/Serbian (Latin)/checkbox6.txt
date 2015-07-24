@@ -1,1 +1,1 @@
-﻿Uklonite postojeće monitore i one koji nisu prisutni (preporučljivo)
+﻿Uklonite postojeće monitore i one koji nisu prisutni\n(preporučljivo)

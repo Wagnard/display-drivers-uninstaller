@@ -163,6 +163,7 @@ Public Class options
                 CheckBox1.Text = CheckBox1.Text
             End If
             CheckBox1.Text = CheckBox1.Text & buttontext(i)
+            ' CheckBox1.Text = CheckBox1.Text.Replace("\n", vbNewLine) disable this until I find a way to not detect C:\nVidia as being a new line
         Next
 
         Try
@@ -177,6 +178,7 @@ Public Class options
                 CheckBox2.Text = CheckBox2.Text
             End If
             CheckBox2.Text = CheckBox2.Text & buttontext(i)
+            CheckBox2.Text = CheckBox2.Text.Replace("\n", vbNewLine)
         Next
 
         buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox4.txt") '// add each line as String Array.
@@ -186,6 +188,7 @@ Public Class options
                 CheckBox4.Text = CheckBox4.Text
             End If
             CheckBox4.Text = CheckBox4.Text & buttontext(i)
+            CheckBox4.Text = CheckBox4.Text.Replace("\n", vbNewLine)
         Next
 
         buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox3.txt") '// add each line as String Array.
@@ -195,6 +198,7 @@ Public Class options
                 CheckBox3.Text = CheckBox3.Text
             End If
             CheckBox3.Text = CheckBox3.Text & buttontext(i)
+            CheckBox3.Text = CheckBox3.Text.Replace("\n", vbNewLine)
         Next
 
 
@@ -205,6 +209,7 @@ Public Class options
                 CheckBox7.Text = CheckBox7.Text
             End If
             CheckBox7.Text = CheckBox7.Text & buttontext(i)
+            CheckBox7.Text = CheckBox7.Text.Replace("\n", vbNewLine)
         Next
 
 
@@ -215,6 +220,7 @@ Public Class options
                 CheckBox5.Text = CheckBox5.Text
             End If
             CheckBox5.Text = CheckBox5.Text & buttontext(i)
+            CheckBox5.Text = CheckBox5.Text.Replace("\n", vbNewLine)
         Next
 
         buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox6.txt") '// add each line as String Array.
@@ -224,6 +230,7 @@ Public Class options
                 CheckBox6.Text = CheckBox6.Text
             End If
             CheckBox6.Text = CheckBox6.Text & buttontext(i)
+            CheckBox6.Text = CheckBox6.Text.Replace("\n", vbNewLine)
         Next
 
         buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox8.txt") '// add each line as String Array.
@@ -233,6 +240,7 @@ Public Class options
                 CheckBox8.Text = CheckBox8.Text
             End If
             CheckBox8.Text = CheckBox8.Text & buttontext(i)
+            CheckBox8.Text = CheckBox8.Text.Replace("\n", vbNewLine)
         Next
 
         Try
@@ -246,8 +254,22 @@ Public Class options
                 CheckBox9.Text = CheckBox9.Text
             End If
             CheckBox9.Text = CheckBox9.Text & buttontext(i)
+            CheckBox9.Text = CheckBox9.Text.Replace("\n", vbNewLine)
         Next
 
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox10.txt") '// add each line as String Array.
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\checkbox10.txt") '// add each line as String Array.
+        End Try
+        CheckBox10.Text = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                CheckBox10.Text = CheckBox10.Text
+            End If
+            CheckBox10.Text = CheckBox10.Text & buttontext(i)
+            CheckBox10.Text = CheckBox10.Text.Replace("\n", vbNewLine)
+        Next
 
     End Sub
 

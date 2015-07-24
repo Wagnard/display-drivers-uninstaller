@@ -1,1 +1,1 @@
-﻿Guardar archivos de registro en la ruta de arranque (recomendado)
+﻿Guardar archivos de registro en la ruta de arranque\n(recomendado)
