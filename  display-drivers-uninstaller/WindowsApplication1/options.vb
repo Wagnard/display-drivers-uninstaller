@@ -124,6 +124,16 @@ Public Class options
             removemonitor = False
         End If
 
+
+        If settings.getconfig("showsafemodebox") = "true" Then
+            CheckBox10.Checked = True
+            safemodemb = True
+        Else
+            CheckBox10.Checked = False
+            safemodemb = False
+        End If
+
+
         If settings.getconfig("removecnvidia") = "true" Then
             CheckBox1.Checked = True
             removecnvidia = True
@@ -303,6 +313,16 @@ Public Class options
         Else
             setconfig("removeamdkmpfd", "false")
             removeamdkmpfd = False
+        End If
+    End Sub
+
+    Private Sub CheckBox10_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox10.CheckedChanged
+        If CheckBox10.Checked = True Then
+            setconfig("showsafemodebox", "true")
+            safemodemb = True
+        Else
+            setconfig("showsafemodebox", "false")
+            safemodemb = False
         End If
     End Sub
 End Class
