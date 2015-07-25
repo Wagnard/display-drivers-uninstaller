@@ -1,1 +1,1 @@
-Afficher le message du mode sans échec au démarrage.
+ï»¿Afficher le message du mode sans Ã©chec au dÃ©marrage.
