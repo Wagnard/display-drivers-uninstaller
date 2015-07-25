@@ -4649,6 +4649,11 @@ Public Class Form1
             Exit Sub
         End If
 
+        'moved this log code up higher so the directory is created sooner to avoid potential issues
+        If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
+            My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
+        End If
+
         'second, we check on what we are running and set variables accordingly (os, architecture)
 
         If Not checkvariables.isnullorwhitespace(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion")) Then
@@ -4728,9 +4733,7 @@ Public Class Form1
                 Button4.Enabled = False
         End Select
 
-        If Not My.Computer.FileSystem.DirectoryExists(Application.StartupPath & "\DDU Logs") Then
-            My.Computer.FileSystem.CreateDirectory(Application.StartupPath & "\DDU Logs")
-        End If
+
 
 
         Try
