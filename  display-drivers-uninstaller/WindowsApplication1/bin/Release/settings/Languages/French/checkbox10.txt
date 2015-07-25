@@ -1,0 +1,1 @@
+Afficher le message du mode sans échec au démarrage.
