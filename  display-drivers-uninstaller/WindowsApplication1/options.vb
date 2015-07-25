@@ -63,6 +63,11 @@ Public Class options
         If e.KeyCode = Keys.Escape Then Me.Close()
     End Sub
     Private Sub options_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+
+
+
+
         '----------------
         'read config file
         '-----------------
@@ -270,6 +275,44 @@ Public Class options
             CheckBox10.Text = CheckBox10.Text & buttontext(i)
             CheckBox10.Text = CheckBox10.Text.Replace("\n", vbNewLine)
         Next
+
+        '-------------------------------------
+        'Resize the option window if necessary
+        '-------------------------------------
+
+
+        If CheckBox2.Width + CheckBox2.Location.X > CheckBox5.Width + CheckBox5.Location.X Then
+            If CheckBox2.Width + CheckBox2.Location.X > CheckBox6.Width + CheckBox6.Location.X Then
+
+                If CheckBox2.Width + CheckBox2.Location.X > CheckBox10.Width + CheckBox10.Location.X Then
+                    Me.Size = New System.Drawing.Size(CheckBox2.Width + CheckBox2.Location.X + 10, 559)
+                End If
+
+            End If
+
+        ElseIf CheckBox5.Width + CheckBox5.Location.X > CheckBox6.Width + CheckBox6.Location.X Then
+
+            If CheckBox5.Width + CheckBox5.Location.X > CheckBox10.Width + CheckBox10.Location.X Then
+                Me.Size = New System.Drawing.Size(CheckBox5.Width + CheckBox5.Location.X + 10, 559)
+            End If
+
+        ElseIf CheckBox6.Width + CheckBox6.Location.X > CheckBox2.Width + CheckBox2.Location.X Then
+            If CheckBox6.Width + CheckBox6.Location.X > CheckBox10.Width + CheckBox10.Location.X Then
+                Me.Size = New System.Drawing.Size(CheckBox6.Width + CheckBox6.Location.X + 10, 559)
+            End If
+
+        ElseIf CheckBox10.Width + CheckBox10.Location.X > CheckBox2.Width + CheckBox2.Location.X Then
+            If CheckBox10.Width + CheckBox10.Location.X > CheckBox5.Width + CheckBox5.Location.X Then
+                If CheckBox10.Width + CheckBox10.Location.X > CheckBox6.Width + CheckBox6.Location.X Then
+                    Me.Size = New System.Drawing.Size(CheckBox10.Width + CheckBox10.Location.X + 10, 559)
+                End If
+            End If
+
+
+        End If
+
+
+
 
     End Sub
 
