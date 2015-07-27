@@ -5807,6 +5807,7 @@ Public Class Form1
         KillP("EncoderServer64")
         KillP("RTSSHooksLoader")
         KillP("EncoderServer")
+        KillP("nvidiaInspector")
     End Sub
     Private Sub cleananddonothing(ByVal gpu As String)
         reboot = False
