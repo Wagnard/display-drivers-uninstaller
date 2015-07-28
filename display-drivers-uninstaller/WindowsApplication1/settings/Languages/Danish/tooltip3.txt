@@ -1,0 +1,2 @@
+﻿Afinstallér nuværende og tidligere drivere, og sluk computeren uden ny gennemsøgning.
+(For installation af nyt grafikkort)

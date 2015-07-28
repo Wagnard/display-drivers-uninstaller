@@ -1,0 +1,2 @@
+﻿Temizledikten sonra yeniden başlat
+(Yeni bir grafik kartı yüklemek için).

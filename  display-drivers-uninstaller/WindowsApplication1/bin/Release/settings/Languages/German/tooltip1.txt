@@ -1,2 +1,0 @@
-﻿Deinstalliert den aktuellen und die vorherigen Treiber und startet den Computer neu
-(Wird dringend empfohlen)

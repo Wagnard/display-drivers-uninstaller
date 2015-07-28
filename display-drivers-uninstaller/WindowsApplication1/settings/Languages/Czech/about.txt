@@ -1,0 +1,39 @@
+﻿Display Driver Uninstaller (DDU) / Nástroj pro čištění ovladačů zobrazení. (NVIDIA/AMD)
+
+Nástroj odstraňuje ovladače zobrazení ze správce zařízení a zároveň odstraní stávající a předchozí verze 
+ovladače z katalogu ovladačů systému Windows a to i včetně přidružených služeb.
+
+Použitím programu docílíte podobného stavu jako po čisté instalaci OS Windows.
+
+Nástroj pracuje podobně jako Driver Sweeper + přidává další funkce uvedené výše.
+
+Pokud máte problémy s instalací novějšího nebo staršího ovladače, neváhejte a zkuste použít tento program. 
+Ohlasy dokazují, že tyto problémy opravdu řeší.
+
+DOPORUČENÉ POUŽITÍ :
+
+- Osobně doporučuji před použitím zakázat připojení k internetu, aby služba Windows Update nezačala po 
+odinstalaci ovladače sama, bez potvrzení, ovladač reinstalovat.
+
+- Tento nástroj může být používán v normálním režimu OS, ale pro dosažení maximální stability 
+je nejlepší DDU používat v nouzovém režimu.
+
+- Rádi bychom od Vás dostali zpětnou vazbu. Řekněte nám, jestli Vám nástroj pomohl či nikoliv. Pro jistotu 
+vytvořte zálohu OS  nebo aspoň bod obnovy (i když by to nemělo být potřeba).
+
+- Pokud se potýkáte, nebo jste se někdy potýkali, s problémy s ovladači a tento nástroj Vám pomohl, neváhejte 
+se s námi podělit o výsledky.
+
+Mějte na paměti, že NVIDIA/AMD nemají s tímto nástrojem co do činění. Nepracujeme pro NVIDIA/AMD a tyto
+společnosti nenesou zodpovědnost za jakékoliv způsobené škody.
+-------------------------------
+
+Vytvořil Wagnard.
+
+Spoluvlastník: Shady7557
+
+Tester : Dellon132
+
+Loga : juanchacin
+
+Díky všem, kteří dávali svůj systém všanc (speciální poděkování patří uživateli Dellon132)

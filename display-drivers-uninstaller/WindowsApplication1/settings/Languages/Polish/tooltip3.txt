@@ -1,0 +1,2 @@
+﻿Odinstaluj obecne i poprzednie sterowniki i Wyłącz komputer bez ponownego skanowania
+(W przypadku instalowania nowej karty)

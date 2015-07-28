@@ -1,0 +1,2 @@
+﻿Avinstallera nuvarande och tidigare drivrutiner, starta sedan om datorn.
+(Rekommenderas)

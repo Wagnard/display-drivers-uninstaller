@@ -1,0 +1,2 @@
+﻿Pulisci e Spegni il PC
+(per installare una nuova scheda video)

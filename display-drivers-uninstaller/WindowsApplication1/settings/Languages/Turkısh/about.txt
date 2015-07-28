@@ -1,0 +1,28 @@
+﻿Bu program ne işe yarar?
+
+Eski sürücü sorunlarını ya da daha yeni kuruyorsanız ve yüklenenmeme gibi bir duurumda bu sorunları giderir.
+
+ÖNERİLEN KULLANIM:
+
+- Aracı windows normal modda da kullanabilirsiniz. Güvenli Mod tercihen kullanabilirsiniz.
+
+- Biz görüşlerinizi almak istiyoruz. Başarılı ya da değil yine de bize söyleyin.
+Ayrıca eğer yeni bir sorun varsa geri dönebilmek için bir geri yükleme noktası oluşturun.
+
+- Eğer bir sorununuz varsa bu program sizin sorununuza yardımcı oldu veya olmadı ise lütfen paylaşın.
+
+NVIDIA / AMD / Intel bu program ile ilgisi olduğunu unutmayın, biz NVIDIA / AMD / Intel içindir. İşe yaramazsa sorumlu değildir.
+Sisteminizde herhangi bir hasar veya hata olduğunda sorumlu değildir.
+-------------------------------
+
+Wagnard tarafından düzenlendi.
+
+CO-Sahibi: Shady7557
+
+Tester: Dellon132
+
+Logolar: juanchacin
+
+Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
+
+Çevirmen: murat5038

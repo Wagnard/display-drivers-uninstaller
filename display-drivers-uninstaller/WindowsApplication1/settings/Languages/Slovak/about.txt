@@ -1,0 +1,38 @@
+Odinštalátor ovládačov (DDU) / Čistič grafických ovládačov.(NVIDIA/AMD)
+
+Tento program odstraňuje aktuálne aj staré verzie grafických ovládačov NVIDIA/AMD 
+zo správcu zariadení a katalógu ovládačov systému Windows vrátane ich služieb.
+
+Po použití tohto programu nastane efekt podobný tomu, ako by bol Windows čerstvo nainštalovaný.
+
+Tento program robí to čo Driver sweeper + veci uvedené vyššie.
+
+Ak máte akýkoľvek problém s inštaláciou staršieho či novšieho ovládača, skúste použiť tento program,  
+ohlasy ukazujú, že pomohol veľa ľuďom.
+
+ODPORÚČANÉ POUŽITIE:
+
+- Osobne odporúčam počas použitia odpojiť internet, aby windows update nezačal bez opýtania 
+inštalovať ovládače...
+
+- Tento nástroj môže byť použitý v Normálnom režime, ale pre úplnú stabilitu je pri použití DDU 
+najlepší Núdzový režim.
+
+- Radi od Vás dostaneme odozvu. Povedzte nám, či program pomohol alebo nie. Spravte si 
+pre istotu zálohu alebo bod obnovy (aj keď by to nemalo byť potrebné).
+
+- Ak ste mali alebo máte problém s ovládačmi, a tento program Vám pomohol, 
+podeľte sa o výsledky.
+
+Berte na vedomie, že NVIDIA/AMD nemajú s týmto programom nič spoločné, Nepracujeme pre NVIDIA/AMD 
+a oni nenesú žiadnu zodpovednosť za škody na Vašom systéme spôsobené týmto programom.
+-------------------------------
+
+Vytvoril Wagnard.
+
+Spolumajiteľ: Shady7557
+Tester: Dellon132
+Logá: juanchacin
+Slovenský preklad: Gyrxiur - Prípadné chyby v preklade mi hláste na gyrxiur@gmail.com
+
+Ďakujeme všetkým, ktorí testovali program (špeciálne poďakovanie patrí Dellon132).

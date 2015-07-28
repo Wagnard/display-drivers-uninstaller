@@ -1,0 +1,2 @@
+﻿Rimuovi i driver correnti e precedenti e NON riavviare il computer.
+(Potrebbe causare problemi come schermate nere)

@@ -1,2 +1,0 @@
-﻿Avinstallera nuvarande och tidigare drivrutiner och stäng av datorn utan ny genomsökning.
-(För installation av nytt grafikkort)
