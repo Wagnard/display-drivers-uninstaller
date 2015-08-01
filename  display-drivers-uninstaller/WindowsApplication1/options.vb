@@ -281,12 +281,12 @@ Public Class options
         Catch ex As Exception
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\options.txt") '// add each line as String Array.
         End Try
-        Me.Name = ""
+        Me.Text = ""
         For i As Integer = 0 To buttontext.Length - 1
             If i <> 0 Then
-                Me.Name = Me.Name & vbNewLine
+                Me.Text = Me.Text & vbNewLine
             End If
-            Me.Name = Me.Name & buttontext(i)
+            Me.Text = Me.Text & buttontext(i)
         Next
 
         '-------------------------------------

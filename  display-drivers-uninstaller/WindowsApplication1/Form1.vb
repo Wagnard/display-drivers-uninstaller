@@ -7076,13 +7076,17 @@ Public Class Form1
                 Label10.Text = Label10.Text & buttontext(i)
             Next
 
-            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\options.txt") '// add each line as String Array.
-            OptionsToolStripMenuItem.Name = ""
+            Try
+                buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\options.txt") '// add each line as String Array.
+            Catch ex As Exception
+                buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\options.txt") '// add each line as String Array.
+            End Try
+            OptionsToolStripMenuItem.Text = ""
             For i As Integer = 0 To buttontext.Length - 1
                 If i <> 0 Then
-                    OptionsToolStripMenuItem.Name = OptionsToolStripMenuItem.Name & vbNewLine
+                    OptionsToolStripMenuItem.Text = OptionsToolStripMenuItem.Text & vbNewLine
                 End If
-                OptionsToolStripMenuItem.Name = OptionsToolStripMenuItem.Name & buttontext(i)
+                OptionsToolStripMenuItem.Text = OptionsToolStripMenuItem.Text & buttontext(i)
             Next
 
 
