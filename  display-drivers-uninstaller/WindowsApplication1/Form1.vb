@@ -7076,6 +7076,16 @@ Public Class Form1
                 Label10.Text = Label10.Text & buttontext(i)
             Next
 
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\options.txt") '// add each line as String Array.
+            OptionsToolStripMenuItem.Name = ""
+            For i As Integer = 0 To buttontext.Length - 1
+                If i <> 0 Then
+                    OptionsToolStripMenuItem.Name = OptionsToolStripMenuItem.Name & vbNewLine
+                End If
+                OptionsToolStripMenuItem.Name = OptionsToolStripMenuItem.Name & buttontext(i)
+            Next
+
+
             Checkupdates2()
 
         Catch ex As Exception

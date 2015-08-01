@@ -276,6 +276,19 @@ Public Class options
             CheckBox10.Text = CheckBox10.Text.Replace("\n", vbNewLine)
         Next
 
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\options.txt") '// add each line as String Array.
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\options.txt") '// add each line as String Array.
+        End Try
+        Me.Name = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                Me.Name = Me.Name & vbNewLine
+            End If
+            Me.Name = Me.Name & buttontext(i)
+        Next
+
         '-------------------------------------
         'Resize the option window if necessary
         '-------------------------------------
