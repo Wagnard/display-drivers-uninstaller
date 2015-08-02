@@ -289,6 +289,32 @@ Public Class options
             Me.Text = Me.Text & buttontext(i)
         Next
 
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\olabel1.txt") '// add each line as String Array.
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\olabel1.txt") '// add each line as String Array.
+        End Try
+        Label1.Text = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                Label1.Text = Label1.Text & vbNewLine
+            End If
+            Label1.Text = Label1.Text & buttontext(i)
+        Next
+
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\olabel2.txt") '// add each line as String Array.
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\olabel2.txt") '// add each line as String Array.
+        End Try
+        Label2.Text = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                Label2.Text = Label2.Text & vbNewLine
+            End If
+            Label2.Text = Label2.Text & buttontext(i)
+        Next
+
         '-------------------------------------
         'Resize the option window if necessary
         '-------------------------------------
