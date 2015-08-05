@@ -1,2 +1,0 @@
-﻿Desinstalar los controladores actuales y anteriores, pero no reiniciar el ordenador.
-(Puede provocar problemas como pantalla en negro, quedarse sin imagen)

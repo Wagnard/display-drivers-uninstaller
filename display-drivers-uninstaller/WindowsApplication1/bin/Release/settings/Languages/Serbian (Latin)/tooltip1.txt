@@ -1,2 +1,0 @@
-﻿Ukloni trenutne i prethodne zaostale drajvere, nakon toga restartuj kompjuter.
-(Preporučljivo)

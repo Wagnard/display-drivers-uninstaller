@@ -1,1 +1,0 @@
-Naplófájlok mentése az indítási útvonalra (ajánlott)

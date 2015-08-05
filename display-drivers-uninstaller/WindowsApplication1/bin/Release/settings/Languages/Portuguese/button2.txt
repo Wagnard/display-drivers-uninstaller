@@ -1,2 +1,0 @@
-﻿Limpar e NÃO reiniciar.
-(Pode causar problemas como Tela Preta)

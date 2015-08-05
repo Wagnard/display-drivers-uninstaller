@@ -1,2 +1,0 @@
-﻿Rensa men starta INTE om.
-(Kan orsaka fel som svart skärm)

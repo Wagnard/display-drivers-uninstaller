@@ -1,1 +1,0 @@
-Mostrar mensaje de Modo a prueba de Fallos al arrancar

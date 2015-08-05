@@ -1,1 +1,0 @@
-Utiliser DDU en mode sans échec est recommandé.

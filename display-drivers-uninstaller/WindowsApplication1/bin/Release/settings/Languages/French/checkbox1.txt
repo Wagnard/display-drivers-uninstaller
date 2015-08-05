@@ -1,1 +1,0 @@
-Retirer les dossiers "C:\nVidia" (PAS recommendé) 

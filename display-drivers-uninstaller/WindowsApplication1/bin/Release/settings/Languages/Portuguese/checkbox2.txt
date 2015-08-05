@@ -1,1 +1,0 @@
-Salvar arquivos de log na mesma pasta (Recomendado)

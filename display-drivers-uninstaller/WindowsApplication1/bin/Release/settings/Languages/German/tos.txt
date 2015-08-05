@@ -1,8 +1,0 @@
-Display Driver Uninstaller ("DDU") Nutzervereinbarung
-
-Sie werden ein Nutzer von DDU ("Nutzer") durch die Anwendung des DDU Programms. Diese Vereinbarung tritt in Kraft sobald sie die Treiberdeinstallation beginnen.
-
-Durch die Benutzung von DDU sind Sie damit einverstanden den Hersteller und andere mit dem Unternehmen verbundene Personen nicht zu beschuldigen, ihren PC beschädigt oder negativ beeinflußt zu haben.
-
-Durch die Benutzung von DDU erkennen Sie an, dass weder NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices ("AMD, Radeon") irgend 
-etwas mit diesem Programm zu tun haben. Gleiches gilt für den Hersteller und andere mit dem Unternehmen verbundene Personen.
