@@ -1,0 +1,75 @@
+Version 15.4.0.0 Released
+08/05/2015 Changelog:
+
+-Added to the log a confirmation if the Services are removed or not.
+-Extended Log will now automatically import the text from the normal log on form1, if the extended log is empty.
+-Fixed bug making the Update label disappear when switching languages.
+-Added an option to disable safe mode message box on startup.
+-Added argument to disable safe mode message box: -nosafemode
+-Log folder is created sooner to avoid potential issues and not logging things.
+-Auto resize of the options form based on the right checkboxes
+-Added NV Inspector to process kill list.
+
+Options form fixes:
+-Added support for \n (newline) in language text files so the text should never be cut off by the form's size if it is properly used.
+-Most languages that had issues have been updated to support newline already.
+-Moved check boxes further apart so the newline would not overlap
+-Commit checkbox10.txt
+-Options can now be converted to other Languages
+
+Translations update:
+-New language : Arabic (HasheM-HRW)
+-Korean (4Li)
+-Russian Danis Miryasov
+-Serbian (Cyrilic/Latin) CrazY_Milojko
+-French (Wagnard)
+-Chinese (Simplified/Traditional) (Credits : kongfl888)
+
+**Updated to fix some translation that wasn't applying. No other functionality changes.***
+and updated theses.
+-Spanish (Jackalito)
+-Korean (Zames Dean)
+
+====================
+Version 15.3.1.0 Released
+07/10/2015 Changelog:
+
+-Additional AMD CleanUP based on Cat 15.7 under Windows 10
+-Small fixes.
+-Translation Updates:
+Turkish (Murat 5038)
+Chinese (Traditional) (Danfong Hsieh)
+
+-Requirements: .NetFramework 2.0 +
+-Supports Windows XP up to Windows 10
+-32/64bit support
+-(AMD / nVidia / Intel / Surface Pro 3)
+
+====================
+Version 15.3.0.4 Released
+07/07/2015 Changelog:
+
+-Better Windows 10 Cleanup for nVidia.
+-Made the message that tell the users that driver search from windows update was disabled before actually starting the cleaning / system restore.
+-Translation Updates:
+Serbian Cyrilic/Latin (Igor Precep)
+Japanese (DH.Omega)
+Spanish (Jackalito)
+
+-Requirements: .NetFramework 2.0 +
+-Supports Windows XP up to Windows 10
+-32/64bit support
+-(AMD / nVidia / Intel / Surface Pro 3)
+
+====================
+Version 15.3.0.3 Released
+06/27/2015 Changelog:
+
+-Small changes to the control/video section.
+(do not remove the BasicDisplay or VGA) from the control / video.
+-Enabled the checkbox9 name translation for the option form.
+
+-Requirements: .NetFramework 2.0 +
+-Supports Windows XP up to Windows 10 TP
+-32/64bit support
+-(AMD / nVidia / Intel / Surface Pro 3)

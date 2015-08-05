@@ -232,7 +232,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DDU.ico" />
-    <Content Include="License.txt">
+    <Content Include="docs\Changelog.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="docs\License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ddu logo3.png" />
