@@ -1,0 +1,2 @@
+﻿Verwijder de huidige en de vorige drivers en sluit af zonder dat de computer opnieuw scant.
+(Voor het installeren van een nieuwe grafische kaart).

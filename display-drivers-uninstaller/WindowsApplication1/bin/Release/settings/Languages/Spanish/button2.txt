@@ -1,0 +1,2 @@
+﻿Limpiar y NO Reiniciar.
+(Puede provocar problemas como pantalla en negro, sin imagen)

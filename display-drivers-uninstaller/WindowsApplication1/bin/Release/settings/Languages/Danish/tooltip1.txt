@@ -1,0 +1,2 @@
+﻿Afinstallér nuværende og tidligere drivere, og genstart derefter computeren.
+(Anbefalet)

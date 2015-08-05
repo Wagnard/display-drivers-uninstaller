@@ -1,0 +1,2 @@
+﻿Nettoyer et éteindre
+(pour l'installation d'une nouvelle carte graphique)

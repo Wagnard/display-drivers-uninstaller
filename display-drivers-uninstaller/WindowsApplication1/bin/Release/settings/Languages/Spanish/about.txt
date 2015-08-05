@@ -1,0 +1,35 @@
+﻿Display Driver Uninstaller (DDU)/Limpiador para Controladores de Pantalla (NVIDIA/AMD).
+
+Elimina el controlador de pantalla/GPU del Administrador de Dispositivos, todo rastro
+de controlador(es) del "Almacén" de Windows, así como servicios de NVIDIA/AMD.
+El resultado es similar al que se obtendría tras una "Instalación Limpia" de Windows.
+Esta herramienta actúa de un modo parecido a "Driver Sweeper"*, y contiene todos los
+extras mencionados anteriormente. Si experimenta cualquier problema instalando un
+controlador más antiguo o nuevo, dele una oportunidad pues existen numerosos
+testimonios que afirman que puede corregir dichos problemas.
+
+USO RECOMENDADO:
+-La herramienta DDU puede ser usada en Modo Normal pero para una estabilidad absoluta,
+el Modo a Prueba de Fallos es siempre la mejor opción.
+-Nos complacería reunir opiniones de todo el mundo, conocer si os funciona
+correctamente o no.
+-Realice una Copia de Seguridad o cree un nuevo Punto de Restauración.
+(aunque normalmente debería ser bastante seguro.)
+-Si ha tenido problemas con un controlador de pantalla, y esta herramienta le ha
+ayudado a solventar lo que estaba o está fallando, por favor comparta su resultado.
+
+Tenga siempre presente que ni NVIDIA, ni AMD, ni Microsoft pueden responsabilizarse
+por cualquier tipo de daños hacia usted o su ordenador y no están de ningún modo
+afiliados a DDU, o a sus creadores.
+------------------------------------------------------------------------------------------------------------------------------------------------
+Creado Por Wagnard. Copropietario: Shady7557
+Probadores: Dellon132, Logos, juanchacin
+Gracias a Helge Klein (http://helgeklein.com/setacl/): por el permiso para usar
+su Programa con DDU "SetAcl"
+Especial Agradecimiento por su tiempo invertido en probar a:
+Gamer1291 (optimus) y Octopuss (Amd Enduro)
+Gracias a todos aquellos que corrieron el riesgo con su sistema.
+Especial Agradecimiento a Dellon132.
+*DDU, sus creadores y colaboradores no están de ningún modo
+afiliados a Driver Sweeper, o a sus creadores.
+Traducción al Español realizada por Jackalito.

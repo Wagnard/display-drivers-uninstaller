@@ -1,0 +1,2 @@
+﻿Wyczyść i NIE Restartuj
+(Może powodować problemy jak czarny ekran)

@@ -1,0 +1,1 @@
+﻿Przywróć domyślne ustawienia aktualizacji sterowników z Windows Update.

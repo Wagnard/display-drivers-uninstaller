@@ -1,0 +1,42 @@
+﻿Извршавање Driver Store cleanUP-а (брисање OEM step-а)...
+Чишћење Directory-а
+Чишћење познатих Registry кључева... Може потрајати до минут-два.
+Чишћење UpdatusUser users account-а ако је присутан.
+Чишћење Directory-а
+Почетак Registry CleanUP процедуре
+Крај чишћења Registry-а
+Почетак уклањања nVidia Optimus UpperFilter-а ако је присутан.
+Скенирање нових уређаја...
+Процедура чишћења је завршена!
+DDU верзија:
+GPU #
+Детектован :
+GPU DeviceId :
+Детектована верзија (верзије) драјвера :
+INF :
+INF секција :
+GPU није правилно инсталиран :
+Брисање специјалних директоријума, може потрајати...
+CleanUP процедура стартована...
+Деинсталација
+драјвера
+Извршавање ddudr Remove процедуре, молимо сачекајте (може потрајати до пар минута)
+GPU уклоњен (уклоњени) из Device Manager-а.
+Извршавање DDUDR Remove Audio controller процедуре.
+HD audio adapter-и уклоњени!
+3D Vision USB Adapter уклоњен из Device Manager-а.
+Monitor-и и Hidden monitor-и уклоњени !
+Крај ddudr Remove процедуре
+Почетак S-1-5-xx region cleanUP процедуре
+Крај S-1-5-xx region cleanUP процедуре
+Почетак Classesroot ,installer\products cleanup процедуре
+Крај Classesroot ,installer\products cleanup процедуре
+Почетак localmachine ,installer\products cleanup процедуре
+Крај localmachine ,installer\products cleanup процедуре
+Почетак currentuser ,installer\products cleanup процедуре
+Крај currentuser ,installer\products cleanup процедуре
+Почетак Process/Services CleanUP процедуре...
+Process/Services CleanUP процедура завршена
+Обрисано.
+Вредност уклоњена.
+Фајл обрисан.

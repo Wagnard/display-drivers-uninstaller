@@ -1,0 +1,1 @@
+﻿Doporučujeme spouštět DDU v nouzovém režimu.

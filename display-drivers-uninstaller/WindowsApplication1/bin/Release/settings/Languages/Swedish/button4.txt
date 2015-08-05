@@ -1,0 +1,1 @@
+﻿Använd standardinställning för Windows automatiska drivrutininstallation.

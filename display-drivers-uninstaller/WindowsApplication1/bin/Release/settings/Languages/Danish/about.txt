@@ -1,0 +1,37 @@
+﻿Display Driver Uninstaller (DDU) / Afinstalleringsværktøj for grafikdrivere.(NVIDIA/AMD)
+
+Programmet fjerner skærm-/grafikkortdriverne fra Enhedshåndtering, alle aktuelle og tidligere drivere fra Windows Driver-mappen samt systemtjenester fra NVIDIA/AMD.
+
+Den umiddelbare effekt af at anvende dette værktøj, er at Windows bliver tilbageført til "nyinstalleret" tilstand hvad angår grafikkortet.
+
+Værktøjet fungerer nogenlunde som "Driver Sweeper"*, plus ovennævnte ektrafunktioner.
+
+Har du problemer at op-/nedgradere dine grafikdrivere, kan du prøve at køre DDU først. ANBEFALET ANVENDELSE:
+
+- Værktøjet kan køres i normaltilstand men for absolut stabilitet er fejlsikker tilstand altid det bedste.
+
+- Vi vil gerne have tilbagemeldinger fra alle brugere, så fortæl om dine erfaringer med programmet. 
+
+- Skab for sikkerheds skyld en sikkerhedskopi eller et systemgendannelsespunkt før brug. (Normalt er programmet ret sikkert.)
+
+- Hvis du har eller har haft driverproblemer og programmet har hjulpet dig med at løse problemet, så del gerne din løsning.
+
+Husk at hverken NVIDIA, AMD, eller Microsoft kan gøres ansvarlige for eventuelle skader eller fejl 
+på din computer, heller ikke DDU, dets skaber eller samarbejdspartnere.
+-------------------------------
+
+Skabt af Wagnard.
+
+Co-ejer: Shady7557
+
+Tester : Dellon132
+
+Logoer : juanchacin
+
+Tak til Helge Klein (http://helgeklein.com/setacl/) : for tilladelse til at bruge hans program i DDU "SetAcl"
+
+Stort Tak for tiden brugt med at teste: Gamer1291
+
+Tak til alle som har risikeret deres systemer. (En speciel tak til Dellon132)
+
+*DDU, dets skabere og samarbejdspartnere er på ingen måde associerede med Driver Sweeper eller dets skabere.

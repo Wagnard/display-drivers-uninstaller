@@ -1,0 +1,2 @@
+﻿Avinstallera nuvarande och tidigare drivrutiner, men starta inte om datorn.
+(Kan orsaka fel som svart skärm)

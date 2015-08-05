@@ -1,0 +1,7 @@
+﻿Display Driver Uninstaller ("DDU") KORISNIČKI UGOVOR (USER AGREEMENT)
+
+Korisnik ("User") programa DDU postajete njegovim korišćenjem. Ovaj ugovor postaje važeći odmah nakon Vašeg korišćenja ovog programa da biste uklonili drajver.
+
+Korišćenjem programa DDU saglasni ste da nećete kriviti DDU ili njegove kreatore i one koji su učestvovali u izradi programa za eventualnu štetu nastalu na Vašem PC kompjuteru.
+
+Korišćenjem programa DDU stavljeno Vam je do znanja da ni NVIDIA ("NVIDIA, GeForce") ni Advanced Micro Devices ("AMD, Radeon") nemaju nikakve veze sa ovim programom i nisu niukakvoj vezi sa programom DDU ili njegovim kreatorima.

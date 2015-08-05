@@ -1,0 +1,2 @@
+﻿Obriši trenutne i prethodne zaostale drajvere i ugasi kompjuter, bez ponovnog skeniranja
+(Za ugradnju/instalaciju nove grafičke kartice)

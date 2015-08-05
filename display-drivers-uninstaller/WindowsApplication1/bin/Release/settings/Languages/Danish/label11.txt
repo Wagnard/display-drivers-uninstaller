@@ -1,0 +1,4 @@
+﻿Kontrollerer om der er opdateringer...
+Ingen opdateringer fundet. Programmet er opdateret.
+Nye opdateringer fundet! Begrænset support på ældre versioner.
+Ikke i stand til at hente opdateringer!
