@@ -1,0 +1,20 @@
+*.a
+*.aps
+*.db
+*.old
+*.opensdf
+*.psess
+*.pyc
+*.sdf
+*.suo
+*.tss
+*.user
+*.vspx
+*.7z
+build.user.bat
+/.git-rewrite
+/display-drivers-uninstaller/WindowsApplication1/Common/gitver.vb
+[Oo]bj/
+[Bb]in/
+/Service References
+

@@ -1,8 +1,0 @@
-Display Driver Uninstaller ("DDU") FELHASZNÁLÓI SZERZŐDÉS
-
-A DDU szoftver használatba vételével a felhasználójává váltál. Ez a szerződés akkor lép érvénybe, amikor a program egy driver eltávolítására használod.
-
-A DDU használatával elfogadod, hogy nem okolod a DDU-t vagy a készítőit vagy kapcsolatait a számítógépedet ért bármilyen sérülés vagy negatív hatás miatt.
-
-A DDU használatával elfogadod, hogy sem az NVIDIA-nak ("NVIDIA, GeForce"), sem az Advanced Micro Devices-nek ("AMD, Radeon") semmi köze
-ehhez a programhoz és semmilyen módon nem állnak kapcsolatban a DDU-val vagy a készítőivel.

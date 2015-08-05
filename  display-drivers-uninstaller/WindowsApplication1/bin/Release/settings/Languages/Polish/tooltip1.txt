@@ -1,2 +1,0 @@
-﻿Odinstaluj obecne i poprzednie sterowniki i uruchom ponownie komputer
-(Wysoce Zalecane)

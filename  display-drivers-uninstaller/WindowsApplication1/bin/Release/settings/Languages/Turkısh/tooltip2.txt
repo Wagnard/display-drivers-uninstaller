@@ -1,2 +1,0 @@
-﻿Mevcut ve önceki sürücüleri kaldırın, ancak bilgisayarı yeniden başlatmayın.
-(Siyah ekran gibi sorunlar neden olabilir)

@@ -1,0 +1,2 @@
+﻿Afinstallér nuværende og tidligere drivere, uden at genstarte computeren.
+(Kan forårsage fejl som sort skærm)

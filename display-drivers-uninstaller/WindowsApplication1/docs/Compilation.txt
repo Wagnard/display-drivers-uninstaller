@@ -1,0 +1,6 @@
+Preparing
+
+If you wanto add the Git build version, create a file named "build.user.bat" in "WindowsApplication1\" containing the following entries, adapted for your system:
+
+@ECHO OFF
+SET "GIT=C:\Program Files (x86)\Git"

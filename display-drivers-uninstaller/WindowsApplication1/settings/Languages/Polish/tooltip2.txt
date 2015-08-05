@@ -1,0 +1,2 @@
+﻿Odinstaluj obecne i poprzednie sterowniki i NIE uruchamiaj ponownie komputera.
+(Może powodować problemy jak czarny ekran)

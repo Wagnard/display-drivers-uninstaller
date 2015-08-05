@@ -1,2 +1,0 @@
-Vyčistiť a NEreštartovať
-(Môže spôsobiť problémy ako čiernu obrazovku)

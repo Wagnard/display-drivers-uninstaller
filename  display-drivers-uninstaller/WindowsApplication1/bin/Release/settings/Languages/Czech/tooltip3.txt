@@ -1,2 +1,0 @@
-﻿Odinstalovat stávající i předchozí ovladače a vypnout počítač bez znovuvyhledání adaptéru.
-(Před instalací nové grafické karty)

@@ -1,7 +1,0 @@
-﻿Display Driver Uninstaller ("DDU") KULLANICI SÖZLEŞMESİ
-
-DDU yazılım kullanarak bir DDU ("kullanıcı") kullanıcısı olursunuz. Bu anlaşma bir sürücüyü kaldırmak için programı kullandığınızda etkin duruma gelir.
-
-DDU'yu kullanarak bilgisayarınıza gelebilecek tüm sorunları kabul etmiş olur ve suçlama talebinde bulunamazsınız.
-
-DDU'yu kullanarak, NVIDIA ("NVIDIA, GeForce") Advanced Micro Devices ("AMD, Radeon") sahip olduğunuzu kabul etmiş olursunuz.
