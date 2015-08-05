@@ -1,0 +1,2 @@
+Odinštalovať aktuálne aj predchádzajúce ovládače a Vypnúť počítač bez vyhľadania hardvéru
+(Na inštaláciu novej grafickej karty)

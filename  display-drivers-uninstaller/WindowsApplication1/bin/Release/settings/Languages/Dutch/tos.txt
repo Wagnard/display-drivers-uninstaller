@@ -1,8 +1,0 @@
-﻿Display Driver Uninstaller ("DDU") GEBRUIKERSOVEREENKOMST
-
-U wordt een gebruiker van DDU ("Gebruiker") door gebruik te maken van de DDU-software. Deze overeenkomst wordt van kracht zodra u het programma gebruikt om een ​​driver te verwijderen.
-
-Door het gebruik van DDU gaat u akkoord met het niet beschuldigen van DDU of zijn makers, en filialen, te beschadigen of negatieve invloed te gedaan hebben op uw PC.
-
-Door het gebruik van DDU erkent u dat NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices ("AMD, Radeon")
- (Intel) iets te maken hebben met dit programma, en op geen enkele wijze filialen van DDU of zijn makers.

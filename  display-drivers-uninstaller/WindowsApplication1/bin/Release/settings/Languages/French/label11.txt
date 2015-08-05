@@ -1,4 +1,0 @@
-﻿Vérification des mises à jour ...
-Aucune mise-à-jour trouvé. DDU est à jour.
-Mise-à-jour trouvée!
-Incapable de vérifier les mises-à-jour.

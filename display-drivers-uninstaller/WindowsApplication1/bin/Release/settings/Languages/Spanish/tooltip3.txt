@@ -1,0 +1,2 @@
+﻿Desinstalar los controladores actuales y anteriores y Apagar el ordenador evitando la instalación automática de los mismos por el S.O.
+(Para instalar una nueva tarjeta gráfica)

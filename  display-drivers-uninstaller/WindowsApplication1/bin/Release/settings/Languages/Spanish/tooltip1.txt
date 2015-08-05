@@ -1,2 +1,0 @@
-﻿Desinstalar los controladores actuales y anteriores, a continuación reiniciar el ordenador.
-(Altamente Recomendado)

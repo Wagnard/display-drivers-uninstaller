@@ -1,1 +1,0 @@
-Speichere Log-Dateien in Startup-Pfad (empfohlen)

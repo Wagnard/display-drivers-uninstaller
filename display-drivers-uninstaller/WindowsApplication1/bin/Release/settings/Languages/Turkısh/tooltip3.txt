@@ -1,0 +1,2 @@
+﻿Mevcut ve önceki sürücüleri kaldırın ve bilgisayarı kapat yeniden tarama yapma
+(Yeni grafik kartı yüklemek için).
