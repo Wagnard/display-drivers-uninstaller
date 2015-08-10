@@ -1,6 +1,8 @@
 ﻿Imports WindowsApplication1.Form1
 Public Class options
     Dim buttontext As String()
+    'Dim userpthn As String = System.Environment.GetEnvironmentVariable("appdata")
+    Dim userpthn As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("Public")
     Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
         If CheckBox2.Checked = True Then
             setconfig("logbox", "true")
@@ -48,11 +50,27 @@ Public Class options
     Public Sub setconfig(ByVal name As String, ByVal setvalue As String)
         Try
             Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
+            Dim isUsingRoaming As Boolean = False
+            Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
+            If My.Computer.FileSystem.FileExists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
+                '    Dim liness() As String = IO.File.ReadAllLines(userpth & "\AppData\Roaming\Display Driver Uninstaller\config.cfg")
+                isUsingRoaming = True
+                roamingcfg = True
+                lines = IO.File.ReadAllLines(userpthn & "\Display Driver Uninstaller\config.cfg")
+                ' MessageBox.Show(userpth)
+                '    MessageBox.Show("using roaming cfg")
+            End If
+
             For i As Integer = 0 To lines.Length - 1
                 If Not String.IsNullOrEmpty(lines(i)) Then
                     If lines(i).ToLower.Contains(name) Then
                         lines(i) = name + "=" + setvalue
-                        System.IO.File.WriteAllLines(Application.StartupPath & "\settings\config.cfg", lines)
+                        If isUsingRoaming = False Then
+                            System.IO.File.WriteAllLines(Application.StartupPath & "\settings\config.cfg", lines)
+                        Else
+                            System.IO.File.WriteAllLines(userpthn & "\Display Driver Uninstaller\config.cfg", lines)
+                        End If
+                        '  System.IO.File.WriteAllLines(Application.StartupPath & "\settings\config.cfg", lines)
                     End If
                 End If
             Next
@@ -136,6 +154,14 @@ Public Class options
         Else
             CheckBox10.Checked = False
             safemodemb = False
+        End If
+
+        If settings.getconfig("roamingcfg") = "true" Then
+            CheckBox11.Checked = True
+            roamingcfg = True
+        Else
+            CheckBox11.Checked = False
+            roamingcfg = False
         End If
 
 
@@ -428,5 +454,36 @@ Public Class options
             setconfig("showsafemodebox", "false")
             safemodemb = False
         End If
+    End Sub
+
+    Private Sub CheckBox11_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox11.CheckedChanged
+        If CheckBox11.Checked = True Then
+            setconfig("roamingcfg", "true")
+            roamingcfg = True
+        Else
+            setconfig("roamingcfg", "false")
+            roamingcfg = False
+        End If
+        Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
+        Dim userpthn As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("Public")
+        'MessageBox.Show(userpthn)
+        If CheckBox11.Checked = True Then
+            If Not My.Computer.FileSystem.DirectoryExists(userpthn & "\Display Driver Uninstaller") Then
+                '  My.Computer.FileSystem.CreateDirectory(userpthn & "\Display Driver Uninstaller")
+                System.IO.Directory.CreateDirectory(userpthn & "\Display Driver Uninstaller")
+                System.Threading.Thread.Sleep(75)
+                My.Computer.FileSystem.CopyFile(Application.StartupPath & "\settings\config.cfg", userpthn & "\Display Driver Uninstaller\config.cfg")
+            End If
+        End If
+        If CheckBox11.Checked = False Then
+            If My.Computer.FileSystem.DirectoryExists(userpthn & "\Display Driver Uninstaller") Then
+                If My.Computer.FileSystem.FileExists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
+                    My.Computer.FileSystem.CopyFile(userpthn & "\Display Driver Uninstaller\config.cfg", Application.StartupPath & "\settings\config.cfg", True)
+                    System.Threading.Thread.Sleep(75)
+                    My.Computer.FileSystem.DeleteDirectory(userpthn & "\Display Driver Uninstaller", FileIO.DeleteDirectoryOption.DeleteAllContents)
+                End If
+            End If
+        End If
+
     End Sub
 End Class
