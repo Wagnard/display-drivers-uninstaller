@@ -2,7 +2,8 @@
 Public Class options
     Dim buttontext As String()
     'Dim userpthn As String = System.Environment.GetEnvironmentVariable("appdata")
-    Dim userpthn As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("Public")
+    'Dim userpthn As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("Public")
+    Dim userpthn As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
     Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
         If CheckBox2.Checked = True Then
             setconfig("logbox", "true")
@@ -51,7 +52,7 @@ Public Class options
         Try
             Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
             Dim isUsingRoaming As Boolean = False
-            Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
+            'Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
             If My.Computer.FileSystem.FileExists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
                 '    Dim liness() As String = IO.File.ReadAllLines(userpth & "\AppData\Roaming\Display Driver Uninstaller\config.cfg")
                 isUsingRoaming = True
@@ -303,6 +304,20 @@ Public Class options
         Next
 
         Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox11.txt") '// add each line as String Array.
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\checkbox11.txt") '// add each line as String Array.
+        End Try
+        CheckBox11.Text = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                CheckBox11.Text = CheckBox11.Text
+            End If
+            CheckBox11.Text = CheckBox11.Text & buttontext(i)
+            CheckBox11.Text = CheckBox11.Text.Replace("\n", vbNewLine)
+        Next
+
+        Try
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\options.txt") '// add each line as String Array.
         Catch ex As Exception
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\options.txt") '// add each line as String Array.
@@ -465,7 +480,7 @@ Public Class options
             roamingcfg = False
         End If
         Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
-        Dim userpthn As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("Public")
+        Dim userpthn As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
         'MessageBox.Show(userpthn)
         If CheckBox11.Checked = True Then
             If Not My.Computer.FileSystem.DirectoryExists(userpthn & "\Display Driver Uninstaller") Then

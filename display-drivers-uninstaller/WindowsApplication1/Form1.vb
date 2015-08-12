@@ -73,7 +73,7 @@ Public Class Form1
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
     Dim windir As String = System.Environment.GetEnvironmentVariable("windir").ToLower
     Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
-    Dim userpthn As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("Public")
+    Dim userpthn As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
     Dim checkupdatethread As Thread = Nothing
     Public updates As Integer = Nothing
     Dim reply As String = Nothing
@@ -4944,6 +4944,9 @@ Public Class Form1
                 ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("uk") Then
                     ComboBox2.SelectedIndex = ComboBox2.FindString("Ukrainian")
 
+                ElseIf System.Globalization.CultureInfo.CurrentCulture.ToString.ToLower.StartsWith("ar") Then
+                    ComboBox2.SelectedIndex = ComboBox2.FindString("Arabic")
+
                 Else
                     ComboBox2.SelectedIndex = ComboBox2.FindString("English")
                 End If
@@ -7420,7 +7423,7 @@ Public Class genericfunction
 
         Try
             Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
-            Dim userpthn As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("Public")
+            Dim userpthn As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
             Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
             Dim isUsingRoaming As Boolean = False
             If My.Computer.FileSystem.FileExists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
@@ -7464,7 +7467,7 @@ Public Class genericfunction
         Try
             '    Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
             Dim userpth As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory") + "\"
-            Dim userpthn As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("Public")
+            Dim userpthn As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
             Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
             Dim isUsingRoaming As Boolean = False
             If My.Computer.FileSystem.FileExists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
