@@ -84,6 +84,7 @@ Public Class options
     Private Sub options_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
 
+        Form1.Enabled = False
 
 
 
@@ -361,43 +362,43 @@ Public Class options
         '-------------------------------------
 
 
-        If CheckBox2.Width + CheckBox2.Location.X > CheckBox5.Width + CheckBox5.Location.X Then
-            If CheckBox2.Width + CheckBox2.Location.X > CheckBox6.Width + CheckBox6.Location.X Then
+        If CheckBox2.Width + CheckBox2.Location.X > CheckBox5.Width + CheckBox5.Location.X AndAlso
+            CheckBox2.Width + CheckBox2.Location.X > CheckBox6.Width + CheckBox6.Location.X AndAlso
+            CheckBox2.Width + CheckBox2.Location.X > CheckBox10.Width + CheckBox10.Location.X AndAlso
+            CheckBox2.Width + CheckBox2.Location.X > CheckBox11.Width + CheckBox11.Location.X Then
+            Me.Size = New System.Drawing.Size(CheckBox2.Width + CheckBox2.Location.X + 10, 559)
 
-                If CheckBox2.Width + CheckBox2.Location.X > CheckBox10.Width + CheckBox10.Location.X Then
-                    Me.Size = New System.Drawing.Size(CheckBox2.Width + CheckBox2.Location.X + 10, 559)
-                End If
 
-            End If
+        ElseIf CheckBox5.Width + CheckBox5.Location.X > CheckBox6.Width + CheckBox6.Location.X AndAlso
+            CheckBox5.Width + CheckBox5.Location.X > CheckBox10.Width + CheckBox10.Location.X AndAlso
+            CheckBox5.Width + CheckBox5.Location.X > CheckBox11.Width + CheckBox11.Location.X Then
+            Me.Size = New System.Drawing.Size(CheckBox5.Width + CheckBox5.Location.X + 10, 559)
 
-        ElseIf CheckBox5.Width + CheckBox5.Location.X > CheckBox6.Width + CheckBox6.Location.X Then
 
-            If CheckBox5.Width + CheckBox5.Location.X > CheckBox10.Width + CheckBox10.Location.X Then
-                Me.Size = New System.Drawing.Size(CheckBox5.Width + CheckBox5.Location.X + 10, 559)
-            End If
+        ElseIf CheckBox6.Width + CheckBox6.Location.X > CheckBox2.Width + CheckBox2.Location.X AndAlso
+            CheckBox6.Width + CheckBox6.Location.X > CheckBox10.Width + CheckBox10.Location.X AndAlso
+            CheckBox6.Width + CheckBox6.Location.X > CheckBox11.Width + CheckBox11.Location.X Then
+            Me.Size = New System.Drawing.Size(CheckBox6.Width + CheckBox6.Location.X + 10, 559)
 
-        ElseIf CheckBox6.Width + CheckBox6.Location.X > CheckBox2.Width + CheckBox2.Location.X Then
-            If CheckBox6.Width + CheckBox6.Location.X > CheckBox10.Width + CheckBox10.Location.X Then
-                Me.Size = New System.Drawing.Size(CheckBox6.Width + CheckBox6.Location.X + 10, 559)
-            End If
+        ElseIf CheckBox10.Width + CheckBox10.Location.X > CheckBox2.Width + CheckBox2.Location.X AndAlso
+               CheckBox10.Width + CheckBox10.Location.X > CheckBox5.Width + CheckBox5.Location.X AndAlso
+               CheckBox10.Width + CheckBox10.Location.X > CheckBox6.Width + CheckBox6.Location.X AndAlso
+               CheckBox10.Width + CheckBox10.Location.X > CheckBox11.Width + CheckBox11.Location.X Then
+            Me.Size = New System.Drawing.Size(CheckBox10.Width + CheckBox10.Location.X + 10, 559)
 
-        ElseIf CheckBox10.Width + CheckBox10.Location.X > CheckBox2.Width + CheckBox2.Location.X Then
-            If CheckBox10.Width + CheckBox10.Location.X > CheckBox5.Width + CheckBox5.Location.X Then
-                If CheckBox10.Width + CheckBox10.Location.X > CheckBox6.Width + CheckBox6.Location.X Then
-                    Me.Size = New System.Drawing.Size(CheckBox10.Width + CheckBox10.Location.X + 10, 559)
-                End If
-            End If
+        ElseIf CheckBox11.Width + CheckBox11.Location.X > CheckBox2.Width + CheckBox2.Location.X AndAlso
+               CheckBox11.Width + CheckBox11.Location.X > CheckBox5.Width + CheckBox5.Location.X AndAlso
+               CheckBox11.Width + CheckBox11.Location.X > CheckBox6.Width + CheckBox6.Location.X AndAlso
+               CheckBox11.Width + CheckBox11.Location.X > CheckBox10.Width + CheckBox10.Location.X Then
+            Me.Size = New System.Drawing.Size(CheckBox11.Width + CheckBox11.Location.X + 10, 559)
 
 
         End If
 
-
-
-
     End Sub
 
     Private Sub options_close(sender As Object, e As EventArgs) Handles MyBase.FormClosed
-        Form1.Show()
+        Form1.Enabled = True
     End Sub
 
     Private Sub CheckBox6_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox6.CheckedChanged

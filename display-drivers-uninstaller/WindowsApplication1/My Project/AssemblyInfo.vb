@@ -11,14 +11,14 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTitle("Display Driver Uninstaller")> 
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("Display Driver Uninstaller")> 
-<Assembly: AssemblyCopyright("Copyright ©  2014")> 
+<Assembly: AssemblyProduct("Display Driver Uninstaller")>
+<Assembly: AssemblyCopyright("Copyright ©  2015")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("730a46b3-5dd6-4fe6-b4ac-e94e169b0841")> 
+<Assembly: Guid("730a46b3-5dd6-4fe6-b4ac-e94e169b0841")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("15.4.0.0")> 
-<Assembly: AssemblyFileVersion("15.4.0.0")> 
+<Assembly: AssemblyVersion("15.4.0.1")>
+<Assembly: AssemblyFileVersion("15.4.0.1")>
