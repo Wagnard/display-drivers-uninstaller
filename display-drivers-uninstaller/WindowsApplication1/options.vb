@@ -183,6 +183,14 @@ Public Class options
             removecamd = False
         End If
 
+        If settings.getconfig("donotcheckupdatestartup") = "true" Then
+            CheckBox12.Checked = True
+            donotcheckupdatestartup = True
+        Else
+            CheckBox12.Checked = False
+            donotcheckupdatestartup = False
+        End If
+
 
         'Init language for checkboxes
         Try
@@ -319,6 +327,20 @@ Public Class options
         Next
 
         Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox12.txt") '// add each line as String Array.
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\checkbox12.txt") '// add each line as String Array.
+        End Try
+        CheckBox12.Text = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                CheckBox12.Text = CheckBox12.Text
+            End If
+            CheckBox12.Text = CheckBox12.Text & buttontext(i)
+            CheckBox12.Text = CheckBox12.Text.Replace("\n", vbNewLine)
+        Next
+
+        Try
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\options.txt") '// add each line as String Array.
         Catch ex As Exception
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\options.txt") '// add each line as String Array.
@@ -392,9 +414,10 @@ Public Class options
                CheckBox11.Width + CheckBox11.Location.X > CheckBox10.Width + CheckBox10.Location.X Then
             Me.Size = New System.Drawing.Size(CheckBox11.Width + CheckBox11.Location.X + 10, 559)
 
-
         End If
-
+        If Me.Size.Width < CheckBox12.Width + CheckBox12.Location.X Then
+            Me.Size = New System.Drawing.Size(CheckBox12.Width + CheckBox12.Location.X + 10, 559)
+        End If
     End Sub
 
     Private Sub options_close(sender As Object, e As EventArgs) Handles MyBase.FormClosed
@@ -501,5 +524,15 @@ Public Class options
             End If
         End If
 
+    End Sub
+
+    Private Sub CheckBox12_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox12.CheckedChanged
+        If CheckBox12.Checked = True Then
+            setconfig("donotcheckupdatestartup", "true")
+            donotcheckupdatestartup = True
+        Else
+            setconfig("donotcheckupdatestartup", "false")
+            donotcheckupdatestartup = False
+        End If
     End Sub
 End Class

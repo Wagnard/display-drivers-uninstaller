@@ -40,6 +40,7 @@ Partial Class options
         Me.CheckBox9 = New System.Windows.Forms.CheckBox()
         Me.CheckBox10 = New System.Windows.Forms.CheckBox()
         Me.CheckBox11 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox12 = New System.Windows.Forms.CheckBox()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -179,7 +180,7 @@ Partial Class options
         'Button1
         '
         Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Location = New System.Drawing.Point(549, 485)
+        Me.Button1.Location = New System.Drawing.Point(588, 485)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 42
@@ -216,11 +217,22 @@ Partial Class options
         Me.CheckBox11.Text = "Store config file in roaming folder (may be buggy)"
         Me.CheckBox11.UseVisualStyleBackColor = True
         '
+        'CheckBox12
+        '
+        Me.CheckBox12.AutoSize = True
+        Me.CheckBox12.Location = New System.Drawing.Point(357, 227)
+        Me.CheckBox12.Name = "CheckBox12"
+        Me.CheckBox12.Size = New System.Drawing.Size(331, 17)
+        Me.CheckBox12.TabIndex = 48
+        Me.CheckBox12.Text = "Do not check for DDU updates on startup (NOT Recommended)"
+        Me.CheckBox12.UseVisualStyleBackColor = True
+        '
         'options
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(675, 520)
+        Me.Controls.Add(Me.CheckBox12)
         Me.Controls.Add(Me.CheckBox11)
         Me.Controls.Add(Me.CheckBox10)
         Me.Controls.Add(Me.CheckBox9)
@@ -269,4 +281,5 @@ Partial Class options
     Friend WithEvents CheckBox9 As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBox10 As CheckBox
     Friend WithEvents CheckBox11 As CheckBox
+    Friend WithEvents CheckBox12 As CheckBox
 End Class

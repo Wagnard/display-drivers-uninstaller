@@ -66,7 +66,7 @@ Public Class Form1
     Public Shared removeamdkmpfd As Boolean
     Public Shared safemodemb As Boolean
     Public Shared roamingcfg As Boolean
-
+    Public Shared donotcheckupdatestartup As Boolean
 
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
@@ -2267,6 +2267,11 @@ Public Class Form1
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
                     End If
                 Catch ex As Exception
                 End Try
@@ -2297,6 +2302,11 @@ Public Class Form1
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
                     End If
                 Catch ex As Exception
                 End Try
@@ -2312,7 +2322,9 @@ Public Class Form1
                         If child.ToLower.Contains("ledvisualizer") Or
                             child.ToLower.Contains("shadowplay") Or
                             child.ToLower.Contains("gfexperience") Or
+                            child.ToLower.Contains("nvvad") Or
                             child.ToLower.Contains("shield apps") Then
+
                             Try
                                 deletedirectory(child)
                             Catch ex As Exception
@@ -2328,6 +2340,11 @@ Public Class Form1
                         Catch ex As Exception
                             log(ex.Message)
                         End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
                     End If
                 Catch ex As Exception
                 End Try
@@ -2361,6 +2378,10 @@ Public Class Form1
                         log(ex.Message)
                         TestDelete(filePath)
                     End Try
+                Else
+                    For Each data As String In Directory.GetDirectories(filePath)
+                        log("Remaining folders found " + " : " + data)
+                    Next
                 End If
             Catch ex As Exception
             End Try
@@ -2394,6 +2415,11 @@ Public Class Form1
                     log(ex.Message)
                     TestDelete(filePath)
                 End Try
+            Else
+                For Each data As String In Directory.GetDirectories(filePath)
+                    log("Remaining folders found " + " : " + data)
+                Next
+
             End If
         Catch ex As Exception
         End Try
@@ -2421,6 +2447,10 @@ Public Class Form1
                         log(ex.Message)
                         TestDelete(filePath)
                     End Try
+                Else
+                    For Each data As String In Directory.GetDirectories(filePath)
+                        log("Remaining folders found " + " : " + data)
+                    Next
                 End If
             Catch ex As Exception
             End Try
@@ -2512,6 +2542,11 @@ Public Class Form1
                                 log(ex.Message)
                                 TestDelete(child)
                             End Try
+                        Else
+                            For Each data As String In Directory.GetDirectories(child)
+                                log("Remaining folders found " + " : " + data)
+                            Next
+
                         End If
                         If Not Directory.Exists(child) Then
                             CleanupEngine.shareddlls(child)
@@ -2526,6 +2561,10 @@ Public Class Form1
                     log(ex.Message)
                     TestDelete(filePath)
                 End Try
+            Else
+                For Each data As String In Directory.GetDirectories(filePath)
+                    log("Remaining folders found " + " : " + data)
+                Next
             End If
         End If
         If Not Directory.Exists(filePath) Then
@@ -2598,6 +2637,11 @@ Public Class Form1
                         log(ex.Message)
                         TestDelete(filePath)
                     End Try
+                Else
+                    For Each data As String In Directory.GetDirectories(filePath)
+                        log("Remaining folders found " + " : " + data)
+                    Next
+
                 End If
             End If
             If Not Directory.Exists(filePath) Then
@@ -2674,6 +2718,11 @@ Public Class Form1
                         log(ex.Message)
                         TestDelete(filePath)
                     End Try
+                Else
+                    For Each data As String In Directory.GetDirectories(filePath)
+                        log("Remaining folders found " + " : " + data)
+                    Next
+
                 End If
             Catch ex As Exception
             End Try
@@ -2708,6 +2757,11 @@ Public Class Form1
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
                     End If
                 Catch ex As Exception
                 End Try
@@ -2737,6 +2791,11 @@ Public Class Form1
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
                     End If
                 Catch ex As Exception
                 End Try
@@ -2766,6 +2825,11 @@ Public Class Form1
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
                     End If
                 Catch ex As Exception
                 End Try
@@ -2801,6 +2865,11 @@ Public Class Form1
                                         log(ex.Message)
                                         TestDelete(filePath)
                                     End Try
+                                Else
+                                    For Each data As String In Directory.GetDirectories(filePath)
+                                        log("Remaining folders found " + " : " + data)
+                                    Next
+
                                 End If
                             End If
                         End If
@@ -4857,6 +4926,21 @@ Public Class Form1
                 removecamd = False
             End If
 
+            If settings.getconfig("donotcheckupdatestartup") = "true" Then
+                f.CheckBox12.Checked = True
+                donotcheckupdatestartup = True
+            Else
+                f.CheckBox12.Checked = False
+                donotcheckupdatestartup = False
+            End If
+
+            If settings.getconfig("showsafemodebox") = "false" Then
+                f.CheckBox10.Checked = False
+                safemodemb = False
+            Else
+                f.CheckBox10.Checked = True
+                safemodemb = True
+            End If
 
 
             '----------------
@@ -4957,17 +5041,20 @@ Public Class Form1
             End If
 
             combobox2value = ComboBox2.Text
+            If Not donotcheckupdatestartup Then
+                Try
+                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
+                    Label11.Text = ""
+                    Label11.Text = Label11.Text & buttontext("0")
+                Catch ex As Exception
+                End Try
 
-            Try
-                buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
-                Label11.Text = ""
-                Label11.Text = Label11.Text & buttontext("0")
-            Catch ex As Exception
-            End Try
-            Checkupdates2()
-            If closeapp Then
-                Exit Sub
+                Checkupdates2()
+                If closeapp Then
+                    Exit Sub
+                End If
             End If
+
 
 
 
@@ -5136,13 +5223,13 @@ Public Class Form1
             End If
 
             'this code is down here because of how the safe mode is handled and variables and stuff and it's 4am and I can't explain this well but this works so yeah, - Shady
-            If settings.getconfig("showsafemodebox") = "false" Then
-                f.CheckBox10.Checked = False
-                safemodemb = False
-            Else
-                f.CheckBox10.Checked = True
-                safemodemb = True
-            End If
+            'If settings.getconfig("showsafemodebox") = "false" Then
+            '    f.CheckBox10.Checked = False
+            '    safemodemb = False
+            'Else
+            '    f.CheckBox10.Checked = True
+            '    safemodemb = True
+            'End If
 
 
 
@@ -5196,7 +5283,13 @@ Public Class Form1
 
             Me.TopMost = True
             NotifyIcon1.Visible = True
-            Checkupdates2()
+            If Not donotcheckupdatestartup Then
+                Checkupdates2()
+                If closeapp Then
+                    Exit Sub
+                End If
+            End If
+
             'MsgBox(msgboxmessagefn("4"), MsgBoxStyle.Information)
 
 
@@ -7116,7 +7209,12 @@ Public Class Form1
             Next
 
 
-            Checkupdates2()
+            If Not donotcheckupdatestartup Then
+                Checkupdates2()
+                If closeapp Then
+                    Exit Sub
+                End If
+            End If
 
         Catch ex As Exception
             log(ex.Message)
