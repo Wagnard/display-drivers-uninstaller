@@ -475,6 +475,11 @@ Public Class Form1
                     log(ex.Message)
                     TestDelete(filePath)
                 End Try
+            Else
+                For Each data As String In Directory.GetDirectories(filePath)
+                    log("Remaining folders found " + " : " + data)
+                Next
+
             End If
         End If
         If Not Directory.Exists(filePath) Then
@@ -507,6 +512,11 @@ Public Class Form1
                     log(ex.Message)
                     TestDelete(filePath)
                 End Try
+            Else
+                For Each data As String In Directory.GetDirectories(filePath)
+                    log("Remaining folders found " + " : " + data)
+                Next
+
             End If
         End If
         If Not Directory.Exists(filePath) Then
@@ -541,6 +551,11 @@ Public Class Form1
                     log(ex.Message)
                     TestDelete(filePath)
                 End Try
+            Else
+                For Each data As String In Directory.GetDirectories(filePath)
+                    log("Remaining folders found " + " : " + data)
+                Next
+
             End If
         End If
         If Not Directory.Exists(filePath) Then
@@ -592,6 +607,11 @@ Public Class Form1
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
                     End If
                 Catch ex As Exception
                 End Try
@@ -677,6 +697,11 @@ Public Class Form1
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
                     End If
                 Catch ex As Exception
                 End Try
@@ -733,6 +758,11 @@ Public Class Form1
                     log(ex.Message)
                     TestDelete(filePath)
                 End Try
+            Else
+                For Each data As String In Directory.GetDirectories(filePath)
+                    log("Remaining folders found " + " : " + data)
+                Next
+
             End If
         End If
         If Not Directory.Exists(filePath) Then
@@ -764,6 +794,11 @@ Public Class Form1
                     log(ex.Message)
                     TestDelete(filePath)
                 End Try
+            Else
+                For Each data As String In Directory.GetDirectories(filePath)
+                    log("Remaining folders found " + " : " + data)
+                Next
+
             End If
         End If
         If Not Directory.Exists(filePath) Then
@@ -796,6 +831,11 @@ Public Class Form1
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
                     End If
                 Catch ex As Exception
                     log("Possible permission issue detected on : " + filePath)
@@ -832,6 +872,11 @@ Public Class Form1
                             log(ex.Message)
                             TestDelete(filePath)
                         End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
                     End If
                 Catch ex As Exception
                     log("Possible permission issue detected on : " + filePath)
@@ -871,6 +916,11 @@ Public Class Form1
                         log(ex.Message)
                         TestDelete(filePath)
                     End Try
+                Else
+                    For Each data As String In Directory.GetDirectories(filePath)
+                        log("Remaining folders found " + " : " + data)
+                    Next
+
                 End If
             Catch ex As Exception
             End Try
@@ -905,6 +955,11 @@ Public Class Form1
                     log(ex.Message)
                     TestDelete(filePath)
                 End Try
+            Else
+                For Each data As String In Directory.GetDirectories(filePath)
+                    log("Remaining folders found " + " : " + data)
+                Next
+
             End If
         End If
         If Not Directory.Exists(filePath) Then
