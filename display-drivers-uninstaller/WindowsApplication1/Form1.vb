@@ -5104,10 +5104,6 @@ Public Class Form1
                 Catch ex As Exception
                 End Try
 
-                Checkupdates2()
-                If closeapp Then
-                    Exit Sub
-                End If
             End If
 
 
@@ -7265,7 +7261,9 @@ Public Class Form1
 
 
             If Not donotcheckupdatestartup Then
+                Me.TopMost = True
                 Checkupdates2()
+                Me.TopMost = False
                 If closeapp Then
                     Exit Sub
                 End If
