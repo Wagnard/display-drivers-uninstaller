@@ -1,0 +1,1 @@
+﻿Sačuvaj konfiguracioni fajl u roaming direktorijumu\n (folderu) (ova opcija je još pomalo bagovita)
