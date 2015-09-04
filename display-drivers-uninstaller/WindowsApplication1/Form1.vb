@@ -6221,6 +6221,8 @@ Public Class Form1
     End Sub
     Private Sub disabledriversearch()
         Dim regkey As RegistryKey = Nothing
+        log("Trying to disable search for Windows Updates :")
+        log("Version " + version + " detected")
         If version >= "6.1" Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
@@ -6229,6 +6231,7 @@ Public Class Form1
                     MsgBox(msgboxmessagefn("8"))
                 End If
             Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
             End Try
         End If
         If version >= "6.0" And version < "6.1" Then
@@ -6239,6 +6242,7 @@ Public Class Form1
                     MsgBox(msgboxmessagefn("8"))
                 End If
             Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
             End Try
         End If
     End Sub
