@@ -212,9 +212,9 @@ Partial Class options
         Me.CheckBox11.AutoSize = True
         Me.CheckBox11.Location = New System.Drawing.Point(357, 195)
         Me.CheckBox11.Name = "CheckBox11"
-        Me.CheckBox11.Size = New System.Drawing.Size(254, 17)
+        Me.CheckBox11.Size = New System.Drawing.Size(179, 17)
         Me.CheckBox11.TabIndex = 47
-        Me.CheckBox11.Text = "Store config file in roaming folder (may be buggy)"
+        Me.CheckBox11.Text = "Store config file in roaming folder"
         Me.CheckBox11.UseVisualStyleBackColor = True
         '
         'CheckBox12

@@ -117,7 +117,6 @@ Public Class Form1
                     buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("1")
-                    ' Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("1"), ToolTipIcon.Info)
                 Catch ex As Exception
                     Label11.Text = ("No Updates found. Program is up to date.")
                 End Try
@@ -128,10 +127,6 @@ Public Class Form1
                     buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("2")
-                    Try
-                        ' Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("2"), ToolTipIcon.Info)
-                    Catch ex As Exception
-                    End Try
 
 
                 Catch ex As Exception
@@ -159,7 +154,7 @@ Public Class Form1
                     buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
                     Label11.Text = ""
                     Label11.Text = Label11.Text & buttontext("3")
-                    'Me.NotifyIcon1.ShowBalloonTip(3000, "", buttontext("3"), ToolTipIcon.Info)
+
                 Catch ex As Exception
                     Label11.Text = ("Unable to Fetch updates!")
                 End Try
@@ -4696,8 +4691,6 @@ Public Class Form1
 
         CheckForIllegalCrossThreadCalls = True
 
-        '  MessageBox.Show(userpthn)
-
         Try
             If System.IO.File.Exists(Application.StartupPath + "\DDU.bat") = True Then
                 System.IO.File.Delete(Application.StartupPath + "\DDU.bat")
@@ -5087,6 +5080,7 @@ Public Class Form1
                     ComboBox2.SelectedIndex = ComboBox2.FindString("Arabic")
 
                 Else
+                    'fall back to english
                     ComboBox2.SelectedIndex = ComboBox2.FindString("English")
                 End If
 
@@ -5273,17 +5267,6 @@ Public Class Form1
                 End If
             End If
 
-            'this code is down here because of how the safe mode is handled and variables and stuff and it's 4am and I can't explain this well but this works so yeah, - Shady
-            'If settings.getconfig("showsafemodebox") = "false" Then
-            '    f.CheckBox10.Checked = False
-            '    safemodemb = False
-            'Else
-            '    f.CheckBox10.Checked = True
-            '    safemodemb = True
-            'End If
-
-
-
 
             'We check if there are any reboot from windows update pending. and if so we quit.
             If winupdatepending() Then
@@ -5340,9 +5323,6 @@ Public Class Form1
                     Exit Sub
                 End If
             End If
-
-            'MsgBox(msgboxmessagefn("4"), MsgBoxStyle.Information)
-
 
 
             UpdateTextMethod(UpdateTextMethodmessagefn("10") + Application.ProductVersion)
@@ -8349,27 +8329,6 @@ Public Class CleanupEngine
                                     End If
                                 End If
                             Next
-                            'If f.win8higher Then
-                            '    If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
-                            '        If subregkey.GetValue("Service").ToString.ToLower = "basicdisplay" Then
-                            '            Try
-                            '                deletesubregkey(regkey, child)
-                            '                deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                            '            Catch ex As Exception
-                            '            End Try
-                            '        End If
-                            '    End If
-                            'Else
-                            '    If checkvariables.isnullorwhitespace(subregkey.GetValue("Service")) = False Then
-                            '        If subregkey.GetValue("Service").ToString.ToLower = "vga" Then
-                            '            Try
-                            '                deletesubregkey(regkey, child)
-                            '                deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                            '            Catch ex As Exception
-                            '            End Try
-                            '        End If
-                            '    End If
-                            'End If
                         Else
                             'Here, if subregkey is nothing, it mean \video doesnt exist and is no \0000, we can delete it.
                             'this is a general cleanUP we could say.

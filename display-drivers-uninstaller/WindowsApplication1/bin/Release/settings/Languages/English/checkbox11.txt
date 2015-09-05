@@ -1,1 +1,1 @@
-﻿Store config file in roaming folder (may be buggy)
+﻿Store config file in roaming folder
