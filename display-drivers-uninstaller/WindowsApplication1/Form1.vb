@@ -1748,7 +1748,7 @@ Public Class Form1
                                         End If
                                         If Not Directory.Exists(filePath) Then
                                             CleanupEngine.shareddlls(filePath)
-                                            'here we will do a specian environement path cleanup as there is chances that the installation is
+                                            'here we will do a special environement path cleanup as there is chances that the installation is
                                             'somewhere else.
                                             amdenvironementpath(filePath)
                                         End If
@@ -6036,8 +6036,6 @@ Public Class Form1
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
         settings.setconfig("donate", "true")
 
-        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-        ' process.Start(webAddress)
         'Create the ddu.bat file
         Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
@@ -6061,11 +6059,9 @@ Public Class Form1
     End Sub
 
     Private Sub VisitGuru3dNVIDIAThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dNVIDIAThreadToolStripMenuItem.Click
-        'process.Start("http://forums.guru3d.com/showthread.php?t=379506")
+       
         settings.setconfig("guru3dnvidia", "true")
 
-        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-        ' process.Start(webAddress)
         'Create the ddu.bat file
         Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
@@ -6089,11 +6085,9 @@ Public Class Form1
     End Sub
 
     Private Sub VisitGuru3dAMDThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dAMDThreadToolStripMenuItem.Click
-        ' process.Start("http://forums.guru3d.com/showthread.php?t=379505")
-        settings.setconfig("guru3damd", "true")
 
-        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-        ' process.Start(webAddress)
+    	settings.setconfig("guru3damd", "true")
+       
         'Create the ddu.bat file
         Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
@@ -6117,11 +6111,9 @@ Public Class Form1
     End Sub
 
     Private Sub VisitGeforceThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGeforceThreadToolStripMenuItem.Click
-        'process.Start("https://forums.geforce.com/default/topic/550192/geforce-drivers/display-driver-uninstaller-ddu-v6-2/")
+       
         settings.setconfig("geforce", "true")
 
-        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-        ' process.Start(webAddress)
         'Create the ddu.bat file
         Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
@@ -6145,11 +6137,9 @@ Public Class Form1
     End Sub
 
     Private Sub SVNToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SVNToolStripMenuItem.Click
-        ' process.Start("https://code.google.com/p/display-drivers-uninstaller/source/list")
+      
         settings.setconfig("svn", "true")
 
-        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-        ' process.Start(webAddress)
         'Create the ddu.bat file
         Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
@@ -6173,11 +6163,10 @@ Public Class Form1
     End Sub
 
     Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomepageToolStripMenuItem.Click
-        ' process.Start("http://www.wagnardmobile.com")
+      
         settings.setconfig("dduhome", "true")
 
-        'Dim webAddress As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-        ' process.Start(webAddress)
+
         'Create the ddu.bat file
         Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
         sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
@@ -6387,7 +6376,7 @@ Public Class Form1
             ' ----------------------
             ' Removing the videocard
             ' ----------------------
-            For a = 1 To 2   'loop 2 time here for nVidia SLI pupose in normal mode.
+            For a = 1 To 2   'loop 2 time here for nVidia SLI pupose in normal mode.(4 may be necessary for quad SLI... need to check.)
                 Try
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
                     If regkey IsNot Nothing Then
@@ -7663,12 +7652,9 @@ Public Class CleanupEngine
     Public Sub deletesubregkey(ByVal regkeypath As RegistryKey, ByVal child As String)
 
         If (regkeypath IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child)) Then
-            'Try
+         
             regkeypath.DeleteSubKeyTree(child)
             log(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn("39"))
-            'Catch ex As Exception
-            '    log(ex.Message + ex.StackTrace + " ----> " + regkeypath.ToString + "\" + child)
-            'End Try
 
         End If
     End Sub
@@ -7704,12 +7690,10 @@ Public Class CleanupEngine
 
 
         If (regkeypath IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child)) Then
-            'Try
+          
             regkeypath.DeleteValue(child)
             log(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn("40"))
-            'Catch ex As Exception
-            '    log(ex.Message + ex.StackTrace + " ----> " + regkeypath.ToString + "\" + child)
-            'End Try
+
 
         End If
 
