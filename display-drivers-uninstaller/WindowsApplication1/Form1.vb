@@ -558,6 +558,20 @@ Public Class Form1
             CleanupEngine.shareddlls(filePath)
         End If
 
+        filePath = Environment.GetFolderPath _
+   (Environment.SpecialFolder.ProgramFiles) + "\AMD APP"
+        If Directory.Exists(filePath) Then
+            Try
+                deletedirectory(filePath)
+            Catch ex As Exception
+                log(ex.Message + "AMD APP")
+                TestDelete(filePath)
+            End Try
+        End If
+        If Not Directory.Exists(filePath) Then
+            CleanupEngine.shareddlls(filePath)
+        End If
+
         If IntPtr.Size = 8 Then
 
             filePath = Environment.GetFolderPath _
@@ -804,6 +818,9 @@ Public Class Form1
 
         For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(userpth))
             filePath = filepaths + "\AppData\Roaming\ATI"
+            If winxp Then
+                filePath = filepaths + "\Application Data\ATI"
+            End If
             If Directory.Exists(filePath) Then
                 Try
                     For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
@@ -845,6 +862,9 @@ Public Class Form1
 
 
             filePath = filepaths + "\AppData\Local\ATI"
+            If winxp Then
+                filePath = filepaths + "\Local Settings\Application Data\ATI"
+            End If
             If Directory.Exists(filePath) Then
                 Try
                     For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
@@ -1029,7 +1049,7 @@ Public Class Form1
                         child.ToLower.Contains("\apm.") Or
                         child.ToLower.Contains("\a4.found") Or
                         child.ToLower.Contains("\atixclib") Or
-                       child.ToLower.Contains("\dem.") Then
+                        child.ToLower.Contains("\dem.") Then
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
@@ -1739,6 +1759,12 @@ Public Class Form1
                             Catch ex As Exception
                             End Try
                         End If
+                        If child.ToLower.Contains("ati catalyst control center") Then
+                            Try
+                                deletesubregkey(regkey, child)
+                            Catch ex As Exception
+                            End Try
+                        End If
                         If child.ToLower.Contains("cds") Then
                             Try
                                 deletesubregkey(regkey, child)
@@ -1806,6 +1832,7 @@ Public Class Form1
                                         child2.ToLower.Contains("ati mcat") Or
                                         child2.ToLower.Contains("avt") Or
                                         child2.ToLower.Contains("ccc") Or
+                                        child2.ToLower.Contains("amd app sdk") Or
                                         child2.ToLower.Contains("packages") Or
                                         child2.ToLower.Contains("wirelessdisplay") Or
                                         child2.ToLower.Contains("hydravision") Or
