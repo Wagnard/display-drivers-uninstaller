@@ -39,7 +39,6 @@ Public Class Form1
     Dim argcleannvidia As Boolean = False
     Dim nbclean As Integer = 0
     Dim restart As Boolean = False
-    Dim f As New options
     Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
     Dim checkvariables As New checkvariables
     Dim identity = WindowsIdentity.GetCurrent()
@@ -67,7 +66,8 @@ Public Class Form1
     Public Shared safemodemb As Boolean
     Public Shared roamingcfg As Boolean
     Public Shared donotcheckupdatestartup As Boolean
-
+    Public Shared trysystemrestore As Boolean
+    Dim f As New options
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
@@ -448,6 +448,7 @@ Public Class Form1
             For Each child As String In Directory.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("ati.ace") Or
+                       child.ToLower.Contains("ati catalyst control center") Or
                        child.ToLower.Contains("application profiles") Or
                        child.ToLower.EndsWith("\px") Or
                        child.ToLower.Contains("hydravision") Then
@@ -580,6 +581,7 @@ Public Class Form1
                     For Each child As String In Directory.GetDirectories(filePath)
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("ati.ace") Or
+                                child.ToLower.Contains("ati catalyst control center") Or
                                 child.ToLower.Contains("application profiles") Or
                                 child.ToLower.EndsWith("\px") Or
                                 child.ToLower.Contains("hydravision") Then
@@ -979,6 +981,46 @@ Public Class Form1
                         child.ToLower.Contains("ace.graphi") Or
                         child.ToLower.Contains("adl.foundation") Or
                         child.ToLower.Contains("64\aem.") Or
+                        child.ToLower.Contains("aticccom") Or
+                        child.ToLower.EndsWith("\ccc") Or
+                        child.ToLower.Contains("\ccc.") Or
+                        child.ToLower.Contains("\pckghlp.") Or
+                        child.ToLower.Contains("\resourceman") Or
+                        child.ToLower.Contains("\apm.") Or
+                        child.ToLower.Contains("\a4.found") Or
+                        child.ToLower.Contains("\atixclib") Or
+                       child.ToLower.Contains("\dem.") Then
+                        Try
+                            deletedirectory(child)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(child)
+                        End Try
+                        If Not Directory.Exists(child) Then
+                            CleanupEngine.shareddlls(child)
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+        filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\GAC_MSIL"
+        If Directory.Exists(filePath) Then
+            For Each child As String In Directory.GetDirectories(filePath)
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    If child.ToLower.EndsWith("\mom") Or
+                        child.ToLower.Contains("\mom.") Or
+                        child.ToLower.Contains("newaem.foundation") Or
+                        child.ToLower.Contains("fuel.foundation") Or
+                        child.ToLower.Contains("\localizatio") Or
+                        child.ToLower.EndsWith("\log") Or
+                        child.ToLower.Contains("log.foundat") Or
+                        child.ToLower.EndsWith("\cli") Or
+                        child.ToLower.Contains("\cli.") Or
+                        child.ToLower.Contains("ace.graphi") Or
+                        child.ToLower.Contains("adl.foundation") Or
+                        child.ToLower.Contains("64\aem.") Or
+                        child.ToLower.Contains("msil\aem.") Or
                         child.ToLower.Contains("aticccom") Or
                         child.ToLower.EndsWith("\ccc") Or
                         child.ToLower.Contains("\ccc.") Or
@@ -4689,6 +4731,7 @@ Public Class Form1
         Dim regkey As RegistryKey = Nothing
         Dim subregkey As RegistryKey = Nothing
 
+
         CheckForIllegalCrossThreadCalls = True
 
         Try
@@ -4920,8 +4963,10 @@ Public Class Form1
 
             If settings.getconfig("systemrestore") = "true" Then
                 f.CheckBox5.Checked = True
+                trysystemrestore = True
             Else
                 f.CheckBox5.Checked = False
+                trysystemrestore = False
             End If
 
             If settings.getconfig("removephysx") = "true" Then
@@ -5709,25 +5754,27 @@ Public Class Form1
         End Try
     End Sub
     Sub systemrestore()
-        Select Case System.Windows.Forms.SystemInformation.BootMode
-            Case BootMode.Normal
-                If f.CheckBox5.Checked = True Then
-                    UpdateTextMethod("Creating System Restore point (If allowed by the system)")
-                    Try
-                        log("Trying to Create a System Restored Point")
-                        Dim SysterRestoredPoint = GetObject("winmgmts:\\.\root\default:Systemrestore")
-                        If SysterRestoredPoint IsNot Nothing Then
-                            If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
-                                log("System Restored Point Created")
-                            Else
-                                log("System Restored Point Could not Created!")
+        If trysystemrestore Then
+            Select Case System.Windows.Forms.SystemInformation.BootMode
+                Case BootMode.Normal
+                    If f.CheckBox5.Checked = True Then
+                        UpdateTextMethod("Creating System Restore point (If allowed by the system)")
+                        Try
+                            log("Trying to Create a System Restored Point")
+                            Dim SysterRestoredPoint = GetObject("winmgmts:\\.\root\default:Systemrestore")
+                            If SysterRestoredPoint IsNot Nothing Then
+                                If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
+                                    log("System Restored Point Created")
+                                Else
+                                    log("System Restored Point Could not Created!")
+                                End If
                             End If
-                        End If
-                    Catch ex As Exception
-                        log(ex.Message)
-                    End Try
-                End If
-        End Select
+                        Catch ex As Exception
+                            log(ex.Message)
+                        End Try
+                    End If
+            End Select
+        End If
     End Sub
     Sub getoeminfo()
 
@@ -6015,6 +6062,7 @@ Public Class Form1
     End Sub
 
     Public Sub log(ByVal strmessage As String)
+
         Try
 
 

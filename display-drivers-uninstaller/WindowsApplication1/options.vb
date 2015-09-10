@@ -26,10 +26,10 @@ Public Class options
     Private Sub CheckBox5_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox5.CheckedChanged
         If CheckBox5.Checked = True Then
             setconfig("systemrestore", "true")
-
+            trysystemrestore = True
         Else
             setconfig("systemrestore", "false")
-
+            trysystemrestore = False
         End If
     End Sub
 
