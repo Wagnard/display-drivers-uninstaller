@@ -1,1 +1,1 @@
-﻿Windows Update drivertelepítés beállítása alapértelmezettre.
+﻿Windows Update illesztőprogram telepítés beállítása alapértelmezettre.

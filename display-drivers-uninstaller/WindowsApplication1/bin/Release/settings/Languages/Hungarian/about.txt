@@ -1,30 +1,30 @@
-﻿Driver eltávolító (DDU) / takarító kijelződriverekhez.(NVIDIA/AMD)
+﻿Illesztőprogram eltávolító (DDU) / takarító kijelző illesztőprogramokhoz.(NVIDIA/AMD)
 
-Annyit tesz, hogy eltávolítja a kijelződrivert az eszközkezelőből, a jelenlegi és minden régebbi drivert 
-a Windows drivertárolóból, valamint az NVIDIA/AMD szolgáltatásokat is.
+Annyit tesz, hogy eltávolítja a kijelző illesztőprogramját az Eszközkezelőből, az aktuális és minden régebbi illesztőprogramt 
+a Windows illesztőprogram tárolóból, valamint az NVIDIA/AMD szolgáltatásokat is.
 
 Az eszköz alkalmazása után a Windowson  szinte a "friss újratelepítés" érzése lesz úrrá.
 
 Ez az eszköz hasonló a Driver Sweeperhez + elvégezi a fentebb említett extra dolgokat.
 
-Ha gondod akadna egy régebbi vagy újabb driver telepítésével, próbáld ezt ki, mivel többen is jelentették,
+Ha gondod akadna egy régebbi vagy újabb illesztőprogram telepítésével, próbáld ezt ki, mivel többen is jelentették,
 hogy megoldotta a gondjaikat.
 
 AJÁNLOTT HASZNÁLAT :
 
 - Személy szerint azt tanácsolom, hogy kapcsolódj le az internetről, mert néha az eltávolítás után 
-a Windows Update újratelepítheti a drivert az engedélyed nélkül...
+a Windows Update újratelepítheti az illesztőprogramot az engedélyed nélkül...
 
 -Ez az eszköz normál módban is használható, de a legjobb stabilitás érdekében a DDU használata 
 csökkentett módban ajánlott.
 
 - Szeretnénk visszajelzést kapni tőled. Mondd el, hogy sikerült-e a művelet vagy sem. Készíts mentést 
-vagy rendszer-visszaállítást (de általában elég biztonságosnak kell lennie).
+vagy rendszervisszaállítást (de általában elég biztonságosnak kell lennie).
 
--Ha driver problémád van vagy volt és ez az eszköz segített megoldani őket, kérlek oszd meg az eredményt.
+-Ha illesztőprogram problémád van vagy volt, és ez az eszköz segített megoldani, kérlek oszd meg az eredményt.
 
-Jó tudni, hogy az NVIDIA/AMD-nek ehhez semmi köze, nem dolgozunk az NVIDIA/AMD-nél, ők pedig 
-nem vonhatók felelősségre bármely esetleges sérülés vagy hiba esetén, ami a rendszeredet éri.
+Megjegyzés: az NVIDIA/AMD-nek ehhez semmi köze, nem dolgozunk az NVIDIA/AMD-nek, ők pedig 
+nem vonhatók felelősségre bármely esetleges kár vagy hiba esetén, ami a rendszeredet éri.
 -------------------------------
 
 Készítette: Wagnard.
@@ -35,4 +35,11 @@ Tesztelő : Dellon132
 
 Logók : juanchacin
 
+Hatalmas köszönet Jackalitonak egy ajándék AMD 7850-ért.
+
+
+Köszönet Helge Kleinnek (http://helgeklein.com/setacl/) : amiért engedélyezte a programja használatát DDU "SetAcl"-lel
+Hatalmas köszönet tesztelésükért : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (időt szánt a hibakeresésre)
+Extraordinary (hibajavítást tesztelt)
 Köszönet mindenkinek, aki veszélybe sodorta a rendszerét (különleges köszönet Dellon132-nek)
+*A DDU, és fejlesztői semmilyen formában nem állnak kapcsolatban a Driver Sweeperrel, vagy annak fejlesztőivel.

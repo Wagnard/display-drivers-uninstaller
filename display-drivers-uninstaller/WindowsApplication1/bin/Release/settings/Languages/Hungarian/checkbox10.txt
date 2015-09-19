@@ -1,0 +1,1 @@
+Csökkentett mód üzenet megjelenítése indításkor

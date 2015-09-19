@@ -1,0 +1,1 @@
+Ne ellenõrizze a DDU frissítéseket indításkor (NEM ajánlott)
