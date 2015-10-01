@@ -2178,20 +2178,8 @@ Public Class Form1
         End If
 
         'prevent CCC reinstalltion (comes from drivers installed from windows updates)
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetValueNames()
-                If Not checkvariables.isnullorwhitespace(child) Then
-                    If child.ToLower.Contains("launchwuapp") Then
-                        deletevalue(regkey, child)
-                    End If
-                End If
-            Next
-
-        End If
-
-        If IntPtr.Size = 8 Then
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\RunOnce", True)
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetValueNames()
                     If Not checkvariables.isnullorwhitespace(child) Then
@@ -2201,26 +2189,49 @@ Public Class Form1
                     End If
                 Next
             End If
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+
+        If IntPtr.Size = 8 Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\RunOnce", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetValueNames()
+                        If Not checkvariables.isnullorwhitespace(child) Then
+                            If child.ToLower.Contains("launchwuapp") Then
+                                deletevalue(regkey, child)
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
+            End Try
         End If
 
         'Saw on Win 10 cat 15.7
         log("AudioEngine CleanUP")
-        regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AudioEngine\AudioProcessingObjects", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If Not checkvariables.isnullorwhitespace(child) Then
-                    Try
-                        If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("FriendlyName")) Then
-                            If regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("cdelayapogfx") Then
-                                deletesubregkey(regkey, child)
+        Try
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AudioEngine\AudioProcessingObjects", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If Not checkvariables.isnullorwhitespace(child) Then
+                        Try
+                            If Not checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("FriendlyName")) Then
+                                If regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("cdelayapogfx") Then
+                                    deletesubregkey(regkey, child)
+                                End If
                             End If
-                        End If
-                    Catch ex As Exception
-                        log(ex.Message + ex.StackTrace)
-                    End Try
-                End If
-            Next
-        End If
+                        Catch ex As Exception
+                            log(ex.Message + ex.StackTrace)
+                        End Try
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
 
     End Sub
 
@@ -4732,7 +4743,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        If MyIdentity.IsSystem Then
+        If MyIdentity.IsSystem AndAlso safemode Then
             Try
                 My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
             Catch ex As Exception
@@ -4839,9 +4850,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        'check for admin before trying to do things, as this could cause errors and message boxes for rebooting into startup without admin _ 
-        'are useless because you can't bcdedit without admin rights, however the next messagebox still plays the sound effect, for msgboxstyle.information. Not sure if this can be fixed.
-
+  
         If Not isElevated Then
 
             MsgBox(msgboxmessagefn("2"), MsgBoxStyle.Critical)
@@ -4950,6 +4959,8 @@ Public Class Form1
 
 
             'allow Paexec to run in safemode
+
+            '  If BootMode.FailSafe Or BootMode.FailSafeWithNetwork Then ' we do this in safemode because of some Antivirus....(Kaspersky)
             Try
                 My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).CreateSubKey("PAexec")
                 My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\PAexec", True).SetValue("", "Service")
@@ -4961,7 +4972,7 @@ Public Class Form1
                 My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network\PAexec", True).SetValue("", "Service")
             Catch ex As Exception
             End Try
-
+            'End If
 
             'read config file
 
@@ -5347,17 +5358,98 @@ Public Class Form1
                 Exit Sub
             End If
 
-
+            Me.TopMost = True
+            NotifyIcon1.Visible = True
+            If Not donotcheckupdatestartup Then
+                Checkupdates2()
+                If closeapp Then
+                    Exit Sub
+                End If
+            End If
+			
             'here I check if the process is running on system user account. if not, make it so.
             If Not MyIdentity.IsSystem Then
+                'This code checks to see which mode Windows has booted up in.
+                Dim processstopservice As New Process
+                Select Case System.Windows.Forms.SystemInformation.BootMode
+                    Case BootMode.FailSafe
+                        'The computer was booted using only the basic files and drivers.
+                        'This is the same as Safe Mode
+                        safemode = True
+                        log("We are in Safe Mode")
+                        If winxp = False Then
+                            Dim setbcdedit As New ProcessStartInfo
+                            setbcdedit.FileName = "cmd.exe"
+                            setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
+                            setbcdedit.UseShellExecute = False
+                            setbcdedit.CreateNoWindow = True
+                            setbcdedit.RedirectStandardOutput = False
+
+                            processstopservice.StartInfo = setbcdedit
+                            processstopservice.Start()
+                            processstopservice.WaitForExit()
+                        End If
+                    Case BootMode.FailSafeWithNetwork
+                        'The computer was booted using the basic files, drivers, and services necessary to start networking.
+                        'This is the same as Safe Mode with Networking
+                        'I am also removing the auto go into safemode with bcdedit
+                        log("We are in Safe Mode with Networking")
+                        safemode = True
+                        If winxp = False Then
+                            Dim setbcdedit As New ProcessStartInfo
+                            setbcdedit.FileName = "cmd.exe"
+                            setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
+                            setbcdedit.UseShellExecute = False
+                            setbcdedit.CreateNoWindow = True
+                            setbcdedit.RedirectStandardOutput = False
+                            processstopservice.StartInfo = setbcdedit
+                            processstopservice.Start()
+                            processstopservice.WaitForExit()
+                        End If
+
+                    Case BootMode.Normal
+
+                        safemode = False
+
+                        log("We are not in Safe Mode")
+
+                        If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
+                            If restart Then  'restart command line argument
+                                restartinsafemode()
+                            Else
+                                If safemodemb = True Then
+                                    If Not silent Then
+                                        Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                                        If resultmsgbox = DialogResult.Cancel Then
+
+
+                                            Me.TopMost = False
+                                            closeddu()
+                                            Exit Sub
+                                        ElseIf resultmsgbox = DialogResult.No Then
+                                            'do nothing and continue without safe mode
+                                        ElseIf resultmsgbox = DialogResult.Yes Then
+
+                                            restartinsafemode()
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        Else
+                            MsgBox(msgboxmessagefn("7"))
+                        End If
+
+                End Select
+                TopMost = False
+
+
+
                 Dim stopservice As New ProcessStartInfo
                 stopservice.FileName = "cmd.exe"
                 stopservice.Arguments = " /Csc stop PAExec"
                 stopservice.UseShellExecute = False
                 stopservice.CreateNoWindow = True
                 stopservice.RedirectStandardOutput = False
-
-                Dim processstopservice As New Process
                 processstopservice.StartInfo = stopservice
                 processstopservice.Start()
                 processstopservice.WaitForExit()
@@ -5387,14 +5479,7 @@ Public Class Form1
                 Exit Sub
             End If
 
-            Me.TopMost = True
-            NotifyIcon1.Visible = True
-            If Not donotcheckupdatestartup Then
-                Checkupdates2()
-                If closeapp Then
-                    Exit Sub
-                End If
-            End If
+
 
 
             UpdateTextMethod(UpdateTextMethodmessagefn("10") + Application.ProductVersion)
@@ -5527,78 +5612,7 @@ Public Class Form1
 
 
 
-            'This code checks to see which mode Windows has booted up in.
-            Select Case System.Windows.Forms.SystemInformation.BootMode
-                Case BootMode.FailSafe
-                    'The computer was booted using only the basic files and drivers.
-                    'This is the same as Safe Mode
-                    safemode = True
-                    log("We are in Safe Mode")
-                    If winxp = False Then
-                        Dim setbcdedit As New ProcessStartInfo
-                        setbcdedit.FileName = "cmd.exe"
-                        setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-                        setbcdedit.UseShellExecute = False
-                        setbcdedit.CreateNoWindow = True
-                        setbcdedit.RedirectStandardOutput = False
-                        Dim processstopservice As New Process
-                        processstopservice.StartInfo = setbcdedit
-                        processstopservice.Start()
-                        processstopservice.WaitForExit()
-                    End If
-                Case BootMode.FailSafeWithNetwork
-                    'The computer was booted using the basic files, drivers, and services necessary to start networking.
-                    'This is the same as Safe Mode with Networking
-                    'I am also removing the auto go into safemode with bcdedit
-                    log("We are in Safe Mode with Networking")
-                    safemode = True
-                    If winxp = False Then
-                        Dim setbcdedit As New ProcessStartInfo
-                        setbcdedit.FileName = "cmd.exe"
-                        setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-                        setbcdedit.UseShellExecute = False
-                        setbcdedit.CreateNoWindow = True
-                        setbcdedit.RedirectStandardOutput = False
-                        Dim processstopservice As New Process
-                        processstopservice.StartInfo = setbcdedit
-                        processstopservice.Start()
-                        processstopservice.WaitForExit()
-                    End If
 
-                Case BootMode.Normal
-
-                    safemode = False
-
-                    log("We are not in Safe Mode")
-
-                    If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
-                        If restart Then  'restart command line argument
-                            restartinsafemode()
-                        Else
-                            If safemodemb = True Then
-                                If Not silent Then
-                                    Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn("11"), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-                                    If resultmsgbox = DialogResult.Cancel Then
-
-
-                                        Me.TopMost = False
-                                        closeddu()
-                                        Exit Sub
-                                    ElseIf resultmsgbox = DialogResult.No Then
-                                        'do nothing and continue without safe mode
-                                    ElseIf resultmsgbox = DialogResult.Yes Then
-
-                                        restartinsafemode()
-                                    End If
-                                End If
-                            End If
-                        End If
-                    Else
-                        MsgBox(msgboxmessagefn("7"))
-                    End If
-
-            End Select
-            Me.TopMost = False
 
             getoeminfo()
 
@@ -5672,32 +5686,33 @@ Public Class Form1
 
         systemrestore() 'we try to do a system restore if allowed before going into safemode.
         log("restarting in safemode")
-        Me.TopMost = False
-        Dim setbcdedit As New ProcessStartInfo
-        setbcdedit.FileName = "cmd.exe"
-        setbcdedit.Arguments = " /CBCDEDIT /set safeboot minimal"
-        setbcdedit.UseShellExecute = False
-        setbcdedit.CreateNoWindow = True
-        setbcdedit.RedirectStandardOutput = False
+		
+
+		Me.TopMost = False
+		
+        Dim setbootconf As New ProcessStartInfo
+        setbootconf.FileName = "bcdedit"
+        setbootconf.Arguments = "/set safeboot minimal"
+        setbootconf.UseShellExecute = False
+        setbootconf.CreateNoWindow = True
+        setbootconf.RedirectStandardOutput = False
         Dim processstopservice As New Process
-        processstopservice.StartInfo = setbcdedit
+        processstopservice.StartInfo = setbootconf
         processstopservice.Start()
         processstopservice.WaitForExit()
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-        If regkey IsNot Nothing Then
-            Try
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+            If regkey IsNot Nothing Then
                 Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
                 sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
                 sw.Flush()
                 sw.Close()
                 regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath + "\ddu.bat" & Chr(34))
                 regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
-            Catch ex As Exception
-                log(ex.Message & ex.StackTrace)
-            End Try
-
-        End If
-
+            End If
+        Catch ex As Exception
+            log(ex.Message & ex.StackTrace)
+        End Try
 
 
         processinfo.FileName = "shutdown"
@@ -5803,6 +5818,9 @@ Public Class Form1
             End Select
         End If
     End Sub
+    Sub fixstore()
+
+    End Sub
     Sub getoeminfo()
 
         log("The following third-party driver packages are installed on this computer: ")
@@ -5880,6 +5898,21 @@ Public Class Form1
 
         'Get an object repesenting the directory path below
         Dim di As New DirectoryInfo(folder)
+
+        'here we take ownership of the folder we want to remove.
+
+        Dim ds As New DirectorySecurity
+        Dim account As System.Security.Principal.NTAccount
+
+        ' use the static GetAccessControl method
+        ds = di.GetAccessControl(Security.AccessControl.AccessControlSections.Owner)
+
+        ' set the owner
+        account = New System.Security.Principal.NTAccount(System.Security.Principal.WindowsIdentity.GetCurrent.Name)
+        ds.SetOwner(account)
+        ds.AddAccessRule(New FileSystemAccessRule(account, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
+        ' save the changes using the static SetAccessControl method
+        di.SetAccessControl(ds)
 
         'Traverse all of the child directors in the root; get to the lowest child
         'and delete all files, working our way back up to the top.  All files
