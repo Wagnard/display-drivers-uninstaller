@@ -2234,6 +2234,48 @@ Public Class Form1
         End Try
 
     End Sub
+    Private Sub fixregistrydriverstore()
+        'Windows 8 + only
+        'This should fix driver installation problem reporting that a file is not found.
+        'It is usually caused by Windows somehow losing track of the driver store , This intend to help it a bit.
+        If win8higher Then
+            log("Fixing registry driverstore if necessary")
+            Try
+                Dim regkey As RegistryKey = Nothing
+                Dim infslist As String = ""
+                For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
+                    If Not checkvariables.isnullorwhitespace(infs) Then
+                        infslist = infslist + infs
+                    End If
+                Next
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("DRIVERS\DriverDatabase\DriverInfFiles", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If Not checkvariables.isnullorwhitespace(child) Then
+                            If child.ToLower.StartsWith("oem") AndAlso child.ToLower.EndsWith(".inf") Then
+                                If Not infslist.ToLower.Contains(child) Then
+                                    Try
+                                        deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("DRIVERS\DriverDatabase\DriverPackages", True), regkey.OpenSubKey(child).GetValue("Active"))
+                                    Catch ex As Exception
+                                        log(ex.Message)
+                                    End Try
+
+                                    Try
+                                        deletesubregkey(regkey, child)
+                                    Catch ex As Exception
+                                        log(ex.Message)
+                                    End Try
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
+            End Try
+        End If
+
+    End Sub
 
     Private Sub cleannvidiaserviceprocess()
 
@@ -5624,7 +5666,7 @@ Public Class Form1
         End Try
 
         NotifyIcon1.Text = "DDU Version: " + Application.ProductVersion
-
+        TopMost = False
         trd = New Thread(AddressOf ThreadTask)
         trd.IsBackground = True
         trd.Start()
@@ -5818,9 +5860,7 @@ Public Class Form1
             End Select
         End If
     End Sub
-    Sub fixstore()
 
-    End Sub
     Sub getoeminfo()
 
         log("The following third-party driver packages are installed on this computer: ")
@@ -7089,7 +7129,7 @@ Public Class Form1
             End If
 
             cleandriverstore()
-
+            fixregistrydriverstore()
             rescan()
 
         Catch ex As Exception
