@@ -4729,6 +4729,19 @@ Public Class Form1
         scan.RedirectStandardOutput = False
 
         If reboot Then
+            UpdateTextMethod(UpdateTextMethodmessagefn("8"))
+            log("Scanning for new device...")
+            Dim proc4 As New Process
+            proc4.StartInfo = scan
+            proc4.Start()
+            proc4.WaitForExit()
+            System.Threading.Thread.Sleep(2000)
+            If Not safemode Then
+                Dim appproc = process.GetProcessesByName("explorer")
+                For i As Integer = 0 To appproc.Length - 1
+                    appproc(i).Kill()
+                Next i
+            End If
             preventclose = False
             log("Restarting Computer ")
             processinfo.FileName = "shutdown"
