@@ -5238,7 +5238,9 @@ Public Class Form1
 
             End If
 
-
+            If closeapp Then
+                Exit Sub
+            End If
 
 
             '----------------------
@@ -5415,12 +5417,7 @@ Public Class Form1
 
             Me.TopMost = True
             NotifyIcon1.Visible = True
-            If Not donotcheckupdatestartup Then
-                Checkupdates2()
-                If closeapp Then
-                    Exit Sub
-                End If
-            End If
+
 			
             'here I check if the process is running on system user account. if not, make it so.
             If Not MyIdentity.IsSystem Then
@@ -7579,10 +7576,6 @@ Public Class Form1
         If Not silent Then
             Me.WindowState = FormWindowState.Normal
         End If
-    End Sub
-
-    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
-        Checkupdates2()
     End Sub
 
     Private Sub amdenvironementpath(ByVal filepath As String)
