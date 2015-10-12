@@ -2945,7 +2945,8 @@ Public Class Form1
             Try
                 For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("geforceexperienceselfupdate") Then
+                        If child.ToLower.Contains("geforceexperienceselfupdate") Or _
+                           child.ToLower.Contains("displaydriver") Then
                             Try
                                 deletedirectory(child)
                             Catch ex As Exception
@@ -5418,7 +5419,8 @@ Public Class Form1
             Me.TopMost = True
             NotifyIcon1.Visible = True
 
-			
+
+
             'here I check if the process is running on system user account. if not, make it so.
             If Not MyIdentity.IsSystem Then
                 'This code checks to see which mode Windows has booted up in.
@@ -5428,7 +5430,7 @@ Public Class Form1
                         'The computer was booted using only the basic files and drivers.
                         'This is the same as Safe Mode
                         safemode = True
-                        log("We are in Safe Mode")
+
                         If winxp = False Then
                             Dim setbcdedit As New ProcessStartInfo
                             setbcdedit.FileName = "cmd.exe"
@@ -5445,7 +5447,7 @@ Public Class Form1
                         'The computer was booted using the basic files, drivers, and services necessary to start networking.
                         'This is the same as Safe Mode with Networking
                         'I am also removing the auto go into safemode with bcdedit
-                        log("We are in Safe Mode with Networking")
+
                         safemode = True
                         If winxp = False Then
                             Dim setbcdedit As New ProcessStartInfo
@@ -5463,7 +5465,7 @@ Public Class Form1
 
                         safemode = False
 
-                        log("We are not in Safe Mode")
+
 
                         If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
                             If restart Then  'restart command line argument
@@ -5663,7 +5665,16 @@ Public Class Form1
             End Try
 
 
-
+            If MyIdentity.IsSystem Then
+                Select Case System.Windows.Forms.SystemInformation.BootMode
+                    Case BootMode.FailSafe
+                        log("We are in Safe Mode")
+                    Case BootMode.FailSafeWithNetwork
+                        log("We are in Safe Mode with Networking")
+                    Case BootMode.Normal
+                        log("We are not in Safe Mode")
+                End Select
+            End If
 
 
             getoeminfo()
@@ -7452,6 +7463,7 @@ Public Class Form1
                                    child2.ToLower.Contains("display.driver") Or
                                    child2.ToLower.Contains("display.gfexperience") Or
                                    child2.ToLower.Contains("display.nvirusb") Or
+                                   child2.ToLower.Contains("display.optimus") Or
                                    child2.ToLower.Contains("display.physx") Or
                                    child2.ToLower.Contains("display.update") Or
                                    child2.ToLower.Contains("display.nview") Or
