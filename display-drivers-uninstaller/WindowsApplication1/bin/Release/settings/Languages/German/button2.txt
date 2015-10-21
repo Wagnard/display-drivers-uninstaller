@@ -1,2 +1,2 @@
-﻿Säubern und KEIN Neustart.
-(Kann Problem wie "black screen" verursachen)
+﻿Säubern und KEIN Neustart
+(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)

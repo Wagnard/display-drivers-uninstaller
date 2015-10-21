@@ -1,2 +1,2 @@
-﻿Säubern und Runterfahren
-(Zur Installation von neuen Grafikkarten)
+﻿Säubern und Herunterfahren
+(Zur Installation einer neuen Grafikkarte)
