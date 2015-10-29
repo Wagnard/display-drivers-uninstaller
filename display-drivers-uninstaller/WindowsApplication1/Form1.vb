@@ -102,6 +102,13 @@ Public Class Form1
     Public picturebox2originaly As Integer
 
     Private Sub Checkupdates2()
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
+            Label11.Text = ""
+            Label11.Text = Label11.Text & buttontext("0")
+        Catch ex As Exception
+            Label11.Text = ("Checking for updates...")
+        End Try
         AccessUI()
     End Sub
     Public Function getremovephysx() As Boolean
@@ -5229,15 +5236,10 @@ Public Class Form1
             End If
 
             combobox2value = ComboBox2.Text
-            If Not donotcheckupdatestartup Then
-                Try
-                    buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\label11.txt") '// add each line as String Array.
-                    Label11.Text = ""
-                    Label11.Text = Label11.Text & buttontext("0")
-                Catch ex As Exception
-                End Try
 
-            End If
+
+
+
 
             If closeapp Then
                 Exit Sub
@@ -5351,6 +5353,11 @@ Public Class Form1
             arg = String.Join(" ", arguments, 1, arguments.Length - 1)
             arg = arg.ToLower.Replace("  ", " ")
 
+            If Not checkvariables.isnullorwhitespace(settings.getconfig("arguments")) Then
+                arg = settings.getconfig("arguments")
+            End If
+
+            settings.setconfig("arguments", "")
 
             If Not checkvariables.isnullorwhitespace(arg) Then
                 If Not arg = " " Then
@@ -5532,9 +5539,6 @@ Public Class Form1
                 closeddu()
                 Exit Sub
             End If
-
-
-
 
             UpdateTextMethod(UpdateTextMethodmessagefn("10") + Application.ProductVersion)
             log("DDU Version: " + Application.ProductVersion)
@@ -5766,11 +5770,12 @@ Public Class Form1
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
             If regkey IsNot Nothing Then
-                Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
-                sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
-                sw.Flush()
-                sw.Close()
-                regkey.SetValue("*loadDDU", "explorer.exe " & Chr(34) & Application.StartupPath + "\ddu.bat" & Chr(34))
+                'Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
+                'sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
+                'sw.Flush()
+                'sw.Close()
+                settings.setconfig("arguments", arg)
+                regkey.SetValue("*" + Application.ProductName, Application.ExecutablePath)
                 regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
             End If
         Catch ex As Exception
@@ -5960,54 +5965,43 @@ Public Class Form1
         'Get an object repesenting the directory path below
         Dim di As New DirectoryInfo(folder)
 
-        'here we take ownership of the folder we want to remove.
-
-        Dim ds As New DirectorySecurity
-        Dim account As System.Security.Principal.NTAccount
-
-        ' use the static GetAccessControl method
-        ds = di.GetAccessControl(Security.AccessControl.AccessControlSections.Owner)
-
-        ' set the owner
-        account = New System.Security.Principal.NTAccount(System.Security.Principal.WindowsIdentity.GetCurrent.Name)
-        ds.SetOwner(account)
-        ds.AddAccessRule(New FileSystemAccessRule(account, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow))
-        ' save the changes using the static SetAccessControl method
-        di.SetAccessControl(ds)
-
         'Traverse all of the child directors in the root; get to the lowest child
         'and delete all files, working our way back up to the top.  All files
         'must be deleted in the directory, before the directory itself can be deleted.
         'also if there is hidden / readonly / system attribute..  change those attribute.
-        For Each diChild As DirectoryInfo In di.GetDirectories()
-            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
-            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
-            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-            If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+        Try
 
-                Try
-                    TraverseDirectory(diChild)
-                Catch ex As Exception
-                    log(ex.Message + ex.StackTrace)
-                End Try
-            End If
-        Next
 
+            For Each diChild As DirectoryInfo In di.GetDirectories()
+                diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
+                diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
+                diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
+                If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+
+                    Try
+                        TraverseDirectory(diChild)
+                    Catch ex As Exception
+                        log(ex.Message + ex.StackTrace)
+                    End Try
+                End If
+            Next
+        Catch ex As Exception
+            log("test delete : " + ex.Message)
+        End Try
         'Finally, clean all of the files directly in the root directory
         CleanAllFilesInDirectory(di)
 
         'The containing directory can only be deleted if the directory
         'is now completely empty and all files previously within
         'were deleted.
-        If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
-            Try
+        Try
+            If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
                 di.Delete()
                 log(di.ToString + " - " + UpdateTextMethodmessagefn("41"))
-            Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
-            End Try
-        End If
-
+            End If
+        Catch ex As Exception
+            log("testdelete @ di.getfiles() : " + ex.Message)
+        End Try
     End Sub
 
 
@@ -6057,32 +6051,36 @@ Public Class Form1
 
     Private Sub CleanAllFilesInDirectory(ByVal DirectoryToClean As DirectoryInfo)
 
-        For Each fi As FileInfo In DirectoryToClean.GetFiles()
-            'The following code is NOT required, but shows how some logic can be wrapped
-            'around the deletion of files.  For example, only delete files with
-            'a creation date older than 1 hour from the current time.  If you
-            'always want to delete all of the files regardless, just remove
-            'the next 'If' statement.
+        Try
+            For Each fi As FileInfo In DirectoryToClean.GetFiles()
+                'The following code is NOT required, but shows how some logic can be wrapped
+                'around the deletion of files.  For example, only delete files with
+                'a creation date older than 1 hour from the current time.  If you
+                'always want to delete all of the files regardless, just remove
+                'the next 'If' statement.
 
-            'Read only files can not be deleted, so mark the attribute as 'IsReadOnly = False'
+                'Read only files can not be deleted, so mark the attribute as 'IsReadOnly = False'
 
-            Try
-                fi.IsReadOnly = False
-            Catch ex As Exception
-            End Try
+                Try
+                    fi.IsReadOnly = False
+                Catch ex As Exception
+                End Try
 
-            Try
-                fi.Delete()
-            Catch ex As Exception
-            End Try
-            'On a rare occasion, files being deleted might be slower than program execution, and upon returning
-            'from this call, attempting to delete the directory will throw an exception stating it is not yet
-            'empty, even though a fraction of a second later it actually is.  Therefore the 'Optional' code below
-            'can stall the process just long enough to ensure the file is deleted before proceeding. The value
-            'can be adjusted as needed from testing and running the process repeatedly.
-            'System.Threading.Thread.sleep(10)  '50 millisecond stall (0.025 Seconds)
+                Try
+                    fi.Delete()
+                Catch ex As Exception
+                End Try
+                'On a rare occasion, files being deleted might be slower than program execution, and upon returning
+                'from this call, attempting to delete the directory will throw an exception stating it is not yet
+                'empty, even though a fraction of a second later it actually is.  Therefore the 'Optional' code below
+                'can stall the process just long enough to ensure the file is deleted before proceeding. The value
+                'can be adjusted as needed from testing and running the process repeatedly.
+                'System.Threading.Thread.sleep(10)  '50 millisecond stall (0.025 Seconds)
 
-        Next
+            Next
+        Catch ex As Exception
+            log("cleanallfilesindi : " + ex.Message)
+        End Try
     End Sub
 
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
@@ -7238,6 +7236,7 @@ Public Class Form1
             Invoke(Sub() ComboBox1.Enabled = True)
             Invoke(Sub() MenuStrip1.Enabled = True)
 
+            'For command line arguement to know if there is more cleans to be done.
             If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
                 If MsgBox(msgboxmessagefn("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                     'do nothing
