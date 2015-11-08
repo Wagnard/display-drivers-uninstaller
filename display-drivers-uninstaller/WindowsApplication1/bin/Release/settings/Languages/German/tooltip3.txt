@@ -1,2 +1,2 @@
-﻿Deinstalliert den aktuellen und die vorherigen Treiber und schaltet den Computer ohne erneutes Scannen aus.
-(Für das Installieren einer neuen Grafikkarte)
+﻿Deinstalliert den aktuellen sowie die vorherigen Treiber und schaltet den Computer ohne erneutes Scannen aus
+(Zur Installation einer neuen Grafikkarte)

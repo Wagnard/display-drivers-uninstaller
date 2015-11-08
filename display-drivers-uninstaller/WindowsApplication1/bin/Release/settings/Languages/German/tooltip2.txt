@@ -1,2 +1,2 @@
-﻿Deinstalliert den aktuellen und die vorherigen Treiber und startet den Computer NICHT neu.
-(Kann zu Problemen wie z.B. einem Blackscreen führen)
+﻿Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer NICHT neu
+(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)

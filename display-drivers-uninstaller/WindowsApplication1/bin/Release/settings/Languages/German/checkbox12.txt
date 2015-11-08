@@ -1,0 +1,1 @@
+﻿DDU beim Start nicht auf Updates überprüfen (NICHT empfohlen)
