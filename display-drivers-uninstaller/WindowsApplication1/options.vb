@@ -122,7 +122,6 @@ Public Class options
         End If
 
 
-
         If settings.getconfig("removeamdaudiobus") = "true" Then
             CheckBox7.Checked = True
             removeamdaudiobus = True
@@ -180,6 +179,14 @@ Public Class options
             removecamd = True
         Else
             CheckBox8.Checked = False
+            removecamd = False
+        End If
+
+        If settings.getconfig("removegfe") = "true" Then
+            CheckBox13.Checked = True
+            removecamd = True
+        Else
+            CheckBox13.Checked = False
             removecamd = False
         End If
 
@@ -533,6 +540,16 @@ Public Class options
         Else
             setconfig("donotcheckupdatestartup", "false")
             donotcheckupdatestartup = False
+        End If
+    End Sub
+
+    Private Sub CheckBox13_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox13.CheckedChanged
+        If CheckBox13.Checked = True Then
+            setconfig("removegfe", "true")
+            removegfe = True
+        Else
+            setconfig("removegfe", "false")
+            removegfe = False
         End If
     End Sub
 End Class

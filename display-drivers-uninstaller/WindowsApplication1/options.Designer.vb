@@ -41,6 +41,7 @@ Partial Class options
         Me.CheckBox10 = New System.Windows.Forms.CheckBox()
         Me.CheckBox11 = New System.Windows.Forms.CheckBox()
         Me.CheckBox12 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox13 = New System.Windows.Forms.CheckBox()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -69,7 +70,7 @@ Partial Class options
         'CheckBox4
         '
         Me.CheckBox4.AutoSize = True
-        Me.CheckBox4.Location = New System.Drawing.Point(12, 142)
+        Me.CheckBox4.Location = New System.Drawing.Point(12, 132)
         Me.CheckBox4.Name = "CheckBox4"
         Me.CheckBox4.Size = New System.Drawing.Size(120, 17)
         Me.CheckBox4.TabIndex = 32
@@ -79,7 +80,7 @@ Partial Class options
         'CheckBox3
         '
         Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Location = New System.Drawing.Point(12, 172)
+        Me.CheckBox3.Location = New System.Drawing.Point(12, 155)
         Me.CheckBox3.Name = "CheckBox3"
         Me.CheckBox3.Size = New System.Drawing.Size(99, 17)
         Me.CheckBox3.TabIndex = 31
@@ -100,7 +101,7 @@ Partial Class options
         'CheckBox1
         '
         Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(12, 204)
+        Me.CheckBox1.Location = New System.Drawing.Point(12, 178)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(313, 17)
         Me.CheckBox1.TabIndex = 29
@@ -110,7 +111,7 @@ Partial Class options
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.WindowsApplication1.My.Resources.Resources.RadeonLogo1
-        Me.PictureBox1.Location = New System.Drawing.Point(12, 227)
+        Me.PictureBox1.Location = New System.Drawing.Point(12, 255)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(110, 90)
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -130,7 +131,7 @@ Partial Class options
         'PictureBox3
         '
         Me.PictureBox3.Image = Global.WindowsApplication1.My.Resources.Resources.intel_logo
-        Me.PictureBox3.Location = New System.Drawing.Point(12, 418)
+        Me.PictureBox3.Location = New System.Drawing.Point(12, 446)
         Me.PictureBox3.Name = "PictureBox3"
         Me.PictureBox3.Size = New System.Drawing.Size(105, 90)
         Me.PictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -140,7 +141,7 @@ Partial Class options
         'CheckBox7
         '
         Me.CheckBox7.AutoSize = True
-        Me.CheckBox7.Location = New System.Drawing.Point(12, 320)
+        Me.CheckBox7.Location = New System.Drawing.Point(12, 351)
         Me.CheckBox7.Name = "CheckBox7"
         Me.CheckBox7.Size = New System.Drawing.Size(222, 17)
         Me.CheckBox7.TabIndex = 38
@@ -150,7 +151,7 @@ Partial Class options
         'CheckBox8
         '
         Me.CheckBox8.AutoSize = True
-        Me.CheckBox8.Location = New System.Drawing.Point(12, 351)
+        Me.CheckBox8.Location = New System.Drawing.Point(12, 374)
         Me.CheckBox8.Name = "CheckBox8"
         Me.CheckBox8.Size = New System.Drawing.Size(301, 17)
         Me.CheckBox8.TabIndex = 39
@@ -180,7 +181,7 @@ Partial Class options
         'Button1
         '
         Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Location = New System.Drawing.Point(588, 485)
+        Me.Button1.Location = New System.Drawing.Point(588, 595)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 42
@@ -190,7 +191,7 @@ Partial Class options
         'CheckBox9
         '
         Me.CheckBox9.AutoSize = True
-        Me.CheckBox9.Location = New System.Drawing.Point(12, 385)
+        Me.CheckBox9.Location = New System.Drawing.Point(12, 397)
         Me.CheckBox9.Name = "CheckBox9"
         Me.CheckBox9.Size = New System.Drawing.Size(299, 17)
         Me.CheckBox9.TabIndex = 45
@@ -227,11 +228,22 @@ Partial Class options
         Me.CheckBox12.Text = "Do not check for DDU updates on startup (NOT Recommended)"
         Me.CheckBox12.UseVisualStyleBackColor = True
         '
+        'CheckBox13
+        '
+        Me.CheckBox13.AutoSize = True
+        Me.CheckBox13.Location = New System.Drawing.Point(12, 201)
+        Me.CheckBox13.Name = "CheckBox13"
+        Me.CheckBox13.Size = New System.Drawing.Size(193, 17)
+        Me.CheckBox13.TabIndex = 49
+        Me.CheckBox13.Text = "Remove Geforce Experience (GFE)"
+        Me.CheckBox13.UseVisualStyleBackColor = True
+        '
         'options
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(675, 520)
+        Me.ClientSize = New System.Drawing.Size(675, 630)
+        Me.Controls.Add(Me.CheckBox13)
         Me.Controls.Add(Me.CheckBox12)
         Me.Controls.Add(Me.CheckBox11)
         Me.Controls.Add(Me.CheckBox10)
@@ -282,4 +294,5 @@ Partial Class options
     Friend WithEvents CheckBox10 As CheckBox
     Friend WithEvents CheckBox11 As CheckBox
     Friend WithEvents CheckBox12 As CheckBox
+    Friend WithEvents CheckBox13 As System.Windows.Forms.CheckBox
 End Class

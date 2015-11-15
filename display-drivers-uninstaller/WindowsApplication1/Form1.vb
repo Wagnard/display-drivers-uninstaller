@@ -67,6 +67,7 @@ Public Class Form1
     Public Shared roamingcfg As Boolean
     Public Shared donotcheckupdatestartup As Boolean
     Public Shared trysystemrestore As Boolean
+    Public Shared removegfe As Boolean
     Dim f As New options
     Dim locations As String = Application.StartupPath & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
@@ -2287,7 +2288,9 @@ Public Class Form1
     Private Sub cleannvidiaserviceprocess()
 
         CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\services.cfg"))
-
+        If removegfe Then
+            CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\gfeservice.cfg"))
+        End If
         'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
         'holding files in the NVIDIA folders sometimes.
         Try
@@ -2317,32 +2320,33 @@ Public Class Form1
                 appproc(i).Kill()
             Next i
 
-            appproc = Process.GetProcessesByName("nvtray")
+            If removegfe Then
+                appproc = process.GetProcessesByName("nvtray")
+                For i As Integer = 0 To appproc.Length - 1
+                    appproc(i).Kill()
+                Next i
+            End If
+            appproc = process.GetProcessesByName("dwm")
             For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
-            appproc = Process.GetProcessesByName("dwm")
+            appproc = process.GetProcessesByName("WWAHost")
             For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
-            appproc = Process.GetProcessesByName("WWAHost")
+            appproc = process.GetProcessesByName("nvspcaps64")
             For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
-            appproc = Process.GetProcessesByName("nvspcaps64")
+            appproc = process.GetProcessesByName("nvspcaps")
             For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
 
-            appproc = Process.GetProcessesByName("nvspcaps")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
-
-            appproc = Process.GetProcessesByName("NvBackend")
+            appproc = process.GetProcessesByName("NvBackend")
             For i As Integer = 0 To appproc.Length - 1
                 appproc(i).Kill()
             Next i
@@ -2424,38 +2428,40 @@ Public Class Form1
 
             filePath = filepaths + "\AppData\Local\NVIDIA"
 
-            Try
-                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("nvbackend") Or
-                            child.ToLower.Contains("gfexperience") Then
+            If removegfe Then
+                Try
+                    For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("nvbackend") Or
+                                child.ToLower.Contains("gfexperience") Then
+                                Try
+                                    deletedirectory(child)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                    TestDelete(child)
+                                End Try
+                            End If
+                        End If
+                    Next
+                    Try
+                        If Directory.GetDirectories(filePath).Length = 0 Then
                             Try
-                                deletedirectory(child)
+                                deletedirectory(filePath)
                             Catch ex As Exception
                                 log(ex.Message)
-                                TestDelete(child)
+                                TestDelete(filePath)
                             End Try
-                        End If
-                    End If
-                Next
-                Try
-                    If Directory.GetDirectories(filePath).Length = 0 Then
-                        Try
-                            deletedirectory(filePath)
-                        Catch ex As Exception
-                            log(ex.Message)
-                            TestDelete(filePath)
-                        End Try
-                    Else
-                        For Each data As String In Directory.GetDirectories(filePath)
-                            log("Remaining folders found " + " : " + data)
-                        Next
+                        Else
+                            For Each data As String In Directory.GetDirectories(filePath)
+                                log("Remaining folders found " + " : " + data)
+                            Next
 
-                    End If
+                        End If
+                    Catch ex As Exception
+                    End Try
                 Catch ex As Exception
                 End Try
-            Catch ex As Exception
-            End Try
+            End If
 
             filePath = filepaths + "\AppData\Roaming\NVIDIA"
 
@@ -2494,42 +2500,42 @@ Public Class Form1
 
 
             filePath = filepaths + "\AppData\Local\NVIDIA Corporation"
+            If removegfe Then
+                Try
+                    For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("ledvisualizer") Or
+                                child.ToLower.Contains("shadowplay") Or
+                                child.ToLower.Contains("gfexperience") Or
+                                child.ToLower.Contains("nvvad") Or
+                                child.ToLower.Contains("shield apps") Then
 
-            Try
-                For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("ledvisualizer") Or
-                            child.ToLower.Contains("shadowplay") Or
-                            child.ToLower.Contains("gfexperience") Or
-                            child.ToLower.Contains("nvvad") Or
-                            child.ToLower.Contains("shield apps") Then
-
+                                Try
+                                    deletedirectory(child)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                End Try
+                            End If
+                        End If
+                    Next
+                    Try
+                        If Directory.GetDirectories(filePath).Length = 0 Then
                             Try
-                                deletedirectory(child)
+                                deletedirectory(filePath)
                             Catch ex As Exception
                                 log(ex.Message)
                             End Try
-                        End If
-                    End If
-                Next
-                Try
-                    If Directory.GetDirectories(filePath).Length = 0 Then
-                        Try
-                            deletedirectory(filePath)
-                        Catch ex As Exception
-                            log(ex.Message)
-                        End Try
-                    Else
-                        For Each data As String In Directory.GetDirectories(filePath)
-                            log("Remaining folders found " + " : " + data)
-                        Next
+                        Else
+                            For Each data As String In Directory.GetDirectories(filePath)
+                                log("Remaining folders found " + " : " + data)
+                            Next
 
-                    End If
+                        End If
+                    Catch ex As Exception
+                    End Try
                 Catch ex As Exception
                 End Try
-            Catch ex As Exception
-            End Try
-
+            End If
 
         Next
 
@@ -2573,11 +2579,11 @@ Public Class Form1
             For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("drs") Or
-                        child.ToLower.Contains("geforce experience") Or
-                        child.ToLower.Contains("netservice") Or
-                        child.ToLower.Contains("shadowplay") Or
-                        child.ToLower.Contains("nview") Or
-                        child.ToLower.Contains("nvstreamsvc") Then
+                        (child.ToLower.Contains("geforce experience") AndAlso removegfe) Or
+                        (child.ToLower.Contains("netservice") AndAlso removegfe) Or
+                        (child.ToLower.Contains("shadowplay") AndAlso removegfe) Or
+                        (child.ToLower.Contains("nview") AndAlso removegfe) Or
+                        (child.ToLower.Contains("nvstreamsvc") AndAlso removegfe) Then
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
@@ -2649,21 +2655,21 @@ Public Class Form1
                        child.ToLower.Contains("nvsmi") Or
                        child.ToLower.Contains("opencl") Or
                        child.ToLower.Contains("3d vision") Or
-                       child.ToLower.Contains("led visualizer") Or
-                       child.ToLower.Contains("netservice") Or
-                       child.ToLower.Contains("geforce experience") Or
-                       child.ToLower.Contains("nvstreamc") Or
-                       child.ToLower.Contains("nvstreamsrv") Or
+                       child.ToLower.Contains("led visualizer") AndAlso removegfe Or
+                       child.ToLower.Contains("netservice") AndAlso removegfe Or
+                       child.ToLower.Contains("geforce experience") AndAlso removegfe Or
+                       child.ToLower.Contains("nvstreamc") AndAlso removegfe Or
+                       child.ToLower.Contains("nvstreamsrv") AndAlso removegfe Or
                        child.ToLower.EndsWith("\physx") Or
-                       child.ToLower.Contains("nvstreamsrv") Or
-                       child.ToLower.Contains("shadowplay") Or
-                       child.ToLower.Contains("update common") Or
-                       child.ToLower.Contains("shield") Or
+                       child.ToLower.Contains("nvstreamsrv") AndAlso removegfe Or
+                       child.ToLower.Contains("shadowplay") AndAlso removegfe Or
+                       child.ToLower.Contains("update common") AndAlso removegfe Or
+                       child.ToLower.Contains("shield") AndAlso removegfe Or
                        child.ToLower.Contains("nview") Or
                        child.ToLower.Contains("nvidia wmi provider") Or
-                       child.ToLower.Contains("gamemonitor") Or
+                       child.ToLower.Contains("gamemonitor") AndAlso removegfe Or
                        child.ToLower.Contains("nvgsync") Or
-                       child.ToLower.Contains("update core") Then
+                       child.ToLower.Contains("update core") AndAlso removegfe Then
 
 
                         Try
@@ -2683,21 +2689,21 @@ Public Class Form1
                                 If child2.ToLower.Contains("display.3dvision") Or
                                    child2.ToLower.Contains("display.controlpanel") Or
                                    child2.ToLower.Contains("display.driver") Or
-                                   child2.ToLower.Contains("display.gfexperience") Or
+                                   child2.ToLower.Contains("display.gfexperience") AndAlso removegfe Or
                                    child2.ToLower.Contains("display.nvirusb") Or
                                    child2.ToLower.Contains("display.physx") Or
-                                   child2.ToLower.Contains("display.update") Or
-                                   child2.ToLower.Contains("display.gamemonitor") Or
-                                   child2.ToLower.Contains("gfexperience") Or
-                                   child2.ToLower.Contains("nvidia.update") Or
+                                   child2.ToLower.Contains("display.update") AndAlso removegfe Or
+                                   child2.ToLower.Contains("display.gamemonitor") AndAlso removegfe Or
+                                   child2.ToLower.Contains("gfexperience") AndAlso removegfe Or
+                                   child2.ToLower.Contains("nvidia.update") AndAlso removegfe Or
                                    child2.ToLower.Contains("installer2\installer") Or
-                                   child2.ToLower.Contains("network.service") Or
-                                   child2.ToLower.Contains("miracast.virtualaudio") Or
-                                   child2.ToLower.Contains("shadowplay") Or
-                                   child2.ToLower.Contains("update.core") Or
-                                   child2.ToLower.Contains("virtualaudio.driver") Or
-                                   child2.ToLower.Contains("coretemp") Or
-                                   child2.ToLower.Contains("shield") Or
+                                   child2.ToLower.Contains("network.service") AndAlso removegfe Or
+                                   child2.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
+                                   child2.ToLower.Contains("shadowplay") AndAlso removegfe Or
+                                   child2.ToLower.Contains("update.core") AndAlso removegfe Or
+                                   child2.ToLower.Contains("virtualaudio.driver") AndAlso removegfe Or
+                                   child2.ToLower.Contains("coretemp") AndAlso removegfe Or
+                                   child2.ToLower.Contains("shield") AndAlso removegfe Or
                                    child2.ToLower.Contains("hdaudio.driver") Then
 
                                     Try
@@ -2774,15 +2780,15 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("3d vision") Or
                            child.ToLower.Contains("coprocmanager") Or
-                           child.ToLower.Contains("led visualizer") Or
-                           child.ToLower.Contains("netservice") Or
-                           child.ToLower.Contains("nvidia geforce experience") Or
-                           child.ToLower.Contains("nvstreamc") Or
-                           child.ToLower.Contains("nvstreamsrv") Or
-                           child.ToLower.Contains("update common") Or
+                           child.ToLower.Contains("led visualizer") AndAlso removegfe Or
+                           child.ToLower.Contains("netservice") AndAlso removegfe Or
+                           child.ToLower.Contains("nvidia geforce experience") AndAlso removegfe Or
+                           child.ToLower.Contains("nvstreamc") AndAlso removegfe Or
+                           child.ToLower.Contains("nvstreamsrv") AndAlso removegfe Or
+                           child.ToLower.Contains("update common") AndAlso removegfe Or
                            child.ToLower.Contains("nvgsync") Or
                            child.ToLower.EndsWith("\physx") Or
-                           child.ToLower.Contains("update core") Then
+                           child.ToLower.Contains("update core") AndAlso removegfe Then
                             If removephysx Then
                                 Try
                                     deletedirectory(child)
@@ -2846,6 +2852,9 @@ Public Class Form1
 
 
         CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
+        If removegfe Then
+            CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\gfedriverfiles.cfg")) '// add each line as String Array.
+        End If
 
         filePath = System.Environment.SystemDirectory
         Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
@@ -2952,7 +2961,7 @@ Public Class Form1
             Try
                 For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("geforceexperienceselfupdate") Or _
+                        If child.ToLower.Contains("geforceexperienceselfupdate") AndAlso removegfe Or _
                            child.ToLower.Contains("displaydriver") Then
                             Try
                                 deletedirectory(child)
@@ -3061,31 +3070,31 @@ Public Class Form1
         Next
 
         'Cleaning the GFE 2.0.1 and earlier assemblies.
-
-        filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_32"
-        If Directory.Exists(filePath) Then
-            For Each child As String In Directory.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("gfexperience") Or
-                        child.ToLower.Contains("nvidia.sett") Or
-                        child.ToLower.Contains("nvidia.updateservice") Or
-                        child.ToLower.Contains("nvidia.win32api") Or
-                        child.ToLower.Contains("installeruiextension") Or
-                        child.ToLower.Contains("installerservice") Or
-                        child.ToLower.Contains("gridservice") Or
-                        child.ToLower.Contains("shadowplay") Or
-                       child.ToLower.Contains("nvidia.gfe") Then
-                        Try
-                            deletedirectory(child)
-                        Catch ex As Exception
-                            log(ex.Message)
-                            TestDelete(child)
-                        End Try
+        If removegfe Then
+            filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_32"
+            If Directory.Exists(filePath) Then
+                For Each child As String In Directory.GetDirectories(filePath)
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        If child.ToLower.Contains("gfexperience") Or
+                            child.ToLower.Contains("nvidia.sett") Or
+                            child.ToLower.Contains("nvidia.updateservice") Or
+                            child.ToLower.Contains("nvidia.win32api") Or
+                            child.ToLower.Contains("installeruiextension") Or
+                            child.ToLower.Contains("installerservice") Or
+                            child.ToLower.Contains("gridservice") Or
+                            child.ToLower.Contains("shadowplay") Or
+                           child.ToLower.Contains("nvidia.gfe") Then
+                            Try
+                                deletedirectory(child)
+                            Catch ex As Exception
+                                log(ex.Message)
+                                TestDelete(child)
+                            End Try
+                        End If
                     End If
-                End If
-            Next
+                Next
+            End If
         End If
-
 
         '-----------------
         'MUI cache cleanUP
@@ -3108,7 +3117,7 @@ Public Class Form1
 
                                                     If Keyname.ToLower.Contains("nvstlink.exe") Or
                                                         Keyname.ToLower.Contains("nvstview.exe") Or
-                                                       Keyname.ToLower.Contains("gfexperience.exe") Or
+                                                       Keyname.ToLower.Contains("gfexperience.exe") AndAlso removegfe Or
                                                        Keyname.ToLower.Contains("nvcpluir.dll") Then
                                                         Try
                                                             deletevalue(subregkey.OpenSubKey(childs, True), Keyname)
@@ -3141,7 +3150,7 @@ Public Class Form1
 
                                 If Keyname.ToLower.Contains("nvstlink.exe") Or
                                     Keyname.ToLower.Contains("nvstview.exe") Or
-                                   Keyname.ToLower.Contains("gfexperience.exe") Or
+                                   Keyname.ToLower.Contains("gfexperience.exe") AndAlso removegfe Or
                                    Keyname.ToLower.Contains("nvcpluir.dll") Then
                                     Try
                                         deletevalue(regkey, Keyname)
@@ -3280,43 +3289,43 @@ Public Class Form1
 
 
 
-
-        '----------------------
-        'Firewall entry cleanup
-        '----------------------
-        log("Firewall entry cleanUP")
-        Try
-            If winxp = False Then
-                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
-                If subregkey IsNot Nothing Then
-                    For Each child2 As String In subregkey.GetSubKeyNames()
-                        If child2.ToLower.Contains("controlset") Then
-                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\SharedAccess\Parameters\FirewallPolicy\FirewallRules", True)
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetValueNames()
-                                    If checkvariables.isnullorwhitespace(child) = False Then
-                                        If checkvariables.isnullorwhitespace(regkey.GetValue(child)) = False Then
-                                            wantedvalue = regkey.GetValue(child).ToString()
+        If removegfe Then
+            '----------------------
+            'Firewall entry cleanup
+            '----------------------
+            log("Firewall entry cleanUP")
+            Try
+                If winxp = False Then
+                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+                    If subregkey IsNot Nothing Then
+                        For Each child2 As String In subregkey.GetSubKeyNames()
+                            If child2.ToLower.Contains("controlset") Then
+                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\SharedAccess\Parameters\FirewallPolicy\FirewallRules", True)
+                                If regkey IsNot Nothing Then
+                                    For Each child As String In regkey.GetValueNames()
+                                        If checkvariables.isnullorwhitespace(child) = False Then
+                                            If checkvariables.isnullorwhitespace(regkey.GetValue(child)) = False Then
+                                                wantedvalue = regkey.GetValue(child).ToString()
+                                            End If
+                                            If wantedvalue.ToLower.ToString.Contains("nvstreamsrv") Or
+                                               wantedvalue.ToLower.ToString.Contains("nvidia network service") Or
+                                               wantedvalue.ToLower.ToString.Contains("nvidia update core") Then
+                                                Try
+                                                    deletevalue(regkey, child)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
                                         End If
-                                        If wantedvalue.ToLower.ToString.Contains("nvstreamsrv") Or
-                                           wantedvalue.ToLower.ToString.Contains("nvidia network service") Or
-                                           wantedvalue.ToLower.ToString.Contains("nvidia update core") Then
-                                            Try
-                                                deletevalue(regkey, child)
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                    End If
-                                Next
+                                    Next
+                                End If
                             End If
-                        End If
-                    Next
+                        Next
+                    End If
                 End If
-            End If
-        Catch ex As Exception
-            log(ex.StackTrace)
-        End Try
-
+            Catch ex As Exception
+                log(ex.StackTrace)
+            End Try
+        End If
         '--------------------------
         'End Firewall entry cleanup
         '--------------------------
@@ -3565,14 +3574,37 @@ Public Class Form1
                                 If child.ToLower.Contains("nvidia corporation") Then
                                     For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
                                         If checkvariables.isnullorwhitespace(child2) = False Then
-                                            If child2.ToLower.Contains("global") Or
-                                                child2.ToLower.Contains("logging") Or
-                                                child2.ToLower.Contains("nvbackend") Or
-                                                child2.ToLower.Contains("nvidia update core") Or
+                                            If child2.ToLower.Contains("global") Then
+                                                If removegfe Then
+                                                    Try
+                                                        deletesubregkey(regkey.OpenSubKey(child, True), child2)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                Else
+                                                    For Each child3 As String In regkey.OpenSubKey(child + "\" + child2).GetSubKeyNames()
+                                                        If checkvariables.isnullorwhitespace(child3) = False Then
+                                                            If child3.ToLower.Contains("gfeclient") Or _
+                                                                child3.ToLower.Contains("gfexperience") Or _
+                                                                child3.ToLower.Contains("shadowplay") Or _
+                                                                child3.ToLower.Contains("ledvisualizer") Then
+                                                                'do nothing
+                                                            Else
+                                                                Try
+                                                                    deletesubregkey(regkey.OpenSubKey(child + "\" + child2, True), child3)
+                                                                Catch ex As Exception
+                                                                End Try
+                                                            End If
+                                                        End If
+                                                    Next
+                                                End If
+                                            End If
+                                            If child2.ToLower.Contains("logging") Or
+                                                child2.ToLower.Contains("nvbackend") AndAlso removegfe Or
+                                                child2.ToLower.Contains("nvidia update core") AndAlso removegfe Or
                                                 child2.ToLower.Contains("nvcontrolpanel2") Or
                                                 child2.ToLower.Contains("nvcontrolpanel") Or
-                                                child2.ToLower.Contains("nvtray") Or
-                                                child2.ToLower.Contains("nvstream") Or
+                                                child2.ToLower.Contains("nvtray") AndAlso removegfe Or
+                                                child2.ToLower.Contains("nvstream") AndAlso removegfe Or
                                                 child2.ToLower.Contains("nvidia control panel") Then
                                                 Try
                                                     deletesubregkey(regkey.OpenSubKey(child, True), child2)
@@ -3594,7 +3626,7 @@ Public Class Form1
                 End If
             Next
         Catch ex As Exception
-            log(ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
 
 
@@ -3607,7 +3639,7 @@ Public Class Form1
                             If checkvariables.isnullorwhitespace(child2) = False Then
                                 If child2.ToLower.Contains("global") Or
                                    child2.ToLower.Contains("nvbackend") Or
-                                   child2.ToLower.Contains("nvidia update core") Or
+                                   child2.ToLower.Contains("nvidia update core") AndAlso removegfe Or
                                     child2.ToLower.Contains("nvcontrolpanel2") Or
                                     child2.ToLower.Contains("nvidia control panel") Then
                                     Try
@@ -3644,20 +3676,45 @@ Public Class Form1
                     If child.ToLower.Contains("nvidia corporation") Then
                         For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
                             If checkvariables.isnullorwhitespace(child2) = False Then
-                                If child2.ToLower.Contains("global") Or
-                                   child2.ToLower.Contains("installer") Or
+                                If child2.ToLower.Contains("global") Then
+                                    If removegfe Then
+                                        Try
+                                            deletesubregkey(regkey.OpenSubKey(child, True), child2)
+                                        Catch ex As Exception
+                                        End Try
+                                    Else
+                                        For Each child3 As String In regkey.OpenSubKey(child + "\" + child2).GetSubKeyNames()
+                                            If checkvariables.isnullorwhitespace(child3) = False Then
+                                                If child3.ToLower.Contains("gfeclient") Or _
+                                                    child3.ToLower.Contains("gfexperience") Or _
+                                                    child3.ToLower.Contains("nvbackend") Or _
+                                                    child3.ToLower.Contains("nvscaps") Or _
+                                                    child3.ToLower.Contains("shadowplay") Or _
+                                                    child3.ToLower.Contains("ledvisualizer") Then
+                                                    'do nothing
+                                                Else
+                                                    Try
+                                                        deletesubregkey(regkey.OpenSubKey(child + "\" + child2, True), child3)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
+                                            End If
+                                        Next
+                                    End If
+                                End If
+                                If child2.ToLower.Contains("installer") Or
                                    child2.ToLower.Contains("logging") Or
                                     child2.ToLower.Contains("installer2") Or
                                     child2.ToLower.Contains("nvidia update core") Or
                                     child2.ToLower.Contains("nvcontrolpanel") Or
                                     child2.ToLower.Contains("nvcontrolpanel2") Or
-                                    child2.ToLower.Contains("nvstream") Or
-                                    child2.ToLower.Contains("nvstreamc") Or
-                                    child2.ToLower.Contains("nvstreamsrv") Or
+                                    child2.ToLower.Contains("nvstream") AndAlso removegfe Or
+                                    child2.ToLower.Contains("nvstreamc") AndAlso removegfe Or
+                                    child2.ToLower.Contains("nvstreamsrv") AndAlso removegfe Or
                                     child2.ToLower.Contains("physx_systemsoftware") Or
                                     child2.ToLower.Contains("physxupdateloader") Or
                                     child2.ToLower.Contains("uxd") Or
-                                    child2.ToLower.Contains("nvtray") Then
+                                    child2.ToLower.Contains("nvtray") AndAlso removegfe Then
                                     If removephysx Then
                                         Try
                                             deletesubregkey(regkey.OpenSubKey(child, True), child2)
@@ -3702,8 +3759,33 @@ Public Class Form1
                         If child.ToLower.Contains("nvidia corporation") Then
                             For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
                                 If checkvariables.isnullorwhitespace(child2) = False Then
-                                    If child2.ToLower.Contains("global") Or
-                                        child2.ToLower.Contains("logging") Or
+                                    If child2.ToLower.Contains("global") Then
+                                        If removegfe Then
+                                            Try
+                                                deletesubregkey(regkey.OpenSubKey(child, True), child2)
+                                            Catch ex As Exception
+                                            End Try
+                                        Else
+                                            For Each child3 As String In regkey.OpenSubKey(child + "\" + child2).GetSubKeyNames()
+                                                If checkvariables.isnullorwhitespace(child3) = False Then
+                                                    If child3.ToLower.Contains("gfeclient") Or _
+                                                        child3.ToLower.Contains("gfexperience") Or _
+                                                        child3.ToLower.Contains("nvbackend") Or _
+                                                        child3.ToLower.Contains("nvscaps") Or _
+                                                        child3.ToLower.Contains("shadowplay") Or _
+                                                        child3.ToLower.Contains("ledvisualizer") Then
+                                                        'do nothing
+                                                    Else
+                                                        Try
+                                                            deletesubregkey(regkey.OpenSubKey(child + "\" + child2, True), child3)
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                End If
+                                            Next
+                                        End If
+                                    End If
+                                    If child2.ToLower.Contains("logging") Or
                                         child2.ToLower.Contains("physx_systemsoftware") Or
                                         child2.ToLower.Contains("physxupdateloader") Or
                                        child2.ToLower.Contains("installer2") Or
@@ -3751,21 +3833,21 @@ Public Class Form1
                             child.ToLower.Contains("3dtv") Or
                             child.ToLower.Contains("_display.controlpanel") Or
                             child.ToLower.Contains("_display.driver") Or
-                            child.ToLower.Contains("_display.gfexperience") Or
+                            child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
                             child.ToLower.Contains("_display.nvirusb") Or
                             child.ToLower.Contains("_display.physx") Or
-                            child.ToLower.Contains("_display.update") Or
-                            child.ToLower.Contains("_display.gamemonitor") Or
-                            child.ToLower.Contains("_gfexperience") Or
+                            child.ToLower.Contains("_display.update") AndAlso removegfe Or
+                            child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
+                            child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
                             child.ToLower.Contains("_hdaudio.driver") Or
                             child.ToLower.Contains("_installer") Or
-                            child.ToLower.Contains("_network.service") Or
-                            child.ToLower.Contains("_shadowplay") Or
-                            child.ToLower.Contains("_update.core") Or
+                            child.ToLower.Contains("_network.service") AndAlso removegfe Or
+                            child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
+                            child.ToLower.Contains("_update.core") AndAlso removegfe Or
                             child.ToLower.Contains("nvidiastereo") Or
-                            child.ToLower.Contains("_shieldwireless") Or
-                            child.ToLower.Contains("miracast.virtualaudio") Or
-                            child.ToLower.Contains("_virtualaudio.driver") Then
+                            child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
+                            child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
+                            child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Then
                             If removephysx = False And child.ToLower.Contains("physx") Then
                                 Continue For
                             End If
@@ -3804,23 +3886,23 @@ Public Class Form1
                         child.ToLower.Contains("3dtv") Or
                         child.ToLower.Contains("_display.controlpanel") Or
                         child.ToLower.Contains("_display.driver") Or
-                        child.ToLower.Contains("_display.gfexperience") Or
+                        child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
                         child.ToLower.Contains("_display.nvirusb") Or
                         child.ToLower.Contains("_display.physx") Or
-                        child.ToLower.Contains("_display.update") Or
+                        child.ToLower.Contains("_display.update") AndAlso removegfe Or
                         child.ToLower.Contains("_display.nview") Or
                         child.ToLower.Contains("_display.nvwmi") Or
-                        child.ToLower.Contains("_display.gamemonitor") Or
-                        child.ToLower.Contains("_nvidia.update") Or
-                        child.ToLower.Contains("_gfexperience") Or
+                        child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
+                        child.ToLower.Contains("_nvidia.update") AndAlso removegfe Or
+                        child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
                         child.ToLower.Contains("_hdaudio.driver") Or
                         child.ToLower.Contains("_installer") Or
-                        child.ToLower.Contains("_network.service") Or
-                        child.ToLower.Contains("_shadowplay") Or
-                        child.ToLower.Contains("_update.core") Or
+                        child.ToLower.Contains("_network.service") AndAlso removegfe Or
+                        child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
+                        child.ToLower.Contains("_update.core") AndAlso removegfe Or
                         child.ToLower.Contains("nvidiastereo") Or
-                        child.ToLower.Contains("_shieldwireless") Or
-                        child.ToLower.Contains("miracast.virtualaudio") Or
+                        child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
+                        child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
                         child.ToLower.Contains("_virtualaudio.driver") Then
                         If removephysx = False And child.ToLower.Contains("physx") Then
                             Continue For
@@ -3853,7 +3935,7 @@ Public Class Form1
         If regkey IsNot Nothing Then
             For Each child As String In regkey.GetValueNames()
                 If Not checkvariables.isnullorwhitespace(child) Then
-                    If child.ToLower.Contains("gfexperience.exe") Then
+                    If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
                         deletevalue(regkey, child)
                     End If
                 End If
@@ -3865,44 +3947,56 @@ Public Class Form1
         If regkey IsNot Nothing Then
             For Each child As String In regkey.GetSubKeyNames()
                 If Not checkvariables.isnullorwhitespace(child) Then
-                    If child.ToLower.Contains("gfexperience.exe") Then
+                    If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
                         deletesubregkey(regkey, child)
                     End If
                 End If
             Next
         End If
 
-        For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-            If Not checkvariables.isnullorwhitespace(users) Then
-                regkey = My.Computer.Registry.Users.OpenSubKey _
-        (users + "\Software\Microsoft\.NETFramework\SQM\Apps", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If Not checkvariables.isnullorwhitespace(child) Then
-                            If child.ToLower.Contains("gfexperience.exe") Then
-                                deletesubregkey(regkey, child)
+        Try
+            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(users) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey _
+            (users + "\Software\Microsoft\.NETFramework\SQM\Apps", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If Not checkvariables.isnullorwhitespace(child) Then
+                                If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
+                                    deletesubregkey(regkey, child)
+                                End If
                             End If
-                        End If
-                    Next
+                        Next
+                    End If
                 End If
-            End If
-        Next
+            Next
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
 
-        For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-            If Not checkvariables.isnullorwhitespace(users) Then
-                regkey = My.Computer.Registry.Users.OpenSubKey _
-        (users + "\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetValueNames()
-                        If Not checkvariables.isnullorwhitespace(child) Then
-                            If child.ToLower.Contains("gfexperience.exe") Then
-                                deletevalue(regkey, child)
+
+        Try
+
+            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(users) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey _
+            (users + "\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetValueNames()
+                            If Not checkvariables.isnullorwhitespace(child) Then
+                                If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
+                                    deletevalue(regkey, child)
+                                End If
                             End If
-                        End If
-                    Next
+                        Next
+                    End If
                 End If
-            End If
-        Next
+            Next
+
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+
 
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
       ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
@@ -3969,7 +4063,7 @@ Public Class Form1
         If regkey IsNot Nothing Then
             For Each child As String In regkey.GetSubKeyNames()
                 If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("gfexperience.exe") Then
+                    If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
                         Try
                             deletesubregkey(regkey, child)
                         Catch ex As Exception
@@ -3985,7 +4079,7 @@ Public Class Form1
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("gfexperience.exe") Then
+                        If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
                             Try
                                 deletesubregkey(regkey, child)
                             Catch ex As Exception
@@ -4128,6 +4222,7 @@ Public Class Form1
                 End If
             Next
         Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
         End Try
 
         Try
@@ -4154,7 +4249,9 @@ Public Class Form1
       ("Software\Microsoft\Windows\CurrentVersion\Run", True)
             If regkey IsNot Nothing Then
                 Try
-                    deletevalue(regkey, "Nvtmru")
+                    If removegfe Then
+                        deletevalue(regkey, "Nvtmru")
+                    End If
                 Catch ex As Exception
                     log(ex.Message + " Nvtmru")
                 End Try
@@ -4172,7 +4269,9 @@ Public Class Form1
                 End Try
 
                 Try
-                    deletevalue(regkey, "NvBackend")
+                    If removegfe Then
+                        deletevalue(regkey, "NvBackend")
+                    End If
                 Catch ex As Exception
                 End Try
 
@@ -4182,7 +4281,9 @@ Public Class Form1
                 End Try
 
                 Try
-                    deletevalue(regkey, "ShadowPlay")
+                    If removegfe Then
+                        deletevalue(regkey, "ShadowPlay")
+                    End If
                 Catch ex As Exception
                     log(ex.Message + " ShadowPlay")
                 End Try
@@ -4193,7 +4294,9 @@ Public Class Form1
                     log(ex.Message + " StereoLinksInstall")
                 End Try
                 Try
-                    deletevalue(regkey, "NvGameMonitor")
+                    If removegfe Then
+                        deletevalue(regkey, "NvGameMonitor")
+                    End If
                 Catch ex As Exception
                     log(ex.Message + " NvGameMonitor")
                 End Try
@@ -4835,13 +4938,7 @@ Public Class Form1
 
         CheckForIllegalCrossThreadCalls = True
 
-        Try
-            If System.IO.File.Exists(Application.StartupPath + "\DDU.bat") = True Then
-                System.IO.File.Delete(Application.StartupPath + "\DDU.bat")
-            End If
-        Catch ex As Exception
-            'This exception is not important, so do nothing and be silent about it.
-        End Try
+
         Dim webAddress As String = ""
         'We try to create config.cfg if non existant.
         If roamingcfg = True Then
@@ -5120,6 +5217,14 @@ Public Class Form1
                 removecamd = False
             End If
 
+            If settings.getconfig("removegfe") = "true" Then
+                f.CheckBox13.Checked = True
+                removegfe = True
+            Else
+                f.CheckBox13.Checked = False
+                removegfe = False
+            End If
+
             If settings.getconfig("donotcheckupdatestartup") = "true" Then
                 f.CheckBox12.Checked = True
                 donotcheckupdatestartup = True
@@ -5367,6 +5472,7 @@ Public Class Form1
                     settings.setconfig("showsafemodebox", "true")
                     settings.setconfig("removeamdaudiobus", "false")
                     settings.setconfig("removeamdkmpfd", "false")
+                    settings.setconfig("removegfe", "false")
 
                     If arg.Contains("-silent") Then
                         silent = True
@@ -5399,6 +5505,9 @@ Public Class Form1
                     End If
                     If arg.Contains("-removeamdkmpfd") Then
                         settings.setconfig("removeamdkmpfd", "true")
+                    End If
+                    If arg.Contains("-removegfe") Then
+                        settings.setconfig("removegfe", "true")
                     End If
                     If arg.Contains("-cleanamd") Then
                         argcleanamd = True
@@ -7460,23 +7569,23 @@ Public Class Form1
                                 If child2.ToLower.Contains("display.3dvision") Or
                                    child2.ToLower.Contains("display.controlpanel") Or
                                    child2.ToLower.Contains("display.driver") Or
-                                   child2.ToLower.Contains("display.gfexperience") Or
+                                   child2.ToLower.Contains("display.gfexperience") AndAlso removegfe Or
                                    child2.ToLower.Contains("display.nvirusb") Or
                                    child2.ToLower.Contains("display.optimus") Or
                                    child2.ToLower.Contains("display.physx") Or
-                                   child2.ToLower.Contains("display.update") Or
+                                   child2.ToLower.Contains("display.update") AndAlso removegfe Or
                                    child2.ToLower.Contains("display.nview") Or
                                    child2.ToLower.Contains("display.nvwmi") Or
-                                   child2.ToLower.Contains("gfexperience") Or
-                                   child2.ToLower.Contains("nvidia.update") Or
+                                   child2.ToLower.Contains("gfexperience") AndAlso removegfe Or
+                                   child2.ToLower.Contains("nvidia.update") AndAlso removegfe Or
                                    child2.ToLower.Contains("installer2\installer") Or
-                                   child2.ToLower.Contains("network.service") Or
-                                   child2.ToLower.Contains("miracast.virtualaudio") Or
-                                   child2.ToLower.Contains("shadowplay") Or
-                                   child2.ToLower.Contains("update.core") Or
-                                   child2.ToLower.Contains("virtualaudio.driver") Or
-                                   child2.ToLower.Contains("coretemp") Or
-                                   child2.ToLower.Contains("shield") Or
+                                   child2.ToLower.Contains("network.service") AndAlso removegfe Or
+                                   child2.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
+                                   child2.ToLower.Contains("shadowplay") AndAlso removegfe Or
+                                   child2.ToLower.Contains("update.core") AndAlso removegfe Or
+                                   child2.ToLower.Contains("virtualaudio.driver") AndAlso removegfe Or
+                                   child2.ToLower.Contains("coretemp") AndAlso removegfe Or
+                                   child2.ToLower.Contains("shield") AndAlso removegfe Or
                                    child2.ToLower.Contains("hdaudio.driver") Then
                                     Try
                                         deletedirectory(child2)
@@ -8398,7 +8507,7 @@ Public Class CleanupEngine
         updatetextmethod(UpdateTextMethodmessagefn("37"))
         log("Cleaning Process/Services...")
 
-        'STOP AMD service
+
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Services", False)
         If regkey IsNot Nothing Then
             For i As Integer = 0 To services.Length - 1
@@ -9168,7 +9277,7 @@ Public Class CleanupEngine
                 Next
             End If
         Catch ex As Exception
-            log(ex.StackTrace)
+            log(ex.Message + ex.StackTrace)
         End Try
 
         If IntPtr.Size = 8 Then
@@ -9213,7 +9322,7 @@ Public Class CleanupEngine
                     Next
                 End If
             Catch ex As Exception
-                log(ex.StackTrace)
+                log(ex.Message + ex.StackTrace)
             End Try
 
         End If
