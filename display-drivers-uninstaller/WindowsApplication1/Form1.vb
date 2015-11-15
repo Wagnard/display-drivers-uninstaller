@@ -3197,6 +3197,10 @@ Public Class Form1
 
         CleanupEngine.clsidleftover(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 
+        'for GFE removal only
+        If removegfe Then
+            CleanupEngine.clsidleftover(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
+        End If
         '------------------------------
         'Clean the rebootneeded message
         '------------------------------
@@ -3226,6 +3230,10 @@ Public Class Form1
 
         CleanupEngine.interfaces(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\interface.cfg")) '// add each line as String Array.
 
+        'When removing GFE only
+        If removegfe Then
+            CleanupEngine.interfaces(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\interface.cfg")) '// add each line as String Array.
+        End If
 
         log("Finished dcom/clsid/appid/typelib/interface cleanup")
 
