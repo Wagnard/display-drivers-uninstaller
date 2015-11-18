@@ -3894,6 +3894,7 @@ Public Class Form1
                         child.ToLower.Contains("3dtv") Or
                         child.ToLower.Contains("_display.controlpanel") Or
                         child.ToLower.Contains("_display.driver") Or
+                        child.ToLower.Contains("_display.optimus") Or
                         child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
                         child.ToLower.Contains("_display.nvirusb") Or
                         child.ToLower.Contains("_display.physx") Or
