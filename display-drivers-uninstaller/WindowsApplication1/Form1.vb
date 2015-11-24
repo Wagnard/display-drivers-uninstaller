@@ -368,6 +368,11 @@ Public Class Form1
             appproc(i).Kill()
         Next i
 
+        appproc = process.GetProcessesByName("Cnext")
+        For i As Integer = 0 To appproc.Length - 1
+            appproc(i).Kill()
+        Next i
+
         appproc = Process.GetProcessesByName("HydraDM")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
@@ -910,6 +915,49 @@ Public Class Form1
             If Not Directory.Exists(filePath) Then
                 CleanupEngine.shareddlls(filePath)
             End If
+
+            filePath = filepaths + "\AppData\Local\AMD"
+            If winxp Then
+                filePath = filepaths + "\Local Settings\Application Data\AMD"
+            End If
+            If Directory.Exists(filePath) Then
+                Try
+                    For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            If child.ToLower.Contains("cn") Then
+                                Try
+                                    deletedirectory(child)
+                                Catch ex As Exception
+                                    log(ex.Message)
+                                    TestDelete(child)
+                                End Try
+                                If Not Directory.Exists(child) Then
+                                    CleanupEngine.shareddlls(child)
+                                End If
+                            End If
+                        End If
+                    Next
+                    If Directory.GetDirectories(filePath).Length = 0 Then
+                        Try
+                            deletedirectory(filePath)
+                        Catch ex As Exception
+                            log(ex.Message)
+                            TestDelete(filePath)
+                        End Try
+                    Else
+                        For Each data As String In Directory.GetDirectories(filePath)
+                            log("Remaining folders found " + " : " + data)
+                        Next
+
+                    End If
+                Catch ex As Exception
+                    log("Possible permission issue detected on : " + filePath)
+                End Try
+            End If
+            If Not Directory.Exists(filePath) Then
+                CleanupEngine.shareddlls(filePath)
+            End If
+
         Next
 
         'starting with AMD  14.12 Omega driver folders
@@ -920,6 +968,7 @@ Public Class Form1
             For Each child As String In Directory.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("amdkmpfd") Or
+                        child.ToLower.Contains("cnext") Or
                        child.ToLower.Contains("cim") Then
                         Try
                             deletedirectory(child)
@@ -960,7 +1009,8 @@ Public Class Form1
 
             For Each child As String In Directory.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("ati.ace") Then
+                    If child.ToLower.Contains("ati.ace") Or _
+                       child.ToLower.Contains("cnext") Then
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
@@ -1709,6 +1759,8 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
+
+        ' to fix later, the range is too large and could lead to problems.
         Try
             For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
                 If Not checkvariables.isnullorwhitespace(users) Then
@@ -1728,7 +1780,25 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
-
+        ' to fix later, the range is too large and could lead to problems.
+        Try
+            For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
+                If Not checkvariables.isnullorwhitespace(users) Then
+                    regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child) = False Then
+                                If child.StartsWith("AMD") Then
+                                    deletesubregkey(regkey, child)
+                                End If
+                            End If
+                        Next
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI", True)
@@ -1798,6 +1868,7 @@ Public Class Form1
                                         For Each childf As String In Directory.GetDirectories(filePath)
                                             If checkvariables.isnullorwhitespace(childf) = False Then
                                                 If childf.ToLower.Contains("ati.ace") Or
+                                                    childf.ToLower.Contains("cnext") Or
                                                     childf.ToLower.Contains("amdkmpfd") Or
                                                     childf.ToLower.Contains("cim") Then
                                                     Try
@@ -1840,6 +1911,7 @@ Public Class Form1
                                         child2.ToLower.Contains("ati mcat") Or
                                         child2.ToLower.Contains("avt") Or
                                         child2.ToLower.Contains("ccc") Or
+                                        child2.ToLower.Contains("cnext") Or
                                         child2.ToLower.Contains("amd app sdk") Or
                                         child2.ToLower.Contains("packages") Or
                                         child2.ToLower.Contains("wirelessdisplay") Or
@@ -1961,6 +2033,7 @@ Public Class Form1
                                         child2.ToLower.Contains("ati mcat") Or
                                         child2.ToLower.Contains("avt") Or
                                         child2.ToLower.Contains("ccc") Or
+                                        child2.ToLower.Contains("cnext") Or
                                         child2.ToLower.Contains("packages") Or
                                         child2.ToLower.Contains("wirelessdisplay") Or
                                         child2.ToLower.Contains("hydravision") Or
@@ -2101,6 +2174,38 @@ Public Class Form1
 
         CleanupEngine.installer(IO.File.ReadAllLines(Application.StartupPath & "\settings\AMD\packages.cfg"))
 
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                ("Software\Microsoft\Windows\CurrentVersion\Run", True)
+            If regkey IsNot Nothing Then
+                Try
+                    deletevalue(regkey, "StartCCC")
+
+                Catch ex As Exception
+
+                    log(ex.Message + " StartCCC")
+                End Try
+                Try
+                    deletevalue(regkey, "StartCN")
+
+                Catch ex As Exception
+
+                    log(ex.Message + " StartCCC")
+                End Try
+                Try
+
+                    deletevalue(regkey, "AMD AVT")
+
+                Catch ex As Exception
+
+                    log(ex.Message + " AMD AVT")
+                End Try
+            End If
+        Catch ex As Exception
+            log(ex.StackTrace)
+        End Try
+
+
         If IntPtr.Size = 8 Then
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -2108,6 +2213,13 @@ Public Class Form1
                 If regkey IsNot Nothing Then
                     Try
                         deletevalue(regkey, "StartCCC")
+
+                    Catch ex As Exception
+
+                        log(ex.Message + " StartCCC")
+                    End Try
+                    Try
+                        deletevalue(regkey, "StartCN")
 
                     Catch ex As Exception
 
@@ -2134,7 +2246,7 @@ Public Class Form1
                 For Each child As String In regkey.GetValueNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.Contains("ATI\CIM\") Or
-                           child.Contains("ATI\CIM\") Or
+                           child.Contains("AMD\CNext\") Or
                            child.Contains("AMD APP\") Or
                            child.Contains("AMD\SteadyVideo\") Or
                            child.Contains("HydraVision\") Then
@@ -2696,7 +2808,7 @@ Public Class Form1
                                    child2.ToLower.Contains("display.gamemonitor") AndAlso removegfe Or
                                    child2.ToLower.Contains("gfexperience") AndAlso removegfe Or
                                    child2.ToLower.Contains("nvidia.update") AndAlso removegfe Or
-                                   child2.ToLower.Contains("installer2\installer") Or
+                                   child2.ToLower.Contains("installer2\installer") AndAlso removegfe Or
                                    child2.ToLower.Contains("network.service") AndAlso removegfe Or
                                    child2.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
                                    child2.ToLower.Contains("shadowplay") AndAlso removegfe Or
@@ -3712,7 +3824,7 @@ Public Class Form1
                                 End If
                                 If child2.ToLower.Contains("installer") Or
                                    child2.ToLower.Contains("logging") Or
-                                    child2.ToLower.Contains("installer2") Or
+                                    child2.ToLower.Contains("installer2") AndAlso removegfe Or
                                     child2.ToLower.Contains("nvidia update core") Or
                                     child2.ToLower.Contains("nvcontrolpanel") Or
                                     child2.ToLower.Contains("nvcontrolpanel2") Or
@@ -3848,7 +3960,7 @@ Public Class Form1
                             child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
                             child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
                             child.ToLower.Contains("_hdaudio.driver") Or
-                            child.ToLower.Contains("_installer") Or
+                            child.ToLower.Contains("_installer") AndAlso removegfe Or
                             child.ToLower.Contains("_network.service") AndAlso removegfe Or
                             child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
                             child.ToLower.Contains("_update.core") AndAlso removegfe Or
@@ -3905,7 +4017,7 @@ Public Class Form1
                         child.ToLower.Contains("_nvidia.update") AndAlso removegfe Or
                         child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
                         child.ToLower.Contains("_hdaudio.driver") Or
-                        child.ToLower.Contains("_installer") Or
+                        child.ToLower.Contains("_installer") AndAlso removegfe Or
                         child.ToLower.Contains("_network.service") AndAlso removegfe Or
                         child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
                         child.ToLower.Contains("_update.core") AndAlso removegfe Or
@@ -7587,7 +7699,7 @@ Public Class Form1
                                    child2.ToLower.Contains("display.nvwmi") Or
                                    child2.ToLower.Contains("gfexperience") AndAlso removegfe Or
                                    child2.ToLower.Contains("nvidia.update") AndAlso removegfe Or
-                                   child2.ToLower.Contains("installer2\installer") Or
+                                   child2.ToLower.Contains("installer2\installer") AndAlso removegfe Or
                                    child2.ToLower.Contains("network.service") AndAlso removegfe Or
                                    child2.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
                                    child2.ToLower.Contains("shadowplay") AndAlso removegfe Or

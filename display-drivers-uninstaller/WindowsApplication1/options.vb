@@ -184,10 +184,10 @@ Public Class options
 
         If settings.getconfig("removegfe") = "true" Then
             CheckBox13.Checked = True
-            removecamd = True
+            removegfe = True
         Else
             CheckBox13.Checked = False
-            removecamd = False
+            removegfe = False
         End If
 
         If settings.getconfig("donotcheckupdatestartup") = "true" Then
