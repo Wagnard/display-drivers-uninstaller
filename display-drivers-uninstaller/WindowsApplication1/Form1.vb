@@ -1954,7 +1954,7 @@ Public Class Form1
                     If checkvariables.isnullorwhitespace(child) = False Then
                         If child.ToLower.Contains("eeu") Or
                            child.ToLower.Contains("fuel") Or
-						   child.ToLower.Contains("CN") Or
+                           child.ToLower.Contains("cn") Or
                            child.ToLower.Contains("mftvdecoder") Then
                             Try
                                 deletesubregkey(regkey, child)
