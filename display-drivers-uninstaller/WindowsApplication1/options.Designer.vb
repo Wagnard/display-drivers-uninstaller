@@ -42,6 +42,7 @@ Partial Class options
         Me.CheckBox11 = New System.Windows.Forms.CheckBox()
         Me.CheckBox12 = New System.Windows.Forms.CheckBox()
         Me.CheckBox13 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox14 = New System.Windows.Forms.CheckBox()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -238,11 +239,22 @@ Partial Class options
         Me.CheckBox13.Text = "Remove Geforce Experience (GFE)"
         Me.CheckBox13.UseVisualStyleBackColor = True
         '
+        'CheckBox14
+        '
+        Me.CheckBox14.AutoSize = True
+        Me.CheckBox14.Location = New System.Drawing.Point(12, 420)
+        Me.CheckBox14.Name = "CheckBox14"
+        Me.CheckBox14.Size = New System.Drawing.Size(203, 17)
+        Me.CheckBox14.TabIndex = 50
+        Me.CheckBox14.Text = "Remove AMD Crimson Shader cache"
+        Me.CheckBox14.UseVisualStyleBackColor = True
+        '
         'options
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(675, 630)
+        Me.Controls.Add(Me.CheckBox14)
         Me.Controls.Add(Me.CheckBox13)
         Me.Controls.Add(Me.CheckBox12)
         Me.Controls.Add(Me.CheckBox11)
@@ -295,4 +307,5 @@ Partial Class options
     Friend WithEvents CheckBox11 As CheckBox
     Friend WithEvents CheckBox12 As CheckBox
     Friend WithEvents CheckBox13 As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckBox14 As System.Windows.Forms.CheckBox
 End Class

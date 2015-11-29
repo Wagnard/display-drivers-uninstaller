@@ -1,6 +1,7 @@
 ﻿Imports WindowsApplication1.Form1
 Public Class options
     Dim buttontext As String()
+    Dim toolTip1 As New ToolTip()
     'Dim userpthn As String = System.Environment.GetEnvironmentVariable("appdata")
     'Dim userpthn As String = My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("Public")
     Dim userpthn As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
@@ -83,7 +84,10 @@ Public Class options
     End Sub
     Private Sub options_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-
+        toolTip1.AutoPopDelay = 3000
+        toolTip1.InitialDelay = 1000
+        toolTip1.ReshowDelay = 250
+        toolTip1.ShowAlways = True
         Form1.Enabled = False
 
 
@@ -198,6 +202,13 @@ Public Class options
             donotcheckupdatestartup = False
         End If
 
+        If settings.getconfig("removedxcache") = "true" Then
+            CheckBox14.Checked = True
+            removedxcache = True
+        Else
+            CheckBox14.Checked = False
+            removedxcache = False
+        End If
 
         'Init language for checkboxes
         Try
@@ -348,6 +359,41 @@ Public Class options
         Next
 
         Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox13.txt") '// add each line as String Array.
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\checkbox13.txt") '// add each line as String Array.
+        End Try
+        CheckBox13.Text = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                CheckBox13.Text = CheckBox13.Text
+            End If
+            CheckBox13.Text = CheckBox13.Text & buttontext(i)
+            CheckBox13.Text = CheckBox13.Text.Replace("\n", vbNewLine)
+        Next
+
+
+        Try
+            toolTip1.SetToolTip(Me.CheckBox14, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\" & combobox2value & "\tooltip14.txt")) '// add each line as String Array.)
+        Catch ex As Exception
+            toolTip1.SetToolTip(Me.CheckBox14, IO.File.ReadAllText(Application.StartupPath & "\settings\Languages\English\tooltip14.txt")) '// add each line as String Array.)
+        End Try
+        Try
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\checkbox14.txt") '// add each line as String Array.
+        Catch ex As Exception
+            buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\checkbox14.txt") '// add each line as String Array.
+        End Try
+        CheckBox14.Text = ""
+        For i As Integer = 0 To buttontext.Length - 1
+            If i <> 0 Then
+                CheckBox14.Text = CheckBox14.Text
+            End If
+            CheckBox14.Text = CheckBox14.Text & buttontext(i)
+            CheckBox14.Text = CheckBox14.Text.Replace("\n", vbNewLine)
+        Next
+
+
+        Try
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\options.txt") '// add each line as String Array.
         Catch ex As Exception
             buttontext = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\English\options.txt") '// add each line as String Array.
@@ -395,35 +441,35 @@ Public Class options
             CheckBox2.Width + CheckBox2.Location.X > CheckBox6.Width + CheckBox6.Location.X AndAlso
             CheckBox2.Width + CheckBox2.Location.X > CheckBox10.Width + CheckBox10.Location.X AndAlso
             CheckBox2.Width + CheckBox2.Location.X > CheckBox11.Width + CheckBox11.Location.X Then
-            Me.Size = New System.Drawing.Size(CheckBox2.Width + CheckBox2.Location.X + 10, 559)
+            Me.Size = New System.Drawing.Size(CheckBox2.Width + CheckBox2.Location.X + 10, Me.Height)
 
 
         ElseIf CheckBox5.Width + CheckBox5.Location.X > CheckBox6.Width + CheckBox6.Location.X AndAlso
             CheckBox5.Width + CheckBox5.Location.X > CheckBox10.Width + CheckBox10.Location.X AndAlso
             CheckBox5.Width + CheckBox5.Location.X > CheckBox11.Width + CheckBox11.Location.X Then
-            Me.Size = New System.Drawing.Size(CheckBox5.Width + CheckBox5.Location.X + 10, 559)
+            Me.Size = New System.Drawing.Size(CheckBox5.Width + CheckBox5.Location.X + 10, Me.Height)
 
 
         ElseIf CheckBox6.Width + CheckBox6.Location.X > CheckBox2.Width + CheckBox2.Location.X AndAlso
             CheckBox6.Width + CheckBox6.Location.X > CheckBox10.Width + CheckBox10.Location.X AndAlso
             CheckBox6.Width + CheckBox6.Location.X > CheckBox11.Width + CheckBox11.Location.X Then
-            Me.Size = New System.Drawing.Size(CheckBox6.Width + CheckBox6.Location.X + 10, 559)
+            Me.Size = New System.Drawing.Size(CheckBox6.Width + CheckBox6.Location.X + 10, Me.Height)
 
         ElseIf CheckBox10.Width + CheckBox10.Location.X > CheckBox2.Width + CheckBox2.Location.X AndAlso
                CheckBox10.Width + CheckBox10.Location.X > CheckBox5.Width + CheckBox5.Location.X AndAlso
                CheckBox10.Width + CheckBox10.Location.X > CheckBox6.Width + CheckBox6.Location.X AndAlso
                CheckBox10.Width + CheckBox10.Location.X > CheckBox11.Width + CheckBox11.Location.X Then
-            Me.Size = New System.Drawing.Size(CheckBox10.Width + CheckBox10.Location.X + 10, 559)
+            Me.Size = New System.Drawing.Size(CheckBox10.Width + CheckBox10.Location.X + 10, Me.Height)
 
         ElseIf CheckBox11.Width + CheckBox11.Location.X > CheckBox2.Width + CheckBox2.Location.X AndAlso
                CheckBox11.Width + CheckBox11.Location.X > CheckBox5.Width + CheckBox5.Location.X AndAlso
                CheckBox11.Width + CheckBox11.Location.X > CheckBox6.Width + CheckBox6.Location.X AndAlso
                CheckBox11.Width + CheckBox11.Location.X > CheckBox10.Width + CheckBox10.Location.X Then
-            Me.Size = New System.Drawing.Size(CheckBox11.Width + CheckBox11.Location.X + 10, 559)
+            Me.Size = New System.Drawing.Size(CheckBox11.Width + CheckBox11.Location.X + 10, Me.Height)
 
         End If
         If Me.Size.Width < CheckBox12.Width + CheckBox12.Location.X Then
-            Me.Size = New System.Drawing.Size(CheckBox12.Width + CheckBox12.Location.X + 10, 559)
+            Me.Size = New System.Drawing.Size(CheckBox12.Width + CheckBox12.Location.X + 10, Me.Height)
         End If
     End Sub
 
@@ -550,6 +596,16 @@ Public Class options
         Else
             setconfig("removegfe", "false")
             removegfe = False
+        End If
+    End Sub
+
+    Private Sub CheckBox14_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox14.CheckedChanged
+        If CheckBox14.Checked = True Then
+            setconfig("removedxcache", "true")
+            removedxcache = True
+        Else
+            setconfig("removedxcache", "false")
+            removedxcache = False
         End If
     End Sub
 End Class

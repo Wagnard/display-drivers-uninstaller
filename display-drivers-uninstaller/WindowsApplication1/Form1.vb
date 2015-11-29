@@ -57,6 +57,7 @@ Public Class Form1
     Public winxp As Boolean = False
     Dim stopme As Boolean = False
     Public Shared removemonitor As Boolean
+    Public Shared removedxcache As Boolean
     Public Shared removecamd As Boolean
     Public Shared removecnvidia As Boolean
     Public Shared removephysx As Boolean
@@ -924,7 +925,8 @@ Public Class Form1
                 Try
                     For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
                         If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("cn") Then
+                            If child.ToLower.Contains("cn") Or
+                                removedxcache AndAlso child.ToLower.Contains("dxcache") Then
                                 Try
                                     deletedirectory(child)
                                 Catch ex As Exception
@@ -3950,6 +3952,14 @@ Public Class Form1
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
+                        If removephysx Then
+                            If checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("DisplayName")) = False Then
+                                If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
+                                    deletesubregkey(regkey, child)
+                                    Continue For
+                                End If
+                            End If
+                        End If
                         If child.ToLower.Contains("display.3dvision") Or
                             child.ToLower.Contains("3dtv") Or
                             child.ToLower.Contains("_display.controlpanel") Or
@@ -3982,17 +3992,6 @@ Public Class Form1
                         End If
                     End If
                 Next
-                If removephysx Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("DisplayName")) = False Then
-                                If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
-                                    deletesubregkey(regkey, child)
-                                End If
-                            End If
-                        End If
-                    Next
-                End If
             End If
         End If
 
@@ -4003,6 +4002,14 @@ Public Class Form1
         If regkey IsNot Nothing Then
             For Each child As String In regkey.GetSubKeyNames()
                 If checkvariables.isnullorwhitespace(child) = False Then
+                    If removephysx Then
+                        If checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("DisplayName")) = False Then
+                            If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
+                                deletesubregkey(regkey, child)
+                                Continue For
+                            End If
+                        End If
+                    End If
                     If child.ToLower.Contains("display.3dvision") Or
                         child.ToLower.Contains("3dtv") Or
                         child.ToLower.Contains("_display.controlpanel") Or
@@ -4029,6 +4036,7 @@ Public Class Form1
                         If removephysx = False And child.ToLower.Contains("physx") Then
                             Continue For
                         End If
+
                         If remove3dtvplay = False And child.ToLower.Contains("3dtv") Then
                             Continue For
                         End If
@@ -4039,17 +4047,6 @@ Public Class Form1
                     End If
                 End If
             Next
-            If removephysx Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("DisplayName")) = False Then
-                            If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
-                                deletesubregkey(regkey, child)
-                            End If
-                        End If
-                    End If
-                Next
-            End If
         End If
 
         regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
@@ -5363,6 +5360,13 @@ Public Class Form1
                 safemodemb = True
             End If
 
+            If settings.getconfig("removedxcache") = "true" Then
+                f.CheckBox14.Checked = True
+                removedxcache = True
+            Else
+                f.CheckBox14.Checked = False
+                removedxcache = False
+            End If
 
             '----------------
             'language section
