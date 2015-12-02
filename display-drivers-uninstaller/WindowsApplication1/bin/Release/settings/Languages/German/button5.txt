@@ -1,1 +1,1 @@
-﻿Ausführliches Log anzeigen.
+﻿Ausführliche Logdatei anzeigen.
