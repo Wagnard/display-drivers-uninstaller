@@ -1,1 +1,1 @@
-﻿Speichere Logdateien im Startup-Pfad (sehr empfohlen)
+﻿Speichere Logdateien im Startup-Pfad (ausdrücklich empfohlen)
