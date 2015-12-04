@@ -2547,8 +2547,10 @@ Public Class Form1
                 Try
                     For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
                         If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("nvbackend") Or
-                                child.ToLower.Contains("gfexperience") Then
+                            If (child.ToLower.Contains("nvbackend") AndAlso removegfe) Or
+                                (child.ToLower.Contains("nvosc.") AndAlso removegfe) Or
+                                (child.ToLower.Contains("shareconnect") AndAlso removegfe) Or
+                                (child.ToLower.Contains("gfexperience") AndAlso removegfe) Then
                                 Try
                                     deletedirectory(child)
                                 Catch ex As Exception
@@ -2619,11 +2621,13 @@ Public Class Form1
                 Try
                     For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
                         If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("ledvisualizer") Or
-                                child.ToLower.Contains("shadowplay") Or
-                                child.ToLower.Contains("gfexperience") Or
-                                child.ToLower.Contains("nvvad") Or
-                                child.ToLower.Contains("shield apps") Then
+                            If (child.ToLower.Contains("ledvisualizer") AndAlso removegfe) Or
+                                (child.ToLower.Contains("shadowplay") AndAlso removegfe) Or
+                                (child.ToLower.Contains("gfexperience") AndAlso removegfe) Or
+                                (child.ToLower.Contains("nvstreamsrv") AndAlso removegfe) Or
+                                (child.ToLower.EndsWith("\osc") AndAlso removegfe) Or
+                                (child.ToLower.Contains("nvvad") AndAlso removegfe) Or
+                                (child.ToLower.Contains("shield apps") AndAlso removegfe) Then
 
                                 Try
                                     deletedirectory(child)
@@ -2695,7 +2699,10 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("drs") Or
                         (child.ToLower.Contains("geforce experience") AndAlso removegfe) Or
+                        (child.ToLower.Contains("gfexperience") AndAlso removegfe) Or
                         (child.ToLower.Contains("netservice") AndAlso removegfe) Or
+                        (child.ToLower.Contains("crashdumps") AndAlso removegfe) Or
+                        (child.ToLower.Contains("nvstream") AndAlso removegfe) Or
                         (child.ToLower.Contains("shadowplay") AndAlso removegfe) Or
                         (child.ToLower.Contains("nview") AndAlso removegfe) Or
                         (child.ToLower.Contains("nvstreamsvc") AndAlso removegfe) Then
@@ -2805,6 +2812,8 @@ Public Class Form1
                                    child2.ToLower.Contains("display.controlpanel") Or
                                    child2.ToLower.Contains("display.driver") Or
                                    child2.ToLower.Contains("display.gfexperience") AndAlso removegfe Or
+                                   child2.ToLower.Contains("osc.") AndAlso removegfe Or
+                                   child2.ToLower.Contains("osclib.") AndAlso removegfe Or
                                    child2.ToLower.Contains("display.nvirusb") Or
                                    child2.ToLower.Contains("display.physx") Or
                                    child2.ToLower.Contains("display.update") AndAlso removegfe Or
@@ -2896,6 +2905,7 @@ Public Class Form1
                         If child.ToLower.Contains("3d vision") Or
                            child.ToLower.Contains("coprocmanager") Or
                            child.ToLower.Contains("led visualizer") AndAlso removegfe Or
+                           child.ToLower.Contains("osc") AndAlso removegfe Or
                            child.ToLower.Contains("netservice") AndAlso removegfe Or
                            child.ToLower.Contains("nvidia geforce experience") AndAlso removegfe Or
                            child.ToLower.Contains("nvstreamc") AndAlso removegfe Or
@@ -3746,6 +3756,25 @@ Public Class Form1
                             End If
                         Next
                     End If
+                    regkey = My.Computer.Registry.Users.OpenSubKey(users & "\SOFTWARE\Microsoft\Windows\CurrentVersion\UFH\SHC", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetValueNames()
+                            If checkvariables.isnullorwhitespace(child) = False Then
+                                Dim tArray() As String = regkey.GetValue(child)
+                                For i As Integer = 0 To tArray.Length - 1
+                                    If checkvariables.isnullorwhitespace(tArray(i)) = False AndAlso Not tArray(i) = "" Then
+                                        If tArray(i).ToLower.ToString.Contains("nvstview.exe") Or _
+                                           tArray(i).ToLower.ToString.Contains("nvstlink.exe") Then
+                                            Try
+                                                deletevalue(regkey, child)
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                    End If
+                                Next
+                            End If
+                        Next
+                    End If
                 End If
             Next
         Catch ex As Exception
@@ -3946,29 +3975,96 @@ Public Class Form1
 
 
         If IntPtr.Size = 8 Then
+            Try
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                    ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If checkvariables.isnullorwhitespace(child) = False Then
+                            Try
+                                If removephysx Then
+                                    If checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("DisplayName")) = False Then
+                                        If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
+                                            deletesubregkey(regkey, child)
+                                            Continue For
+                                        End If
+                                    End If
+                                End If
+                            Catch ex As Exception
+                                log(ex.Message + ex.StackTrace + "WoWChild = " + child)
+                            End Try
+                            If child.ToLower.Contains("display.3dvision") Or
+                                child.ToLower.Contains("3dtv") Or
+                                child.ToLower.Contains("_display.controlpanel") Or
+                                child.ToLower.Contains("_display.driver") Or
+                                child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
+                                child.ToLower.Contains("_display.nvirusb") Or
+                                child.ToLower.Contains("_display.physx") Or
+                                child.ToLower.Contains("_display.update") AndAlso removegfe Or
+                                child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
+                                child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
+                                child.ToLower.Contains("_hdaudio.driver") Or
+                                child.ToLower.Contains("_installer") AndAlso removegfe Or
+                                child.ToLower.Contains("_network.service") AndAlso removegfe Or
+                                child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
+                                child.ToLower.Contains("_update.core") AndAlso removegfe Or
+                                child.ToLower.Contains("nvidiastereo") Or
+                                child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
+                                child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
+                                child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Then
+                                If removephysx = False And child.ToLower.Contains("physx") Then
+                                    Continue For
+                                End If
+                                If remove3dtvplay = False And child.ToLower.Contains("3dtv") Then
+                                    Continue For
+                                End If
+                                Try
+                                    deletesubregkey(regkey, child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
+            End Try
+        End If
+
+
+        Try
 
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+          ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If checkvariables.isnullorwhitespace(child) = False Then
-                        If removephysx Then
-                            If checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("DisplayName")) = False Then
-                                If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
-                                    deletesubregkey(regkey, child)
-                                    Continue For
+                        Try
+                            If removephysx Then
+                                If checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("DisplayName")) = False Then
+                                    If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
+                                        deletesubregkey(regkey, child)
+                                        Continue For
+                                    End If
                                 End If
                             End If
-                        End If
+                        Catch ex As Exception
+                            log(ex.Message + ex.StackTrace + "Child = " + child)
+                        End Try
                         If child.ToLower.Contains("display.3dvision") Or
                             child.ToLower.Contains("3dtv") Or
                             child.ToLower.Contains("_display.controlpanel") Or
                             child.ToLower.Contains("_display.driver") Or
+                            child.ToLower.Contains("_display.optimus") Or
                             child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
                             child.ToLower.Contains("_display.nvirusb") Or
                             child.ToLower.Contains("_display.physx") Or
                             child.ToLower.Contains("_display.update") AndAlso removegfe Or
+                            child.ToLower.Contains("_osc") AndAlso removegfe Or
+                            child.ToLower.Contains("_display.nview") Or
+                            child.ToLower.Contains("_display.nvwmi") Or
                             child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
+                            child.ToLower.Contains("_nvidia.update") AndAlso removegfe Or
                             child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
                             child.ToLower.Contains("_hdaudio.driver") Or
                             child.ToLower.Contains("_installer") AndAlso removegfe Or
@@ -3978,10 +4074,11 @@ Public Class Form1
                             child.ToLower.Contains("nvidiastereo") Or
                             child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
                             child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
-                            child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Then
+                            child.ToLower.Contains("_virtualaudio.driver") Then
                             If removephysx = False And child.ToLower.Contains("physx") Then
                                 Continue For
                             End If
+
                             If remove3dtvplay = False And child.ToLower.Contains("3dtv") Then
                                 Continue For
                             End If
@@ -3993,61 +4090,9 @@ Public Class Form1
                     End If
                 Next
             End If
-        End If
-
-
-
-        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-      ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-        If regkey IsNot Nothing Then
-            For Each child As String In regkey.GetSubKeyNames()
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If removephysx Then
-                        If checkvariables.isnullorwhitespace(regkey.OpenSubKey(child).GetValue("DisplayName")) = False Then
-                            If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
-                                deletesubregkey(regkey, child)
-                                Continue For
-                            End If
-                        End If
-                    End If
-                    If child.ToLower.Contains("display.3dvision") Or
-                        child.ToLower.Contains("3dtv") Or
-                        child.ToLower.Contains("_display.controlpanel") Or
-                        child.ToLower.Contains("_display.driver") Or
-                        child.ToLower.Contains("_display.optimus") Or
-                        child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
-                        child.ToLower.Contains("_display.nvirusb") Or
-                        child.ToLower.Contains("_display.physx") Or
-                        child.ToLower.Contains("_display.update") AndAlso removegfe Or
-                        child.ToLower.Contains("_display.nview") Or
-                        child.ToLower.Contains("_display.nvwmi") Or
-                        child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
-                        child.ToLower.Contains("_nvidia.update") AndAlso removegfe Or
-                        child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
-                        child.ToLower.Contains("_hdaudio.driver") Or
-                        child.ToLower.Contains("_installer") AndAlso removegfe Or
-                        child.ToLower.Contains("_network.service") AndAlso removegfe Or
-                        child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
-                        child.ToLower.Contains("_update.core") AndAlso removegfe Or
-                        child.ToLower.Contains("nvidiastereo") Or
-                        child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
-                        child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
-                        child.ToLower.Contains("_virtualaudio.driver") Then
-                        If removephysx = False And child.ToLower.Contains("physx") Then
-                            Continue For
-                        End If
-
-                        If remove3dtvplay = False And child.ToLower.Contains("3dtv") Then
-                            Continue For
-                        End If
-                        Try
-                            deletesubregkey(regkey, child)
-                        Catch ex As Exception
-                        End Try
-                    End If
-                End If
-            Next
-        End If
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
 
         regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
       ("Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
