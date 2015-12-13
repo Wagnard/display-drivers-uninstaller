@@ -1,0 +1,2 @@
+﻿Preporučljivo ukloniti ako primetite anomalije u vezi prikaza grafike (usporenja ili artefakte) prouzrokovane oštećenim Shader Cache podacima.
+Takođe preporučljivo ukloniti ako prelazite na drugog proizvođača grafičkih kartica, neku nVidia GeForce grafičku karticu recimo.

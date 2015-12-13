@@ -1,1 +1,1 @@
-﻿Borrar PhysX
+﻿Eliminar PhysX

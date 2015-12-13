@@ -1,0 +1,1 @@
+﻿Ukloni AMD Crimson Shader Cache direktorijum (folder)
