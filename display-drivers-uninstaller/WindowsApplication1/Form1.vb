@@ -4993,6 +4993,38 @@ Public Class Form1
             log(ex.Message + ex.StackTrace)
         End Try
     End Sub
+    Private Sub restartcomputer()
+
+        log("Restarting Computer ")
+        processinfo.FileName = "shutdown"
+        processinfo.Arguments = "/r /t 0"
+        processinfo.WindowStyle = ProcessWindowStyle.Hidden
+        processinfo.UseShellExecute = True
+        processinfo.CreateNoWindow = True
+        processinfo.RedirectStandardOutput = False
+
+        process.StartInfo = processinfo
+        process.Start()
+        process.Close()
+        closeddu()
+
+    End Sub
+    Private Sub shutdowncomputer()
+        preventclose = False
+        processinfo.FileName = "shutdown"
+        processinfo.Arguments = "/s /t 0"
+        processinfo.WindowStyle = ProcessWindowStyle.Hidden
+        processinfo.UseShellExecute = True
+        processinfo.CreateNoWindow = True
+        processinfo.RedirectStandardOutput = False
+
+        process.StartInfo = processinfo
+        process.Start()
+        process.Close()
+        closeddu()
+
+    End Sub
+
     Private Sub rescan()
 
         'Scan for new devices...
@@ -5003,67 +5035,22 @@ Public Class Form1
         scan.CreateNoWindow = True
         scan.RedirectStandardOutput = False
 
-        If reboot Then
-            UpdateTextMethod(UpdateTextMethodmessagefn("8"))
-            log("Scanning for new device...")
-            Dim proc4 As New Process
-            proc4.StartInfo = scan
-            proc4.Start()
-            proc4.WaitForExit()
-            System.Threading.Thread.Sleep(2000)
-            If Not safemode Then
-                Dim appproc = process.GetProcessesByName("explorer")
-                For i As Integer = 0 To appproc.Length - 1
-                    appproc(i).Kill()
-                Next i
-            End If
-            preventclose = False
-            log("Restarting Computer ")
-            processinfo.FileName = "shutdown"
-            processinfo.Arguments = "/r /t 0"
-            processinfo.WindowStyle = ProcessWindowStyle.Hidden
-            processinfo.UseShellExecute = True
-            processinfo.CreateNoWindow = True
-            processinfo.RedirectStandardOutput = False
 
-            process.StartInfo = processinfo
-            process.Start()
-            closeddu()
-            Exit Sub
+        UpdateTextMethod(UpdateTextMethodmessagefn("8"))
+        log("Scanning for new device...")
+        Dim proc4 As New Process
+        proc4.StartInfo = scan
+        proc4.Start()
+        proc4.WaitForExit()
+        proc4.Close()
+        System.Threading.Thread.Sleep(2000)
+        If Not safemode Then
+            Dim appproc = process.GetProcessesByName("explorer")
+            For i As Integer = 0 To appproc.Length - 1
+                appproc(i).Kill()
+            Next i
         End If
-        If shutdown Then
-            preventclose = False
-            processinfo.FileName = "shutdown"
-            processinfo.Arguments = "/s /t 0"
-            processinfo.WindowStyle = ProcessWindowStyle.Hidden
-            processinfo.UseShellExecute = True
-            processinfo.CreateNoWindow = True
-            processinfo.RedirectStandardOutput = False
 
-            process.StartInfo = processinfo
-            process.Start()
-            closeddu()
-            Exit Sub
-        End If
-        If reboot = False And shutdown = False Then
-            UpdateTextMethod(UpdateTextMethodmessagefn("8"))
-            log("Scanning for new device...")
-            Dim proc4 As New Process
-            proc4.StartInfo = scan
-            proc4.Start()
-            proc4.WaitForExit()
-            System.Threading.Thread.Sleep(2000)
-            If Not safemode Then
-                Dim appproc = Process.GetProcessesByName("explorer")
-                For i As Integer = 0 To appproc.Length - 1
-                    appproc(i).Kill()
-                Next i
-            End If
-
-        End If
-        UpdateTextMethod(UpdateTextMethodmessagefn("9"))
-
-        log("Clean uninstall completed!")
 
     End Sub
     Private Sub Form1_close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
@@ -6121,7 +6108,7 @@ Public Class Form1
                 System.Threading.Thread.Sleep(10)
             Loop
             If restart Then
-                preventclose = False
+
                 log("Restarting Computer ")
                 processinfo.FileName = "shutdown"
                 processinfo.Arguments = "/r /t 0"
@@ -7429,7 +7416,6 @@ Public Class Form1
 
             cleandriverstore()
             fixregistrydriverstore()
-            rescan()
 
         Catch ex As Exception
             log(ex.Message & ex.StackTrace)
@@ -7517,6 +7503,18 @@ Public Class Form1
             Invoke(Sub() MenuStrip1.Enabled = True)
 
             'For command line arguement to know if there is more cleans to be done.
+
+            preventclose = False
+            backgroundworkcomplete = True
+
+            UpdateTextMethod(UpdateTextMethodmessagefn("9"))
+
+            log("Clean uninstall completed!")
+
+            If Not shutdown Then
+                rescan()
+            End If
+
             If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
                 If MsgBox(msgboxmessagefn("9"), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                     'do nothing
@@ -7525,9 +7523,14 @@ Public Class Form1
                     Exit Sub
                 End If
             End If
-            preventclose = False
-            backgroundworkcomplete = True
 
+            If reboot Then
+                restartcomputer()
+            End If
+
+            If shutdown Then
+                shutdowncomputer()
+            End If
 
         Catch ex As Exception
             preventclose = False
