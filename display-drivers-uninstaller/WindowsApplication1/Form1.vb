@@ -3357,7 +3357,7 @@ Public Class Form1
 
         'When removing GFE only
         If removegfe Then
-            CleanupEngine.interfaces(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\interface.cfg")) '// add each line as String Array.
+            CleanupEngine.interfaces(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
         End If
 
         log("Finished dcom/clsid/appid/typelib/interface cleanup")
