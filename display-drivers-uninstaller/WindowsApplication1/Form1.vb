@@ -2664,7 +2664,8 @@ Public Class Form1
         Try
             For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("updatus") Then
+                    If child.ToLower.Contains("updatus") Or _
+                        (child.ToLower.Contains("grid") AndAlso removegfe) Then
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
@@ -2704,6 +2705,7 @@ Public Class Form1
                         (child.ToLower.Contains("crashdumps") AndAlso removegfe) Or
                         (child.ToLower.Contains("nvstream") AndAlso removegfe) Or
                         (child.ToLower.Contains("shadowplay") AndAlso removegfe) Or
+                        (child.ToLower.Contains("ledvisualizer") AndAlso removegfe) Or
                         (child.ToLower.Contains("nview") AndAlso removegfe) Or
                         (child.ToLower.Contains("nvstreamsvc") AndAlso removegfe) Then
                         Try
