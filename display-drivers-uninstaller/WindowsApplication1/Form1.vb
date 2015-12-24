@@ -799,7 +799,8 @@ Public Class Form1
         If Directory.Exists(filePath) Then
             For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
                 If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("kdb") Then
+                    If child.ToLower.Contains("kdb") Or _
+                       child.ToLower.Contains("fuel") Then
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
@@ -926,7 +927,9 @@ Public Class Form1
                     For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
                         If checkvariables.isnullorwhitespace(child) = False Then
                             If child.ToLower.Contains("cn") Or
-                                removedxcache AndAlso child.ToLower.Contains("dxcache") Then
+                                child.ToLower.Contains("fuel") Or _
+                                removedxcache AndAlso child.ToLower.Contains("dxcache") Or _
+                                removedxcache AndAlso child.ToLower.Contains("glcache") Then
                                 Try
                                     deletedirectory(child)
                                 Catch ex As Exception
