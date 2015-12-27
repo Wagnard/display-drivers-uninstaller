@@ -5972,11 +5972,6 @@ Public Class Form1
         trd.IsBackground = True
         trd.Start()
 
-
-        systemrestore()
-
-
-
     End Sub
     Private Sub gpuidentify(ByVal gpu As String)
 
@@ -6145,9 +6140,26 @@ Public Class Form1
     Sub systemrestore()
         'THIS NEEDS TO BE FIXED!!! DOES NOT WORK WITH OPTION STRICT ON. I WAS UNABLE TO FIGURE OUT MY SELF. BE SURE TO FIX BEFORE RELEASE.
 
+        If trysystemrestore Then
+            Try
+                log("Trying to Create a System Restored Point")
+                Dim oScope As New ManagementScope("\\localhost\root\default")
+                Dim oPath As New ManagementPath("SystemRestore")
+                Dim oGetOp As New ObjectGetOptions()
+                Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
 
+                Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
+                oInParams("Description") = "DDU System Restored Point"
+                oInParams("RestorePointType") = 12 ' MODIFY_SETTINGS
+                oInParams("EventType") = 100
 
+                Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
+                log("System Restored Point Created")
+            Catch ex As Exception
+                log("System Restored Point Could not Created!")
+            End Try
 
+        End If
         '     If trysystemrestore Then
         '     Select Case System.Windows.Forms.SystemInformation.BootMode
         '     Case BootMode.Normal
