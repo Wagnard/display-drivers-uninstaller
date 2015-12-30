@@ -7085,52 +7085,55 @@ Public Class Form1
                 End Try
 
                 'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
-                Try
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ROOT")
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames
-                            If Not checkvariables.isnullorwhitespace(child) Then
+                If removegfe Then
 
-                                subregkey = regkey.OpenSubKey(child)
-                                If subregkey IsNot Nothing Then
+                    Try
+                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ROOT")
+                        If regkey IsNot Nothing Then
+                            For Each child As String In regkey.GetSubKeyNames
+                                If Not checkvariables.isnullorwhitespace(child) Then
 
-                                    For Each child2 As String In subregkey.GetSubKeyNames
-                                        If Not checkvariables.isnullorwhitespace(child2) Then
-                                            If subregkey.OpenSubKey(child2) Is Nothing Then
-                                                Continue For
+                                    subregkey = regkey.OpenSubKey(child)
+                                    If subregkey IsNot Nothing Then
+
+                                        For Each child2 As String In subregkey.GetSubKeyNames
+                                            If Not checkvariables.isnullorwhitespace(child2) Then
+                                                If subregkey.OpenSubKey(child2) Is Nothing Then
+                                                    Continue For
+                                                End If
+
+                                                If Not checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey(child2).GetValue("DeviceDesc"))) AndAlso
+                                                   subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
+
+                                                    vendid = child & "\" & child2
+
+                                                    processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
+                                                    processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
+                                                    processinfo.UseShellExecute = False
+                                                    processinfo.CreateNoWindow = True
+                                                    processinfo.RedirectStandardOutput = True
+                                                    process.StartInfo = processinfo
+
+                                                    process.Start()
+                                                    reply2 = process.StandardOutput.ReadToEnd
+                                                    process.StandardOutput.Close()
+                                                    process.Close()
+                                                    'process.WaitForExit()
+                                                    log(reply2)
+
+                                                End If
                                             End If
-
-                                            If Not checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey(child2).GetValue("DeviceDesc"))) AndAlso
-                                               subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
-
-                                                vendid = child & "\" & child2
-
-                                                processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
-                                                processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
-                                                processinfo.UseShellExecute = False
-                                                processinfo.CreateNoWindow = True
-                                                processinfo.RedirectStandardOutput = True
-                                                process.StartInfo = processinfo
-
-                                                process.Start()
-                                                reply2 = process.StandardOutput.ReadToEnd
-                                                process.StandardOutput.Close()
-                                                process.Close()
-                                                'process.WaitForExit()
-                                                log(reply2)
-
-                                            End If
-                                        End If
-                                    Next
+                                        Next
+                                    End If
                                 End If
-                            End If
-                        Next
-                    End If
-                Catch ex As Exception
-                    MsgBox(msgboxmessagefn(5))
-                    log(ex.Message + ex.StackTrace)
-                End Try
+                            Next
+                        End If
+                    Catch ex As Exception
+                        MsgBox(msgboxmessagefn(5))
+                        log(ex.Message + ex.StackTrace)
+                    End Try
 
+                End If
                 ' ------------------------------
                 ' Removing nVidia AudioEndpoints
                 ' ------------------------------
@@ -7144,7 +7147,7 @@ Public Class Form1
                             If Not checkvariables.isnullorwhitespace(child) Then
 
                                 If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
-                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia virtual audio device") Or
+                                   (regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia virtual audio device") AndAlso removegfe) Or
                                    regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia high definition audio") Then
 
                                     vendid = child
@@ -7403,7 +7406,7 @@ Public Class Form1
 
                 If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
                     log("Killing Explorer.exe")
-                    Dim appproc = Process.GetProcessesByName("explorer")
+                    Dim appproc = process.GetProcessesByName("explorer")
                     For i As Integer = 0 To appproc.Length - 1
                         appproc(i).Kill()
                     Next i
@@ -7418,7 +7421,7 @@ Public Class Form1
 
                 If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
                     log("Killing Explorer.exe")
-                    Dim appproc = Process.GetProcessesByName("explorer")
+                    Dim appproc = process.GetProcessesByName("explorer")
                     For i As Integer = 0 To appproc.Length - 1
                         appproc(i).Kill()
                     Next i
@@ -7435,7 +7438,7 @@ Public Class Form1
 
                 If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
                     log("Killing Explorer.exe")
-                    Dim appproc = Process.GetProcessesByName("explorer")
+                    Dim appproc = process.GetProcessesByName("explorer")
                     For i As Integer = 0 To appproc.Length - 1
                         appproc(i).Kill()
                     Next i
