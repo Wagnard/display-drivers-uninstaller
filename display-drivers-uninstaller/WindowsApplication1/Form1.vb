@@ -189,6 +189,7 @@ Public Class Form1
         UpdateTextMethod("-Executing Driver Store cleanUP(finding OEM step)...")
         log("Executing Driver Store cleanUP(Find OEM)...")
         'Check the driver from the driver store  ( oemxx.inf)
+
         Dim deloem As New Diagnostics.ProcessStartInfo
         deloem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
         Dim proc3 As New Diagnostics.Process
@@ -199,6 +200,7 @@ Public Class Form1
 
         Try
             For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
+
                 If Not checkvariables.isnullorwhitespace(infs) Then
                     For Each child As String In IO.File.ReadAllLines(infs)
                         If Not checkvariables.isnullorwhitespace(child) Then
@@ -6187,19 +6189,20 @@ Public Class Form1
     Sub getoeminfo()
 
         log("The following third-party driver packages are installed on this computer: ")
-
+        Dim infisvalid As Boolean = True
         Try
             For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
                 If Not checkvariables.isnullorwhitespace(infs) Then
 
                     log("---")
                     log(infs)
-
+                    infisvalid = False 'false unless we find either a provider or class 
                     For Each child As String In IO.File.ReadAllLines(infs)
                         If Not checkvariables.isnullorwhitespace(child) Then
                             child = child.Replace(" ", "").Replace(vbTab, "")
 
                             If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
+                                infisvalid = True
                                 If child.EndsWith("%") Then
                                     For Each provider As String In IO.File.ReadAllLines(infs)
                                         If Not checkvariables.isnullorwhitespace(provider) Then
@@ -6225,6 +6228,7 @@ Public Class Form1
                             child = child.Replace(" ", "").Replace(vbTab, "")
 
                             If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
+                                infisvalid = True
                                 If child.EndsWith("%") Then
                                     For Each provider As String In IO.File.ReadAllLines(infs)
                                         If Not checkvariables.isnullorwhitespace(provider) Then
@@ -6243,6 +6247,10 @@ Public Class Form1
                             End If
                         End If
                     Next
+                    If Not infisvalid Then
+                        log("This inf entry is corrupted or invalid.")
+                        deletefile(infs)
+                    End If
                 End If
             Next
         Catch ex As Exception
