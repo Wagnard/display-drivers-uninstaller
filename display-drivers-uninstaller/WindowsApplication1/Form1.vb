@@ -179,7 +179,7 @@ Public Class Form1
 
         reboot = True
         combobox1value = ComboBox1.Text
-        systemrestore()
+
         BackgroundWorker1.RunWorkerAsync()
 
     End Sub
@@ -6145,6 +6145,7 @@ Public Class Form1
 
         If trysystemrestore Then
             Try
+                UpdateTextMethod("Creating System Restore point (If allowed by the system)")
                 log("Trying to Create a System Restored Point")
                 Dim oScope As New ManagementScope("\\localhost\root\default")
                 Dim oPath As New ManagementPath("SystemRestore")
@@ -6402,7 +6403,6 @@ Public Class Form1
         reboot = False
         shutdown = False
         combobox1value = ComboBox1.Text
-        systemrestore()
         BackgroundWorker1.RunWorkerAsync()
 
     End Sub
@@ -6434,7 +6434,6 @@ Public Class Form1
     Private Sub cleananddonothing(ByVal gpu As String)
         reboot = False
         shutdown = False
-        systemrestore()
         Invoke(Sub() ComboBox1.Text = gpu)
         BackgroundWorker1.RunWorkerAsync()
 
@@ -6442,7 +6441,6 @@ Public Class Form1
     Private Sub cleanandandreboot(ByVal gpu As String)
         reboot = True
         shutdown = False
-        systemrestore()
         Invoke(Sub() ComboBox1.Text = gpu)
         BackgroundWorker1.RunWorkerAsync()
 
@@ -6456,7 +6454,6 @@ Public Class Form1
         reboot = False
         shutdown = True
         combobox1value = ComboBox1.Text
-        systemrestore()
         BackgroundWorker1.RunWorkerAsync()
     End Sub
 
@@ -6707,7 +6704,7 @@ Public Class Form1
         Invoke(Sub() ComboBox1.Enabled = False)
         Invoke(Sub() MenuStrip1.Enabled = False)
 
-
+        systemrestore()
         Try
 
             If combobox1value = "AMD" Then
