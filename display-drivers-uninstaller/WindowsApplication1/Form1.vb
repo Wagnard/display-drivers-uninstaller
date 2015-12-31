@@ -977,6 +977,7 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("amdkmpfd") Or
                         child.ToLower.Contains("cnext") Or
+                        child.ToLower.Contains("920DEC42-4CA5-4d1d-9487-67BE645CDDFC") Or
                        child.ToLower.Contains("cim") Then
                         Try
                             deletedirectory(child)
