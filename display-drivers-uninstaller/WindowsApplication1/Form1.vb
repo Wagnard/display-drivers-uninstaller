@@ -6158,9 +6158,10 @@ Public Class Form1
                 oInParams("EventType") = 100
 
                 Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
-                log("System Restored Point Created")
+
+                log("System Restored Point Created. code: " + CStr(oOutParams("ReturnValue")))
             Catch ex As Exception
-                log("System Restored Point Could not Created!")
+                log("System Restored Point Could not be Created! Err Code: 0x" & Hex(Err.Number))
             End Try
 
         End If
@@ -6704,8 +6705,9 @@ Public Class Form1
         Invoke(Sub() ComboBox1.Enabled = False)
         Invoke(Sub() MenuStrip1.Enabled = False)
 
-        systemrestore()
+
         Try
+            systemrestore()
 
             If combobox1value = "AMD" Then
                 vendidexpected = "VEN_1002"
@@ -7535,11 +7537,7 @@ Public Class Form1
                 closeddu()
                 Exit Sub
             End If
-            Invoke(Sub() Button1.Enabled = True)
-            Invoke(Sub() Button2.Enabled = True)
-            Invoke(Sub() Button3.Enabled = True)
-            Invoke(Sub() ComboBox1.Enabled = True)
-            Invoke(Sub() MenuStrip1.Enabled = True)
+
 
             'For command line arguement to know if there is more cleans to be done.
 
@@ -7553,6 +7551,12 @@ Public Class Form1
             If Not shutdown Then
                 rescan()
             End If
+
+            Invoke(Sub() Button1.Enabled = True)
+            Invoke(Sub() Button2.Enabled = True)
+            Invoke(Sub() Button3.Enabled = True)
+            Invoke(Sub() ComboBox1.Enabled = True)
+            Invoke(Sub() MenuStrip1.Enabled = True)
 
             If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
                 If MsgBox(msgboxmessagefn(9), MsgBoxStyle.YesNo) = MsgBoxResult.No Then
