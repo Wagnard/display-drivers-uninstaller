@@ -351,7 +351,8 @@ Public Class Form1
         processkillpid.StartInfo = killpid
         processkillpid.Start()
         processkillpid.WaitForExit()
-
+        processkillpid.Close()
+		
         Dim appproc = Process.GetProcessesByName("MOM")
         For i As Integer = 0 To appproc.Length - 1
             appproc(i).Kill()
@@ -687,7 +688,20 @@ Public Class Form1
             End If
 
             filePath = Environment.GetFolderPath _
-            (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
+            (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoFirefox"
+            If Directory.Exists(filePath) Then
+                Try
+                    TestDelete(filePath)
+                Catch ex As Exception
+                    log(ex.Message + "SteadyVideo testdelete")
+                End Try
+            End If
+            If Not Directory.Exists(filePath) Then
+                CleanupEngine.shareddlls(filePath)
+            End If
+
+            filePath = Environment.GetFolderPath _
+(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoChrome"
             If Directory.Exists(filePath) Then
                 Try
                     TestDelete(filePath)
@@ -977,6 +991,7 @@ Public Class Form1
                 If checkvariables.isnullorwhitespace(child) = False Then
                     If child.ToLower.Contains("amdkmpfd") Or
                         child.ToLower.Contains("cnext") Or
+                        child.ToLower.Contains("steadyvideo") Or
                         child.ToLower.Contains("920dec42-4ca5-4d1d-9487-67be645cddfc") Or
                        child.ToLower.Contains("cim") Then
                         Try
@@ -1942,6 +1957,12 @@ Public Class Form1
                                 Catch ex As Exception
                                 End Try
                             End If
+                            For Each values As String In regkey.OpenSubKey(child).GetValueNames()
+                                Try
+                                    deletevalue(regkey.OpenSubKey(child, True), values) 'This is for windows 7, it prevent removing the South Bridge and fix the Catalyst "Upgrade"
+                                Catch ex As Exception
+                                End Try
+                            Next
                         End If
                     End If
                 Next
@@ -5014,6 +5035,7 @@ Public Class Form1
 
         process.StartInfo = processinfo
         process.Start()
+		process.WaitForExit()
         process.Close()
         closeddu()
 
@@ -5029,6 +5051,7 @@ Public Class Form1
 
         process.StartInfo = processinfo
         process.Start()
+		process.WaitForExit()
         process.Close()
         closeddu()
 
@@ -5159,7 +5182,9 @@ Public Class Form1
 
             process.StartInfo = processinfo
             process.Start()
-
+            'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
+            process.Close()
+			
             settings.setconfig("donate", "false")
             settings.setconfig("guru3dnvidia", "false")
             settings.setconfig("guru3damd", "false")
@@ -5728,6 +5753,7 @@ Public Class Form1
                             processstopservice.StartInfo = setbcdedit
                             processstopservice.Start()
                             processstopservice.WaitForExit()
+                            processstopservice.Close()							
                         End If
                     Case BootMode.FailSafeWithNetwork
                         'The computer was booted using the basic files, drivers, and services necessary to start networking.
@@ -5745,6 +5771,7 @@ Public Class Form1
                             processstopservice.StartInfo = setbcdedit
                             processstopservice.Start()
                             processstopservice.WaitForExit()
+							processstopservice.Close()
                         End If
 
                     Case BootMode.Normal
@@ -5756,6 +5783,7 @@ Public Class Form1
                         If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
                             If restart Then  'restart command line argument
                                 restartinsafemode()
+                                Exit Sub
                             Else
                                 If safemodemb = True Then
                                     If Not silent Then
@@ -5769,8 +5797,8 @@ Public Class Form1
                                         ElseIf resultmsgbox = DialogResult.No Then
                                             'do nothing and continue without safe mode
                                         ElseIf resultmsgbox = DialogResult.Yes Then
-
                                             restartinsafemode()
+                                            Exit Sub
                                         End If
                                     End If
                                 End If
@@ -5793,7 +5821,7 @@ Public Class Form1
                 processstopservice.StartInfo = stopservice
                 processstopservice.Start()
                 processstopservice.WaitForExit()
-
+                processstopservice.Close()
                 System.Threading.Thread.Sleep(10)
 
                 stopservice.Arguments = " /Csc delete PAExec"
@@ -5801,12 +5829,14 @@ Public Class Form1
                 processstopservice.StartInfo = stopservice
                 processstopservice.Start()
                 processstopservice.WaitForExit()
+                processstopservice.Close()				
 
                 stopservice.Arguments = " /Csc interrogate PAExec"
                 processstopservice.StartInfo = stopservice
                 processstopservice.Start()
                 processstopservice.WaitForExit()
-
+                processstopservice.Close()
+				
                 processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\paexec.exe"
                 processinfo.Arguments = "-noname -i -s " & Chr(34) & Application.StartupPath & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + arg
                 processinfo.UseShellExecute = False
@@ -5815,6 +5845,9 @@ Public Class Form1
 
                 process.StartInfo = processinfo
                 process.Start()
+                'Do not add waitforexit here or DDU(current user)will not close
+                process.Close()
+				
                 closeddu()
                 Exit Sub
             End If
@@ -6044,6 +6077,7 @@ Public Class Form1
         processstopservice.StartInfo = setbootconf
         processstopservice.Start()
         processstopservice.WaitForExit()
+		processstopservice.Close()
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
             If regkey IsNot Nothing Then
@@ -6069,12 +6103,16 @@ Public Class Form1
 
         process.StartInfo = processinfo
         process.Start()
+        process.WaitForExit()
+        process.Close()
+		
         closeddu()
 
 
 
     End Sub
     Private Sub closeddu()
+
         If Me.InvokeRequired Then
             Me.Invoke(New MethodInvoker(AddressOf Me.closeddu))
         Else
@@ -6129,6 +6167,9 @@ Public Class Form1
 
                 process.StartInfo = processinfo
                 process.Start()
+				process.WaitForExit()
+				process.Close()
+				
                 closeddu()
                 Exit Sub
             End If
@@ -7532,7 +7573,7 @@ Public Class Form1
                 proc4.StartInfo = scan
                 proc4.Start()
                 proc4.WaitForExit()
-
+                proc4.Close()
                 'then quit
                 closeddu()
                 Exit Sub
@@ -8747,7 +8788,8 @@ Public Class CleanupEngine
                             log("Stopping service : " & services(i))
                             processstopservice.Start()
                             processstopservice.WaitForExit()
-
+                            processstopservice.Close()
+							
                             stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
 
                             processstopservice.StartInfo = stopservice
@@ -8755,12 +8797,14 @@ Public Class CleanupEngine
                             log("Trying to Deleting service : " & services(i))
                             processstopservice.Start()
                             processstopservice.WaitForExit()
-
+                            processstopservice.Close()
+							
                             stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
                             processstopservice.StartInfo = stopservice
                             processstopservice.Start()
                             processstopservice.WaitForExit()
-
+                            processstopservice.Close()
+							
                             'Verify that the service was indeed removed.
                             If regkey.OpenSubKey(services(i), False) IsNot Nothing Then
                                 updatetextmethod("Failed to remove the service.")
