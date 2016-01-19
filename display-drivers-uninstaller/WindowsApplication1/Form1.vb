@@ -1597,7 +1597,7 @@ Public Class Form1
 
 
         '---------------------------------------------
-        'Cleaning of Legacy_AMDKMDAG on win7 and lower
+        'Cleaning of Legacy_AMDKMDAG+ on win7 and lower
         '---------------------------------------------
 
         Try
@@ -1614,7 +1614,9 @@ Public Class Form1
                                 If regkey IsNot Nothing Then
                                     For Each child As String In regkey.GetSubKeyNames()
                                         If checkvariables.isnullorwhitespace(child) = False Then
-                                            If child.ToLower.Contains("legacy_amdkmdag") Then
+                                            If child.ToLower.Contains("legacy_amdkmdag") Or _
+                                                (child.ToLower.Contains("legacy_amdkmdag") AndAlso removeamdkmpfd) Or _
+                                                child.ToLower.Contains("legacy_amdacpksd") Then
 
                                                 Try
                                                     deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\" & childs & "\Enum\Root\" & child)
@@ -1951,18 +1953,18 @@ Public Class Form1
                                     End If
                                 End If
                             Next
-                            If regkey.OpenSubKey(child).SubKeyCount = 0 Then
-                                Try
-                                    deletesubregkey(regkey, child)
-                                Catch ex As Exception
-                                End Try
-                            End If
                             For Each values As String In regkey.OpenSubKey(child).GetValueNames()
                                 Try
                                     deletevalue(regkey.OpenSubKey(child, True), values) 'This is for windows 7, it prevent removing the South Bridge and fix the Catalyst "Upgrade"
                                 Catch ex As Exception
                                 End Try
                             Next
+                            If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+                                Try
+                                    deletesubregkey(regkey, child)
+                                Catch ex As Exception
+                                End Try
+                            End If
                         End If
                     End If
                 Next
@@ -2294,40 +2296,6 @@ Public Class Form1
             log(ex.StackTrace)
         End Try
 
-        If IntPtr.Size = 8 Then
-            Try
-                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                    ("Wow6432Node\Interface", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            Try
-                                subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-                                ("Wow6432Node\Interface\" & child, False)
-                            Catch ex As Exception
-                                Continue For
-                            End Try
-                            If subregkey IsNot Nothing Then
-                                If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
-                                    wantedvalue = subregkey.GetValue("").ToString
-                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
-                                        If wantedvalue.Contains("SteadyVideoBHO") Then
-                                            Try
-                                                deletesubregkey(regkey, child)
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                    End If
-                                End If
-                            End If
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                log(ex.StackTrace)
-            End Try
-        End If
-
         'prevent CCC reinstalltion (comes from drivers installed from windows updates)
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
@@ -2377,6 +2345,26 @@ Public Class Form1
                         Catch ex As Exception
                             log(ex.Message + ex.StackTrace)
                         End Try
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+
+        'SteadyVideo stuff
+        Try
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\PROTOCOLS\Filter\", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If Not checkvariables.isnullorwhitespace(child) Then
+                        If child.ToLower.Contains("steadyvideo") Then
+                            Try
+                                deletesubregkey(regkey, child)
+                            Catch ex As Exception
+                                log(ex.Message + ex.StackTrace)
+                            End Try
+                        End If
                     End If
                 Next
             End If
@@ -6346,7 +6334,7 @@ Public Class Form1
         Try
             If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
                 di.Delete()
-                log(di.ToString + " - " + UpdateTextMethodmessagefn(41))
+                log(di.ToString + " - " + "Folder removed via testdelete sub")
             End If
         Catch ex As Exception
             log("testdelete @ di.getfiles() : " + ex.Message)
@@ -9552,7 +9540,16 @@ Public Class CleanupEngine
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\Interface\" & child, False)
 
                             If subregkey IsNot Nothing Then
-                                If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                                'Hack for some weird registry state  "For user: Watcher"
+                                Try
+                                    If checkvariables.isnullorwhitespace(CStr((subregkey.GetValue("")))) = False Then
+                                        'do nothing
+                                    End If
+                                Catch ex As Exception
+                                    log("non standard keytype found : " + child)
+                                    Continue For
+                                End Try
+                                If checkvariables.isnullorwhitespace(CStr((subregkey.GetValue("")))) = False Then
                                     wantedvalue = subregkey.GetValue("").ToString
                                     If checkvariables.isnullorwhitespace(wantedvalue) = False Then
                                         For i As Integer = 0 To interfaces.Length - 1
