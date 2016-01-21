@@ -2353,17 +2353,50 @@ Public Class Form1
         End Try
 
         'SteadyVideo stuff
+
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+      ("Software\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetSubKeyNames()
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    subregkey = regkey.OpenSubKey(child, False)
+                    If subregkey IsNot Nothing Then
+                        If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                            wantedvalue = subregkey.GetValue("").ToString
+                            If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                If wantedvalue.ToLower.Contains("steadyvideo") Then
+                                    Try
+                                        deletesubregkey(regkey, child)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+        End If
+
+
         Try
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\PROTOCOLS\Filter\", True)
+            regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("PROTOCOLS\Filter", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
                     If Not checkvariables.isnullorwhitespace(child) Then
-                        If child.ToLower.Contains("steadyvideo") Then
-                            Try
-                                deletesubregkey(regkey, child)
-                            Catch ex As Exception
-                                log(ex.Message + ex.StackTrace)
-                            End Try
+                        subregkey = regkey.OpenSubKey(child, False)
+                        If subregkey IsNot Nothing Then
+                            If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) Then
+                                wantedvalue = CStr(subregkey.GetValue(""))
+                                If Not checkvariables.isnullorwhitespace(wantedvalue) Then
+                                    If wantedvalue.ToLower.Contains("steadyvideo") Then
+                                        Try
+                                            deletesubregkey(regkey, child)
+                                        Catch ex As Exception
+                                            log(ex.Message + ex.StackTrace)
+                                        End Try
+                                    End If
+                                End If
+                            End If
                         End If
                     End If
                 Next
@@ -2371,6 +2404,63 @@ Public Class Form1
         Catch ex As Exception
             log(ex.Message + ex.StackTrace)
         End Try
+
+        If IntPtr.Size = 8 Then
+            'SteadyVideo stuff
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If checkvariables.isnullorwhitespace(child) = False Then
+                        subregkey = regkey.OpenSubKey(child, False)
+                        If subregkey IsNot Nothing Then
+                            If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                                wantedvalue = subregkey.GetValue("").ToString
+                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                    If wantedvalue.ToLower.Contains("steadyvideo") Then
+                                        Try
+                                            deletesubregkey(regkey, child)
+                                        Catch ex As Exception
+                                        End Try
+                                    End If
+                                End If
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+
+
+
+            Try
+                regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\PROTOCOLS\Filter", True)
+                If regkey IsNot Nothing Then
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If Not checkvariables.isnullorwhitespace(child) Then
+                            subregkey = regkey.OpenSubKey(child, False)
+                            If subregkey IsNot Nothing Then
+                                If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) Then
+                                    wantedvalue = CStr(subregkey.GetValue(""))
+                                    If Not checkvariables.isnullorwhitespace(wantedvalue) Then
+                                        If wantedvalue.ToLower.Contains("steadyvideo") Then
+                                            Try
+                                                deletesubregkey(regkey, child)
+                                            Catch ex As Exception
+                                                log(ex.Message + ex.StackTrace)
+                                            End Try
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                log(ex.Message + ex.StackTrace)
+            End Try
+
+        End If
 
     End Sub
     Private Sub fixregistrydriverstore()
@@ -2829,6 +2919,7 @@ Public Class Form1
                                 If child2.ToLower.Contains("display.3dvision") Or
                                    child2.ToLower.Contains("display.controlpanel") Or
                                    child2.ToLower.Contains("display.driver") Or
+                                   child2.ToLower.Contains("msvcruntime") Or
                                    child2.ToLower.Contains("display.gfexperience") AndAlso removegfe Or
                                    child2.ToLower.Contains("osc.") AndAlso removegfe Or
                                    child2.ToLower.Contains("osclib.") AndAlso removegfe Or
@@ -8683,7 +8774,7 @@ Public Class CleanupEngine
                             If checkvariables.isnullorwhitespace(child) = False Then
 
                                 subregkey = My.Computer.Registry.Users.OpenSubKey _
-    (users & "\Software\Microsoft\Installer\Products" & child, False)
+    (users & "\Software\Microsoft\Installer\Products\" & child, False)
 
                                 If subregkey IsNot Nothing Then
                                     If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
