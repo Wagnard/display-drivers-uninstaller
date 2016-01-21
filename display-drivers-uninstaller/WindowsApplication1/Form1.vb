@@ -2463,6 +2463,31 @@ Public Class Form1
         End If
 
     End Sub
+    Private Sub rebuildcountercache()
+        log("Rebuilding the Perf.Counter cache X2")
+        Try
+
+            For i = 0 To 1
+                processinfo.FileName = "lodctr"
+                processinfo.Arguments = "/R"
+                processinfo.WindowStyle = ProcessWindowStyle.Hidden
+                processinfo.UseShellExecute = False
+                processinfo.CreateNoWindow = True
+                processinfo.RedirectStandardOutput = True
+
+                process.StartInfo = processinfo
+                process.Start()
+                reply2 = process.StandardOutput.ReadToEnd
+                process.StandardOutput.Close()
+                process.Close()
+                log(reply2)
+            Next
+
+        Catch ex As Exception
+            log(ex.Message + ex.StackTrace)
+        End Try
+    End Sub
+
     Private Sub fixregistrydriverstore()
         'Windows 8 + only
         'This should fix driver installation problem reporting that a file is not found.
@@ -7577,7 +7602,7 @@ Public Class Form1
 
             cleandriverstore()
             fixregistrydriverstore()
-
+            rebuildcountercache()
         Catch ex As Exception
             log(ex.Message & ex.StackTrace)
             MsgBox(msgboxmessagefn(5), MsgBoxStyle.Critical)
