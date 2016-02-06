@@ -3890,6 +3890,7 @@ Public Class Form1
                             End If
                         Next
                     End If
+
                     regkey = My.Computer.Registry.Users.OpenSubKey(users & "\SOFTWARE\Microsoft\Windows\CurrentVersion\UFH\SHC", True)
                     If regkey IsNot Nothing Then
                         For Each child As String In regkey.GetValueNames()
@@ -3915,6 +3916,25 @@ Public Class Form1
             log(ex.Message + ex.StackTrace)
         End Try
 
+        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\UFH\ARP", True)
+        If regkey IsNot Nothing Then
+            For Each child As String In regkey.GetValueNames()
+                If checkvariables.isnullorwhitespace(child) = False Then
+                    Dim tArray() As String = CType(regkey.GetValue(child), String())
+                    For i As Integer = 0 To tArray.Length - 1
+                        If checkvariables.isnullorwhitespace(tArray(i)) = False AndAlso Not tArray(i) = "" Then
+                            If tArray(i).ToLower.ToString.Contains("nvi2.dll") Or _
+                               tArray(i).ToLower.ToString.Contains("nvstlink.exe") Then
+                                Try
+                                    deletevalue(regkey, child)
+                                Catch ex As Exception
+                                End Try
+                            End If
+                        End If
+                    Next
+                End If
+            Next
+        End If
 
         regkey = My.Computer.Registry.Users.OpenSubKey(".DEFAULT\Software", True)
         If regkey IsNot Nothing Then
@@ -4442,10 +4462,15 @@ Public Class Form1
                             For Each child As String In regkey.GetSubKeyNames()
                                 If checkvariables.isnullorwhitespace(child) = False Then
                                     If child.ToLower.StartsWith("nvidia update") Or
+                                        (child.ToLower.StartsWith("nvstreamsvc") AndAlso removegfe) Or
                                         child.ToLower.StartsWith("nvidia opengl driver") Or
                                         child.ToLower.StartsWith("nvwmi") Or
                                         child.ToLower.StartsWith("nview") Then
-                                        deletesubregkey(regkey, child)
+                                        Try
+                                            deletesubregkey(regkey, child)
+                                        Catch ex As Exception
+                                            log(ex.Message + ex.StackTrace)
+                                        End Try
                                     End If
                                 End If
                             Next
