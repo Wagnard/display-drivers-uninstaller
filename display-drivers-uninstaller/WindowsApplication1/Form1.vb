@@ -172,6 +172,12 @@ Public Class Form1
         End If
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        If Not CBool(settings.getconfig("goodsite")) Then
+            MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to to continue developping DDU.")
+            settings.setconfig("goodsite", "True")
+        End If
+
         disabledriversearch()
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
         KillGPUStatsProcesses()
@@ -6566,6 +6572,10 @@ Public Class Form1
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        If Not CBool(settings.getconfig("goodsite")) Then
+            MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to to continue developping DDU.")
+            settings.setconfig("goodsite", "True")
+        End If
         disabledriversearch()
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
         KillGPUStatsProcesses()
@@ -6617,6 +6627,10 @@ Public Class Form1
 
     End Sub
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        If Not CBool(settings.getconfig("goodsite")) Then
+            MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to to continue developping DDU.")
+            settings.setconfig("goodsite", "True")
+        End If
         disabledriversearch()
         'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
         KillGPUStatsProcesses()
