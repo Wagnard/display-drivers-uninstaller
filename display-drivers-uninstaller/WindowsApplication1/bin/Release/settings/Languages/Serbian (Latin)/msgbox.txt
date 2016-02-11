@@ -11,3 +11,4 @@ Uklanjanje drajvera ja završeno! Da li želite da izađete iz programa?
 Završeno!
 Niste u Windows Safe Mode-u. Preporučljivo je da restartujete Windows u Safe Mode-u da bi izbegli moguće probleme. Želite li da startujete Windows u Safe Mode-u?
 Ovo treba da izaberete na plavom Recovery ekranu: Troubleshoot-> advanced options -> startup Settings.
+Neophodan je restart sistema, molimo da prvo restartujete operativni sistem pa tek onda nastavite sa korišćenjem DDU programa.
