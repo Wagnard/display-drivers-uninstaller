@@ -7641,7 +7641,7 @@ Public Class Form1
 
             cleandriverstore()
             fixregistrydriverstore()
-            rebuildcountercache()
+            'rebuildcountercache()
         Catch ex As Exception
             log(ex.Message & ex.StackTrace)
             MsgBox(msgboxmessagefn(5), MsgBoxStyle.Critical)
