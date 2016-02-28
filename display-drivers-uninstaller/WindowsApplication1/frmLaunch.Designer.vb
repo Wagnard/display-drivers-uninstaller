@@ -63,7 +63,7 @@ Partial Class frmLaunch
         '
         'pbLogo
         '
-        Me.pbLogo.BackgroundImage = Global.DisplayDriverUninstaller.My.Resources.Resources.ddu_logo3
+        Me.pbLogo.BackgroundImage = Global.WindowsApplication1.My.Resources.Resources.ddu_logo3
         Me.pbLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
         Me.pbLogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.pbLogo.Dock = System.Windows.Forms.DockStyle.Top
