@@ -114,9 +114,11 @@ Public Class Form1
         End Try
         AccessUI()
     End Sub
+
     Public Function getremovephysx() As Boolean
         Return removephysx
     End Function
+
     Private Sub AccessUI()
         Dim updates As Integer = checkupdates.checkupdates
         If Me.InvokeRequired Then
@@ -171,6 +173,7 @@ Public Class Form1
             End If
         End If
     End Sub
+
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
         If Not CBool(settings.getconfig("goodsite")) Then
@@ -341,6 +344,7 @@ Public Class Form1
 
         'Delete left over files.
     End Sub
+
     Private Sub cleanamdserviceprocess()
 
 
@@ -426,6 +430,7 @@ Public Class Form1
 
         System.Threading.Thread.Sleep(10)
     End Sub
+
     Private Sub cleanamdfolders()
         Dim filePath As String = Nothing
         'Delete AMD data Folders
@@ -1153,6 +1158,7 @@ Public Class Form1
         End If
 
     End Sub
+
     Private Sub cleanamd()
 
         Dim regkey As RegistryKey = Nothing
@@ -2469,6 +2475,7 @@ Public Class Form1
         End If
 
     End Sub
+
     Private Sub rebuildcountercache()
         log("Rebuilding the Perf.Counter cache X2")
         Try
@@ -4826,6 +4833,7 @@ Public Class Form1
         Next
 
     End Sub
+
     Private Sub cleanintelserviceprocess()
 
         CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\INTEL\services.cfg")) '// add each line as String Array.
@@ -4836,6 +4844,7 @@ Public Class Form1
         Next i
 
     End Sub
+
     Private Sub cleanintel()
 
         Dim regkey As RegistryKey = Nothing
@@ -5097,6 +5106,7 @@ Public Class Form1
 
         UpdateTextMethod(UpdateTextMethodmessagefn(6))
     End Sub
+
     Private Sub checkpcieroot()  'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
 
         Dim regkey As RegistryKey = Nothing
@@ -5158,6 +5168,7 @@ Public Class Form1
             log(ex.Message + ex.StackTrace)
         End Try
     End Sub
+
     Private Sub restartcomputer()
 
         log("Restarting Computer ")
@@ -5175,6 +5186,7 @@ Public Class Form1
         closeddu()
 
     End Sub
+
     Private Sub shutdowncomputer()
         preventclose = False
         processinfo.FileName = "shutdown"
@@ -5191,6 +5203,7 @@ Public Class Form1
         closeddu()
 
     End Sub
+
 
     Private Sub rescan()
 
@@ -5220,6 +5233,7 @@ Public Class Form1
 
 
     End Sub
+
     Private Sub Form1_close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
 
         If preventclose Then
@@ -5239,6 +5253,7 @@ Public Class Form1
         End If
 
     End Sub
+
     Private Function winupdatepending() As Boolean
         Dim regkey As RegistryKey = Nothing
         regkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
@@ -5248,6 +5263,7 @@ Public Class Form1
             Return False
         End If
     End Function
+
     Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Dim regkey As RegistryKey = Nothing
@@ -5872,7 +5888,7 @@ Public Class Form1
                 'This code checks to see which mode Windows has booted up in.
                 Dim processstopservice As New Process
                 Select Case System.Windows.Forms.SystemInformation.BootMode
-                    Case BootMode.FailSafe
+                    Case BootMode.FailSafeWithNetwork Or BootMode.FailSafe 'Merged both boot options (same code 1:1)
                         'The computer was booted using only the basic files and drivers.
                         'This is the same as Safe Mode
                         safemode = True
@@ -5888,32 +5904,10 @@ Public Class Form1
                             processstopservice.StartInfo = setbcdedit
                             processstopservice.Start()
                             processstopservice.WaitForExit()
-                            processstopservice.Close()							
+                            processstopservice.Close()
                         End If
-                    Case BootMode.FailSafeWithNetwork
-                        'The computer was booted using the basic files, drivers, and services necessary to start networking.
-                        'This is the same as Safe Mode with Networking
-                        'I am also removing the auto go into safemode with bcdedit
-
-                        safemode = True
-                        If winxp = False Then
-                            Dim setbcdedit As New ProcessStartInfo
-                            setbcdedit.FileName = "cmd.exe"
-                            setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-                            setbcdedit.UseShellExecute = False
-                            setbcdedit.CreateNoWindow = True
-                            setbcdedit.RedirectStandardOutput = False
-                            processstopservice.StartInfo = setbcdedit
-                            processstopservice.Start()
-                            processstopservice.WaitForExit()
-							processstopservice.Close()
-                        End If
-
                     Case BootMode.Normal
-
                         safemode = False
-
-
 
                         If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
                             If restart Then  'restart command line argument
@@ -5922,19 +5916,44 @@ Public Class Form1
                             Else
                                 If safemodemb = True Then
                                     If Not silent Then
-                                        Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn(11), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-                                        If resultmsgbox = DialogResult.Cancel Then
+                                        Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
 
+                                        Using frmSafeBoot As New frmLaunch
+                                            frmSafeBoot.TopMost = True
 
-                                            Me.TopMost = False
-                                            closeddu()
-                                            Exit Sub
-                                        ElseIf resultmsgbox = DialogResult.No Then
-                                            'do nothing and continue without safe mode
-                                        ElseIf resultmsgbox = DialogResult.Yes Then
-                                            restartinsafemode()
-                                            Exit Sub
-                                        End If
+                                            If frmSafeBoot.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then
+                                                bootOption = frmSafeBoot.selection
+                                            Else
+                                                bootOption = -1
+                                            End If
+                                        End Using
+
+                                        Select Case bootOption
+                                            Case 0 'normal
+                                                Exit Select
+                                            Case 1 'SafeMode
+                                                restartinsafemode(False)
+                                                Exit Select
+                                            Case 2 'SafeMode with network
+                                                restartinsafemode(True)
+                                                Exit Select
+                                            Case Else '-1 = Cancel
+                                                Me.TopMost = False
+                                                closeddu()
+                                        End Select
+                                        ' Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn(11), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+
+                                        'If resultmsgbox = DialogResult.Cancel Then
+                                        '
+                                        ' Me.TopMost = False
+                                        'closeddu()
+                                        'Exit Sub
+                                        ' ElseIf resultmsgbox = DialogResult.No Then
+                                        'do nothing and continue without safe mode
+                                        'ElseIf resultmsgbox = DialogResult.Yes Then
+                                        'restartinsafemode(False)
+                                        ' Exit Sub
+                                        ' End If
                                     End If
                                 End If
                             End If
@@ -6085,8 +6104,8 @@ Public Class Form1
             ' Check if this is an AMD Enduro system
             ' -------------------------------------
             Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-                   ("SYSTEM\CurrentControlSet\Enum\PCI")
+                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
                         If checkvariables.isnullorwhitespace(child) = False Then
@@ -6139,11 +6158,14 @@ Public Class Form1
 
         NotifyIcon1.Text = "DDU Version: " + Application.ProductVersion
         TopMost = False
-        trd = New Thread(AddressOf ThreadTask)
-        trd.IsBackground = True
-        trd.Start()
 
+        If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
+            trd = New Thread(AddressOf ThreadTask)
+            trd.IsBackground = True
+            trd.Start()
+        End If
     End Sub
+
     Private Sub gpuidentify(ByVal gpu As String)
 
         Dim regkey As RegistryKey = Nothing
@@ -6192,29 +6214,38 @@ Public Class Form1
             log(ex.Message + ex.StackTrace)
         End Try
     End Sub
-    Private Sub restartinsafemode()
+
+    Private Sub restartinsafemode(Optional ByVal withNetwork As Boolean = False)
 
         Dim regkey As RegistryKey = Nothing
 
         systemrestore() 'we try to do a system restore if allowed before going into safemode.
         log("restarting in safemode")
-		
 
-		Me.TopMost = False
-		
-        Dim setbootconf As New ProcessStartInfo
-        setbootconf.FileName = "bcdedit"
-        setbootconf.Arguments = "/set safeboot minimal"
+
+        Me.TopMost = False
+
+        Dim setbootconf As New ProcessStartInfo("bcdedit")
+
+        If withNetwork Then
+            setbootconf.Arguments = "/set safeboot network"
+        Else
+            setbootconf.Arguments = "/set safeboot minimal"
+        End If
+
         setbootconf.UseShellExecute = False
         setbootconf.CreateNoWindow = True
         setbootconf.RedirectStandardOutput = False
+
         Dim processstopservice As New Process
         processstopservice.StartInfo = setbootconf
         processstopservice.Start()
         processstopservice.WaitForExit()
-		processstopservice.Close()
+        processstopservice.Close()
+
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+
             If regkey IsNot Nothing Then
                 'Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
                 'sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
@@ -6240,12 +6271,10 @@ Public Class Form1
         process.Start()
         process.WaitForExit()
         process.Close()
-		
+
         closeddu()
-
-
-
     End Sub
+
     Private Sub closeddu()
 
         If Me.InvokeRequired Then
@@ -6261,11 +6290,13 @@ Public Class Form1
             End Try
         End If
     End Sub
+
     Private Sub Form1_Shown(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Shown
         If silent Then
             Me.Hide()
         End If
     End Sub
+
     Private Sub ThreadTask()
 
         Try
@@ -6273,25 +6304,30 @@ Public Class Form1
                 backgroundworkcomplete = False
                 cleananddonothing("AMD")
             End If
+
             Do Until backgroundworkcomplete
                 System.Threading.Thread.Sleep(10)
             Loop
+
             If argcleannvidia Then
                 backgroundworkcomplete = False
                 cleananddonothing("NVIDIA")
             End If
+
             Do Until backgroundworkcomplete
                 System.Threading.Thread.Sleep(10)
             Loop
+
             If argcleanintel Then
                 backgroundworkcomplete = False
                 cleananddonothing("INTEL")
             End If
+
             Do Until backgroundworkcomplete
                 System.Threading.Thread.Sleep(10)
             Loop
-            If restart Then
 
+            If restart Then
                 log("Restarting Computer ")
                 processinfo.FileName = "shutdown"
                 processinfo.Arguments = "/r /t 0"
@@ -6316,6 +6352,7 @@ Public Class Form1
             log(ex.Message + ex.StackTrace)
         End Try
     End Sub
+
     Sub systemrestore()
         'THIS NEEDS TO BE FIXED!!! DOES NOT WORK WITH OPTION STRICT ON. I WAS UNABLE TO FIGURE OUT MY SELF. BE SURE TO FIX BEFORE RELEASE.
 
@@ -6587,6 +6624,7 @@ Public Class Form1
         BackgroundWorker1.RunWorkerAsync()
 
     End Sub
+
     Private Sub KillP(processname As String)
         Dim processList() As Process
         processList = Process.GetProcessesByName(processname)
@@ -6599,6 +6637,7 @@ Public Class Form1
             End Try
         Next
     End Sub
+
     Private Sub KillGPUStatsProcesses()
         KillP("MSIAfterburner")
         KillP("PrecisionX_x64") ' Not sure for the x86 one...      Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
@@ -6612,6 +6651,7 @@ Public Class Form1
         KillP("EncoderServer")
         KillP("nvidiaInspector")
     End Sub
+
     Private Sub cleananddonothing(ByVal gpu As String)
         reboot = False
         shutdown = False
@@ -6619,6 +6659,7 @@ Public Class Form1
         BackgroundWorker1.RunWorkerAsync()
 
     End Sub
+
     Private Sub cleanandandreboot(ByVal gpu As String)
         reboot = True
         shutdown = False
@@ -6626,6 +6667,7 @@ Public Class Form1
         BackgroundWorker1.RunWorkerAsync()
 
     End Sub
+
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         If Not CBool(settings.getconfig("goodsite")) Then
                 MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
@@ -6843,6 +6885,7 @@ Public Class Form1
             WindowsApi.CloseHandle(UserTokenHandle)
         End If
     End Sub
+
     Private Sub disabledriversearch()
         Dim regkey As RegistryKey = Nothing
         log("Trying to disable search for Windows Updates :")
@@ -7649,6 +7692,7 @@ Public Class Form1
         End Try
 
     End Sub
+
     Private Function checkamdkmapfd() As Boolean
 
         Dim regkey As RegistryKey = Nothing
@@ -7698,6 +7742,7 @@ Public Class Form1
         End If
 
     End Function
+
     Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object,
                              ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
                              Handles BackgroundWorker1.RunWorkerCompleted
@@ -7788,6 +7833,7 @@ Public Class Form1
             End Try
         End If
     End Sub
+
     Private Sub initlanguage()
 
         Try
@@ -7924,6 +7970,7 @@ Public Class Form1
             log(ex.Message)
         End Try
     End Sub
+
     Public Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
         UpdateTextMethodmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\updatetextmethod.txt") '// add each line as String Array.
 
@@ -7934,6 +7981,7 @@ Public Class Form1
             Return UpdateTextMethodmessage(number)
         End If
     End Function
+
     Public Function msgboxmessagefn(ByVal number As Integer) As String
         msgboxmessage = IO.File.ReadAllLines(Application.StartupPath & "\settings\Languages\" & combobox2value & "\msgbox.txt") '// add each line as String Array.
 
@@ -7944,6 +7992,7 @@ Public Class Form1
             Return msgboxmessage(number)
         End If
     End Function
+
     Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
         combobox2value = ComboBox2.Text
         settings.setconfig("language", combobox2value)
@@ -8015,6 +8064,7 @@ Public Class Form1
         Catch ex As Exception
         End Try
     End Sub
+
     Public Sub UpdateTextMethod(ByVal strMessage As String)
 
         If TextBox1.InvokeRequired Then
@@ -8028,6 +8078,7 @@ Public Class Form1
         End If
 
     End Sub
+
     Public Sub UpdateTextMethod2(ByVal strMessage As String)
 
         If TextBox1.InvokeRequired Then
@@ -8041,6 +8092,7 @@ Public Class Form1
         End If
 
     End Sub
+
     Public Function GetREG_BINARY(ByVal Path As String, ByVal Value As String) As String
         Dim Data() As Byte = CType(Microsoft.Win32.Registry.GetValue(Path, Value, Nothing), Byte())
         If Data Is Nothing Then Return "N/A"
@@ -8050,6 +8102,7 @@ Public Class Form1
         Next
         Return Result
     End Function
+
     Public Function HexToString(ByVal Data As String) As String
         Dim com As String = ""
         For x = 0 To Data.Length - 1 Step 2
@@ -8077,6 +8130,7 @@ Public Class Form1
     Private Sub deletedirectory(ByVal directory As String)
         CleanupEngine.deletedirectory(directory)
     End Sub
+
     Private Sub deletefile(ByVal file As String)
         CleanupEngine.deletefile(file)
     End Sub
@@ -8189,6 +8243,9 @@ End Class
 
 Public Class genericfunction
     Public Function checkupdates() As Integer
+        If Not My.Computer.Network.IsAvailable Then
+            Return 3
+        End If
 
         Try
             Dim request2 As System.Net.HttpWebRequest = CType(System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt"), Net.HttpWebRequest)
@@ -9877,6 +9934,7 @@ Public Class CleanupEngine
         End If
     End Sub
 End Class
+
 Public Class WindowsApi
 
     <DllImport("shell32.dll")> _
