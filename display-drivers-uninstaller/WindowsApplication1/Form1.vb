@@ -5930,16 +5930,17 @@ Public Class Form1
 
                                         Select Case bootOption
                                             Case 0 'normal
-                                                Exit Select
+												Exit Select
                                             Case 1 'SafeMode
                                                 restartinsafemode(False)
-                                                Exit Select
+                                                Exit Sub
                                             Case 2 'SafeMode with network
                                                 restartinsafemode(True)
-                                                Exit Select
-                                            Case Else '-1 = Cancel
+                                                Exit Sub
+                                            Case Else '-1 = Close
                                                 Me.TopMost = False
                                                 closeddu()
+												Exit Sub
                                         End Select
                                         ' Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn(11), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
 
