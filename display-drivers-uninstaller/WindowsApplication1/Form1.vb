@@ -29,7 +29,6 @@ Imports System.Text
 
 
 Public Class Form1
-    Dim catalog As String
     Dim arg As String
     Dim trd As Thread
     Dim backgroundworkcomplete As Boolean = True
@@ -195,7 +194,7 @@ Public Class Form1
         UpdateTextMethod("-Executing Driver Store cleanUP(finding OEM step)...")
         log("Executing Driver Store cleanUP(Find OEM)...")
         'Check the driver from the driver store  ( oemxx.inf)
-
+        Dim catalog As String = ""
         Dim deloem As New Diagnostics.ProcessStartInfo
         deloem.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
         Dim proc3 As New Diagnostics.Process
