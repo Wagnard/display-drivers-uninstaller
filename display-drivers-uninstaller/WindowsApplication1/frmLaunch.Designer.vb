@@ -55,7 +55,7 @@ Partial Class frmLaunch
         '
         Me.cbBootOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbBootOption.FormattingEnabled = True
-        Me.cbBootOption.Items.AddRange(New Object() {"Normal", "Safe Mode", "Safe Mode With Networking"})
+        Me.cbBootOption.Items.AddRange(New Object() {"Normal", "Safe Mode (Recommended)", "Safe Mode With Networking"})
         Me.cbBootOption.Location = New System.Drawing.Point(12, 151)
         Me.cbBootOption.Name = "cbBootOption"
         Me.cbBootOption.Size = New System.Drawing.Size(349, 21)
@@ -70,7 +70,7 @@ Partial Class frmLaunch
         Me.pbLogo.InitialImage = Nothing
         Me.pbLogo.Location = New System.Drawing.Point(0, 0)
         Me.pbLogo.Name = "pbLogo"
-        Me.pbLogo.Size = New System.Drawing.Size(369, 121)
+        Me.pbLogo.Size = New System.Drawing.Size(365, 121)
         Me.pbLogo.TabIndex = 4
         Me.pbLogo.TabStop = False
         '
@@ -99,7 +99,7 @@ Partial Class frmLaunch
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnClose
-        Me.ClientSize = New System.Drawing.Size(369, 298)
+        Me.ClientSize = New System.Drawing.Size(365, 294)
         Me.ControlBox = False
         Me.Controls.Add(Me.lblText)
         Me.Controls.Add(Me.Label1)

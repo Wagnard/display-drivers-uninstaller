@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -110,7 +110,7 @@
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-	<Compile Include="frmLaunch.Designer.vb">
+    <Compile Include="frmLaunch.Designer.vb">
       <DependentUpon>frmLaunch.vb</DependentUpon>
     </Compile>
     <Compile Include="frmLaunch.vb">
@@ -152,6 +152,9 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLaunch.resx">
+      <DependentUpon>frmLaunch.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="logf.resx">
       <DependentUpon>logf.vb</DependentUpon>
