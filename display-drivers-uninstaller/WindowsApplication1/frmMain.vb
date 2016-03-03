@@ -5352,7 +5352,7 @@ Public Class frmMain
 			Try
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
 				regkey.SetValue("SearchOrderConfig", 1)
-				MsgBox(msgboxmessagefn(10))
+				MsgBox(Language.GetTranslation("frmMain", "Messages", "Text11"))
 			Catch ex As Exception
 				log(ex.Message + ex.StackTrace)
 			End Try
@@ -5361,7 +5361,7 @@ Public Class frmMain
 			Try
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
 				regkey.SetValue("DontSearchWindowsUpdate", 0)
-				MsgBox(msgboxmessagefn(10))
+				MsgBox(Language.GetTranslation("frmMain", "Messages", "Text11"))
 			Catch ex As Exception
 				log(ex.Message + ex.StackTrace)
 			End Try
@@ -7643,6 +7643,7 @@ Public Class frmMain
 		Dim regkey As RegistryKey = Nothing
 		log("Trying to disable search for Windows Updates :")
 		log("Version " + version + " detected")
+
 		If version >= "6.1" Then
 			Try
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
@@ -7654,6 +7655,7 @@ Public Class frmMain
 				log(ex.Message + ex.StackTrace)
 			End Try
 		End If
+
 		If version >= "6.0" And version < "6.1" Then
 			Try
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
@@ -7777,10 +7779,6 @@ Public Class frmMain
 
 	Public Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
 		Return Language.GetTranslation(Me.Name, "UpdateLog", String.Format("Text{0}", number + 1))
-	End Function
-
-	Public Function msgboxmessagefn(ByVal number As Integer) As String
-		Return "Not WORKING! YET"
 	End Function
 
 	Private Sub temporarynvidiaspeedup()   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
@@ -8125,16 +8123,10 @@ End Class
 
 Public Class CleanupEngine
 
-    Dim checkvariables As New checkvariables
-
-    Private Function msgboxmessagefn(ByVal number As Integer) As String
-		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
-        Return f.msgboxmessagefn(number)
-	End Function
+	Dim checkvariables As New checkvariables
 
     Private Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
-		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
-        Return f.UpdateTextMethodmessagefn(number)
+		Return Language.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1))
 	End Function
 
     Private Sub updatetextmethod(strmessage As String)
@@ -8489,9 +8481,9 @@ Public Class CleanupEngine
                 Next
             End If
             updatetextmethod(UpdateTextMethodmessagefn(30))
-            log("-End of S-1-5-xx region cleanUP")
+			log("-End of S-1-5-xx region cleanUP")
         Catch ex As Exception
-            MsgBox(msgboxmessagefn(5))
+			MsgBox(Language.GetTranslation("frmMain", "Messages", "Text6"))
             log(ex.Message + ex.StackTrace)
         End Try
 
@@ -8580,8 +8572,8 @@ Public Class CleanupEngine
             End If
             updatetextmethod(UpdateTextMethodmessagefn(32))
         Catch ex As Exception
-            MsgBox(msgboxmessagefn(5))
-            log(ex.Message + ex.StackTrace)
+			MsgBox(Language.GetTranslation("frmMain", "Messages", "Text6"))
+			log(ex.Message + ex.StackTrace)
         End Try
 
 
@@ -8649,8 +8641,8 @@ Public Class CleanupEngine
             End If
             updatetextmethod(UpdateTextMethodmessagefn(34))
         Catch ex As Exception
-            MsgBox(msgboxmessagefn(5))
-            log(ex.Message + ex.StackTrace)
+			MsgBox(Language.GetTranslation("frmMain", "Messages", "Text6"))
+			log(ex.Message + ex.StackTrace)
         End Try
 
         updatetextmethod(UpdateTextMethodmessagefn(35))
@@ -8722,8 +8714,8 @@ Public Class CleanupEngine
             Next
             updatetextmethod(UpdateTextMethodmessagefn(36))
         Catch ex As Exception
-            MsgBox(msgboxmessagefn(5))
-            log(ex.Message + ex.StackTrace)
+			MsgBox(Language.GetTranslation("frmMain", "Messages", "Text6"))
+			log(ex.Message + ex.StackTrace)
         End Try
 
 	End Sub
