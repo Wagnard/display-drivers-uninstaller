@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="ko" Text="Korean">
+	<!--
+	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
+	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+
+	Text = Shown to user (as written in english, found on language selection box)
+
+	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
+	[char = replaces]  xml doesn't allow some special chars like <>&"
+	| = newline
+	&amp; = &
+	&quot; = "
+	&gt; = >
+	&lt; = <
+
+	-->
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<Button1>
+			<Text>지우고, 다시 시작하기|(적극 권장)</Text>
+			<Tooltip>현재 및 이전 드라이버를 제거하고, 컴퓨터를 다시 시작합니다.|(적극 권장)</Tooltip>
+		</Button1>
+		<Button2>
+			<Text>지우고, 다시 시작하지 않기|(blackscreen 같은 문제 발생 가능)</Text>
+			<Tooltip>현재 및 이전 드라이버를 제거하지만, 컴퓨터를 다시 시작하진 않습니다.|(blackscreen 같은 문제 발생 가능)</Tooltip>
+		</Button2>
+		<Button3>
+			<Text>지우고, 시스템 끄기|(새 그래픽 카드를 장착할 경우)</Text>
+			<Tooltip>현재 및 이전 드라이버를 제거하고, 다시 검색없이 컴퓨터를 끕니다.|(새 그래픽 카드를 장착하는 경우)</Tooltip>
+		</Button3>
+		<Button4>
+			<Text>Windows 자동 드라이버 설치를       기본값으로 설정</Text>
+		</Button4>
+		<Button5>
+			<Text>자세한 로그(기록) 보이기</Text>
+		</Button5>
+		<Label1>
+			<Text>감지된 Windows 버전 :</Text>
+		</Label1>
+		<Label4>
+			<Text>*** DDU가 맘에 들면, 기부에 대해 생각해봐 주세요.  추가 개발에 도움이 됩니다. ***</Text>
+		</Label4>
+		<Label5>
+			<Text>로그(기록) :</Text>
+		</Label5>
+		<Label7>
+			<Text>그래픽 드라이버 선택 :</Text>
+		</Label7>
+		<Label9>
+			<Text>참고: 사용자의 PC에 발생하는 모든 손상이나 오류는 사용자의 책임입니다.</Text>
+		</Label9>
+		<Label10>
+			<Text>안전 모드에서의 DDU 사용을 권장합니다.</Text>
+		</Label10>
+		<Label11>
+			<Text>업데이트 확인하는 중...</Text>
+			<Text2>업데이트가 없습니다.  프로그램이 최신 버전입니다.</Text2>
+			<Text3>업데이트가 있습니다!  가장 최신보다 더 오래된 버전에서는 기능 지원이 제한될 수 있습니다.</Text3>
+			<Text4>업데이트 패치를 할 수 없습니다!</Text4>
+		</Label11>
+		<OptionsToolStripMenuItem>
+			<Text>Options</Text>
+		</OptionsToolStripMenuItem>
+		<ToolStripMenuItem1>
+			<Text>?</Text>
+		</ToolStripMenuItem1>
+		<ToSToolStripMenuItem>
+			<Text>ToS</Text>
+		</ToSToolStripMenuItem>
+		<VisitDDUHomepageToolStripMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomepageToolStripMenuItem>
+		<SVNToolStripMenuItem>
+			<Text>Visit SVN Website</Text>
+		</SVNToolStripMenuItem>
+		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
+		<VisitGuru3dAMDThreadToolStripMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3dAMDThreadToolStripMenuItem>
+		<VisitGeforceThreadToolStripMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceThreadToolStripMenuItem>
+		<AboutToolStripMenuItem>
+			<Text>About</Text>
+		</AboutToolStripMenuItem>
+		<Messages>
+			<Text1>업데이트를 사용할 수 있습니다!  지금 DDU 웹 사이트에 방문할까요?</Text1>
+			<Text2>가장 최신보다 오래된 버전에서는 지원(기능)이 제한될 수 있습니다.  버그를 보고하기 전에 최신 버전을 확인해 보세요.</Text2>
+			<Text3>관리자 권한으로 DDU를 사용하고 있지 않습니다.  응용 프로그램은 바로 종료됩니다.</Text3>
+			<Text4>ddudr을 찾을 수 없습니다.  로그(기록)를 참조하세요.</Text4>
+			<Text5>Display Driver Uninstaller (DDU)는 레지스트리를 많이 수정합니다.  (보통 방식에서만) DDU는 시스템 복원 지점을 자동으로 만드려고 할 겁니다.</Text5>
+			<Text6>모듈 중 하나에서 문제가 발생했습니다.  DDU 로그(기록)를 개발자에게 보내 주세요.</Text6>
+			<Text7>DDU는 노트북 (Enduro 또는 동급)으로 전환되는 AMD를 감지했습니다.  DDU는 아직 Enduro 시스템에서는 완전한 호환성 여부가 테스트가 되지 않았습니다.  사용상 위험 부담은 사용자에게 있습니다.</Text7>
+			<Text8>DDU는 현재 안전 모드에 있지 않은 걸 감지했습니다.  문제없이 더 나은 정리를 위해, 안전 모드로의 리부트를 권합니다.</Text8>
+			<Text9>DDU는 Windows 업데이트에서 드라이버의 자동 다운로드를 방지하도록 설정을 바꿨습니다.  새 드라이버를 설치한 후 원한다면, 이 설정을 기본값으로 되돌릴 수 있습니다.</Text9>
+			<Text10>제거 정리가 완료됐습니다!  이제 끝낼까요?</Text10>
+			<Text11>마침!</Text11>
+			<Text12>현재 안전 모드에 있지 않습니다.  발생 가능한 문제점을 피하기 위해, 안전 모드로의 리부트를 강력히 권합니다.  지금 안전 모드로 리부트할까요?</Text12>
+			<Text13>여기는 파란 복구 화면에서 선택해야 하는 겁니다: 문제 해결 -&gt; 고급 옵션 -&gt; 시작 프로그램 설정</Text13>
+			<Text14>리부트를 보류 중인 상태입니다.  DDU를 사용하기 전에 리부트하세요.</Text14>
+		</Messages>
+		<UpdateLog>
+			<Text1>드라이버 저장소 정리 (OEM 단계 삭제) 실행하는 중...</Text1>
+			<Text2>디렉토리 정리</Text2>
+			<Text3>알려진 레지스트리 키 정리하는 중...  2분 정도 걸릴 수 있습니다.</Text3>
+			<Text4>있는 경우, 사용자 계정 UpdatusUser 를 정리합니다.</Text4>
+			<Text5>디렉토리 정리</Text5>
+			<Text6>레지스트리 정리 시작</Text6>
+			<Text7>레지스트리 정리 마침</Text7>
+			<Text8>있는 경우, nVIDIA Optimus UpperFilter의 제거를 시작합니다.</Text8>
+			<Text9>새 장치 검색하는 중...</Text9>
+			<Text10>제거 정리가 완료됐습니다!</Text10>
+			<Text11>DDU 버전 :</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>감지됨 :</Text13>
+			<Text14>GPU 장치 ID :</Text14>
+			<Text15>감지된 드라이버 버전 :</Text15>
+			<Text16>INF :</Text16>
+			<Text17>INF 섹션 :</Text17>
+			<Text18>GPU가 올바르게 설치되지 않았습니다 :</Text18>
+			<Text19>일부 특수 폴더 삭제하는 중...  약간의 시간이 걸릴 수 있습니다.</Text19>
+			<Text20>정리가 시작됐습니다...</Text20>
+			<Text21>제거</Text21>
+			<Text22>드라이버</Text22>
+			<Text23>ddudr 제거 실행하는 중, 기다리세요. (몇 분 정도 걸릴 수 있습니다.)</Text23>
+			<Text24>장치 관리자에서 GPU(들)이 제거됐습니다.</Text24>
+			<Text25>오디오 컨트롤러 제거를 실행하고 있습니다.</Text25>
+			<Text26>HD 오디오 어댑터가 제거됐습니다!</Text26>
+			<Text27>3D Vision USB 어댑터가 장치 관리자에서 제거됐습니다.</Text27>
+			<Text28>모니터 및 숨겨진 모니터가 제거됐습니다!</Text28>
+			<Text29>ddudr 제거 완료</Text29>
+			<Text30>S-1-5-xx로 시작하는 영역 정리</Text30>
+			<Text31>S-1-5-xx로 끝나는 영역 정리</Text31>
+			<Text32>Classesroot 시작, installer\products 정리</Text32>
+			<Text33>Classesroot 끝, installer\products 정리</Text33>
+			<Text34>localmachine 시작, installer\products 정리</Text34>
+			<Text35>localmachine 끝, installer\products 정리</Text35>
+			<Text36>currentuser 시작, installer\products 정리</Text36>
+			<Text37>currentuser 끝, installer\products 정리</Text37>
+			<Text38>프로세스/서비스 정리하는 중...</Text38>
+			<Text39>프로세스/서비스 정리 완료</Text39>
+			<Text40>삭제됐습니다.</Text40>
+			<Text41>값이 제거됐습니다.</Text41>
+			<Text42>파일이 삭제됐습니다.</Text42>
+		</UpdateLog>
+	</frmMain>
+	<frmOptions Text="옵션">
+		<Label1>
+			<Text>GPU 특정 옵션</Text>
+		</Label1>
+		<Label2>
+			<Text>일반 옵션</Text>
+		</Label2>
+		<CheckBox1>
+			<Text>'C:\nVidia' 드라이버 폴더 제거 (권장 안 함)</Text>
+		</CheckBox1>
+		<CheckBox2>
+			<Text>DDU 프로그램 폴더에 로그(기록) 파일 저장 (적극 권장)</Text>
+		</CheckBox2>
+		<CheckBox3>
+			<Text>PhysX 제거</Text>
+		</CheckBox3>
+		<CheckBox4>
+			<Text>3DTV Play 제거</Text>
+		</CheckBox4>
+		<CheckBox5>
+			<Text>시스템 복원 지점 만들기 (허용된 경우)</Text>
+		</CheckBox5>
+		<CheckBox6>
+			<Text>존재 및 존재하지 않는 모니터 제거 (권장)</Text>
+		</CheckBox6>
+		<CheckBox7>
+			<Text>AMD 오디오 버스 제거</Text>
+		</CheckBox7>
+		<CheckBox8>
+			<Text>'C:\AMD' 드라이버 폴더 제거 (권장 안 함)</Text>
+		</CheckBox8>
+		<CheckBox9>
+			<Text>AMDKMPFD 드라이버/필터 제거 (AMD 칩셋에서는 백업 권장)</Text>
+		</CheckBox9>
+		<CheckBox10>
+			<Text>시작시, 안전 모드 메시지 상자 보이기</Text>
+		</CheckBox10>
+		<CheckBox11>
+			<Text>roaming 폴더에 구성 파일 저장</Text>
+		</CheckBox11>
+		<CheckBox12>
+			<Text>프로그램 시작시, DDU 업데이트 확인 안 함 (권장 안 함)</Text>
+		</CheckBox12>
+		<CheckBox13>
+			<Text>Geforce Experience (GFE) 제거</Text>
+		</CheckBox13>
+		<CheckBox14>
+			<Text>AMD Crimson 쉐이더 캐시 폴더 제거</Text>
+			<Tooltip>손상된 쉐이더 캐시 데이터에 의해 발생한 그래픽 이상 (속도나 시각 손상)이 있는 경우에 권장합니다.|또한, nVIDIA 같은 다른 브랜드로 전환하려는 경우에도 권장합니다.|</Tooltip>
+		</CheckBox14>
+	</frmOptions>
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Launch</Text>
+			<Text2>Reboot to|Safe Mode</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Launch option</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+		</lblNotSafeMode>
+		<cbBootOption>
+			<Item1>Normal</Item1>
+			<Item2>Safe Mode (Recommended)</Item2>
+			<Item3>Safe Mode With Networking</Item3>
+		</cbBootOption>
+	</frmLaunch>
+	<frmLog Text="Extended log">		
+	</frmLog>
+	<frmAbout>
+		<Label1>
+			<Text>
+Display Driver Uninstaller (DDU)
+- 디스플레이 (GPU) 드라이버 (nVIDIA/AMD) 용으로 만든 청소 도구
+
+장치 관리자에서 디스플레이/GPU 드라이버를 제거하고,
+nVIDIA/AMD로부터 제공받은 걸 포함해
+Windows 드라이버 저장소에서 현재 및 이전의 모든 드라이버를 제거합니다.
+
+이 도구를 사용한 후의 효과는 '새로 설치'한 상태의 Windows와 비슷합니다.
+
+이 도구는 'Driver Sweeper'와 같은 역할을 하며, 위에 언급한 모든 걸 추가했습니다.
+
+이전 드라이버나 새로운 거 하나를 설치하는데 어떠한 문제가 있을 경우,
+그 문제의 해결 시도를 위해 몇 가지 보고서를 제공합니다.
+
+
+권장하는 사용 방법 :
+
+- 이 도구는 보통(일반) 모드에서 사용할 수 있지만,
+  절대적인 안정성을 위해서는 언제나 안전 모드가 최선입니다.
+
+- 모두로부터의 의견을 수집하고자 합니다.  성공이냐 실패냐의 여부를 알려주세요.
+  백업이나 시스템 복원을 만드세요. (그렇지만, 일반적으로 매우 안전합니다.)
+
+- 드라이버 문제가 생기거나 생긴 경우, 이 도구는 안고 있거나 현재 겪고 있는
+  몇 가지 문제점에 대해 당신을 도울 겁니다.  여러분의 결과를 공유해 주세요.
+
+nVIDIA도 AMD도 Microsoft도 당신이나 당신의 컴퓨터의 어떠한 종류의 손상에 대해서도
+책임을 지지 않고, DDU의 계열사나 그 제작자에게 물을 방법이 없음을 명심하세요.
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+제작: Wagnard.
+
+공동 소유자: Shady757
+
+테스터: Dellon132
+
+로고 제작: juanchacin
+
+AMD 7850을 기부해 주신 Jackalito에게 너~무 너무 고맙습니다.
+
+Helge Klein에게 감사드립니다. (http://helgeklein.com/setacl/):
+ DDU 'SetAcl'을 포함한 그의 프로그램 사용을 허가해줬습니다.
+
+테스트를 위해 자신의 시간을 할애함에 너무 감사드립니다:
+ Gamer1291, Octopuss (Amd Enduro), nedooo` (나와 함께 디버깅했음),
+ Extraordinary (버그 수정 테스트)
+
+자신의 시스템을 위험에 몰아넣은(?) 모든 분들께 감사드립니다.
+ (Dellon132에게 특별히 감사드립니다.)
+
+* DDU의 제작자와 계열사는 'Driver Sweeper' 또는 그 제작자와는 어떠한
+  제휴(관련)도 없습니다.
+</Text>
+		</Label1>
+	</frmAbout>
+	<Misc>
+		<Tos>
+			<Text>
+Display Driver Uninstaller ('DDU') 사용자 계약
+
+
+당신은 DDU 소프트웨어를 사용해서 DDU의 '사용자'가 됩니다.
+이 계약은 드라이버를 제거하기 위해 이 프로그램을 사용하는 즉시 효력이 발생합니다.
+
+DDU를 사용함에 있어, 사용자의 PC에 손상이나 부정적인 영향을 끼치는 것에 대해
+DDU 또는 그 제작자 및 계열사를 비난(고발)하지 않을 것에 동의합니다.
+
+DDU를 사용함에 있어,
+nVIDIA ('nVIDIA, GeForce')도 Advanced Micro Devices ('AMD, Radeon')도
+Microsoft도 당신이나 당신의 컴퓨터의 어떠한 종류의 손상에 대해서도
+책임을 지지 않고, DDU의 계열사나 그 제작자에게 물을 방법이 없음을 인정합니다.
+</Text>
+		</Tos>
+	</Misc>
+</DisplayDriverUninstaller>

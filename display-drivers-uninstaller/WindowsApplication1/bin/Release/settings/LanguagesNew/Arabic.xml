@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="ar" Text="Arabic">
+	<!--
+	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
+	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+
+	Text = Shown to user (as written in english, found on language selection box)
+
+	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
+	[char = replaces]  xml doesn't allow some special chars like <>&"
+	| = newline
+	&amp; = &
+	&quot; = "
+	&gt; = >
+	&lt; = <
+
+	-->
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<Button1>
+			<Text>تنظيف وإعادة تشغيـــل النظام|(ينصــح بـه بشـدة)</Text>
+			<Tooltip>Uninstall the current and previous drivers, then restart the computer.|(Highly Recommended)</Tooltip>
+		</Button1>
+		<Button2>
+			<Text>تنظيف لكن بدون إعادة تشغيل|(قد يسبب المشاكل مثل ظهور شاشة سوداء)</Text>
+			<Tooltip>Uninstall the current and previous drivers, but don't restart the computer.|(May cause issues like blackscreen)</Tooltip>
+		</Button2>
+		<Button3>
+			<Text>تنظيف وإطفاء الجهاز |(لـتركيب كــرت جديــد)</Text>
+			<Tooltip>Uninstall the current and previous drivers and Shutdown the computer with no rescan|(For installing a new graphic card)</Tooltip>
+		</Button3>
+		<Button4>
+			<Text>ارجاع نظام التثبيت التلقائي للتعريفات إلى الوضع الافتراضي</Text>
+		</Button4>
+		<Button5>
+			<Text>عرض تقريـر مفصل</Text>
+		</Button5>
+		<Label1>
+			<Text>نـظام التشغيــل الحالـــي :</Text>
+		</Label1>
+		<Label4>
+			<Text>** هـل تحب هذا الأداة ؟ ؛ اذا ما رأيك بالتبـرع لنا. التبرعات تساهم في عملية التطويـر **</Text>
+		</Label4>
+		<Label5>
+			<Text>التقــريـــر : </Text>
+		</Label5>
+		<Label7>
+			<Text>حـدد نـوع الكـرت الخاص بـك : |</Text>
+		</Label7>
+		<Label9>
+			<Text>مـلاحظـة : أيـة اضرار أو اخطاء قـد تلحـق بجهازك هي تحت مسؤوليتـك الخاصة فقـط .||</Text>
+		</Label9>
+		<Label10>
+			<Text>ينصــح باستخــدام هـذه الاداة في الوضع الآمن </Text>
+		</Label10>
+		<Label11>
+			<Text>التحقـق من التحديثات .....</Text>
+			<Text2>لا يوجد تحديث حاليا ؛ الأداة بآخر اصدار.</Text2>
+			<Text3>تم العثور على تحديث جديد! ؛ سينحـصر الدعم عن الاصدارات القديمـة تدريجيا بعكس الاصدارات الحديثة</Text3>
+			<Text4>لا يمكـن جلب التحديثات في الوقت الحالي !</Text4>
+		</Label11>
+		<OptionsToolStripMenuItem>
+			<Text>Options</Text>
+		</OptionsToolStripMenuItem>
+		<ToolStripMenuItem1>
+			<Text>?</Text>
+		</ToolStripMenuItem1>
+		<ToSToolStripMenuItem>
+			<Text>ToS</Text>
+		</ToSToolStripMenuItem>
+		<VisitDDUHomepageToolStripMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomepageToolStripMenuItem>
+		<SVNToolStripMenuItem>
+			<Text>Visit SVN Website</Text>
+		</SVNToolStripMenuItem>
+		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
+		<VisitGuru3dAMDThreadToolStripMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3dAMDThreadToolStripMenuItem>
+		<VisitGeforceThreadToolStripMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceThreadToolStripMenuItem>
+		<AboutToolStripMenuItem>
+			<Text>About</Text>
+		</AboutToolStripMenuItem>
+		<Messages>
+			<Text1>يوجـد تحديث جديـد ! ؛ هـل تريد زيارة موقع الأداة الآن ؟</Text1>
+			<Text2>الاصدارات القديمــة لهذه الأداة دعمها محدود ؛ لذلك قم بتحديث الأداة لآخر اصدار قبل تبليغنـا بأيـة مشاكل أو اخطاء.</Text2>
+			<Text3>أنت لا تستخدم هذه الاداة مع كامل الصلاحيات . سيتم ايقاف الأداة الآن.</Text3>
+			<Text4>لم يتم ايجاد ddudr ؛ الرجاء الرجوع للتقريـر لمعرفة السبب.</Text4>
+			<Text5>هذه الأداة تقــوم بتعديل الريجستــري بشكل كبيـر . الأداة ستقوم بمحاولة انشاء نقطة استعادة للنظام تلقائيا ( الوضـع الطبيعي فقط )</Text5>
+			<Text6>حدثت مشكلة في أحد دوال البرنامج ؛ الرجاء ارسال التقارير للمطور</Text6>
+			<Text7>الأداة اكتشفت انك تسخدم الان حاسب محمول يحتوي على كرتين مدمجين أحدهما من AMD . الأداة حاليـا ليست متوافقة بشكل كامل لمعالجة هذه الحالة ؛ استخدم الاداة على مسؤوليتك فقط.</Text7>
+			<Text8>أنت الآن لست في الوضع الآمن للنظام ... للحصول على أفضل النتائج وبدون اخطاء ؛ ينصـح بإعادة التشغيل والدخول للوضع الآمن</Text8>
+			<Text9>الأداة قامت بتغيير الاعدادات التي تعرقل عملية تحميل التعريفات من الويندوز ابديت ؛ يمكنك ارجاعه للوضع الافتراضي بعد تنصيب التعريف الجديد</Text9>
+			<Text10>تـم الانتهاء من عمليـة التنظيف بالكامل ! هل تريد الخروج من الأداة الآن ؟</Text10>
+			<Text11>تم الانتهاء!</Text11>
+			<Text12>أنت الان لست في الوضع الآمن للنظام . يستحسـن ان تقوم بإعادة التشغيل والدخول للوضع الآمن ؛ وذلك لتجنب أية اخطاء قد تحدث</Text12>
+			<Text13>في حال حدوث شاشة زرقاء  Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text14>
+			<Text14>يجب عمل اعادة تشغيل للنظام قبل اعادة استخدام هذه الآداة مجددا</Text15>
+		</Messages>
+		<UpdateLog>
+			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
+			<Text2>Cleaning Directory</Text2>
+			<Text3>Cleaning known Regkeys... May take a minute or two.</Text3>
+			<Text4>Cleaning UpdatusUser users account if present.</Text4>
+			<Text5>Cleaning Directory</Text5>
+			<Text6>Starting Registry CleanUP</Text6>
+			<Text7>Finished cleaning Registry</Text7>
+			<Text8>Starting the removal of nVidia Optimus UpperFilter if present.</Text8>
+			<Text9>Scanning for new device...</Text9>
+			<Text10>Clean uninstall completed!</Text10>
+			<Text11>DDU Version:</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Detected :</Text13>
+			<Text14>GPU DeviceId :</Text14>
+			<Text15>Detected Driver(s) Version(s) :</Text15>
+			<Text16>INF :</Text16>
+			<Text17>INF Section :</Text17>
+			<Text18>GPU not Correctly Installed :</Text18>
+			<Text19>Deleting some specials folders, it may take some times...</Text19>
+			<Text20>CleanUP started...</Text20>
+			<Text21>Uninstalling</Text21>
+			<Text22>driver</Text22>
+			<Text23>Executing ddudr Remove , Please wait(can take a few minutes)</Text23>
+			<Text24>GPU(s) Removed from Device Manager.</Text24>
+			<Text25>Executing DDUDR Remove Audio controller.</Text25>
+			<Text26>HD audio adapters Removed !</Text26>
+			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
+			<Text28>Monitors and Hidden monitors removed !</Text28>
+			<Text29>ddudr Remove complete</Text29>
+			<Text30>Starting S-1-5-xx region cleanUP</Text30>
+			<Text31>End of S-1-5-xx region cleanUP</Text31>
+			<Text32>Begin Classesroot ,installer\products cleanup</Text32>
+			<Text33>End Classesroot ,installer\products cleanup</Text33>
+			<Text34>Start localmachine ,installer\products cleanup</Text34>
+			<Text35>End localmachine ,installer\products cleanup</Text35>
+			<Text36>Start currentuser ,installer\products cleanup</Text36>
+			<Text37>End currentuser ,installer\products cleanup</Text37>
+			<Text38>Cleaning process/services...</Text38>
+			<Text39>Process/Services CleanUP Complete</Text39>
+			<Text40>Deleted.</Text40>
+			<Text41>Value removed.</Text41>
+			<Text42>File Deleted.</Text42>
+		</UpdateLog>
+	</frmMain>
+	<frmOptions Text="Options">
+		<Label1>
+			<Text>GPUs Specifics Options</Text>
+		</Label1>
+		<Label2>
+			<Text>General Options</Text>
+		</Label2>
+		<CheckBox1>
+			<Text>حذف مجلد "C:\nVidia" ? (لا ينصح بهذا الاجراء) </Text>
+		</CheckBox1>
+		<CheckBox2>
+			<Text>حفظ تقرير مفصل للرجوع اليه ( ينصح به بشــدة )</Text>
+		</CheckBox2>
+		<CheckBox3>
+			<Text>حـذف التجسيد الفيزيائي PhysX</Text>
+		</CheckBox3>
+		<CheckBox4>
+			<Text>حذف|3DTV Play</Text>
+		</CheckBox4>
+		<CheckBox5>
+			<Text>عمـل نقطة استعادة للنظام ( اذا كانت مفعلة )</Text>
+		</CheckBox5>
+		<CheckBox6>
+			<Text>حـذف اعدادات الشاشة الحالية المتصلة أو الغير متصلة ( ينصـح بـه )</Text>
+		</CheckBox6>
+		<CheckBox7>
+			<Text>حـذف AMD Audio Bus</Text>
+		</CheckBox7>
+		<CheckBox8>
+			<Text>حذف مجلد  "C:\AMD" ( لا ينصـح بهذا الاجراء )</Text>
+		</CheckBox8>
+		<CheckBox9>
+			<Text>حذف تعريف/فلتر AMDKMPFD ( ينصح بعمل نسخ احتياطي في حال استخدام لوحة تحتوي على شريحة من AMD )</Text>
+		</CheckBox9>
+		<CheckBox10>
+			<Text>Show Safe Mode message box on startup</Text>
+		</CheckBox10>
+		<CheckBox11>
+			<Text>Store config file in roaming folder</Text>
+		</CheckBox11>
+		<CheckBox12>
+			<Text>Do not check for DDU updates on startup (NOT Recommended)</Text>
+		</CheckBox12>
+		<CheckBox13>
+			<Text>Remove Geforce Experience (GFE)</Text>
+		</CheckBox13>
+		<CheckBox14>
+			<Text>Remove AMD Crimson Shader Cache folder</Text>
+			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+		</CheckBox14>
+	</frmOptions>
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Launch</Text>
+			<Text2>Reboot to|Safe Mode</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Launch option</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+		</lblNotSafeMode>
+		<cbBootOption>
+			<Item1>Normal</Item1>
+			<Item2>Safe Mode (Recommended)</Item2>
+			<Item3>Safe Mode With Networking</Item3>
+		</cbBootOption>
+	</frmLaunch>
+	<frmLog Text="Extended log">		
+	</frmLog>
+	<frmAbout>
+		<Label1>
+			<Text>
+Display Driver Uninstaller (DDU) / Cleaner made for Display (GPU) Drivers.(NVIDIA/AMD)
+
+وظيفة هذه الأداة تكمن في الغاء تثبيت تعريف الكرت الرسومي من إدارة الأجهــزة ؛ وأيضا حذف جميع الملفات المتعلقة بالتعريف الموجودة داخل النظام التشغيلي 
+بالإضافة إلى ايقاف الخدمات الخاصة بالتعريف سواء كان الكرت من 
+NVIDIA أو AMD .
+
+الهدف من هذه الأداة هو تنظيف النظام نهائيا من مشغل الكرت الرسومي. وكأن النظام قد تم تنصيبه للتو
+
+هذه الأداة مشابهة لأداة درايفر سويبر* لكن تحتوي على الخصائص الاضافية التي تم ذكرها سلفا
+
+في حال ظهرت لك مشاكل أثناء تنصيب التعريفات القديمة أو الجديدة ؛ الرجاء إبلاغنا بها لكي نقوم بحلها في الاإصدارات الجديدة
+
+
+طريقة استخدام الاداة :
+
+-هذه الأداة يمكن ان تستخدمها في الوضع الطبيعي لنظام التشغيل ؛ لكن يفضل استخدامها في الوضع الآمن
+
+- نحن نرحب بالآراء والمقترحات الجديدة ؛ الرجاء ابلاغنا في حال كان لديك ملاحظة 
+
+- دائما احتفظ بنسخة احتياطية للنظام أو نقطة استعادة ؛ تحسبا لأية مشاكل قد تظهر بعد الاستخدام
+
+-اذا واجهت مشاكل في التعريف الكرت الخاص بك ؛ وبعد استخدام هذه الاداة تم حل المشكلة؛ الرجاء مشاركتنا 
+بتجربتك وأية اقتراحات تود اطلاعنا عليها
+
+الرجاء الانتباه بأن كل من 
+NVIDIA , AMD , Microsoft
+غير مسؤولة نهائيا عن أية اضرار قد تلحق بجهازك جراء استخدام هذه الاداة أو من مصمم الاداة
+-------------------------------
+
+هذه الاداة من برمجة Wagnard.
+
+بالاشتراك مع: Shady757
+
+الاختبار : Dellon132
+
+تصميم الشعار : juanchacin
+
+الشكر الجزيل لـ
+Jackalito
+لتبرعه ببطاقة 
+AMD 7850
+شكر خاص لـ
+Helge Klein (http://helgeklein.com/setacl/) "SetAcl"
+لتصريحه لنا باستخدم برنامجه ودمجه مع هذه الاداة
+
+جزيل الشكر لكل من ساهم في تجربة البرنامج ؛ وهم
+Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (took time debugging with me) 
+Extraordinary (Testing a bug fix)
+
+شكرا لكل من جرب هذه الاداة وعرض جهازه للاخطار في سبيل نجاحها (شكر خاص لـ Dellon132)
+
+هذه الاداة ؛ مبتكرها وكل الاشخاص الذين ساهموا مع المبرمج  ليس لهم علاقة مع برنامج درايفر سويبر أو حتى مبتكره
+</Text>
+		</Label1>
+	</frmAbout>
+	<Misc>
+		<Tos>
+			<Text>
+Display Driver Uninstaller ("DDU") اتفاقيـة الترخيص 
+
+أنت الان تعتبر مستخدم لهذه الاداة طالما تستخدم البرمجيات المتعلقة بها. لذلك فإن هذه الاتفاقيـة سارية المفعول عند استخدام هذا البرنامج لحذف تعريفات جهازك.
+
+باستخدامك لهذه الأداة أنت توافق بعدم اتهام مبتكرها أو اي شخص ساهم في هذه الاداة في حال حدوث أية اضرار أو اخطاء لجهازك.
+
+عند استخدامك لهذه الاداة فأنت تقر بأن كلا من  NVIDIA ("NVIDIA, GeForce")  و/أو  Advanced Micro Devices ("AMD, Radeon") ليس لها/لهما علاقة بهذه الاداة ؛ أو مع مبرمجها وكل من ساهم في عملها بجميع الأحوال.
+</Text>
+		</Tos>
+	</Misc>
+</DisplayDriverUninstaller>
