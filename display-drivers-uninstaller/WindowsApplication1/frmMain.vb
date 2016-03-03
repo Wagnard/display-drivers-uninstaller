@@ -143,25 +143,6 @@ Public Class frmMain
 		End If
 	End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
-        If Not CBool(settings.getconfig("goodsite")) Then
-            MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
-            settings.setconfig("goodsite", "True")
-        End If
-
-        disabledriversearch()
-        'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-        KillGPUStatsProcesses()
-        'this shouldn't be slow, so it isn't on a thread/background worker
-
-        reboot = True
-        combobox1value = ComboBox1.Text
-
-        BackgroundWorker1.RunWorkerAsync()
-
-    End Sub
-
     Private Sub cleandriverstore()
         Dim catalog As String = ""
 
@@ -2514,74 +2495,46 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub cleannvidiaserviceprocess()
+	Private Sub cleannvidiaserviceprocess()
+		CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\services.cfg"))
 
-        CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\services.cfg"))
-        If removegfe Then
-            CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\gfeservice.cfg"))
-        End If
-        'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
-        'holding files in the NVIDIA folders sometimes.
-        Try
-            Dim appproc = Process.GetProcessesByName("Lcore")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
+		If removegfe Then
+			CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.StartupPath & "\settings\NVIDIA\gfeservice.cfg"))
+		End If
 
-            appproc = Process.GetProcessesByName("nvgamemonitor")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
+		'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
+		'holding files in the NVIDIA folders sometimes.
+		Try
+			Dim processes As String() =
+			 New String() {
+			 "Lcore",
+			 "nvgamemonitor",
+			 "nvstreamsvc",
+			 "NvTmru",
+			 "nvxdsync",
+			 "dwm",
+			 "WWAHost",
+			 "nvspcaps64",
+			 "nvspcaps",
+			 "NvBackend"}
 
-            appproc = Process.GetProcessesByName("nvstreamsvc")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
+			For Each pname As String In processes
+				For Each p As Process In process.GetProcessesByName(pname)
+					p.Kill()
+				Next
+			Next
 
-            appproc = Process.GetProcessesByName("NvTmru")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
+			If removegfe Then
+				Dim appproc = process.GetProcessesByName("nvtray")
 
+				For i As Integer = 0 To appproc.Length - 1
+					appproc(i).Kill()
+				Next i
+			End If
 
-            appproc = Process.GetProcessesByName("nvxdsync")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
-
-            If removegfe Then
-                appproc = process.GetProcessesByName("nvtray")
-                For i As Integer = 0 To appproc.Length - 1
-                    appproc(i).Kill()
-                Next i
-            End If
-            appproc = process.GetProcessesByName("dwm")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
-
-            appproc = process.GetProcessesByName("WWAHost")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
-
-            appproc = process.GetProcessesByName("nvspcaps64")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
-
-            appproc = process.GetProcessesByName("nvspcaps")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
-
-            appproc = process.GetProcessesByName("NvBackend")
-            For i As Integer = 0 To appproc.Length - 1
-                appproc(i).Kill()
-            Next i
-        Catch ex As Exception
-        End Try
-    End Sub
+		Catch ex As Exception
+		End Try
+	End Sub
 
     Private Sub cleannvidiafolders()
         Dim regkey As RegistryKey = Nothing
@@ -5203,26 +5156,6 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub Form1_close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
-
-        If preventclose Then
-            e.Cancel = True
-            Exit Sub
-        End If
-
-        If MyIdentity.IsSystem AndAlso safemode Then
-            Try
-                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
-            Catch ex As Exception
-            End Try
-            Try
-                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True).DeleteSubKeyTree("PAexec")
-            Catch ex As Exception
-            End Try
-        End If
-
-    End Sub
-
     Private Function winupdatepending() As Boolean
         Dim regkey As RegistryKey = Nothing
         regkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
@@ -5233,7 +5166,436 @@ Public Class frmMain
         End If
     End Function
 
-	Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+	Private Sub gpuidentify(ByVal gpu As String)
+
+		Dim regkey As RegistryKey = Nothing
+		Dim subregkey As RegistryKey = Nothing
+		Dim array() As String
+
+		Try
+			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+
+			For Each child As String In regkey.GetSubKeyNames
+				If Not checkvariables.isnullorwhitespace(child) Then
+					If child.ToLower.Contains(gpu) Then
+
+						subregkey = regkey.OpenSubKey(child)
+						For Each child2 As String In subregkey.GetSubKeyNames
+							array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
+							If (array IsNot Nothing) AndAlso (Not (array.Length < 1)) Then
+								For i As Integer = 0 To array.Length - 1
+									If array(i).ToLower.Contains("pci\cc_03") Then
+										For j As Integer = 0 To array.Length - 1
+											If array(j).ToLower.Contains("ven_8086") Then
+												ComboBox1.SelectedIndex = 2
+												PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+												PictureBox2.Size = New Size(158, 126)
+											End If
+											If array(j).ToLower.Contains("ven_1002") Then
+												ComboBox1.SelectedIndex = 1
+												PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+												PictureBox2.Size = New Size(158, 126)
+											End If
+											If array(j).ToLower.Contains("ven_10de") Then
+												ComboBox1.SelectedIndex = 0
+												PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
+												PictureBox2.Size = New Size(252, 123)
+											End If
+										Next
+									End If
+								Next
+							End If
+						Next
+					End If
+				End If
+			Next
+		Catch ex As Exception
+			MessageBox.Show(Language.GetTranslation(Me.Name, "Messages", "Text6"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+			log(ex.Message + ex.StackTrace)
+		End Try
+	End Sub
+
+	Private Sub restartinsafemode(Optional ByVal withNetwork As Boolean = False)
+
+		Dim regkey As RegistryKey = Nothing
+
+		systemrestore()	'we try to do a system restore if allowed before going into safemode.
+		log("restarting in safemode")
+
+
+		Me.TopMost = False
+
+		Dim setbootconf As New ProcessStartInfo("bcdedit")
+
+		If withNetwork Then
+			setbootconf.Arguments = "/set safeboot network"
+		Else
+			setbootconf.Arguments = "/set safeboot minimal"
+		End If
+
+		setbootconf.UseShellExecute = False
+		setbootconf.CreateNoWindow = True
+		setbootconf.RedirectStandardOutput = False
+
+		Dim processstopservice As New Process
+		processstopservice.StartInfo = setbootconf
+		processstopservice.Start()
+		processstopservice.WaitForExit()
+		processstopservice.Close()
+
+		Try
+			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+
+			If regkey IsNot Nothing Then
+				'Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
+				'sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
+				'sw.Flush()
+				'sw.Close()
+				settings.setconfig("arguments", arg)
+				regkey.SetValue("*" + Application.ProductName, Application.ExecutablePath)
+				regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+			End If
+		Catch ex As Exception
+			log(ex.Message & ex.StackTrace)
+		End Try
+
+
+		processinfo.FileName = "shutdown"
+		processinfo.Arguments = "/r /t 0"
+		processinfo.WindowStyle = ProcessWindowStyle.Hidden
+		processinfo.UseShellExecute = True
+		processinfo.CreateNoWindow = True
+		processinfo.RedirectStandardOutput = False
+
+		process.StartInfo = processinfo
+		process.Start()
+		process.WaitForExit()
+		process.Close()
+
+		closeddu()
+	End Sub
+
+	Private Sub closeddu()
+
+		If Me.InvokeRequired Then
+			Me.Invoke(New MethodInvoker(AddressOf Me.closeddu))
+		Else
+			Try
+				preventclose = False
+
+				Me.Close()
+
+			Catch ex As Exception
+				log(ex.Message + ex.StackTrace)
+			End Try
+		End If
+	End Sub
+
+#Region "frmMain Controls"
+
+	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+		If Not CBool(settings.getconfig("goodsite")) Then
+			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
+			settings.setconfig("goodsite", "True")
+		End If
+
+		disabledriversearch()
+		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
+		KillGPUStatsProcesses()
+		'this shouldn't be slow, so it isn't on a thread/background worker
+
+		reboot = True
+		combobox1value = ComboBox1.Text
+
+		BackgroundWorker1.RunWorkerAsync()
+	End Sub
+
+	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+		If Not CBool(settings.getconfig("goodsite")) Then
+			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
+			settings.setconfig("goodsite", "True")
+		End If
+		disabledriversearch()
+		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
+		KillGPUStatsProcesses()
+		'this shouldn't be slow, so it isn't on a thread/background worker
+
+		reboot = False
+		shutdown = False
+		combobox1value = ComboBox1.Text
+		BackgroundWorker1.RunWorkerAsync()
+
+	End Sub
+
+	Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+		If Not CBool(settings.getconfig("goodsite")) Then
+			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
+			settings.setconfig("goodsite", "True")
+		End If
+		disabledriversearch()
+		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
+		KillGPUStatsProcesses()
+		'this shouldn't be slow, so it isn't on a thread/background worker
+
+		reboot = False
+		shutdown = True
+		combobox1value = ComboBox1.Text
+		BackgroundWorker1.RunWorkerAsync()
+	End Sub
+
+	Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+
+		Dim regkey As RegistryKey = Nothing
+
+		If version >= "6.1" Then
+			Try
+				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
+				regkey.SetValue("SearchOrderConfig", 1)
+				MsgBox(msgboxmessagefn(10))
+			Catch ex As Exception
+				log(ex.Message + ex.StackTrace)
+			End Try
+		End If
+		If version >= "6.0" And version < "6.1" Then
+			Try
+				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
+				regkey.SetValue("DontSearchWindowsUpdate", 0)
+				MsgBox(msgboxmessagefn(10))
+			Catch ex As Exception
+				log(ex.Message + ex.StackTrace)
+			End Try
+		End If
+	End Sub
+
+	Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+		Using frm As New frmLog
+			frm.ShowDialog(Me)
+		End Using
+	End Sub
+
+
+
+	Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+		combobox1value = ComboBox1.Text
+		If combobox1value = "NVIDIA" Then
+
+			PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
+			PictureBox2.Size = New Size(252, 123)
+			PictureBox2.Image = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
+		End If
+
+		If combobox1value = "AMD" Then
+
+
+			PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+			PictureBox2.Size = New Size(158, 126)
+			PictureBox2.Image = My.Resources.RadeonLogo1
+		End If
+
+		If combobox1value = "INTEL" Then
+
+			PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+			PictureBox2.Size = New Size(158, 126)
+			PictureBox2.Image = My.Resources.intel_logo
+		End If
+
+	End Sub
+
+	Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+		If ComboBox2.SelectedItem IsNot Nothing Then
+			InitLanguage(False, CType(ComboBox2.SelectedItem, Language.LanguageOption))
+		End If
+	End Sub
+
+	Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
+		settings.setconfig("donate", "true")
+
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
+
+
+
+	Private Sub ToSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ToSToolStripMenuItem.Click
+		MessageBox.Show(Language.GetTranslation("Misc", "Tos", "Text"))
+	End Sub
+
+	Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
+		Using frm As New frmAbout
+			frm.ShowDialog(Me)
+		End Using
+	End Sub
+
+	Private Sub VisitGuru3dNVIDIAThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dNVIDIAThreadToolStripMenuItem.Click
+
+		settings.setconfig("guru3dnvidia", "true")
+
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
+
+	Private Sub VisitGuru3dAMDThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dAMDThreadToolStripMenuItem.Click
+
+		settings.setconfig("guru3damd", "true")
+
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
+
+	Private Sub VisitGeforceThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGeforceThreadToolStripMenuItem.Click
+
+		settings.setconfig("geforce", "true")
+
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
+
+	Private Sub SVNToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SVNToolStripMenuItem.Click
+
+		settings.setconfig("svn", "true")
+
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
+
+	Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomepageToolStripMenuItem.Click
+
+		settings.setconfig("dduhome", "true")
+
+
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
+
+	Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
+		frmOptions.Show()
+		frmOptions.TopMost = True
+	End Sub
+
+	Private Sub ToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
+		If Not preventclose Then
+			Me.Close()
+		End If
+	End Sub
+
+	Private Sub NotifyIcon1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles NotifyIcon1.MouseDoubleClick
+		If Not silent Then
+			Me.WindowState = FormWindowState.Normal
+		End If
+	End Sub
+
+
+
+	Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		InitLanguage(True)
 
 		If Not donotcheckupdatestartup Then
@@ -6038,758 +6400,37 @@ Public Class frmMain
 		End If
 	End Sub
 
-	Private Sub gpuidentify(ByVal gpu As String)
-
-		Dim regkey As RegistryKey = Nothing
-		Dim subregkey As RegistryKey = Nothing
-		Dim array() As String
-
-		Try
-			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-
-			For Each child As String In regkey.GetSubKeyNames
-				If Not checkvariables.isnullorwhitespace(child) Then
-					If child.ToLower.Contains(gpu) Then
-
-						subregkey = regkey.OpenSubKey(child)
-						For Each child2 As String In subregkey.GetSubKeyNames
-							array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
-							If (array IsNot Nothing) AndAlso (Not (array.Length < 1)) Then
-								For i As Integer = 0 To array.Length - 1
-									If array(i).ToLower.Contains("pci\cc_03") Then
-										For j As Integer = 0 To array.Length - 1
-											If array(j).ToLower.Contains("ven_8086") Then
-												ComboBox1.SelectedIndex = 2
-												PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-												PictureBox2.Size = New Size(158, 126)
-											End If
-											If array(j).ToLower.Contains("ven_1002") Then
-												ComboBox1.SelectedIndex = 1
-												PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-												PictureBox2.Size = New Size(158, 126)
-											End If
-											If array(j).ToLower.Contains("ven_10de") Then
-												ComboBox1.SelectedIndex = 0
-												PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
-												PictureBox2.Size = New Size(252, 123)
-											End If
-										Next
-									End If
-								Next
-							End If
-						Next
-					End If
-				End If
-			Next
-		Catch ex As Exception
-			MessageBox.Show(Language.GetTranslation(Me.Name, "Messages", "Text6"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-			log(ex.Message + ex.StackTrace)
-		End Try
-	End Sub
-
-	Private Sub restartinsafemode(Optional ByVal withNetwork As Boolean = False)
-
-		Dim regkey As RegistryKey = Nothing
-
-		systemrestore()	'we try to do a system restore if allowed before going into safemode.
-		log("restarting in safemode")
-
-
-		Me.TopMost = False
-
-		Dim setbootconf As New ProcessStartInfo("bcdedit")
-
-		If withNetwork Then
-			setbootconf.Arguments = "/set safeboot network"
-		Else
-			setbootconf.Arguments = "/set safeboot minimal"
-		End If
-
-		setbootconf.UseShellExecute = False
-		setbootconf.CreateNoWindow = True
-		setbootconf.RedirectStandardOutput = False
-
-		Dim processstopservice As New Process
-		processstopservice.StartInfo = setbootconf
-		processstopservice.Start()
-		processstopservice.WaitForExit()
-		processstopservice.Close()
-
-		Try
-			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-
-			If regkey IsNot Nothing Then
-				'Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
-				'sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
-				'sw.Flush()
-				'sw.Close()
-				settings.setconfig("arguments", arg)
-				regkey.SetValue("*" + Application.ProductName, Application.ExecutablePath)
-				regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
-			End If
-		Catch ex As Exception
-			log(ex.Message & ex.StackTrace)
-		End Try
-
-
-		processinfo.FileName = "shutdown"
-		processinfo.Arguments = "/r /t 0"
-		processinfo.WindowStyle = ProcessWindowStyle.Hidden
-		processinfo.UseShellExecute = True
-		processinfo.CreateNoWindow = True
-		processinfo.RedirectStandardOutput = False
-
-		process.StartInfo = processinfo
-		process.Start()
-		process.WaitForExit()
-		process.Close()
-
-		closeddu()
-	End Sub
-
-	Private Sub closeddu()
-
-		If Me.InvokeRequired Then
-			Me.Invoke(New MethodInvoker(AddressOf Me.closeddu))
-		Else
-			Try
-				preventclose = False
-
-				Me.Close()
-
-			Catch ex As Exception
-				log(ex.Message + ex.StackTrace)
-			End Try
-		End If
-	End Sub
-
 	Private Sub Form1_Shown(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Shown
 		If silent Then
 			Me.Hide()
 		End If
 	End Sub
 
-	Private Sub ThreadTask()
+	Private Sub Form1_Close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
 
-		Try
-			If argcleanamd Then
-				backgroundworkcomplete = False
-				cleananddonothing("AMD")
-			End If
-
-			Do Until backgroundworkcomplete
-				System.Threading.Thread.Sleep(10)
-			Loop
-
-			If argcleannvidia Then
-				backgroundworkcomplete = False
-				cleananddonothing("NVIDIA")
-			End If
-
-			Do Until backgroundworkcomplete
-				System.Threading.Thread.Sleep(10)
-			Loop
-
-			If argcleanintel Then
-				backgroundworkcomplete = False
-				cleananddonothing("INTEL")
-			End If
-
-			Do Until backgroundworkcomplete
-				System.Threading.Thread.Sleep(10)
-			Loop
-
-			If restart Then
-				log("Restarting Computer ")
-				processinfo.FileName = "shutdown"
-				processinfo.Arguments = "/r /t 0"
-				processinfo.WindowStyle = ProcessWindowStyle.Hidden
-				processinfo.UseShellExecute = True
-				processinfo.CreateNoWindow = True
-				processinfo.RedirectStandardOutput = False
-
-				process.StartInfo = processinfo
-				process.Start()
-				process.WaitForExit()
-				process.Close()
-
-				closeddu()
-				Exit Sub
-			End If
-
-			If silent And (Not restart) Then
-				closeddu()
-			End If
-		Catch ex As Exception
-			log(ex.Message + ex.StackTrace)
-		End Try
-	End Sub
-
-	Sub systemrestore()
-		'THIS NEEDS TO BE FIXED!!! DOES NOT WORK WITH OPTION STRICT ON. I WAS UNABLE TO FIGURE OUT MY SELF. BE SURE TO FIX BEFORE RELEASE.
-
-		If trysystemrestore Then
-			Try
-				UpdateTextMethod("Creating System Restore point (If allowed by the system)")
-				log("Trying to Create a System Restored Point")
-				Dim oScope As New ManagementScope("\\localhost\root\default")
-				Dim oPath As New ManagementPath("SystemRestore")
-				Dim oGetOp As New ObjectGetOptions()
-				Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
-
-				Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
-				oInParams("Description") = "DDU System Restored Point"
-				oInParams("RestorePointType") = 12 ' MODIFY_SETTINGS
-				oInParams("EventType") = 100
-
-				Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
-
-				log("System Restored Point Created. code: " + CStr(oOutParams("ReturnValue")))
-			Catch ex As Exception
-				log("System Restored Point Could not be Created! Err Code: 0x" & Hex(Err.Number))
-			End Try
-
-		End If
-		'     If trysystemrestore Then
-		'     Select Case System.Windows.Forms.SystemInformation.BootMode
-		'     Case BootMode.Normal
-		'     If f.CheckBox5.Checked = True Then
-		'     UpdateTextMethod("Creating System Restore point (If allowed by the system)")
-		'     Try
-		'     log("Trying to Create a System Restored Point")
-		'     Dim SysterRestoredPoint As Object = GetObject("winmgmts:\\.\root\default:Systemrestore")
-		'     If SysterRestoredPoint IsNot Nothing Then
-		'     If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
-		'     log("System Restored Point Created")
-		'     Else
-		'     log("System Restored Point Could not Created!")
-		'     End If
-		'     End If
-		'
-		'        Catch ex As Exception
-		'        log(ex.Message)
-		'        End Try
-		'        End If
-		'        End Select
-		'        End If
-	End Sub
-
-	Sub getoeminfo()
-
-		log("The following third-party driver packages are installed on this computer: ")
-		Dim infisvalid As Boolean = True
-		Try
-			For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
-				If Not checkvariables.isnullorwhitespace(infs) Then
-
-					log("---")
-					log(infs)
-					infisvalid = False 'false unless we find either a provider or class 
-					For Each child As String In IO.File.ReadAllLines(infs)
-						If Not checkvariables.isnullorwhitespace(child) Then
-							child = child.Replace(" ", "").Replace(vbTab, "")
-
-							If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
-								infisvalid = True
-								If child.EndsWith("%") Then
-									For Each provider As String In IO.File.ReadAllLines(infs)
-										If Not checkvariables.isnullorwhitespace(provider) Then
-											provider = provider.Replace(" ", "").Replace(vbTab, "")
-											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
-											   Not provider.Contains("%") Then
-												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
-												Exit For
-											End If
-										End If
-									Next
-									Exit For
-								End If
-								log(child)
-								Exit For
-							End If
-						End If
-					Next
-
-					For Each child As String In IO.File.ReadAllLines(infs)
-						If Not checkvariables.isnullorwhitespace(child) Then
-
-							child = child.Replace(" ", "").Replace(vbTab, "")
-
-							If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
-								infisvalid = True
-								If child.EndsWith("%") Then
-									For Each provider As String In IO.File.ReadAllLines(infs)
-										If Not checkvariables.isnullorwhitespace(provider) Then
-											provider = provider.Replace(" ", "").Replace(vbTab, "")
-											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso
-											   Not provider.Contains("%") Then
-												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
-												Exit For
-											End If
-										End If
-									Next
-									Exit For
-								End If
-								log(child)
-								Exit For
-							End If
-						End If
-					Next
-					If Not infisvalid Then
-						log("This inf entry is corrupted or invalid.")
-						deletefile(infs)
-					End If
-				End If
-			Next
-		Catch ex As Exception
-			log(ex.Message + ex.StackTrace)
-		End Try
-
-	End Sub
-
-	Public Sub TestDelete(ByVal folder As String)
-		' UpdateTextMethod(UpdateTextMethodmessagefn("18"))
-		'log("Deleting some specials folders, it could take some times...")
-		'ensure that this folder can be accessed with current user ac.
-		If Not Directory.Exists(folder) Then
+		If preventclose Then
+			e.Cancel = True
 			Exit Sub
 		End If
 
-		'Get an object repesenting the directory path below
-		Dim di As New DirectoryInfo(folder)
-
-		'Traverse all of the child directors in the root; get to the lowest child
-		'and delete all files, working our way back up to the top.  All files
-		'must be deleted in the directory, before the directory itself can be deleted.
-		'also if there is hidden / readonly / system attribute..  change those attribute.
-		Try
-
-
-			For Each diChild As DirectoryInfo In di.GetDirectories()
-				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
-				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
-				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-				If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
-
-					Try
-						TraverseDirectory(diChild)
-					Catch ex As Exception
-						log(ex.Message + ex.StackTrace)
-					End Try
-				End If
-			Next
-		Catch ex As Exception
-			log("test delete : " + ex.Message)
-		End Try
-		'Finally, clean all of the files directly in the root directory
-		CleanAllFilesInDirectory(di)
-
-		'The containing directory can only be deleted if the directory
-		'is now completely empty and all files previously within
-		'were deleted.
-		Try
-			If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
-				di.Delete()
-				log(di.ToString + " - " + "Folder removed via testdelete sub")
-			End If
-		Catch ex As Exception
-			log("testdelete @ di.getfiles() : " + ex.Message)
-		End Try
-	End Sub
-
-
-	Private Sub TraverseDirectory(ByVal di As DirectoryInfo)
-
-		'If the current directory has more child directories, then continure
-		'to traverse down until we are at the lowest level and remove
-		'there hidden / readonly / system attribute..  At that point all of the
-		'files will be deleted.
-		For Each diChild As DirectoryInfo In di.GetDirectories()
-			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
-			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
-			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-			If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
-
-				Try
-					TraverseDirectory(diChild)
-				Catch ex As Exception
-					log(ex.Message + ex.StackTrace)
-				End Try
-			End If
-		Next
-
-		'Now that we have no more child directories to traverse, delete all of the files
-		'in the current directory, and then delete the directory itself.
-		CleanAllFilesInDirectory(di)
-
-
-		'The containing directory can only be deleted if the directory
-		'is now completely empty and all files previously within
-		'were deleted.
-		If di.GetFiles().Length = 0 Then
+		If MyIdentity.IsSystem AndAlso safemode Then
 			Try
-				di.Delete()
+				My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
 			Catch ex As Exception
-				log(ex.Message + ex.StackTrace)
+			End Try
+			Try
+				My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True).DeleteSubKeyTree("PAexec")
+			Catch ex As Exception
 			End Try
 		End If
 
 	End Sub
 
-
-	''' Iterates through all files in the directory passed into
-	''' method and deletes them.
-	''' It may be necessary to wrap this call in impersonation or ensure parent directory
-	''' permissions prior, because delete permissions are not guaranteed.
-
-	Private Sub CleanAllFilesInDirectory(ByVal DirectoryToClean As DirectoryInfo)
-
-		Try
-			For Each fi As FileInfo In DirectoryToClean.GetFiles()
-				'The following code is NOT required, but shows how some logic can be wrapped
-				'around the deletion of files.  For example, only delete files with
-				'a creation date older than 1 hour from the current time.  If you
-				'always want to delete all of the files regardless, just remove
-				'the next 'If' statement.
-
-				'Read only files can not be deleted, so mark the attribute as 'IsReadOnly = False'
-
-				Try
-					fi.IsReadOnly = False
-				Catch ex As Exception
-				End Try
-
-				Try
-					fi.Delete()
-				Catch ex As Exception
-				End Try
-				'On a rare occasion, files being deleted might be slower than program execution, and upon returning
-				'from this call, attempting to delete the directory will throw an exception stating it is not yet
-				'empty, even though a fraction of a second later it actually is.  Therefore the 'Optional' code below
-				'can stall the process just long enough to ensure the file is deleted before proceeding. The value
-				'can be adjusted as needed from testing and running the process repeatedly.
-				'System.Threading.Thread.sleep(10)  '50 millisecond stall (0.025 Seconds)
-
-			Next
-		Catch ex As Exception
-			log("cleanallfilesindi : " + ex.Message)
-		End Try
-	End Sub
-
-	Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
-		Using frm As New frmAbout
-			frm.ShowDialog(Me)
-		End Using
-	End Sub
-
-	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-		If Not CBool(settings.getconfig("goodsite")) Then
-			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
-			settings.setconfig("goodsite", "True")
-		End If
-		disabledriversearch()
-		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-		KillGPUStatsProcesses()
-		'this shouldn't be slow, so it isn't on a thread/background worker
-
-		reboot = False
-		shutdown = False
-		combobox1value = ComboBox1.Text
-		BackgroundWorker1.RunWorkerAsync()
-
-	End Sub
-
-	Private Sub KillP(processname As String)
-		Dim processList() As Process
-		processList = process.GetProcessesByName(processname)
-
-		For Each proc As Process In processList
-			Try
-				proc.Kill()
-			Catch ex As Exception
-				log("!! ERROR !! Failed to kill process(es): " & ex.Message)
-			End Try
-		Next
-	End Sub
-
-	Private Sub KillGPUStatsProcesses()
-		KillP("MSIAfterburner")
-		KillP("PrecisionX_x64")	' Not sure for the x86 one...      Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
-		KillP("PrecisionXServer_x64")
-		KillP("PrecisionXServer")
-		KillP("PrecisionX")
-		KillP("RTSS")
-		KillP("RTSSHooksLoader64")
-		KillP("EncoderServer64")
-		KillP("RTSSHooksLoader")
-		KillP("EncoderServer")
-		KillP("nvidiaInspector")
-	End Sub
-
-	Private Sub cleananddonothing(ByVal gpu As String)
-		reboot = False
-		shutdown = False
-		Invoke(Sub() ComboBox1.Text = gpu)
-		BackgroundWorker1.RunWorkerAsync()
-
-	End Sub
-
-	Private Sub cleanandandreboot(ByVal gpu As String)
-		reboot = True
-		shutdown = False
-		Invoke(Sub() ComboBox1.Text = gpu)
-		BackgroundWorker1.RunWorkerAsync()
-
-	End Sub
-
-	Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-		If Not CBool(settings.getconfig("goodsite")) Then
-			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
-			settings.setconfig("goodsite", "True")
-		End If
-		disabledriversearch()
-		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-		KillGPUStatsProcesses()
-		'this shouldn't be slow, so it isn't on a thread/background worker
-
-		reboot = False
-		shutdown = True
-		combobox1value = ComboBox1.Text
-		BackgroundWorker1.RunWorkerAsync()
-	End Sub
-
-	Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
-		combobox1value = ComboBox1.Text
-		If combobox1value = "NVIDIA" Then
-
-			PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
-			PictureBox2.Size = New Size(252, 123)
-			PictureBox2.Image = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
-		End If
-
-		If combobox1value = "AMD" Then
-
-
-			PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-			PictureBox2.Size = New Size(158, 126)
-			PictureBox2.Image = My.Resources.RadeonLogo1
-		End If
-
-		If combobox1value = "INTEL" Then
-
-			PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-			PictureBox2.Size = New Size(158, 126)
-			PictureBox2.Image = My.Resources.intel_logo
-		End If
-
-	End Sub
-
-	Public Sub log(ByVal strmessage As String)
-		Try
-			If f.CheckBox2.Checked = True Then
-				Using wlog As New IO.StreamWriter(locations, True)
-					wlog.WriteLine(DateTime.Now & " >> " & strmessage)
-
-					UpdateTextMethod2(strmessage)
-
-					wlog.Flush()
-					wlog.Close()
-				End Using 'End using always calls .Dispose() 
-				'  System.Threading.Thread.Sleep(10)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
-			End If
-		Catch ex As Exception
-
-		End Try
-	End Sub
-
-	Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
-		settings.setconfig("donate", "true")
-
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-		sw.Flush()
-		sw.Close()
-
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
-	Private Sub VisitGuru3dNVIDIAThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dNVIDIAThreadToolStripMenuItem.Click
-
-		settings.setconfig("guru3dnvidia", "true")
-
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-		sw.Flush()
-		sw.Close()
-
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
-	Private Sub VisitGuru3dAMDThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dAMDThreadToolStripMenuItem.Click
-
-		settings.setconfig("guru3damd", "true")
-
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-		sw.Flush()
-		sw.Close()
-
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
-	Private Sub VisitGeforceThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGeforceThreadToolStripMenuItem.Click
-
-		settings.setconfig("geforce", "true")
-
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-		sw.Flush()
-		sw.Close()
-
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
-	Private Sub SVNToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SVNToolStripMenuItem.Click
-
-		settings.setconfig("svn", "true")
-
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-		sw.Flush()
-		sw.Close()
-
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
-	Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomepageToolStripMenuItem.Click
-
-		settings.setconfig("dduhome", "true")
-
-
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(Application.StartupPath + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.StartupPath + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-		sw.Flush()
-		sw.Close()
-
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.StartupPath + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
-	Private Sub disabledriversearch()
-		Dim regkey As RegistryKey = Nothing
-		log("Trying to disable search for Windows Updates :")
-		log("Version " + version + " detected")
-		If version >= "6.1" Then
-			Try
-				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
-				If CInt(regkey.GetValue("SearchOrderConfig").ToString) <> 0 Then
-					regkey.SetValue("SearchOrderConfig", 0)
-					MessageBox.Show(Language.GetTranslation(Me.Name, "Messages", "Text9"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information)
-				End If
-			Catch ex As Exception
-				log(ex.Message + ex.StackTrace)
-			End Try
-		End If
-		If version >= "6.0" And version < "6.1" Then
-			Try
-				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-				If CInt(regkey.GetValue("DontSearchWindowsUpdate").ToString) <> 1 Then
-					regkey.SetValue("DontSearchWindowsUpdate", 1)
-					MessageBox.Show(Language.GetTranslation(Me.Name, "Messages", "Text9"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information)
-				End If
-			Catch ex As Exception
-				log(ex.Message + ex.StackTrace)
-			End Try
-		End If
-	End Sub
 
 
 	Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object,
-					 ByVal e As System.ComponentModel.DoWorkEventArgs) _
-					 Handles BackgroundWorker1.DoWork
+	 ByVal e As System.ComponentModel.DoWorkEventArgs) _
+	 Handles BackgroundWorker1.DoWork
 
 		Dim regkey As RegistryKey = Nothing
 		Dim subregkey As RegistryKey = Nothing
@@ -6953,9 +6594,9 @@ Public Class frmMain
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
 							If Not checkvariables.isnullorwhitespace(child) AndAlso
-								   (child.ToLower.Contains("ven_10de") Or
-								   child.ToLower.Contains("ven_8086") Or
-								   child.ToLower.Contains("ven_1002")) Then
+							 (child.ToLower.Contains("ven_10de") Or
+							 child.ToLower.Contains("ven_8086") Or
+							 child.ToLower.Contains("ven_1002")) Then
 
 								subregkey = regkey.OpenSubKey(child)
 								If subregkey IsNot Nothing Then
@@ -7098,16 +6739,16 @@ Public Class frmMain
 						position2 = reply.IndexOf(":", card1)
 						vendid = reply.Substring(card1, position2 - card1).Trim
 						If vendid.Contains("USB\VID_0955&PID_0007") Or
-							vendid.Contains("USB\VID_0955&PID_7001") Or
-							vendid.Contains("USB\VID_0955&PID_7002") Or
-							vendid.Contains("USB\VID_0955&PID_7003") Or
-							vendid.Contains("USB\VID_0955&PID_7004") Or
-							vendid.Contains("USB\VID_0955&PID_7008") Or
-							vendid.Contains("USB\VID_0955&PID_7009") Or
-							vendid.Contains("USB\VID_0955&PID_700A") Or
-							vendid.Contains("USB\VID_0955&PID_700C") Or
-							vendid.Contains("USB\VID_0955&PID_700D&MI_00") Or
-							vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
+						 vendid.Contains("USB\VID_0955&PID_7001") Or
+						 vendid.Contains("USB\VID_0955&PID_7002") Or
+						 vendid.Contains("USB\VID_0955&PID_7003") Or
+						 vendid.Contains("USB\VID_0955&PID_7004") Or
+						 vendid.Contains("USB\VID_0955&PID_7008") Or
+						 vendid.Contains("USB\VID_0955&PID_7009") Or
+						 vendid.Contains("USB\VID_0955&PID_700A") Or
+						 vendid.Contains("USB\VID_0955&PID_700C") Or
+						 vendid.Contains("USB\VID_0955&PID_700D&MI_00") Or
+						 vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
 							log("-" & vendid & "- 3D vision usb controler found")
 
 							processinfo.FileName = Application.StartupPath & "\" & ddudrfolder & "\ddudr.exe"
@@ -7565,59 +7206,9 @@ Public Class frmMain
 
 	End Sub
 
-	Private Function checkamdkmapfd() As Boolean
-
-		Dim regkey As RegistryKey = Nothing
-		Dim subregkey As RegistryKey = Nothing
-		Dim array As String() = Nothing
-		Dim iskmpfdpresent As Boolean = False
-
-		Try
-			log("Checking if AMDKMPFD is present before Service removal")
-			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
-			If regkey IsNot Nothing Then
-				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
-						If child.ToLower.Contains("pnp0a08") Or
-						   child.ToLower.Contains("pnp0a03") Then
-							subregkey = regkey.OpenSubKey(child)
-							If subregkey IsNot Nothing Then
-								For Each child2 As String In subregkey.GetSubKeyNames()
-									If Not checkvariables.isnullorwhitespace(child2) Then
-										array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
-										If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-											For i As Integer = 0 To array.Length - 1
-												If Not checkvariables.isnullorwhitespace(array(i)) Then
-													If array(i).ToLower.Contains("amdkmpfd") Then
-														log("Found an AMDKMPFD! in " + child)
-														log("We do not remove the AMDKMPFP service yet")
-														iskmpfdpresent = True
-
-													End If
-												End If
-											Next
-										End If
-									End If
-								Next
-							End If
-						End If
-					End If
-				Next
-			End If
-		Catch ex As Exception
-			log(ex.Message + ex.StackTrace)
-		End Try
-		If iskmpfdpresent Then
-			Return True
-		Else
-			Return False
-		End If
-
-	End Function
-
 	Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object,
-							 ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
-							 Handles BackgroundWorker1.RunWorkerCompleted
+	ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+	Handles BackgroundWorker1.RunWorkerCompleted
 		Try
 
 			If stopme = True Then
@@ -7680,15 +7271,385 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+#End Region
 
+	Private Sub ThreadTask()
+
+		Try
+			If argcleanamd Then
+				backgroundworkcomplete = False
+				cleananddonothing("AMD")
+			End If
+
+			Do Until backgroundworkcomplete
+				System.Threading.Thread.Sleep(10)
+			Loop
+
+			If argcleannvidia Then
+				backgroundworkcomplete = False
+				cleananddonothing("NVIDIA")
+			End If
+
+			Do Until backgroundworkcomplete
+				System.Threading.Thread.Sleep(10)
+			Loop
+
+			If argcleanintel Then
+				backgroundworkcomplete = False
+				cleananddonothing("INTEL")
+			End If
+
+			Do Until backgroundworkcomplete
+				System.Threading.Thread.Sleep(10)
+			Loop
+
+			If restart Then
+				log("Restarting Computer ")
+				processinfo.FileName = "shutdown"
+				processinfo.Arguments = "/r /t 0"
+				processinfo.WindowStyle = ProcessWindowStyle.Hidden
+				processinfo.UseShellExecute = True
+				processinfo.CreateNoWindow = True
+				processinfo.RedirectStandardOutput = False
+
+				process.StartInfo = processinfo
+				process.Start()
+				process.WaitForExit()
+				process.Close()
+
+				closeddu()
+				Exit Sub
+			End If
+
+			If silent And (Not restart) Then
+				closeddu()
+			End If
+		Catch ex As Exception
+			log(ex.Message + ex.StackTrace)
+		End Try
+	End Sub
+
+	Sub systemrestore()
+		'THIS NEEDS TO BE FIXED!!! DOES NOT WORK WITH OPTION STRICT ON. I WAS UNABLE TO FIGURE OUT MY SELF. BE SURE TO FIX BEFORE RELEASE.
+
+		If trysystemrestore Then
+			Try
+				UpdateTextMethod("Creating System Restore point (If allowed by the system)")
+				log("Trying to Create a System Restored Point")
+				Dim oScope As New ManagementScope("\\localhost\root\default")
+				Dim oPath As New ManagementPath("SystemRestore")
+				Dim oGetOp As New ObjectGetOptions()
+				Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
+
+				Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
+				oInParams("Description") = "DDU System Restored Point"
+				oInParams("RestorePointType") = 12 ' MODIFY_SETTINGS
+				oInParams("EventType") = 100
+
+				Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
+
+				log("System Restored Point Created. code: " + CStr(oOutParams("ReturnValue")))
+			Catch ex As Exception
+				log("System Restored Point Could not be Created! Err Code: 0x" & Hex(Err.Number))
+			End Try
+
+		End If
+		'     If trysystemrestore Then
+		'     Select Case System.Windows.Forms.SystemInformation.BootMode
+		'     Case BootMode.Normal
+		'     If f.CheckBox5.Checked = True Then
+		'     UpdateTextMethod("Creating System Restore point (If allowed by the system)")
+		'     Try
+		'     log("Trying to Create a System Restored Point")
+		'     Dim SysterRestoredPoint As Object = GetObject("winmgmts:\\.\root\default:Systemrestore")
+		'     If SysterRestoredPoint IsNot Nothing Then
+		'     If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
+		'     log("System Restored Point Created")
+		'     Else
+		'     log("System Restored Point Could not Created!")
+		'     End If
+		'     End If
+		'
+		'        Catch ex As Exception
+		'        log(ex.Message)
+		'        End Try
+		'        End If
+		'        End Select
+		'        End If
+	End Sub
+
+	Sub getoeminfo()
+
+		log("The following third-party driver packages are installed on this computer: ")
+		Dim infisvalid As Boolean = True
+		Try
+			For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
+				If Not checkvariables.isnullorwhitespace(infs) Then
+
+					log("---")
+					log(infs)
+					infisvalid = False 'false unless we find either a provider or class 
+					For Each child As String In IO.File.ReadAllLines(infs)
+						If Not checkvariables.isnullorwhitespace(child) Then
+							child = child.Replace(" ", "").Replace(vbTab, "")
+
+							If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
+								infisvalid = True
+								If child.EndsWith("%") Then
+									For Each provider As String In IO.File.ReadAllLines(infs)
+										If Not checkvariables.isnullorwhitespace(provider) Then
+											provider = provider.Replace(" ", "").Replace(vbTab, "")
+											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
+											   Not provider.Contains("%") Then
+												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
+												Exit For
+											End If
+										End If
+									Next
+									Exit For
+								End If
+								log(child)
+								Exit For
+							End If
+						End If
+					Next
+
+					For Each child As String In IO.File.ReadAllLines(infs)
+						If Not checkvariables.isnullorwhitespace(child) Then
+
+							child = child.Replace(" ", "").Replace(vbTab, "")
+
+							If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
+								infisvalid = True
+								If child.EndsWith("%") Then
+									For Each provider As String In IO.File.ReadAllLines(infs)
+										If Not checkvariables.isnullorwhitespace(provider) Then
+											provider = provider.Replace(" ", "").Replace(vbTab, "")
+											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso
+											   Not provider.Contains("%") Then
+												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
+												Exit For
+											End If
+										End If
+									Next
+									Exit For
+								End If
+								log(child)
+								Exit For
+							End If
+						End If
+					Next
+					If Not infisvalid Then
+						log("This inf entry is corrupted or invalid.")
+						deletefile(infs)
+					End If
+				End If
+			Next
+		Catch ex As Exception
+			log(ex.Message + ex.StackTrace)
+		End Try
+
+	End Sub
+
+	Public Sub TestDelete(ByVal folder As String)
+		' UpdateTextMethod(UpdateTextMethodmessagefn("18"))
+		'log("Deleting some specials folders, it could take some times...")
+		'ensure that this folder can be accessed with current user ac.
+		If Not Directory.Exists(folder) Then
+			Exit Sub
+		End If
+
+		'Get an object repesenting the directory path below
+		Dim di As New DirectoryInfo(folder)
+
+		'Traverse all of the child directors in the root; get to the lowest child
+		'and delete all files, working our way back up to the top.  All files
+		'must be deleted in the directory, before the directory itself can be deleted.
+		'also if there is hidden / readonly / system attribute..  change those attribute.
+		Try
+
+
+			For Each diChild As DirectoryInfo In di.GetDirectories()
+				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
+				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
+				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
+				If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+
+					Try
+						TraverseDirectory(diChild)
+					Catch ex As Exception
+						log(ex.Message + ex.StackTrace)
+					End Try
+				End If
+			Next
+		Catch ex As Exception
+			log("test delete : " + ex.Message)
+		End Try
+		'Finally, clean all of the files directly in the root directory
+		CleanAllFilesInDirectory(di)
+
+		'The containing directory can only be deleted if the directory
+		'is now completely empty and all files previously within
+		'were deleted.
+		Try
+			If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
+				di.Delete()
+				log(di.ToString + " - " + "Folder removed via testdelete sub")
+			End If
+		Catch ex As Exception
+			log("testdelete @ di.getfiles() : " + ex.Message)
+		End Try
+	End Sub
+
+	Private Sub TraverseDirectory(ByVal di As DirectoryInfo)
+
+		'If the current directory has more child directories, then continure
+		'to traverse down until we are at the lowest level and remove
+		'there hidden / readonly / system attribute..  At that point all of the
+		'files will be deleted.
+		For Each diChild As DirectoryInfo In di.GetDirectories()
+			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
+			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
+			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
+			If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+
+				Try
+					TraverseDirectory(diChild)
+				Catch ex As Exception
+					log(ex.Message + ex.StackTrace)
+				End Try
+			End If
+		Next
+
+		'Now that we have no more child directories to traverse, delete all of the files
+		'in the current directory, and then delete the directory itself.
+		CleanAllFilesInDirectory(di)
+
+
+		'The containing directory can only be deleted if the directory
+		'is now completely empty and all files previously within
+		'were deleted.
+		If di.GetFiles().Length = 0 Then
+			Try
+				di.Delete()
+			Catch ex As Exception
+				log(ex.Message + ex.StackTrace)
+			End Try
+		End If
+
+	End Sub
+
+	''' Iterates through all files in the directory passed into
+	''' method and deletes them.
+	''' It may be necessary to wrap this call in impersonation or ensure parent directory
+	''' permissions prior, because delete permissions are not guaranteed.
+
+	Private Sub CleanAllFilesInDirectory(ByVal DirectoryToClean As DirectoryInfo)
+
+		Try
+			For Each fi As FileInfo In DirectoryToClean.GetFiles()
+				'The following code is NOT required, but shows how some logic can be wrapped
+				'around the deletion of files.  For example, only delete files with
+				'a creation date older than 1 hour from the current time.  If you
+				'always want to delete all of the files regardless, just remove
+				'the next 'If' statement.
+
+				'Read only files can not be deleted, so mark the attribute as 'IsReadOnly = False'
+
+				Try
+					fi.IsReadOnly = False
+				Catch ex As Exception
+				End Try
+
+				Try
+					fi.Delete()
+				Catch ex As Exception
+				End Try
+				'On a rare occasion, files being deleted might be slower than program execution, and upon returning
+				'from this call, attempting to delete the directory will throw an exception stating it is not yet
+				'empty, even though a fraction of a second later it actually is.  Therefore the 'Optional' code below
+				'can stall the process just long enough to ensure the file is deleted before proceeding. The value
+				'can be adjusted as needed from testing and running the process repeatedly.
+				'System.Threading.Thread.sleep(10)  '50 millisecond stall (0.025 Seconds)
+
+			Next
+		Catch ex As Exception
+			log("cleanallfilesindi : " + ex.Message)
+		End Try
+	End Sub
+
+	Private Sub KillP(processname As String)
+		Dim processList() As Process
+		processList = process.GetProcessesByName(processname)
+
+		For Each proc As Process In processList
+			Try
+				proc.Kill()
+			Catch ex As Exception
+				log("!! ERROR !! Failed to kill process(es): " & ex.Message)
+			End Try
+		Next
+	End Sub
+
+	Private Sub KillGPUStatsProcesses()
+		KillP("MSIAfterburner")
+		KillP("PrecisionX_x64")	' Not sure for the x86 one...      Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
+		KillP("PrecisionXServer_x64")
+		KillP("PrecisionXServer")
+		KillP("PrecisionX")
+		KillP("RTSS")
+		KillP("RTSSHooksLoader64")
+		KillP("EncoderServer64")
+		KillP("RTSSHooksLoader")
+		KillP("EncoderServer")
+		KillP("nvidiaInspector")
+	End Sub
+
+	Private Sub cleananddonothing(ByVal gpu As String)
+		reboot = False
+		shutdown = False
+		Invoke(Sub() ComboBox1.Text = gpu)
+		BackgroundWorker1.RunWorkerAsync()
+
+	End Sub
+
+	Private Sub cleanandandreboot(ByVal gpu As String)
+		reboot = True
+		shutdown = False
+		Invoke(Sub() ComboBox1.Text = gpu)
+		BackgroundWorker1.RunWorkerAsync()
+
+	End Sub
+
+	Public Sub log(ByVal strmessage As String)
+		Try
+			If f.CheckBox2.Checked = True Then
+				Using wlog As New IO.StreamWriter(locations, True)
+					wlog.WriteLine(DateTime.Now & " >> " & strmessage)
+
+					UpdateTextMethod2(strmessage)
+
+					wlog.Flush()
+					wlog.Close()
+				End Using 'End using always calls .Dispose() 
+				'  System.Threading.Thread.Sleep(10)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
+			End If
+		Catch ex As Exception
+
+		End Try
+	End Sub
+
+	Private Sub disabledriversearch()
 		Dim regkey As RegistryKey = Nothing
-
+		log("Trying to disable search for Windows Updates :")
+		log("Version " + version + " detected")
 		If version >= "6.1" Then
 			Try
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
-				regkey.SetValue("SearchOrderConfig", 1)
-				MsgBox(msgboxmessagefn(10))
+				If CInt(regkey.GetValue("SearchOrderConfig").ToString) <> 0 Then
+					regkey.SetValue("SearchOrderConfig", 0)
+					MessageBox.Show(Language.GetTranslation(Me.Name, "Messages", "Text9"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information)
+				End If
 			Catch ex As Exception
 				log(ex.Message + ex.StackTrace)
 			End Try
@@ -7696,14 +7657,65 @@ Public Class frmMain
 		If version >= "6.0" And version < "6.1" Then
 			Try
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-				regkey.SetValue("DontSearchWindowsUpdate", 0)
-				MsgBox(msgboxmessagefn(10))
+				If CInt(regkey.GetValue("DontSearchWindowsUpdate").ToString) <> 1 Then
+					regkey.SetValue("DontSearchWindowsUpdate", 1)
+					MessageBox.Show(Language.GetTranslation(Me.Name, "Messages", "Text9"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information)
+				End If
 			Catch ex As Exception
 				log(ex.Message + ex.StackTrace)
 			End Try
 		End If
 	End Sub
 
+	Private Function checkamdkmapfd() As Boolean
+
+		Dim regkey As RegistryKey = Nothing
+		Dim subregkey As RegistryKey = Nothing
+		Dim array As String() = Nothing
+		Dim iskmpfdpresent As Boolean = False
+
+		Try
+			log("Checking if AMDKMPFD is present before Service removal")
+			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames()
+					If checkvariables.isnullorwhitespace(child) = False Then
+						If child.ToLower.Contains("pnp0a08") Or
+						   child.ToLower.Contains("pnp0a03") Then
+							subregkey = regkey.OpenSubKey(child)
+							If subregkey IsNot Nothing Then
+								For Each child2 As String In subregkey.GetSubKeyNames()
+									If Not checkvariables.isnullorwhitespace(child2) Then
+										array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
+										If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+											For i As Integer = 0 To array.Length - 1
+												If Not checkvariables.isnullorwhitespace(array(i)) Then
+													If array(i).ToLower.Contains("amdkmpfd") Then
+														log("Found an AMDKMPFD! in " + child)
+														log("We do not remove the AMDKMPFP service yet")
+														iskmpfdpresent = True
+
+													End If
+												End If
+											Next
+										End If
+									End If
+								Next
+							End If
+						End If
+					End If
+				Next
+			End If
+		Catch ex As Exception
+			log(ex.Message + ex.StackTrace)
+		End Try
+		If iskmpfdpresent Then
+			Return True
+		Else
+			Return False
+		End If
+
+	End Function
 
 	Private Sub InitLanguage(ByVal firstLaunch As Boolean, Optional ByVal changeTo As Language.LanguageOption = Nothing)
 		toolTip1.AutoPopDelay = 3000
@@ -7770,16 +7782,6 @@ Public Class frmMain
 	Public Function msgboxmessagefn(ByVal number As Integer) As String
 		Return "Not WORKING! YET"
 	End Function
-
-	Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
-		If ComboBox2.SelectedItem IsNot Nothing Then
-			InitLanguage(False, CType(ComboBox2.SelectedItem, Language.LanguageOption))
-		End If
-	End Sub
-
-	Private Sub ToSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ToSToolStripMenuItem.Click
-		MessageBox.Show(Language.GetTranslation("Misc", "Tos", "Text"))
-	End Sub
 
 	Private Sub temporarynvidiaspeedup()   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
 
@@ -7889,17 +7891,6 @@ Public Class frmMain
 		Return com
 	End Function
 
-	Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
-		frmOptions.Show()
-		frmOptions.TopMost = True
-	End Sub
-
-	Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
-		Using frm As New frmLog
-			frm.ShowDialog(Me)
-		End Using
-	End Sub
-
 	Public Sub deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
 
 		CleanupEngine.deletesubregkey(value1, value2)
@@ -7918,18 +7909,6 @@ Public Class frmMain
 
 		CleanupEngine.deletevalue(value1, value2)
 
-	End Sub
-
-	Private Sub ToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
-		If Not preventclose Then
-			Me.Close()
-		End If
-	End Sub
-
-	Private Sub NotifyIcon1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles NotifyIcon1.MouseDoubleClick
-		If Not silent Then
-			Me.WindowState = FormWindowState.Normal
-		End If
 	End Sub
 
 	Private Sub amdenvironementpath(ByVal filepath As String)
@@ -8008,6 +7987,7 @@ Public Class frmMain
 		'end system environement patch cleanup
 	End Sub
 End Class
+
 Public Class checkvariables
 
     Public Function isnullorwhitespace(ByVal stringtocheck As String) As Boolean
@@ -8148,25 +8128,30 @@ Public Class CleanupEngine
     Dim checkvariables As New checkvariables
 
     Private Function msgboxmessagefn(ByVal number As Integer) As String
-		Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         Return f.msgboxmessagefn(number)
-    End Function
+	End Function
+
     Private Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
-        Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         Return f.UpdateTextMethodmessagefn(number)
-    End Function
+	End Function
+
     Private Sub updatetextmethod(strmessage As String)
-        Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         f.UpdateTextMethod(strmessage)
-    End Sub
+	End Sub
+
     Private Sub log(strmessage As String)
-        Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         f.log(strmessage)
-    End Sub
+	End Sub
+
     Public Sub TestDelete(ByVal folder As String)
-        Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         f.TestDelete(folder)
-    End Sub
+	End Sub
+
     Public Sub deletesubregkey(ByVal regkeypath As RegistryKey, ByVal child As String)
 
         If (regkeypath IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child)) Then
@@ -8178,7 +8163,7 @@ Public Class CleanupEngine
     End Sub
 
     Public Sub deletedirectory(ByVal directorypath As String)
-        Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         Dim removephysx As Boolean = f.getremovephysx
         If Not checkvariables.isnullorwhitespace(directorypath) Then
 
@@ -8362,7 +8347,7 @@ Public Class CleanupEngine
     End Sub
 
     Public Sub installer(ByVal packages As String())
-        Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         Dim regkey As RegistryKey
         Dim basekey As RegistryKey
         Dim superregkey As RegistryKey
@@ -8741,9 +8726,10 @@ Public Class CleanupEngine
             log(ex.Message + ex.StackTrace)
         End Try
 
-    End Sub
+	End Sub
+
     Public Sub cleanserviceprocess(ByVal services As String())
-        Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
         Dim regkey As RegistryKey
         Dim subregkey As RegistryKey
@@ -8851,9 +8837,10 @@ Public Class CleanupEngine
         Catch ex As Exception
             log(ex.Message + ex.StackTrace)
         End Try
-    End Sub
+	End Sub
+
     Public Sub prePnplockdownfiles(ByVal oeminf As String)
-        Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         Dim regkey As RegistryKey
         Dim winxp = f.winxp
         Dim win8higher = f.win8higher
@@ -8886,9 +8873,10 @@ Public Class CleanupEngine
             log(ex.Message + ex.StackTrace)
         End Try
 
-    End Sub
+	End Sub
+
     Public Sub Pnplockdownfiles(ByVal driverfiles As String())
-        Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         Dim regkey As RegistryKey
         Dim winxp = f.winxp
         Dim win8higher = f.win8higher
@@ -9584,9 +9572,10 @@ Public Class CleanupEngine
         End If
 
         log("END Interface CleanUP")
-    End Sub
+	End Sub
+
     Public Sub folderscleanup(ByVal driverfiles As String())
-        Dim f As frmMain = CType(My.Application.OpenForms("Form1"), frmMain)
+		Dim f As frmMain = CType(My.Application.OpenForms("frmMain"), frmMain)
         Dim winxp = f.winxp
         Dim filePath As String
         Dim donotremoveamdhdaudiobusfiles = f.donotremoveamdhdaudiobusfiles
@@ -9674,7 +9663,8 @@ Public Class CleanupEngine
                 End If
             Next
         End If
-    End Sub
+	End Sub
+
     Public Sub shareddlls(ByVal filepath As String)
         If Not checkvariables.isnullorwhitespace(filepath) Then
             If Not Directory.Exists(filepath) Then

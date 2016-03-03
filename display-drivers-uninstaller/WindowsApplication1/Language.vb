@@ -61,10 +61,11 @@ Public Class Language
 		End If
 	End Sub
 
-	''' <param name="parent">In which form control is located (Form1, fmrLaunch)</param>
-	''' <param name="type">Name of control, eg Button1</param>
-	''' <returns>Translated text. If language not found, return English text</returns> 
-	Public Shared Function GetTranslation(ByVal parent As String, ByVal type As String) As String
+	''' <param name="parent">Which form (Form1, fmrLaunch)</param>
+	''' <param name="type">Name of propery (Me.Text)</param>
+	''' <param name="returnValue">If no translation (english or current) found, return given value</param>
+	''' <returns>Translated text. If language not found, return English text.</returns> 
+	Public Shared Function GetParentTranslation(ByVal parent As String, ByVal type As String, Optional ByVal returnValue As String = Nothing) As String
 		SyncLock (threadLock)
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
@@ -75,14 +76,14 @@ Public Class Language
 
 			If tc Is Nothing Then
 				If Not useTranslated Then
-					Return Nothing
+					Return returnValue
 				End If
 notFound:
 				tc = GetParent(False, parent)
 				noTranslation = True
 
 				If tc Is Nothing Then
-					Return String.Empty
+					Return returnValue
 				End If
 			End If
 
@@ -102,15 +103,16 @@ notFound:
 				Next
 			End If
 
-			Return String.Empty
+			Return returnValue
 		End SyncLock
 	End Function
 
 	''' <param name="parent">In which form control is located (Form1, fmrLaunch)</param>
 	''' <param name="control">Name of control, eg Button1</param>
 	''' <param name="type">What attribute to return. Text, Tooltip etc.</param>
+	''' <param name="returnValue">If no translation (english or current) found, return given value</param>
 	''' <returns>Translated text. If language not found, return English text</returns> 
-	Public Shared Function GetTranslation(ByVal parent As String, ByVal control As String, ByVal type As String) As String
+	Public Shared Function GetTranslation(ByVal parent As String, ByVal control As String, ByVal type As String, Optional ByVal returnValue As String = Nothing) As String
 		SyncLock (threadLock)
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
@@ -121,14 +123,14 @@ notFound:
 
 			If tc Is Nothing Then
 				If Not useTranslated Then
-					Return Nothing
+					Return returnValue
 				End If
 notFound:
 				tc = GetControl(False, parent, control)
 				noTranslation = True
 
 				If tc Is Nothing Then
-					Return Nothing
+					Return returnValue
 				End If
 			End If
 
@@ -143,50 +145,7 @@ notFound:
 			Next
 
 			If noTranslation Then
-				Return Nothing
-			Else
-				GoTo notFound
-			End If
-		End SyncLock
-	End Function
-
-	''' <param name="parent">Which parent(Form1, fmrLaunch)</param>
-	''' <param name="type">What attribute to return. Text, Tooltip etc.</param>
-	''' <returns>Translated text. If language not found, return English text</returns> 
-	Public Shared Function GetParentTranslation(ByVal parent As String, ByVal type As String) As String
-		SyncLock (threadLock)
-			If Not isEngLoaded And Not useTranslated Then
-				LoadDefault()
-			End If
-
-			Dim tc As TranslatedControl = GetParent(useTranslated, parent)
-			Dim noTranslation As Boolean = False
-
-			If tc Is Nothing Then
-				If Not useTranslated Then
-					Return Nothing
-				End If
-notFound:
-				tc = GetParent(False, parent)
-				noTranslation = True
-
-				If tc Is Nothing Then
-					Return Nothing
-				End If
-			End If
-
-			For Each kvp As KeyValuePair(Of String, String) In tc.Values
-				If (kvp.Key.Equals(type, StringComparison.OrdinalIgnoreCase)) Then
-					If Not String.IsNullOrEmpty(kvp.Value) Then
-						Return kvp.Value.Trim(New Char() {vbCr, vbLf, vbCrLf}).Replace(newlineStr, vbCrLf)
-					Else
-						Exit For
-					End If
-				End If
-			Next
-
-			If noTranslation Then
-				Return Nothing
+				Return returnValue
 			Else
 				GoTo notFound
 			End If
@@ -229,13 +188,15 @@ notFound:
 		End SyncLock
 	End Function
 
+	''' <param name="form">Which form to translate (frmMain, frmLaunch etc)</param>
+	''' <param name="tooltip">If form has tooltip, use it here (fills tooltip texts if has any)</param>
 	Public Shared Sub TranslateForm(ByVal form As Form, Optional ByVal tooltip As ToolTip = Nothing)
 		SyncLock (threadLock)
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
 			End If
 
-			Dim text As String = GetTranslation(form.Name, "Text")
+			Dim text As String = GetParentTranslation(form.Name, "Text")
 
 			If Not String.IsNullOrEmpty(text) Then
 				form.Text = text
@@ -299,9 +260,6 @@ notFound:
 		Next
 	End Sub
 
-
-	''' <param name="langFile">Path to language file or 'en' for default (English)</param>
-	''' <returns>IO.Stream of loaded file or nothing</returns>
 	Private Shared Function LoadFile(ByVal langFile As String) As Stream
 		If (langFile.Equals("en", StringComparison.OrdinalIgnoreCase)) Then
 			Return Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Language).Namespace, "English.xml"))
@@ -456,11 +414,6 @@ notFound:
 		End If
 	End Function
 
-
-	''' <param name="translated">Use user selected language or default (english)</param>
-	''' <param name="parent">In which form control is located (Form1, fmrLaunch, Messages etc.)</param>
-	''' <param name="control">Name of control, eg Button1</param>
-	''' <returns>List of controls values (text, tooltip, etc)</returns> 
 	Private Shared Function GetControl(ByVal translated As Boolean, ByVal parent As String, ByVal control As String) As TranslatedControl
 		Dim dict As TranslatedFile = GetDictionary(translated)
 
@@ -602,4 +555,5 @@ notFound:
 			Return m_text
 		End Function
 	End Class
+
 End Class
