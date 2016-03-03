@@ -1,2 +1,0 @@
-﻿Verwijder drivers en start de computer NIET opnieuw op.
-(Kan kwesties/problemen zoals een zwart scherm veroorzaken)

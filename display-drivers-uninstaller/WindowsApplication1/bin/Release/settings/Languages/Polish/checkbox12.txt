@@ -1,1 +1,0 @@
-﻿Nie sprawdzaj dostępności aktualizacji dla DDU przy starcie (NIE zalecane)

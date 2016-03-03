@@ -1,1 +1,0 @@
-﻿Erstelle einen Systemwiederherstellungspunkt (falls erlaubt)

@@ -1,1 +1,0 @@
-Sla logbestanden op in het opstartpad (aanbeloven).

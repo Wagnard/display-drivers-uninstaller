@@ -1,1 +1,0 @@
-﻿Store config file in roaming folder

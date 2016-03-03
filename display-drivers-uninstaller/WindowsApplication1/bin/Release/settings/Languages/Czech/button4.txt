@@ -1,1 +1,0 @@
-﻿Obnovit nastavení instalace ovladačů skrze Windows Update.

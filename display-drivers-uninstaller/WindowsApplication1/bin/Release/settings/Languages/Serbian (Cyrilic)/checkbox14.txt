@@ -1,1 +1,0 @@
-﻿Уклони AMD Crimson Shader Cache директоријум (фолдер)

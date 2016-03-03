@@ -1,1 +1,0 @@
-﻿Nemoj proveravati da li postoji nova DDU verzija prilikom\n startovanja (nije preporučljivo)

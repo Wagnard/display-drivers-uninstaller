@@ -1,1 +1,0 @@
-﻿Do not check for DDU updates on startup (NOT Recommended)

@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="jp" Text="Japanese">
+	<!--
+	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
+	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+
+	Text = Shown to user (as written in english, found on language selection box)
+
+	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
+	[char = replaces]  xml doesn't allow some special chars like <>&"
+	| = newline
+	&amp; = &
+	&quot; = "
+	&gt; = >
+	&lt; = <
+
+	-->
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<Button1>
+			<Text>削除して再起動|(強く推奨します)</Text>
+			<Tooltip>全てのドライバーをアンインストールして、コンピューターを再起動します。|(強く推奨します)</Tooltip>
+		</Button1>
+		<Button2>
+			<Text>削除後に再起動しない|(黒画面のような問題を引き起こす可能性があります)</Text>
+			<Tooltip>全てのドライバーをアンインストールしますが、その後再起動しません。|(黒画面のような問題を引き起こす可能性があります)</Tooltip>
+		</Button2>
+		<Button3>
+			<Text>削除してシャットダウン|(新しいグラフィックカードをインストールする場合)</Text>
+			<Tooltip>全てのドライバーをアンインストールして、再スキャンさせないようコンピューターをシャットダウンします。|(新しいグラフィックカードをインストールする場合)</Tooltip>
+		</Button3>
+		<Button4>
+			<Text>Windowsの標準ドライバー自動インストールを既定にセット。</Text>
+		</Button4>
+		<Button5>
+			<Text>拡張ログを表示する</Text>
+		</Button5>
+		<Label1>
+			<Text>検出された Windows バージョン：</Text>
+		</Label1>
+		<Label4>
+			<Text>*** DDUは気に入りましたか？ よろしければ更なる開発を支援する寄付をご検討ください。***</Text>
+		</Label4>
+		<Label5>
+			<Text>ログ：</Text>
+		</Label5>
+		<Label7>
+			<Text>グラフィックドライバーを選択：</Text>
+		</Label7>
+		<Label9>
+			<Text>注意：如何なる損害やエラーがあなたのPCに発生しても自己責任です。</Text>
+		</Label9>
+		<Label10>
+			<Text>セーフモードでのDDU の使用を推奨します</Text>
+		</Label10>
+		<Label11>
+			<Text>アップデートを確認しています...</Text>
+			<Text2>アップデートは見つかりませんでした。プログラムは最新版です。</Text2>
+			<Text3>アップデートが見つかりました！最新版ではより多くのサポートが期待できます。</Text3>
+			<Text4>アップデート版を入手することができません！</Text4>
+		</Label11>
+		<OptionsToolStripMenuItem>
+			<Text>Options</Text>
+		</OptionsToolStripMenuItem>
+		<ToolStripMenuItem1>
+			<Text>?</Text>
+		</ToolStripMenuItem1>
+		<ToSToolStripMenuItem>
+			<Text>ToS</Text>
+		</ToSToolStripMenuItem>
+		<VisitDDUHomepageToolStripMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomepageToolStripMenuItem>
+		<SVNToolStripMenuItem>
+			<Text>Visit SVN Website</Text>
+		</SVNToolStripMenuItem>
+		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
+		<VisitGuru3dAMDThreadToolStripMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3dAMDThreadToolStripMenuItem>
+		<VisitGeforceThreadToolStripMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceThreadToolStripMenuItem>
+		<AboutToolStripMenuItem>
+			<Text>About</Text>
+		</AboutToolStripMenuItem>
+		<Messages>
+			<Text1>最新版があります！ DDUのウェブサイトに行きますか？</Text1>
+			<Text2>最新版ではより多くのサポートが期待できます。バグ報告の前に最新版を試してください。</Text2>
+			<Text3>DDUは管理者権限で実行されていません。 アプリケーションを終了します。</Text3>
+			<Text4>ddudrが見つかりません。ログを参照してください。</Text4>
+			<Text5>Display Driver Uninstaller (DDU)は非常に多くのレジストリを改編します。DDUは自動的にシステム復元ポイントの作成を試みます。（通常モードのみ）</Text5>
+			<Text6>モジュールのいずれかで問題が発生しました。開発者にDDULog.logを送信してください。</Text6>
+			<Text7>DDUはAMDのノートPC（Enduroディスプレイスイッチングテクノロジー、または同等品）を検出しました。DDUはEnduro系システムでの互換性／テストがまだ完全ではありません。自己責任で使用してください。</Text7>
+			<Text8>現在セーフモードではありません... 問題のない優れたクリーンアップのためにはセーフモードで再起動することをお勧めします。</Text8>
+			<Text9>DDUは Windows Update でドライバーを自動的にダウンロードしないように設定を変更します。新しいドライバーのインストールを後で行う場合、この設定を既定に戻す事が出来ます。</Text9>
+			<Text10>クリーンアンインストールが完了しました！ プログラムを終了しますか？</Text10>
+			<Text11>完了！</Text11>
+			<Text12>現在セーフモードではありません。不具合を回避するためにセーフモードで再起動することを強く推奨します。セーフモードで再起動しますか？</Text12>
+			<Text13>水色の回復画面で次のように選択する必要があります:「オプションの選択」→「トラブルシューティング」→「詳細オプション」→「スタートアップ設定」→ 再起動</Text13>
+			<Text14>再起動を待機中です、DDUを使用する前に再起動してください。</Text14>
+		</Messages>
+		<UpdateLog>
+			<Text1>Driver Storeのクリーンアップを実行中（OEMの削除）...</Text1>
+			<Text2>ディレクトリをクリーンアップ</Text2>
+			<Text3>既知のレジストリキーをクリーンアップ...1〜2分かかる場合があります。</Text3>
+			<Text4>存在する場合、UpdatusUser ユーザー アカウントをクリーンアップします。</Text4>
+			<Text5>ディレクトリをクリーンアップ</Text5>
+			<Text6>レジストリのクリーンアップを開始</Text6>
+			<Text7>レジストリのクリーンアップが完了しました</Text7>
+			<Text8>存在する場合、nVidia Optimus UpperFilter の削除を開始します。</Text8>
+			<Text9>新しいデバイスをスキャン中...</Text9>
+			<Text10>クリーンアンインストールが完了しました！</Text10>
+			<Text11>DDUバージョン：</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>を検出しました：</Text13>
+			<Text14>GPU DeviceId：</Text14>
+			<Text15>検出されたドライバーのバージョン：</Text15>
+			<Text16>INF：</Text16>
+			<Text17>INFセクション：</Text17>
+			<Text18>GPUが正しくインストールされていません。</Text18>
+			<Text19>いくつかの特殊なフォルダーを削除すると、時間がかかることがあります...</Text19>
+			<Text20>クリーンアップを開始しました...</Text20>
+			<Text21>アンインストールします</Text21>
+			<Text22>ドライバー</Text22>
+			<Text23>ddudrが削除を実行中（数分かかる場合があります）。しばらくお待ちください。</Text23>
+			<Text24>GPUをデバイス マネージャーから削除します。（複数可）。</Text24>
+			<Text25>DDUDRを実行しオーディオコントローラーを削除します。</Text25>
+			<Text26>HDオーディオアダプターは削除されました！</Text26>
+			<Text27>3D Vision USB アダプターがデバイスマネージャーから削除されました。</Text27>
+			<Text28>モニターと非表示（未接続）のモニターが削除されました！</Text28>
+			<Text29>ddudrが削除を完了しました</Text29>
+			<Text30>S-1-5-XX領域のクリーンアップを開始</Text30>
+			<Text31>S-1-5-XX領域のクリーンアップを終了</Text31>
+			<Text32>HKEY_CLASSES_ROOT内のInstaller\Productsのクリーンアップを開始</Text32>
+			<Text33>HKEY_CLASSES_ROOT内のInstaller\Productsのクリーンアップを終了</Text33>
+			<Text34>HKEY_LOCAL_MACHINE内のInstaller\Productsのクリーンアップを開始</Text34>
+			<Text35>HKEY_LOCAL_MACHINE内のInstaller\Productsのクリーンアップを終了</Text35>
+			<Text36>HKEY_USERS内のInstaller\Productsのクリーンアップを開始</Text36>
+			<Text37>HKEY_USERS内のInstaller\Productsのクリーンアップを終了</Text37>
+			<Text38>プロセス/サービスのクリーンアップを実行中...</Text38>
+			<Text39>プロセス/サービスのクリーンアップが完了しました</Text39>
+			<Text40>削除されました。</Text40>
+			<Text41>値が削除されました。</Text41>
+			<Text42>ファイルが削除されました。</Text42>
+		</UpdateLog>
+	</frmMain>
+	<frmOptions Text="オプション">
+		<Label1>
+			<Text>GPUの詳細オプション</Text>
+		</Label1>
+		<Label2>
+			<Text>全般オプション</Text>
+		</Label2>
+		<CheckBox1>
+			<Text>"C:\nVidia" ドライバーフォルダーを削除（非推奨）</Text>
+		</CheckBox1>
+		<CheckBox2>
+			<Text>ログファイルをDDUのフォルダー内に保存 (推奨)</Text>
+		</CheckBox2>
+		<CheckBox3>
+			<Text>PhysX を削除</Text>
+		</CheckBox3>
+		<CheckBox4>
+			<Text>3DTV Play を削除</Text>
+		</CheckBox4>
+		<CheckBox5>
+			<Text>システムの復元ポイントを作成する (可能な場合)</Text>
+		</CheckBox5>
+		<CheckBox6>
+			<Text>現在のモニターと非表示（未接続）のモニターを削除（推奨）</Text>
+		</CheckBox6>
+		<CheckBox7>
+			<Text>AMD Audio Bus を削除</Text>
+		</CheckBox7>
+		<CheckBox8>
+			<Text>"C:\AMD" ドライバーフォルダーを削除（非推奨）</Text>
+		</CheckBox8>
+		<CheckBox9>
+			<Text>AMDKMPFD ドライバー / フィルターを削除（AMD チップセットの場合バックアップを推奨）</Text>
+		</CheckBox9>
+		<CheckBox10>
+			<Text>起動時にセーフモードのメッセージボックスを表示</Text>
+		</CheckBox10>
+		<CheckBox11>
+			<Text>roaming フォルダーに設定ファイルを保存</Text>
+		</CheckBox11>
+		<CheckBox12>
+			<Text>起動時にDDUのアップデートを確認しない (非推奨)</Text>
+		</CheckBox12>
+		<CheckBox13>
+			<Text>Geforce Experience (GFE)を削除</Text>
+		</CheckBox13>
+		<CheckBox14>
+			<Text>AMD Crimson Shader Cache フォルダーを削除</Text>
+			<Tooltip>破損したシェーダー キャッシュ データによるグラフィックの異常 (速度または視覚的な破損) がある場合に推奨します。|また、nVidia のような別のブランドに換装している場合にも推奨します。</Tooltip>
+		</CheckBox14>
+	</frmOptions>
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Launch</Text>
+			<Text2>Reboot to|Safe Mode</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Launch option</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+		</lblNotSafeMode>
+		<cbBootOption>
+			<Item1>Normal</Item1>
+			<Item2>Safe Mode (Recommended)</Item2>
+			<Item3>Safe Mode With Networking</Item3>
+		</cbBootOption>
+	</frmLaunch>
+	<frmLog Text="Extended log">		
+	</frmLog>
+	<frmAbout>
+		<Label1>
+			<Text>
+Display Driver Uninstaller (DDU) / ディスプレイ（ GPU ）ドライバー（ NVIDIA / AMD）のために作られたクリーナー
+
+このツールはディスプレイ/GPUドライバーをデバイスマネージャから削除し、NVIDIA / AMDのサービスを削除するとともに、
+Windows Driver store から現在そして過去の全てのドライバーを削除します。
+
+このツールを使用した後、現在の効果は、Windowsが「新規インストール」された時に近い状態になります。
+
+このツールは "Driver Sweeper"*のように動作し、さらに前述の特長があります。
+
+古いドライバー、または新しいものをインストールする際に問題が発生した場合、
+それらの問題が解消したといういくつかの報告があるので試してみてください。
+
+推奨される使用法：
+
+ - このツールは、ノーマルモードで使用することができますが、DDUを使用する際の
+絶対的な安定性のためには、セーフモードで行うのが常に最良の選択です。
+
+ - 私たちは、すべての人からのフィードバックを収集したいと思っています。
+使用した結果成功したか否かを是非ともお知らせください。
+
+ - バックアップまたはシステムの復元ポイントを作成してください（通常かなり安全な筈ですが）
+
+ - もしあなたが経験した（現在している）ドライバーの問題があり、このツールが問題の解決に役立ったなら、
+あなたの結果を​​共有してください。
+
+ - NVIDIA 、 AMD 、またマイクロソフトは、DDUとそのクリエイターとは何ら関係がなく、
+いかなる損害についても責任を負わないことに注意してください。
+-------------------------------
+
+作成者： Wagnard.
+
+共同所有者： Shady757
+
+テスター： Dellon132
+
+ロゴ： juanchacin
+
+日本語化： DH ◆OmegaWBPUI
+
+AMD 7850を寄贈してくれた Jackalito に多大な感謝を
+
+Helge Klein (http://helgeklein.com/setacl/) に感謝を ： 彼のプログラム "SetAcl"のDDUへの使用許可
+
+テストのために時間を割いてくれた Gamer1291 (optimus)、Octopuss (Amd Enduro)、
+nedooo` (デバッグへの協力)、Extraordinary (バグ修正のテスト) に多大な感謝を
+
+自分のシステムを危険にさらしてテストしてくれた皆さん (特に Dellon132) に感謝を
+
+*DDUとそのクリエイター、関係者は、 Driver Sweeperとそのクリエイターとは何ら提携関係にありません
+</Text>
+		</Label1>
+	</frmAbout>
+	<Misc>
+		<Tos>
+			<Text>
+Display Driver Uninstaller ("DDU") ユーザー使用許諾契約
+
+あなたがDDUソフトウェアを使用すると、DDUの利用者（以下「ユーザー」）になります。
+本契約は、ドライバーをアンインストールするソフトウェアの使用を開始した時点で有効になります。
+
+DDUを使用することであなたのPCに損害や悪影響を及ぼしても、DDUとそのクリエイターを
+非難しないことに同意するものとみなします。
+
+DDUの使用によって、あなたは NVIDIA ("NVIDIA, GeForce")及び 
+Advanced Micro Devices ("AMD, Radeon")がこのプログラムとは何ら関係がなく、 
+DDUとそのクリエイターとは何ら提携関係にないことを認めるものとみなします。
+</Text>
+		</Tos>
+	</Misc>
+</DisplayDriverUninstaller>

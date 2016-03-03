@@ -1,1 +1,0 @@
-﻿Przechowuj plik konfiguracyjny w folderze roaming

@@ -1,1 +1,0 @@
-﻿Guardar el archivo de configuración en la carpeta roaming

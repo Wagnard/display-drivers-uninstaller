@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="uk" Text="Ukrainian">
+	<!--
+	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
+	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+
+	Text = Shown to user (as written in english, found on language selection box)
+
+	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
+	[char = replaces]  xml doesn't allow some special chars like <>&"
+	| = newline
+	&amp; = &
+	&quot; = "
+	&gt; = >
+	&lt; = <
+
+	-->
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<Button1>
+			<Text>Очистити та перезавантажити|(настійно рекомендовано)</Text>
+			<Tooltip>Натисніть, щоб видалити поточний і попередні драйвери, а потім перезавантажити комп'ютер.|(настійно рекомендовано)</Tooltip>
+		</Button1>
+		<Button2>
+			<Text>Очистити БЕЗ перезавантаження|(може спричинити проблеми, подібні до "чорного екрана")</Text>
+			<Tooltip>Натисніть, щоб видалити поточний і попередні драйвери, але не перезавантажувати комп'ютер.|(може спричинити проблеми, подібні до "чорного екрана")</Tooltip>
+		</Button2>
+		<Button3>
+			<Text>Видалити та завершити роботу|(для встановлення нової відеокарти)</Text>
+			<Tooltip>Натисніть, щоб видалити поточний і попередні драйвери та завершити роботу комп'ютера без повторного сканування.|(для встановлення нової відеокарти)</Tooltip>
+		</Button3>
+		<Button4>
+			<Text>Встановити типове налаштування для системи оновлення драйверів з Windows Update</Text>
+		</Button4>
+		<Button5>
+			<Text>Показати розширений журнал</Text>
+		</Button5>
+		<Label1>
+			<Text>Виявлено версію Windows:</Text>
+		</Label1>
+		<Label4>
+			<Text>Подобається DDU? Поміркуйте щодо пожертвування - це допоможе його подальшому розвитку.</Text>
+		</Label4>
+		<Label5>
+			<Text>Журнал:</Text>
+		</Label5>
+		<Label7>
+			<Text>Виберіть графічний драйвер:</Text>
+		</Label7>
+		<Label9>
+			<Text>Зауваження: Будь-які пошкодження чи помилки, що виникнуть у вашому комп'ютері, на вашій відповідальності.</Text>
+		</Label9>
+		<Label10>
+			<Text>Радимо використовувати DDU в безпечному режимі.</Text>
+		</Label10>
+		<Label11>
+			<Text>Перевіряємо наявність оновлень...</Text>
+			<Text2>Оновлень не виявлено. Програма в актуальному стані.</Text2>
+			<Text3>Виявлено оновлення! Очікуйте на обмежену підтримку версій, старіших ніж найостанніша.</Text3>
+			<Text4>Не вдалося завантажити оновлення!</Text4>
+		</Label11>
+		<OptionsToolStripMenuItem>
+			<Text>Options</Text>
+		</OptionsToolStripMenuItem>
+		<ToolStripMenuItem1>
+			<Text>?</Text>
+		</ToolStripMenuItem1>
+		<ToSToolStripMenuItem>
+			<Text>ToS</Text>
+		</ToSToolStripMenuItem>
+		<VisitDDUHomepageToolStripMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomepageToolStripMenuItem>
+		<SVNToolStripMenuItem>
+			<Text>Visit SVN Website</Text>
+		</SVNToolStripMenuItem>
+		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
+		<VisitGuru3dAMDThreadToolStripMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3dAMDThreadToolStripMenuItem>
+		<VisitGeforceThreadToolStripMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceThreadToolStripMenuItem>
+		<AboutToolStripMenuItem>
+			<Text>About</Text>
+		</AboutToolStripMenuItem>
+		<Messages>
+			<Text1>Доступні оновлення! Відвідати веб-сайт DDU зараз?</Text1>
+			<Text2>Очікуйте на обмежену підтримку версій, старіших ніж найостанніша. Будь ласка, перевірте нову версію до повідомлень про помилки.</Text2>
+			<Text3>Ви використовуєте DDU не з правами адміністратора. Застосунок буде завершено.</Text3>
+			<Text4>Не вдалося знайти DDUDR. Будь ласка, зверніться до журналу.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) внесе дуже багато змін до реєстру. DDU спробує автоматично створити точку відновлення системи (лише звичайний режим).</Text5>
+			<Text6>Виникла проблема в одному з модулів, надішліть ваші журнали DDU розробнику.</Text6>
+			<Text7>DDU виявлено ноутбук з графікою AMD, що перемикається (Enduro або аналогічний). DDU ще не повністю сумісний/випробуваний з системами Enduro. Використовуйте на свій страх і ризик.</Text7>
+			<Text8>DDU виявлено, що система працює не в безпечному режимі... Для кращого очищення без проблем радимо перезавантажити комп'ютер у безпечному режимі.</Text8>
+			<Text9>DDU змінив налаштування, щоб запобігти автоматичному завантаженю драйверів через Windows Update. Ви можете повернути їх до типового стану, якщо бажаєте, але ПІСЛЯ інсталяції нового драйвера.</Text9>
+			<Text10>Повне видалення завершено! Ви хочете зараз вийти?</Text10>
+			<Text11>Готово!</Text11>
+			<Text12>Система працює не в безпечному режимі. Настійно рекомендовано перезавантажити її в безпечному режимі, щоб уникнути можливих проблем. Перезапустити систему в безпечному режимі зараз?</Text12>
+			<Text13>Ось що вам необхідно вибрати на синьому екрані відновлення: Виправити неполадки -&gt; Додаткові параметри-&gt; Настройки завантаження.</Text13>
+			<Text14>Існує відкладене перезавантаження, виконайте його, перш ніж використовувати DDU</Text14>
+		</Messages>
+		<UpdateLog>
+			<Text1>Виконання очищення сховища драйверів Windows (крок видалення OEM)...</Text1>
+			<Text2>Очищення каталогу</Text2>
+			<Text3>Очищення відомих ключів реєстру... Це може зайняти хвилину чи дві.</Text3>
+			<Text4>Очищення облікових записів користувачів UpdatusUser, якщо такі є.</Text4>
+			<Text5>Очищення каталогу</Text5>
+			<Text6>Запуск очищення реєстру</Text6>
+			<Text7>Завершено очищення реєстру</Text7>
+			<Text8>Запуск видалення NVIDIA Optimus UpperFilter, якщо він є.</Text8>
+			<Text9>Пошук нового пристрою...</Text9>
+			<Text10>Повне видалення завершено!</Text10>
+			<Text11>Версія DDU:</Text11>
+			<Text12>Графічний процесор #</Text12>
+			<Text13>виявлено:</Text13>
+			<Text14>DeviceId графічного процесора:</Text14>
+			<Text15>Виявлені версії драйверів:</Text15>
+			<Text16>Файл INF:</Text16>
+			<Text17>Секція INF:</Text17>
+			<Text18>Графічний процесор інстальовано неправильно:</Text18>
+			<Text19>Видалення деяких спеціальних папок, це може тривати деякий час...</Text19>
+			<Text20>Розпочато очищення...</Text20>
+			<Text21>Видалення</Text21>
+			<Text22>драйвер</Text22>
+			<Text23>Виконання видалення DDUDR. Будь ласка, зачекайте (це може зайняти кілька хвилин)</Text23>
+			<Text24>Графічні процесори видалено з диспетчера пристроїв.</Text24>
+			<Text25>Виконання видалення DDUDR аудіо контролера.</Text25>
+			<Text26>HD аудіо адаптери видалено!</Text26>
+			<Text27>Адаптер 3D Vision USB видалено з диспетчера пристроїв.</Text27>
+			<Text28>Монітори та приховані монітори видалено!</Text28>
+			<Text29>Видалення DDUDR завершено</Text29>
+			<Text30>Запуск очищення регіону S-1-5-xx</Text30>
+			<Text31>Кінець очищення регіону S-1-5-xx</Text31>
+			<Text32>Початок очищення Classesroot ,installer\products</Text32>
+			<Text33>Кінець очищення  Classesroot ,installer\products</Text33>
+			<Text34>Початок очищення localmachine ,installer\products</Text34>
+			<Text35>Кінець очищення  localmachine ,installer\products</Text35>
+			<Text36>Початок очищення currentuser ,installer\products</Text36>
+			<Text37>Кінець очищення  currentuser ,installer\products</Text37>
+			<Text38>Очищення process/services...</Text38>
+			<Text39>Очищення process/services завершено</Text39>
+			<Text40>Видалено.</Text40>
+			<Text41>Значення видалено.</Text41>
+			<Text42>Файл видалено.</Text42>
+		</UpdateLog>
+	</frmMain>
+	<frmOptions Text="Параметри">
+		<Label1>
+			<Text>Параметри, специфічні для GPU</Text>
+		</Label1>
+		<Label2>
+			<Text>Загальні параметри</Text>
+		</Label2>
+		<CheckBox1>
+			<Text>Видалити папку драйверів "C:\nVidia" (НЕ рекомендовано)</Text>
+		</CheckBox1>
+		<CheckBox2>
+			<Text>Зберегти файли журналу в папці запуску\n(рекомендовано)</Text>
+		</CheckBox2>
+		<CheckBox3>
+			<Text>Видалити PhysX</Text>
+		</CheckBox3>
+		<CheckBox4>
+			<Text>Видалити 3DTV Play</Text>
+		</CheckBox4>
+		<CheckBox5>
+			<Text>Створити точку відновлення системи\n(якщо це дозволено)</Text>
+		</CheckBox5>
+		<CheckBox6>
+			<Text>Видалити існуючі й неіснуючі монітори\n(рекомендовано)</Text>
+		</CheckBox6>
+		<CheckBox7>
+			<Text>Видалити AMD Audio Bus</Text>
+		</CheckBox7>
+		<CheckBox8>
+			<Text>Видалити папку драйверів "C:\AMD" (НЕ рекомендовано)</Text>
+		</CheckBox8>
+		<CheckBox9>
+			<Text>Видалити драйвер/фільтр AMDKMPFD (для чіпсета AMD, рекомендовано створення резервної копії)</Text>
+		</CheckBox9>
+		<CheckBox10>
+			<Text>Відображати вікно повідомлення про безпечний режим\nпри запуску</Text>
+		</CheckBox10>
+		<CheckBox11>
+			<Text>Зберігати файл конфігурації у папці, що переміщується (можливі помилки)</Text>
+		</CheckBox11>
+		<CheckBox12>
+			<Text>Не перевіряти наявність оновлень при запуску DDU (НЕ рекомендовано)</Text>
+		</CheckBox12>
+		<CheckBox13>
+			<Text>Remove Geforce Experience (GFE)</Text>
+		</CheckBox13>
+		<CheckBox14>
+			<Text>Remove AMD Crimson Shader Cache folder</Text>
+			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+		</CheckBox14>
+	</frmOptions>
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Launch</Text>
+			<Text2>Reboot to|Safe Mode</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Launch option</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+		</lblNotSafeMode>
+		<cbBootOption>
+			<Item1>Normal</Item1>
+			<Item2>Safe Mode (Recommended)</Item2>
+			<Item3>Safe Mode With Networking</Item3>
+		</cbBootOption>
+	</frmLaunch>
+	<frmLog Text="Extended log">		
+	</frmLog>
+	<frmAbout>
+		<Label1>
+			<Text>
+  Display Driver Uninstaller (DDU) — програма для видалення відеодрайверів (NVIDIA/AMD/Intel)
+
+  Що вона робить? Видаляє відеодрайвер з диспетчера пристроїв, а також поточний та всі попередні драйвери
+зі сховища драйверів Windows разом з видаленням служб NVIDIA/AMD.
+  Після того, як ви скористаєтесь цим інструментом, ефект буде схожим на те, що Windows перебуває
+в стані "нова інсталяція".
+  Цей інструмент діє так само, як "Driver Sweeper"*, та має всі додаткові функції, описані вище.
+  Якщо у вас виникли проблеми з інсталюванням старішого або більш нового драйвера, спробуйте DDU!
+Є повідомлення, що він усуває ці проблеми.
+
+РЕКОМЕНДАЦІЇ ЩОДО ВИКОРИСТАННЯ:
+
+— інструмент може використовуватися в звичайному режимі, але для абсолютної стабільності, при використанні DDU
+завжди є кращим безпечний режим.
+— ми хотіли б зібрати відгуки від усіх. Повідомте нам, чи було використання інструменту успішним, чи ні.
+— зробіть резервну копію або створіть точку відновлення системи (проте інструмент, як правило, досить безпечний).
+— якщо у вас є або ви мали проблеми з драйверами, і цей інструмент допоміг вам з якимось вадами, які були 
+або яких ви зазнаєте зараз, будь ласка, поділіться своїми результатами.
+
+   Майте на увазі, що NVIDIA, AMD та Microsoft не можуть нести відповідальність за будь-який збиток вам
+або пошкодження вашого комп'ютера і жодним чином не пов'язані з DDU або його авторами.
+
+——————————————————————————————
+Автор: Wagnard
+Співвласник: Shady757
+Тестування: Dellon132
+Логотипи: juanchacin
+Переклад українською: YuriPet
+——————————————————————————————
+
+  Величезне спасибі Jackalito за пожертвування AMD 7850.
+  Дякую Helge Klein (http://helgeklein.com/setacl/) за дозвіл на використання його програми "SetAcl" у DDU.
+  Величезне спасибі за свій час, витрачений на тестування: Gamer1291 (optimus), Octopuss (Amd Enduro), 
+nedooo` (потрібен був час на відлагодження зі мною), Extraordinary (тестування виправлення помилок).
+  Дякую всім, хто піддавав свою систему ризику. (Особлива подяка Dellon132).
+
+* DDU, його автори та партнери жодним чином не пов'язані з Driver Sweeper, або його авторами.
+</Text>
+		</Label1>
+	</frmAbout>
+	<Misc>
+		<Tos>
+			<Text>
+УГОДА З КОРИСТУВАЧЕМ Display Driver Uninstaller ("DDU")
+
+Використовуючи програму DDU ви стаєте користувачем DDU.
+Ця угода набуває чинності, як тільки ви видалите драйвер
+за допомогою програми.
+
+Використовуючи DDU, ви погоджуєтесь не звинувачувати DDU
+або його авторів та партнерів, що вони пошкодили
+чи негативно вплинули на ваш ПК.
+
+Використовуючи DDU ви визнаєте, що ні NVIDIA ("NVIDIA", "GeForce"),
+ні Advanced Micro Devices ("AMD", "Radeon") не мають нічого спільного
+з цією програмою, і жодним чином не пов'язані з DDU чи її авторами.
+</Text>
+		</Tos>
+	</Misc>
+</DisplayDriverUninstaller>

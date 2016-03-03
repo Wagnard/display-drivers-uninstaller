@@ -1,1 +1,0 @@
-﻿Remove AMD Crimson Shader Cache folder

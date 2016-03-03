@@ -1,2 +1,0 @@
-﻿Verwijder drivers en schakel de computer uit.
-(Voor het installeren van een nieuwe grafische kaart).

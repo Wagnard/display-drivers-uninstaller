@@ -1,4 +1,0 @@
-﻿Suche nach Updates...
-Keine Updates gefunden. Programm ist auf dem neuesten Stand.
-Updates gefunden! Eingeschränkte Unterstützung für ältere Versionen ist zu erwarten.
-Kann keine Updates abrufen!

@@ -1,2 +1,0 @@
-﻿Ukloni trenutne i prethodne zaostale drajvere, ali NEMOJ restartovati kompjuter.
-(Može dovesti do problema kao što su zacrnjenje ekrana)

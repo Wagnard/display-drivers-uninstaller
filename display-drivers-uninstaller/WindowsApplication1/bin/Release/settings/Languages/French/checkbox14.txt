@@ -1,1 +1,0 @@
-﻿Retirer le répertoire du AMD Crimson Shader Cache
