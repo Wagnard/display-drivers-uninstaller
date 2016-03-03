@@ -16,14 +16,15 @@
     End Sub
 
     Private Sub frmLaunch_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+        Language.TranslateForm(Me)
         cbBootOption.SelectedIndex = 0
     End Sub
 
     Private Sub cbBootOption_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cbBootOption.SelectedIndexChanged
         If cbBootOption.SelectedIndex = 0 Then
-            btnAccept.Text = "Launch"
+            btnAccept.Text = Language.GetTranslation(Me.Name, btnAccept.Name, "Text")
         Else
-            btnAccept.Text = "Reboot to" + vbCrLf + "Safe Mode"
+            btnAccept.Text = Language.GetTranslation(Me.Name, btnAccept.Name, "Text2")
         End If
     End Sub
 
