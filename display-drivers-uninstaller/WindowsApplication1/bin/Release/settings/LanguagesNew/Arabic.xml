@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="ar" Text="Arabic">
 	<!--
 	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
@@ -98,8 +98,8 @@
 			<Text10>تـم الانتهاء من عمليـة التنظيف بالكامل ! هل تريد الخروج من الأداة الآن ؟</Text10>
 			<Text11>تم الانتهاء!</Text11>
 			<Text12>أنت الان لست في الوضع الآمن للنظام . يستحسـن ان تقوم بإعادة التشغيل والدخول للوضع الآمن ؛ وذلك لتجنب أية اخطاء قد تحدث</Text12>
-			<Text13>في حال حدوث شاشة زرقاء  Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text14>
-			<Text14>يجب عمل اعادة تشغيل للنظام قبل اعادة استخدام هذه الآداة مجددا</Text15>
+			<Text13>في حال حدوث شاشة زرقاء  Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text14>يجب عمل اعادة تشغيل للنظام قبل اعادة استخدام هذه الآداة مجددا</Text14>
 		</Messages>
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
