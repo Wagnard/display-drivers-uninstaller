@@ -296,8 +296,9 @@ notFound:
 						Return Nothing
 					End If
 
+					Dim s As String = Application.ProductName.Replace(" ", "")
 					'Check reader nodetype (element), element name (DDU), has attributes (lang)
-					If reader.NodeType <> XmlNodeType.Element Or (reader.Name.Equals(Application.ProductName.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)) Or Not reader.HasAttributes Then
+					If reader.NodeType <> XmlNodeType.Element Or Not reader.Name.Equals(Application.ProductName.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) Or Not reader.HasAttributes Then
 						Throw New InvalidDataException("Language file's format is invalid!")
 					End If
 
