@@ -7732,15 +7732,29 @@ Public Class frmMain
 		toolTip1.ShowAlways = True
 
 		If firstLaunch Then
-			Dim defaultLang As New Language.LanguageOption("en", "English", "")
+			ComboBox2.Items.Clear()
 
-			If ComboBox2.Items.Count <= 0 Then
-				If Directory.Exists(String.Concat(Application.StartupPath, "\settings\languages\")) Then
-					ComboBox2.Items.AddRange(Language.ScanFolderForLang(Application.StartupPath + "\settings\languages\").ToArray())
-				End If
-
-				ComboBox2.Items.Add(defaultLang)
+			If Directory.Exists(String.Concat(Application.StartupPath, "\settings\languages\")) Then
+				ComboBox2.Items.AddRange(Language.ScanFolderForLang(Application.StartupPath + "\settings\languages\").ToArray())
+			Else
+				Directory.CreateDirectory(String.Concat(Application.StartupPath, "\settings\languages\"))
 			End If
+
+			Dim defaultLang As New Language.LanguageOption("en", "English", Application.StartupPath + "\settings\languages\English.xml")
+			ComboBox2.Items.Add(defaultLang)
+
+			Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Language).Namespace, "English.xml")))
+				Using sw As New StreamWriter(defaultLang.Filename, False, Encoding.UTF8)
+					While (sr.Peek() <> -1)
+						sw.WriteLine(sr.ReadLine())
+					End While
+
+					sw.Flush()
+					sw.Close()
+				End Using
+
+				sr.Close()
+			End Using
 
 			Language.Load()	'default = en
 
@@ -8050,8 +8064,9 @@ Public Class genericfunction
         Try
             Dim userpth As String = CStr(My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory")) + "\"
             Dim userpthn As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
-            Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
-            Dim isUsingRoaming As Boolean = False
+			Dim lines() As String = IO.File.ReadAllLines(Application.StartupPath & "\settings\config.cfg")
+			Dim isUsingRoaming As Boolean = False
+
             If My.Computer.FileSystem.FileExists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
                 '    Dim liness() As String = IO.File.ReadAllLines(userpth & "\AppData\Roaming\Display Driver Uninstaller\config.cfg")
                 isUsingRoaming = True

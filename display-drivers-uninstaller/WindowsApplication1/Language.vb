@@ -451,7 +451,7 @@ notFound:
 			Dim ValidLangFiles As New List(Of LanguageOption)(30)
 
 			For Each file As String In Directory.GetFiles(folder, "*.xml", SearchOption.TopDirectoryOnly)
-				If ReadFile(file, True, tf) Then
+				If ReadFile(file, True, tf) AndAlso Not tf.ISOLanguage.Equals("en") Then
 					ValidLangFiles.Add(New LanguageOption(tf.ISOLanguage, tf.LanguageText, file))
 				End If
 			Next
