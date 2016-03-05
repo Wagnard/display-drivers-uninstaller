@@ -7743,7 +7743,7 @@ Public Class frmMain
 			Dim defaultLang As New Language.LanguageOption("en", "English", Application.StartupPath + "\settings\languages\English.xml")
 			ComboBox2.Items.Add(defaultLang)
 
-			Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Language).Namespace, "English.xml")))
+			Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Language).Namespace, "English.xml")), Encoding.UTF8, True)
 				Using sw As New StreamWriter(defaultLang.Filename, False, Encoding.UTF8)
 					While (sr.Peek() <> -1)
 						sw.WriteLine(sr.ReadLine())
