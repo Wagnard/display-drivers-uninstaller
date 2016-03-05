@@ -23,6 +23,7 @@ Public Class Language
     Private Shared englishDictionary As TranslatedFile = Nothing
     Private Shared translatedDictionary As TranslatedFile = Nothing
 
+	''' <param name="langOption">Which language to load for use. Use 'Nothing' for defaul (English)</param>
 	Public Shared Sub Load(Optional ByVal langOption As LanguageOption = Nothing)
 		SyncLock (threadLock)
 			If langOption Is Nothing Then
@@ -229,7 +230,7 @@ notFound:
 	End Sub
 
 	Private Shared Sub TranslateControl(ByVal form As String, ByVal ctrl As Control, Optional ByVal tp As ToolTip = Nothing)
-		If TypeOf (ctrl) Is ComboBox Or TypeOf (ctrl) Is ListBox Then
+		If TypeOf (ctrl) Is ComboBox Then
 			Dim cb As ComboBox = ctrl
 			Dim items As List(Of String) = GetTranslationList(form, ctrl.Name, "Item")
 
@@ -284,31 +285,33 @@ notFound:
 
 					Dim reader As XmlReader = XmlReader.Create(sr, settings)
 
-					'Read until reach first line which should be
-					'<DisplayDriverUninstaller language="xxx">
+					' Read until reach first line which should be
+					' <DisplayDriverUninstaller ISO="en" Text="English">
 					Do While reader.Read()
 						If reader.NodeType = XmlNodeType.Element Then
 							Exit Do
 						End If
 					Loop
 
-					If reader.EOF Then 'End of File reached
-						Return Nothing
+					If reader.EOF Then 'End of File reached (empty translation file)
+						Return False
 					End If
 
-					Dim s As String = Application.ProductName.Replace(" ", "")
-					'Check reader nodetype (element), element name (DDU), has attributes (lang)
+					' Check reader nodetype (Element), element name (DDU), has attributes (ISO & Text)
+					' Name = DisplayDriverUninstaller
+					' Attributes = ISO="en" , Text="English"
+
 					If reader.NodeType <> XmlNodeType.Element Or Not reader.Name.Equals(Application.ProductName.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) Or Not reader.HasAttributes Then
-						Throw New InvalidDataException("Language file's format is invalid!")
+						Throw New InvalidDataException("Language file's format is invalid!" & vbCrLf & String.Format("Root node doesn't match '{0}'", Application.ProductName.Replace(" ", "")) & vbCrLf & "Or missing attributes 'ISO' and 'Text'")
 					End If
 
-					'Check first attributes (eg. iso = "en" and lang="English")
 					Dim lang_iso As String = ""
 					Dim lang_text As String = ""
 
+					' <DisplayDriverUninstaller ISO="en" Text="English"> <-- read ISO & Text attribute's values
 					Do While reader.MoveToNextAttribute()
 						If Not String.IsNullOrEmpty(reader.Name) Then
-							If reader.Name.Equals("iso", StringComparison.OrdinalIgnoreCase) Then
+							If reader.Name.Equals("ISO", StringComparison.OrdinalIgnoreCase) Then
 								lang_iso = reader.Value
 							ElseIf reader.Name.Equals("Text", StringComparison.OrdinalIgnoreCase) Then
 								lang_text = reader.Value
@@ -316,23 +319,23 @@ notFound:
 						End If
 					Loop
 
+					' ISO="en" and/or Text="English" attribute(s) not found 
 					If String.IsNullOrEmpty(lang_iso) Or String.IsNullOrEmpty(lang_text) Then
-						Throw New InvalidDataException("Language file's format is invalid!")
+						Throw New InvalidDataException("Language file's format is invalid!" & vbCrLf & "Missing required attributes 'ISO' and 'Text'" & vbCrLf & "(eg. 'ISO=""en""' and 'Text=""English""' )")
 					End If
 
-					'File should be in correct format at this point
 					Dim file As TranslatedFile = New TranslatedFile(lang_iso, lang_text)
 					Dim controls As List(Of TranslatedControl)
 					Dim ctrl As TranslatedControl
 					Dim parent As TranslatedControl
 
-
-					Do While reader.Read() 'loop parents
-						If reader.NodeType = XmlNodeType.Element Then 'found parent
-							parent = New TranslatedControl(reader.Name)	'Form1, frmLaunch etc.
+					' File should be in correct format at this point
+					Do While reader.Read() ' loop parents
+						If reader.NodeType = XmlNodeType.Element Then ' found parent, <frmMain Text="...">, <frmLaunch Text="..."> etc.
+							parent = New TranslatedControl(reader.Name)
 							controls = New List(Of TranslatedControl)
 
-							If reader.HasAttributes Then 'parent has attributes. (eg Form1.Text)
+							If reader.HasAttributes Then 'parent has attributes. <frmMain Text="..."> <-- 'Text' attribute
 								Do While reader.MoveToNextAttribute()
 									parent.Attributes.Add(reader.Name, reader.Value.Replace(newlineStr, vbCrLf))
 								Loop
@@ -341,10 +344,10 @@ notFound:
 							Do
 								reader.Read()
 
-								If reader.NodeType = XmlNodeType.Element Then 'found control
+								If reader.NodeType = XmlNodeType.Element Then ' found control, <Button1>, <Label1> etc.
 									ctrl = New TranslatedControl(reader.Name)
 
-									If reader.HasAttributes Then
+									If reader.HasAttributes Then  ' has attributes? Shouldn't, but may used in future if needed
 										Do While reader.MoveToNextAttribute()
 											ctrl.Attributes.Add(reader.Name, reader.Value.Replace(newlineStr, vbCrLf))
 										Loop
@@ -353,7 +356,7 @@ notFound:
 									reader.Read()
 
 									Do
-										If reader.NodeType = XmlNodeType.Element Then
+										If reader.NodeType = XmlNodeType.Element Then ' child elements found  <Text>, <Tooltip> etc.
 											ctrl.Values.Add(reader.Name, reader.ReadElementContentAsString().Replace(vbTab, ""))
 										Else
 											reader.Read()
@@ -368,45 +371,33 @@ notFound:
 						End If
 					Loop
 
+					output = file
+
 					reader.Close()
 					sr.Close()
 
-					output = file
 					Return True
 				End Using
 			End Using
-
-			Return True
 		Catch ex As Exception
-			'if English translation is badly formatted/not readable, throw exception 
-			If langFile.Equals("English", StringComparison.OrdinalIgnoreCase) Then
+			'if English translation is badly formatted/not readable (should never be)
+			If langFile.Equals("en", StringComparison.OrdinalIgnoreCase) Or Not onlyCheckValid Then
 				Throw ex
 			End If
 
 			If Not onlyCheckValid Then
-				Throw New InvalidDataException(String.Format("Language file '{0}' is corrupted or badly formatted!", langFile))
+				Throw New InvalidDataException(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", vbCrLf, langFile))
 			Else
-				MessageBox.Show(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", vbCrLf, langFile))
+				If TypeOf (ex) Is InvalidDataException Then
+					MessageBox.Show(ex.Message & vbCrLf & String.Format("{0}File: '{1}'", vbCrLf, langFile))
+				Else
+					MessageBox.Show(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", vbCrLf, langFile))
+				End If
 			End If
 
 			Return False
 		End Try
 	End Function
-
-	Private Sub ReadSection(ByRef reader As XmlReader, ByVal name As String)
-		While (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-			If Not reader.Read() Or reader.EOF Then
-				Exit While
-			End If
-
-			Select Case reader.NodeType
-				Case XmlNodeType.Element
-				Case XmlNodeType.EndElement
-			End Select
-
-		End While
-	End Sub
-
 	Private Shared Function GetDictionary(ByVal translated As Boolean) As TranslatedFile
 		If translated And isUserLoaded Then
 			Return translatedDictionary
@@ -451,6 +442,10 @@ notFound:
 			Dim ValidLangFiles As New List(Of LanguageOption)(30)
 
 			For Each file As String In Directory.GetFiles(folder, "*.xml", SearchOption.TopDirectoryOnly)
+				If file.EndsWith("\English.xml", StringComparison.OrdinalIgnoreCase) Then
+					Continue For 'Skip english file
+				End If
+
 				If ReadFile(file, True, tf) AndAlso Not tf.ISOLanguage.Equals("en") Then
 					ValidLangFiles.Add(New LanguageOption(tf.ISOLanguage, tf.LanguageText, file))
 				End If

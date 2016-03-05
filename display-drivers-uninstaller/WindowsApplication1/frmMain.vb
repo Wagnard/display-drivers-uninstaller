@@ -5586,7 +5586,8 @@ Public Class frmMain
 		If Not preventclose Then
 			Me.Close()
 		End If
-    End Sub
+	End Sub
+
     Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
         If Not preventclose Then
             Checkupdates2()
@@ -7756,7 +7757,7 @@ Public Class frmMain
 				sr.Close()
 			End Using
 
-			Language.Load()	'default = en
+			Language.Load()	'default = english
 
 			Dim systemLang As String = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName	'en, fr, sv etc.
 			Dim lastUsedLang As String = settings.getconfig("language")
