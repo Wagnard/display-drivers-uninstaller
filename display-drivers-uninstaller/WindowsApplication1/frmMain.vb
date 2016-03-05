@@ -5405,7 +5405,8 @@ Public Class frmMain
 	Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
 		If ComboBox2.SelectedItem IsNot Nothing Then
 			InitLanguage(False, CType(ComboBox2.SelectedItem, Language.LanguageOption))
-		End If
+        End If
+        Checkupdates2()
 	End Sub
 
 	Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
@@ -5585,7 +5586,12 @@ Public Class frmMain
 		If Not preventclose Then
 			Me.Close()
 		End If
-	End Sub
+    End Sub
+    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
+        If Not preventclose Then
+            Checkupdates2()
+        End If
+    End Sub
 
 	Private Sub NotifyIcon1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles NotifyIcon1.MouseDoubleClick
 		If Not silent Then
