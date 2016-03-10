@@ -5603,7 +5603,22 @@ Public Class frmMain
 
 
 	Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		InitLanguage(True)
+
+        'We try to create config.cfg if non existant.
+        If roamingcfg = True Then
+            My.Computer.FileSystem.CreateDirectory(userpthn & "\Display Driver Uninstaller")
+        End If
+
+        If Not System.IO.File.Exists(Application.StartupPath & "\settings\config.cfg") Then
+            If Not System.IO.File.Exists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
+                myExe = Application.StartupPath & "\settings\config.cfg"
+                System.IO.File.WriteAllBytes(myExe, My.Resources.config)
+            Else
+                System.IO.File.Copy(userpthn & "\Display Driver Uninstaller\config.cfg", Application.StartupPath & "\settings\config.cfg") 'this is a really bad lazy fix, and will be improved upon later.
+            End If
+        End If
+
+        InitLanguage(True)
 
 		If Not donotcheckupdatestartup Then
 			Me.TopMost = True
@@ -5623,19 +5638,7 @@ Public Class frmMain
 
 
 		Dim webAddress As String = ""
-		'We try to create config.cfg if non existant.
-		If roamingcfg = True Then
-			My.Computer.FileSystem.CreateDirectory(userpthn & "\Display Driver Uninstaller")
-		End If
 
-		If Not System.IO.File.Exists(Application.StartupPath & "\settings\config.cfg") Then
-			If Not System.IO.File.Exists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
-				myExe = Application.StartupPath & "\settings\config.cfg"
-				System.IO.File.WriteAllBytes(myExe, My.Resources.config)
-			Else
-				System.IO.File.Copy(userpthn & "\Display Driver Uninstaller\config.cfg", Application.StartupPath & "\settings\config.cfg") 'this is a really bad lazy fix, and will be improved upon later.
-			End If
-		End If
 
 
 
