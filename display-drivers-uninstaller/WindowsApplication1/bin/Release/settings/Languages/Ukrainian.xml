@@ -38,7 +38,7 @@
 			<Text>Виявлено версію Windows:</Text>
 		</Label1>
 		<Label4>
-			<Text>Подобається DDU? Поміркуйте щодо пожертвування - це допоможе його подальшому розвитку.</Text>
+			<Text>Подобається DDU? Поміркуйте щодо пожертвування (Donate) - це допоможе його подальшому розвитку.</Text>
 		</Label4>
 		<Label5>
 			<Text>Журнал:</Text>
@@ -59,31 +59,31 @@
 			<Text4>Не вдалося завантажити оновлення!</Text4>
 		</Label11>
 		<OptionsToolStripMenuItem>
-			<Text>Options</Text>
+			<Text>Параметри</Text>
 		</OptionsToolStripMenuItem>
 		<ToolStripMenuItem1>
-			<Text>?</Text>
+			<Text>Довідка</Text>
 		</ToolStripMenuItem1>
 		<ToSToolStripMenuItem>
-			<Text>ToS</Text>
+			<Text>Угода з користувачем</Text>
 		</ToSToolStripMenuItem>
 		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
+			<Text>Відвідайте веб-сайт DDU</Text>
 		</VisitDDUHomepageToolStripMenuItem>
 		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
+			<Text>Відвідайте веб-сайт SVN</Text>
 		</SVNToolStripMenuItem>
 		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
+			<Text>Відвідайте тему NVIDIA на Guru3d</Text>
 		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
 		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
+			<Text>Відвідайте тему AMD Guru3d</Text>
 		</VisitGuru3dAMDThreadToolStripMenuItem>
 		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
+			<Text>Відвідайте тему Geforce</Text>
 		</VisitGeforceThreadToolStripMenuItem>
 		<AboutToolStripMenuItem>
-			<Text>About</Text>
+			<Text>Про DDU</Text>
 		</AboutToolStripMenuItem>
 		<Messages>
 			<Text1>Доступні оновлення! Відвідати веб-сайт DDU зараз?</Text1>
@@ -184,40 +184,40 @@
 			<Text>Відображати вікно повідомлення про безпечний режим\nпри запуску</Text>
 		</CheckBox10>
 		<CheckBox11>
-			<Text>Зберігати файл конфігурації у папці, що переміщується (можливі помилки)</Text>
+			<Text>Зберігати файл конфігурації у папці, що переміщується</Text>
 		</CheckBox11>
 		<CheckBox12>
 			<Text>Не перевіряти наявність оновлень при запуску DDU (НЕ рекомендовано)</Text>
 		</CheckBox12>
 		<CheckBox13>
-			<Text>Remove Geforce Experience (GFE)</Text>
+			<Text>Видалити Geforce Experience (GFE)</Text>
 		</CheckBox13>
 		<CheckBox14>
-			<Text>Remove AMD Crimson Shader Cache folder</Text>
-			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+			<Text>Видалити папку AMD Crimson Shader Cache</Text>
+			<Tooltip>Рекомендовано за наявності графічних аномалій (швидкості чи візуальних спотворень) через пошкодження кешу даних шейдерів.|Також рекомендовано, якщо ви переходите до іншої марки, наприклад nVidia.</Tooltip>
 		</CheckBox14>
 	</frmOptions>
-	<frmLaunch Text="Launch option">
+	<frmLaunch Text="Варіанти запуску">
 		<btnAccept>
-			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text>Запуск</Text>
+			<Text2>Перезавантаж.|у безп. режимі</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Закрити</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>Варіанти запуску</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>Система працює не в безпечному режимі. Щоб уникнути|можливих проблем, НАСТІЙНО РЕКОМЕНДОВАНО|перезавантажити її в безпечному режимі.</Text>
 		</lblNotSafeMode>
 		<cbBootOption>
-			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
-			<Item3>Safe Mode With Networking</Item3>
+			<Item1>Нормальний режим</Item1>
+			<Item2>Безпечний режим (рекомендовано)</Item2>
+			<Item3>Безпечний режим з підтримкою мережі</Item3>
 		</cbBootOption>
 	</frmLaunch>
-	<frmLog Text="Extended log">		
+	<frmLog Text="Розширений журнал">		
 	</frmLog>
 	<frmAbout>
 		<Label1>
