@@ -217,7 +217,10 @@
 			<Item3>Vikasietotila verkkoyhteyksillä</Item3>
 		</cbBootOption>
 	</frmLaunch>
-	<frmLog Text="Laajennettu loki" >		
+	<frmLog Text="Laajennettu loki" >
+		<btnClose>
+			<Text>Sulje</Text>
+		</btnClose>	
 	</frmLog>
 	<frmAbout>
 		<Label1>

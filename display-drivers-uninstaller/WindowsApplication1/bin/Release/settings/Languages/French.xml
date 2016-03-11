@@ -216,7 +216,10 @@
 			<Item3>Mode sans échec avec prise en charge du réseau</Item3>
 		</cbBootOption>
 	</frmLaunch>
-	<frmLog Text="Log Étendu">		
+	<frmLog Text="Log Étendu">	
+		<btnClose>
+			<Text>Fermer</Text>
+		</btnClose>	
 	</frmLog>
 	<frmAbout>
 		<Label1>

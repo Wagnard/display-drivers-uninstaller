@@ -213,7 +213,10 @@
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
 	</frmLaunch>
-	<frmLog Text="Extended log">		
+	<frmLog Text="Extended log">
+     	<btnClose>
+			<Text>Close</Text>
+		</btnClose>	
 	</frmLog>
 	<frmAbout>
 		<Label1>

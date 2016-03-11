@@ -217,7 +217,10 @@
 			<Item3>Безпечний режим з підтримкою мережі</Item3>
 		</cbBootOption>
 	</frmLaunch>
-	<frmLog Text="Розширений журнал">		
+	<frmLog Text="Розширений журнал">
+     	<btnClose>
+			<Text>Закрити</Text>
+		</btnClose>
 	</frmLog>
 	<frmAbout>
 		<Label1>
