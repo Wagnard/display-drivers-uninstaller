@@ -196,27 +196,27 @@
 			<Tooltip>Recommandé s’il y a des anomalies graphiques (vitesse ou la corruption visuelle) causée par un cache de données de shader corrompu.|Aussi recommandé si vous passez à une autre marque comme nVidia.</Tooltip>
 		</CheckBox14>
 	</frmOptions>
-	<frmLaunch Text="Launch option">
+	<frmLaunch Text="Options de démarrage">
 		<btnAccept>
-			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text>Exécuter</Text>
+			<Text2>Redémarrer en|Mode sans échec</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Fermer</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>Options de démarrage</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>Vous n'êtes pas en mode sans échec . Il est fortement recommandé de |redémarrer en mode sans échec pour éviter des problèmes.</Text>
 		</lblNotSafeMode>
 		<cbBootOption>
 			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
-			<Item3>Safe Mode With Networking</Item3>
+			<Item2>Mode sans échec (Recommendé)</Item2>
+			<Item3>Mode sans échec avec prise en charge du réseau</Item3>
 		</cbBootOption>
 	</frmLaunch>
-	<frmLog Text="Extended log">		
+	<frmLog Text="Log Étendu">		
 	</frmLog>
 	<frmAbout>
 		<Label1>
