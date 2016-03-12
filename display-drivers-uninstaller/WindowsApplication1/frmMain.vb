@@ -5253,7 +5253,7 @@ Public Class frmMain
 				'sw.Close()
 				settings.setconfig("arguments", arg)
 				regkey.SetValue("*" + Application.ProductName, Application.ExecutablePath)
-				regkey.SetValue("*UndoSM", "bcdedit /deletevalue safeboot")
+                regkey.SetValue("*UndoSM", "BCDEDIT /deletevalue safeboot")
 			End If
 		Catch ex As Exception
 			log(ex.Message & ex.StackTrace)
@@ -6131,24 +6131,25 @@ Public Class frmMain
 				'This code checks to see which mode Windows has booted up in.
 				Dim processstopservice As New Process
 				Select Case System.Windows.Forms.SystemInformation.BootMode
-					Case BootMode.FailSafeWithNetwork Or BootMode.FailSafe 'Merged both boot options (same code 1:1)
-						'The computer was booted using only the basic files and drivers.
-						'This is the same as Safe Mode
-						safemode = True
+                    Case BootMode.FailSafeWithNetwork, BootMode.FailSafe 'Merged both boot options (same code 1:1) (WARNING, we cannot use "OR" with "Case", we must use a ",")
+                        'The computer was booted using only the basic files and drivers.
+                        'This is the same as Safe Mode
+                        safemode = True
 
-						If winxp = False Then
-							Dim setbcdedit As New ProcessStartInfo
-							setbcdedit.FileName = "cmd.exe"
-							setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-							setbcdedit.UseShellExecute = False
-							setbcdedit.CreateNoWindow = True
-							setbcdedit.RedirectStandardOutput = False
+                        If winxp = False Then
+                            Dim setbcdedit As New ProcessStartInfo
+                            setbcdedit.FileName = "cmd.exe"
+                            setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
+                            setbcdedit.UseShellExecute = False
+                            setbcdedit.CreateNoWindow = True
+                            setbcdedit.RedirectStandardOutput = False
 
-							processstopservice.StartInfo = setbcdedit
-							processstopservice.Start()
-							processstopservice.WaitForExit()
-							processstopservice.Close()
-						End If
+                            processstopservice.StartInfo = setbcdedit
+                            processstopservice.Start()
+                            processstopservice.WaitForExit()
+                            processstopservice.Close()
+                            MsgBox("Reached")
+                        End If
 					Case BootMode.Normal
 						safemode = False
 
