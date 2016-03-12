@@ -6148,7 +6148,6 @@ Public Class frmMain
                             processstopservice.Start()
                             processstopservice.WaitForExit()
                             processstopservice.Close()
-                            MsgBox("Reached")
                         End If
 					Case BootMode.Normal
 						safemode = False
