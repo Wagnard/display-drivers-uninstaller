@@ -8023,10 +8023,13 @@ End Class
 
 Public Class genericfunction
     Public Function checkupdates() As Integer
-        If Not My.Computer.Network.IsAvailable Then
-            Return 3
-        End If
-
+        Try
+        	If Not My.Computer.Network.IsAvailable Then
+            	Return 3
+    		End If
+		Catch ex As Exception
+		End Try
+		
         Try
             Dim request2 As System.Net.HttpWebRequest = CType(System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt"), Net.HttpWebRequest)
             Dim response2 As System.Net.HttpWebResponse = Nothing
