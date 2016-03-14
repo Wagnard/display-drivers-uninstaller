@@ -29,36 +29,43 @@ Partial Class frmLog
         '
         'TextBox1
         '
+        Me.TextBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBox1.BackColor = System.Drawing.SystemColors.MenuBar
-        Me.TextBox1.Location = New System.Drawing.Point(8, 8)
-        Me.TextBox1.Margin = New System.Windows.Forms.Padding(2)
+        Me.TextBox1.Location = New System.Drawing.Point(6, 12)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ReadOnly = True
         Me.TextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TextBox1.Size = New System.Drawing.Size(581, 428)
+        Me.TextBox1.Size = New System.Drawing.Size(870, 656)
         Me.TextBox1.TabIndex = 0
         '
         'btnClose
         '
-        Me.btnClose.Location = New System.Drawing.Point(509, 441)
+        Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnClose.AutoSize = True
+        Me.btnClose.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnClose.Location = New System.Drawing.Point(822, 688)
+        Me.btnClose.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnClose.Name = "btnClose"
-        Me.btnClose.Size = New System.Drawing.Size(75, 23)
+        Me.btnClose.Size = New System.Drawing.Size(59, 30)
         Me.btnClose.TabIndex = 43
         Me.btnClose.Text = "Close"
         Me.btnClose.UseVisualStyleBackColor = True
         '
         'frmLog
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(596, 476)
+        Me.AutoSize = True
+        Me.ClientSize = New System.Drawing.Size(894, 732)
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.TextBox1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
-        Me.Margin = New System.Windows.Forms.Padding(2)
         Me.Name = "frmLog"
+        Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.Text = "Extended Log"
         Me.ResumeLayout(False)
         Me.PerformLayout()

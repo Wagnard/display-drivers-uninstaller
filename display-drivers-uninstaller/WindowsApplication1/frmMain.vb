@@ -5369,9 +5369,10 @@ Public Class frmMain
 	End Sub
 
 	Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
-		Using frm As New frmLog
-			frm.ShowDialog(Me)
-		End Using
+        'Using frm As New frmLog
+        '    frm.ShowDialog(Me)
+        'End Using
+        frmLog.Show()
 	End Sub
 
 
