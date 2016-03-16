@@ -137,6 +137,7 @@ Public Class frmMain
                         Case Windows.Forms.DialogResult.Cancel
                             closeapp = True
                             closeddu()
+                            Exit Sub
                     End Select
 
                 End If
@@ -5282,12 +5283,13 @@ Public Class frmMain
     Private Sub closeddu()
 
         If Not Dispatcher.CheckAccess() Then
-            Dispatcher.Invoke(New MethodInvoker(AddressOf Me.closeddu))
+            Dispatcher.Invoke(New MethodInvoker(AddressOf closeddu))
         Else
             Try
                 preventclose = False
 
-                Me.Close()
+                ' Me.Close()
+                Application.Current.MainWindow.Close()
 
             Catch ex As Exception
                 log(ex.Message + ex.StackTrace)
@@ -6414,6 +6416,7 @@ Public Class frmMain
         If silent Then
             Me.Hide()
         End If
+        closeddu()
     End Sub
 
     Private Sub frmMain(sender As Object, e As System.ComponentModel.CancelEventArgs)
