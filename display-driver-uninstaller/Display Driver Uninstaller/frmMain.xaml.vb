@@ -57,6 +57,7 @@ Public Class frmMain
     Dim toolTip1 As New ToolTip()
     Dim reboot As Boolean = False
     Dim shutdown As Boolean = False
+    Public Shared baseDir As String = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
     Public Shared win8higher As Boolean = False
     Public win10 As Boolean = False
     Public Shared winxp As Boolean = False
@@ -76,7 +77,7 @@ Public Class frmMain
     Public Shared removegfe As Boolean
 
     Dim f As New frmOptions
-    Dim locations As String = System.IO.Directory.GetCurrentDirectory() & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
+    Dim locations As String = baseDir & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
                               & "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
     Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
     Dim windir As String = System.Environment.GetEnvironmentVariable("windir").ToLower
@@ -156,9 +157,9 @@ Public Class frmMain
         'Check the driver from the driver store  ( oemxx.inf)
 
         Dim deloem As New Diagnostics.ProcessStartInfo
-        deloem.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+        deloem.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
         Dim proc3 As New Diagnostics.Process
-        processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+        processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
         processinfo.Arguments = "dp_enum"
 
         UpdateTextMethod(UpdateTextMethodmessagefn(0))
@@ -304,7 +305,7 @@ Public Class frmMain
     Private Sub cleanamdserviceprocess()
 
 
-        CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\AMD\services.cfg")) '// add each line as String Array.
+        CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(basedir & "\settings\AMD\services.cfg")) '// add each line as String Array.
 
         Dim killpid As New ProcessStartInfo
         killpid.FileName = "cmd.exe"
@@ -409,7 +410,7 @@ Public Class frmMain
         'Delete driver files
         'delete OpenCL
 
-        CleanupEngine.folderscleanup(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\AMD\driverfiles.cfg")) '// add each line as String Array.
+        CleanupEngine.folderscleanup(IO.File.ReadAllLines(basedir & "\settings\AMD\driverfiles.cfg")) '// add each line as String Array.
 
 
 
@@ -1135,7 +1136,7 @@ Public Class frmMain
 
         log("Starting dcom/clsid/appid/typelib cleanup")
 
-        CleanupEngine.classroot(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\AMD\classroot.cfg")) '// add each line as String Array.
+        CleanupEngine.classroot(IO.File.ReadAllLines(basedir & "\settings\AMD\classroot.cfg")) '// add each line as String Array.
 
 
         '-----------------
@@ -1144,7 +1145,7 @@ Public Class frmMain
 
 
 
-        CleanupEngine.interfaces(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\AMD\interface.cfg")) '// add each line as String Array.
+        CleanupEngine.interfaces(IO.File.ReadAllLines(basedir & "\settings\AMD\interface.cfg")) '// add each line as String Array.
 
         log("Instance class cleanUP")
         Try
@@ -1301,7 +1302,7 @@ Public Class frmMain
         log("AppID and clsidleftover cleanUP")
         'old dcom 
 
-        CleanupEngine.clsidleftover(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\AMD\clsidleftover.cfg")) '// add each line as String Array.
+        CleanupEngine.clsidleftover(IO.File.ReadAllLines(basedir & "\settings\AMD\clsidleftover.cfg")) '// add each line as String Array.
 
         log("Record CleanUP")
 
@@ -1499,7 +1500,7 @@ Public Class frmMain
 
         log("Pnplockdownfiles region cleanUP")
 
-        CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\AMD\driverfiles.cfg")) '// add each line as String Array.
+        CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(basedir & "\settings\AMD\driverfiles.cfg")) '// add each line as String Array.
 
         Try
 
@@ -2103,7 +2104,7 @@ Public Class frmMain
 
         log("Removing known Packages")
 
-        packages = IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\AMD\packages.cfg") '// add each line as String Array.
+        packages = IO.File.ReadAllLines(basedir & "\settings\AMD\packages.cfg") '// add each line as String Array.
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
       ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -2139,7 +2140,7 @@ Public Class frmMain
         End Try
 
         If IntPtr.Size = 8 Then
-            packages = IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\AMD\packages.cfg") '// add each line as String Array.
+            packages = IO.File.ReadAllLines(basedir & "\settings\AMD\packages.cfg") '// add each line as String Array.
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -2173,7 +2174,7 @@ Public Class frmMain
             End Try
         End If
 
-        CleanupEngine.installer(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\AMD\packages.cfg"))
+        CleanupEngine.installer(IO.File.ReadAllLines(basedir & "\settings\AMD\packages.cfg"))
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -2501,10 +2502,10 @@ Public Class frmMain
     End Sub
 
     Private Sub cleannvidiaserviceprocess()
-        CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\services.cfg"))
+        CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\services.cfg"))
 
         If removegfe Then
-            CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\gfeservice.cfg"))
+            CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\gfeservice.cfg"))
         End If
 
         'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
@@ -3051,9 +3052,9 @@ Public Class frmMain
         End If
 
 
-        CleanupEngine.folderscleanup(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
+        CleanupEngine.folderscleanup(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
         If removegfe Then
-            CleanupEngine.folderscleanup(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\gfedriverfiles.cfg")) '// add each line as String Array.
+            CleanupEngine.folderscleanup(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\gfedriverfiles.cfg")) '// add each line as String Array.
         End If
 
         filePath = System.Environment.SystemDirectory
@@ -3393,13 +3394,13 @@ Public Class frmMain
         'Deleting DCOM object /classroot
         log("Starting dcom/clsid/appid/typelib cleanup")
 
-        CleanupEngine.classroot(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\classroot.cfg")) '// add each line as String Array.
+        CleanupEngine.classroot(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\classroot.cfg")) '// add each line as String Array.
 
-        CleanupEngine.clsidleftover(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
+        CleanupEngine.clsidleftover(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 
         'for GFE removal only
         If removegfe Then
-            CleanupEngine.clsidleftover(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
+            CleanupEngine.clsidleftover(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
         End If
         '------------------------------
         'Clean the rebootneeded message
@@ -3428,11 +3429,11 @@ Public Class frmMain
         'interface cleanup
         '-----------------
 
-        CleanupEngine.interfaces(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\interface.cfg")) '// add each line as String Array.
+        CleanupEngine.interfaces(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\interface.cfg")) '// add each line as String Array.
 
         'When removing GFE only
         If removegfe Then
-            CleanupEngine.interfaces(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
+            CleanupEngine.interfaces(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
         End If
 
         log("Finished dcom/clsid/appid/typelib/interface cleanup")
@@ -3440,7 +3441,7 @@ Public Class frmMain
         'end of deleting dcom stuff
         log("Pnplockdownfiles region cleanUP")
 
-        CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
+        CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
 
         'Cleaning PNPRessources.
         If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos", False) IsNot Nothing Then
@@ -4585,7 +4586,7 @@ Public Class frmMain
             log(ex.StackTrace)
         End Try
 
-        CleanupEngine.installer(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\NVIDIA\packages.cfg"))
+        CleanupEngine.installer(IO.File.ReadAllLines(basedir & "\settings\NVIDIA\packages.cfg"))
 
 
         If remove3dtvplay Then
@@ -4747,7 +4748,7 @@ Public Class frmMain
 
         log("Cleaning Directory")
 
-        CleanupEngine.folderscleanup(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
+        CleanupEngine.folderscleanup(IO.File.ReadAllLines(basedir & "\settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
 
         filePath = System.Environment.SystemDirectory
         Dim files() As String = IO.Directory.GetFiles(filePath + "\", "igfxcoin*.*")
@@ -4764,7 +4765,7 @@ Public Class frmMain
 
     Private Sub cleanintelserviceprocess()
 
-        CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\INTEL\services.cfg")) '// add each line as String Array.
+        CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(basedir & "\settings\INTEL\services.cfg")) '// add each line as String Array.
 
         Dim appproc = process.GetProcessesByName("IGFXEM")
         For i As Integer = 0 To appproc.Length - 1
@@ -4784,13 +4785,13 @@ Public Class frmMain
 
         log("Cleaning registry")
 
-        CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
+        CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(basedir & "\settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
 
-        CleanupEngine.classroot(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\INTEL\classroot.cfg")) '// add each line as String Array.
+        CleanupEngine.classroot(IO.File.ReadAllLines(basedir & "\settings\INTEL\classroot.cfg")) '// add each line as String Array.
 
-        CleanupEngine.interfaces(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\INTEL\interface.cfg")) '// add each line as String Array.
+        CleanupEngine.interfaces(IO.File.ReadAllLines(basedir & "\settings\INTEL\interface.cfg")) '// add each line as String Array.
 
-        CleanupEngine.clsidleftover(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
+        CleanupEngine.clsidleftover(IO.File.ReadAllLines(basedir & "\settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Intel", True)
@@ -4924,10 +4925,10 @@ Public Class frmMain
             log(ex.StackTrace)
         End Try
 
-        CleanupEngine.installer(IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\INTEL\packages.cfg"))
+        CleanupEngine.installer(IO.File.ReadAllLines(basedir & "\settings\INTEL\packages.cfg"))
 
         If IntPtr.Size = 8 Then
-            packages = IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\INTEL\packages.cfg") '// add each line as String Array.
+            packages = IO.File.ReadAllLines(basedir & "\settings\INTEL\packages.cfg") '// add each line as String Array.
             Try
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
                     ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -4987,7 +4988,7 @@ Public Class frmMain
             If win8higher Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR", True)
                 If regkey IsNot Nothing Then
-                    Dim classroot As String() = IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\INTEL\classroot.cfg")
+                    Dim classroot As String() = IO.File.ReadAllLines(basedir & "\settings\INTEL\classroot.cfg")
                     For Each child As String In regkey.GetSubKeyNames()
                         If Not checkvariables.isnullorwhitespace(child) Then
                             For i As Integer = 0 To classroot.Length - 1
@@ -5136,7 +5137,7 @@ Public Class frmMain
 
         'Scan for new devices...
         Dim scan As New ProcessStartInfo
-        scan.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+        scan.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
         scan.Arguments = "rescan"
         scan.UseShellExecute = False
         scan.CreateNoWindow = True
@@ -5252,8 +5253,8 @@ Public Class frmMain
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
 
             If regkey IsNot Nothing Then
-                'Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-                'sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
+                'Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
+                'sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
                 'sw.Flush()
                 'sw.Close()
                 settings.setconfig("arguments", arg)
@@ -5430,8 +5431,8 @@ Public Class frmMain
         settings.setconfig("donate", "true")
 
         'Create the ddu.bat file
-        Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-        sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+        Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
+        sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
         sw.Flush()
         sw.Close()
 
@@ -5441,7 +5442,7 @@ Public Class frmMain
         Dim StartInfo As New WindowsApi.STARTUPINFOW
         StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-        If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+        If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
         Else
             MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
         End If
@@ -5468,8 +5469,8 @@ Public Class frmMain
     '    settings.setconfig("guru3dnvidia", "true")
 
     '    'Create the ddu.bat file
-    '    Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-    '    sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+    '    Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
+    '    sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
     '    sw.Flush()
     '    sw.Close()
 
@@ -5479,7 +5480,7 @@ Public Class frmMain
     '    Dim StartInfo As New WindowsApi.STARTUPINFOW
     '    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
     '    Else
     '        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
     '    End If
@@ -5494,8 +5495,8 @@ Public Class frmMain
     '    settings.setconfig("guru3damd", "true")
 
     '    'Create the ddu.bat file
-    '    Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-    '    sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+    '    Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
+    '    sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
     '    sw.Flush()
     '    sw.Close()
 
@@ -5505,7 +5506,7 @@ Public Class frmMain
     '    Dim StartInfo As New WindowsApi.STARTUPINFOW
     '    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
     '    Else
     '        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
     '    End If
@@ -5520,8 +5521,8 @@ Public Class frmMain
     '    settings.setconfig("geforce", "true")
 
     '    'Create the ddu.bat file
-    '    Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-    '    sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+    '    Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
+    '    sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
     '    sw.Flush()
     '    sw.Close()
 
@@ -5531,7 +5532,7 @@ Public Class frmMain
     '    Dim StartInfo As New WindowsApi.STARTUPINFOW
     '    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
     '    Else
     '        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
     '    End If
@@ -5546,8 +5547,8 @@ Public Class frmMain
     '    settings.setconfig("svn", "true")
 
     '    'Create the ddu.bat file
-    '    Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-    '    sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+    '    Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
+    '    sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
     '    sw.Flush()
     '    sw.Close()
 
@@ -5557,7 +5558,7 @@ Public Class frmMain
     '    Dim StartInfo As New WindowsApi.STARTUPINFOW
     '    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
     '    Else
     '        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
     '    End If
@@ -5573,8 +5574,8 @@ Public Class frmMain
 
 
     '    'Create the ddu.bat file
-    '    Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-    '    sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+    '    Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
+    '    sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
     '    sw.Flush()
     '    sw.Close()
 
@@ -5584,7 +5585,7 @@ Public Class frmMain
     '    Dim StartInfo As New WindowsApi.STARTUPINFOW
     '    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
     '    Else
     '        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
     '    End If
@@ -5603,820 +5604,827 @@ Public Class frmMain
 
 
     Private Sub frmMain_Loaded(sender As Object, e As RoutedEventArgs)
-
-        'We try to create config.cfg if non existant.
-        If roamingcfg = True Then
-            My.Computer.FileSystem.CreateDirectory(userpthn & "\Display Driver Uninstaller")
-        End If
-
-        If Not System.IO.File.Exists(System.IO.Directory.GetCurrentDirectory() & "\settings\config.cfg") Then
-            If Not System.IO.File.Exists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
-                myExe = System.IO.Directory.GetCurrentDirectory() & "\settings\config.cfg"
-                System.IO.File.WriteAllBytes(myExe, My.Resources.config)
-            Else
-                System.IO.File.Copy(userpthn & "\Display Driver Uninstaller\config.cfg", System.IO.Directory.GetCurrentDirectory() & "\settings\config.cfg") 'this is a really bad lazy fix, and will be improved upon later.
-            End If
-        End If
-
-        InitLanguage(True)
-
-        If Not donotcheckupdatestartup Then
-            Me.Topmost = True
-            Checkupdates2()
-
-            Me.Topmost = False
-            If closeapp Then
-                Exit Sub
-            End If
-        End If
-
-        Dim regkey As RegistryKey = Nothing
-        Dim subregkey As RegistryKey = Nothing
-
-        ' CheckForIllegalCrossThreadCalls = True
-
-
-
-        Dim webAddress As String = ""
-
-
-
-
-
-        'we check if the donate/guru3dnvidia/gugu3damd/geforce/dduhome is trigger here directly.
-        If CBool(settings.getconfig("donate")) = True Then
-            webAddress = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-        End If
-
-        If CBool(settings.getconfig("guru3dnvidia")) = True Then
-            webAddress = "http://forums.guru3d.com/showthread.php?t=379506"
-        End If
-
-        If CBool(settings.getconfig("guru3damd")) = True Then
-
-            webAddress = "http://forums.guru3d.com/showthread.php?t=379505"
-        End If
-
-        If CBool(settings.getconfig("geforce")) = True Then
-
-            webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
-        End If
-
-        If CBool(settings.getconfig("dduhome")) = True Then
-            webAddress = "http://www.wagnardmobile.com"
-        End If
-
-        If CBool(settings.getconfig("svn")) = True Then
-            webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
-        End If
-
-        If CBool(settings.getconfig("donate")) = True Or
-           CBool(settings.getconfig("guru3dnvidia")) = True Or
-           CBool(settings.getconfig("guru3damd")) = True Or
-           CBool(settings.getconfig("geforce")) = True Or
-           CBool(settings.getconfig("svn")) = True Or
-           CBool(settings.getconfig("dduhome")) = True Then
-
-            processinfo.FileName = webAddress
-            processinfo.Arguments = Nothing
-            processinfo.UseShellExecute = True
-            processinfo.CreateNoWindow = True
-            processinfo.RedirectStandardOutput = False
-
-            process.StartInfo = processinfo
-            process.Start()
-            'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
-            process.Close()
-
-            settings.setconfig("donate", "false")
-            settings.setconfig("guru3dnvidia", "false")
-            settings.setconfig("guru3damd", "false")
-            settings.setconfig("geforce", "false")
-            settings.setconfig("dduhome", "false")
-            settings.setconfig("svn", "false")
-
-            closeddu()
-            Exit Sub
-        End If
-
-
-        If Not isElevated Then
-            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            closeddu()
-            Exit Sub
-        End If
-
-        'moved this log code up higher so the directory is created sooner to avoid potential issues
-        If Not My.Computer.FileSystem.DirectoryExists(System.IO.Directory.GetCurrentDirectory() & "\DDU Logs") Then
-            My.Computer.FileSystem.CreateDirectory(System.IO.Directory.GetCurrentDirectory() & "\DDU Logs")
-        End If
-
-        'second, we check on what we are running and set variables accordingly (os, architecture)
-
-        If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion"))) Then
-            version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
-
-        Else
-            version = "5.0"
-        End If
-
-        Select Case version
-
-            Case "5.1"
-                Label2.Content = "Windows XP or Server 2003"
-                winxp = True
-                btnCleanRestart.IsEnabled = True
-                btnClean.IsEnabled = True
-                btnCleanShutdown.IsEnabled = True
-                btnWuRestore.IsEnabled = True
-
-            Case "5.2"
-                winxp = True
-                btnCleanRestart.IsEnabled = True
-                btnClean.IsEnabled = True
-                btnCleanShutdown.IsEnabled = True
-                btnWuRestore.IsEnabled = True
-            Case "6.0"
-                Label2.Content = "Windows Vista or Server 2008"
-                btnCleanRestart.IsEnabled = True
-                btnClean.IsEnabled = True
-                btnCleanShutdown.IsEnabled = True
-                btnWuRestore.IsEnabled = True
-
-            Case "6.1"
-                Label2.Content = "Windows 7 or Server 2008r2"
-                btnCleanRestart.IsEnabled = True
-                btnClean.IsEnabled = True
-                btnCleanShutdown.IsEnabled = True
-                btnWuRestore.IsEnabled = True
-
-            Case "6.2"
-                Label2.Content = "Windows 8 or Server 2012"
-                win8higher = True
-                btnCleanRestart.IsEnabled = True
-                btnClean.IsEnabled = True
-                btnCleanShutdown.IsEnabled = True
-                btnWuRestore.IsEnabled = True
-
-            Case "6.3"
-                Label2.Content = "Windows 8.1"
-                If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber"))) Then
-                    If CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber")) = "10" Then
-                        Label2.Content = "Windows 10"
-                        win10 = True
-                    End If
-                End If
-                win8higher = True
-                btnCleanRestart.IsEnabled = True
-                btnClean.IsEnabled = True
-                btnCleanShutdown.IsEnabled = True
-                btnWuRestore.IsEnabled = True
-
-            Case "6.4", "10.0"
-                Label2.Content = "Windows 10"
-                win8higher = True
-                win10 = True
-                btnCleanRestart.IsEnabled = True
-                btnClean.IsEnabled = True
-                btnCleanShutdown.IsEnabled = True
-                btnWuRestore.IsEnabled = True
-
-            Case Else
-                Label2.Content = "Unsupported OS"
-                log("Unsupported OS.")
-                btnCleanRestart.IsEnabled = False
-                btnClean.IsEnabled = False
-                btnCleanShutdown.IsEnabled = False
-                btnWuRestore.IsEnabled = False
-        End Select
-
-
-
-
         Try
+
+
             'We try to create config.cfg if non existant.
-            If Not System.IO.File.Exists(System.IO.Directory.GetCurrentDirectory() & "\settings\config.cfg") Then
-                myExe = System.IO.Directory.GetCurrentDirectory() & "\settings\config.cfg"
-                System.IO.File.WriteAllBytes(myExe, My.Resources.config)
-            End If
-
-            'picturebox2originalx = PictureBox2.Location.X
-            'picturebox2originaly = PictureBox2.Location.Y
-
-
-            'allow Paexec to run in safemode
-
-            '  If BootMode.FailSafe Or BootMode.FailSafeWithNetwork Then ' we do this in safemode because of some Antivirus....(Kaspersky)
-            Try
-                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).CreateSubKey("PAexec")
-                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\PAexec", True).SetValue("", "Service")
-            Catch ex As Exception
-            End Try
-
-            Try
-                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True).CreateSubKey("PAexec")
-                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network\PAexec", True).SetValue("", "Service")
-            Catch ex As Exception
-            End Try
-            'End If
-
-            'read config file
-
-            If settings.getconfig("logbox") = "true" Then
-                f.CheckBox2.IsChecked = True
-
-            Else
-                f.CheckBox2.IsChecked = False
-            End If
-
-            If settings.getconfig("roamingcfg") = "true" Then
-                f.CheckBox11.IsChecked = True
-                roamingcfg = True
-            Else
-                f.CheckBox11.IsChecked = False
-                roamingcfg = False
-            End If
-
-            If settings.getconfig("remove3dtvplay") = "true" Then
-                f.CheckBox4.IsChecked = True
-                remove3dtvplay = True
-            Else
-                f.CheckBox4.IsChecked = False
-                remove3dtvplay = False
-            End If
-
-            If settings.getconfig("systemrestore") = "true" Then
-                f.CheckBox5.IsChecked = True
-                trysystemrestore = True
-            Else
-                f.CheckBox5.IsChecked = False
-                trysystemrestore = False
-            End If
-
-            If settings.getconfig("removephysx") = "true" Then
-                f.CheckBox3.IsChecked = True
-                removephysx = True
-            Else
-                f.CheckBox3.IsChecked = False
-                removephysx = False
+            If roamingcfg = True Then
+                My.Computer.FileSystem.CreateDirectory(userpthn & "\Display Driver Uninstaller")
             End If
 
 
-            If settings.getconfig("removeamdaudiobus") = "true" Then
-                f.CheckBox7.IsChecked = True
-                removeamdaudiobus = True
-            Else
-                f.CheckBox7.IsChecked = False
-                removeamdaudiobus = False
-            End If
 
-            If settings.getconfig("removeamdkmpfd") = "true" Then
-                f.CheckBox9.IsChecked = True
-                removeamdkmpfd = True
-            Else
-                f.CheckBox9.IsChecked = False
-                removeamdkmpfd = False
-            End If
-
-
-            If settings.getconfig("removemonitor") = "true" Then
-                f.CheckBox6.IsChecked = True
-                removemonitor = True
-            Else
-                f.CheckBox6.IsChecked = False
-                removemonitor = False
-            End If
-
-            If settings.getconfig("removecnvidia") = "true" Then
-                f.CheckBox1.IsChecked = True
-                removecnvidia = True
-            Else
-                f.CheckBox1.IsChecked = False
-                removecnvidia = False
-            End If
-
-            If settings.getconfig("removecamd") = "true" Then
-                f.CheckBox8.IsChecked = True
-                removecamd = True
-            Else
-                f.CheckBox8.IsChecked = False
-                removecamd = False
-            End If
-
-            If settings.getconfig("removegfe") = "true" Then
-                f.CheckBox13.IsChecked = True
-                removegfe = True
-            Else
-                f.CheckBox13.IsChecked = False
-                removegfe = False
-            End If
-
-            If settings.getconfig("donotcheckupdatestartup") = "true" Then
-                f.CheckBox12.IsChecked = True
-                donotcheckupdatestartup = True
-            Else
-                f.CheckBox12.IsChecked = False
-                donotcheckupdatestartup = False
-            End If
-
-            If settings.getconfig("showsafemodebox") = "false" Then
-                f.CheckBox10.IsChecked = False
-                safemodemb = False
-            Else
-                f.CheckBox10.IsChecked = True
-                safemodemb = True
-            End If
-
-            If settings.getconfig("removedxcache") = "true" Then
-                f.CheckBox14.IsChecked = True
-                removedxcache = True
-            Else
-                f.CheckBox14.IsChecked = False
-                removedxcache = False
-            End If
-
-            If closeapp Then
-                Exit Sub
-            End If
-
-
-            '----------------------
-            'check computer/os info
-            '----------------------
-
-            Dim arch As Boolean
-
-
-            Me.ComboBox1.SelectedIndex = 0
-            If IntPtr.Size = 8 Then
-
-                arch = True
-                Try
-                    If Not My.Computer.FileSystem.DirectoryExists(System.IO.Directory.GetCurrentDirectory() & "\x64") Then
-                        My.Computer.FileSystem.CreateDirectory(System.IO.Directory.GetCurrentDirectory() & "\x64")
-                    End If
-                Catch ex As Exception
-                    log(ex.Message)
-                    Textbox1.AppendText(ex.Message)
-                End Try
-
-            ElseIf IntPtr.Size = 4 Then
-
-                arch = False
-                Try
-                    If Not My.Computer.FileSystem.DirectoryExists(System.IO.Directory.GetCurrentDirectory() & "\x86") Then
-                        My.Computer.FileSystem.CreateDirectory(System.IO.Directory.GetCurrentDirectory() & "\x86")
-                    End If
-                Catch ex As Exception
-                    log(ex.Message)
-                    Textbox1.AppendText(ex.Message)
-                End Try
-
-            End If
-
-            'Verifying if we are on X86 or x64
-
-            If arch = True Then
-                Label3.Content = "x64"
-            Else
-                Label3.Content = "x86"
-            End If
-            ' Label3.Refresh()
-            ddudrfolder = CStr(Label3.Content)
-
-            If arch = True Then
-                Try
-
-                    If winxp Then  'XP64
-                        myExe = System.IO.Directory.GetCurrentDirectory() & "\x64\ddudr.exe"
-                        System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp64)
-                        myExe = System.IO.Directory.GetCurrentDirectory() & "\x64\paexec.exe"
-                        System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
-                    Else
-
-                        myExe = System.IO.Directory.GetCurrentDirectory() & "\x64\ddudr.exe"
-                        System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr64)
-
-                        myExe = System.IO.Directory.GetCurrentDirectory() & "\x64\paexec.exe"
-                        System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
-                    End If
-
-                Catch ex As Exception
-                End Try
-            Else
-                Try
-                    If winxp Then  'XP32
-                        myExe = System.IO.Directory.GetCurrentDirectory() & "\x86\ddudr.exe"
-                        System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp32)
-
-                        myExe = System.IO.Directory.GetCurrentDirectory() & "\x86\paexec.exe"
-                        System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
-                    Else 'all other 32 bits
-                        myExe = System.IO.Directory.GetCurrentDirectory() & "\x86\ddudr.exe"
-                        System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr32)
-
-                        myExe = System.IO.Directory.GetCurrentDirectory() & "\x86\paexec.exe"
-                        System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
-
-                    End If
-
-                Catch ex As Exception
-                End Try
-            End If
-
-            If arch = True Then
-                If Not My.Computer.FileSystem.FileExists(System.IO.Directory.GetCurrentDirectory() & "\x64\ddudr.exe") Then
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    btnCleanRestart.IsEnabled = False
-                    btnClean.IsEnabled = False
-                    btnCleanShutdown.IsEnabled = False
-                    Exit Sub
+            If Not System.IO.File.Exists(baseDir & "\settings\config.cfg") Then
+                If Not System.IO.File.Exists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
+                    myExe = baseDir & "\settings\config.cfg"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.config)
+                Else
+                    System.IO.File.Copy(userpthn & "\Display Driver Uninstaller\config.cfg", baseDir & "\settings\config.cfg") 'this is a really bad lazy fix, and will be improved upon later.
                 End If
-            ElseIf arch = False Then
-                If Not My.Computer.FileSystem.FileExists(System.IO.Directory.GetCurrentDirectory() & "\x86\ddudr.exe") Then
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    btnCleanRestart.IsEnabled = False
-                    btnClean.IsEnabled = False
-                    btnCleanShutdown.IsEnabled = False
+            End If
+
+            InitLanguage(True)
+
+            If Not donotcheckupdatestartup Then
+                Me.Topmost = True
+                Checkupdates2()
+
+                Me.Topmost = False
+                If closeapp Then
                     Exit Sub
                 End If
             End If
 
-            'processing arguments
+            Dim regkey As RegistryKey = Nothing
+            Dim subregkey As RegistryKey = Nothing
 
-            arg = String.Join(" ", arguments, 1, arguments.Length - 1)
-            arg = arg.ToLower.Replace("  ", " ")
+            ' CheckForIllegalCrossThreadCalls = True
 
-            If Not checkvariables.isnullorwhitespace(settings.getconfig("arguments")) Then
-                arg = settings.getconfig("arguments")
+
+
+            Dim webAddress As String = ""
+
+
+
+
+
+            'we check if the donate/guru3dnvidia/gugu3damd/geforce/dduhome is trigger here directly.
+            If CBool(settings.getconfig("donate")) = True Then
+                webAddress = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
             End If
 
-            settings.setconfig("arguments", "")
-
-            If Not checkvariables.isnullorwhitespace(arg) Then
-                If Not arg = " " Then
-                    settings.setconfig("logbox", "false")
-                    settings.setconfig("systemrestore", "false")
-                    settings.setconfig("removemonitor", "false")
-                    settings.setconfig("showsafemodebox", "true")
-                    settings.setconfig("removeamdaudiobus", "false")
-                    settings.setconfig("removeamdkmpfd", "false")
-                    settings.setconfig("removegfe", "false")
-
-                    If arg.Contains("-silent") Then
-                        silent = True
-                        Me.WindowState = Windows.WindowState.Minimized
-                    Else
-                        Checkupdates2()
-                        If closeapp Then
-                            Exit Sub
-                        End If
-                    End If
-
-
-                    If arg.Contains("-logging") Then
-                        settings.setconfig("logbox", "true")
-                    End If
-                    If arg.Contains("-createsystemrestorepoint") Then
-                        settings.setconfig("systemrestore", "true")
-                    End If
-                    If arg.Contains("-removemonitors") Then
-                        settings.setconfig("removemonitor", "true")
-                    End If
-                    If arg.Contains("-nosafemode") Then
-                        settings.setconfig("showsafemodebox", "false")
-                    End If
-                    If arg.Contains("-restart") Then
-                        restart = True
-                    End If
-                    If arg.Contains("-removeamdaudiobus") Then
-                        settings.setconfig("removeamdaudiobus", "true")
-                    End If
-                    If arg.Contains("-removeamdkmpfd") Then
-                        settings.setconfig("removeamdkmpfd", "true")
-                    End If
-                    If arg.Contains("-removegfe") Then
-                        settings.setconfig("removegfe", "true")
-                    End If
-                    If arg.Contains("-cleanamd") Then
-                        argcleanamd = True
-                        nbclean = nbclean + 1
-                    End If
-                    If arg.Contains("-cleanintel") Then
-                        argcleanintel = True
-                        nbclean = nbclean + 1
-                    End If
-                    If arg.Contains("-cleannvidia") Then
-                        argcleannvidia = True
-                        nbclean = nbclean + 1
-                    End If
-                End If
+            If CBool(settings.getconfig("guru3dnvidia")) = True Then
+                webAddress = "http://forums.guru3d.com/showthread.php?t=379506"
             End If
 
+            If CBool(settings.getconfig("guru3damd")) = True Then
 
-            'We check if there are any reboot from windows update pending. and if so we quit.
-            If winupdatepending() Then
-                MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text14"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                closeddu()
-                Exit Sub
+                webAddress = "http://forums.guru3d.com/showthread.php?t=379505"
             End If
 
-            Me.Topmost = True
+            If CBool(settings.getconfig("geforce")) = True Then
 
+                webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
+            End If
 
+            If CBool(settings.getconfig("dduhome")) = True Then
+                webAddress = "http://www.wagnardmobile.com"
+            End If
 
+            If CBool(settings.getconfig("svn")) = True Then
+                webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
+            End If
 
+            If CBool(settings.getconfig("donate")) = True Or
+               CBool(settings.getconfig("guru3dnvidia")) = True Or
+               CBool(settings.getconfig("guru3damd")) = True Or
+               CBool(settings.getconfig("geforce")) = True Or
+               CBool(settings.getconfig("svn")) = True Or
+               CBool(settings.getconfig("dduhome")) = True Then
 
-            'here I check if the process is running on system user account. if not, make it so.
-            If Not MyIdentity.IsSystem Then
-                'This code checks to see which mode Windows has booted up in.
-                Dim processstopservice As New Process
-                Select Case System.Windows.Forms.SystemInformation.BootMode
-                    Case BootMode.FailSafeWithNetwork, BootMode.FailSafe 'Merged both boot options (same code 1:1) (WARNING, we cannot use "OR" with "Case", we must use a ",")
-                        'The computer was booted using only the basic files and drivers.
-                        'This is the same as Safe Mode
-                        safemode = True
-
-                        If winxp = False Then
-                            Dim setbcdedit As New ProcessStartInfo
-                            setbcdedit.FileName = "cmd.exe"
-                            setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-                            setbcdedit.UseShellExecute = False
-                            setbcdedit.CreateNoWindow = True
-                            setbcdedit.RedirectStandardOutput = False
-
-                            processstopservice.StartInfo = setbcdedit
-                            processstopservice.Start()
-                            processstopservice.WaitForExit()
-                            processstopservice.Close()
-                        End If
-                    Case BootMode.Normal
-                        safemode = False
-
-                        If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
-                            If restart Then  'restart command line argument
-                                restartinsafemode()
-                                Exit Sub
-                            Else
-                                If safemodemb = True Then
-                                    If Not silent Then
-                                        'Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
-
-
-                                        'Using frmSafeBoot As New frmLaunch
-                                        '    frmSafeBoot.Topmost = True
-
-                                        '    If frmSafeBoot.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then
-                                        '        bootOption = frmSafeBoot.selection
-                                        '    Else
-                                        '        bootOption = -1
-                                        '    End If
-                                        'End Using
-
-                                        'Select Case bootOption
-                                        '    Case 0 'normal
-                                        '        Exit Select
-                                        '    Case 1 'SafeMode
-                                        '        restartinsafemode(False)
-                                        '        Exit Sub
-                                        '    Case 2 'SafeMode with network
-                                        '        restartinsafemode(True)
-                                        '        Exit Sub
-                                        '    Case Else '-1 = Close
-                                        '        Me.Topmost = False
-                                        '        closeddu()
-                                        '        Exit Sub
-                                        'End Select
-                                        ' Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn(11), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-
-                                        'If resultmsgbox = DialogResult.Cancel Then
-                                        '
-                                        ' Me.TopMost = False
-                                        'closeddu()
-                                        'Exit Sub
-                                        ' ElseIf resultmsgbox = DialogResult.No Then
-                                        'do nothing and continue without safe mode
-                                        'ElseIf resultmsgbox = DialogResult.Yes Then
-                                        'restartinsafemode(False)
-                                        ' Exit Sub
-                                        ' End If
-                                    End If
-                                End If
-                            End If
-                        Else
-                            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text8"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                        End If
-
-                End Select
-                Topmost = False
-
-
-
-                Dim stopservice As New ProcessStartInfo
-                stopservice.FileName = "cmd.exe"
-                stopservice.Arguments = " /Csc stop PAExec"
-                stopservice.UseShellExecute = False
-                stopservice.CreateNoWindow = True
-                stopservice.RedirectStandardOutput = False
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                processstopservice.Close()
-                System.Threading.Thread.Sleep(10)
-
-                stopservice.Arguments = " /Csc delete PAExec"
-
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                processstopservice.Close()
-
-                stopservice.Arguments = " /Csc interrogate PAExec"
-                processstopservice.StartInfo = stopservice
-                processstopservice.Start()
-                processstopservice.WaitForExit()
-                processstopservice.Close()
-
-                processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\paexec.exe"
-                processinfo.Arguments = "-noname -i -s " & Chr(34) & System.IO.Directory.GetCurrentDirectory() & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + arg
-                processinfo.UseShellExecute = False
+                processinfo.FileName = webAddress
+                processinfo.Arguments = Nothing
+                processinfo.UseShellExecute = True
                 processinfo.CreateNoWindow = True
                 processinfo.RedirectStandardOutput = False
 
                 process.StartInfo = processinfo
                 process.Start()
-                'Do not add waitforexit here or DDU(current user)will not close
+                'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
                 process.Close()
+
+                settings.setconfig("donate", "false")
+                settings.setconfig("guru3dnvidia", "false")
+                settings.setconfig("guru3damd", "false")
+                settings.setconfig("geforce", "false")
+                settings.setconfig("dduhome", "false")
+                settings.setconfig("svn", "false")
 
                 closeddu()
                 Exit Sub
             End If
 
-            UpdateTextMethod(UpdateTextMethodmessagefn(10) + Application.Current.MainWindow.GetType().Assembly.ToString)
-            log("DDU Version: " + Application.Current.MainWindow.GetType().Assembly.ToString)
-            log("OS: " + CStr(Label2.Content))
-            log("Architecture: " & ddudrfolder)
 
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames
-                        If Not checkvariables.isnullorwhitespace(child) Then
-
-                            If Not child.ToLower.Contains("properties") Then
-
-                                subregkey = regkey.OpenSubKey(child)
-                                If subregkey IsNot Nothing Then
-
-                                    If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("Device Description"))) Then
-                                        currentdriverversion = subregkey.GetValue("Device Description").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
-                                        log("GPU #" + child + " Detected : " + currentdriverversion)
-                                    Else
-                                        If (subregkey.GetValue("DriverDesc") IsNot Nothing) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
-                                            UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
-                                            log("GPU #" + child + " Detected :  " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
-                                        Else
-                                            If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DriverDesc"))) Then
-                                                currentdriverversion = subregkey.GetValue("DriverDesc").ToString
-                                                UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
-                                                log("GPU #" + child + " Detected : " + currentdriverversion)
-                                            End If
-                                        End If
-
-                                    End If
-                                    If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("MatchingDeviceId"))) Then
-                                        currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessagefn(13) + " " + currentdriverversion)
-                                        log("GPU DeviceId : " + currentdriverversion)
-                                    End If
-
-                                    Try
-                                        If (Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString")))) AndAlso (subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary) Then
-                                            UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
-                                            log("Vbios :" + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
-                                        Else
-                                            If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString"))) Then
-                                                currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
-                                                For i As Integer = 0 To 9
-                                                    'this is a little fix to correctly show the vbios version info
-                                                    currentdriverversion = currentdriverversion.Replace("." + i.ToString + ".", ".0" + i.ToString + ".")
-                                                Next
-                                                UpdateTextMethod("Vbios :" + " " + currentdriverversion)
-                                                log("Vbios : " + currentdriverversion)
-                                            End If
-                                        End If
-                                    Catch ex As Exception
-                                    End Try
-
-
-                                    If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DriverVersion"))) Then
-                                        currentdriverversion = subregkey.GetValue("DriverVersion").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessagefn(14) + " " + currentdriverversion)
-                                        log("Detected Driver(s) Version(s) : " + currentdriverversion)
-                                    End If
-                                    If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("InfPath"))) Then
-                                        currentdriverversion = subregkey.GetValue("InfPath").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessagefn(15) + " " + currentdriverversion)
-                                        log("INF : " + currentdriverversion)
-                                    End If
-                                    If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("InfSection"))) Then
-                                        currentdriverversion = subregkey.GetValue("InfSection").ToString
-                                        UpdateTextMethod(UpdateTextMethodmessagefn(16) + " " + currentdriverversion)
-                                        log("INF Section : " + currentdriverversion)
-                                    End If
-                                End If
-                                UpdateTextMethod("--------------")
-                                log("--------------")
-                            End If
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
-            End Try
-
-            ' ----------------------------------------------------------------------------
-            ' Trying to get the installed GPU info 
-            ' (These list the one that are at least installed with minimal driver support)
-            ' ----------------------------------------------------------------------------
-
-            gpuidentify("ven_8086")
-            gpuidentify("ven_1002")
-            gpuidentify("ven_10de")
-
-
-            ' -------------------------------------
-            ' Check if this is an AMD Enduro system
-            ' -------------------------------------
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains("ven_8086") Then
-                                Try
-                                    subregkey = regkey.OpenSubKey(child)
-                                Catch ex As Exception
-                                    Continue For
-                                End Try
-                                For Each childs As String In subregkey.GetSubKeyNames()
-                                    If checkvariables.isnullorwhitespace(childs) = False Then
-                                        If Not checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey(childs).GetValue("Service"))) Then
-                                            If subregkey.OpenSubKey(childs).GetValue("Service").ToString.ToLower.Contains("amdkmdap") Then
-                                                enduro = True
-                                                UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
-                                                log("System seems to be an AMD Enduro (Intel)")
-                                            End If
-                                        End If
-                                    End If
-                                Next
-                            End If
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
-            End Try
-
-
-            If MyIdentity.IsSystem Then
-                Select Case System.Windows.Forms.SystemInformation.BootMode
-                    Case BootMode.FailSafe
-                        log("We are in Safe Mode")
-                    Case BootMode.FailSafeWithNetwork
-                        log("We are in Safe Mode with Networking")
-                    Case BootMode.Normal
-                        log("We are not in Safe Mode")
-                End Select
+            If Not isElevated Then
+                MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                closeddu()
+                Exit Sub
             End If
 
+            'moved this log code up higher so the directory is created sooner to avoid potential issues
+            If Not My.Computer.FileSystem.DirectoryExists(baseDir & "\DDU Logs") Then
+                My.Computer.FileSystem.CreateDirectory(basedir & "\DDU Logs")
+            End If
 
-            getoeminfo()
+            'second, we check on what we are running and set variables accordingly (os, architecture)
 
+            If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion"))) Then
+                version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
+
+            Else
+                version = "5.0"
+            End If
+
+            Select Case version
+
+                Case "5.1"
+                    Label2.Content = "Windows XP or Server 2003"
+                    winxp = True
+                    btnCleanRestart.IsEnabled = True
+                    btnClean.IsEnabled = True
+                    btnCleanShutdown.IsEnabled = True
+                    btnWuRestore.IsEnabled = True
+
+                Case "5.2"
+                    winxp = True
+                    btnCleanRestart.IsEnabled = True
+                    btnClean.IsEnabled = True
+                    btnCleanShutdown.IsEnabled = True
+                    btnWuRestore.IsEnabled = True
+                Case "6.0"
+                    Label2.Content = "Windows Vista or Server 2008"
+                    btnCleanRestart.IsEnabled = True
+                    btnClean.IsEnabled = True
+                    btnCleanShutdown.IsEnabled = True
+                    btnWuRestore.IsEnabled = True
+
+                Case "6.1"
+                    Label2.Content = "Windows 7 or Server 2008r2"
+                    btnCleanRestart.IsEnabled = True
+                    btnClean.IsEnabled = True
+                    btnCleanShutdown.IsEnabled = True
+                    btnWuRestore.IsEnabled = True
+
+                Case "6.2"
+                    Label2.Content = "Windows 8 or Server 2012"
+                    win8higher = True
+                    btnCleanRestart.IsEnabled = True
+                    btnClean.IsEnabled = True
+                    btnCleanShutdown.IsEnabled = True
+                    btnWuRestore.IsEnabled = True
+
+                Case "6.3"
+                    Label2.Content = "Windows 8.1"
+                    If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber"))) Then
+                        If CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber")) = "10" Then
+                            Label2.Content = "Windows 10"
+                            win10 = True
+                        End If
+                    End If
+                    win8higher = True
+                    btnCleanRestart.IsEnabled = True
+                    btnClean.IsEnabled = True
+                    btnCleanShutdown.IsEnabled = True
+                    btnWuRestore.IsEnabled = True
+
+                Case "6.4", "10.0"
+                    Label2.Content = "Windows 10"
+                    win8higher = True
+                    win10 = True
+                    btnCleanRestart.IsEnabled = True
+                    btnClean.IsEnabled = True
+                    btnCleanShutdown.IsEnabled = True
+                    btnWuRestore.IsEnabled = True
+
+                Case Else
+                    Label2.Content = "Unsupported OS"
+                    log("Unsupported OS.")
+                    btnCleanRestart.IsEnabled = False
+                    btnClean.IsEnabled = False
+                    btnCleanShutdown.IsEnabled = False
+                    btnWuRestore.IsEnabled = False
+            End Select
+
+
+
+
+            Try
+                'We try to create config.cfg if non existant.
+                If Not System.IO.File.Exists(basedir & "\settings\config.cfg") Then
+                    myExe = basedir & "\settings\config.cfg"
+                    System.IO.File.WriteAllBytes(myExe, My.Resources.config)
+                End If
+
+                'picturebox2originalx = PictureBox2.Location.X
+                'picturebox2originaly = PictureBox2.Location.Y
+
+
+                'allow Paexec to run in safemode
+
+                '  If BootMode.FailSafe Or BootMode.FailSafeWithNetwork Then ' we do this in safemode because of some Antivirus....(Kaspersky)
+                Try
+                    My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).CreateSubKey("PAexec")
+                    My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\PAexec", True).SetValue("", "Service")
+                Catch ex As Exception
+                End Try
+
+                Try
+                    My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True).CreateSubKey("PAexec")
+                    My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network\PAexec", True).SetValue("", "Service")
+                Catch ex As Exception
+                End Try
+                'End If
+
+                'read config file
+
+                If settings.getconfig("logbox") = "true" Then
+                    f.CheckBox2.IsChecked = True
+
+                Else
+                    f.CheckBox2.IsChecked = False
+                End If
+
+                If settings.getconfig("roamingcfg") = "true" Then
+                    f.CheckBox11.IsChecked = True
+                    roamingcfg = True
+                Else
+                    f.CheckBox11.IsChecked = False
+                    roamingcfg = False
+                End If
+
+                If settings.getconfig("remove3dtvplay") = "true" Then
+                    f.CheckBox4.IsChecked = True
+                    remove3dtvplay = True
+                Else
+                    f.CheckBox4.IsChecked = False
+                    remove3dtvplay = False
+                End If
+
+                If settings.getconfig("systemrestore") = "true" Then
+                    f.CheckBox5.IsChecked = True
+                    trysystemrestore = True
+                Else
+                    f.CheckBox5.IsChecked = False
+                    trysystemrestore = False
+                End If
+
+                If settings.getconfig("removephysx") = "true" Then
+                    f.CheckBox3.IsChecked = True
+                    removephysx = True
+                Else
+                    f.CheckBox3.IsChecked = False
+                    removephysx = False
+                End If
+
+
+                If settings.getconfig("removeamdaudiobus") = "true" Then
+                    f.CheckBox7.IsChecked = True
+                    removeamdaudiobus = True
+                Else
+                    f.CheckBox7.IsChecked = False
+                    removeamdaudiobus = False
+                End If
+
+                If settings.getconfig("removeamdkmpfd") = "true" Then
+                    f.CheckBox9.IsChecked = True
+                    removeamdkmpfd = True
+                Else
+                    f.CheckBox9.IsChecked = False
+                    removeamdkmpfd = False
+                End If
+
+
+                If settings.getconfig("removemonitor") = "true" Then
+                    f.CheckBox6.IsChecked = True
+                    removemonitor = True
+                Else
+                    f.CheckBox6.IsChecked = False
+                    removemonitor = False
+                End If
+
+                If settings.getconfig("removecnvidia") = "true" Then
+                    f.CheckBox1.IsChecked = True
+                    removecnvidia = True
+                Else
+                    f.CheckBox1.IsChecked = False
+                    removecnvidia = False
+                End If
+
+                If settings.getconfig("removecamd") = "true" Then
+                    f.CheckBox8.IsChecked = True
+                    removecamd = True
+                Else
+                    f.CheckBox8.IsChecked = False
+                    removecamd = False
+                End If
+
+                If settings.getconfig("removegfe") = "true" Then
+                    f.CheckBox13.IsChecked = True
+                    removegfe = True
+                Else
+                    f.CheckBox13.IsChecked = False
+                    removegfe = False
+                End If
+
+                If settings.getconfig("donotcheckupdatestartup") = "true" Then
+                    f.CheckBox12.IsChecked = True
+                    donotcheckupdatestartup = True
+                Else
+                    f.CheckBox12.IsChecked = False
+                    donotcheckupdatestartup = False
+                End If
+
+                If settings.getconfig("showsafemodebox") = "false" Then
+                    f.CheckBox10.IsChecked = False
+                    safemodemb = False
+                Else
+                    f.CheckBox10.IsChecked = True
+                    safemodemb = True
+                End If
+
+                If settings.getconfig("removedxcache") = "true" Then
+                    f.CheckBox14.IsChecked = True
+                    removedxcache = True
+                Else
+                    f.CheckBox14.IsChecked = False
+                    removedxcache = False
+                End If
+
+                If closeapp Then
+                    Exit Sub
+                End If
+
+
+                '----------------------
+                'check computer/os info
+                '----------------------
+
+                Dim arch As Boolean
+
+
+                Me.ComboBox1.SelectedIndex = 0
+                If IntPtr.Size = 8 Then
+
+                    arch = True
+                    Try
+                        If Not My.Computer.FileSystem.DirectoryExists(basedir & "\x64") Then
+                            My.Computer.FileSystem.CreateDirectory(basedir & "\x64")
+                        End If
+                    Catch ex As Exception
+                        log(ex.Message)
+                        Textbox1.AppendText(ex.Message)
+                    End Try
+
+                ElseIf IntPtr.Size = 4 Then
+
+                    arch = False
+                    Try
+                        If Not My.Computer.FileSystem.DirectoryExists(basedir & "\x86") Then
+                            My.Computer.FileSystem.CreateDirectory(basedir & "\x86")
+                        End If
+                    Catch ex As Exception
+                        log(ex.Message)
+                        Textbox1.AppendText(ex.Message)
+                    End Try
+
+                End If
+
+                'Verifying if we are on X86 or x64
+
+                If arch = True Then
+                    Label3.Content = "x64"
+                Else
+                    Label3.Content = "x86"
+                End If
+                ' Label3.Refresh()
+                ddudrfolder = CStr(Label3.Content)
+
+                If arch = True Then
+                    Try
+
+                        If winxp Then  'XP64
+                            myExe = basedir & "\x64\ddudr.exe"
+                            System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp64)
+                            myExe = basedir & "\x64\paexec.exe"
+                            System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
+                        Else
+
+                            myExe = basedir & "\x64\ddudr.exe"
+                            System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr64)
+
+                            myExe = basedir & "\x64\paexec.exe"
+                            System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
+                        End If
+
+                    Catch ex As Exception
+                    End Try
+                Else
+                    Try
+                        If winxp Then  'XP32
+                            myExe = basedir & "\x86\ddudr.exe"
+                            System.IO.File.WriteAllBytes(myExe, My.Resources.ddudrxp32)
+
+                            myExe = basedir & "\x86\paexec.exe"
+                            System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
+                        Else 'all other 32 bits
+                            myExe = basedir & "\x86\ddudr.exe"
+                            System.IO.File.WriteAllBytes(myExe, My.Resources.ddudr32)
+
+                            myExe = basedir & "\x86\paexec.exe"
+                            System.IO.File.WriteAllBytes(myExe, My.Resources.paexec)
+
+                        End If
+
+                    Catch ex As Exception
+                    End Try
+                End If
+
+                If arch = True Then
+                    If Not My.Computer.FileSystem.FileExists(basedir & "\x64\ddudr.exe") Then
+                        MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        btnCleanRestart.IsEnabled = False
+                        btnClean.IsEnabled = False
+                        btnCleanShutdown.IsEnabled = False
+                        Exit Sub
+                    End If
+                ElseIf arch = False Then
+                    If Not My.Computer.FileSystem.FileExists(basedir & "\x86\ddudr.exe") Then
+                        MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        btnCleanRestart.IsEnabled = False
+                        btnClean.IsEnabled = False
+                        btnCleanShutdown.IsEnabled = False
+                        Exit Sub
+                    End If
+                End If
+
+                'processing arguments
+
+                arg = String.Join(" ", arguments, 1, arguments.Length - 1)
+                arg = arg.ToLower.Replace("  ", " ")
+
+                If Not checkvariables.isnullorwhitespace(settings.getconfig("arguments")) Then
+                    arg = settings.getconfig("arguments")
+                End If
+
+                settings.setconfig("arguments", "")
+
+                If Not checkvariables.isnullorwhitespace(arg) Then
+                    If Not arg = " " Then
+                        settings.setconfig("logbox", "false")
+                        settings.setconfig("systemrestore", "false")
+                        settings.setconfig("removemonitor", "false")
+                        settings.setconfig("showsafemodebox", "true")
+                        settings.setconfig("removeamdaudiobus", "false")
+                        settings.setconfig("removeamdkmpfd", "false")
+                        settings.setconfig("removegfe", "false")
+
+                        If arg.Contains("-silent") Then
+                            silent = True
+                            Me.WindowState = Windows.WindowState.Minimized
+                        Else
+                            Checkupdates2()
+                            If closeapp Then
+                                Exit Sub
+                            End If
+                        End If
+
+
+                        If arg.Contains("-logging") Then
+                            settings.setconfig("logbox", "true")
+                        End If
+                        If arg.Contains("-createsystemrestorepoint") Then
+                            settings.setconfig("systemrestore", "true")
+                        End If
+                        If arg.Contains("-removemonitors") Then
+                            settings.setconfig("removemonitor", "true")
+                        End If
+                        If arg.Contains("-nosafemode") Then
+                            settings.setconfig("showsafemodebox", "false")
+                        End If
+                        If arg.Contains("-restart") Then
+                            restart = True
+                        End If
+                        If arg.Contains("-removeamdaudiobus") Then
+                            settings.setconfig("removeamdaudiobus", "true")
+                        End If
+                        If arg.Contains("-removeamdkmpfd") Then
+                            settings.setconfig("removeamdkmpfd", "true")
+                        End If
+                        If arg.Contains("-removegfe") Then
+                            settings.setconfig("removegfe", "true")
+                        End If
+                        If arg.Contains("-cleanamd") Then
+                            argcleanamd = True
+                            nbclean = nbclean + 1
+                        End If
+                        If arg.Contains("-cleanintel") Then
+                            argcleanintel = True
+                            nbclean = nbclean + 1
+                        End If
+                        If arg.Contains("-cleannvidia") Then
+                            argcleannvidia = True
+                            nbclean = nbclean + 1
+                        End If
+                    End If
+                End If
+
+
+                'We check if there are any reboot from windows update pending. and if so we quit.
+                If winupdatepending() Then
+                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text14"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    closeddu()
+                    Exit Sub
+                End If
+
+                Me.Topmost = True
+
+
+
+
+
+                'here I check if the process is running on system user account. if not, make it so.
+                If Not MyIdentity.IsSystem Then
+                    'This code checks to see which mode Windows has booted up in.
+                    Dim processstopservice As New Process
+                    Select Case System.Windows.Forms.SystemInformation.BootMode
+                        Case BootMode.FailSafeWithNetwork, BootMode.FailSafe 'Merged both boot options (same code 1:1) (WARNING, we cannot use "OR" with "Case", we must use a ",")
+                            'The computer was booted using only the basic files and drivers.
+                            'This is the same as Safe Mode
+                            safemode = True
+
+                            If winxp = False Then
+                                Dim setbcdedit As New ProcessStartInfo
+                                setbcdedit.FileName = "cmd.exe"
+                                setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
+                                setbcdedit.UseShellExecute = False
+                                setbcdedit.CreateNoWindow = True
+                                setbcdedit.RedirectStandardOutput = False
+
+                                processstopservice.StartInfo = setbcdedit
+                                processstopservice.Start()
+                                processstopservice.WaitForExit()
+                                processstopservice.Close()
+                            End If
+                        Case BootMode.Normal
+                            safemode = False
+
+                            If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
+                                If restart Then  'restart command line argument
+                                    restartinsafemode()
+                                    Exit Sub
+                                Else
+                                    If safemodemb = True Then
+                                        If Not silent Then
+                                            'Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
+
+
+                                            'Using frmSafeBoot As New frmLaunch
+                                            '    frmSafeBoot.Topmost = True
+
+                                            '    If frmSafeBoot.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then
+                                            '        bootOption = frmSafeBoot.selection
+                                            '    Else
+                                            '        bootOption = -1
+                                            '    End If
+                                            'End Using
+
+                                            'Select Case bootOption
+                                            '    Case 0 'normal
+                                            '        Exit Select
+                                            '    Case 1 'SafeMode
+                                            '        restartinsafemode(False)
+                                            '        Exit Sub
+                                            '    Case 2 'SafeMode with network
+                                            '        restartinsafemode(True)
+                                            '        Exit Sub
+                                            '    Case Else '-1 = Close
+                                            '        Me.Topmost = False
+                                            '        closeddu()
+                                            '        Exit Sub
+                                            'End Select
+                                            ' Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn(11), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+
+                                            'If resultmsgbox = DialogResult.Cancel Then
+                                            '
+                                            ' Me.TopMost = False
+                                            'closeddu()
+                                            'Exit Sub
+                                            ' ElseIf resultmsgbox = DialogResult.No Then
+                                            'do nothing and continue without safe mode
+                                            'ElseIf resultmsgbox = DialogResult.Yes Then
+                                            'restartinsafemode(False)
+                                            ' Exit Sub
+                                            ' End If
+                                        End If
+                                    End If
+                                End If
+                            Else
+                                MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text8"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                            End If
+
+                    End Select
+                    Topmost = False
+
+
+
+                    Dim stopservice As New ProcessStartInfo
+                    stopservice.FileName = "cmd.exe"
+                    stopservice.Arguments = " /Csc stop PAExec"
+                    stopservice.UseShellExecute = False
+                    stopservice.CreateNoWindow = True
+                    stopservice.RedirectStandardOutput = False
+                    processstopservice.StartInfo = stopservice
+                    processstopservice.Start()
+                    processstopservice.WaitForExit()
+                    processstopservice.Close()
+                    System.Threading.Thread.Sleep(10)
+
+                    stopservice.Arguments = " /Csc delete PAExec"
+
+                    processstopservice.StartInfo = stopservice
+                    processstopservice.Start()
+                    processstopservice.WaitForExit()
+                    processstopservice.Close()
+
+                    stopservice.Arguments = " /Csc interrogate PAExec"
+                    processstopservice.StartInfo = stopservice
+                    processstopservice.Start()
+                    processstopservice.WaitForExit()
+                    processstopservice.Close()
+
+                    processinfo.FileName = basedir & "\" & ddudrfolder & "\paexec.exe"
+                    processinfo.Arguments = "-noname -i -s " & Chr(34) & basedir & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + arg
+                    processinfo.UseShellExecute = False
+                    processinfo.CreateNoWindow = True
+                    processinfo.RedirectStandardOutput = False
+
+                    process.StartInfo = processinfo
+                    process.Start()
+                    'Do not add waitforexit here or DDU(current user)will not close
+                    process.Close()
+
+                    closeddu()
+                    Exit Sub
+                End If
+
+                UpdateTextMethod(UpdateTextMethodmessagefn(10) + Application.Current.MainWindow.GetType().Assembly.ToString)
+                log("DDU Version: " + Application.Current.MainWindow.GetType().Assembly.ToString)
+                log("OS: " + CStr(Label2.Content))
+                log("Architecture: " & ddudrfolder)
+
+                Try
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames
+                            If Not checkvariables.isnullorwhitespace(child) Then
+
+                                If Not child.ToLower.Contains("properties") Then
+
+                                    subregkey = regkey.OpenSubKey(child)
+                                    If subregkey IsNot Nothing Then
+
+                                        If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("Device Description"))) Then
+                                            currentdriverversion = subregkey.GetValue("Device Description").ToString
+                                            UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
+                                            log("GPU #" + child + " Detected : " + currentdriverversion)
+                                        Else
+                                            If (subregkey.GetValue("DriverDesc") IsNot Nothing) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
+                                                UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
+                                                log("GPU #" + child + " Detected :  " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
+                                            Else
+                                                If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DriverDesc"))) Then
+                                                    currentdriverversion = subregkey.GetValue("DriverDesc").ToString
+                                                    UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
+                                                    log("GPU #" + child + " Detected : " + currentdriverversion)
+                                                End If
+                                            End If
+
+                                        End If
+                                        If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("MatchingDeviceId"))) Then
+                                            currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
+                                            UpdateTextMethod(UpdateTextMethodmessagefn(13) + " " + currentdriverversion)
+                                            log("GPU DeviceId : " + currentdriverversion)
+                                        End If
+
+                                        Try
+                                            If (Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString")))) AndAlso (subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary) Then
+                                                UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
+                                                log("Vbios :" + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
+                                            Else
+                                                If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString"))) Then
+                                                    currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
+                                                    For i As Integer = 0 To 9
+                                                        'this is a little fix to correctly show the vbios version info
+                                                        currentdriverversion = currentdriverversion.Replace("." + i.ToString + ".", ".0" + i.ToString + ".")
+                                                    Next
+                                                    UpdateTextMethod("Vbios :" + " " + currentdriverversion)
+                                                    log("Vbios : " + currentdriverversion)
+                                                End If
+                                            End If
+                                        Catch ex As Exception
+                                        End Try
+
+
+                                        If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DriverVersion"))) Then
+                                            currentdriverversion = subregkey.GetValue("DriverVersion").ToString
+                                            UpdateTextMethod(UpdateTextMethodmessagefn(14) + " " + currentdriverversion)
+                                            log("Detected Driver(s) Version(s) : " + currentdriverversion)
+                                        End If
+                                        If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("InfPath"))) Then
+                                            currentdriverversion = subregkey.GetValue("InfPath").ToString
+                                            UpdateTextMethod(UpdateTextMethodmessagefn(15) + " " + currentdriverversion)
+                                            log("INF : " + currentdriverversion)
+                                        End If
+                                        If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("InfSection"))) Then
+                                            currentdriverversion = subregkey.GetValue("InfSection").ToString
+                                            UpdateTextMethod(UpdateTextMethodmessagefn(16) + " " + currentdriverversion)
+                                            log("INF Section : " + currentdriverversion)
+                                        End If
+                                    End If
+                                    UpdateTextMethod("--------------")
+                                    log("--------------")
+                                End If
+                            End If
+                        Next
+                    End If
+                Catch ex As Exception
+                    log(ex.Message + ex.StackTrace)
+                End Try
+
+                ' ----------------------------------------------------------------------------
+                ' Trying to get the installed GPU info 
+                ' (These list the one that are at least installed with minimal driver support)
+                ' ----------------------------------------------------------------------------
+
+                gpuidentify("ven_8086")
+                gpuidentify("ven_1002")
+                gpuidentify("ven_10de")
+
+
+                ' -------------------------------------
+                ' Check if this is an AMD Enduro system
+                ' -------------------------------------
+                Try
+                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If checkvariables.isnullorwhitespace(child) = False Then
+                                If child.ToLower.Contains("ven_8086") Then
+                                    Try
+                                        subregkey = regkey.OpenSubKey(child)
+                                    Catch ex As Exception
+                                        Continue For
+                                    End Try
+                                    For Each childs As String In subregkey.GetSubKeyNames()
+                                        If checkvariables.isnullorwhitespace(childs) = False Then
+                                            If Not checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey(childs).GetValue("Service"))) Then
+                                                If subregkey.OpenSubKey(childs).GetValue("Service").ToString.ToLower.Contains("amdkmdap") Then
+                                                    enduro = True
+                                                    UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
+                                                    log("System seems to be an AMD Enduro (Intel)")
+                                                End If
+                                            End If
+                                        End If
+                                    Next
+                                End If
+                            End If
+                        Next
+                    End If
+                Catch ex As Exception
+                    log(ex.Message + ex.StackTrace)
+                End Try
+
+
+                If MyIdentity.IsSystem Then
+                    Select Case System.Windows.Forms.SystemInformation.BootMode
+                        Case BootMode.FailSafe
+                            log("We are in Safe Mode")
+                        Case BootMode.FailSafeWithNetwork
+                            log("We are in Safe Mode with Networking")
+                        Case BootMode.Normal
+                            log("We are not in Safe Mode")
+                    End Select
+                End If
+
+
+                getoeminfo()
+
+            Catch ex As Exception
+                MsgBox(ex.Message + ex.StackTrace)
+                log(ex.Message + ex.StackTrace)
+                closeddu()
+                Exit Sub
+            End Try
+
+
+            Topmost = False
+
+            If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
+                trd = New Thread(AddressOf ThreadTask)
+                trd.IsBackground = True
+                trd.Start()
+            End If
+            MsgBox("finished loaded")
         Catch ex As Exception
             MsgBox(ex.Message + ex.StackTrace)
-            log(ex.Message + ex.StackTrace)
-            closeddu()
-            Exit Sub
         End Try
-
-
-        Topmost = False
-
-        If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
-            trd = New Thread(AddressOf ThreadTask)
-            trd.IsBackground = True
-            trd.Start()
-        End If
     End Sub
 
     Private Sub frmMainContentRendered(sender As Object, e As EventArgs)
         If silent Then
             Me.Hide()
         End If
-        closeddu()
     End Sub
 
     Private Sub frmMain(sender As Object, e As System.ComponentModel.CancelEventArgs)
@@ -6527,7 +6535,7 @@ Public Class frmMain
                                                                                         log("array result: " + array(i))
                                                                                     Catch ex As Exception
                                                                                     End Try
-                                                                                    processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                                                                                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                                                                                     processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
                                                                                     processinfo.UseShellExecute = False
                                                                                     processinfo.CreateNoWindow = True
@@ -6631,7 +6639,7 @@ Public Class frmMain
                                                     vendid = child & "\" & child2
 
                                                     If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-                                                        processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                                                        processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                                                         processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
                                                         processinfo.UseShellExecute = False
                                                         processinfo.CreateNoWindow = True
@@ -6689,7 +6697,7 @@ Public Class frmMain
                                     vendid = child & "\" & child2
 
                                     If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-                                        processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                                        processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                                         processinfo.Arguments = "remove " & Chr(34) & "@HDAUDIO\" & vendid & Chr(34)
                                         processinfo.UseShellExecute = False
                                         processinfo.CreateNoWindow = True
@@ -6728,7 +6736,7 @@ Public Class frmMain
             If combobox1value = "NVIDIA" Then
                 Try
                     'removing 3DVision USB driver
-                    processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                     processinfo.Arguments = "findall =USB"
                     processinfo.UseShellExecute = False
                     processinfo.CreateNoWindow = True
@@ -6765,7 +6773,7 @@ Public Class frmMain
                          vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
                             log("-" & vendid & "- 3D vision usb controler found")
 
-                            processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                            processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                             processinfo.Arguments = "remove =USB " & Chr(34) & vendid & Chr(34)
                             processinfo.UseShellExecute = False
                             processinfo.CreateNoWindow = True
@@ -6794,7 +6802,7 @@ Public Class frmMain
 
                 Try
                     'removing NVIDIA SHIELD Wireless Controller Trackpad
-                    processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                     processinfo.Arguments = "findall =MOUSE"
                     processinfo.UseShellExecute = False
                     processinfo.CreateNoWindow = True
@@ -6821,7 +6829,7 @@ Public Class frmMain
                         If vendid.ToLower.Contains("hid\vid_0955&pid_7210") Then
                             log("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
 
-                            processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                            processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                             processinfo.Arguments = "remove =MOUSE " & Chr(34) & vendid & Chr(34)
                             processinfo.UseShellExecute = False
                             processinfo.CreateNoWindow = True
@@ -6869,7 +6877,7 @@ Public Class frmMain
 
                                                     vendid = child & "\" & child2
 
-                                                    processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                                                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                                                     processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
                                                     processinfo.UseShellExecute = False
                                                     processinfo.CreateNoWindow = True
@@ -6914,7 +6922,7 @@ Public Class frmMain
 
                                     vendid = child
 
-                                    processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                                     processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
                                     processinfo.UseShellExecute = False
                                     processinfo.CreateNoWindow = True
@@ -6958,7 +6966,7 @@ Public Class frmMain
 
                                     vendid = child
 
-                                    processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                                     processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
                                     processinfo.UseShellExecute = False
                                     processinfo.CreateNoWindow = True
@@ -6985,7 +6993,7 @@ Public Class frmMain
             If combobox1value = "INTEL" Then
                 'Removing Intel WIdI bus Enumerator
                 log("Removing IWD Bus Enumerator")
-                processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                 processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
                 processinfo.UseShellExecute = False
                 processinfo.CreateNoWindow = True
@@ -7016,7 +7024,7 @@ Public Class frmMain
 
                                     vendid = child
 
-                                    processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                                     processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
                                     processinfo.UseShellExecute = False
                                     processinfo.CreateNoWindow = True
@@ -7067,7 +7075,7 @@ Public Class frmMain
                                             vendid = child & "\" & child2
 
 
-                                            processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                                            processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                                             processinfo.Arguments = "remove " & Chr(34) & "@DISPLAY\" & vendid & Chr(34)
                                             processinfo.UseShellExecute = False
                                             processinfo.CreateNoWindow = True
@@ -7120,7 +7128,7 @@ Public Class frmMain
                                                                     log("array result: " + array(i))
                                                                 Catch ex As Exception
                                                                 End Try
-                                                                processinfo.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                                                                processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                                                                 If win10 Then
                                                                     processinfo.Arguments = "update " & windir & "\inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
                                                                 Else
@@ -7229,7 +7237,7 @@ Public Class frmMain
                 'Scan for new hardware to not let users into a non working state.
 
                 Dim scan As New ProcessStartInfo
-                scan.FileName = System.IO.Directory.GetCurrentDirectory() & "\" & ddudrfolder & "\ddudr.exe"
+                scan.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
                 scan.Arguments = "rescan"
                 scan.UseShellExecute = False
                 scan.CreateNoWindow = True
@@ -7742,13 +7750,13 @@ Public Class frmMain
         If firstLaunch Then
             ComboBox2.Items.Clear()
 
-            If Directory.Exists(String.Concat(System.IO.Directory.GetCurrentDirectory(), "\settings\languages\")) Then
-                ComboBox2.ItemsSource = (Languages.ScanFolderForLang(System.IO.Directory.GetCurrentDirectory() + "\settings\languages\").ToArray())
+            If Directory.Exists(String.Concat(basedir, "\settings\languages\")) Then
+                ComboBox2.ItemsSource = (Languages.ScanFolderForLang(basedir + "\settings\languages\").ToArray())
             Else
-                Directory.CreateDirectory(String.Concat(System.IO.Directory.GetCurrentDirectory(), "\settings\languages\"))
+                Directory.CreateDirectory(String.Concat(basedir, "\settings\languages\"))
             End If
 
-            Dim defaultLang As New Languages.LanguageOption("en", "English", System.IO.Directory.GetCurrentDirectory() + "\settings\languages\English.xml")
+            Dim defaultLang As New Languages.LanguageOption("en", "English", basedir + "\settings\languages\English.xml")
             ComboBox2.Items.Contains(defaultLang)
 
             Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml")), Encoding.UTF8, True)
@@ -8075,11 +8083,11 @@ Public Class genericfunction
         End Try
     End Function
     Public Function getconfig(ByVal options As String) As String
-
+        Dim basedir As String = frmMain.baseDir
         Try
             Dim userpth As String = CStr(My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory")) + "\"
             Dim userpthn As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
-            Dim lines() As String = IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\config.cfg")
+            Dim lines() As String = IO.File.ReadAllLines(basedir & "\settings\config.cfg")
             Dim isUsingRoaming As Boolean = False
 
             If My.Computer.FileSystem.FileExists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
@@ -8104,7 +8112,7 @@ Public Class genericfunction
             lines(lines.Length - 1) = options + "=false"
             If isUsingRoaming = False Then
                 If frmMain.roamingcfg = False Then
-                    System.IO.File.WriteAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\config.cfg", lines)
+                    System.IO.File.WriteAllLines(basedir & "\settings\config.cfg", lines)
                 End If
             Else
                 If frmMain.roamingcfg = True Then
@@ -8121,11 +8129,12 @@ Public Class genericfunction
 
     End Function
     Public Sub setconfig(ByVal name As String, ByVal setvalue As String)
+        Dim basedir As String = frmMain.baseDir
         Try
-            '    Dim lines() As String = IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\config.cfg")
+            '    Dim lines() As String = IO.File.ReadAllLines(basedir & "\settings\config.cfg")
             Dim userpth As String = CStr(My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory")) + "\"
             Dim userpthn As String = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
-            Dim lines() As String = IO.File.ReadAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\config.cfg")
+            Dim lines() As String = IO.File.ReadAllLines(basedir & "\settings\config.cfg")
             Dim isUsingRoaming As Boolean = False
             If My.Computer.FileSystem.FileExists(userpthn & "\Display Driver Uninstaller\config.cfg") Then
                 '    Dim liness() As String = IO.File.ReadAllLines(userpth & "\AppData\Roaming\Display Driver Uninstaller\config.cfg")
@@ -8141,7 +8150,7 @@ Public Class genericfunction
                         lines(i) = name + "=" + setvalue
                         If isUsingRoaming = False Then
                             If frmMain.roamingcfg = False Then
-                                System.IO.File.WriteAllLines(System.IO.Directory.GetCurrentDirectory() & "\settings\config.cfg", lines)
+                                System.IO.File.WriteAllLines(basedir & "\settings\config.cfg", lines)
                             End If
                         Else
                             If frmMain.roamingcfg = True Then
