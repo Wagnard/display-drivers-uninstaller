@@ -3,24 +3,31 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="frmMain"
     Title="Display Driver Uninstaller" Height="609" Width="533"
-        ResizeMode="noresize">
+        ResizeMode="noresize" Closing="frmMain" Loaded="frmMain_Loaded" ContentRendered="frmMainContentRendered">
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="304*"/>
+            <ColumnDefinition Width="27*"/>
+            <ColumnDefinition Width="196*"/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
         <Button x:Name="btnCleanRestart" Content="BtnRestart" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="139" Height="53" />
         <Button x:Name="btnClean" Content="btnCleanonly" HorizontalAlignment="Left" Margin="10,175,0,0" VerticalAlignment="Top" Width="139" Height="53" />
         <Button x:Name="btnCleanShutdown" Content="button" HorizontalAlignment="Left" Margin="10,253,0,0" VerticalAlignment="Top" Width="139" Height="53" RenderTransformOrigin="0.518,1.792" />
-        <ComboBox x:Name="ComboBox1" HorizontalAlignment="Left" Margin="99,30,0,0" VerticalAlignment="Top" Width="120"/>
-        <ComboBox x:Name="ComboBox2" HorizontalAlignment="Left" Margin="397,509,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="Label11" Content="Label" HorizontalAlignment="Left" Margin="10,544,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="Label2" Content="Label" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnWuRestore" Content="Button" HorizontalAlignment="Left" Margin="363,450,0,0" VerticalAlignment="Top" Width="154" Height="54"/>
-        <Label x:Name="Label3" Content="Label" HorizontalAlignment="Left" Margin="67,57,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="Textbox1" HorizontalAlignment="Left" Height="204" Margin="10,335,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="348"/>
-        <Image x:Name="PictureBox2" HorizontalAlignment="Left" Height="125" Margin="258,103,0,0" VerticalAlignment="Top" Width="189"/>
-        <Menu x:Name="MenuStrip1" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="447">
+        <ComboBox x:Name="ComboBox1" HorizontalAlignment="Left" Margin="99,30,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
+        <ComboBox x:Name="ComboBox2" HorizontalAlignment="Left" Margin="65.672,509,0,0" VerticalAlignment="Top" Width="120" Height="22" Grid.Column="2"/>
+        <Label x:Name="Label11" Content="Label" HorizontalAlignment="Left" Margin="10,544,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
+        <Label x:Name="Label2" Content="Label" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
+        <Button x:Name="btnWuRestore" Content="Button" HorizontalAlignment="Left" Margin="31.672,450,0,0" VerticalAlignment="Top" Width="154" Height="54" Grid.Column="2"/>
+        <Label x:Name="Label3" Content="Label" HorizontalAlignment="Left" Margin="67,57,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
+        <TextBox x:Name="Textbox1" HorizontalAlignment="Left" Height="204" Margin="10,335,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="348" Grid.ColumnSpan="3"/>
+        <Image x:Name="PictureBox2" HorizontalAlignment="Left" Height="125" Margin="258,103,0,0" VerticalAlignment="Top" Width="189" Grid.ColumnSpan="3"/>
+        <Menu x:Name="MenuStrip1" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="447" Grid.ColumnSpan="3">
             <MenuItem x:Name="OptionsToolStripMenuItem" Header="Options"/>
         </Menu>
-        <Image x:Name="PictureBox1" HorizontalAlignment="Left" Height="31" Margin="378,539,0,0" VerticalAlignment="Top" Width="139" RenderTransformOrigin="0.496,0.484"/>
+        <Image x:Name="PictureBox1" HorizontalAlignment="Left" Height="31" Margin="46.672,539,0,0" VerticalAlignment="Top" Width="139" RenderTransformOrigin="0.496,0.484" Grid.Column="2"/>
+        <Button x:Name="btnExtendedLog" Content="Button" HorizontalAlignment="Left" Margin="32,375,0,0" VerticalAlignment="Top" Width="154" Height="25" Grid.Column="2"/>
 
     </Grid>
 </Window>

@@ -5373,7 +5373,7 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+    Private Sub btnExtendedLog_Click(sender As Object, e As EventArgs) Handles btnExtendedLog.Click
         'Using frm As New frmLog
         '    frm.ShowDialog(Me)
         'End Using
@@ -5386,13 +5386,14 @@ Public Class frmMain
 
 
 
-    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles ComboBox1.SelectionChanged
+
         combobox1value = ComboBox1.Text
         If combobox1value = "NVIDIA" Then
 
             'PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
             'PictureBox2.Size = New Size(252, 123)
-            PictureBox2.Source = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
+            '         PictureBox2.Source = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
         End If
 
         If combobox1value = "AMD" Then
@@ -5403,26 +5404,27 @@ Public Class frmMain
             bi3.EndInit()
             'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
             'PictureBox2.Size = New Size(158, 126)
-            PictureBox2.Source = My.Resources.RadeonLogo1
+            '           PictureBox2.Source = My.Resources.RadeonLogo1
         End If
 
         If combobox1value = "INTEL" Then
 
             'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
             'PictureBox2.Size = New Size(158, 126)
-            PictureBox2.Source = My.Resources.intel_logo
+            '         PictureBox2.Source = My.Resources.intel_logo
         End If
 
     End Sub
 
-    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles ComboBox2.SelectionChanged
+
         If ComboBox2.SelectedItem IsNot Nothing Then
             InitLanguage(False, CType(ComboBox2.SelectedItem, Languages.LanguageOption))
         End If
         Checkupdates2()
     End Sub
 
-    Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
+    Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.MouseLeftButtonUp
         settings.setconfig("donate", "true")
 
         'Create the ddu.bat file
@@ -5449,146 +5451,146 @@ Public Class frmMain
 
 
 
-    Private Sub ToSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ToSToolStripMenuItem.Click
-        MessageBox.Show(Languages.GetTranslation("Misc", "Tos", "Text"))
-    End Sub
+    'Private Sub ToSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ToSToolStripMenuItem.Click
+    '    MessageBox.Show(Languages.GetTranslation("Misc", "Tos", "Text"))
+    'End Sub
 
-    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
-        Using frm As New frmAbout
-            frm.ShowDialog(Me)
-        End Using
-    End Sub
+    'Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
+    '    Using frm As New frmAbout
+    '        frm.ShowDialog(Me)
+    '    End Using
+    'End Sub
 
-    Private Sub VisitGuru3dNVIDIAThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dNVIDIAThreadToolStripMenuItem.Click
+    'Private Sub VisitGuru3dNVIDIAThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dNVIDIAThreadToolStripMenuItem.Click
 
-        settings.setconfig("guru3dnvidia", "true")
+    '    settings.setconfig("guru3dnvidia", "true")
 
-        'Create the ddu.bat file
-        Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-        sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-        sw.Flush()
-        sw.Close()
+    '    'Create the ddu.bat file
+    '    Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
+    '    sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+    '    sw.Flush()
+    '    sw.Close()
 
-        Dim UserTokenHandle As IntPtr = IntPtr.Zero
-        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-        Dim StartInfo As New WindowsApi.STARTUPINFOW
-        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+    '    Dim UserTokenHandle As IntPtr = IntPtr.Zero
+    '    WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+    '    Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+    '    Dim StartInfo As New WindowsApi.STARTUPINFOW
+    '    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-        If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-        Else
-            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-        End If
+    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+    '    Else
+    '        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+    '    End If
 
-        If Not UserTokenHandle = IntPtr.Zero Then
-            WindowsApi.CloseHandle(UserTokenHandle)
-        End If
-    End Sub
+    '    If Not UserTokenHandle = IntPtr.Zero Then
+    '        WindowsApi.CloseHandle(UserTokenHandle)
+    '    End If
+    'End Sub
 
-    Private Sub VisitGuru3dAMDThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dAMDThreadToolStripMenuItem.Click
+    'Private Sub VisitGuru3dAMDThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dAMDThreadToolStripMenuItem.Click
 
-        settings.setconfig("guru3damd", "true")
+    '    settings.setconfig("guru3damd", "true")
 
-        'Create the ddu.bat file
-        Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-        sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-        sw.Flush()
-        sw.Close()
+    '    'Create the ddu.bat file
+    '    Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
+    '    sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+    '    sw.Flush()
+    '    sw.Close()
 
-        Dim UserTokenHandle As IntPtr = IntPtr.Zero
-        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-        Dim StartInfo As New WindowsApi.STARTUPINFOW
-        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+    '    Dim UserTokenHandle As IntPtr = IntPtr.Zero
+    '    WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+    '    Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+    '    Dim StartInfo As New WindowsApi.STARTUPINFOW
+    '    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-        If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-        Else
-            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-        End If
+    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+    '    Else
+    '        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+    '    End If
 
-        If Not UserTokenHandle = IntPtr.Zero Then
-            WindowsApi.CloseHandle(UserTokenHandle)
-        End If
-    End Sub
+    '    If Not UserTokenHandle = IntPtr.Zero Then
+    '        WindowsApi.CloseHandle(UserTokenHandle)
+    '    End If
+    'End Sub
 
-    Private Sub VisitGeforceThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGeforceThreadToolStripMenuItem.Click
+    'Private Sub VisitGeforceThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGeforceThreadToolStripMenuItem.Click
 
-        settings.setconfig("geforce", "true")
+    '    settings.setconfig("geforce", "true")
 
-        'Create the ddu.bat file
-        Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-        sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-        sw.Flush()
-        sw.Close()
+    '    'Create the ddu.bat file
+    '    Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
+    '    sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+    '    sw.Flush()
+    '    sw.Close()
 
-        Dim UserTokenHandle As IntPtr = IntPtr.Zero
-        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-        Dim StartInfo As New WindowsApi.STARTUPINFOW
-        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+    '    Dim UserTokenHandle As IntPtr = IntPtr.Zero
+    '    WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+    '    Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+    '    Dim StartInfo As New WindowsApi.STARTUPINFOW
+    '    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-        If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-        Else
-            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-        End If
+    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+    '    Else
+    '        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+    '    End If
 
-        If Not UserTokenHandle = IntPtr.Zero Then
-            WindowsApi.CloseHandle(UserTokenHandle)
-        End If
-    End Sub
+    '    If Not UserTokenHandle = IntPtr.Zero Then
+    '        WindowsApi.CloseHandle(UserTokenHandle)
+    '    End If
+    'End Sub
 
-    Private Sub SVNToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SVNToolStripMenuItem.Click
+    'Private Sub SVNToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SVNToolStripMenuItem.Click
 
-        settings.setconfig("svn", "true")
+    '    settings.setconfig("svn", "true")
 
-        'Create the ddu.bat file
-        Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-        sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-        sw.Flush()
-        sw.Close()
+    '    'Create the ddu.bat file
+    '    Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
+    '    sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+    '    sw.Flush()
+    '    sw.Close()
 
-        Dim UserTokenHandle As IntPtr = IntPtr.Zero
-        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-        Dim StartInfo As New WindowsApi.STARTUPINFOW
-        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+    '    Dim UserTokenHandle As IntPtr = IntPtr.Zero
+    '    WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+    '    Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+    '    Dim StartInfo As New WindowsApi.STARTUPINFOW
+    '    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-        If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-        Else
-            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-        End If
+    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+    '    Else
+    '        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+    '    End If
 
-        If Not UserTokenHandle = IntPtr.Zero Then
-            WindowsApi.CloseHandle(UserTokenHandle)
-        End If
-    End Sub
+    '    If Not UserTokenHandle = IntPtr.Zero Then
+    '        WindowsApi.CloseHandle(UserTokenHandle)
+    '    End If
+    'End Sub
 
-    Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomepageToolStripMenuItem.Click
+    'Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomepageToolStripMenuItem.Click
 
-        settings.setconfig("dduhome", "true")
+    '    settings.setconfig("dduhome", "true")
 
 
-        'Create the ddu.bat file
-        Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
-        sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-        sw.Flush()
-        sw.Close()
+    '    'Create the ddu.bat file
+    '    Dim sw As StreamWriter = System.IO.File.CreateText(System.IO.Directory.GetCurrentDirectory() + "\DDU.bat")
+    '    sw.WriteLine(Chr(34) + System.IO.Directory.GetCurrentDirectory() + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+    '    sw.Flush()
+    '    sw.Close()
 
-        Dim UserTokenHandle As IntPtr = IntPtr.Zero
-        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-        Dim StartInfo As New WindowsApi.STARTUPINFOW
-        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+    '    Dim UserTokenHandle As IntPtr = IntPtr.Zero
+    '    WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+    '    Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+    '    Dim StartInfo As New WindowsApi.STARTUPINFOW
+    '    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-        If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-        Else
-            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-        End If
+    '    If WindowsApi.CreateProcessAsUser(UserTokenHandle, System.IO.Directory.GetCurrentDirectory() + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+    '    Else
+    '        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+    '    End If
 
-        If Not UserTokenHandle = IntPtr.Zero Then
-            WindowsApi.CloseHandle(UserTokenHandle)
-        End If
-    End Sub
+    '    If Not UserTokenHandle = IntPtr.Zero Then
+    '        WindowsApi.CloseHandle(UserTokenHandle)
+    '    End If
+    'End Sub
 
     Private Sub OptionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsToolStripMenuItem.Click
         Dim frmOptions As frmOptions
@@ -5598,7 +5600,7 @@ Public Class frmMain
     End Sub
 
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub frmMain_Loaded(sender As Object, e As RoutedEventArgs)
 
         'We try to create config.cfg if non existant.
         If roamingcfg = True Then
@@ -6061,7 +6063,7 @@ Public Class frmMain
 
                     If arg.Contains("-silent") Then
                         silent = True
-                        Me.WindowState = FormWindowState.Minimized
+                        Me.WindowState = Windows.WindowState.Minimized
                     Else
                         Checkupdates2()
                         If closeapp Then
@@ -6158,8 +6160,9 @@ Public Class frmMain
                                     If Not silent Then
                                         Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
 
+
                                         Using frmSafeBoot As New frmLaunch
-                                            frmSafeBoot.TopMost = True
+                                            frmSafeBoot.Topmost = True
 
                                             If frmSafeBoot.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then
                                                 bootOption = frmSafeBoot.selection
@@ -6407,13 +6410,13 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub Form1_Shown(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Shown
+    Private Sub frmMainContentRendered(sender As Object, e As EventArgs)
         If silent Then
             Me.Hide()
         End If
     End Sub
 
-    Private Sub Form1_Close(sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
+    Private Sub frmMain(sender As Object, e As System.ComponentModel.CancelEventArgs)
 
         If preventclose Then
             e.Cancel = True
@@ -7745,7 +7748,7 @@ Public Class frmMain
             Dim defaultLang As New Languages.LanguageOption("en", "English", System.IO.Directory.GetCurrentDirectory() + "\settings\languages\English.xml")
             ComboBox2.Items.Add(defaultLang)
 
-            Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Language).Namespace, "English.xml")), Encoding.UTF8, True)
+            Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml")), Encoding.UTF8, True)
                 Using sw As New StreamWriter(defaultLang.Filename, False, Encoding.UTF8)
                     While (sr.Peek() <> -1)
                         sw.WriteLine(sr.ReadLine())
@@ -7789,11 +7792,11 @@ Public Class frmMain
                 End If
             End If
 
-            Languages.TranslateForm(Me, toolTip1)
+            '          Languages.TranslateForm(Me, toolTip1)
         Else
             If changeTo IsNot Nothing AndAlso Not changeTo.ISOLanguage.Equals(Languages.Current) Then
                 Languages.Load(changeTo)
-                Languages.TranslateForm(Me, toolTip1)
+                '               Languages.TranslateForm(Me, toolTip1)
             End If
         End If
 
@@ -8054,7 +8057,7 @@ Public Class genericfunction
 
 
             Dim newestversion2int As Integer = CInt(newestversion2.Replace(".", ""))
-            Dim applicationversion As Integer = CInt(Application.Current.MainWindow.GetType().Assembly.Replace(".", ""))
+            Dim applicationversion As Integer = CInt(Application.Current.MainWindow.GetType().Assembly.ToString)
 
             If newestversion2int <= applicationversion Then
                 Return 1

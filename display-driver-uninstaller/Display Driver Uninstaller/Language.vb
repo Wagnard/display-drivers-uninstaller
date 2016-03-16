@@ -207,27 +207,27 @@ notFound:
                 TranslateControl(form.Name, c, tooltip)
             Next
 
-            If form.MainMenuStrip IsNot Nothing AndAlso form.MainMenuStrip.Items.Count > 0 Then
-                For Each menuitem As Forms.ToolStripMenuItem In form.MainMenuStrip.Items
-                    TranslateMenuItem(form.Name, menuitem, tooltip)
-                Next
-            End If
+            'If form.MainMenuStrip IsNot Nothing AndAlso form.MainMenuStrip.Items.Count > 0 Then
+            '    For Each menuitem As Forms.ToolStripMenuItem In form.MainMenuStrip.Items
+            '        TranslateMenuItem(form.Name, menuitem, tooltip)
+            '    Next
+            'End If
         End SyncLock
     End Sub
 
-    Private Shared Sub TranslateMenuItem(ByVal form As String, ByVal menuitem As Forms.ToolStripMenuItem, Optional ByVal tp As ToolTip = Nothing)
-        Dim text = GetTranslation(form, menuitem.Name, "Text")
+    'Private Shared Sub TranslateMenuItem(ByVal form As String, ByVal menuitem As Forms.ToolStripMenuItem, Optional ByVal tp As ToolTip = Nothing)
+    '    Dim text = GetTranslation(form, menuitem.Name, "Text")
 
-        If Not String.IsNullOrEmpty(text) Then
-            menuitem.Text = text
-        End If
+    '    If Not String.IsNullOrEmpty(text) Then
+    '        menuitem.Text = text
+    '    End If
 
-        If menuitem.HasDropDownItems Then
-            For Each childmenuitem As ToolStripMenuItem In menuitem.DropDownItems
-                TranslateMenuItem(form, childmenuitem, tp)
-            Next
-        End If
-    End Sub
+    '    If menuitem.HasDropDownItems Then
+    '        For Each childmenuitem As ToolStripMenuItem In menuitem.DropDownItems
+    '            TranslateMenuItem(form, childmenuitem, tp)
+    '        Next
+    '    End If
+    'End Sub
 
     Private Shared Sub TranslateControl(ByVal form As String, ByVal ctrl As Control, Optional ByVal tp As ToolTip = Nothing)
         If TypeOf (ctrl) Is ComboBox Then
@@ -242,7 +242,7 @@ notFound:
             Dim text = GetTranslation(form, ctrl.Name, "Text")
 
             If Not String.IsNullOrEmpty(text) Then
-                ctrl.Text = text
+                ctrl.text = text
             End If
 
             If tp IsNot Nothing Then
@@ -265,7 +265,7 @@ notFound:
 
     Private Shared Function LoadFile(ByVal langFile As String) As Stream
         If (langFile.Equals("en", StringComparison.OrdinalIgnoreCase)) Then
-            Return Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Language).Namespace, "English.xml"))
+            Return Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml"))
         Else
             If (File.Exists(langFile)) Then
                 Return New FileStream(langFile, FileMode.Open, FileAccess.Read, FileShare.Read)

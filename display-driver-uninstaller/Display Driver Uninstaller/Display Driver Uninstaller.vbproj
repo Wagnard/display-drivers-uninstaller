@@ -67,9 +67,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="frmLaunchxaml.xaml.vb">
+      <DependentUpon>frmLaunchxaml.xaml</DependentUpon>
+    </Compile>
     <Compile Include="frmLog.xaml.vb">
       <DependentUpon>frmLog.xaml</DependentUpon>
     </Compile>
+    <Page Include="frmLaunchxaml.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="frmMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
