@@ -385,7 +385,7 @@ notFound:
         Catch ex As Exception
             'if English translation is badly formatted/not readable (should never be)
             If langFile.Equals("en", StringComparison.OrdinalIgnoreCase) Or Not onlyCheckValid Then
-                Throw ex
+                MsgBox(ex.Message + ex.StackTrace)
             End If
 
             If Not onlyCheckValid Then

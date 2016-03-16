@@ -113,7 +113,7 @@ Public Class frmMain
     End Function
 
     Private Sub Checkupdates2()
-        If Me.Dispatcher.CheckAccess() Then
+        If Not Me.Dispatcher.CheckAccess() Then
             Dispatcher.Invoke(New MethodInvoker(AddressOf Checkupdates2))
         Else
             Label11.Content = Languages.GetTranslation(Me.Name, "Label11", "Text")
@@ -5281,7 +5281,7 @@ Public Class frmMain
 
     Private Sub closeddu()
 
-        If Dispatcher.CheckAccess() Then
+        If Not Dispatcher.CheckAccess() Then
             Dispatcher.Invoke(New MethodInvoker(AddressOf Me.closeddu))
         Else
             Try
@@ -7746,7 +7746,7 @@ Public Class frmMain
             End If
 
             Dim defaultLang As New Languages.LanguageOption("en", "English", System.IO.Directory.GetCurrentDirectory() + "\settings\languages\English.xml")
-            ComboBox2.Items.Add(defaultLang)
+            ComboBox2.Items.Contains(defaultLang)
 
             Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml")), Encoding.UTF8, True)
                 Using sw As New StreamWriter(defaultLang.Filename, False, Encoding.UTF8)
@@ -7871,7 +7871,7 @@ Public Class frmMain
 
     Public Sub UpdateTextMethod(ByVal strMessage As String)
 
-        If Textbox1.Dispatcher.CheckAccess() Then
+        If Not Textbox1.Dispatcher.CheckAccess() Then
             Dispatcher.Invoke(Sub() Textbox1.Text = Textbox1.Text + strMessage + vbNewLine)
             Dispatcher.Invoke(Sub() Textbox1.Select(Textbox1.Text.Length, 0))
             Dispatcher.Invoke(Sub() Textbox1.ScrollToEnd())
@@ -7885,7 +7885,7 @@ Public Class frmMain
 
     Public Sub UpdateTextMethod2(ByVal strMessage As String)
         Dim frmLog As New frmLog
-        If frmLog.tbLog.Dispatcher.CheckAccess() Then
+        If Not frmLog.tbLog.Dispatcher.CheckAccess() Then
             Dispatcher.Invoke(Sub() frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine)
             Dispatcher.Invoke(Sub() frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0))
             Dispatcher.Invoke(Sub() frmLog.tbLog.ScrollToEnd())
@@ -8057,7 +8057,8 @@ Public Class genericfunction
 
 
             Dim newestversion2int As Integer = CInt(newestversion2.Replace(".", ""))
-            Dim applicationversion As Integer = CInt(Application.Current.MainWindow.GetType().Assembly.ToString)
+            Dim exeversion As String = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString().Replace(".", "")
+            Dim applicationversion As Integer = CInt(exeversion)
 
             If newestversion2int <= applicationversion Then
                 Return 1
@@ -8066,6 +8067,7 @@ Public Class genericfunction
             End If
 
         Catch ex As Exception
+            MsgBox(ex.Message + ex.StackTrace)
             Return 3
         End Try
     End Function

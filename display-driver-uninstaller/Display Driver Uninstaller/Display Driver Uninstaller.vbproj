@@ -154,6 +154,7 @@
     <None Include="Resources\RadeonLogo1.png" />
     <None Include="Resources\NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg" />
     <None Include="Resources\btn_donate_LG.gif" />
+    <EmbeddedResource Include="English.xml" />
     <Content Include="Resources\ddudr.exe" />
     <None Include="Resources\intel_logo.png" />
     <None Include="Resources\xp64\ddudr.exe" />
