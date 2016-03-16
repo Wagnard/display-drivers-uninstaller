@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="de" Text="German">
+	<!--
+	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
+	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+
+	Text = Shown to user (as written in english, found on language selection box)
+
+	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
+	[char = replaces]  xml doesn't allow some special chars like <>&"
+	| = newline
+	&amp; = &
+	&quot; = "
+	&gt; = >
+	&lt; = <
+
+	-->
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<Button1>
+			<Text>Säubern und Neustart|(Empfohlene Aktion)</Text>
+			<Tooltip>Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer neu|(sehr empfohlen)</Tooltip>
+		</Button1>
+		<Button2>
+			<Text>Säubern und KEIN Neustart|(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)</Text>
+			<Tooltip>Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer NICHT neu|(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)</Tooltip>
+		</Button2>
+		<Button3>
+			<Text>Säubern und Herunterfahren|(Zur Installation einer neuen Grafikkarte)</Text>
+			<Tooltip>Deinstalliert den aktuellen sowie die vorherigen Treiber und schaltet den Computer ohne erneutes Scannen aus|(Zur Installation einer neuen Grafikkarte)</Tooltip>
+		</Button3>
+		<Button4>
+			<Text>Setze Treiberinstallation durch Windows Update auf Standard.</Text>
+		</Button4>
+		<Button5>
+			<Text>Ausführliche Logdatei anzeigen.</Text>
+		</Button5>
+		<Label1>
+			<Text>Erkannte Windows-Version:</Text>
+		</Label1>
+		<Label4>
+			<Text>*** Mögen Sie DDU? Denken Sie über eine Spende nach, dies würde eine zukünftige Entwicklung fördern. ***</Text>
+		</Label4>
+		<Label5>
+			<Text>Log:</Text>
+		</Label5>
+		<Label7>
+			<Text>Grafiktreiber auswählen:</Text>
+		</Label7>
+		<Label9>
+			<Text>Hinweis: Jegliche Schäden oder Fehler, die Ihrem Computer zugefügt werden, liegen in Ihrer Verantwortung.</Text>
+		</Label9>
+		<Label10>
+			<Text>Das Verwenden von DDU im abgesicherten Modus wird empfohlen.</Text>
+		</Label10>
+		<Label11>
+			<Text>Suche nach Updates...</Text>
+			<Text2>Keine Updates gefunden. Programm ist auf dem neuesten Stand.</Text2>
+			<Text3>Updates gefunden! Eingeschränkte Unterstützung für ältere Versionen ist zu erwarten.</Text3>
+			<Text4>Kann keine Updates abrufen!</Text4>
+		</Label11>
+		<OptionsToolStripMenuItem>
+			<Text>Options</Text>
+		</OptionsToolStripMenuItem>
+		<ToolStripMenuItem1>
+			<Text>?</Text>
+		</ToolStripMenuItem1>
+		<ToSToolStripMenuItem>
+			<Text>ToS</Text>
+		</ToSToolStripMenuItem>
+		<VisitDDUHomepageToolStripMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomepageToolStripMenuItem>
+		<SVNToolStripMenuItem>
+			<Text>Visit SVN Website</Text>
+		</SVNToolStripMenuItem>
+		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
+		<VisitGuru3dAMDThreadToolStripMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3dAMDThreadToolStripMenuItem>
+		<VisitGeforceThreadToolStripMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceThreadToolStripMenuItem>
+		<AboutToolStripMenuItem>
+			<Text>About</Text>
+		</AboutToolStripMenuItem>
+		<Messages>
+			<Text1>Updates sind erhältlich! Möchten Sie jetzt die DDU Webseite besuchen?</Text1>
+			<Text2>Für ältere Versionen besteht eine eingeschränkte Unterstützung. Bitte überprüfen Sie, ob neue Versionen verfügbar sind bevor Sie Fehler melden.</Text2>
+			<Text3>Sie verwenden DDU nicht mit Administratorrechten. Die Anwendung wird nun beendet.</Text3>
+			<Text4>ddur kann nicht gefunden werden. Bitte beachten Sie das Protokoll (Log).</Text4>
+			<Text5>Display Driver Uninstaller (DDU) verändert Ihre Registry erheblich. DDU wird versuchen, automatisch einen Systemwiederherstellungspunkt zu erstellen (nur normaler Modus).</Text5>
+			<Text6>Ein Problem ist in einem der Module aufgetreten, senden Sie bitte die DDU Protokolle (Logs) an den Entwickler.</Text6>
+			<Text7>DDU hat festgestellt, dass es sich um einen "AMD-Switching-Laptop" handelt (Enduro oder ähnlich), DDU ist derzeit hierfür nicht vollständig kompatibel/mit Enduro Systemen gestest, Benutzung auf eigene Gefahr.</Text7>
+			<Text8>DDU hat festgestellt, dass Sie sich NICHT im abgesicherten Modus befinden... Für eine bessere Säuberung ohne Fehler wird ein Neustart im abgesicherten Modus empfohlen.</Text8>
+			<Text9>DDU hat eine Einstellung so geändert, sodass die automatische Installation von Treibern über Windows Update verhindert wird. Sie können dies auf die ursprüngliche Einstellung nach dem Neustart zurückstellen.</Text9>
+			<Text10>Saubere Deinstallation vollständig! Möchten Sie jetzt beenden?</Text10>
+			<Text11>Fertig!</Text11>
+			<Text12>Sie sind nicht im abgesicherten Modus. Um Fehler zu vermeiden wird ein Neustart im abgesicherten Modus dringend empfohlen. Jetzt im abgesicherten Modus neustarten?</Text12>
+			<Text13>Folgendes müssen Sie bei einem blauen Wiederherstellungsbildschirm auswählen: Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text14>Ein noch ausstehender Neustart ist vorhanden, bitte vor der Benutzung von DDU neustarten</Text14>
+		</Messages>
+		<UpdateLog>
+			<Text1>Ausführen von Driver Store Säuberung (Löschen vom OEM Schritt)...</Text1>
+			<Text2>Säubern des Verzeichnis</Text2>
+			<Text3>Säubern bekannter Regkeys... Kann ein paar Minuten dauern.</Text3>
+			<Text4>Säubern der UpdatusUser Benutzerkonten (falls vorhanden).</Text4>
+			<Text5>Säubern des Verzeichnisses</Text5>
+			<Text6>Starten der Registrysäuberung</Text6>
+			<Text7>Säubern der Registry beendet</Text7>
+			<Text8>Starten der Entfernung des nVidia Optimus UpperFilter (falls vorhanden).</Text8>
+			<Text9>Scannen nach neuen Geräten...</Text9>
+			<Text10>Saubere Deinstallation vollständig!</Text10>
+			<Text11>DDU Version:</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Erkannt:</Text13>
+			<Text14>GPU GeräteId:</Text14>
+			<Text15>Erkannte Treiber Version(en):</Text15>
+			<Text16>INF:</Text16>
+			<Text17>INF Abschnitt:</Text17>
+			<Text18>GPU nicht korrekt installiert:</Text18>
+			<Text19>Löschen von bestimmten Ordnern, kann eine Weile dauern...</Text19>
+			<Text20>Säuberung gestartet...</Text20>
+			<Text21>Deinstallation</Text21>
+			<Text22>Treiber</Text22>
+			<Text23>Ausführen der ddudr Entfernung, bitte warten (kann ein paar Minuten dauern)</Text23>
+			<Text24>GPU(s) vom Gerätemanager entfernt.</Text24>
+			<Text25>Ausführen der ddudr Entfernung Audio controller.</Text25>
+			<Text26>HD Audio Adapter entfernt!</Text26>
+			<Text27>3D Vision USB Adapter vom Gerätemanager entfernt.</Text27>
+			<Text28>Monitore and versteckte Monitore entfernt!</Text28>
+			<Text29>ddudr Entfernung vollständig</Text29>
+			<Text30>Starten der Säuberung der S-1-5-xx Region</Text30>
+			<Text31>Ende der Säuberung der S-1-5-xx Region</Text31>
+			<Text32>Beginn Classesroot ,Installer\Produkt Säuberung</Text32>
+			<Text33>Ende Classesroot ,Installer\Produkt Säuberung</Text33>
+			<Text34>Starten localmachine ,Installer\Produkt Säuberung</Text34>
+			<Text35>Ende localmachine ,Installer\Produkt Säuberung</Text35>
+			<Text36>Starten currentuser ,Installer\Produkt Säuberung</Text36>
+			<Text37>Ende currentuser ,Installer\Produkt Säuberung</Text37>
+			<Text38>Säuberung Prozess/Service...</Text38>
+			<Text39>Prozess/Service Säuberung vollständig</Text39>
+			<Text40>Gelöscht.</Text40>
+			<Text41>Wert entfernt.</Text41>
+			<Text42>Datei gelöscht.</Text42>
+		</UpdateLog>
+	</frmMain>
+	<frmOptions Text="Optionen">
+		<Label1>
+			<Text>Grafikkartenspezifische Optionen</Text>
+		</Label1>
+		<Label2>
+			<Text>Allgemeine Optionen</Text>
+		</Label2>
+		<CheckBox1>
+			<Text>Treiberordner "C:\nVidia" entfernen (NICHT empfohlen)</Text>
+		</CheckBox1>
+		<CheckBox2>
+			<Text>Speichere Logdateien im Startup-Pfad (ausdrücklich empfohlen)</Text>
+		</CheckBox2>
+		<CheckBox3>
+			<Text>Entferne PhysX</Text>
+		</CheckBox3>
+		<CheckBox4>
+			<Text>Entferne 3DTV Play</Text>
+		</CheckBox4>
+		<CheckBox5>
+			<Text>Erstelle einen Systemwiederherstellungspunkt (falls erlaubt)</Text>
+		</CheckBox5>
+		<CheckBox6>
+			<Text>Entferne alle vorhandenen und derzeit nicht vorhandenen Bildschirme (empfohlen)</Text>
+		</CheckBox6>
+		<CheckBox7>
+			<Text>Entferne AMD Audio Bus</Text>
+		</CheckBox7>
+		<CheckBox8>
+			<Text>Treiberordner "C:\AMD" entfernen (NICHT empfohlen)</Text>
+		</CheckBox8>
+		<CheckBox9>
+			<Text>Entferne Treiber/Filter AMDKMPFD (Ein Backup für AMD Chipsätze wird empfohlen)</Text>
+		</CheckBox9>
+		<CheckBox10>
+			<Text>Hinweis zum abgesicherten Modus beim Start anzeigen</Text>
+		</CheckBox10>
+		<CheckBox11>
+			<Text>Speichere Config-Datei im Roaming-Ordner</Text>
+		</CheckBox11>
+		<CheckBox12>
+			<Text>DDU beim Start nicht auf Updates überprüfen (NICHT empfohlen)</Text>
+		</CheckBox12>
+		<CheckBox13>
+			<Text>GeForce Experience (GFE) entfernen</Text>
+		</CheckBox13>
+		<CheckBox14>
+			<Text>AMD Crimson Shader Cache Ordner entfernen</Text>
+			<Tooltip>Empfohlen, falls aufgrund von defekten Shader-Cache-Daten grafische Unregelmäßigkeiten (Geschwindigkeit oder sichtbare Fehler) auftreten.|Ebenfalls empfohlen, falls Sie zu einem anderen Hersteller, wie nVidia, wechseln.</Tooltip>
+		</CheckBox14>
+	</frmOptions>
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Launch</Text>
+			<Text2>Reboot to|Safe Mode</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Launch option</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+		</lblNotSafeMode>
+		<cbBootOption>
+			<Item1>Normal</Item1>
+			<Item2>Safe Mode (Recommended)</Item2>
+			<Item3>Safe Mode With Networking</Item3>
+		</cbBootOption>
+	</frmLaunch>
+	<frmLog Text="Extended log">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>	
+	</frmLog>
+	<frmAbout>
+		<Label1>
+			<Text>
+Display Driver Uninstaller (DDU) / Cleaner für Grafiktreiber (NVIDIA/AMD)
+
+Das Programm entfernt den Grafiktreiber vom Gerätemanager, den aktuellen und alle vorhergehendenden Treiber vom Windows Treiber
+Speicher, sowie die Dienste von NVIDIA/AMD.
+
+Nach der Anwendung des Tools ist der Zustand des Betriebssystems vergleichbar dem Zustand nach einer Neuinstallation.
+
+Dieses Tool arbeitet ähnlich wie "Driver Sweeper"* und die oben genannten Programme.
+
+Falls Sie Probleme bei der Installation älterer oder neuerer Treiber haben sollten, probieren Sie dieses 
+Programm aus. Es gibt einige Berichte, dass DDU dieses Probleme beheben kann.
+
+EMPFOHLENE BENUTZUNG:
+
+- Dieses Programm kann im normalen Windows Modus benutzt werden, für absolute Stabilität bei der Benutzung des Tools
+  ist der abgesicherte Modus aber immer die beste Wahl.
+
+- Wir würden gerne Feedback von Ihnen erhalten. Bitte teilen Sie uns mit, ob Sie Erfolg hatten oder nicht.
+
+- Erstellen Sie ein Backup oder einen Wiederherstellungspunkt (in der Regel sollte es jedoch ziemlich sicher sein).
+
+- Wenn Sie jemals ein Treiber-Problem hatten und dieses Tool Ihnen geholfen hat Fehler zu beheben, teilen Sie bitte Ihr Ergebnis mit.
+
+Beachten Sie, dass weder NVIDIA, AMD noch Microsoft für eventuelle Schäden an Ihnen oder Ihrem System haftbar gemacht werden
+können und mit DDU oder seinen Partnern in Verbindung stehen.
+-------------------------------
+
+Erstellt von Wagnard.
+
+Mitinhaber: Shady7557
+
+Tester: Dellon132
+
+Logos: juanchacin
+
+Besonderer Dank gilt Jackalito für eine Spende einer AMD 7850.
+
+Danke an Helge Klein (http://helgeklein.com/setacl/): für die Erlaubnis sein Programm mit DDU "SetAc1" zu verwenden.
+
+Großer Dank für ihre Zeit zum Testen geht an: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (Fehlersuche mit mir)
+Extraordinary (Bugfix getestet)
+
+Danke an alle, die ihre Systeme der Gefahr ausgesetzt haben (Besonderer Dank gilt Dellon132)
+
+*DDU, seine Ersteller und Partner sind in keiner Weise mit Driver Sweeper oder seinen Erstellern verbunden.
+</Text>
+		</Label1>
+	</frmAbout>
+	<Misc>
+		<Tos>
+			<Text>
+NUTZERVEREINBARUNG - Display Driver Uninstaller ("DDU")
+
+Sie werden ein Nutzer von DDU ("Nutzer") durch die Anwendung des DDU Programms. Diese Vereinbarung tritt in Kraft, sobald Sie die Treiberdeinstallation beginnen.
+
+Durch die Benutzung von DDU sind Sie damit einverstanden, den Hersteller und andere mit dem Unternehmen verbundene Personen, nicht zu beschuldigen, Ihren PC beschädigt oder negativ beeinflusst zu haben.
+
+Durch die Benutzung von DDU erkennen Sie an, dass weder NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices ("AMD, Radeon") irgendetwas mit diesem Programm zu tun haben und in keinster Art und Weise mit DDU oder seinen Erstellern verbunden sind.
+</Text>
+		</Tos>
+	</Misc>
+</DisplayDriverUninstaller>

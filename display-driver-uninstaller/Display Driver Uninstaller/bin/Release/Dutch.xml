@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="nl" Text="Dutch">
+	<!--
+	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
+	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+
+	Text = Shown to user (as written in english, found on language selection box)
+
+	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
+	[char = replaces]  xml doesn't allow some special chars like <>&"
+	| = newline
+	&amp; = &
+	&quot; = "
+	&gt; = >
+	&lt; = <
+
+	-->
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<Button1>
+			<Text>Verwijder drivers en herstart de computer.|(Sterk aanbevolen)</Text>
+			<Tooltip>Verwijder de huidige en de vorige drivers en herstart de computer.|(Sterk aanbevolen)</Tooltip>
+		</Button1>
+		<Button2>
+			<Text>Verwijder drivers en start de computer NIET opnieuw op.|(Kan kwesties/problemen zoals een zwart scherm veroorzaken)</Text>
+			<Tooltip>Verwijder de huidige en de vorige drivers en start de computer niet opnieuw op.|(Kan kwesties/problemen zoals zwart scherm veroorzaken)</Tooltip>
+		</Button2>
+		<Button3>
+			<Text>Verwijder drivers en schakel de computer uit.|(Voor het installeren van een nieuwe grafische kaart).</Text>
+			<Tooltip>Verwijder de huidige en de vorige drivers en sluit af zonder dat de computer opnieuw scant.|(Voor het installeren van een nieuwe grafische kaart).</Tooltip>
+		</Button3>
+		<Button4>
+			<Text>Zet windows driver installatie op standaard.</Text>
+		</Button4>
+		<Button5>
+			<Text>Laat uitgebreide log zien.</Text>
+		</Button5>
+		<Label1>
+			<Text>Gedetecteerde Windows-versie:</Text>
+		</Label1>
+		<Label4>
+			<Text>*** Vind je DDU goed? Denk misschien eens aan een donatie, het zal de ontwikkeling enorm helpen. ***</Text>
+		</Label4>
+		<Label5>
+			<Text>Log :</Text>
+		</Label5>
+		<Label7>
+			<Text>Selecteer grafische driver :</Text>
+		</Label7>
+		<Label9>
+			<Text>Opmerking: Eventuele schade of fouten veroorzaakt aan uw pc is uw verantwoordelijkheid.</Text>
+		</Label9>
+		<Label10>
+			<Text>Het gebruiken van DDU word in Veilige Modus aanbeloven. |</Text>
+		</Label10>
+		<Label11>
+			<Text>Controloren of er nieuwe updates zijn...</Text>
+			<Text2>Geen updates gevonden. Programma is up-to-date.</Text2>
+			<Text3>Updates gevonden! Verwacht beperkte ondersteuning op oudere versies dan de meest recente versie.</Text3>
+			<Text4>Kan geen updates halen!</Text4>
+		</Label11>
+		<OptionsToolStripMenuItem>
+			<Text>Options</Text>
+		</OptionsToolStripMenuItem>
+		<ToolStripMenuItem1>
+			<Text>?</Text>
+		</ToolStripMenuItem1>
+		<ToSToolStripMenuItem>
+			<Text>ToS</Text>
+		</ToSToolStripMenuItem>
+		<VisitDDUHomepageToolStripMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomepageToolStripMenuItem>
+		<SVNToolStripMenuItem>
+			<Text>Visit SVN Website</Text>
+		</SVNToolStripMenuItem>
+		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
+		<VisitGuru3dAMDThreadToolStripMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3dAMDThreadToolStripMenuItem>
+		<VisitGeforceThreadToolStripMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceThreadToolStripMenuItem>
+		<AboutToolStripMenuItem>
+			<Text>About</Text>
+		</AboutToolStripMenuItem>
+		<Messages>
+			<Text1>Updates gevonden! Nu de DDU website bezoeken?</Text1>
+			<Text2>Verwacht beperkte ondersteuning op oudere versies dan de meest recente versie. Alstublieft alleen fouten rapporteren van de nieuwste versie van DDU.</Text2>
+			<Text3>U gebruikt DDU niet met Administrator privileges. De applicatie word nu afgesloten.</Text3>
+			<Text4>Het was niet mogelijk ddudr te vinden. Raadpleeg alstublieft de log.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) Wijzigt uw register veel. DDU zal nu proberen automatisch een systeem herstel punt te maken (Alleen normale mode).</Text5>
+			<Text6>Er is een probleem voorgekomen in een van de modules, stuur je DDU logs naar de ontwikkelaar.</Text6>
+			<Text7>DDU heeft gedecteerd dat u een AMD omschakel Laptop hebt (Enduro of gelijkwaardig), DDU is nog niet volledig compatibel / getest met Enduro systemen, Gebruik op eigen risico.</Text7>
+			<Text8>DDU heeft gedecteerd dat u NIET in Veilige Modus bent... Voor een betere schoonmaak zonder problemen, is het aanbevolen om te herstarten in veilige modus.</Text8>
+			<Text9>DDU heeft een optie verandert dat weerhoud drivers automatisch te downloaden met Windows Update. U kunt deze terugzetten naar standaart , NADAT je nieuwe driver geinstalleerd is.</Text9>
+			<Text10>Volledige verwijdering klaar! Wilt u nu afsluiten?</Text10>
+			<Text11>Klaar!</Text11>
+			<Text12>U bent niet in veilige modus. Het is zeer aanbevolen te herstarten naar veilige modus om problemen te voorkomen., Nu opnieuw opstarten in veilige modus?"</Text12>
+			<Text13>Dit is wat je moet selecteren in het blauwe menu van Geavanceerde opstartopties: Problemen oplossen -&gt; Geavanceerde opties -&gt; Opstartinstellingen.</Text13>
+			<Text14>Er is een herstart in afwachting, a.u.b. opnieuw opstarten voordat u DDU gebruikt.</Text14>
+		</Messages>
+		<UpdateLog>
+			<Text1>Driver Winkel schoonmaak word uitgevoerd(Verwijdert OEM step)...</Text1>
+			<Text2>Map schoonmaken</Text2>
+			<Text3>Bekende RegSleutels schoonmaken... Kan een minuut of twee duren.</Text3>
+			<Text4>UpdatusUser gebruikers account schoonmaken indien aanwezig.</Text4>
+			<Text5>Map schoonmaken</Text5>
+			<Text6>Register schoonmaak gestart</Text6>
+			<Text7>Register schoonmaak klaar</Text7>
+			<Text8>Gestart met het verwijderen van nVidia Optimus UpperFilter indien aanwezig.</Text8>
+			<Text9>Scannen voor nieuwe apparaten...</Text9>
+			<Text10>Volledige verwijdering klaar!</Text10>
+			<Text11>DDU Versie:</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Gedetecteerd :</Text13>
+			<Text14>GPU DeviceId :</Text14>
+			<Text15>Gedetecteerde Driver(s) Versie(s) :</Text15>
+			<Text16>INF :</Text16>
+			<Text17>INF Sectie :</Text17>
+			<Text18>GPU niet Correct Geinstalleerd :</Text18>
+			<Text19>Speciale mappen worden verwijdert, dit kan even duren...</Text19>
+			<Text20>Schoonmaak gestart...</Text20>
+			<Text21>Deinstalleren</Text21>
+			<Text22>driver</Text22>
+			<Text23>ddudr Verwijdering Word Uitgevoerd , Even geduld(kan een paar minuten duren)</Text23>
+			<Text24>GPU(s) Verwijdert van ApparaatBeheer.</Text24>
+			<Text25>DDUDR Verwijdering Geluids controller word Uitgevoerd.</Text25>
+			<Text26>HD geluid adapters Verwijdert !</Text26>
+			<Text27>3D Visie USB Adapter Verwijdert van ApparaatBeheer.</Text27>
+			<Text28>Monitors en verborgen monitors verwijdert !</Text28>
+			<Text29>ddudr Verwijdering compleet</Text29>
+			<Text30>S-1-5-xx region Schoonmaak gestart</Text30>
+			<Text31>S-1-5-xx region Schoonmaak geëindigd</Text31>
+			<Text32>Begin Classesroot ,installer\products schoonmaak</Text32>
+			<Text33>Eindigt Classesroot ,installer\products schoonmaak</Text33>
+			<Text34>Start localmachine ,installer\products schoonmaak</Text34>
+			<Text35>Eindigt localmachine ,installer\products schoonmaak</Text35>
+			<Text36>Start currentuser ,installer\products schoonmaak</Text36>
+			<Text37>Eindigt currentuser ,installer\products schoonmaak</Text37>
+			<Text38>Bezig met het schoonmaken van process/services...</Text38>
+			<Text39>Process/Services Schoonmaak Klaar</Text39>
+			<Text40>Verwijderd.</Text40>
+			<Text41>Waarde verwijdert.</Text41>
+			<Text42>Bestand verwijdert.</Text42>
+		</UpdateLog>
+	</frmMain>
+	<frmOptions Text="Instellingen">
+		<Label1>
+			<Text>GPU Specifieke Instellingen</Text>
+		</Label1>
+		<Label2>
+			<Text>Algemene Instellingen</Text>
+		</Label2>
+		<CheckBox1>
+			<Text>Verwijder "C:\nVidia" Driver mappen (NIET aanbevolen) </Text>
+		</CheckBox1>
+		<CheckBox2>
+			<Text>Sla logbestanden op in het opstartpad (aanbeloven).</Text>
+		</CheckBox2>
+		<CheckBox3>
+			<Text>Verwijder PhysX.</Text>
+		</CheckBox3>
+		<CheckBox4>
+			<Text>Verwijder 3DTV Play</Text>
+		</CheckBox4>
+		<CheckBox5>
+			<Text>Maak een systeem herstel punt (indien toegestaan)</Text>
+		</CheckBox5>
+		<CheckBox6>
+			<Text>Verwijder aanwezige en niet- aanwezige monitors (aanbevolen )</Text>
+		</CheckBox6>
+		<CheckBox7>
+			<Text>Verwijder AMD Geluids Bus</Text>
+		</CheckBox7>
+		<CheckBox8>
+			<Text>Verwijder "C:\AMD" Driver mappen (NIET aanbevolen) </Text>
+		</CheckBox8>
+		<CheckBox9>
+			<Text>Activeer Windows 8+ Direct naar Veilige Modus.</Text>
+		</CheckBox9>
+		<CheckBox10>
+			<Text>Laat Veilige Modus notificatie zien bij het opstarten</Text>
+		</CheckBox10>
+		<CheckBox11>
+			<Text>Store config file in roaming folder</Text>
+		</CheckBox11>
+		<CheckBox12>
+			<Text>Do not check for DDU updates on startup (NOT Recommended)</Text>
+		</CheckBox12>
+		<CheckBox13>
+			<Text>Remove Geforce Experience (GFE)</Text>
+		</CheckBox13>
+		<CheckBox14>
+			<Text>Remove AMD Crimson Shader Cache folder</Text>
+			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+		</CheckBox14>
+	</frmOptions>
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Launch</Text>
+			<Text2>Reboot to|Safe Mode</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Launch option</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+		</lblNotSafeMode>
+		<cbBootOption>
+			<Item1>Normal</Item1>
+			<Item2>Safe Mode (Recommended)</Item2>
+			<Item3>Safe Mode With Networking</Item3>
+		</cbBootOption>
+	</frmLaunch>
+	<frmLog Text="Extended log">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>	
+	</frmLog>
+	<frmAbout>
+		<Label1>
+			<Text>
+Driver Uninstaller (DDU) / Schoonmaker gemaakt voor Display Drivers.(NVIDIA/AMD/Intel)
+
+Wat het doet is het verwijderen van de display driver uit het apparaatbeheer en het verwijderen van de huidige en alle vorige drivers van de Windows Driver winkel 
+samen met het verwijderen van diensten van NVIDIA/AMD/Intel.
+
+Het resultaat nadat u deze tool gebruikt zal vergelijkbaar zijn alsof je net een nieuwe Windows versie hebt geinstalleerd.
+
+Dit programma is vergelijkbaar met wat Driver sweeper/... doet + het extra bovenvermelde.
+
+Als je problemen hebt met het installeren van oudere driver(s) of nieuwere, probeer dan eens dit programma want er zijn enkele meldingen dat het deze problemen repareert.
+
+AANBEVOLEN GEBRUIK:
+
+- De tool kan gebruikt worden in de normale modus van windows maar voor absolute stabiliteit bij het gebruik, gebruik je DDU in Veilige modus.
+
+- We zouden graag feedback krijgen van jou. Vertel ons als het een succes was of niet.
+
+- Maak een Back-up of een Herstelpunt.(Dit voor de zekerheid maar het zou veilig moeten zijn.)
+
+- Als je een probleem hebt en dit programma je geholpen heeft met jou probleem, deel dit alstublieft.
+
+Hou wel in gedachten dat NVIDIA/AMD/Intel niks met deze programma te maken heeft, wij werken niet voor NVIDIA/AMD/Intel en zij zijn niet verantwoordelijk voor
+eventuele schade of fouten veroorzaakt op uw systeem.
+-------------------------------
+
+Gemaakt door Wagnard.
+
+CO-eigenaar: Shady757
+
+Tester: Dellon132
+
+Logos: juanchacin
+
+Een grote dank aan Jackalito voor de donatie van een AMD 7850.
+
+Dank aan Helge Klein (http://helgeklein.com/setacl/) : Voor de permissie om zijn Programma te mogen gebruiken in DDU "SetAcl"
+
+
+Bedankt aan iedereen die te tijd heeft genomen om te testen : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (Hij nam de tijd om met mij te debuggen) 
+Extraordinary (Het testen van een bug fix)
+
+ en bedankt naar iedereen die zijn systeeem in gevaar heeft gebracht. (speciale dank aan Dellon132)
+
+Vertaler: MojoW
+</Text>
+		</Label1>
+	</frmAbout>
+	<Misc>
+		<Tos>
+			<Text>
+Display Driver Uninstaller ("DDU") GEBRUIKERSOVEREENKOMST
+
+U wordt een gebruiker van DDU ("Gebruiker") door gebruik te maken van de DDU-software. Deze overeenkomst wordt van kracht zodra u het programma gebruikt om een ​​driver te verwijderen.
+
+Door het gebruik van DDU gaat u akkoord met het niet beschuldigen van DDU of zijn makers, en filialen, te beschadigen of negatieve invloed te gedaan hebben op uw PC.
+
+Door het gebruik van DDU erkent u dat NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices ("AMD, Radeon")
+ (Intel) iets te maken hebben met dit programma, en op geen enkele wijze filialen van DDU of zijn makers.
+</Text>
+		</Tos>
+	</Misc>
+</DisplayDriverUninstaller>

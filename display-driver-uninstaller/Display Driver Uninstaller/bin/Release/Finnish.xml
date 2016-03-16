@@ -1,0 +1,292 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="fi" Text="Finnish">
+	<!--
+	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
+	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+
+	Text = Shown to user (as written in english, found on language selection box)
+
+	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
+	[char = replaces]  xml doesn't allow some special chars like <>&"
+	| = newline
+	&amp; = &
+	&quot; = "
+	&gt; = >
+	&lt; = <
+
+	-->
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<Button1>
+			<Text>Puhdista ja käynnistä uudelleen|(Erittäin suositeltavaa)</Text>
+			<Tooltip>Poista nykyiset ja edelliset ajurit ja käynnistä tietokone uudelleen|(Erittäin suositeltavaa)</Tooltip>
+		</Button1>
+		<Button2>
+			<Text>Puhdista ja älä tee mitään|(Voi aiheuttaa ongelmia kuten kuvan menetyksen)</Text>
+			<Tooltip>Poista nykyiset ja edelliset ajurit ja älä käynnistä uudelleen|(Voi aiheuttaa ongelmia kuten kuvan menetyksen)</Tooltip>
+		</Button2>
+		<Button3>
+			<Text>Puhdista ja Sammuta|(Asentaessa uutta näytönohjainta)</Text>
+			<Tooltip>Poista nykyiset ja edelliset ajurit ja sammuta tietokone|(Asentaessa uutta näytönohjainta)</Tooltip>
+		</Button3>
+		<Button4>
+			<Text>Palauta Windowsin automaattinen ajurien asennus oletus asetukseen</Text>
+		</Button4>
+		<Button5>
+			<Text>Näytä laajennettu loki.</Text>
+		</Button5>
+		<Label1>
+			<Text>Havaittu Windows versio:</Text>
+		</Label1>
+		<Label4>
+			<Text>*** Pidätkö ohjelmasta DDU? Harkitse lahjoitusta, mikä auttaa ohjelman kehittämisessä jatkossa. ***</Text>
+		</Label4>
+		<Label5>
+			<Text>Loki :</Text>
+		</Label5>
+		<Label7>
+			<Text>Valitse Näytönohjain ajuri:</Text>
+		</Label7>
+		<Label9>
+			<Text>Huomautus: Mikä tahansa tietokoneelle aiheutettu vaurio tai virhe on omalla vastuullasi.</Text>
+		</Label9>
+		<Label10>
+			<Text>DDU:n käyttäminen vikasietotilassa suositeltavaa</Text>
+		</Label10>
+		<Label11>
+			<Text>Tarkistetaan päivityksiä...</Text>
+			<Text2>Ei löytynyt päivityksiä. Ohjelma on ajantasalla.</Text2>
+			<Text3>Päivityksiä löydetty! Vanhemman version tuki on huonompaa.</Text3>
+			<Text4>Päivityksien hakeminen epäonnistui!</Text4>
+		</Label11>
+		<OptionsToolStripMenuItem>
+			<Text>Asetukset</Text>
+		</OptionsToolStripMenuItem>
+		<ToolStripMenuItem1>
+			<Text>?</Text>
+		</ToolStripMenuItem1>
+		<ToSToolStripMenuItem>
+			<Text>Käyttöehdot</Text>
+		</ToSToolStripMenuItem>
+		<VisitDDUHomepageToolStripMenuItem>
+			<Text>Vieraile virallisella kotisivulla</Text>
+		</VisitDDUHomepageToolStripMenuItem>
+		<SVNToolStripMenuItem>
+			<Text>Vieraile Lähdekoodin verkkosivulla</Text>
+		</SVNToolStripMenuItem>
+		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
+			<Text>Vieraile Guru3d NVIDIA keskustelupalstalla</Text>
+		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
+		<VisitGuru3dAMDThreadToolStripMenuItem>
+			<Text>Vieraile Guru3d AMD keskustelupalstalla</Text>
+		</VisitGuru3dAMDThreadToolStripMenuItem>
+		<VisitGeforceThreadToolStripMenuItem>
+			<Text>Vieraile Geforce keskustelupalstalla</Text>
+		</VisitGeforceThreadToolStripMenuItem>
+		<AboutToolStripMenuItem>
+			<Text>Tietoa</Text>
+		</AboutToolStripMenuItem>
+		<Messages>
+			<Text1>Päivityksiä saatavilla! Vieraile DDU verkkosivulla nyt?</Text1>
+			<Text2>Vanhemman version tuki on huonompaa kuin uuden. Ennen virheiden raportointa, tarkista uusin versio.</Text2>
+			<Text3>Et käytä ohjelmaa järjestelmänvalvojan oikeuksilla. Ohjelma sulkeutuu.</Text3>
+			<Text4>Epäonnistui etsimään tiedostoa 'ddudr'. Tarkista lokitiedosto.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) muokkaa paljon Windowsin rekisteriä. DDU yrittää automaattisesti luoda järjestelmän palautuspisteen (Vain normaalissa tilassa).</Text5>
+			<Text6>Ohjelman sisäinen virhe. Lähetä lokitiedostot kehittäjälle.</Text6>
+			<Text7>DDU havaitsi että sinulla on AMD:n kannettava tietokone Enduro teknologialla (tai vastaava), DDU ei ole vielä täysin yhteensopiva / testattu kyseisen teknologian kanssa. Käyttö omalla vastuulla.</Text7>
+			<Text8>DDU havaitsi että ET OLE vikasietotilassa... Paremman puhdistuksen saamiseksi, on suositeltavaa käynnistää vikasietotilaan.</Text8>
+			<Text9>DDU muutti asetusta joka estää automaattisten ajurien asennuksen Windows Update:sta. Voit asettaa sen takaisin oletusasetukseen jos haluat, uusien ajurien asennuksen jälkeen.</Text9>
+			<Text10>Puhdan asennuksen poisto on valmis! Haluaisitko sulkea ohjelman?</Text10>
+			<Text11>Valmis!</Text11>
+			<Text12>Et ole vikasietotilassa. On erittäin suositeltavaa käynnistää uudelleen vikasietotilaan virheiden välttämiseksi. Käynnistä uudelleen vikasietotilaan?</Text12>
+			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text14>Täällä on odottava uudellenkäynnistys jonossa, Käynnistä uudelleen ennen ohjelman käyttöä.</Text14>
+		</Messages>
+		<UpdateLog>
+			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
+			<Text2>Cleaning Directory</Text2>
+			<Text3>Cleaning known Regkeys... May take a minute or two.</Text3>
+			<Text4>Cleaning UpdatusUser users account if present.</Text4>
+			<Text5>Cleaning Directory</Text5>
+			<Text6>Starting Registry CleanUP</Text6>
+			<Text7>Finished cleaning Registry</Text7>
+			<Text8>Starting the removal of nVidia Optimus UpperFilter if present.</Text8>
+			<Text9>Scanning for new device...</Text9>
+			<Text10>Clean uninstall completed!</Text10>
+			<Text11>DDU Version:</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Detected :</Text13>
+			<Text14>GPU DeviceId :</Text14>
+			<Text15>Detected Driver(s) Version(s) :</Text15>
+			<Text16>INF :</Text16>
+			<Text17>INF Section :</Text17>
+			<Text18>GPU not Correctly Installed :</Text18>
+			<Text19>Deleting some specials folders, it may take some times...</Text19>
+			<Text20>CleanUP started...</Text20>
+			<Text21>Uninstalling</Text21>
+			<Text22>driver</Text22>
+			<Text23>Executing ddudr Remove , Please wait(can take a few minutes)</Text23>
+			<Text24>GPU(s) Removed from Device Manager.</Text24>
+			<Text25>Executing DDUDR Remove Audio controller.</Text25>
+			<Text26>HD audio adapters Removed !</Text26>
+			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
+			<Text28>Monitors and Hidden monitors removed !</Text28>
+			<Text29>ddudr Remove complete</Text29>
+			<Text30>Starting S-1-5-xx region cleanUP</Text30>
+			<Text31>End of S-1-5-xx region cleanUP</Text31>
+			<Text32>Begin Classesroot ,installer\products cleanup</Text32>
+			<Text33>End Classesroot ,installer\products cleanup</Text33>
+			<Text34>Start localmachine ,installer\products cleanup</Text34>
+			<Text35>End localmachine ,installer\products cleanup</Text35>
+			<Text36>Start currentuser ,installer\products cleanup</Text36>
+			<Text37>End currentuser ,installer\products cleanup</Text37>
+			<Text38>Cleaning process/services...</Text38>
+			<Text39>Process/Services CleanUP Complete</Text39>
+			<Text40>Deleted.</Text40>
+			<Text41>Value removed.</Text41>
+			<Text42>File Deleted.</Text42>
+		</UpdateLog>
+	</frmMain>
+	<frmOptions Text="Asetukset">
+		<Label1>
+			<Text>Näytönohjaimen asetukset</Text>
+		</Label1>
+		<Label2>
+			<Text>Yleiset asetukset</Text>
+		</Label2>
+		<CheckBox1>
+			<Text>Poista "C:\nVidia" ajuri kansiot (EI suositeltavaa) </Text>
+		</CheckBox1>
+		<CheckBox2>
+			<Text>Tallenna lokitiedostot ohjelman pääkansioon (Erittäin suositeltavaa)</Text>
+		</CheckBox2>
+		<CheckBox3>
+			<Text>Poista PhysX</Text>
+		</CheckBox3>
+		<CheckBox4>
+			<Text>Poista 3DTV Play</Text>
+		</CheckBox4>
+		<CheckBox5>
+			<Text>Luo järjestelmän palautuspiste (jos mahdollista)</Text>
+		</CheckBox5>
+		<CheckBox6>
+			<Text>Poista nykyiset ja edelliset näytöt(Suositeltavaa)</Text>
+		</CheckBox6>
+		<CheckBox7>
+			<Text>Poista AMD Audio Bus</Text>
+		</CheckBox7>
+		<CheckBox8>
+			<Text>Poista "C:\AMD" ajuri kansiot (EI suositeltavaa) </Text>
+		</CheckBox8>
+		<CheckBox9>
+			<Text>Poista AMDKMPFD ajuri (Varmuuskopio AMD piirisarjan omistaville suositeltavaa)</Text>
+		</CheckBox9>
+		<CheckBox10>
+			<Text>Näytä käynnistysvalinta ikkuna käynnistäessä</Text>
+		</CheckBox10>
+		<CheckBox11>
+			<Text>Tallenna asetukset 'Roaming' kansioon</Text>
+		</CheckBox11>
+		<CheckBox12>
+			<Text>Älä tarkista ohjelman päivityksiä käynnistäessä (EI suositeltavaa)</Text>
+		</CheckBox12>
+		<CheckBox13>
+			<Text>Poista Geforce Experience (GFE)</Text>
+		</CheckBox13>
+		<CheckBox14>
+			<Text>Poista AMD Crimson Shader Cache kansio</Text>
+			<Tooltip>Suositeltavaa jos ilmenee grafiikka ongelmia (nopeus tai virheet kuvassa) korruptoituneiden varjostimien välimuistin takia.|Myös suositeltavaa jos ole vaihtamassa näytönohjain valmistajan merkkiä kuten Nvidiaan</Tooltip>
+		</CheckBox14>
+	</frmOptions>
+	<frmLaunch Text="Käynnistysvalinta">
+		<btnAccept>
+			<Text>Käynnistä</Text>
+			<Text2>Käynnistä uudelleen|Vikasietotilaan</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Sulje</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Käynnistysvalinta</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>Et ole vikasietotilassa. On erittäin suositeltavaa|käynnistää uudelleen vikasietotilaan</Text>
+		</lblNotSafeMode>
+		<cbBootOption>
+			<Item1>Normaali</Item1>
+			<Item2>Vikasietotila (Suositeltavaa)</Item2>
+			<Item3>Vikasietotila verkkoyhteyksillä</Item3>
+		</cbBootOption>
+	</frmLaunch>
+	<frmLog Text="Laajennettu loki" >
+		<btnClose>
+			<Text>Sulje</Text>
+		</btnClose>	
+	</frmLog>
+	<frmAbout>
+		<Label1>
+			<Text>
+Display Driver Uninstaller (DDU) / Puhdistusohjelma näytönohjain (GPU) Ajureille. (NVIDIA/AMD)
+
+Ohjelma poistaa nykyiset ja kaikki edelliset ajurit Laitehallinnasta ja Windowsin ajurihakemistoista
+kuten myös ajurien palvelut.
+
+Vaikutus ohjelman käyttämisen jälkeen on samankaltainen kuin Windows olisi uudelleenasennettu.
+
+Tämä ohjelma toimii kuten ohjelma "Driver Sweeper"* ja sisältää kaikki uudet yllämainitut ominaisuudet.
+
+Jos sinullla on ongelmia vanhan tai uuden ajurin asennuksessa, anna ohjelmalle mahdollisuus. Ohjelmasta löytyy
+useita palautteita ongelmien korjaantumisista ohjelman käytön jälkeen.
+
+
+SUOSITELTAVA KÄYTTÖ:
+
+- Ohjelmaa voi käyttää normaalissa tilassa (työpöydällä), mutta parhaan toimivuuden vuoksi,
+ohjelman käyttäminen vikasietotilassa on suositeltavaa.
+
+- Haluaisimme palautetta ohjelman toiminnasta, kerro jos ohjelma auttoi sinua tai ei toiminut.
+
+- Luo varmuuskopio tai järjestelmän palautuspiste. (ohjelman pitäisi olla kuitenkin turvallinen)
+
+- Jos sinulla on tai oli ajuri ongelmia, ja tämä ohjelma auttoi ongelmissa joita sinulla on tai oli,
+kertokaa tuloksista eteenpäin.
+
+- Huomioikaa että yrityksiä NVIDIA, AMD ja/tai Microsoft ei voi pitää vastuussa mistään vahingoista
+tietokoneellesi ja eivät ole missään suhteessa tekemisissä ohjelman "DDU" tai sen luojien kanssa.
+-------------------------------
+
+Luoja : Wagnard.
+
+Osa-luoja: Shady757
+
+Testaaja : Dellon132
+
+Logot : juanchacin
+
+Suuri kiitos 'Jackalito':lle näytönohjaimen AMD 7850:n lahjoituksesta.
+
+Kiitos 'Helge Klein':lle (http://helgeklein.com/setacl/) : luvasta käyttää häen ohjelmiaan "DDU":n kanssa.
+
+Suuri kiitos ajasta ja testaamisesta käyttäjille : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (testaukseen käytetystä ajasta)
+Extraordinary (ohjelmistovirheiden korjauksien testaamisista)
+
+Kiitos kaikille jotka ovat laittaneen tietokoneenne vaaraan testatessaan (erityiset kiitokset käyttäjälle 'Dellon132')
+
+*"DDU", tai sen luojat ja tukijat eivät ole missään suhteessa tekemisissä ohjelman "Driver Sweeper" tai sen luojien kanssa.
+</Text>
+		</Label1>
+	</frmAbout>
+	<Misc>
+		<Tos>
+			<Text>
+Display Driver Uninstaller ("DDU") KÄYTTÖEHDOT
+
+Sinusta tulee ohjelman "DDU" ("Käyttäjä") käyttämällä ohjelmaa. Tämä ehto tulee voimaan heti kun olet käyttänyt ohjelmaa ajurien poistamiseen.
+
+Käyttämällä ohjelmaa "DDU" hyväksyt että et syytä ohjelmaa "DDU" tai sen luojia, ja tukijoita, tietokoneen vahingoittamisesta tai toimivuuden heikentämisestä.
+
+Käyttämällä ohjelmaa "DDU" tiedostat että yrityksillä NVIDIA ("NVIDIA, GeForce") ja/tai Advanced Micro Devices ("AMD, Radeon") ei ole
+mitään tekemistä tämän ohjelman kanssa ja eivät ole missään suhteessa tekemisissä ohjelman "DDU" tai sen luojien kanssa.
+</Text>
+		</Tos>
+	</Misc>
+</DisplayDriverUninstaller>

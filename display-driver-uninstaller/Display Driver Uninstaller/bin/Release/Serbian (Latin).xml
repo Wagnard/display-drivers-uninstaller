@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="sr2" Text="Serbian (Latin)">
+	<!--
+	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
+	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+
+	Text = Shown to user (as written in english, found on language selection box)
+
+	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
+	[char = replaces]  xml doesn't allow some special chars like <>&"
+	| = newline
+	&amp; = &
+	&quot; = "
+	&gt; = >
+	&lt; = <
+
+	-->
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<Button1>
+			<Text>Ukloni i restartuj kompjuter|(Preporučljivo)</Text>
+			<Tooltip>Ukloni trenutne i prethodne zaostale drajvere, nakon toga restartuj kompjuter.|(Preporučljivo)</Tooltip>
+		</Button1>
+		<Button2>
+			<Text>Ukloni i NEMOJ restartovati kompjuter|(Može dovesti do problema kao što su zacrnjenje ekrana)</Text>
+			<Tooltip>Ukloni trenutne i prethodne zaostale drajvere, ali NEMOJ restartovati kompjuter.|(Može dovesti do problema kao što su zacrnjenje ekrana)</Tooltip>
+		</Button2>
+		<Button3>
+			<Text>Ukloni i ugasi kompjuter|(Za ugradnju/instalaciju nove grafičke kartice)</Text>
+			<Tooltip>Obriši trenutne i prethodne zaostale drajvere i ugasi kompjuter, bez ponovnog skeniranja|(Za ugradnju/instalaciju nove grafičke kartice)</Tooltip>
+		</Button3>
+		<Button4>
+			<Text>Windows automatsku instalaciju drajvera vrati na Default (uključi)</Text>
+		</Button4>
+		<Button5>
+			<Text>Prikaži prošireni izveštaj (log).</Text>
+		</Button5>
+		<Label1>
+			<Text>Detektovana verzija Windows-a:</Text>
+		</Label1>
+		<Label4>
+			<Text>*** Sviđa vam se DDU? Razmislite o donaciji, pomozite dalji razvoj programa. ***</Text>
+		</Label4>
+		<Label5>
+			<Text>Izveštaj (log):</Text>
+		</Label5>
+		<Label7>
+			<Text>Odaberi drajver za graf.karticu:</Text>
+		</Label7>
+		<Label9>
+			<Text>Napomena: Bilo kakva šteta ili greške prouzrokovane Vašem kompjuteru isključivo su Vaša odgovornost!</Text>
+		</Label9>
+		<Label10>
+			<Text>Korišćenje DDU u Safe Mode-u je preporučljivo!</Text>
+		</Label10>
+		<Label11>
+			<Text>Provera da li postoji novija verzija programa...</Text>
+			<Text2>Ne postoji novija verzija programa. Koristite trenutno najnoviju verziju.</Text2>
+			<Text3>Pronađena novija verzija programa! Starije verzije imaju ograničenu podršku uodnosu na novije.</Text3>
+			<Text4>Neuspešan prelazak na novu verziju programa!</Text4>
+		</Label11>
+		<OptionsToolStripMenuItem>
+			<Text>Options</Text>
+		</OptionsToolStripMenuItem>
+		<ToolStripMenuItem1>
+			<Text>?</Text>
+		</ToolStripMenuItem1>
+		<ToSToolStripMenuItem>
+			<Text>ToS</Text>
+		</ToSToolStripMenuItem>
+		<VisitDDUHomepageToolStripMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomepageToolStripMenuItem>
+		<SVNToolStripMenuItem>
+			<Text>Visit SVN Website</Text>
+		</SVNToolStripMenuItem>
+		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
+		<VisitGuru3dAMDThreadToolStripMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3dAMDThreadToolStripMenuItem>
+		<VisitGeforceThreadToolStripMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceThreadToolStripMenuItem>
+		<AboutToolStripMenuItem>
+			<Text>About</Text>
+		</AboutToolStripMenuItem>
+		<Messages>
+			<Text1>Nova verzija je raspoloživa! Želite li sada da posetite DDU sajt?</Text1>
+			<Text2>Očekujte ograničenu podršku za starije verzije uodnosu na trenutno najnovije. Molimo pokušajte sa najnovijom verzijom pre prijavljivanja grešaka.</Text2>
+			<Text3>Trenutno ne koristite DDU sa Administratorskim privilegijama. Aplikacija će sada prestati sa radom.</Text3>
+			<Text4>Nije moguće pronaći ddudr. Pogledajte log fajl.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) vrši prilične modifikacije Windows Registry-a. DDU će pokušati da automatski kreira System Restore point (samo u Normal Mode-u Windows-a).</Text5>
+			<Text6>Nastao je problem u jednom od programskih modula, pošaljite vaše DDU log-ove kreatoru programa.</Text6>
+			<Text7>DDU je detektovao da koristite laptop sa AMD switching grafikom (Enduro ili ekvivalent), DDU još uvek nije potpuno kompatibilan / testiran sa Enduro sistemima, koristite ga na svoj rizik.</Text7>
+			<Text8>DDU je detektovao da NISTE u Safe Mode-u... Za bolje uklanjanje drajvera bez posledica, preporučljivo je da restartujete Windows u Safe Mode-u.</Text8>
+			<Text9>DDU je promenio podešavanja koja ne dozvoljavaju automatsku instalaciju drajvera putem Windows Update-a. Možete ova podešavanja vratiti na podrazumevanu vrednost, ako želite NAKON instalacije novih drajvera.</Text9>
+			<Text10>Uklanjanje drajvera ja završeno! Da li želite da izađete iz programa?</Text10>
+			<Text11>Završeno!</Text11>
+			<Text12>Niste u Windows Safe Mode-u. Preporučljivo je da restartujete Windows u Safe Mode-u da bi izbegli moguće probleme. Želite li da startujete Windows u Safe Mode-u?</Text12>
+			<Text13>Ovo treba da izaberete na plavom Recovery ekranu: Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text14>Neophodan je restart sistema, molimo da prvo restartujete operativni sistem pa tek onda nastavite sa korišćenjem DDU programa.</Text14>
+		</Messages>
+		<UpdateLog>
+			<Text1>Izvršavanje Driver Store cleanUP-a (brisanje OEM step-a)...</Text1>
+			<Text2>Čišćenje Directory-a</Text2>
+			<Text3>Čišćenje poznatih Registry ključeva... Može potrajati do minut-dva.</Text3>
+			<Text4>Čišćenje UpdatusUser users account-a ako je prisutan.</Text4>
+			<Text5>Čišćenje Directory-a</Text5>
+			<Text6>Početak Registry CleanUP procedure</Text6>
+			<Text7>Kraj čišćenja Registry-a</Text7>
+			<Text8>Početak uklanjanja nVidia Optimus UpperFilter-a ako je pristutan.</Text8>
+			<Text9>Skeniranje novih uređaja...</Text9>
+			<Text10>Procedura ćišćenja je završena!</Text10>
+			<Text11>DDU verzija:</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Detektovan :</Text13>
+			<Text14>GPU DeviceId :</Text14>
+			<Text15>Detektovana verzija (verzije) drajvera :</Text15>
+			<Text16>INF :</Text16>
+			<Text17>INF sekcija :</Text17>
+			<Text18>GPU nije pravilno instaliran :</Text18>
+			<Text19>Brisanje specijalnih direktorijuma, može potrajati...</Text19>
+			<Text20>CleanUP procedura startovana...</Text20>
+			<Text21>Deinstalacija</Text21>
+			<Text22>drajvera</Text22>
+			<Text23>Izvršavanje ddudr Remove procedure, molimo sačekajte (može potrajati do par minuta)</Text23>
+			<Text24>GPU uklonjen (uklonjeni) iz Device Manager-a.</Text24>
+			<Text25>Izvršavanje DDUDR Remove Audio controller procedure.</Text25>
+			<Text26>HD audio adapter-i uklonjeni!</Text26>
+			<Text27>3D Vision USB Adapter uklonjen iz Device Manager-a.</Text27>
+			<Text28>Monitor-i i Hidden monitor-i uklonjeni!</Text28>
+			<Text29>Kraj ddudr Remove procedure</Text29>
+			<Text30>Početak S-1-5-xx region cleanUP procedure</Text30>
+			<Text31>Kraj S-1-5-xx region cleanUP procedure</Text31>
+			<Text32>Početak Classesroot ,installer\products cleanup procedure</Text32>
+			<Text33>Kraj Classesroot ,installer\products cleanup procedure</Text33>
+			<Text34>Početak localmachine ,installer\products cleanup procedure</Text34>
+			<Text35>Kraj localmachine ,installer\products cleanup procedure</Text35>
+			<Text36>Početak currentuser ,installer\products cleanup procedure</Text36>
+			<Text37>Kraj currentuser ,installer\products cleanup pocedure</Text37>
+			<Text38>Početak Process/Services CleanUP procedure...</Text38>
+			<Text39>Process/Services CleanUP procedura završena</Text39>
+			<Text40>Obrisano.</Text40>
+			<Text41>Vrednost uklonjena.</Text41>
+			<Text42>Fajl obrisan.</Text42>
+		</UpdateLog>
+	</frmMain>
+	<frmOptions Text="Opcije">
+		<Label1>
+			<Text>GPU specifične opcije</Text>
+		</Label1>
+		<Label2>
+			<Text>Glavne opcije</Text>
+		</Label2>
+		<CheckBox1>
+			<Text>Ukloni: "C:\nVidia"  ...drajver direktorijume (foldere) (NIJE PREPORUČLJIVO!) </Text>
+		</CheckBox1>
+		<CheckBox2>
+			<Text>Snimi izveštaj (log) fajlove u startni direktorijum (preporučljivo)</Text>
+		</CheckBox2>
+		<CheckBox3>
+			<Text>Ukloni PhysX</Text>
+		</CheckBox3>
+		<CheckBox4>
+			<Text>Ukloni 3DTV Play</Text>
+		</CheckBox4>
+		<CheckBox5>
+			<Text>Kreiraj System Restore Point (ako je moguće)</Text>
+		</CheckBox5>
+		<CheckBox6>
+			<Text>Uklonite postojeće monitore i one koji nisu prisutni\n(preporučljivo)</Text>
+		</CheckBox6>
+		<CheckBox7>
+			<Text>Ukloni: AMD Audio Bus</Text>
+		</CheckBox7>
+		<CheckBox8>
+			<Text>Ukloni: "C:\AMD"  ...drajver direktorijume (foldere) (NIJE PREPORUČLJIVO!) </Text>
+		</CheckBox8>
+		<CheckBox9>
+			<Text>Ukloni drajver/filter AMDKMPFD (preporučljivo napraviti rezervnu kopiju za AMD čipset-e)</Text>
+		</CheckBox9>
+		<CheckBox10>
+			<Text>Prikaži Safe Mode poruku pri startovanju</Text>
+		</CheckBox10>
+		<CheckBox11>
+			<Text>Sačuvaj konfiguracioni fajl u roaming direktorijumu\n (folderu)</Text>
+		</CheckBox11>
+		<CheckBox12>
+			<Text>Nemoj proveravati da li postoji nova DDU verzija prilikom\n startovanja (nije preporučljivo)</Text>
+		</CheckBox12>
+		<CheckBox13>
+			<Text>Ukloni Geforce Experience (GFE)</Text>
+		</CheckBox13>
+		<CheckBox14>
+			<Text>Ukloni AMD Crimson Shader Cache direktorijum (folder)</Text>
+			<Tooltip>Preporučljivo ukloniti ako primetite anomalije u vezi prikaza grafike (usporenja ili artefakte) prouzrokovane oštećenim Shader Cache podacima.|Takođe preporučljivo ukloniti ako prelazite na drugog proizvođača grafičkih kartica, neku nVidia GeForce grafičku karticu recimo.</Tooltip>
+		</CheckBox14>
+	</frmOptions>
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Launch</Text>
+			<Text2>Reboot to|Safe Mode</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Launch option</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+		</lblNotSafeMode>
+		<cbBootOption>
+			<Item1>Normal</Item1>
+			<Item2>Safe Mode (Recommended)</Item2>
+			<Item3>Safe Mode With Networking</Item3>
+		</cbBootOption>
+	</frmLaunch>
+	<frmLog Text="Extended log">
+     	<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmLog>
+	<frmAbout>
+		<Label1>
+			<Text>
+  Display Driver Uninstaller (DDU) / Program namenjen za uklanjanje (GPU) drajvera.(NVIDIA/AMD)
+
+  Ono šta ovaj program radi je uklanjanje (GPU) drajvera za grafičku karticu iz Device Manager-a i uklanjanje trenutnih i svih
+zaostalih drajvera iz Windows Driver store-a zajedno sa svim NVIDIA/AMD-a servisima u vezi sa drajverima za grafičku karticu.
+
+  Trenutni efekat nakon upotrebe ovog programa sličan je kao kada je Windows u "sveže instaliranom" stanju.
+
+
+
+  Ovaj program ponaša se vrlo slično programu "Driver Sweeper" i ima sve dodatne pogodnosti pomenute iznad.
+
+
+
+  Ako imate nekih problema pri instalaciji starijeg ili nekog novijeg drajvera za NVIDIA/AMD grafičku karticu dajte ovom
+programu šansu jer ima brojnih potvrda o tome da je ovaj program mnogima rešio probleme sa uklanjanjem starih i instalacijom
+novih drajvera za grafičku karticu, možda će rešiti i Vaš problem.
+
+  PREPORUKE ZA UPOTREBU:
+
+
+
+- Program može biti korišćen u normalnom Windows modu, ali za apsolutnu stabilnost kada koristite DDU Windows-ov Safe Mode
+  je uvek najbolje rešenje.
+
+- Želeli bi da dobijemo povratnu informaciju od Vas, javite nam da li je Vaše korišćenje ovog programa bilo uspešno ili nije.
+
+- Pre korišćenja ovog programa poželjno je da napravite Backup ili System Restore (u normalnim okolnostima program DDU je
+  prilično bezbedan).
+
+
+- Ako imate ili ste imali problema sa drajverima za NVIDIA/AMD grafičku karticu, a ovaj program Vam je pomogao u rešavanju tih
+  problema u kojima ste bili ili ste trenutno, molimo da podelite Vaše iskustvo sa nama.
+
+  Imajte na umu da ni NVIDIA, AMD ili Microsoft ne mogu biti odgovorni za bilo kakvu štetu načinjenu Vama ili Vašem kompjuteru
+i nisu niukakvoj vezi sa programom DDU ili kreatorima istog.
+
+
+-------------------------------
+
+
+
+Program kreirao: Wagnard
+
+Suvlasnik: Shady757
+
+
+Tester: Dellon132
+
+Logo-i: juanchacin
+
+
+Zahvaljujemo se: Helge Klein (http://helgeklein.com/setacl/) za odobrenje za korišćenje njegovog programa sa DDU
+
+
+Velika zahvalnost za vreme odvojeno za testiranje: Gamer1291 (optimus) i Octopuss (Amd Enduro)
+
+Hvala svima onima koji su svoje kompjutere tokom test-korišćenja ovog programa izložili riziku (posebna zahvalnost: Dellon132)
+.
+Prevod na srpski jezik (latinica): Crazy_Milojko
+
+  *DDU, njegovi kreatori i ostali koji su učestvovali u kreiranju programa nisu niukakvoj vezi sa programom Driver Sweeper ili
+njegovim kreatorima.
+</Text>
+		</Label1>
+	</frmAbout>
+	<Misc>
+		<Tos>
+			<Text>
+Display Driver Uninstaller ("DDU") KORISNIČKI UGOVOR (USER AGREEMENT)
+
+Korisnik ("User") programa DDU postajete njegovim korišćenjem. Ovaj ugovor postaje važeći odmah nakon Vašeg korišćenja ovog programa da biste uklonili drajver.
+
+Korišćenjem programa DDU saglasni ste da nećete kriviti DDU ili njegove kreatore i one koji su učestvovali u izradi programa za eventualnu štetu nastalu na Vašem PC kompjuteru.
+
+Korišćenjem programa DDU stavljeno Vam je do znanja da ni NVIDIA ("NVIDIA, GeForce") ni Advanced Micro Devices ("AMD, Radeon") nemaju nikakve veze sa ovim programom i nisu niukakvoj vezi sa programom DDU ili njegovim kreatorima.
+</Text>
+		</Tos>
+	</Misc>
+</DisplayDriverUninstaller>
