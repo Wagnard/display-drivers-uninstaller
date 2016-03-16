@@ -6158,33 +6158,33 @@ Public Class frmMain
                             Else
                                 If safemodemb = True Then
                                     If Not silent Then
-                                        Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
+                                        'Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
 
 
-                                        Using frmSafeBoot As New frmLaunch
-                                            frmSafeBoot.Topmost = True
+                                        'Using frmSafeBoot As New frmLaunch
+                                        '    frmSafeBoot.Topmost = True
 
-                                            If frmSafeBoot.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then
-                                                bootOption = frmSafeBoot.selection
-                                            Else
-                                                bootOption = -1
-                                            End If
-                                        End Using
+                                        '    If frmSafeBoot.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then
+                                        '        bootOption = frmSafeBoot.selection
+                                        '    Else
+                                        '        bootOption = -1
+                                        '    End If
+                                        'End Using
 
-                                        Select Case bootOption
-                                            Case 0 'normal
-                                                Exit Select
-                                            Case 1 'SafeMode
-                                                restartinsafemode(False)
-                                                Exit Sub
-                                            Case 2 'SafeMode with network
-                                                restartinsafemode(True)
-                                                Exit Sub
-                                            Case Else '-1 = Close
-                                                Me.Topmost = False
-                                                closeddu()
-                                                Exit Sub
-                                        End Select
+                                        'Select Case bootOption
+                                        '    Case 0 'normal
+                                        '        Exit Select
+                                        '    Case 1 'SafeMode
+                                        '        restartinsafemode(False)
+                                        '        Exit Sub
+                                        '    Case 2 'SafeMode with network
+                                        '        restartinsafemode(True)
+                                        '        Exit Sub
+                                        '    Case Else '-1 = Close
+                                        '        Me.Topmost = False
+                                        '        closeddu()
+                                        '        Exit Sub
+                                        'End Select
                                         ' Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn(11), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
 
                                         'If resultmsgbox = DialogResult.Cancel Then

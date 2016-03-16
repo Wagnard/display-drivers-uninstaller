@@ -1,0 +1,11 @@
+﻿<Window x:Name="frmLaunch" x:Class="frmLaunch"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="frmLaunchxaml" Height="300" Width="300">
+    <Grid>
+        <ComboBox x:Name="cbBootOption" HorizontalAlignment="Left" Margin="10,119.268,0,0" VerticalAlignment="Top" Width="272"/>
+        <Button x:Name="btnAccept" Content="Button" HorizontalAlignment="Left" Margin="10,239.04,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.279,1.271"/>
+        <Button x:Name="btnClose" Content="Button" HorizontalAlignment="Left" Margin="207,239.04,0,0" VerticalAlignment="Top" Width="75"/>
+
+    </Grid>
+</Window>

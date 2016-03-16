@@ -242,23 +242,24 @@ notFound:
             Dim text = GetTranslation(form, ctrl.Name, "Text")
 
             If Not String.IsNullOrEmpty(text) Then
-                ctrl.text = text
+                ' ctrl.text = text
+
             End If
 
             If tp IsNot Nothing Then
                 Dim tooltip As String = GetTranslation(form, ctrl.Name, "Tooltip")
 
                 If Not String.IsNullOrEmpty(tooltip) Then
-                    tp.SetToolTip(ctrl, tooltip)
+                    '        tp.SetToolTip(ctrl, tooltip)
                 End If
             End If
         End If
 
-        For Each c As Control In ctrl.controls
-            If (c.HasChildren) Then
-                TranslateControl(form, c, tp)
-            End If
-        Next
+        'For Each c As Control In ctrl.controls
+        '    If (c.HasChildren) Then
+        '        TranslateControl(form, c, tp)
+        '    End If
+        'Next
 
 
     End Sub
