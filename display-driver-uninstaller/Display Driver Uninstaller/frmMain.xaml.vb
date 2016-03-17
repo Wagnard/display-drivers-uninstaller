@@ -57,7 +57,7 @@ Public Class frmMain
     Dim toolTip1 As New ToolTip()
     Dim reboot As Boolean = False
     Dim shutdown As Boolean = False
-    Public Shared baseDir As String = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+	Public Shared baseDir As String = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
     Public Shared win8higher As Boolean = False
     Public win10 As Boolean = False
     Public Shared winxp As Boolean = False
@@ -5419,38 +5419,38 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles ComboBox2.SelectionChanged
+	Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
+		If cbLanguage.SelectedItem IsNot Nothing Then
+			InitLanguage(False, CType(cbLanguage.SelectedItem, Languages.LanguageOption))
+		End If
 
-        If ComboBox2.SelectedItem IsNot Nothing Then
-            InitLanguage(False, CType(ComboBox2.SelectedItem, Languages.LanguageOption))
-        End If
-        Checkupdates2()
-    End Sub
+		Checkupdates2()
+	End Sub
 
-    Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.MouseLeftButtonUp
-        settings.setconfig("donate", "true")
+	Private Sub PictureBox1_Click(sender As Object, e As EventArgs)
+		settings.setconfig("donate", "true")
 
-        'Create the ddu.bat file
-        Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
-        sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-        sw.Flush()
-        sw.Close()
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
+		sw.WriteLine(Chr(34) + baseDir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+		sw.Flush()
+		sw.Close()
 
-        Dim UserTokenHandle As IntPtr = IntPtr.Zero
-        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-        Dim StartInfo As New WindowsApi.STARTUPINFOW
-        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-        If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-        Else
-            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-        End If
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, baseDir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
 
-        If Not UserTokenHandle = IntPtr.Zero Then
-            WindowsApi.CloseHandle(UserTokenHandle)
-        End If
-    End Sub
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
 
 
 
@@ -5603,10 +5603,9 @@ Public Class frmMain
     End Sub
 
 
+
     Private Sub frmMain_Loaded(sender As Object, e As RoutedEventArgs)
         Try
-
-
             'We try to create config.cfg if non existant.
             If roamingcfg = True Then
                 My.Computer.FileSystem.CreateDirectory(userpthn & "\Display Driver Uninstaller")
@@ -6133,130 +6132,126 @@ Public Class frmMain
 
 
                 'here I check if the process is running on system user account. if not, make it so.
-                If Not MyIdentity.IsSystem Then
-                    'This code checks to see which mode Windows has booted up in.
-                    Dim processstopservice As New Process
-                    Select Case System.Windows.Forms.SystemInformation.BootMode
-                        Case BootMode.FailSafeWithNetwork, BootMode.FailSafe 'Merged both boot options (same code 1:1) (WARNING, we cannot use "OR" with "Case", we must use a ",")
-                            'The computer was booted using only the basic files and drivers.
-                            'This is the same as Safe Mode
-                            safemode = True
+				If Not MyIdentity.IsSystem Then
+					'This code checks to see which mode Windows has booted up in.
+					Dim processstopservice As New Process
+					Select Case System.Windows.Forms.SystemInformation.BootMode
+						Case BootMode.FailSafeWithNetwork, BootMode.FailSafe 'Merged both boot options (same code 1:1) (WARNING, we cannot use "OR" with "Case", we must use a ",")
+							'The computer was booted using only the basic files and drivers.
+							'This is the same as Safe Mode
+							safemode = True
 
-                            If winxp = False Then
-                                Dim setbcdedit As New ProcessStartInfo
-                                setbcdedit.FileName = "cmd.exe"
-                                setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-                                setbcdedit.UseShellExecute = False
-                                setbcdedit.CreateNoWindow = True
-                                setbcdedit.RedirectStandardOutput = False
+							If winxp = False Then
+								Dim setbcdedit As New ProcessStartInfo
+								setbcdedit.FileName = "cmd.exe"
+								setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
+								setbcdedit.UseShellExecute = False
+								setbcdedit.CreateNoWindow = True
+								setbcdedit.RedirectStandardOutput = False
 
-                                processstopservice.StartInfo = setbcdedit
-                                processstopservice.Start()
-                                processstopservice.WaitForExit()
-                                processstopservice.Close()
-                            End If
-                        Case BootMode.Normal
-                            safemode = False
+								processstopservice.StartInfo = setbcdedit
+								processstopservice.Start()
+								processstopservice.WaitForExit()
+								processstopservice.Close()
+							End If
+						Case BootMode.Normal
+							safemode = False
 
-                            If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
-                                If restart Then  'restart command line argument
-                                    restartinsafemode()
-                                    Exit Sub
-                                Else
-                                    If safemodemb = True Then
-                                        If Not silent Then
-                                            'Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
+							If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
+								If restart Then	 'restart command line argument
+									restartinsafemode()
+									Exit Sub
+								Else
+									If safemodemb = True Then
+										If Not silent Then
+											Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
+											Dim frmSafeBoot As New frmLaunch
 
+											With frmSafeBoot
+												.Topmost = True
+												.ShowInTaskbar = False
+												.ResizeMode = Windows.ResizeMode.NoResize
+												.Owner = Application.Current.MainWindow
+											End With
 
-                                            'Using frmSafeBoot As New frmLaunch
-                                            '    frmSafeBoot.Topmost = True
+											Me.Visibility = Windows.Visibility.Hidden
+											' frmMain could be Invisible from start and shown AFTER all "processing"
+											' (WPF renders UI too fast which cause 'flash' before frmLaunch on start)
 
-                                            '    If frmSafeBoot.ShowDialog(Me) = Windows.Forms.DialogResult.OK Then
-                                            '        bootOption = frmSafeBoot.selection
-                                            '    Else
-                                            '        bootOption = -1
-                                            '    End If
-                                            'End Using
+											Dim launch As Boolean? = frmSafeBoot.ShowDialog()
+											Me.Visibility = Windows.Visibility.Visible
 
-                                            'Select Case bootOption
-                                            '    Case 0 'normal
-                                            '        Exit Select
-                                            '    Case 1 'SafeMode
-                                            '        restartinsafemode(False)
-                                            '        Exit Sub
-                                            '    Case 2 'SafeMode with network
-                                            '        restartinsafemode(True)
-                                            '        Exit Sub
-                                            '    Case Else '-1 = Close
-                                            '        Me.Topmost = False
-                                            '        closeddu()
-                                            '        Exit Sub
-                                            'End Select
-                                            ' Dim resultmsgbox As Integer = MessageBox.Show(msgboxmessagefn(11), "Safe Mode?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+											If launch IsNot Nothing AndAlso launch Then
+												bootOption = frmSafeBoot.selection
+											End If
 
-                                            'If resultmsgbox = DialogResult.Cancel Then
-                                            '
-                                            ' Me.TopMost = False
-                                            'closeddu()
-                                            'Exit Sub
-                                            ' ElseIf resultmsgbox = DialogResult.No Then
-                                            'do nothing and continue without safe mode
-                                            'ElseIf resultmsgbox = DialogResult.Yes Then
-                                            'restartinsafemode(False)
-                                            ' Exit Sub
-                                            ' End If
-                                        End If
-                                    End If
-                                End If
-                            Else
-                                MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text8"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                            End If
+											Select Case bootOption
+												Case 0 'normal
+													Exit Select
+												Case 1 'SafeMode
+													restartinsafemode(False)
+													Exit Sub
+												Case 2 'SafeMode with network
+													restartinsafemode(True)
+													Exit Sub
+												Case Else '-1 = Close
+													Me.Topmost = False
+													closeddu()
+													Exit Sub
+											End Select
+										End If
+									End If
+								End If
+							Else
+								'    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text8"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
+							End If
 
-                    End Select
-                    Topmost = False
+					End Select
+					Topmost = False
 
 
+					GoTo skipboot 'TODO: REMOVE THIS LINE!!!! Blocked restart for faster debugging
+					Dim stopservice As New ProcessStartInfo
+					stopservice.FileName = "cmd.exe"
+					stopservice.Arguments = " /Csc stop PAExec"
+					stopservice.UseShellExecute = False
+					stopservice.CreateNoWindow = True
+					stopservice.RedirectStandardOutput = False
 
-                    Dim stopservice As New ProcessStartInfo
-                    stopservice.FileName = "cmd.exe"
-                    stopservice.Arguments = " /Csc stop PAExec"
-                    stopservice.UseShellExecute = False
-                    stopservice.CreateNoWindow = True
-                    stopservice.RedirectStandardOutput = False
-                    processstopservice.StartInfo = stopservice
-                    processstopservice.Start()
-                    processstopservice.WaitForExit()
-                    processstopservice.Close()
-                    System.Threading.Thread.Sleep(10)
+					processstopservice.StartInfo = stopservice
+					processstopservice.Start()
+					processstopservice.WaitForExit()
+					processstopservice.Close()
+					System.Threading.Thread.Sleep(10)
 
-                    stopservice.Arguments = " /Csc delete PAExec"
+					stopservice.Arguments = " /Csc delete PAExec"
 
-                    processstopservice.StartInfo = stopservice
-                    processstopservice.Start()
-                    processstopservice.WaitForExit()
-                    processstopservice.Close()
+					processstopservice.StartInfo = stopservice
+					processstopservice.Start()
+					processstopservice.WaitForExit()
+					processstopservice.Close()
 
-                    stopservice.Arguments = " /Csc interrogate PAExec"
-                    processstopservice.StartInfo = stopservice
-                    processstopservice.Start()
-                    processstopservice.WaitForExit()
-                    processstopservice.Close()
+					stopservice.Arguments = " /Csc interrogate PAExec"
+					processstopservice.StartInfo = stopservice
+					processstopservice.Start()
+					processstopservice.WaitForExit()
+					processstopservice.Close()
 
-                    processinfo.FileName = basedir & "\" & ddudrfolder & "\paexec.exe"
-                    processinfo.Arguments = "-noname -i -s " & Chr(34) & basedir & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + arg
-                    processinfo.UseShellExecute = False
-                    processinfo.CreateNoWindow = True
-                    processinfo.RedirectStandardOutput = False
+					processinfo.FileName = baseDir & "\" & ddudrfolder & "\paexec.exe"
+					processinfo.Arguments = "-noname -i -s " & Chr(34) & baseDir & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + arg
+					processinfo.UseShellExecute = False
+					processinfo.CreateNoWindow = True
+					processinfo.RedirectStandardOutput = False
 
-                    process.StartInfo = processinfo
-                    process.Start()
-                    'Do not add waitforexit here or DDU(current user)will not close
-                    process.Close()
+					process.StartInfo = processinfo
+					process.Start()
+					'Do not add waitforexit here or DDU(current user)will not close
+					process.Close()
 
-                    closeddu()
-                    Exit Sub
-                End If
-
+					closeddu()
+					Exit Sub
+				End If
+skipboot:
                 UpdateTextMethod(UpdateTextMethodmessagefn(10) + Application.Current.MainWindow.GetType().Assembly.ToString)
                 log("DDU Version: " + Application.Current.MainWindow.GetType().Assembly.ToString)
                 log("OS: " + CStr(Label2.Content))
@@ -6421,1606 +6416,1605 @@ Public Class frmMain
         End Try
     End Sub
 
-    Private Sub frmMainContentRendered(sender As Object, e As EventArgs)
-        If silent Then
-            Me.Hide()
-        End If
-    End Sub
-
-    Private Sub frmMain(sender As Object, e As System.ComponentModel.CancelEventArgs)
-
-        If preventclose Then
-            e.Cancel = True
-            Exit Sub
-        End If
-
-        If MyIdentity.IsSystem AndAlso safemode Then
-            Try
-                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
-            Catch ex As Exception
-            End Try
-            Try
-                My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True).DeleteSubKeyTree("PAexec")
-            Catch ex As Exception
-            End Try
-        End If
-
-    End Sub
-
-
-
-    Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object,
-     ByVal e As System.ComponentModel.DoWorkEventArgs)
-
-
-        Dim regkey As RegistryKey = Nothing
-        Dim subregkey As RegistryKey = Nothing
-        Dim array() As String
-
-        UpdateTextMethod(UpdateTextMethodmessagefn(19))
-
-        preventclose = True
-
-        Dispatcher.Invoke(Sub() btnCleanRestart.IsEnabled = False)
-        Dispatcher.Invoke(Sub() btnClean.IsEnabled = False)
-        Dispatcher.Invoke(Sub() btnCleanShutdown.IsEnabled = False)
-        Dispatcher.Invoke(Sub() ComboBox1.IsEnabled = False)
-        Dispatcher.Invoke(Sub() MenuStrip1.IsEnabled = False)
-
-
-        Try
-            systemrestore()
-
-            If combobox1value = "AMD" Then
-                vendidexpected = "VEN_1002"
-                provider = "AdvancedMicroDevices"
-            End If
-
-            If combobox1value = "NVIDIA" Then
-                vendidexpected = "VEN_10DE"
-                provider = "NVIDIA"
-            End If
-
-            If combobox1value = "INTEL" Then
-                vendidexpected = "VEN_8086"
-                provider = "Intel"
-            End If
-
-            UpdateTextMethod(UpdateTextMethodmessagefn(20) + " " & combobox1value & " " + UpdateTextMethodmessagefn(21))
-            log("Uninstalling " + combobox1value + " driver ...")
-            UpdateTextMethod(UpdateTextMethodmessagefn(22))
-
-            Try
-                If combobox1value = "NVIDIA" Then
-
-                    temporarynvidiaspeedup()   'we do this If and until nvidia speed up their installer that is impacting "ddudr remove" of the GPU from device manager.
-                End If
-            Catch ex As Exception
-            End Try
-
-
-            '----------------------------------------------
-            'Here I remove AMD HD Audio bus (System device)
-            '----------------------------------------------
-
-            ' First , get the ParentIdPrefix
-
-            If removeamdaudiobus And combobox1value = "AMD" Then
-
-                Try
-                    If combobox1value = "AMD" Then
-                        Dim removed As Boolean = False
-                        log("Trying to remove the AMD HD Audio BUS")
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetSubKeyNames()
-                                If checkvariables.isnullorwhitespace(child) = False Then
-                                    If child.ToLower.Contains("ven_1002") Then
-                                        For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
-                                            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-                                            If subregkey IsNot Nothing Then
-                                                For Each child2 As String In subregkey.GetSubKeyNames()
-                                                    removed = False
-                                                    If checkvariables.isnullorwhitespace(child2) = False Then
-                                                        If child2.ToLower.Contains("ven_1002") Then
-                                                            For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-                                                                If checkvariables.isnullorwhitespace(child3) = False Then
-                                                                    array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
-                                                                    If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                                                        For i As Integer = 0 To array.Length - 1
-                                                                            If Not checkvariables.isnullorwhitespace(array(i)) Then
-                                                                                If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
-                                                                                    log("Found an AMD audio controller bus !")
-                                                                                    Try
-                                                                                        log("array result: " + array(i))
-                                                                                    Catch ex As Exception
-                                                                                    End Try
-                                                                                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                                                                                    processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
-                                                                                    processinfo.UseShellExecute = False
-                                                                                    processinfo.CreateNoWindow = True
-                                                                                    processinfo.RedirectStandardOutput = True
-                                                                                    process.StartInfo = processinfo
-
-                                                                                    process.Start()
-                                                                                    reply2 = process.StandardOutput.ReadToEnd
-                                                                                    'process.WaitForExit()
-                                                                                    process.StandardOutput.Close()
-                                                                                    process.Close()
-                                                                                    log(reply2)
-                                                                                    log("AMD HD Audio Bus Removed !")
-                                                                                    removed = True
-                                                                                End If
-                                                                            End If
-                                                                        Next
-                                                                    End If
-                                                                    If removed Then
-                                                                        Exit For
-                                                                    End If
-                                                                End If
-                                                            Next
-                                                        End If
-                                                    End If
-                                                Next
-                                            End If
-                                        Next
-                                    End If
-                                End If
-                            Next
-                        End If
-                    End If
-                Catch ex As Exception
-                    log(ex.Message + ex.StackTrace)
-                End Try
-
-
-                'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
-                Try
-                    donotremoveamdhdaudiobusfiles = False
-                    subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-                    If subregkey IsNot Nothing Then
-                        For Each child2 As String In subregkey.GetSubKeyNames()
-                            If Not checkvariables.isnullorwhitespace(child2) AndAlso child2.ToLower.Contains("ven_1002") Then
-                                For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-                                    If checkvariables.isnullorwhitespace(child3) = False Then
-                                        array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
-                                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                            For i As Integer = 0 To array.Length - 1
-                                                If Not checkvariables.isnullorwhitespace(array(i)) Then
-                                                    If array(i).ToLower.Contains("amdkmafd") Then
-                                                        log("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
-                                                        donotremoveamdhdaudiobusfiles = True
-                                                    End If
-                                                End If
-                                            Next
-                                        End If
-                                    End If
-                                Next
-                            End If
-                        Next
-                    End If
-                Catch ex As Exception
-                    log(ex.Message + ex.StackTrace)
-                End Try
-
-            End If
-
-
-
-            ' ----------------------
-            ' Removing the videocard
-            ' ----------------------
-            For a = 1 To 2   'loop 2 time here for nVidia SLI pupose in normal mode.(4 may be necessary for quad SLI... need to check.)
-                Try
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames
-                            If Not checkvariables.isnullorwhitespace(child) AndAlso
-                             (child.ToLower.Contains("ven_10de") Or
-                             child.ToLower.Contains("ven_8086") Or
-                             child.ToLower.Contains("ven_1002")) Then
-
-                                subregkey = regkey.OpenSubKey(child)
-                                If subregkey IsNot Nothing Then
-
-                                    For Each child2 As String In subregkey.GetSubKeyNames
-
-                                        If subregkey.OpenSubKey(child2) Is Nothing Then
-                                            Continue For
-                                        End If
-
-                                        array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
-
-                                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                            For i As Integer = 0 To array.Length - 1
-
-                                                If Not checkvariables.isnullorwhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
-
-                                                    vendid = child & "\" & child2
-
-                                                    If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-                                                        processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                                                        processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
-                                                        processinfo.UseShellExecute = False
-                                                        processinfo.CreateNoWindow = True
-                                                        processinfo.RedirectStandardOutput = True
-                                                        process.StartInfo = processinfo
-
-                                                        process.Start()
-                                                        reply2 = process.StandardOutput.ReadToEnd
-                                                        process.StandardOutput.Close()
-                                                        process.Close()
-                                                        'process.WaitForExit()
-                                                        log(reply2)
-                                                    End If
-                                                    Exit For   'the card is removed so we exit the loop from here.
-                                                End If
-                                            Next
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        Next
-                    End If
-                Catch ex As Exception
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    log(ex.Message + ex.StackTrace)
-                End Try
-            Next
-
-            UpdateTextMethod(UpdateTextMethodmessagefn(23))
-            log("DDUDR Remove Display Driver: Complete.")
-
-            cleandriverstore()
-
-            UpdateTextMethod(UpdateTextMethodmessagefn(24))
-            log("Executing DDUDR Remove Audio controler.")
-
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames
-                        If Not checkvariables.isnullorwhitespace(child) AndAlso
-                           (child.ToLower.Contains("ven_10de") Or
-                           child.ToLower.Contains("ven_8086") Or
-                           child.ToLower.Contains("ven_1002")) Then
-
-                            subregkey = regkey.OpenSubKey(child)
-                            If subregkey IsNot Nothing Then
-
-                                For Each child2 As String In subregkey.GetSubKeyNames
-
-                                    If subregkey.OpenSubKey(child2) Is Nothing Then
-                                        Continue For
-                                    End If
-
-                                    vendid = child & "\" & child2
-
-                                    If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-                                        processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                                        processinfo.Arguments = "remove " & Chr(34) & "@HDAUDIO\" & vendid & Chr(34)
-                                        processinfo.UseShellExecute = False
-                                        processinfo.CreateNoWindow = True
-                                        processinfo.RedirectStandardOutput = True
-                                        process.StartInfo = processinfo
-
-                                        process.Start()
-                                        reply2 = process.StandardOutput.ReadToEnd
-                                        process.StandardOutput.Close()
-                                        process.Close()
-                                        'process.WaitForExit()
-                                        log(reply2)
-
-                                    End If
-                                Next
-                            End If
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                log(ex.Message + ex.StackTrace)
-            End Try
-
-            UpdateTextMethod(UpdateTextMethodmessagefn(25))
-
-
-            log("DDUDR Remove Audio controler Complete.")
-
-            If Not combobox1value = "INTEL" Then
-                cleandriverstore()
-            End If
-
-            'Here I remove 3dVision USB Adapter.
-
-            If combobox1value = "NVIDIA" Then
-                Try
-                    'removing 3DVision USB driver
-                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                    processinfo.Arguments = "findall =USB"
-                    processinfo.UseShellExecute = False
-                    processinfo.CreateNoWindow = True
-                    processinfo.RedirectStandardOutput = True
-
-                    'creation dun process fantome pour le wait on exit.
-
-                    process.StartInfo = processinfo
-                    process.Start()
-                    reply = process.StandardOutput.ReadToEnd
-                    process.StandardOutput.Close()
-                    process.Close()
-                    'process.WaitForExit()
-
-                    Try
-                        card1 = reply.IndexOf("USB\")
-                    Catch ex As Exception
-                    End Try
-
-                    While card1 > -1
-
-                        position2 = reply.IndexOf(":", card1)
-                        vendid = reply.Substring(card1, position2 - card1).Trim
-                        If vendid.Contains("USB\VID_0955&PID_0007") Or
-                         vendid.Contains("USB\VID_0955&PID_7001") Or
-                         vendid.Contains("USB\VID_0955&PID_7002") Or
-                         vendid.Contains("USB\VID_0955&PID_7003") Or
-                         vendid.Contains("USB\VID_0955&PID_7004") Or
-                         vendid.Contains("USB\VID_0955&PID_7008") Or
-                         vendid.Contains("USB\VID_0955&PID_7009") Or
-                         vendid.Contains("USB\VID_0955&PID_700A") Or
-                         vendid.Contains("USB\VID_0955&PID_700C") Or
-                         vendid.Contains("USB\VID_0955&PID_700D&MI_00") Or
-                         vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
-                            log("-" & vendid & "- 3D vision usb controler found")
-
-                            processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                            processinfo.Arguments = "remove =USB " & Chr(34) & vendid & Chr(34)
-                            processinfo.UseShellExecute = False
-                            processinfo.CreateNoWindow = True
-                            processinfo.RedirectStandardOutput = True
-                            process.StartInfo = processinfo
-
-                            process.Start()
-                            reply2 = process.StandardOutput.ReadToEnd
-                            process.StandardOutput.Close()
-                            process.Close()
-                            'process.WaitForExit()
-                            log(reply2)
-
-
-                        End If
-                        card1 = reply.IndexOf("USB\", card1 + 1)
-
-                    End While
-
-                Catch ex As Exception
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    log(ex.Message + ex.StackTrace)
-                End Try
-
-                UpdateTextMethod(UpdateTextMethodmessagefn(26))
-
-                Try
-                    'removing NVIDIA SHIELD Wireless Controller Trackpad
-                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                    processinfo.Arguments = "findall =MOUSE"
-                    processinfo.UseShellExecute = False
-                    processinfo.CreateNoWindow = True
-                    processinfo.RedirectStandardOutput = True
-
-                    'creation dun process fantome pour le wait on exit.
-
-                    process.StartInfo = processinfo
-                    process.Start()
-                    reply = process.StandardOutput.ReadToEnd
-                    process.StandardOutput.Close()
-                    process.Close()
-                    'process.WaitForExit()
-
-                    Try
-                        card1 = reply.IndexOf("HID\")
-                    Catch ex As Exception
-                    End Try
-
-                    While card1 > -1
-
-                        position2 = reply.IndexOf(":", card1)
-                        vendid = reply.Substring(card1, position2 - card1).Trim
-                        If vendid.ToLower.Contains("hid\vid_0955&pid_7210") Then
-                            log("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
-
-                            processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                            processinfo.Arguments = "remove =MOUSE " & Chr(34) & vendid & Chr(34)
-                            processinfo.UseShellExecute = False
-                            processinfo.CreateNoWindow = True
-                            processinfo.RedirectStandardOutput = True
-                            process.StartInfo = processinfo
-
-                            process.Start()
-                            reply2 = process.StandardOutput.ReadToEnd
-                            process.StandardOutput.Close()
-                            process.Close()
-                            'process.WaitForExit()
-                            log(reply2)
-
-
-                        End If
-                        card1 = reply.IndexOf("HID\", card1 + 1)
-
-                    End While
-
-                Catch ex As Exception
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    log(ex.Message + ex.StackTrace)
-                End Try
-
-                'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
-                If removegfe Then
-
-                    Try
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ROOT")
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetSubKeyNames
-                                If Not checkvariables.isnullorwhitespace(child) Then
-
-                                    subregkey = regkey.OpenSubKey(child)
-                                    If subregkey IsNot Nothing Then
-
-                                        For Each child2 As String In subregkey.GetSubKeyNames
-                                            If Not checkvariables.isnullorwhitespace(child2) Then
-                                                If subregkey.OpenSubKey(child2) Is Nothing Then
-                                                    Continue For
-                                                End If
-
-                                                If Not checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey(child2).GetValue("DeviceDesc"))) AndAlso
-                                                   subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
-
-                                                    vendid = child & "\" & child2
-
-                                                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                                                    processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
-                                                    processinfo.UseShellExecute = False
-                                                    processinfo.CreateNoWindow = True
-                                                    processinfo.RedirectStandardOutput = True
-                                                    process.StartInfo = processinfo
-
-                                                    process.Start()
-                                                    reply2 = process.StandardOutput.ReadToEnd
-                                                    process.StandardOutput.Close()
-                                                    process.Close()
-                                                    'process.WaitForExit()
-                                                    log(reply2)
-
-                                                End If
-                                            End If
-                                        Next
-                                    End If
-                                End If
-                            Next
-                        End If
-                    Catch ex As Exception
-                        MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                        log(ex.Message + ex.StackTrace)
-                    End Try
-
-                End If
-                ' ------------------------------
-                ' Removing nVidia AudioEndpoints
-                ' ------------------------------
-
-                log("Removing nVidia Audio Endpoints")
-
-                Try
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames
-                            If Not checkvariables.isnullorwhitespace(child) Then
-
-                                If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
-                                   (regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia virtual audio device") AndAlso removegfe) Or
-                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia high definition audio") Then
-
-                                    vendid = child
-
-                                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                                    processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
-                                    processinfo.UseShellExecute = False
-                                    processinfo.CreateNoWindow = True
-                                    processinfo.RedirectStandardOutput = True
-                                    process.StartInfo = processinfo
-
-                                    process.Start()
-                                    reply2 = process.StandardOutput.ReadToEnd
-                                    process.StandardOutput.Close()
-                                    process.Close()
-                                    'process.WaitForExit()
-                                    log(reply2)
-
-                                End If
-                            End If
-                        Next
-                    End If
-                Catch ex As Exception
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    log(ex.Message + ex.StackTrace)
-                End Try
-
-            End If
-
-            If combobox1value = "AMD" Then
-                ' ------------------------------
-                ' Removing some of AMD AudioEndpoints
-                ' ------------------------------
-
-                log("Removing AMD Audio Endpoints")
-
-                Try
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames
-                            If Not checkvariables.isnullorwhitespace(child) Then
-
-                                If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
-                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("amd high definition audio device") Or
-                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("digital audio (hdmi) (high definition audio device)") Then
-
-                                    vendid = child
-
-                                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                                    processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
-                                    processinfo.UseShellExecute = False
-                                    processinfo.CreateNoWindow = True
-                                    processinfo.RedirectStandardOutput = True
-                                    process.StartInfo = processinfo
-
-                                    process.Start()
-                                    reply2 = process.StandardOutput.ReadToEnd
-                                    process.StandardOutput.Close()
-                                    process.Close()
-                                    'process.WaitForExit()
-                                    log(reply2)
-
-                                End If
-                            End If
-                        Next
-                    End If
-                Catch ex As Exception
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    log(ex.Message + ex.StackTrace)
-                End Try
-
-            End If
-            If combobox1value = "INTEL" Then
-                'Removing Intel WIdI bus Enumerator
-                log("Removing IWD Bus Enumerator")
-                processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
-                processinfo.UseShellExecute = False
-                processinfo.CreateNoWindow = True
-                processinfo.RedirectStandardOutput = True
-                process.StartInfo = processinfo
-
-                process.Start()
-                reply2 = process.StandardOutput.ReadToEnd
-                process.StandardOutput.Close()
-                process.Close()
-                'process.WaitForExit()
-                log(reply2)
-
-
-                ' ------------------------------
-                ' Removing Intel AudioEndpoints
-                ' ------------------------------
-                log("Removing Intel Audio Endpoints")
-                Try
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames
-                            If Not checkvariables.isnullorwhitespace(child) Then
-
-                                If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
-                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel widi") Or
-                                   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel(r)") Then
-
-                                    vendid = child
-
-                                    processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                                    processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
-                                    processinfo.UseShellExecute = False
-                                    processinfo.CreateNoWindow = True
-                                    processinfo.RedirectStandardOutput = True
-                                    process.StartInfo = processinfo
-
-                                    process.Start()
-                                    reply2 = process.StandardOutput.ReadToEnd
-                                    process.StandardOutput.Close()
-                                    process.Close()
-                                    'process.WaitForExit()
-                                    log(reply2)
-
-                                End If
-                            End If
-                        Next
-                    End If
-                Catch ex As Exception
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    log(ex.Message + ex.StackTrace)
-                End Try
-            End If
-
-
-            log("ddudr Remove Audio/HDMI Complete")
-            'removing monitor and hidden monitor
-
-
-
-            If removemonitor Then
-                log("ddudr Remove Monitor started")
-                Try
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames
-                            If Not checkvariables.isnullorwhitespace(child) Then
-
-                                subregkey = regkey.OpenSubKey(child)
-                                If subregkey IsNot Nothing Then
-
-                                    For Each child2 As String In subregkey.GetSubKeyNames
-                                        If Not checkvariables.isnullorwhitespace(child2) Then
-
-                                            If subregkey.OpenSubKey(child2) Is Nothing Then
-                                                Continue For
-                                            End If
-
-                                            vendid = child & "\" & child2
-
-
-                                            processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                                            processinfo.Arguments = "remove " & Chr(34) & "@DISPLAY\" & vendid & Chr(34)
-                                            processinfo.UseShellExecute = False
-                                            processinfo.CreateNoWindow = True
-                                            processinfo.RedirectStandardOutput = True
-                                            process.StartInfo = processinfo
-
-                                            process.Start()
-                                            reply2 = process.StandardOutput.ReadToEnd
-                                            process.StandardOutput.Close()
-                                            process.Close()
-                                            'process.WaitForExit()
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        Next
-                    End If
-                Catch ex As Exception
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    log(ex.Message + ex.StackTrace)
-                End Try
-
-                UpdateTextMethod(UpdateTextMethodmessagefn(27))
-            End If
-            UpdateTextMethod(UpdateTextMethodmessagefn(28))
-
-            'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont what that
-            'espcially if we are not using an AMD GPU
-
-            If removeamdkmpfd Then
-                Try
-                    log("Checking and Removing AMDKMPFD Filter if present")
-                    regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames()
-                            If checkvariables.isnullorwhitespace(child) = False Then
-                                If child.ToLower.Contains("pnp0a08") Or
-                                   child.ToLower.Contains("pnp0a03") Then
-                                    subregkey = regkey.OpenSubKey(child)
-                                    If subregkey IsNot Nothing Then
-                                        For Each child2 As String In subregkey.GetSubKeyNames()
-                                            If Not checkvariables.isnullorwhitespace(child2) Then
-                                                array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
-                                                If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                                    For i As Integer = 0 To array.Length - 1
-                                                        If Not checkvariables.isnullorwhitespace(array(i)) Then
-                                                            If array(i).ToLower.Contains("amdkmpfd") Then
-                                                                log("Found an AMDKMPFD! in " + child)
-                                                                Try
-                                                                    log("array result: " + array(i))
-                                                                Catch ex As Exception
-                                                                End Try
-                                                                processinfo.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                                                                If win10 Then
-                                                                    processinfo.Arguments = "update " & windir & "\inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
-                                                                Else
-                                                                    processinfo.Arguments = "update " & windir & "\inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
-                                                                End If
-                                                                processinfo.UseShellExecute = False
-                                                                processinfo.CreateNoWindow = True
-                                                                processinfo.RedirectStandardOutput = True
-                                                                process.StartInfo = processinfo
-
-                                                                process.Start()
-                                                                reply2 = process.StandardOutput.ReadToEnd
-                                                                'process.WaitForExit()
-                                                                process.StandardOutput.Close()
-                                                                process.Close()
-                                                                log(reply2)
-                                                                log(child + " Restored.")
-
-                                                            End If
-                                                        End If
-                                                    Next
-                                                End If
-                                            End If
-                                        Next
-                                    End If
-                                End If
-                            End If
-                        Next
-                    End If
-                Catch ex As Exception
-                    log(ex.Message + ex.StackTrace)
-                End Try
-
-                'We now try to remove the service AMDPMPFD if its lowerfilter is not found
-                If reboot Or shutdown Then
-                    If Not checkamdkmapfd() Then
-                        CleanupEngine.cleanserviceprocess({"amdkmpfd"})
-                    End If
-                End If
-            End If
-
-            If combobox1value = "AMD" Then
-                cleanamdserviceprocess()
-                cleanamd()
-
-                If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-                    log("Killing Explorer.exe")
-                    Dim appproc = process.GetProcessesByName("explorer")
-                    For i As Integer = 0 To appproc.Length - 1
-                        appproc(i).Kill()
-                    Next i
-                End If
-
-                cleanamdfolders()
-            End If
-
-            If combobox1value = "NVIDIA" Then
-                cleannvidiaserviceprocess()
-                cleannvidia()
-
-                If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-                    log("Killing Explorer.exe")
-                    Dim appproc = process.GetProcessesByName("explorer")
-                    For i As Integer = 0 To appproc.Length - 1
-                        appproc(i).Kill()
-                    Next i
-                End If
-
-
-                cleannvidiafolders()
-                checkpcieroot()
-            End If
-
-            If combobox1value = "INTEL" Then
-                cleanintelserviceprocess()
-                cleanintel()
-
-                If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-                    log("Killing Explorer.exe")
-                    Dim appproc = process.GetProcessesByName("explorer")
-                    For i As Integer = 0 To appproc.Length - 1
-                        appproc(i).Kill()
-                    Next i
-                End If
-
-                cleanintelfolders()
-            End If
-
-            cleandriverstore()
-            fixregistrydriverstore()
-            'rebuildcountercache()
-        Catch ex As Exception
-            log(ex.Message & ex.StackTrace)
-            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            stopme = True
-        End Try
-
-    End Sub
-
-    Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object,
-    ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
-    Handles BackgroundWorker1.RunWorkerCompleted
-        Try
-
-            If stopme = True Then
-                'Scan for new hardware to not let users into a non working state.
-
-                Dim scan As New ProcessStartInfo
-                scan.FileName = basedir & "\" & ddudrfolder & "\ddudr.exe"
-                scan.Arguments = "rescan"
-                scan.UseShellExecute = False
-                scan.CreateNoWindow = True
-                scan.RedirectStandardOutput = False
-                Dim proc4 As New Process
-                proc4.StartInfo = scan
-                proc4.Start()
-                proc4.WaitForExit()
-                proc4.Close()
-                'then quit
-                closeddu()
-                Exit Sub
-            End If
-
-
-            'For command line arguement to know if there is more cleans to be done.
-
-            preventclose = False
-            backgroundworkcomplete = True
-
-            UpdateTextMethod(UpdateTextMethodmessagefn(9))
-
-            log("Clean uninstall completed!")
-
-            If Not shutdown Then
-                rescan()
-            End If
-
-            Dispatcher.Invoke(Sub() btnCleanRestart.IsEnabled = True)
-            Dispatcher.Invoke(Sub() btnClean.IsEnabled = True)
-            Dispatcher.Invoke(Sub() btnCleanShutdown.IsEnabled = True)
-            Dispatcher.Invoke(Sub() ComboBox1.IsEnabled = True)
-            Dispatcher.Invoke(Sub() MenuStrip1.IsEnabled = True)
-
-            If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
-                If MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text10"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.YesNo, MessageBoxIcon.Information) = Windows.Forms.DialogResult.Yes Then
-                    closeddu()
-                    Exit Sub
-                End If
-            End If
-
-            If reboot Then
-                restartcomputer()
-            End If
-
-            If shutdown Then
-                shutdowncomputer()
-            End If
-
-        Catch ex As Exception
-            preventclose = False
-            log(ex.Message + ex.StackTrace)
-        End Try
-    End Sub
+	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
+		If silent Then
+			Me.Hide()
+		End If
+	End Sub
+
+	Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+		If preventclose Then
+			e.Cancel = True
+			Exit Sub
+		End If
+
+		If MyIdentity.IsSystem AndAlso safemode Then
+			Try
+				My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
+			Catch ex As Exception
+			End Try
+			Try
+				My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True).DeleteSubKeyTree("PAexec")
+			Catch ex As Exception
+			End Try
+		End If
+
+	End Sub
+
+
+
+	Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object,
+	 ByVal e As System.ComponentModel.DoWorkEventArgs)
+
+
+		Dim regkey As RegistryKey = Nothing
+		Dim subregkey As RegistryKey = Nothing
+		Dim array() As String
+
+		UpdateTextMethod(UpdateTextMethodmessagefn(19))
+
+		preventclose = True
+
+		Dispatcher.Invoke(Sub() btnCleanRestart.IsEnabled = False)
+		Dispatcher.Invoke(Sub() btnClean.IsEnabled = False)
+		Dispatcher.Invoke(Sub() btnCleanShutdown.IsEnabled = False)
+		Dispatcher.Invoke(Sub() ComboBox1.IsEnabled = False)
+		Dispatcher.Invoke(Sub() MenuStrip1.IsEnabled = False)
+
+
+		Try
+			systemrestore()
+
+			If combobox1value = "AMD" Then
+				vendidexpected = "VEN_1002"
+				provider = "AdvancedMicroDevices"
+			End If
+
+			If combobox1value = "NVIDIA" Then
+				vendidexpected = "VEN_10DE"
+				provider = "NVIDIA"
+			End If
+
+			If combobox1value = "INTEL" Then
+				vendidexpected = "VEN_8086"
+				provider = "Intel"
+			End If
+
+			UpdateTextMethod(UpdateTextMethodmessagefn(20) + " " & combobox1value & " " + UpdateTextMethodmessagefn(21))
+			log("Uninstalling " + combobox1value + " driver ...")
+			UpdateTextMethod(UpdateTextMethodmessagefn(22))
+
+			Try
+				If combobox1value = "NVIDIA" Then
+
+					temporarynvidiaspeedup()   'we do this If and until nvidia speed up their installer that is impacting "ddudr remove" of the GPU from device manager.
+				End If
+			Catch ex As Exception
+			End Try
+
+
+			'----------------------------------------------
+			'Here I remove AMD HD Audio bus (System device)
+			'----------------------------------------------
+
+			' First , get the ParentIdPrefix
+
+			If removeamdaudiobus And combobox1value = "AMD" Then
+
+				Try
+					If combobox1value = "AMD" Then
+						Dim removed As Boolean = False
+						log("Trying to remove the AMD HD Audio BUS")
+						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetSubKeyNames()
+								If checkvariables.isnullorwhitespace(child) = False Then
+									If child.ToLower.Contains("ven_1002") Then
+										For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
+											subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+											If subregkey IsNot Nothing Then
+												For Each child2 As String In subregkey.GetSubKeyNames()
+													removed = False
+													If checkvariables.isnullorwhitespace(child2) = False Then
+														If child2.ToLower.Contains("ven_1002") Then
+															For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
+																If checkvariables.isnullorwhitespace(child3) = False Then
+																	array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
+																	If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+																		For i As Integer = 0 To array.Length - 1
+																			If Not checkvariables.isnullorwhitespace(array(i)) Then
+																				If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
+																					log("Found an AMD audio controller bus !")
+																					Try
+																						log("array result: " + array(i))
+																					Catch ex As Exception
+																					End Try
+																					processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+																					processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
+																					processinfo.UseShellExecute = False
+																					processinfo.CreateNoWindow = True
+																					processinfo.RedirectStandardOutput = True
+																					process.StartInfo = processinfo
+
+																					process.Start()
+																					reply2 = process.StandardOutput.ReadToEnd
+																					'process.WaitForExit()
+																					process.StandardOutput.Close()
+																					process.Close()
+																					log(reply2)
+																					log("AMD HD Audio Bus Removed !")
+																					removed = True
+																				End If
+																			End If
+																		Next
+																	End If
+																	If removed Then
+																		Exit For
+																	End If
+																End If
+															Next
+														End If
+													End If
+												Next
+											End If
+										Next
+									End If
+								End If
+							Next
+						End If
+					End If
+				Catch ex As Exception
+					log(ex.Message + ex.StackTrace)
+				End Try
+
+
+				'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
+				Try
+					donotremoveamdhdaudiobusfiles = False
+					subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+					If subregkey IsNot Nothing Then
+						For Each child2 As String In subregkey.GetSubKeyNames()
+							If Not checkvariables.isnullorwhitespace(child2) AndAlso child2.ToLower.Contains("ven_1002") Then
+								For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
+									If checkvariables.isnullorwhitespace(child3) = False Then
+										array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
+										If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+											For i As Integer = 0 To array.Length - 1
+												If Not checkvariables.isnullorwhitespace(array(i)) Then
+													If array(i).ToLower.Contains("amdkmafd") Then
+														log("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
+														donotremoveamdhdaudiobusfiles = True
+													End If
+												End If
+											Next
+										End If
+									End If
+								Next
+							End If
+						Next
+					End If
+				Catch ex As Exception
+					log(ex.Message + ex.StackTrace)
+				End Try
+
+			End If
+
+
+
+			' ----------------------
+			' Removing the videocard
+			' ----------------------
+			For a = 1 To 2	 'loop 2 time here for nVidia SLI pupose in normal mode.(4 may be necessary for quad SLI... need to check.)
+				Try
+					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames
+							If Not checkvariables.isnullorwhitespace(child) AndAlso
+							 (child.ToLower.Contains("ven_10de") Or
+							 child.ToLower.Contains("ven_8086") Or
+							 child.ToLower.Contains("ven_1002")) Then
+
+								subregkey = regkey.OpenSubKey(child)
+								If subregkey IsNot Nothing Then
+
+									For Each child2 As String In subregkey.GetSubKeyNames
+
+										If subregkey.OpenSubKey(child2) Is Nothing Then
+											Continue For
+										End If
+
+										array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
+
+										If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+											For i As Integer = 0 To array.Length - 1
+
+												If Not checkvariables.isnullorwhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
+
+													vendid = child & "\" & child2
+
+													If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+														processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+														processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
+														processinfo.UseShellExecute = False
+														processinfo.CreateNoWindow = True
+														processinfo.RedirectStandardOutput = True
+														process.StartInfo = processinfo
+
+														process.Start()
+														reply2 = process.StandardOutput.ReadToEnd
+														process.StandardOutput.Close()
+														process.Close()
+														'process.WaitForExit()
+														log(reply2)
+													End If
+													Exit For   'the card is removed so we exit the loop from here.
+												End If
+											Next
+										End If
+									Next
+								End If
+							End If
+						Next
+					End If
+				Catch ex As Exception
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					log(ex.Message + ex.StackTrace)
+				End Try
+			Next
+
+			UpdateTextMethod(UpdateTextMethodmessagefn(23))
+			log("DDUDR Remove Display Driver: Complete.")
+
+			cleandriverstore()
+
+			UpdateTextMethod(UpdateTextMethodmessagefn(24))
+			log("Executing DDUDR Remove Audio controler.")
+
+			Try
+				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetSubKeyNames
+						If Not checkvariables.isnullorwhitespace(child) AndAlso
+						   (child.ToLower.Contains("ven_10de") Or
+						   child.ToLower.Contains("ven_8086") Or
+						   child.ToLower.Contains("ven_1002")) Then
+
+							subregkey = regkey.OpenSubKey(child)
+							If subregkey IsNot Nothing Then
+
+								For Each child2 As String In subregkey.GetSubKeyNames
+
+									If subregkey.OpenSubKey(child2) Is Nothing Then
+										Continue For
+									End If
+
+									vendid = child & "\" & child2
+
+									If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+										processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+										processinfo.Arguments = "remove " & Chr(34) & "@HDAUDIO\" & vendid & Chr(34)
+										processinfo.UseShellExecute = False
+										processinfo.CreateNoWindow = True
+										processinfo.RedirectStandardOutput = True
+										process.StartInfo = processinfo
+
+										process.Start()
+										reply2 = process.StandardOutput.ReadToEnd
+										process.StandardOutput.Close()
+										process.Close()
+										'process.WaitForExit()
+										log(reply2)
+
+									End If
+								Next
+							End If
+						End If
+					Next
+				End If
+			Catch ex As Exception
+				MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+				log(ex.Message + ex.StackTrace)
+			End Try
+
+			UpdateTextMethod(UpdateTextMethodmessagefn(25))
+
+
+			log("DDUDR Remove Audio controler Complete.")
+
+			If Not combobox1value = "INTEL" Then
+				cleandriverstore()
+			End If
+
+			'Here I remove 3dVision USB Adapter.
+
+			If combobox1value = "NVIDIA" Then
+				Try
+					'removing 3DVision USB driver
+					processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+					processinfo.Arguments = "findall =USB"
+					processinfo.UseShellExecute = False
+					processinfo.CreateNoWindow = True
+					processinfo.RedirectStandardOutput = True
+
+					'creation dun process fantome pour le wait on exit.
+
+					process.StartInfo = processinfo
+					process.Start()
+					reply = process.StandardOutput.ReadToEnd
+					process.StandardOutput.Close()
+					process.Close()
+					'process.WaitForExit()
+
+					Try
+						card1 = reply.IndexOf("USB\")
+					Catch ex As Exception
+					End Try
+
+					While card1 > -1
+
+						position2 = reply.IndexOf(":", card1)
+						vendid = reply.Substring(card1, position2 - card1).Trim
+						If vendid.Contains("USB\VID_0955&PID_0007") Or
+						 vendid.Contains("USB\VID_0955&PID_7001") Or
+						 vendid.Contains("USB\VID_0955&PID_7002") Or
+						 vendid.Contains("USB\VID_0955&PID_7003") Or
+						 vendid.Contains("USB\VID_0955&PID_7004") Or
+						 vendid.Contains("USB\VID_0955&PID_7008") Or
+						 vendid.Contains("USB\VID_0955&PID_7009") Or
+						 vendid.Contains("USB\VID_0955&PID_700A") Or
+						 vendid.Contains("USB\VID_0955&PID_700C") Or
+						 vendid.Contains("USB\VID_0955&PID_700D&MI_00") Or
+						 vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
+							log("-" & vendid & "- 3D vision usb controler found")
+
+							processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+							processinfo.Arguments = "remove =USB " & Chr(34) & vendid & Chr(34)
+							processinfo.UseShellExecute = False
+							processinfo.CreateNoWindow = True
+							processinfo.RedirectStandardOutput = True
+							process.StartInfo = processinfo
+
+							process.Start()
+							reply2 = process.StandardOutput.ReadToEnd
+							process.StandardOutput.Close()
+							process.Close()
+							'process.WaitForExit()
+							log(reply2)
+
+
+						End If
+						card1 = reply.IndexOf("USB\", card1 + 1)
+
+					End While
+
+				Catch ex As Exception
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					log(ex.Message + ex.StackTrace)
+				End Try
+
+				UpdateTextMethod(UpdateTextMethodmessagefn(26))
+
+				Try
+					'removing NVIDIA SHIELD Wireless Controller Trackpad
+					processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+					processinfo.Arguments = "findall =MOUSE"
+					processinfo.UseShellExecute = False
+					processinfo.CreateNoWindow = True
+					processinfo.RedirectStandardOutput = True
+
+					'creation dun process fantome pour le wait on exit.
+
+					process.StartInfo = processinfo
+					process.Start()
+					reply = process.StandardOutput.ReadToEnd
+					process.StandardOutput.Close()
+					process.Close()
+					'process.WaitForExit()
+
+					Try
+						card1 = reply.IndexOf("HID\")
+					Catch ex As Exception
+					End Try
+
+					While card1 > -1
+
+						position2 = reply.IndexOf(":", card1)
+						vendid = reply.Substring(card1, position2 - card1).Trim
+						If vendid.ToLower.Contains("hid\vid_0955&pid_7210") Then
+							log("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
+
+							processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+							processinfo.Arguments = "remove =MOUSE " & Chr(34) & vendid & Chr(34)
+							processinfo.UseShellExecute = False
+							processinfo.CreateNoWindow = True
+							processinfo.RedirectStandardOutput = True
+							process.StartInfo = processinfo
+
+							process.Start()
+							reply2 = process.StandardOutput.ReadToEnd
+							process.StandardOutput.Close()
+							process.Close()
+							'process.WaitForExit()
+							log(reply2)
+
+
+						End If
+						card1 = reply.IndexOf("HID\", card1 + 1)
+
+					End While
+
+				Catch ex As Exception
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					log(ex.Message + ex.StackTrace)
+				End Try
+
+				'Removing NVIDIA Virtual Audio Device (Wave Extensible) (WDM)
+				If removegfe Then
+
+					Try
+						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ROOT")
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetSubKeyNames
+								If Not checkvariables.isnullorwhitespace(child) Then
+
+									subregkey = regkey.OpenSubKey(child)
+									If subregkey IsNot Nothing Then
+
+										For Each child2 As String In subregkey.GetSubKeyNames
+											If Not checkvariables.isnullorwhitespace(child2) Then
+												If subregkey.OpenSubKey(child2) Is Nothing Then
+													Continue For
+												End If
+
+												If Not checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey(child2).GetValue("DeviceDesc"))) AndAlso
+												   subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
+
+													vendid = child & "\" & child2
+
+													processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+													processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
+													processinfo.UseShellExecute = False
+													processinfo.CreateNoWindow = True
+													processinfo.RedirectStandardOutput = True
+													process.StartInfo = processinfo
+
+													process.Start()
+													reply2 = process.StandardOutput.ReadToEnd
+													process.StandardOutput.Close()
+													process.Close()
+													'process.WaitForExit()
+													log(reply2)
+
+												End If
+											End If
+										Next
+									End If
+								End If
+							Next
+						End If
+					Catch ex As Exception
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+						log(ex.Message + ex.StackTrace)
+					End Try
+
+				End If
+				' ------------------------------
+				' Removing nVidia AudioEndpoints
+				' ------------------------------
+
+				log("Removing nVidia Audio Endpoints")
+
+				Try
+					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames
+							If Not checkvariables.isnullorwhitespace(child) Then
+
+								If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
+								   (regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia virtual audio device") AndAlso removegfe) Or
+								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia high definition audio") Then
+
+									vendid = child
+
+									processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+									processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
+									processinfo.UseShellExecute = False
+									processinfo.CreateNoWindow = True
+									processinfo.RedirectStandardOutput = True
+									process.StartInfo = processinfo
+
+									process.Start()
+									reply2 = process.StandardOutput.ReadToEnd
+									process.StandardOutput.Close()
+									process.Close()
+									'process.WaitForExit()
+									log(reply2)
+
+								End If
+							End If
+						Next
+					End If
+				Catch ex As Exception
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					log(ex.Message + ex.StackTrace)
+				End Try
+
+			End If
+
+			If combobox1value = "AMD" Then
+				' ------------------------------
+				' Removing some of AMD AudioEndpoints
+				' ------------------------------
+
+				log("Removing AMD Audio Endpoints")
+
+				Try
+					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames
+							If Not checkvariables.isnullorwhitespace(child) Then
+
+								If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
+								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("amd high definition audio device") Or
+								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("digital audio (hdmi) (high definition audio device)") Then
+
+									vendid = child
+
+									processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+									processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
+									processinfo.UseShellExecute = False
+									processinfo.CreateNoWindow = True
+									processinfo.RedirectStandardOutput = True
+									process.StartInfo = processinfo
+
+									process.Start()
+									reply2 = process.StandardOutput.ReadToEnd
+									process.StandardOutput.Close()
+									process.Close()
+									'process.WaitForExit()
+									log(reply2)
+
+								End If
+							End If
+						Next
+					End If
+				Catch ex As Exception
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					log(ex.Message + ex.StackTrace)
+				End Try
+
+			End If
+			If combobox1value = "INTEL" Then
+				'Removing Intel WIdI bus Enumerator
+				log("Removing IWD Bus Enumerator")
+				processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+				processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
+				processinfo.UseShellExecute = False
+				processinfo.CreateNoWindow = True
+				processinfo.RedirectStandardOutput = True
+				process.StartInfo = processinfo
+
+				process.Start()
+				reply2 = process.StandardOutput.ReadToEnd
+				process.StandardOutput.Close()
+				process.Close()
+				'process.WaitForExit()
+				log(reply2)
+
+
+				' ------------------------------
+				' Removing Intel AudioEndpoints
+				' ------------------------------
+				log("Removing Intel Audio Endpoints")
+				Try
+					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames
+							If Not checkvariables.isnullorwhitespace(child) Then
+
+								If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
+								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel widi") Or
+								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel(r)") Then
+
+									vendid = child
+
+									processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+									processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
+									processinfo.UseShellExecute = False
+									processinfo.CreateNoWindow = True
+									processinfo.RedirectStandardOutput = True
+									process.StartInfo = processinfo
+
+									process.Start()
+									reply2 = process.StandardOutput.ReadToEnd
+									process.StandardOutput.Close()
+									process.Close()
+									'process.WaitForExit()
+									log(reply2)
+
+								End If
+							End If
+						Next
+					End If
+				Catch ex As Exception
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					log(ex.Message + ex.StackTrace)
+				End Try
+			End If
+
+
+			log("ddudr Remove Audio/HDMI Complete")
+			'removing monitor and hidden monitor
+
+
+
+			If removemonitor Then
+				log("ddudr Remove Monitor started")
+				Try
+					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames
+							If Not checkvariables.isnullorwhitespace(child) Then
+
+								subregkey = regkey.OpenSubKey(child)
+								If subregkey IsNot Nothing Then
+
+									For Each child2 As String In subregkey.GetSubKeyNames
+										If Not checkvariables.isnullorwhitespace(child2) Then
+
+											If subregkey.OpenSubKey(child2) Is Nothing Then
+												Continue For
+											End If
+
+											vendid = child & "\" & child2
+
+
+											processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+											processinfo.Arguments = "remove " & Chr(34) & "@DISPLAY\" & vendid & Chr(34)
+											processinfo.UseShellExecute = False
+											processinfo.CreateNoWindow = True
+											processinfo.RedirectStandardOutput = True
+											process.StartInfo = processinfo
+
+											process.Start()
+											reply2 = process.StandardOutput.ReadToEnd
+											process.StandardOutput.Close()
+											process.Close()
+											'process.WaitForExit()
+										End If
+									Next
+								End If
+							End If
+						Next
+					End If
+				Catch ex As Exception
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					log(ex.Message + ex.StackTrace)
+				End Try
+
+				UpdateTextMethod(UpdateTextMethodmessagefn(27))
+			End If
+			UpdateTextMethod(UpdateTextMethodmessagefn(28))
+
+			'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont what that
+			'espcially if we are not using an AMD GPU
+
+			If removeamdkmpfd Then
+				Try
+					log("Checking and Removing AMDKMPFD Filter if present")
+					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames()
+							If checkvariables.isnullorwhitespace(child) = False Then
+								If child.ToLower.Contains("pnp0a08") Or
+								   child.ToLower.Contains("pnp0a03") Then
+									subregkey = regkey.OpenSubKey(child)
+									If subregkey IsNot Nothing Then
+										For Each child2 As String In subregkey.GetSubKeyNames()
+											If Not checkvariables.isnullorwhitespace(child2) Then
+												array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
+												If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+													For i As Integer = 0 To array.Length - 1
+														If Not checkvariables.isnullorwhitespace(array(i)) Then
+															If array(i).ToLower.Contains("amdkmpfd") Then
+																log("Found an AMDKMPFD! in " + child)
+																Try
+																	log("array result: " + array(i))
+																Catch ex As Exception
+																End Try
+																processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+																If win10 Then
+																	processinfo.Arguments = "update " & windir & "\inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
+																Else
+																	processinfo.Arguments = "update " & windir & "\inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
+																End If
+																processinfo.UseShellExecute = False
+																processinfo.CreateNoWindow = True
+																processinfo.RedirectStandardOutput = True
+																process.StartInfo = processinfo
+
+																process.Start()
+																reply2 = process.StandardOutput.ReadToEnd
+																'process.WaitForExit()
+																process.StandardOutput.Close()
+																process.Close()
+																log(reply2)
+																log(child + " Restored.")
+
+															End If
+														End If
+													Next
+												End If
+											End If
+										Next
+									End If
+								End If
+							End If
+						Next
+					End If
+				Catch ex As Exception
+					log(ex.Message + ex.StackTrace)
+				End Try
+
+				'We now try to remove the service AMDPMPFD if its lowerfilter is not found
+				If reboot Or shutdown Then
+					If Not checkamdkmapfd() Then
+						CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+					End If
+				End If
+			End If
+
+			If combobox1value = "AMD" Then
+				cleanamdserviceprocess()
+				cleanamd()
+
+				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+					log("Killing Explorer.exe")
+					Dim appproc = process.GetProcessesByName("explorer")
+					For i As Integer = 0 To appproc.Length - 1
+						appproc(i).Kill()
+					Next i
+				End If
+
+				cleanamdfolders()
+			End If
+
+			If combobox1value = "NVIDIA" Then
+				cleannvidiaserviceprocess()
+				cleannvidia()
+
+				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+					log("Killing Explorer.exe")
+					Dim appproc = process.GetProcessesByName("explorer")
+					For i As Integer = 0 To appproc.Length - 1
+						appproc(i).Kill()
+					Next i
+				End If
+
+
+				cleannvidiafolders()
+				checkpcieroot()
+			End If
+
+			If combobox1value = "INTEL" Then
+				cleanintelserviceprocess()
+				cleanintel()
+
+				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+					log("Killing Explorer.exe")
+					Dim appproc = process.GetProcessesByName("explorer")
+					For i As Integer = 0 To appproc.Length - 1
+						appproc(i).Kill()
+					Next i
+				End If
+
+				cleanintelfolders()
+			End If
+
+			cleandriverstore()
+			fixregistrydriverstore()
+			'rebuildcountercache()
+		Catch ex As Exception
+			log(ex.Message & ex.StackTrace)
+			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+			stopme = True
+		End Try
+
+	End Sub
+
+	Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object,
+	ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+	Handles BackgroundWorker1.RunWorkerCompleted
+		Try
+
+			If stopme = True Then
+				'Scan for new hardware to not let users into a non working state.
+
+				Dim scan As New ProcessStartInfo
+				scan.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+				scan.Arguments = "rescan"
+				scan.UseShellExecute = False
+				scan.CreateNoWindow = True
+				scan.RedirectStandardOutput = False
+				Dim proc4 As New Process
+				proc4.StartInfo = scan
+				proc4.Start()
+				proc4.WaitForExit()
+				proc4.Close()
+				'then quit
+				closeddu()
+				Exit Sub
+			End If
+
+
+			'For command line arguement to know if there is more cleans to be done.
+
+			preventclose = False
+			backgroundworkcomplete = True
+
+			UpdateTextMethod(UpdateTextMethodmessagefn(9))
+
+			log("Clean uninstall completed!")
+
+			If Not shutdown Then
+				rescan()
+			End If
+
+			Dispatcher.Invoke(Sub() btnCleanRestart.IsEnabled = True)
+			Dispatcher.Invoke(Sub() btnClean.IsEnabled = True)
+			Dispatcher.Invoke(Sub() btnCleanShutdown.IsEnabled = True)
+			Dispatcher.Invoke(Sub() ComboBox1.IsEnabled = True)
+			Dispatcher.Invoke(Sub() MenuStrip1.IsEnabled = True)
+
+			If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
+				If MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text10"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.YesNo, MessageBoxIcon.Information) = Windows.Forms.DialogResult.Yes Then
+					closeddu()
+					Exit Sub
+				End If
+			End If
+
+			If reboot Then
+				restartcomputer()
+			End If
+
+			If shutdown Then
+				shutdowncomputer()
+			End If
+
+		Catch ex As Exception
+			preventclose = False
+			log(ex.Message + ex.StackTrace)
+		End Try
+	End Sub
 
 #End Region
 
-    Private Sub ThreadTask()
-
-        Try
-            If argcleanamd Then
-                backgroundworkcomplete = False
-                cleananddonothing("AMD")
-            End If
-
-            Do Until backgroundworkcomplete
-                System.Threading.Thread.Sleep(10)
-            Loop
-
-            If argcleannvidia Then
-                backgroundworkcomplete = False
-                cleananddonothing("NVIDIA")
-            End If
-
-            Do Until backgroundworkcomplete
-                System.Threading.Thread.Sleep(10)
-            Loop
-
-            If argcleanintel Then
-                backgroundworkcomplete = False
-                cleananddonothing("INTEL")
-            End If
-
-            Do Until backgroundworkcomplete
-                System.Threading.Thread.Sleep(10)
-            Loop
-
-            If restart Then
-                log("Restarting Computer ")
-                processinfo.FileName = "shutdown"
-                processinfo.Arguments = "/r /t 0"
-                processinfo.WindowStyle = ProcessWindowStyle.Hidden
-                processinfo.UseShellExecute = True
-                processinfo.CreateNoWindow = True
-                processinfo.RedirectStandardOutput = False
-
-                process.StartInfo = processinfo
-                process.Start()
-                process.WaitForExit()
-                process.Close()
-
-                closeddu()
-                Exit Sub
-            End If
-
-            If silent And (Not restart) Then
-                closeddu()
-            End If
-        Catch ex As Exception
-            log(ex.Message + ex.StackTrace)
-        End Try
-    End Sub
-
-    Sub systemrestore()
-        'THIS NEEDS TO BE FIXED!!! DOES NOT WORK WITH OPTION STRICT ON. I WAS UNABLE TO FIGURE OUT MY SELF. BE SURE TO FIX BEFORE RELEASE.
-
-        If trysystemrestore Then
-            Try
-                UpdateTextMethod("Creating System Restore point (If allowed by the system)")
-                log("Trying to Create a System Restored Point")
-                Dim oScope As New ManagementScope("\\localhost\root\default")
-                Dim oPath As New ManagementPath("SystemRestore")
-                Dim oGetOp As New ObjectGetOptions()
-                Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
-
-                Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
-                oInParams("Description") = "DDU System Restored Point"
-                oInParams("RestorePointType") = 12 ' MODIFY_SETTINGS
-                oInParams("EventType") = 100
-
-                Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
-
-                log("System Restored Point Created. code: " + CStr(oOutParams("ReturnValue")))
-            Catch ex As Exception
-                log("System Restored Point Could not be Created! Err Code: 0x" & Hex(Err.Number))
-            End Try
-
-        End If
-        '     If trysystemrestore Then
-        '     Select Case System.Windows.Forms.SystemInformation.BootMode
-        '     Case BootMode.Normal
-        '     If f.CheckBox5.isChecked = True Then
-        '     UpdateTextMethod("Creating System Restore point (If allowed by the system)")
-        '     Try
-        '     log("Trying to Create a System Restored Point")
-        '     Dim SysterRestoredPoint As Object = GetObject("winmgmts:\\.\root\default:Systemrestore")
-        '     If SysterRestoredPoint IsNot Nothing Then
-        '     If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
-        '     log("System Restored Point Created")
-        '     Else
-        '     log("System Restored Point Could not Created!")
-        '     End If
-        '     End If
-        '
-        '        Catch ex As Exception
-        '        log(ex.Message)
-        '        End Try
-        '        End If
-        '        End Select
-        '        End If
-    End Sub
-
-    Sub getoeminfo()
-
-        log("The following third-party driver packages are installed on this computer: ")
-        Dim infisvalid As Boolean = True
-        Try
-            For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
-                If Not checkvariables.isnullorwhitespace(infs) Then
-
-                    log("---")
-                    log(infs)
-                    infisvalid = False 'false unless we find either a provider or class 
-                    For Each child As String In IO.File.ReadAllLines(infs)
-                        If Not checkvariables.isnullorwhitespace(child) Then
-                            child = child.Replace(" ", "").Replace(vbTab, "")
-
-                            If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
-                                infisvalid = True
-                                If child.EndsWith("%") Then
-                                    For Each provider As String In IO.File.ReadAllLines(infs)
-                                        If Not checkvariables.isnullorwhitespace(provider) Then
-                                            provider = provider.Replace(" ", "").Replace(vbTab, "")
-                                            If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
-                                               Not provider.Contains("%") Then
-                                                log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
-                                                Exit For
-                                            End If
-                                        End If
-                                    Next
-                                    Exit For
-                                End If
-                                log(child)
-                                Exit For
-                            End If
-                        End If
-                    Next
-
-                    For Each child As String In IO.File.ReadAllLines(infs)
-                        If Not checkvariables.isnullorwhitespace(child) Then
-
-                            child = child.Replace(" ", "").Replace(vbTab, "")
-
-                            If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
-                                infisvalid = True
-                                If child.EndsWith("%") Then
-                                    For Each provider As String In IO.File.ReadAllLines(infs)
-                                        If Not checkvariables.isnullorwhitespace(provider) Then
-                                            provider = provider.Replace(" ", "").Replace(vbTab, "")
-                                            If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso
-                                               Not provider.Contains("%") Then
-                                                log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
-                                                Exit For
-                                            End If
-                                        End If
-                                    Next
-                                    Exit For
-                                End If
-                                log(child)
-                                Exit For
-                            End If
-                        End If
-                    Next
-                    If Not infisvalid Then
-                        log("This inf entry is corrupted or invalid.")
-                        deletefile(infs)
-                    End If
-                End If
-            Next
-        Catch ex As Exception
-            log(ex.Message + ex.StackTrace)
-        End Try
-
-    End Sub
-
-    Public Sub TestDelete(ByVal folder As String)
-        ' UpdateTextMethod(UpdateTextMethodmessagefn("18"))
-        'log("Deleting some specials folders, it could take some times...")
-        'ensure that this folder can be accessed with current user ac.
-        If Not Directory.Exists(folder) Then
-            Exit Sub
-        End If
-
-        'Get an object repesenting the directory path below
-        Dim di As New DirectoryInfo(folder)
-
-        'Traverse all of the child directors in the root; get to the lowest child
-        'and delete all files, working our way back up to the top.  All files
-        'must be deleted in the directory, before the directory itself can be deleted.
-        'also if there is hidden / readonly / system attribute..  change those attribute.
-        Try
-
-
-            For Each diChild As DirectoryInfo In di.GetDirectories()
-                diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
-                diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
-                diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-                If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
-
-                    Try
-                        TraverseDirectory(diChild)
-                    Catch ex As Exception
-                        log(ex.Message + ex.StackTrace)
-                    End Try
-                End If
-            Next
-        Catch ex As Exception
-            log("test delete : " + ex.Message)
-        End Try
-        'Finally, clean all of the files directly in the root directory
-        CleanAllFilesInDirectory(di)
-
-        'The containing directory can only be deleted if the directory
-        'is now completely empty and all files previously within
-        'were deleted.
-        Try
-            If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
-                di.Delete()
-                log(di.ToString + " - " + "Folder removed via testdelete sub")
-            End If
-        Catch ex As Exception
-            log("testdelete @ di.getfiles() : " + ex.Message)
-        End Try
-    End Sub
-
-    Private Sub TraverseDirectory(ByVal di As DirectoryInfo)
-
-        'If the current directory has more child directories, then continure
-        'to traverse down until we are at the lowest level and remove
-        'there hidden / readonly / system attribute..  At that point all of the
-        'files will be deleted.
-        For Each diChild As DirectoryInfo In di.GetDirectories()
-            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
-            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
-            diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-            If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
-
-                Try
-                    TraverseDirectory(diChild)
-                Catch ex As Exception
-                    log(ex.Message + ex.StackTrace)
-                End Try
-            End If
-        Next
-
-        'Now that we have no more child directories to traverse, delete all of the files
-        'in the current directory, and then delete the directory itself.
-        CleanAllFilesInDirectory(di)
-
-
-        'The containing directory can only be deleted if the directory
-        'is now completely empty and all files previously within
-        'were deleted.
-        If di.GetFiles().Length = 0 Then
-            Try
-                di.Delete()
-            Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
-            End Try
-        End If
-
-    End Sub
-
-    ''' Iterates through all files in the directory passed into
-    ''' method and deletes them.
-    ''' It may be necessary to wrap this call in impersonation or ensure parent directory
-    ''' permissions prior, because delete permissions are not guaranteed.
-
-    Private Sub CleanAllFilesInDirectory(ByVal DirectoryToClean As DirectoryInfo)
-
-        Try
-            For Each fi As FileInfo In DirectoryToClean.GetFiles()
-                'The following code is NOT required, but shows how some logic can be wrapped
-                'around the deletion of files.  For example, only delete files with
-                'a creation date older than 1 hour from the current time.  If you
-                'always want to delete all of the files regardless, just remove
-                'the next 'If' statement.
-
-                'Read only files can not be deleted, so mark the attribute as 'IsReadOnly = False'
-
-                Try
-                    fi.IsReadOnly = False
-                Catch ex As Exception
-                End Try
-
-                Try
-                    fi.Delete()
-                Catch ex As Exception
-                End Try
-                'On a rare occasion, files being deleted might be slower than program execution, and upon returning
-                'from this call, attempting to delete the directory will throw an exception stating it is not yet
-                'empty, even though a fraction of a second later it actually is.  Therefore the 'Optional' code below
-                'can stall the process just long enough to ensure the file is deleted before proceeding. The value
-                'can be adjusted as needed from testing and running the process repeatedly.
-                'System.Threading.Thread.sleep(10)  '50 millisecond stall (0.025 Seconds)
-
-            Next
-        Catch ex As Exception
-            log("cleanallfilesindi : " + ex.Message)
-        End Try
-    End Sub
-
-    Private Sub KillP(processname As String)
-        Dim processList() As Process
-        processList = process.GetProcessesByName(processname)
-
-        For Each proc As Process In processList
-            Try
-                proc.Kill()
-            Catch ex As Exception
-                log("!! ERROR !! Failed to kill process(es): " & ex.Message)
-            End Try
-        Next
-    End Sub
-
-    Private Sub KillGPUStatsProcesses()
-        KillP("MSIAfterburner")
-        KillP("PrecisionX_x64") ' Not sure for the x86 one...      Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
-        KillP("PrecisionXServer_x64")
-        KillP("PrecisionXServer")
-        KillP("PrecisionX")
-        KillP("RTSS")
-        KillP("RTSSHooksLoader64")
-        KillP("EncoderServer64")
-        KillP("RTSSHooksLoader")
-        KillP("EncoderServer")
-        KillP("nvidiaInspector")
-    End Sub
-
-    Private Sub cleananddonothing(ByVal gpu As String)
-        reboot = False
-        shutdown = False
-        Dispatcher.Invoke(Sub() ComboBox1.Text = gpu)
-        BackgroundWorker1.RunWorkerAsync()
-
-    End Sub
-
-    Private Sub cleanandandreboot(ByVal gpu As String)
-        reboot = True
-        shutdown = False
-        Dispatcher.Invoke(Sub() ComboBox1.Text = gpu)
-        BackgroundWorker1.RunWorkerAsync()
-
-    End Sub
-
-    Public Sub log(ByVal strmessage As String)
-        Try
-            If f.CheckBox2.IsChecked = True Then
-                Using wlog As New IO.StreamWriter(locations, True)
-                    wlog.WriteLine(DateTime.Now & " >> " & strmessage)
-
-                    UpdateTextMethod2(strmessage)
-
-                    wlog.Flush()
-                    wlog.Close()
-                End Using 'End using always calls .Dispose() 
-                '  System.Threading.Thread.Sleep(10)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
-            End If
-        Catch ex As Exception
-
-        End Try
-    End Sub
-
-    Private Sub disabledriversearch()
-        Dim regkey As RegistryKey = Nothing
-        log("Trying to disable search for Windows Updates :")
-        log("Version " + version + " detected")
-
-        If version >= "6.1" Then
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
-                If CInt(regkey.GetValue("SearchOrderConfig").ToString) <> 0 Then
-                    regkey.SetValue("SearchOrderConfig", 0)
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                End If
-            Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
-            End Try
-        End If
-
-        If version >= "6.0" And version < "6.1" Then
-            Try
-                regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-                If CInt(regkey.GetValue("DontSearchWindowsUpdate").ToString) <> 1 Then
-                    regkey.SetValue("DontSearchWindowsUpdate", 1)
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                End If
-            Catch ex As Exception
-                log(ex.Message + ex.StackTrace)
-            End Try
-        End If
-    End Sub
-
-    Private Function checkamdkmapfd() As Boolean
-
-        Dim regkey As RegistryKey = Nothing
-        Dim subregkey As RegistryKey = Nothing
-        Dim array As String() = Nothing
-        Dim iskmpfdpresent As Boolean = False
-
-        Try
-            log("Checking if AMDKMPFD is present before Service removal")
-            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
-            If regkey IsNot Nothing Then
-                For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
-                        If child.ToLower.Contains("pnp0a08") Or
-                           child.ToLower.Contains("pnp0a03") Then
-                            subregkey = regkey.OpenSubKey(child)
-                            If subregkey IsNot Nothing Then
-                                For Each child2 As String In subregkey.GetSubKeyNames()
-                                    If Not checkvariables.isnullorwhitespace(child2) Then
-                                        array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
-                                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-                                            For i As Integer = 0 To array.Length - 1
-                                                If Not checkvariables.isnullorwhitespace(array(i)) Then
-                                                    If array(i).ToLower.Contains("amdkmpfd") Then
-                                                        log("Found an AMDKMPFD! in " + child)
-                                                        log("We do not remove the AMDKMPFP service yet")
-                                                        iskmpfdpresent = True
-
-                                                    End If
-                                                End If
-                                            Next
-                                        End If
-                                    End If
-                                Next
-                            End If
-                        End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.Message + ex.StackTrace)
-        End Try
-        If iskmpfdpresent Then
-            Return True
-        Else
-            Return False
-        End If
-
-    End Function
-
-    Private Sub InitLanguage(ByVal firstLaunch As Boolean, Optional ByVal changeTo As Languages.LanguageOption = Nothing)
-        toolTip1.AutoPopDelay = 3000
-        toolTip1.InitialDelay = 1000
-        toolTip1.ReshowDelay = 250
-        toolTip1.ShowAlways = True
-
-        If firstLaunch Then
-            ComboBox2.Items.Clear()
-
-            If Directory.Exists(String.Concat(basedir, "\settings\languages\")) Then
-                ComboBox2.ItemsSource = (Languages.ScanFolderForLang(basedir + "\settings\languages\").ToArray())
-            Else
-                Directory.CreateDirectory(String.Concat(basedir, "\settings\languages\"))
-            End If
-
-            Dim defaultLang As New Languages.LanguageOption("en", "English", basedir + "\settings\languages\English.xml")
-            ComboBox2.Items.Contains(defaultLang)
-
-            Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml")), Encoding.UTF8, True)
-                Using sw As New StreamWriter(defaultLang.Filename, False, Encoding.UTF8)
-                    While (sr.Peek() <> -1)
-                        sw.WriteLine(sr.ReadLine())
-                    End While
-
-                    sw.Flush()
-                    sw.Close()
-                End Using
-
-                sr.Close()
-            End Using
-
-            Languages.Load() 'default = english
-
-            Dim systemLang As String = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName 'en, fr, sv etc.
-            Dim lastUsedLang As String = settings.getconfig("language")
-
-            Dim hasLastUsed As Boolean = False
-            Dim hasNativeLang As Boolean = False
-
-            Dim nativeLang As Languages.LanguageOption = Nothing
-
-            For Each item As Languages.LanguageOption In ComboBox2.Items
-                If item.ISOLanguage.Equals(lastUsedLang, StringComparison.OrdinalIgnoreCase) Then
-                    ComboBox2.SelectedItem = item
-                    hasLastUsed = True
-                    Exit For 'found last used lang, moving on
-
-                End If
-
-                If Not hasNativeLang AndAlso systemLang.Equals(item.ISOLanguage, StringComparison.OrdinalIgnoreCase) Then
-                    nativeLang = item 'take native on hold incase last used language not found (avoid multiple loops)
-                End If
-            Next
-
-            If Not hasLastUsed Then
-                If Not hasNativeLang Then
-                    ComboBox2.SelectedItem = defaultLang 'couldn't find last used nor native lang, using english.
-                Else
-                    ComboBox2.SelectedItem = nativeLang 'couldn't find last used, using native lang
-                End If
-            End If
-
-            '          Languages.TranslateForm(Me, toolTip1)
-        Else
-            If changeTo IsNot Nothing AndAlso Not changeTo.ISOLanguage.Equals(Languages.Current) Then
-                Languages.Load(changeTo)
-                '               Languages.TranslateForm(Me, toolTip1)
-            End If
-        End If
-
-        settings.setconfig("language", Languages.Current)
-    End Sub
-
-    Public Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
-        Return Languages.GetTranslation(Me.Name, "UpdateLog", String.Format("Text{0}", number + 1))
-    End Function
-
-    Private Sub temporarynvidiaspeedup()   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
-
-        Dim filePath As String = Nothing
-
-        Try
-            filePath = Environment.GetFolderPath _
-            (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
-
-            For Each child As String In Directory.GetDirectories(filePath)
-                If checkvariables.isnullorwhitespace(child) = False Then
-                    If child.ToLower.Contains("installer2") Then
-                        For Each child2 As String In Directory.GetDirectories(child)
-                            If checkvariables.isnullorwhitespace(child2) = False Then
-                                If child2.ToLower.Contains("display.3dvision") Or
-                                   child2.ToLower.Contains("display.controlpanel") Or
-                                   child2.ToLower.Contains("display.driver") Or
-                                   child2.ToLower.Contains("display.gfexperience") AndAlso removegfe Or
-                                   child2.ToLower.Contains("display.nvirusb") Or
-                                   child2.ToLower.Contains("display.optimus") Or
-                                   child2.ToLower.Contains("display.physx") Or
-                                   child2.ToLower.Contains("display.update") AndAlso removegfe Or
-                                   child2.ToLower.Contains("display.nview") Or
-                                   child2.ToLower.Contains("display.nvwmi") Or
-                                   child2.ToLower.Contains("gfexperience") AndAlso removegfe Or
-                                   child2.ToLower.Contains("nvidia.update") AndAlso removegfe Or
-                                   child2.ToLower.Contains("installer2\installer") AndAlso removegfe Or
-                                   child2.ToLower.Contains("network.service") AndAlso removegfe Or
-                                   child2.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
-                                   child2.ToLower.Contains("shadowplay") AndAlso removegfe Or
-                                   child2.ToLower.Contains("update.core") AndAlso removegfe Or
-                                   child2.ToLower.Contains("virtualaudio.driver") AndAlso removegfe Or
-                                   child2.ToLower.Contains("coretemp") AndAlso removegfe Or
-                                   child2.ToLower.Contains("shield") AndAlso removegfe Or
-                                   child2.ToLower.Contains("hdaudio.driver") Then
-                                    Try
-                                        deletedirectory(child2)
-                                    Catch ex As Exception
-                                    End Try
-
-                                    If Not Directory.Exists(child2) Then
-                                        CleanupEngine.shareddlls(child2)
-                                    End If
-                                End If
-                            End If
-                        Next
-
-                        If Directory.GetDirectories(child).Length = 0 Then
-                            Try
-                                deletedirectory(child)
-                            Catch ex As Exception
-                            End Try
-                        End If
-                        If Not Directory.Exists(child) Then
-                            CleanupEngine.shareddlls(child)
-                        End If
-                    End If
-                End If
-            Next
-        Catch ex As Exception
-        End Try
-    End Sub
-
-    Public Sub UpdateTextMethod(ByVal strMessage As String)
-
-        If Not Textbox1.Dispatcher.CheckAccess() Then
-            Dispatcher.Invoke(Sub() Textbox1.Text = Textbox1.Text + strMessage + vbNewLine)
-            Dispatcher.Invoke(Sub() Textbox1.Select(Textbox1.Text.Length, 0))
-            Dispatcher.Invoke(Sub() Textbox1.ScrollToEnd())
-        Else
-            Textbox1.Text = Textbox1.Text + strMessage + vbNewLine
-            Textbox1.Select(Textbox1.Text.Length, 0)
-            Textbox1.ScrollToEnd()
-        End If
-
-    End Sub
-
-    Public Sub UpdateTextMethod2(ByVal strMessage As String)
-        Dim frmLog As New frmLog
-        If Not frmLog.tbLog.Dispatcher.CheckAccess() Then
-            Dispatcher.Invoke(Sub() frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine)
-            Dispatcher.Invoke(Sub() frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0))
-            Dispatcher.Invoke(Sub() frmLog.tbLog.ScrollToEnd())
-        Else
-            frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine
-            frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0)
-            frmLog.tbLog.ScrollToEnd()
-        End If
-
-    End Sub
-
-    Public Function GetREG_BINARY(ByVal Path As String, ByVal Value As String) As String
-        Dim Data() As Byte = CType(Microsoft.Win32.Registry.GetValue(Path, Value, Nothing), Byte())
-        If Data Is Nothing Then Return "N/A"
-        Dim Result As String = String.Empty
-        For j As Integer = 0 To Data.Length - 1
-            Result &= Hex(Data(j)).PadLeft(2, "0"c) & ""
-        Next
-        Return Result
-    End Function
-
-    Public Function HexToString(ByVal Data As String) As String
-        Dim com As String = ""
-        For x = 0 To Data.Length - 1 Step 2
-            com &= ChrW(CInt("&H" & Data.Substring(x, 2)))
-        Next
-        Return com
-    End Function
-
-    Public Sub deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
-
-        CleanupEngine.deletesubregkey(value1, value2)
-
-    End Sub
-
-    Private Sub deletedirectory(ByVal directory As String)
-        CleanupEngine.deletedirectory(directory)
-    End Sub
-
-    Private Sub deletefile(ByVal file As String)
-        CleanupEngine.deletefile(file)
-    End Sub
-
-    Public Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
-
-        CleanupEngine.deletevalue(value1, value2)
-
-    End Sub
-
-    Private Sub amdenvironementpath(ByVal filepath As String)
-
-        Dim regkey As RegistryKey
-        Dim subregkey As RegistryKey
-        Dim wantedvalue As String = Nothing
-
-        '--------------------------------
-        'System environement path cleanup
-        '--------------------------------
-
-        log("System environement cleanUP")
-        filepath = filepath.ToLower
-        Try
-            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
-            If subregkey IsNot Nothing Then
-                For Each child2 As String In subregkey.GetSubKeyNames()
-                    If child2.ToLower.Contains("controlset") Then
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetValueNames()
-                                If checkvariables.isnullorwhitespace(child) = False Then
-                                    If child.Contains("Path") Then
-                                        If checkvariables.isnullorwhitespace(CStr(regkey.GetValue(child))) = False Then
-                                            wantedvalue = regkey.GetValue(child).ToString.ToLower
-                                            Try
-                                                Select Case True
-                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86_64")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86_64", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86_64;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86_64;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\amd app\bin\x86;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
-                                                        wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                    Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
-                                                        wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
-                                                        regkey.SetValue(child, wantedvalue)
-
-                                                End Select
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                    End If
-                                End If
-                            Next
-                        End If
-                    End If
-                Next
-            End If
-        Catch ex As Exception
-            log(ex.Message + ex.StackTrace)
-        End Try
-
-        'end system environement patch cleanup
-    End Sub
+	Private Sub ThreadTask()
+
+		Try
+			If argcleanamd Then
+				backgroundworkcomplete = False
+				cleananddonothing("AMD")
+			End If
+
+			Do Until backgroundworkcomplete
+				System.Threading.Thread.Sleep(10)
+			Loop
+
+			If argcleannvidia Then
+				backgroundworkcomplete = False
+				cleananddonothing("NVIDIA")
+			End If
+
+			Do Until backgroundworkcomplete
+				System.Threading.Thread.Sleep(10)
+			Loop
+
+			If argcleanintel Then
+				backgroundworkcomplete = False
+				cleananddonothing("INTEL")
+			End If
+
+			Do Until backgroundworkcomplete
+				System.Threading.Thread.Sleep(10)
+			Loop
+
+			If restart Then
+				log("Restarting Computer ")
+				processinfo.FileName = "shutdown"
+				processinfo.Arguments = "/r /t 0"
+				processinfo.WindowStyle = ProcessWindowStyle.Hidden
+				processinfo.UseShellExecute = True
+				processinfo.CreateNoWindow = True
+				processinfo.RedirectStandardOutput = False
+
+				process.StartInfo = processinfo
+				process.Start()
+				process.WaitForExit()
+				process.Close()
+
+				closeddu()
+				Exit Sub
+			End If
+
+			If silent And (Not restart) Then
+				closeddu()
+			End If
+		Catch ex As Exception
+			log(ex.Message + ex.StackTrace)
+		End Try
+	End Sub
+
+	Sub systemrestore()
+		'THIS NEEDS TO BE FIXED!!! DOES NOT WORK WITH OPTION STRICT ON. I WAS UNABLE TO FIGURE OUT MY SELF. BE SURE TO FIX BEFORE RELEASE.
+
+		If trysystemrestore Then
+			Try
+				UpdateTextMethod("Creating System Restore point (If allowed by the system)")
+				log("Trying to Create a System Restored Point")
+				Dim oScope As New ManagementScope("\\localhost\root\default")
+				Dim oPath As New ManagementPath("SystemRestore")
+				Dim oGetOp As New ObjectGetOptions()
+				Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
+
+				Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
+				oInParams("Description") = "DDU System Restored Point"
+				oInParams("RestorePointType") = 12 ' MODIFY_SETTINGS
+				oInParams("EventType") = 100
+
+				Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
+
+				log("System Restored Point Created. code: " + CStr(oOutParams("ReturnValue")))
+			Catch ex As Exception
+				log("System Restored Point Could not be Created! Err Code: 0x" & Hex(Err.Number))
+			End Try
+
+		End If
+		'     If trysystemrestore Then
+		'     Select Case System.Windows.Forms.SystemInformation.BootMode
+		'     Case BootMode.Normal
+		'     If f.CheckBox5.isChecked = True Then
+		'     UpdateTextMethod("Creating System Restore point (If allowed by the system)")
+		'     Try
+		'     log("Trying to Create a System Restored Point")
+		'     Dim SysterRestoredPoint As Object = GetObject("winmgmts:\\.\root\default:Systemrestore")
+		'     If SysterRestoredPoint IsNot Nothing Then
+		'     If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
+		'     log("System Restored Point Created")
+		'     Else
+		'     log("System Restored Point Could not Created!")
+		'     End If
+		'     End If
+		'
+		'        Catch ex As Exception
+		'        log(ex.Message)
+		'        End Try
+		'        End If
+		'        End Select
+		'        End If
+	End Sub
+
+	Sub getoeminfo()
+
+		log("The following third-party driver packages are installed on this computer: ")
+		Dim infisvalid As Boolean = True
+		Try
+			For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
+				If Not checkvariables.isnullorwhitespace(infs) Then
+
+					log("---")
+					log(infs)
+					infisvalid = False 'false unless we find either a provider or class 
+					For Each child As String In IO.File.ReadAllLines(infs)
+						If Not checkvariables.isnullorwhitespace(child) Then
+							child = child.Replace(" ", "").Replace(vbTab, "")
+
+							If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
+								infisvalid = True
+								If child.EndsWith("%") Then
+									For Each provider As String In IO.File.ReadAllLines(infs)
+										If Not checkvariables.isnullorwhitespace(provider) Then
+											provider = provider.Replace(" ", "").Replace(vbTab, "")
+											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
+											   Not provider.Contains("%") Then
+												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
+												Exit For
+											End If
+										End If
+									Next
+									Exit For
+								End If
+								log(child)
+								Exit For
+							End If
+						End If
+					Next
+
+					For Each child As String In IO.File.ReadAllLines(infs)
+						If Not checkvariables.isnullorwhitespace(child) Then
+
+							child = child.Replace(" ", "").Replace(vbTab, "")
+
+							If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
+								infisvalid = True
+								If child.EndsWith("%") Then
+									For Each provider As String In IO.File.ReadAllLines(infs)
+										If Not checkvariables.isnullorwhitespace(provider) Then
+											provider = provider.Replace(" ", "").Replace(vbTab, "")
+											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso
+											   Not provider.Contains("%") Then
+												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
+												Exit For
+											End If
+										End If
+									Next
+									Exit For
+								End If
+								log(child)
+								Exit For
+							End If
+						End If
+					Next
+					If Not infisvalid Then
+						log("This inf entry is corrupted or invalid.")
+						deletefile(infs)
+					End If
+				End If
+			Next
+		Catch ex As Exception
+			log(ex.Message + ex.StackTrace)
+		End Try
+
+	End Sub
+
+	Public Sub TestDelete(ByVal folder As String)
+		' UpdateTextMethod(UpdateTextMethodmessagefn("18"))
+		'log("Deleting some specials folders, it could take some times...")
+		'ensure that this folder can be accessed with current user ac.
+		If Not Directory.Exists(folder) Then
+			Exit Sub
+		End If
+
+		'Get an object repesenting the directory path below
+		Dim di As New DirectoryInfo(folder)
+
+		'Traverse all of the child directors in the root; get to the lowest child
+		'and delete all files, working our way back up to the top.  All files
+		'must be deleted in the directory, before the directory itself can be deleted.
+		'also if there is hidden / readonly / system attribute..  change those attribute.
+		Try
+
+
+			For Each diChild As DirectoryInfo In di.GetDirectories()
+				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
+				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
+				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
+				If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+
+					Try
+						TraverseDirectory(diChild)
+					Catch ex As Exception
+						log(ex.Message + ex.StackTrace)
+					End Try
+				End If
+			Next
+		Catch ex As Exception
+			log("test delete : " + ex.Message)
+		End Try
+		'Finally, clean all of the files directly in the root directory
+		CleanAllFilesInDirectory(di)
+
+		'The containing directory can only be deleted if the directory
+		'is now completely empty and all files previously within
+		'were deleted.
+		Try
+			If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
+				di.Delete()
+				log(di.ToString + " - " + "Folder removed via testdelete sub")
+			End If
+		Catch ex As Exception
+			log("testdelete @ di.getfiles() : " + ex.Message)
+		End Try
+	End Sub
+
+	Private Sub TraverseDirectory(ByVal di As DirectoryInfo)
+
+		'If the current directory has more child directories, then continure
+		'to traverse down until we are at the lowest level and remove
+		'there hidden / readonly / system attribute..  At that point all of the
+		'files will be deleted.
+		For Each diChild As DirectoryInfo In di.GetDirectories()
+			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
+			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
+			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
+			If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+
+				Try
+					TraverseDirectory(diChild)
+				Catch ex As Exception
+					log(ex.Message + ex.StackTrace)
+				End Try
+			End If
+		Next
+
+		'Now that we have no more child directories to traverse, delete all of the files
+		'in the current directory, and then delete the directory itself.
+		CleanAllFilesInDirectory(di)
+
+
+		'The containing directory can only be deleted if the directory
+		'is now completely empty and all files previously within
+		'were deleted.
+		If di.GetFiles().Length = 0 Then
+			Try
+				di.Delete()
+			Catch ex As Exception
+				log(ex.Message + ex.StackTrace)
+			End Try
+		End If
+
+	End Sub
+
+	''' Iterates through all files in the directory passed into
+	''' method and deletes them.
+	''' It may be necessary to wrap this call in impersonation or ensure parent directory
+	''' permissions prior, because delete permissions are not guaranteed.
+
+	Private Sub CleanAllFilesInDirectory(ByVal DirectoryToClean As DirectoryInfo)
+
+		Try
+			For Each fi As FileInfo In DirectoryToClean.GetFiles()
+				'The following code is NOT required, but shows how some logic can be wrapped
+				'around the deletion of files.  For example, only delete files with
+				'a creation date older than 1 hour from the current time.  If you
+				'always want to delete all of the files regardless, just remove
+				'the next 'If' statement.
+
+				'Read only files can not be deleted, so mark the attribute as 'IsReadOnly = False'
+
+				Try
+					fi.IsReadOnly = False
+				Catch ex As Exception
+				End Try
+
+				Try
+					fi.Delete()
+				Catch ex As Exception
+				End Try
+				'On a rare occasion, files being deleted might be slower than program execution, and upon returning
+				'from this call, attempting to delete the directory will throw an exception stating it is not yet
+				'empty, even though a fraction of a second later it actually is.  Therefore the 'Optional' code below
+				'can stall the process just long enough to ensure the file is deleted before proceeding. The value
+				'can be adjusted as needed from testing and running the process repeatedly.
+				'System.Threading.Thread.sleep(10)  '50 millisecond stall (0.025 Seconds)
+
+			Next
+		Catch ex As Exception
+			log("cleanallfilesindi : " + ex.Message)
+		End Try
+	End Sub
+
+	Private Sub KillP(processname As String)
+		Dim processList() As Process
+		processList = process.GetProcessesByName(processname)
+
+		For Each proc As Process In processList
+			Try
+				proc.Kill()
+			Catch ex As Exception
+				log("!! ERROR !! Failed to kill process(es): " & ex.Message)
+			End Try
+		Next
+	End Sub
+
+	Private Sub KillGPUStatsProcesses()
+		KillP("MSIAfterburner")
+		KillP("PrecisionX_x64")	' Not sure for the x86 one...      Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
+		KillP("PrecisionXServer_x64")
+		KillP("PrecisionXServer")
+		KillP("PrecisionX")
+		KillP("RTSS")
+		KillP("RTSSHooksLoader64")
+		KillP("EncoderServer64")
+		KillP("RTSSHooksLoader")
+		KillP("EncoderServer")
+		KillP("nvidiaInspector")
+	End Sub
+
+	Private Sub cleananddonothing(ByVal gpu As String)
+		reboot = False
+		shutdown = False
+		Dispatcher.Invoke(Sub() ComboBox1.Text = gpu)
+		BackgroundWorker1.RunWorkerAsync()
+
+	End Sub
+
+	Private Sub cleanandandreboot(ByVal gpu As String)
+		reboot = True
+		shutdown = False
+		Dispatcher.Invoke(Sub() ComboBox1.Text = gpu)
+		BackgroundWorker1.RunWorkerAsync()
+
+	End Sub
+
+	Public Sub log(ByVal strmessage As String)
+		Try
+			If f.CheckBox2.IsChecked = True Then
+				Using wlog As New IO.StreamWriter(locations, True)
+					wlog.WriteLine(DateTime.Now & " >> " & strmessage)
+
+					UpdateTextMethod2(strmessage)
+
+					wlog.Flush()
+					wlog.Close()
+				End Using 'End using always calls .Dispose() 
+				'  System.Threading.Thread.Sleep(10)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
+			End If
+		Catch ex As Exception
+
+		End Try
+	End Sub
+
+	Private Sub disabledriversearch()
+		Dim regkey As RegistryKey = Nothing
+		log("Trying to disable search for Windows Updates :")
+		log("Version " + version + " detected")
+
+		If version >= "6.1" Then
+			Try
+				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
+				If CInt(regkey.GetValue("SearchOrderConfig").ToString) <> 0 Then
+					regkey.SetValue("SearchOrderConfig", 0)
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
+				End If
+			Catch ex As Exception
+				log(ex.Message + ex.StackTrace)
+			End Try
+		End If
+
+		If version >= "6.0" And version < "6.1" Then
+			Try
+				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
+				If CInt(regkey.GetValue("DontSearchWindowsUpdate").ToString) <> 1 Then
+					regkey.SetValue("DontSearchWindowsUpdate", 1)
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
+				End If
+			Catch ex As Exception
+				log(ex.Message + ex.StackTrace)
+			End Try
+		End If
+	End Sub
+
+	Private Function checkamdkmapfd() As Boolean
+
+		Dim regkey As RegistryKey = Nothing
+		Dim subregkey As RegistryKey = Nothing
+		Dim array As String() = Nothing
+		Dim iskmpfdpresent As Boolean = False
+
+		Try
+			log("Checking if AMDKMPFD is present before Service removal")
+			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames()
+					If checkvariables.isnullorwhitespace(child) = False Then
+						If child.ToLower.Contains("pnp0a08") Or
+						   child.ToLower.Contains("pnp0a03") Then
+							subregkey = regkey.OpenSubKey(child)
+							If subregkey IsNot Nothing Then
+								For Each child2 As String In subregkey.GetSubKeyNames()
+									If Not checkvariables.isnullorwhitespace(child2) Then
+										array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
+										If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+											For i As Integer = 0 To array.Length - 1
+												If Not checkvariables.isnullorwhitespace(array(i)) Then
+													If array(i).ToLower.Contains("amdkmpfd") Then
+														log("Found an AMDKMPFD! in " + child)
+														log("We do not remove the AMDKMPFP service yet")
+														iskmpfdpresent = True
+
+													End If
+												End If
+											Next
+										End If
+									End If
+								Next
+							End If
+						End If
+					End If
+				Next
+			End If
+		Catch ex As Exception
+			log(ex.Message + ex.StackTrace)
+		End Try
+		If iskmpfdpresent Then
+			Return True
+		Else
+			Return False
+		End If
+
+	End Function
+
+	Private Sub InitLanguage(ByVal firstLaunch As Boolean, Optional ByVal changeTo As Languages.LanguageOption = Nothing)
+		toolTip1.AutoPopDelay = 3000
+		toolTip1.InitialDelay = 1000
+		toolTip1.ReshowDelay = 250
+		toolTip1.ShowAlways = True
+
+		If firstLaunch Then
+			cbLanguage.Items.Clear()
+
+			If Directory.Exists(String.Concat(baseDir, "\settings\languages\")) Then
+				cbLanguage.ItemsSource = (Languages.ScanFolderForLang(baseDir + "\settings\languages\").ToArray())
+			Else
+				Directory.CreateDirectory(String.Concat(baseDir, "\settings\languages\"))
+			End If
+
+			Dim defaultLang As New Languages.LanguageOption("en", "English", baseDir + "\settings\languages\English.xml")
+			cbLanguage.Items.Contains(defaultLang)
+
+			Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml")), Encoding.UTF8, True)
+				Using sw As New StreamWriter(defaultLang.Filename, False, Encoding.UTF8)
+					While (sr.Peek() <> -1)
+						sw.WriteLine(sr.ReadLine())
+					End While
+
+					sw.Flush()
+					sw.Close()
+				End Using
+
+				sr.Close()
+			End Using
+
+			Languages.Load() 'default = english
+
+			Dim systemLang As String = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName	'en, fr, sv etc.
+			Dim lastUsedLang As String = settings.getconfig("language")
+
+			Dim hasLastUsed As Boolean = False
+			Dim hasNativeLang As Boolean = False
+
+			Dim nativeLang As Languages.LanguageOption = Nothing
+
+			For Each item As Languages.LanguageOption In cbLanguage.Items
+				If item.ISOLanguage.Equals(lastUsedLang, StringComparison.OrdinalIgnoreCase) Then
+					cbLanguage.SelectedItem = item
+					hasLastUsed = True
+					Exit For 'found last used lang, moving on
+
+				End If
+
+				If Not hasNativeLang AndAlso systemLang.Equals(item.ISOLanguage, StringComparison.OrdinalIgnoreCase) Then
+					nativeLang = item 'take native on hold incase last used language not found (avoid multiple loops)
+				End If
+			Next
+
+			If Not hasLastUsed Then
+				If Not hasNativeLang Then
+					cbLanguage.SelectedItem = defaultLang 'couldn't find last used nor native lang, using english.
+				Else
+					cbLanguage.SelectedItem = nativeLang 'couldn't find last used, using native lang
+				End If
+			End If
+
+			Languages.TranslateForm(Me)
+		Else
+			If changeTo IsNot Nothing AndAlso Not changeTo.ISOLanguage.Equals(Languages.Current) Then
+				Languages.Load(changeTo)
+				Languages.TranslateForm(Me)
+			End If
+		End If
+
+		settings.setconfig("language", Languages.Current)
+	End Sub
+
+	Public Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
+		Return Languages.GetTranslation(Me.Name, "UpdateLog", String.Format("Text{0}", number + 1))
+	End Function
+
+	Private Sub temporarynvidiaspeedup()   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
+
+		Dim filePath As String = Nothing
+
+		Try
+			filePath = Environment.GetFolderPath _
+			(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
+
+			For Each child As String In Directory.GetDirectories(filePath)
+				If checkvariables.isnullorwhitespace(child) = False Then
+					If child.ToLower.Contains("installer2") Then
+						For Each child2 As String In Directory.GetDirectories(child)
+							If checkvariables.isnullorwhitespace(child2) = False Then
+								If child2.ToLower.Contains("display.3dvision") Or
+								   child2.ToLower.Contains("display.controlpanel") Or
+								   child2.ToLower.Contains("display.driver") Or
+								   child2.ToLower.Contains("display.gfexperience") AndAlso removegfe Or
+								   child2.ToLower.Contains("display.nvirusb") Or
+								   child2.ToLower.Contains("display.optimus") Or
+								   child2.ToLower.Contains("display.physx") Or
+								   child2.ToLower.Contains("display.update") AndAlso removegfe Or
+								   child2.ToLower.Contains("display.nview") Or
+								   child2.ToLower.Contains("display.nvwmi") Or
+								   child2.ToLower.Contains("gfexperience") AndAlso removegfe Or
+								   child2.ToLower.Contains("nvidia.update") AndAlso removegfe Or
+								   child2.ToLower.Contains("installer2\installer") AndAlso removegfe Or
+								   child2.ToLower.Contains("network.service") AndAlso removegfe Or
+								   child2.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
+								   child2.ToLower.Contains("shadowplay") AndAlso removegfe Or
+								   child2.ToLower.Contains("update.core") AndAlso removegfe Or
+								   child2.ToLower.Contains("virtualaudio.driver") AndAlso removegfe Or
+								   child2.ToLower.Contains("coretemp") AndAlso removegfe Or
+								   child2.ToLower.Contains("shield") AndAlso removegfe Or
+								   child2.ToLower.Contains("hdaudio.driver") Then
+									Try
+										deletedirectory(child2)
+									Catch ex As Exception
+									End Try
+
+									If Not Directory.Exists(child2) Then
+										CleanupEngine.shareddlls(child2)
+									End If
+								End If
+							End If
+						Next
+
+						If Directory.GetDirectories(child).Length = 0 Then
+							Try
+								deletedirectory(child)
+							Catch ex As Exception
+							End Try
+						End If
+						If Not Directory.Exists(child) Then
+							CleanupEngine.shareddlls(child)
+						End If
+					End If
+				End If
+			Next
+		Catch ex As Exception
+		End Try
+	End Sub
+
+	Public Sub UpdateTextMethod(ByVal strMessage As String)
+
+		If Not Textbox1.Dispatcher.CheckAccess() Then
+			Dispatcher.Invoke(Sub() Textbox1.Text = Textbox1.Text + strMessage + vbNewLine)
+			Dispatcher.Invoke(Sub() Textbox1.Select(Textbox1.Text.Length, 0))
+			Dispatcher.Invoke(Sub() Textbox1.ScrollToEnd())
+		Else
+			Textbox1.Text = Textbox1.Text + strMessage + vbNewLine
+			Textbox1.Select(Textbox1.Text.Length, 0)
+			Textbox1.ScrollToEnd()
+		End If
+
+	End Sub
+
+	Public Sub UpdateTextMethod2(ByVal strMessage As String)
+		Dim frmLog As New frmLog
+		If Not frmLog.tbLog.Dispatcher.CheckAccess() Then
+			Dispatcher.Invoke(Sub() frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine)
+			Dispatcher.Invoke(Sub() frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0))
+			Dispatcher.Invoke(Sub() frmLog.tbLog.ScrollToEnd())
+		Else
+			frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine
+			frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0)
+			frmLog.tbLog.ScrollToEnd()
+		End If
+
+	End Sub
+
+	Public Function GetREG_BINARY(ByVal Path As String, ByVal Value As String) As String
+		Dim Data() As Byte = CType(Microsoft.Win32.Registry.GetValue(Path, Value, Nothing), Byte())
+		If Data Is Nothing Then Return "N/A"
+		Dim Result As String = String.Empty
+		For j As Integer = 0 To Data.Length - 1
+			Result &= Hex(Data(j)).PadLeft(2, "0"c) & ""
+		Next
+		Return Result
+	End Function
+
+	Public Function HexToString(ByVal Data As String) As String
+		Dim com As String = ""
+		For x = 0 To Data.Length - 1 Step 2
+			com &= ChrW(CInt("&H" & Data.Substring(x, 2)))
+		Next
+		Return com
+	End Function
+
+	Public Sub deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
+
+		CleanupEngine.deletesubregkey(value1, value2)
+
+	End Sub
+
+	Private Sub deletedirectory(ByVal directory As String)
+		CleanupEngine.deletedirectory(directory)
+	End Sub
+
+	Private Sub deletefile(ByVal file As String)
+		CleanupEngine.deletefile(file)
+	End Sub
+
+	Public Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
+
+		CleanupEngine.deletevalue(value1, value2)
+
+	End Sub
+
+	Private Sub amdenvironementpath(ByVal filepath As String)
+
+		Dim regkey As RegistryKey
+		Dim subregkey As RegistryKey
+		Dim wantedvalue As String = Nothing
+
+		'--------------------------------
+		'System environement path cleanup
+		'--------------------------------
+
+		log("System environement cleanUP")
+		filepath = filepath.ToLower
+		Try
+			subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+			If subregkey IsNot Nothing Then
+				For Each child2 As String In subregkey.GetSubKeyNames()
+					If child2.ToLower.Contains("controlset") Then
+						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetValueNames()
+								If checkvariables.isnullorwhitespace(child) = False Then
+									If child.Contains("Path") Then
+										If checkvariables.isnullorwhitespace(CStr(regkey.GetValue(child))) = False Then
+											wantedvalue = regkey.GetValue(child).ToString.ToLower
+											Try
+												Select Case True
+													Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86_64")
+														wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86_64", "")
+														regkey.SetValue(child, wantedvalue)
+
+													Case wantedvalue.Contains(filepath & "\amd app\bin\x86_64;")
+														wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86_64;", "")
+														regkey.SetValue(child, wantedvalue)
+
+													Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86")
+														wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86", "")
+														regkey.SetValue(child, wantedvalue)
+
+													Case wantedvalue.Contains(filepath & "\amd app\bin\x86;")
+														wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86;", "")
+														regkey.SetValue(child, wantedvalue)
+
+													Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
+														wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
+														regkey.SetValue(child, wantedvalue)
+
+													Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
+														wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
+														regkey.SetValue(child, wantedvalue)
+
+													Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
+														wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
+														regkey.SetValue(child, wantedvalue)
+
+													Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
+														wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
+														regkey.SetValue(child, wantedvalue)
+
+												End Select
+											Catch ex As Exception
+											End Try
+										End If
+									End If
+								End If
+							Next
+						End If
+					End If
+				Next
+			End If
+		Catch ex As Exception
+			log(ex.Message + ex.StackTrace)
+		End Try
+
+		'end system environement patch cleanup
+	End Sub
 
 End Class
 
@@ -8036,52 +8030,54 @@ Public Class checkvariables
 End Class
 
 Public Class genericfunction
-    Public Function checkupdates() As Integer
-        Try
-            If Not My.Computer.Network.IsAvailable Then
-                Return 3
-            End If
-        Catch ex As Exception
-        End Try
+	Public Function checkupdates() As Integer
+		Return 3  'TODO: REMOVE THIS LINE!!!! Blocked updates for faster debugging
 
-        Try
-            Dim request2 As System.Net.HttpWebRequest = CType(System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt"), Net.HttpWebRequest)
-            Dim response2 As System.Net.HttpWebResponse = Nothing
-            request2.Timeout = 2500
+		Try
+			If Not My.Computer.Network.IsAvailable Then
+				Return 3
+			End If
+		Catch ex As Exception
+		End Try
 
-            Try
-                response2 = CType(request2.GetResponse(), Net.HttpWebResponse)
-            Catch ex As Exception
-                request2 = CType(System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion2.txt"), Net.HttpWebRequest)
-            End Try
+		Try
+			Dim request2 As System.Net.HttpWebRequest = CType(System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt"), Net.HttpWebRequest)
+			Dim response2 As System.Net.HttpWebResponse = Nothing
+			request2.Timeout = 2500
 
-            request2.Timeout = 2500
-            response2 = CType(request2.GetResponse(), Net.HttpWebResponse)
+			Try
+				response2 = CType(request2.GetResponse(), Net.HttpWebResponse)
+			Catch ex As Exception
+				request2 = CType(System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion2.txt"), Net.HttpWebRequest)
+			End Try
 
-            Dim newestversion2 As String = ""
+			request2.Timeout = 2500
+			response2 = CType(request2.GetResponse(), Net.HttpWebResponse)
 
-            Using sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
-                newestversion2 = sr.ReadToEnd()
+			Dim newestversion2 As String = ""
 
-                sr.Close()
-            End Using
+			Using sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
+				newestversion2 = sr.ReadToEnd()
+
+				sr.Close()
+			End Using
 
 
-            Dim newestversion2int As Integer = CInt(newestversion2.Replace(".", ""))
-            Dim exeversion As String = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString().Replace(".", "")
-            Dim applicationversion As Integer = CInt(exeversion)
+			Dim newestversion2int As Integer = CInt(newestversion2.Replace(".", ""))
+			Dim exeversion As String = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString().Replace(".", "")
+			Dim applicationversion As Integer = CInt(exeversion)
 
-            If newestversion2int <= applicationversion Then
-                Return 1
-            Else
-                Return 2
-            End If
+			If newestversion2int <= applicationversion Then
+				Return 1
+			Else
+				Return 2
+			End If
 
-        Catch ex As Exception
-            MsgBox(ex.Message + ex.StackTrace)
-            Return 3
-        End Try
-    End Function
+		Catch ex As Exception
+			MsgBox(ex.Message + ex.StackTrace)
+			Return 3
+		End Try
+	End Function
     Public Function getconfig(ByVal options As String) As String
         Dim basedir As String = frmMain.baseDir
         Try

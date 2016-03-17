@@ -16,24 +16,24 @@
 
 	-->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<btnCleanRestart>
 			<Text>Clean and restart|(Highly Recommended)</Text>
 			<Tooltip>Uninstall the current and previous drivers, then restart the computer.|(Highly Recommended)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Clean and DO NOT restart.|(May cause issues like blackscreen)</Text>
 			<Tooltip>Uninstall the current and previous drivers, but don't restart the computer.|(May cause issues like blackscreen)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Clean and Shutdown|(For installing a new graphic card)</Text>
 			<Tooltip>Uninstall the current and previous drivers and Shutdown the computer with no rescan|(For installing a new graphic card)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Set Windows Automatic Driver installation to default.</Text>
-		</Button4>
-		<Button5>
+		</btnWuRestore>
+		<btnExtendedLog>
 			<Text>Show extended log.</Text>
-		</Button5>
+		</btnExtendedLog>
 		<Label1>
 			<Text>Detected Windows Version:</Text>
 		</Label1>

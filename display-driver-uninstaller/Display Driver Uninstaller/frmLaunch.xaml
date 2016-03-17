@@ -1,11 +1,27 @@
 ﻿<Window x:Name="frmLaunch" x:Class="frmLaunch"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="frmLaunchxaml" Height="300" Width="300">
-    <Grid>
-        <ComboBox x:Name="cbBootOption" HorizontalAlignment="Left" Margin="10,119.268,0,0" VerticalAlignment="Top" Width="272"/>
-        <Button x:Name="btnAccept" Content="Button" HorizontalAlignment="Left" Margin="10,239.04,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.279,1.271"/>
-        <Button x:Name="btnClose" Content="Button" HorizontalAlignment="Left" Margin="207,239.04,0,0" VerticalAlignment="Top" Width="75"/>
+    Title="frmLaunchxaml" Height="299" Width="391" ShowInTaskbar="False" ResizeMode="NoResize">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="110" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="45" />
+		</Grid.RowDefinitions>
 
-    </Grid>
+		<Label Name="Label1" Content="TODO: Put image here" Margin="6" />
+		
+		<ComboBox x:Name="cbBootOption" HorizontalAlignment="Left" VerticalAlignment="Top" Width="282" SelectedIndex="0" Grid.Row="1" Margin="6">
+			<ComboBoxItem Content="Normal (Dont remove, until translation fixed)" />
+		</ComboBox>
+
+		<Label Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="2" Margin="6" />
+
+		<DockPanel Grid.Row="3" Margin="6">
+			<Button x:Name="btnAccept" Content="Accept" HorizontalAlignment="Left" Width="100" />
+			<Button x:Name="btnClose" Content="Close" HorizontalAlignment="Right" Width="100" />
+		</DockPanel>
+
+	</Grid>
 </Window>
