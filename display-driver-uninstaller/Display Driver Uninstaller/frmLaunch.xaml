@@ -1,27 +1,32 @@
 ﻿<Window x:Name="frmLaunch" x:Class="frmLaunch"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="frmLaunchxaml" Height="299" Width="391" ShowInTaskbar="False" ResizeMode="NoResize">
+    Title="frmLaunch" Height="320" Width="420" ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="ToolWindow">
+	
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="110" />
+			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 			<RowDefinition Height="45" />
 		</Grid.RowDefinitions>
 
-		<Label Name="Label1" Content="TODO: Put image here" Margin="6" />
+		<Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" Margin="-1,-1,-1,0">
+			<Image Name="Image1" Source="/Resources/ddu logo3.png" Stretch="Uniform" Margin="6" />
+		</Border>
 		
-		<ComboBox x:Name="cbBootOption" HorizontalAlignment="Left" VerticalAlignment="Top" Width="282" SelectedIndex="0" Grid.Row="1" Margin="6">
-			<ComboBoxItem Content="Normal (Dont remove, until translation fixed)" />
-		</ComboBox>
+		<Label Name="lblLaunchOption" Content="lblLaunchOption" Grid.Row="1" Margin="6,6,6,0" Padding="0" />
 
-		<Label Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="2" Margin="6" />
+		<ComboBox x:Name="cbBootOption" HorizontalAlignment="Left" VerticalAlignment="Top" Width="282" SelectedIndex="0" Grid.Row="2" Margin="6"/>
 
-		<DockPanel Grid.Row="3" Margin="6">
-			<Button x:Name="btnAccept" Content="Accept" HorizontalAlignment="Left" Width="100" />
-			<Button x:Name="btnClose" Content="Close" HorizontalAlignment="Right" Width="100" />
-		</DockPanel>
+		<Label Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="3" Margin="6" Foreground="#FFEB0000" FontSize="14" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center" />
 
+		<Border Grid.Row="4" BorderBrush="Black" BorderThickness="1" Margin="-1,0,-1,-1">
+			<DockPanel Margin="6">
+				<Button x:Name="btnAccept" Content="accept" HorizontalAlignment="Left" Width="100" />
+				<Button x:Name="btnClose" Content="close" HorizontalAlignment="Right" Width="100" />
+			</DockPanel>
+		</Border>
 	</Grid>
 </Window>

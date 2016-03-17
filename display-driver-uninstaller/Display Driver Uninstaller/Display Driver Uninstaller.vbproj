@@ -21,7 +21,8 @@
     <IncrementalBuild>true</IncrementalBuild>
     <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile>Display Driver Uninstaller.xml</DocumentationFile>
-    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
+    <NoWarn>42314</NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,7 +34,8 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>Display Driver Uninstaller.xml</DocumentationFile>
-    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
+    <NoWarn>42314</NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -42,7 +44,7 @@
     <OptionCompare>Binary</OptionCompare>
   </PropertyGroup>
   <PropertyGroup>
-    <OptionStrict>Off</OptionStrict>
+    <OptionStrict>On</OptionStrict>
   </PropertyGroup>
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
@@ -73,6 +75,7 @@
     <Compile Include="frmLog.xaml.vb">
       <DependentUpon>frmLog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AppSettings.vb" />
     <Page Include="frmLaunch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -147,20 +150,24 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <AppDesigner Include="My Project\" />
-    <None Include="Resources\config.cfg" />
+    <Resource Include="Resources\config.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\paexec.exe" />
-    <None Include="Resources\RadeonLogo1.png" />
-    <None Include="Resources\NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg" />
-    <None Include="Resources\btn_donate_LG.gif" />
+    <Resource Include="Resources\paexec.exe" />
+    <Resource Include="Resources\RadeonLogo1.png" />
+    <Resource Include="Resources\NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg" />
+    <Resource Include="Resources\btn_donate_LG.gif" />
     <EmbeddedResource Include="English.xml" />
-    <Content Include="Resources\ddudr.exe" />
-    <None Include="Resources\intel_logo.png" />
-    <None Include="Resources\xp64\ddudr.exe" />
-    <None Include="Resources\xp32\ddudr.exe" />
-    <None Include="Resources\x86\ddudr.exe" />
-    <None Include="Resources\x64\ddudr.exe" />
+    <Resource Include="Resources\ddu logo3.png" />
+    <Resource Include="Resources\ddudr.exe" />
+    <Resource Include="Resources\intel_logo.png" />
+    <Resource Include="Resources\xp64\ddudr.exe" />
+    <Resource Include="Resources\xp32\ddudr.exe" />
+    <Resource Include="Resources\x86\ddudr.exe" />
+    <Resource Include="Resources\x64\ddudr.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\DDU.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

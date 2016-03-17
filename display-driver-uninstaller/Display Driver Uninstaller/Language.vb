@@ -220,29 +220,34 @@ notFound:
 					controls.Add(CType(child, Control))
 				End If
 
-				If VisualTreeHelper.GetChildrenCount(child) > 0 Then
-					GetChildren(child, controls)
+				If TypeOf (child) Is MenuItem Then
+					Dim menuitem As MenuItem = CType(child, MenuItem)
+
+					controls.Add(CType(menuitem, Control))
+					GetMenuItems(menuitem, controls)
+				Else
+					If VisualTreeHelper.GetChildrenCount(child) > 0 Then
+						GetChildren(child, controls)
+					End If
 				End If
 			Next
 		End If
 	End Sub
 
-	'Private Shared Sub TranslateMenuItem(ByVal form As String, ByVal menuitem As Forms.ToolStripMenuItem, Optional ByVal tp As ToolTip = Nothing)
-	'    Dim text = GetTranslation(form, menuitem.Name, "Text")
+	Private Shared Sub GetMenuItems(ByVal parent As MenuItem, ByRef controls As List(Of Control))
+		If parent.HasItems Then
+			For Each menuitem As MenuItem In parent.Items
+				controls.Add(CType(menuitem, Control))
 
-	'    If Not String.IsNullOrEmpty(text) Then
-	'        menuitem.Text = text
-	'    End If
-
-	'    If menuitem.HasDropDownItems Then
-	'        For Each childmenuitem As ToolStripMenuItem In menuitem.DropDownItems
-	'            TranslateMenuItem(form, childmenuitem, tp)
-	'        Next
-	'    End If
-	'End Sub
+				If menuitem.HasItems Then
+					GetMenuItems(menuitem, controls)
+				End If
+			Next
+		End If
+	End Sub
 
 	Private Shared Sub TranslateControl(ByVal window As String, ByVal ctrl As Control)
-		If TypeOf (ctrl) Is ComboBox Then
+		If TypeOf (ctrl) Is ComboBox Then				'ComboBox
 			Dim cb As ComboBox = CType(ctrl, ComboBox)
 			Dim items As List(Of String) = GetTranslationList(window, ctrl.Name, "Item")
 
@@ -251,7 +256,8 @@ notFound:
 				cb.ItemsSource = (GetTranslationList(window, ctrl.Name, "Item").ToArray())
 				cb.SelectedIndex = 0
 			End If
-		ElseIf TypeOf (ctrl) Is ContentControl Then	'control has '.Content' property
+
+		ElseIf TypeOf (ctrl) Is ContentControl Then		'control has '.Content' property
 			Dim contentCtrl As ContentControl = CType(ctrl, ContentControl)
 			Dim text = GetTranslation(window, contentCtrl.Name, "Text")
 
@@ -259,34 +265,27 @@ notFound:
 				contentCtrl.Content = text
 			End If
 
-
 			Dim tooltipText As String = GetTranslation(window, contentCtrl.Name, "Tooltip")
 
 			If Not String.IsNullOrEmpty(tooltipText) Then
 				contentCtrl.ToolTip = tooltipText
 			End If
-		ElseIf TypeOf (ctrl) Is Control Then 'TextBox, Menu, MenuItem
-			Dim text = GetTranslation(window, ctrl.Name, "Text")
+
+		ElseIf TypeOf (ctrl) Is MenuItem Then			'MenuItem
+			Dim menuCtrl As MenuItem = CType(ctrl, MenuItem)
+
+			Dim text = GetTranslation(window, menuCtrl.Name, "Text")
 
 			If Not String.IsNullOrEmpty(text) Then
-				'ctrl.Text = text
+				menuCtrl.Header = text
 			End If
 
-
-			Dim tooltipText As String = GetTranslation(window, ctrl.Name, "Tooltip")
+			Dim tooltipText As String = GetTranslation(window, menuCtrl.Name, "Tooltip")
 
 			If Not String.IsNullOrEmpty(tooltipText) Then
-				ctrl.ToolTip = tooltipText
+				menuCtrl.ToolTip = tooltipText
 			End If
 		End If
-
-		'For Each c As Control In ctrl.controls
-		'    If (c.HasChildren) Then
-		'        TranslateControl(form, c, tp)
-		'    End If
-		'Next
-
-
 	End Sub
 
 	Private Shared Function LoadFile(ByVal langFile As String) As Stream

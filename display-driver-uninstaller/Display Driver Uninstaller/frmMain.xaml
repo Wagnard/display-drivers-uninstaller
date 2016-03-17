@@ -5,7 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	mc:Ignorable="d" 
 	
-    Title="Display Driver Uninstaller" Height="600" Width="800" ResizeMode="noresize" Loaded="frmMain_Loaded">
+    Title="Display Driver Uninstaller" Height="600" Width="800" ResizeMode="noresize" Loaded="frmMain_Loaded" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico">
 
     <Grid>
         <Button x:Name="btnCleanRestart" Content="BtnRestart" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="180" Height="53" />
@@ -15,7 +15,7 @@
        	<Button x:Name="btnExtendedLog" Content="btnExtendedLog" HorizontalAlignment="Left" Margin="425,300,0,0" VerticalAlignment="Top" Width="154" Height="25" />
 
 		<ComboBox x:Name="ComboBox1" HorizontalAlignment="Left" Margin="219,31,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
-        <ComboBox x:Name="cbLanguage" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="120" Height="22" />
+		<ComboBox x:Name="cbLanguage" ItemsSource="{Binding Main.LanguageOptions}" DisplayMemberPath="DisplayText" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="172" Height="22" IsReadOnly="True" />
         
 		<Label x:Name="Label11" Content="Label" HorizontalAlignment="Left" Margin="12,523,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
         <Label x:Name="Label2" Content="Label" HorizontalAlignment="Left" Margin="10,27,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
@@ -23,8 +23,19 @@
       
 		<TextBox x:Name="Textbox1" HorizontalAlignment="Left" Height="172" Margin="10,335,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="366" />
 	
-		<Menu x:Name="MenuStrip1" HorizontalAlignment="Stretch" Height="25" VerticalAlignment="Top" >
-            <MenuItem x:Name="OptionsToolStripMenuItem" Header="Options"/>
-        </Menu>	
+		<Menu x:Name="MenuStrip1" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
+            <MenuItem x:Name="OptionsMenuItem" Header="Options"/>
+			<MenuItem x:Name="LinksMenuItem" Header="Links">
+				<MenuItem x:Name="VisitDDUHomeMenuItem" Header="ddu_home" />
+				<MenuItem x:Name="VisitSVNMenuItem" Header="svn" />
+				<MenuItem x:Name="VisitGuru3DNvidiaMenuItem" Header="g3d_nv" />
+				<MenuItem x:Name="VisitGuru3DAMDMenuItem" Header="g3d_amd" />
+				<MenuItem x:Name="VisitGeforceMenuItem" Header="geforce" />
+			</MenuItem>
+			<MenuItem x:Name="InfoMenuItem" Header="Info">
+				<MenuItem x:Name="ToSMenuItem" Header="Terms of Service (ToS)" />
+				<MenuItem x:Name="AboutMenuItem" Header="About" />
+			</MenuItem>
+		</Menu>	
     </Grid>
 </Window>
