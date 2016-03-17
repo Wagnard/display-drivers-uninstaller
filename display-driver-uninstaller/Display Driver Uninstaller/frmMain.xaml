@@ -6,12 +6,6 @@
         ResizeMode="noresize" Closing="frmMain" Loaded="frmMain_Loaded" ContentRendered="frmMainContentRendered">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="304*"/>
-            <ColumnDefinition Width="27*"/>
-            <ColumnDefinition Width="196*"/>
-            <ColumnDefinition Width="0*"/>
-        </Grid.ColumnDefinitions>
         <Button x:Name="btnCleanRestart" Content="BtnRestart" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="139" Height="53" />
         <Button x:Name="btnClean" Content="btnCleanonly" HorizontalAlignment="Left" Margin="10,175,0,0" VerticalAlignment="Top" Width="139" Height="53" />
         <Button x:Name="btnCleanShutdown" Content="button" HorizontalAlignment="Left" Margin="10,253,0,0" VerticalAlignment="Top" Width="139" Height="53" RenderTransformOrigin="0.518,1.792" />
