@@ -5,7 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	mc:Ignorable="d" 
 	
-    Title="Display Driver Uninstaller" Height="600" Width="800" ResizeMode="noresize" Loaded="frmMain_Loaded" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" Visibility="Visible" WindowState="Minimized">
+    Title="Display Driver Uninstaller" Height="600" Width="800" ResizeMode="noresize" Loaded="frmMain_Loaded" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" Visibility="Visible" WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Button x:Name="btnCleanRestart" Content="BtnRestart" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="180" Height="53" />

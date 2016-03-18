@@ -1,7 +1,7 @@
 ﻿<Window x:Name="frmLaunch" x:Class="frmLaunch"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="frmLaunch" Height="320" Width="420" ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="ToolWindow">
+    Title="frmLaunch" Height="320" Width="420" ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
 	
 	<Grid>
 		<Grid.RowDefinitions>

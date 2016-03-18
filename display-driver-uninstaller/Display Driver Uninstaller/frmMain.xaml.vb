@@ -6174,7 +6174,7 @@ Public Class frmMain
 							'The computer was booted using only the basic files and drivers.
 							'This is the same as Safe Mode
 							safemode = True
-
+                            Me.WindowState = Windows.WindowState.Normal
 							If winxp = False Then
 								Dim setbcdedit As New ProcessStartInfo
 								setbcdedit.FileName = "cmd.exe"
@@ -6208,21 +6208,22 @@ Public Class frmMain
 												.Owner = Application.Current.MainWindow
 											End With
 
-                                            Me.Visibility = Windows.Visibility.Hidden
+
 
 											' frmMain could be Invisible from start and shown AFTER all "processing"
 											' (WPF renders UI too fast which cause 'flash' before frmLaunch on start)
-
+                                            ' Me.Opacity = 100
                                             Dim launch As Boolean? = frmSafeBoot.ShowDialog()
-											Me.Visibility = Windows.Visibility.Visible
                                             Me.WindowState = Windows.WindowState.Normal
+
 											If launch IsNot Nothing AndAlso launch Then
 												bootOption = frmSafeBoot.selection
 											End If
 
 											Select Case bootOption
-												Case 0 'normal
-													Exit Select
+                                                Case 0 'normal
+
+                                                    Exit Select
 												Case 1 'SafeMode
 													restartinsafemode(False)
 													Exit Sub
@@ -6284,8 +6285,10 @@ Public Class frmMain
 					process.Close()
 
 					closeddu()
-					Exit Sub
-				End If
+                    Exit Sub
+                Else
+                    Me.WindowState = Windows.WindowState.Normal
+                End If
 skipboot:
                 UpdateTextMethod(UpdateTextMethodmessagefn(10) + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
                 log("DDU Version: " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
@@ -8061,6 +8064,9 @@ skipboot:
 		'end system environement patch cleanup
 	End Sub
 
+    Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
+        Me.WindowState = Windows.WindowState.Minimized
+    End Sub
 End Class
 
 Public Class checkvariables
