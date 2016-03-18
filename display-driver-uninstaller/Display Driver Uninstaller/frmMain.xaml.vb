@@ -5388,32 +5388,47 @@ Public Class frmMain
 
 
 	Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles ComboBox1.SelectionChanged
+        Dim bi3 As New BitmapImage
+        Try
 
-		combobox1value = ComboBox1.Text
-		If combobox1value = "NVIDIA" Then
 
-			'PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
-			'PictureBox2.Size = New Size(252, 123)
-			'         PictureBox2.Source = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
-		End If
+            combobox1value = ComboBox1.SelectedValue.ToString()
+        Catch ex As Exception
+            combobox1value = ""
+        End Try
 
-		If combobox1value = "AMD" Then
+        If combobox1value = "NVIDIA" Then
 
-			Dim bi3 As New BitmapImage
-			bi3.BeginInit()
-			bi3.UriSource = New Uri("smiley_stackpanel.PNG", UriKind.Relative)
-			bi3.EndInit()
-			'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-			'PictureBox2.Size = New Size(158, 126)
-			'           PictureBox2.Source = My.Resources.RadeonLogo1
-		End If
+            'PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
+            'PictureBox2.Size = New Size(252, 123)
+            '         PictureBox2.Source = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
+            bi3.BeginInit()
+            bi3.UriSource = New Uri("/Resources/NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg", UriKind.Relative)
+            bi3.EndInit()
+            imgLogo.Source = bi3
+        End If
 
-		If combobox1value = "INTEL" Then
+        If combobox1value = "AMD" Then
 
-			'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-			'PictureBox2.Size = New Size(158, 126)
-			'         PictureBox2.Source = My.Resources.intel_logo
-		End If
+
+            bi3.BeginInit()
+            bi3.UriSource = New Uri("/Resources/RadeonLogo1.png", UriKind.Relative)
+            bi3.EndInit()
+            imgLogo.Source = bi3
+            'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+            'PictureBox2.Size = New Size(158, 126)
+            '           PictureBox2.Source = My.Resources.RadeonLogo1
+        End If
+
+        If combobox1value = "INTEL" Then
+            bi3.BeginInit()
+            bi3.UriSource = New Uri("/Resources/intel_logo.png", UriKind.Relative)
+            bi3.EndInit()
+            imgLogo.Source = bi3
+            'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+            'PictureBox2.Size = New Size(158, 126)
+            '         PictureBox2.Source = My.Resources.intel_logo
+        End If
 
 	End Sub
 
@@ -6193,13 +6208,14 @@ Public Class frmMain
 												.Owner = Application.Current.MainWindow
 											End With
 
-											Me.Visibility = Windows.Visibility.Hidden
+                                            Me.Visibility = Windows.Visibility.Hidden
+
 											' frmMain could be Invisible from start and shown AFTER all "processing"
 											' (WPF renders UI too fast which cause 'flash' before frmLaunch on start)
 
-											Dim launch As Boolean? = frmSafeBoot.ShowDialog()
+                                            Dim launch As Boolean? = frmSafeBoot.ShowDialog()
 											Me.Visibility = Windows.Visibility.Visible
-
+                                            Me.WindowState = Windows.WindowState.Normal
 											If launch IsNot Nothing AndAlso launch Then
 												bootOption = frmSafeBoot.selection
 											End If
@@ -6271,8 +6287,8 @@ Public Class frmMain
 					Exit Sub
 				End If
 skipboot:
-				UpdateTextMethod(UpdateTextMethodmessagefn(10) + Application.Current.MainWindow.GetType().Assembly.ToString)
-				log("DDU Version: " + Application.Current.MainWindow.GetType().Assembly.ToString)
+                UpdateTextMethod(UpdateTextMethodmessagefn(10) + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
+                log("DDU Version: " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
 				log("OS: " + CStr(Label2.Content))
 				log("Architecture: " & ddudrfolder)
 
@@ -6429,9 +6445,8 @@ skipboot:
 				trd.IsBackground = True
 				trd.Start()
 			End If
-			MsgBox("finished loaded")
-		Catch ex As Exception
-			MsgBox(ex.Message + ex.StackTrace)
+        Catch ex As Exception
+            MsgBox(ex.Message + ex.StackTrace)
 		End Try
 	End Sub
 

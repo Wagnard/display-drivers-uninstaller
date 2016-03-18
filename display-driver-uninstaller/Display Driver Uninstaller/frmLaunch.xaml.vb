@@ -16,7 +16,8 @@
 	End Sub
 
 	Private Sub frmLaunch_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
-		Languages.TranslateForm(Me)
+        Me.Visibility = Windows.Visibility.Visible
+        Languages.TranslateForm(Me)
 	End Sub
 
 	Private Sub cbBootOption_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cbBootOption.SelectionChanged
