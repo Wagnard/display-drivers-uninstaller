@@ -153,49 +153,49 @@
 		<Label2>
 			<Text>Загальні параметри</Text>
 		</Label2>
-		<CheckBox1>
+		<lblRemNvidiaDirs>
 			<Text>Видалити папку драйверів "C:\nVidia" (НЕ рекомендовано)</Text>
-		</CheckBox1>
-		<CheckBox2>
+		</lblRemNvidiaDirs>
+		<lblsaveLogs>
 			<Text>Зберегти файли журналу в папці запуску\n(рекомендовано)</Text>
-		</CheckBox2>
-		<CheckBox3>
+		</lblsaveLogs>
+		<lblRemPhysX>
 			<Text>Видалити PhysX</Text>
-		</CheckBox3>
-		<CheckBox4>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
 			<Text>Видалити 3DTV Play</Text>
-		</CheckBox4>
-		<CheckBox5>
+		</lblRem3DtvPlay>
+		<lblcreateRestorePoint>
 			<Text>Створити точку відновлення системи\n(якщо це дозволено)</Text>
-		</CheckBox5>
-		<CheckBox6>
+		</lblcreateRestorePoint>
+		<lblRemMonitors>
 			<Text>Видалити існуючі й неіснуючі монітори\n(рекомендовано)</Text>
-		</CheckBox6>
-		<CheckBox7>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
 			<Text>Видалити AMD Audio Bus</Text>
-		</CheckBox7>
-		<CheckBox8>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
 			<Text>Видалити папку драйверів "C:\AMD" (НЕ рекомендовано)</Text>
-		</CheckBox8>
-		<CheckBox9>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
 			<Text>Видалити драйвер/фільтр AMDKMPFD (для чіпсета AMD, рекомендовано створення резервної копії)</Text>
-		</CheckBox9>
-		<CheckBox10>
+		</lblRemAMDKMPFD>
+		<lblshowSafeModeMsg>
 			<Text>Відображати вікно повідомлення про безпечний режим\nпри запуску</Text>
-		</CheckBox10>
-		<CheckBox11>
+		</lblshowSafeModeMsg>
+		<lblUseRoamingCfg>
 			<Text>Зберігати файл конфігурації у папці, що переміщується</Text>
-		</CheckBox11>
-		<CheckBox12>
+		</lblUseRoamingCfg>
+		<lblDontCheckUpdates>
 			<Text>Не перевіряти наявність оновлень при запуску DDU (НЕ рекомендовано)</Text>
-		</CheckBox12>
-		<CheckBox13>
+		</lblDontCheckUpdates>
+		<lblRemGFE>
 			<Text>Видалити Geforce Experience (GFE)</Text>
-		</CheckBox13>
-		<CheckBox14>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
 			<Text>Видалити папку AMD Crimson Shader Cache</Text>
 			<Tooltip>Рекомендовано за наявності графічних аномалій (швидкості чи візуальних спотворень) через пошкодження кешу даних шейдерів.|Також рекомендовано, якщо ви переходите до іншої марки, наприклад nVidia.</Tooltip>
-		</CheckBox14>
+		</lblRemCrimsonCache>
 	</frmOptions>
 	<frmLaunch Text="Варіанти запуску">
 		<btnAccept>

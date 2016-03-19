@@ -153,49 +153,49 @@
 		<Label2>
 			<Text>Allgemeine Optionen</Text>
 		</Label2>
-		<CheckBox1>
+		<lblRemNvidiaDirs>
 			<Text>Treiberordner "C:\nVidia" entfernen (NICHT empfohlen)</Text>
-		</CheckBox1>
-		<CheckBox2>
+		</lblRemNvidiaDirs>
+		<lblsaveLogs>
 			<Text>Speichere Logdateien im Startup-Pfad (ausdrücklich empfohlen)</Text>
-		</CheckBox2>
-		<CheckBox3>
+		</lblsaveLogs>
+		<lblRemPhysX>
 			<Text>Entferne PhysX</Text>
-		</CheckBox3>
-		<CheckBox4>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
 			<Text>Entferne 3DTV Play</Text>
-		</CheckBox4>
-		<CheckBox5>
+		</lblRem3DtvPlay>
+		<lblcreateRestorePoint>
 			<Text>Erstelle einen Systemwiederherstellungspunkt (falls erlaubt)</Text>
-		</CheckBox5>
-		<CheckBox6>
+		</lblcreateRestorePoint>
+		<lblRemMonitors>
 			<Text>Entferne alle vorhandenen und derzeit nicht vorhandenen Bildschirme (empfohlen)</Text>
-		</CheckBox6>
-		<CheckBox7>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
 			<Text>Entferne AMD Audio Bus</Text>
-		</CheckBox7>
-		<CheckBox8>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
 			<Text>Treiberordner "C:\AMD" entfernen (NICHT empfohlen)</Text>
-		</CheckBox8>
-		<CheckBox9>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
 			<Text>Entferne Treiber/Filter AMDKMPFD (Ein Backup für AMD Chipsätze wird empfohlen)</Text>
-		</CheckBox9>
-		<CheckBox10>
+		</lblRemAMDKMPFD>
+		<lblshowSafeModeMsg>
 			<Text>Hinweis zum abgesicherten Modus beim Start anzeigen</Text>
-		</CheckBox10>
-		<CheckBox11>
+		</lblshowSafeModeMsg>
+		<lblUseRoamingCfg>
 			<Text>Speichere Config-Datei im Roaming-Ordner</Text>
-		</CheckBox11>
-		<CheckBox12>
+		</lblUseRoamingCfg>
+		<lblDontCheckUpdates>
 			<Text>DDU beim Start nicht auf Updates überprüfen (NICHT empfohlen)</Text>
-		</CheckBox12>
-		<CheckBox13>
+		</lblDontCheckUpdates>
+		<lblRemGFE>
 			<Text>GeForce Experience (GFE) entfernen</Text>
-		</CheckBox13>
-		<CheckBox14>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
 			<Text>AMD Crimson Shader Cache Ordner entfernen</Text>
 			<Tooltip>Empfohlen, falls aufgrund von defekten Shader-Cache-Daten grafische Unregelmäßigkeiten (Geschwindigkeit oder sichtbare Fehler) auftreten.|Ebenfalls empfohlen, falls Sie zu einem anderen Hersteller, wie nVidia, wechseln.</Tooltip>
-		</CheckBox14>
+		</lblRemCrimsonCache>
 	</frmOptions>
 	<frmLaunch Text="Launch option">
 		<btnAccept>

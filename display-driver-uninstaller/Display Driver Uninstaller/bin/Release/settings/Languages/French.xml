@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="fr" Text="French">
 	<!--
 	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
@@ -152,49 +152,49 @@
 		<Label2>
 			<Text>Options générales</Text>
 		</Label2>
-		<CheckBox1>
+		<lblRemNvidiaDirs>
 			<Text>Retirer les dossiers "C:\nVidia" (PAS recommendé) </Text>
-		</CheckBox1>
-		<CheckBox2>
+		</lblRemNvidiaDirs>
+		<lblsaveLogs>
 			<Text>Enregistrer les fichiers journaux dans le chemin de démarrage\n(recommandé)</Text>
-		</CheckBox2>
-		<CheckBox3>
+		</lblsaveLogs>
+		<lblRemPhysX>
 			<Text>Retirer PhysX</Text>
-		</CheckBox3>
-		<CheckBox4>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
 			<Text>Retirer 3DTV Play</Text>
-		</CheckBox4>
-		<CheckBox5>
+		</lblRem3DtvPlay>
+		<lblcreateRestorePoint>
 			<Text>Créer un point de restauration système (Si il est actif)</Text>
-		</CheckBox5>
-		<CheckBox6>
+		</lblcreateRestorePoint>
+		<lblRemMonitors>
 			<Text>Retirez les moniteurs présents et non présents (recommandé)</Text>
-		</CheckBox6>
-		<CheckBox7>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
 			<Text>Retirer AMD Audio Bus (System Device)</Text>
-		</CheckBox7>
-		<CheckBox8>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
 			<Text>Retirer les dossiers "C:\AMD" (PAS recommendé) </Text>
-		</CheckBox8>
-		<CheckBox9>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
 			<Text>Retirer pilote / filtre AMDKMPFD  (Une Sauvegarde est recommandée pour les chipset AMD)</Text>
-		</CheckBox9>
-		<CheckBox10>
+		</lblRemAMDKMPFD>
+		<lblshowSafeModeMsg>
 			<Text>Afficher le message du mode sans échec au démarrage.</Text>
-		</CheckBox10>
-		<CheckBox11>
+		</lblshowSafeModeMsg>
+		<lblUseRoamingCfg>
 			<Text>Sauvegarder le fichier de configuration dans le dossier d'itinérance</Text>
-		</CheckBox11>
-		<CheckBox12>
+		</lblUseRoamingCfg>
+		<lblDontCheckUpdates>
 			<Text>Ne pas vérifier les mises à jour au démarrage de DDU (non recommandé)</Text>
-		</CheckBox12>
-		<CheckBox13>
+		</lblDontCheckUpdates>
+		<lblRemGFE>
 			<Text>Retirer Geforce Experience (GFE)</Text>
-		</CheckBox13>
-		<CheckBox14>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
 			<Text>Retirer le répertoire du AMD Crimson Shader Cache</Text>
 			<Tooltip>Recommandé s’il y a des anomalies graphiques (vitesse ou la corruption visuelle) causée par un cache de données de shader corrompu.|Aussi recommandé si vous passez à une autre marque comme nVidia.</Tooltip>
-		</CheckBox14>
+		</lblRemCrimsonCache>
 	</frmOptions>
 	<frmLaunch Text="Options de démarrage">
 		<btnAccept>

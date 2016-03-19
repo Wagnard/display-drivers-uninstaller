@@ -152,49 +152,49 @@
 		<Label2>
 			<Text>Opciones Generales</Text>
 		</Label2>
-		<CheckBox1>
+		<lblRemNvidiaDirs>
 			<Text>Eliminar las carpetas de Controladores "C:\nVidia" (No recomendado)</Text>
-		</CheckBox1>
-		<CheckBox2>
+		</lblRemNvidiaDirs>
+		<lblsaveLogs>
 			<Text>Guardar archivos de registro en la ruta de arranque\n(recomendado)|</Text>
-		</CheckBox2>
-		<CheckBox3>
+		</lblsaveLogs>
+		<lblRemPhysX>
 			<Text>Eliminar PhysX|</Text>
-		</CheckBox3>
-		<CheckBox4>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
 			<Text>Eliminar 3DTV Play|</Text>
-		</CheckBox4>
-		<CheckBox5>
+		</lblRem3DtvPlay>
+		<lblcreateRestorePoint>
 			<Text>Crear un Punto de Restauración de Sistema (si es posible)|</Text>
-		</CheckBox5>
-		<CheckBox6>
+		</lblcreateRestorePoint>
+		<lblRemMonitors>
 			<Text>Eliminar los monitores presentes y no presentes (Recomendado)</Text>
-		</CheckBox6>
-		<CheckBox7>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
 			<Text>Eliminar Bus de Audio AMD</Text>
-		</CheckBox7>
-		<CheckBox8>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
 			<Text>Eliminar las carpetas de Controladores "C:\AMD" (No recomendado)</Text>
-		</CheckBox8>
-		<CheckBox9>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
 			<Text>Eliminar el controlador/filtro AMDKMPFD (Se recomienda realizar una copia de seguridad en sistemas con chipset AMD)</Text>
-		</CheckBox9>
-		<CheckBox10>
+		</lblRemAMDKMPFD>
+		<lblshowSafeModeMsg>
 			<Text>Mostrar mensaje de Modo a prueba de Fallos al arrancar</Text>
-		</CheckBox10>
-		<CheckBox11>
+		</lblshowSafeModeMsg>
+		<lblUseRoamingCfg>
 			<Text>Guardar el archivo de configuración en la carpeta roaming</Text>
-		</CheckBox11>
-		<CheckBox12>
+		</lblUseRoamingCfg>
+		<lblDontCheckUpdates>
 			<Text>Desactivar la búsqueda de nuevas actualizaciones al arrancar (NO se Recomienda)</Text>
-		</CheckBox12>
-		<CheckBox13>
+		</lblDontCheckUpdates>
+		<lblRemGFE>
 			<Text>Eliminar 'Geforce Experience' (GFE)</Text>
-		</CheckBox13>
-		<CheckBox14>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
 			<Text>Eliminar carpeta de caché de AMD 'Crimson Shader'</Text>
 			<Tooltip>Recomendado en caso de anomalías gráficas (velocidad o corrupción de imagen) causadas por datos de caché de 'shader' corruptos.|También recomendado si se va a proceder a cambiar a otra marca como nVidia.</Tooltip>
-		</CheckBox14>
+		</lblRemCrimsonCache>
 	</frmOptions>
 	<frmLaunch Text="Launch option">
 		<btnAccept>

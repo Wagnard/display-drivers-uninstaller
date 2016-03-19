@@ -1,7 +1,7 @@
 ﻿<Window x:Name="frmLaunch" x:Class="frmLaunch"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="frmLaunch" Height="320" Width="420" ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
+    Title="frmLaunch" Height="360" Width="480" ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
 	
 	<Grid>
 		<Grid.RowDefinitions>
@@ -9,7 +9,7 @@
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
-			<RowDefinition Height="45" />
+			<RowDefinition Height="55" />
 		</Grid.RowDefinitions>
 
 		<Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" Margin="-1,-1,-1,0">
@@ -18,14 +18,14 @@
 		
 		<Label Name="lblLaunchOption" Content="lblLaunchOption" Grid.Row="1" Margin="6,6,6,0" Padding="0" />
 
-		<ComboBox x:Name="cbBootOption" HorizontalAlignment="Left" VerticalAlignment="Top" Width="282" SelectedIndex="0" Grid.Row="2" Margin="6"/>
+		<ComboBox x:Name="cbBootOption" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" SelectedIndex="0" Grid.Row="2" Margin="6"/>
 
 		<Label Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="3" Margin="6" Foreground="#FFEB0000" FontSize="14" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center" />
 
 		<Border Grid.Row="4" BorderBrush="Black" BorderThickness="1" Margin="-1,0,-1,-1">
 			<DockPanel Margin="6">
-				<Button x:Name="btnAccept" Content="accept" HorizontalAlignment="Left" Width="100" />
-				<Button x:Name="btnClose" Content="close" HorizontalAlignment="Right" Width="100" />
+				<Button x:Name="btnAccept" Content="accept" HorizontalAlignment="Left" Width="140" />
+				<Button x:Name="btnClose" Content="close" HorizontalAlignment="Right" Width="140" />
 			</DockPanel>
 		</Border>
 	</Grid>

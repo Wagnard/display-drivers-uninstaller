@@ -70,6 +70,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppPaths.vb" />
+    <Compile Include="Converters.vb" />
     <Compile Include="frmLaunch.xaml.vb">
       <DependentUpon>frmLaunch.xaml</DependentUpon>
     </Compile>
@@ -158,7 +159,6 @@
     <Resource Include="Resources\RadeonLogo1.png" />
     <Resource Include="Resources\NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg" />
     <Resource Include="Resources\btn_donate_LG.gif" />
-    <EmbeddedResource Include="English.xml" />
     <Resource Include="Resources\ddu logo3.png" />
     <Resource Include="Resources\ddudr.exe" />
     <Resource Include="Resources\intel_logo.png" />
@@ -169,6 +169,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\DDU.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="English.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

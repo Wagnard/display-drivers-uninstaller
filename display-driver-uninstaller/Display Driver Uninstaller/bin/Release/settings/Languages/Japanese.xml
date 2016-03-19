@@ -153,49 +153,49 @@
 		<Label2>
 			<Text>全般オプション</Text>
 		</Label2>
-		<CheckBox1>
+		<lblRemNvidiaDirs>
 			<Text>"C:\nVidia" ドライバーフォルダーを削除（非推奨）</Text>
-		</CheckBox1>
-		<CheckBox2>
+		</lblRemNvidiaDirs>
+		<lblsaveLogs>
 			<Text>ログファイルをDDUのフォルダー内に保存 (推奨)</Text>
-		</CheckBox2>
-		<CheckBox3>
+		</lblsaveLogs>
+		<lblRemPhysX>
 			<Text>PhysX を削除</Text>
-		</CheckBox3>
-		<CheckBox4>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
 			<Text>3DTV Play を削除</Text>
-		</CheckBox4>
-		<CheckBox5>
+		</lblRem3DtvPlay>
+		<lblcreateRestorePoint>
 			<Text>システムの復元ポイントを作成する (可能な場合)</Text>
-		</CheckBox5>
-		<CheckBox6>
+		</lblcreateRestorePoint>
+		<lblRemMonitors>
 			<Text>現在のモニターと非表示（未接続）のモニターを削除（推奨）</Text>
-		</CheckBox6>
-		<CheckBox7>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
 			<Text>AMD Audio Bus を削除</Text>
-		</CheckBox7>
-		<CheckBox8>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
 			<Text>"C:\AMD" ドライバーフォルダーを削除（非推奨）</Text>
-		</CheckBox8>
-		<CheckBox9>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
 			<Text>AMDKMPFD ドライバー / フィルターを削除（AMD チップセットの場合バックアップを推奨）</Text>
-		</CheckBox9>
-		<CheckBox10>
+		</lblRemAMDKMPFD>
+		<lblshowSafeModeMsg>
 			<Text>起動時にセーフモードのメッセージボックスを表示</Text>
-		</CheckBox10>
-		<CheckBox11>
+		</lblshowSafeModeMsg>
+		<lblUseRoamingCfg>
 			<Text>roaming フォルダーに設定ファイルを保存</Text>
-		</CheckBox11>
-		<CheckBox12>
+		</lblUseRoamingCfg>
+		<lblDontCheckUpdates>
 			<Text>起動時にDDUのアップデートを確認しない (非推奨)</Text>
-		</CheckBox12>
-		<CheckBox13>
+		</lblDontCheckUpdates>
+		<lblRemGFE>
 			<Text>Geforce Experience (GFE)を削除</Text>
-		</CheckBox13>
-		<CheckBox14>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
 			<Text>AMD Crimson Shader Cache フォルダーを削除</Text>
 			<Tooltip>破損したシェーダー キャッシュ データによるグラフィックの異常 (速度または視覚的な破損) がある場合に推奨します。|また、nVidia のような別のブランドに換装している場合にも推奨します。</Tooltip>
-		</CheckBox14>
+		</lblRemCrimsonCache>
 	</frmOptions>
 	<frmLaunch Text="Launch option">
 		<btnAccept>

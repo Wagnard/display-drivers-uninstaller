@@ -1,28 +1,30 @@
 ﻿<Window x:Class="frmOptions" x:Name="frmOptions"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="frmOptions" Height="347" Width="300">
+	xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
+    Title="frmOptions" Height="437" Width="776">
+	
+	<Window.Resources>
+		<conv:NullableBooleanToBoolean x:Key="NulBoolToBool"></conv:NullableBooleanToBoolean>
+	</Window.Resources>
+	
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition Width="31*"/>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition Width="261*"/>
-        </Grid.ColumnDefinitions>
-        <CheckBox x:Name="CheckBox1" Content="CheckBox" HorizontalAlignment="Left" Margin="0.298,95.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox6" Content="CheckBox" HorizontalAlignment="Left" Margin="0.298,137.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox9" Content="CheckBox" HorizontalAlignment="Left" Margin="0.298,174.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox10" Content="CheckBox" HorizontalAlignment="Left" Margin="0.298,209.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox11" Content="CheckBox" HorizontalAlignment="Left" Margin="0.298,54.438,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox12" Content="CheckBox" HorizontalAlignment="Left" Margin="88.298,54.438,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox13" Content="CheckBox" HorizontalAlignment="Left" Margin="88.298,95.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox14" Content="CheckBox" HorizontalAlignment="Left" Margin="88.298,137.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox2" Content="CheckBox" HorizontalAlignment="Left" Margin="88.298,174.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox3" Content="CheckBox" HorizontalAlignment="Left" Margin="88.298,209.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox5" Content="CheckBox" HorizontalAlignment="Left" Margin="88.298,229.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox4" Content="CheckBox" HorizontalAlignment="Left" Margin="88.298,249.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox7" Content="CheckBox" HorizontalAlignment="Left" Margin="0.298,249.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
-        <CheckBox x:Name="CheckBox8" Content="CheckBox" HorizontalAlignment="Left" Margin="0.298,229.388,0,0" VerticalAlignment="Top" Grid.Column="3" Height="15" Width="71"/>
+		<CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" HorizontalAlignment="Left" Margin="12,34,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAMDAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" HorizontalAlignment="Left" Margin="12,54,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblRemCrimsonCache" IsChecked="{Binding RemoveCrimsonCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemCrimsonCache" HorizontalAlignment="Left" Margin="13,76,0,0" VerticalAlignment="Top" />
 
+		<CheckBox x:Name="lblRemNvidiaDirs" IsChecked="{Binding RemoveNvidiaDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemNvidiaDirs" HorizontalAlignment="Left" Margin="13,123,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblRemPhysX" IsChecked="{Binding RemovePhysX, Converter={StaticResource NulBoolToBool}}" Content="lblRemPhysX" HorizontalAlignment="Left" Margin="13,145,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblRem3DtvPlay" IsChecked="{Binding Remove3DTVPlay, Converter={StaticResource NulBoolToBool}}" Content="lblRem3DtvPlay" HorizontalAlignment="Left" Margin="13,167,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblRemGFE" IsChecked="{Binding RemoveGFE, Converter={StaticResource NulBoolToBool}}" Content="lblRemGFE" HorizontalAlignment="Left" Margin="13,189,0,0" VerticalAlignment="Top" />
+
+		<CheckBox x:Name="lblRemMonitors" IsChecked="{Binding RemoveMonitors, Converter={StaticResource NulBoolToBool}}" Content="lblRemMonitors" HorizontalAlignment="Left" Margin="12,233,0,0" VerticalAlignment="Top" />
+
+		<CheckBox x:Name="lblsaveLogs" IsChecked="{Binding SaveLogs, Converter={StaticResource NulBoolToBool}}" Content="lblsaveLogs" HorizontalAlignment="Left" Margin="12,275,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblcreateRestorePoint" IsChecked="{Binding CreateRestorePoint, Converter={StaticResource NulBoolToBool}}" Content="lblcreateRestorePoint" HorizontalAlignment="Left" Margin="12,295,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblshowSafeModeMsg" IsChecked="{Binding ShowSafeModeMsg, Converter={StaticResource NulBoolToBool}}" Content="lblshowSafeModeMsg" HorizontalAlignment="Left" Margin="12,317,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblUseRoamingCfg" IsChecked="{Binding UseRoamingConfig, Converter={StaticResource NulBoolToBool}}" Content="lblUseRoamingCfg" HorizontalAlignment="Left" Margin="12,337,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblDontCheckUpdates" IsChecked="{Binding DontCheckUpdates, Converter={StaticResource NulBoolToBool}}" Content="lblDontCheckUpdates" HorizontalAlignment="Left" Margin="12,357,0,0" VerticalAlignment="Top" />	
     </Grid>
 </Window>

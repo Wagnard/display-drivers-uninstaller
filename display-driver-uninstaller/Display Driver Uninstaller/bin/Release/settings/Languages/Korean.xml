@@ -153,49 +153,49 @@
 		<Label2>
 			<Text>일반 옵션</Text>
 		</Label2>
-		<CheckBox1>
+		<lblRemNvidiaDirs>
 			<Text>'C:\nVidia' 드라이버 폴더 제거 (권장 안 함)</Text>
-		</CheckBox1>
-		<CheckBox2>
+		</lblRemNvidiaDirs>
+		<lblsaveLogs>
 			<Text>DDU 프로그램 폴더에 로그(기록) 파일 저장 (적극 권장)</Text>
-		</CheckBox2>
-		<CheckBox3>
+		</lblsaveLogs>
+		<lblRemPhysX>
 			<Text>PhysX 제거</Text>
-		</CheckBox3>
-		<CheckBox4>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
 			<Text>3DTV Play 제거</Text>
-		</CheckBox4>
-		<CheckBox5>
+		</lblRem3DtvPlay>
+		<lblcreateRestorePoint>
 			<Text>시스템 복원 지점 만들기 (허용된 경우)</Text>
-		</CheckBox5>
-		<CheckBox6>
+		</lblcreateRestorePoint>
+		<lblRemMonitors>
 			<Text>존재 및 존재하지 않는 모니터 제거 (권장)</Text>
-		</CheckBox6>
-		<CheckBox7>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
 			<Text>AMD 오디오 버스 제거</Text>
-		</CheckBox7>
-		<CheckBox8>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
 			<Text>'C:\AMD' 드라이버 폴더 제거 (권장 안 함)</Text>
-		</CheckBox8>
-		<CheckBox9>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
 			<Text>AMDKMPFD 드라이버/필터 제거 (AMD 칩셋에서는 백업 권장)</Text>
-		</CheckBox9>
-		<CheckBox10>
+		</lblRemAMDKMPFD>
+		<lblshowSafeModeMsg>
 			<Text>시작시, 안전 모드 메시지 상자 보이기</Text>
-		</CheckBox10>
-		<CheckBox11>
+		</lblshowSafeModeMsg>
+		<lblUseRoamingCfg>
 			<Text>roaming 폴더에 구성 파일 저장</Text>
-		</CheckBox11>
-		<CheckBox12>
+		</lblUseRoamingCfg>
+		<lblDontCheckUpdates>
 			<Text>프로그램 시작시, DDU 업데이트 확인 안 함 (권장 안 함)</Text>
-		</CheckBox12>
-		<CheckBox13>
+		</lblDontCheckUpdates>
+		<lblRemGFE>
 			<Text>Geforce Experience (GFE) 제거</Text>
-		</CheckBox13>
-		<CheckBox14>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
 			<Text>AMD Crimson 쉐이더 캐시 폴더 제거</Text>
 			<Tooltip>손상된 쉐이더 캐시 데이터에 의해 발생한 그래픽 이상 (속도나 시각 손상)이 있는 경우에 권장합니다.|또한, nVIDIA 같은 다른 브랜드로 전환하려는 경우에도 권장합니다.|</Tooltip>
-		</CheckBox14>
+		</lblRemCrimsonCache>
 	</frmOptions>
 	<frmLaunch Text="Launch option">
 		<btnAccept>

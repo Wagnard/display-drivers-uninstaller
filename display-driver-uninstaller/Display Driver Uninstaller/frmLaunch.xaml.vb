@@ -22,9 +22,9 @@
 
 	Private Sub cbBootOption_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cbBootOption.SelectionChanged
 		If cbBootOption.SelectedIndex = 0 Then
-			'         btnAccept.Content = Language.GetTranslation(Me.Name, btnAccept.Name, "Text")
+			btnAccept.Content = Languages.GetTranslation(Me.Name, btnAccept.Name, "Text")
 		Else
-			'        btnAccept.Content = Language.GetTranslation(Me.Name, btnAccept.Name, "Text2")
+			btnAccept.Content = Languages.GetTranslation(Me.Name, btnAccept.Name, "Text2")
 		End If
 	End Sub
 

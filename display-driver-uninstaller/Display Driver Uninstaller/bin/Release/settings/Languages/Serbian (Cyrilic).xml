@@ -153,49 +153,49 @@
 		<Label2>
 			<Text>Главне опције</Text>
 		</Label2>
-		<CheckBox1>
+		<lblRemNvidiaDirs>
 			<Text>Уклони:  "C:\nVidia"  ...драјвер директоријуме (фолдере) (НИЈЕ ПРЕПОРУЧЉИВО!) </Text>
-		</CheckBox1>
-		<CheckBox2>
+		</lblRemNvidiaDirs>
+		<lblsaveLogs>
 			<Text>Сними извештај (log) фајлове у стартни директоријум\n(препоручљиво)</Text>
-		</CheckBox2>
-		<CheckBox3>
+		</lblsaveLogs>
+		<lblRemPhysX>
 			<Text>Уклони PhysX</Text>
-		</CheckBox3>
-		<CheckBox4>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
 			<Text>Уклони 3DTV Play</Text>
-		</CheckBox4>
-		<CheckBox5>
+		</lblRem3DtvPlay>
+		<lblcreateRestorePoint>
 			<Text>Kреирај System Restore Point (ако је могуће)</Text>
-		</CheckBox5>
-		<CheckBox6>
+		</lblcreateRestorePoint>
+		<lblRemMonitors>
 			<Text>Уклоните постојеће мониторе и онe који нису присутни\n(препоручљиво)</Text>
-		</CheckBox6>
-		<CheckBox7>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
 			<Text>Уклони: AMD Audio Bus</Text>
-		</CheckBox7>
-		<CheckBox8>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
 			<Text>Уклони:  "C:\AMD"  ...драјвер директоријуме (фодлере) (НИЈЕ ПРЕПОРУЧЉИВО!) </Text>
-		</CheckBox8>
-		<CheckBox9>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
 			<Text>Уклони драјвер/филтер AMDKMPFD (препоручљиво направити резервну копију за AMD чипсет-е)</Text>
-		</CheckBox9>
-		<CheckBox10>
+		</lblRemAMDKMPFD>
+		<lblshowSafeModeMsg>
 			<Text>Прикажи Safe Mode поруку при стартовању</Text>
-		</CheckBox10>
-		<CheckBox11>
+		</lblshowSafeModeMsg>
+		<lblUseRoamingCfg>
 			<Text>Сачувај конфигурациони фајл у роаминг директоријуму\n (фолдеру)</Text>
-		</CheckBox11>
-		<CheckBox12>
+		</lblUseRoamingCfg>
+		<lblDontCheckUpdates>
 			<Text>Немој проверавати да ли постоји нова DDU верзија приликом\n стартовања (није препоручљиво)</Text>
-		</CheckBox12>
-		<CheckBox13>
+		</lblDontCheckUpdates>
+		<lblRemGFE>
 			<Text>Уклони Geforce Experience (GFE)</Text>
-		</CheckBox13>
-		<CheckBox14>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
 			<Text>Уклони AMD Crimson Shader Cache директоријум (фолдер)</Text>
 			<Tooltip>Препоручљиво уклонити ако приметите аномалије у вези приказа графике (успорења или артефакте) проузроковане оштећеним Shader Cache подацима.|Такође препоручљиво уклонити ако прелазите на другог произвођача графичких картица, некu nVidia GeForce графичку картицу рецимо.</Tooltip>
-		</CheckBox14>
+		</lblRemCrimsonCache>
 	</frmOptions>
 	<frmLaunch Text="Launch option">
 		<btnAccept>

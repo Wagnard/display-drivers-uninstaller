@@ -28,10 +28,6 @@ Imports System.Reflection
 Imports System.Text
 
 
-
-
-
-
 Public Class frmMain
 	Private WithEvents BackgroundWorker1 As New System.ComponentModel.BackgroundWorker
 	Dim arg As String
@@ -51,10 +47,7 @@ Public Class frmMain
 	Dim isElevated As Boolean = principal.IsInRole(WindowsBuiltInRole.Administrator)
 	Dim processinfo As New ProcessStartInfo
 	Dim process As New Process
-	Dim vendid As String = ""
-	Dim vendidexpected As String = ""
-	Dim provider As String = ""
-	Dim toolTip1 As New ToolTip()
+
 	Dim reboot As Boolean = False
 	Dim shutdown As Boolean = False
 	Public Shared baseDir As String = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
@@ -75,8 +68,8 @@ Public Class frmMain
 	Public Shared donotcheckupdatestartup As Boolean
 	Public Shared trysystemrestore As Boolean
 	Public Shared removegfe As Boolean
+	Public Shared savelogs As Boolean
 
-	Dim f As New frmOptions
 	Dim locations As String = baseDir & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
 			& "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
 	Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
@@ -88,7 +81,6 @@ Public Class frmMain
 	Dim reply As String = Nothing
 	Dim reply2 As String = Nothing
 	Dim version As String = Nothing
-	Dim card1 As Integer = Nothing
 	Dim position2 As Integer = Nothing
 	Dim currentdriverversion As String = Nothing
 	Dim safemode As Boolean = False
@@ -97,9 +89,9 @@ Public Class frmMain
 	Public Shared settings As New genericfunction
 	Dim CleanupEngine As New CleanupEngine
 	Dim enduro As Boolean = False
+	Dim provider As String = ""
 	Public Shared preventclose As Boolean = False
 	Public Shared combobox1value As String = Nothing
-	Public Shared combobox2value As String = Nothing
 	Dim buttontext As String()
 	Dim closeapp As Boolean = False
 	Public ddudrfolder As String
@@ -239,8 +231,8 @@ Public Class frmMain
 								Else
 
 									If child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(provider.ToLower) Or
-										  child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.StartsWith("atitech") Or
-										  child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("amd") Then
+									   child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.StartsWith("atitech") Or
+									   child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("amd") Then
 										deloem.Arguments = "dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
 										Try
 											For Each child3 As String In IO.File.ReadAllLines(infs)
@@ -5610,6 +5602,7 @@ Public Class frmMain
 
 		With frmOptions
 			.Owner = Me
+			.DataContext = Me.DataContext
 			.ResizeMode = Windows.ResizeMode.NoResize
 			.WindowStyle = Windows.WindowStyle.ToolWindow
 		End With
@@ -5759,10 +5752,11 @@ Public Class frmMain
 				version = "5.0"
 			End If
 
+			' https://msdn.microsoft.com/en-us/library/windows/desktop/ms724832%28v=vs.85%29.aspx
 			Select Case version
 
 				Case "5.1"
-					Label2.Content = "Windows XP or Server 2003"
+					lblWinVersion.Content = "Windows XP"
 					winxp = True
 					btnCleanRestart.IsEnabled = True
 					btnClean.IsEnabled = True
@@ -5770,27 +5764,28 @@ Public Class frmMain
 					btnWuRestore.IsEnabled = True
 
 				Case "5.2"
+					lblWinVersion.Content = "Windows XP (x64) or Server 2003"
 					winxp = True
 					btnCleanRestart.IsEnabled = True
 					btnClean.IsEnabled = True
 					btnCleanShutdown.IsEnabled = True
 					btnWuRestore.IsEnabled = True
 				Case "6.0"
-					Label2.Content = "Windows Vista or Server 2008"
+					lblWinVersion.Content = "Windows Vista or Server 2008"
 					btnCleanRestart.IsEnabled = True
 					btnClean.IsEnabled = True
 					btnCleanShutdown.IsEnabled = True
 					btnWuRestore.IsEnabled = True
 
 				Case "6.1"
-					Label2.Content = "Windows 7 or Server 2008r2"
+					lblWinVersion.Content = "Windows 7 or Server 2008R2"
 					btnCleanRestart.IsEnabled = True
 					btnClean.IsEnabled = True
 					btnCleanShutdown.IsEnabled = True
 					btnWuRestore.IsEnabled = True
 
 				Case "6.2"
-					Label2.Content = "Windows 8 or Server 2012"
+					lblWinVersion.Content = "Windows 8 or Server 2012"
 					win8higher = True
 					btnCleanRestart.IsEnabled = True
 					btnClean.IsEnabled = True
@@ -5798,10 +5793,10 @@ Public Class frmMain
 					btnWuRestore.IsEnabled = True
 
 				Case "6.3"
-					Label2.Content = "Windows 8.1"
+					lblWinVersion.Content = "Windows 8.1"
 					If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber"))) Then
 						If CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber")) = "10" Then
-							Label2.Content = "Windows 10"
+							lblWinVersion.Content = "Windows 10"
 							win10 = True
 						End If
 					End If
@@ -5812,7 +5807,7 @@ Public Class frmMain
 					btnWuRestore.IsEnabled = True
 
 				Case "6.4", "10.0"
-					Label2.Content = "Windows 10"
+					lblWinVersion.Content = "Windows 10"
 					win8higher = True
 					win10 = True
 					btnCleanRestart.IsEnabled = True
@@ -5821,7 +5816,7 @@ Public Class frmMain
 					btnWuRestore.IsEnabled = True
 
 				Case Else
-					Label2.Content = "Unsupported OS"
+					lblWinVersion.Content = "Unsupported OS"
 					log("Unsupported OS.")
 					btnCleanRestart.IsEnabled = False
 					btnClean.IsEnabled = False
@@ -5862,115 +5857,116 @@ Public Class frmMain
 				'read config file
 
 				If settings.getconfig("logbox") = "true" Then
-					f.CheckBox2.IsChecked = True
-
+					Application.Settings.SaveLogs = True
+					savelogs = True
 				Else
-					f.CheckBox2.IsChecked = False
+					Application.Settings.SaveLogs = False
+					savelogs = False
 				End If
 
 				If settings.getconfig("roamingcfg") = "true" Then
-					f.CheckBox11.IsChecked = True
+					Application.Settings.UseRoamingConfig = True
 					roamingcfg = True
 				Else
-					f.CheckBox11.IsChecked = False
+					Application.Settings.UseRoamingConfig = False
 					roamingcfg = False
 				End If
 
 				If settings.getconfig("remove3dtvplay") = "true" Then
-					f.CheckBox4.IsChecked = True
+					Application.Settings.Remove3DTVPlay = True
 					remove3dtvplay = True
 				Else
-					f.CheckBox4.IsChecked = False
+					Application.Settings.Remove3DTVPlay = False
 					remove3dtvplay = False
 				End If
 
 				If settings.getconfig("systemrestore") = "true" Then
-					f.CheckBox5.IsChecked = True
+					Application.Settings.CreateRestorePoint = True
 					trysystemrestore = True
 				Else
-					f.CheckBox5.IsChecked = False
+					Application.Settings.CreateRestorePoint = False
 					trysystemrestore = False
 				End If
 
 				If settings.getconfig("removephysx") = "true" Then
-					f.CheckBox3.IsChecked = True
+					Application.Settings.RemovePhysX = True
 					removephysx = True
 				Else
-					f.CheckBox3.IsChecked = False
+					Application.Settings.RemovePhysX = False
 					removephysx = False
 				End If
 
 
 				If settings.getconfig("removeamdaudiobus") = "true" Then
-					f.CheckBox7.IsChecked = True
+					Application.Settings.RemoveAMDAudioBus = True
 					removeamdaudiobus = True
 				Else
-					f.CheckBox7.IsChecked = False
+					Application.Settings.RemoveAMDAudioBus = False
 					removeamdaudiobus = False
 				End If
 
 				If settings.getconfig("removeamdkmpfd") = "true" Then
-					f.CheckBox9.IsChecked = True
+					Application.Settings.RemoveAMDKMPFD = True
 					removeamdkmpfd = True
 				Else
-					f.CheckBox9.IsChecked = False
+					Application.Settings.RemoveAMDKMPFD = False
 					removeamdkmpfd = False
 				End If
 
 
 				If settings.getconfig("removemonitor") = "true" Then
-					f.CheckBox6.IsChecked = True
+					Application.Settings.RemoveMonitors = True
 					removemonitor = True
 				Else
-					f.CheckBox6.IsChecked = False
+					Application.Settings.RemoveMonitors = False
 					removemonitor = False
 				End If
 
 				If settings.getconfig("removecnvidia") = "true" Then
-					f.CheckBox1.IsChecked = True
+					Application.Settings.RemoveNvidiaDirs = True
 					removecnvidia = True
 				Else
-					f.CheckBox1.IsChecked = False
+					Application.Settings.RemoveNvidiaDirs = False
 					removecnvidia = False
 				End If
 
 				If settings.getconfig("removecamd") = "true" Then
-					f.CheckBox8.IsChecked = True
+					Application.Settings.RemoveAMDDirs = True
 					removecamd = True
 				Else
-					f.CheckBox8.IsChecked = False
+					Application.Settings.RemoveAMDDirs = False
 					removecamd = False
 				End If
 
 				If settings.getconfig("removegfe") = "true" Then
-					f.CheckBox13.IsChecked = True
+					Application.Settings.RemoveGFE = True
 					removegfe = True
 				Else
-					f.CheckBox13.IsChecked = False
+					Application.Settings.RemoveGFE = False
 					removegfe = False
 				End If
 
 				If settings.getconfig("donotcheckupdatestartup") = "true" Then
-					f.CheckBox12.IsChecked = True
+					Application.Settings.DontCheckUpdates = True
 					donotcheckupdatestartup = True
 				Else
-					f.CheckBox12.IsChecked = False
+					Application.Settings.DontCheckUpdates = False
 					donotcheckupdatestartup = False
 				End If
 
 				If settings.getconfig("showsafemodebox") = "false" Then
-					f.CheckBox10.IsChecked = False
+					Application.Settings.ShowSafeModeMsg = False
 					safemodemb = False
 				Else
-					f.CheckBox10.IsChecked = True
+					Application.Settings.ShowSafeModeMsg = True
 					safemodemb = True
 				End If
 
 				If settings.getconfig("removedxcache") = "true" Then
-					f.CheckBox14.IsChecked = True
+					Application.Settings.RemoveCrimsonCache = True
 					removedxcache = True
 				Else
-					f.CheckBox14.IsChecked = False
+					Application.Settings.RemoveCrimsonCache = False
 					removedxcache = False
 				End If
 
@@ -6293,7 +6289,7 @@ Public Class frmMain
 skipboot:
 				UpdateTextMethod(UpdateTextMethodmessagefn(10) + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
 				log("DDU Version: " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
-				log("OS: " + CStr(Label2.Content))
+				log("OS: " + CStr(lblWinVersion.Content))
 				log("Architecture: " & ddudrfolder)
 
 				Try
@@ -6481,10 +6477,11 @@ skipboot:
 
 
 
-	Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object,
-	 ByVal e As System.ComponentModel.DoWorkEventArgs)
-
-
+	Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
+		Dim card1 As Integer = Nothing
+		Dim vendid As String = ""
+		Dim vendidexpected As String = ""
+		
 		Dim regkey As RegistryKey = Nothing
 		Dim subregkey As RegistryKey = Nothing
 		Dim array() As String
@@ -7260,9 +7257,31 @@ skipboot:
 
 	End Sub
 
-	Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object,
-	ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
-	Handles BackgroundWorker1.RunWorkerCompleted
+	' TODO: BackgroundWorker1_DoWork1 (see text)
+	Private Sub BackgroundWorker1_DoWork1(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
+		Dim config As ThreadSettings = CType(e.Argument, ThreadSettings)
+
+		'	Application.Settings  and  Application.Paths
+		'	causes CrossThread exception  (DONT USE !!! )
+		' 
+		'	Instead:
+		'
+		'		BackgroundWorker1.RunWorkerAsync()
+		' --->	BackgroundWorker1.RunWorkerAsync(ThreadSettings.Create())    'Creates Copy of AppSettings & AppPaths = Safe for Threading (no reference)
+		'		"ThreadSettings" is passed to thread via "e.Argument"
+		'
+		'
+		'		@ BackgroundWorker1_DoWork
+		'		Dim config As ThreadSettings = CType(e.Argument, ThreadSettings)  
+		'
+		'		e.Result = "Obj2"  <-- "Obj2" is passed to RunWorkerCompleted after DoWork
+		'
+		'
+		'		@ BackgroundWorker1_RunWorkerCompleted
+		'		e.Result  <-- "Obj2"
+	End Sub
+
+	Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorker1.RunWorkerCompleted
 		Try
 
 			If stopme = True Then
@@ -7677,7 +7696,7 @@ skipboot:
 
 	Public Sub log(ByVal strmessage As String)
 		Try
-			If f.CheckBox2.IsChecked = True Then
+			If savelogs Then
 				Using wlog As New IO.StreamWriter(locations, True)
 					wlog.WriteLine(DateTime.Now & " >> " & strmessage)
 
@@ -7774,25 +7793,19 @@ skipboot:
 	End Function
 
 	Private Sub InitLanguage(ByVal firstLaunch As Boolean, Optional ByVal changeTo As Languages.LanguageOption = Nothing)
-		toolTip1.AutoPopDelay = 3000
-		toolTip1.InitialDelay = 1000
-		toolTip1.ReshowDelay = 250
-		toolTip1.ShowAlways = True
-
-
 		'TODO: InitLanguage (just comment for quick find)
 
 		If firstLaunch Then
 			cbLanguage.Items.Clear()
 
-			Dim defaultLang As New Languages.LanguageOption("en", "English", Application.Paths.DirLanguage & "English.xml")
-			Dim foundLangs As List(Of Languages.LanguageOption) = Languages.ScanFolderForLang(Application.Paths.DirLanguage)
+			Dim defaultLang As New Languages.LanguageOption("en", "English", Application.Paths.Language & "English.xml")
+			Dim foundLangs As List(Of Languages.LanguageOption) = Languages.ScanFolderForLang(Application.Paths.Language)
 
 			foundLangs.Add(defaultLang)
 			foundLangs.Sort(Function(x, y) x.DisplayText.CompareTo(y.DisplayText))
 
 			For Each lang As Languages.LanguageOption In foundLangs
-				Application.Settings.Main.LanguageOptions.Add(lang)
+				Application.Settings.LanguageOptions.Add(lang)
 			Next
 
 			Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml")), Encoding.UTF8, True)
@@ -7818,7 +7831,7 @@ skipboot:
 
 			Dim nativeLang As Languages.LanguageOption = Nothing
 
-			For Each item As Languages.LanguageOption In cbLanguage.Items
+			For Each item As Languages.LanguageOption In Application.Settings.LanguageOptions
 				If item.ISOLanguage.Equals(lastUsedLang, StringComparison.OrdinalIgnoreCase) Then
 					cbLanguage.SelectedItem = item
 					hasLastUsed = True
@@ -7840,14 +7853,14 @@ skipboot:
 			End If
 
 			Languages.TranslateForm(Me)
+			settings.setconfig("language", Languages.Current.ISOLanguage)
 		Else
 			If changeTo IsNot Nothing AndAlso Not changeTo.Equals(Languages.Current) Then
 				Languages.Load(changeTo)
 				Languages.TranslateForm(Me)
+				settings.setconfig("language", Languages.Current.ISOLanguage)
 			End If
 		End If
-
-		settings.setconfig("language", Languages.Current.ISOLanguage)
 	End Sub
 
 	Public Function UpdateTextMethodmessagefn(ByRef number As Integer) As String

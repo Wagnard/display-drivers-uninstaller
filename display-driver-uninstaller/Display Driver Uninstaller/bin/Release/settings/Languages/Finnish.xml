@@ -16,27 +16,27 @@
 
 	-->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<btnCleanRestart>
 			<Text>Puhdista ja käynnistä uudelleen|(Erittäin suositeltavaa)</Text>
 			<Tooltip>Poista nykyiset ja edelliset ajurit ja käynnistä tietokone uudelleen|(Erittäin suositeltavaa)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Puhdista ja älä tee mitään|(Voi aiheuttaa ongelmia kuten kuvan menetyksen)</Text>
 			<Tooltip>Poista nykyiset ja edelliset ajurit ja älä käynnistä uudelleen|(Voi aiheuttaa ongelmia kuten kuvan menetyksen)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Puhdista ja Sammuta|(Asentaessa uutta näytönohjainta)</Text>
 			<Tooltip>Poista nykyiset ja edelliset ajurit ja sammuta tietokone|(Asentaessa uutta näytönohjainta)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Palauta Windowsin automaattinen ajurien asennus oletus asetukseen</Text>
-		</Button4>
-		<Button5>
+		</btnWuRestore>
+		<btnExtendedLog>
 			<Text>Näytä laajennettu loki.</Text>
-		</Button5>
-		<Label1>
+		</btnExtendedLog>
+		<lblWinVersion>
 			<Text>Havaittu Windows versio:</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label4>
 			<Text>*** Pidätkö ohjelmasta DDU? Harkitse lahjoitusta, mikä auttaa ohjelman kehittämisessä jatkossa. ***</Text>
 		</Label4>
@@ -145,7 +145,8 @@
 			<Text41>Value removed.</Text41>
 			<Text42>File Deleted.</Text42>
 		</UpdateLog>
-	</frmMain>
+	
+</frmMain>
 	<frmOptions Text="Asetukset">
 		<Label1>
 			<Text>Näytönohjaimen asetukset</Text>
@@ -153,49 +154,49 @@
 		<Label2>
 			<Text>Yleiset asetukset</Text>
 		</Label2>
-		<CheckBox1>
+		<lblRemNvidiaDirs>
 			<Text>Poista "C:\nVidia" ajuri kansiot (EI suositeltavaa) </Text>
-		</CheckBox1>
-		<CheckBox2>
+		</lblRemNvidiaDirs>
+		<lblsaveLogs>
 			<Text>Tallenna lokitiedostot ohjelman pääkansioon (Erittäin suositeltavaa)</Text>
-		</CheckBox2>
-		<CheckBox3>
+		</lblsaveLogs>
+		<lblRemPhysX>
 			<Text>Poista PhysX</Text>
-		</CheckBox3>
-		<CheckBox4>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
 			<Text>Poista 3DTV Play</Text>
-		</CheckBox4>
-		<CheckBox5>
+		</lblRem3DtvPlay>
+		<lblcreateRestorePoint>
 			<Text>Luo järjestelmän palautuspiste (jos mahdollista)</Text>
-		</CheckBox5>
-		<CheckBox6>
+		</lblcreateRestorePoint>
+		<lblRemMonitors>
 			<Text>Poista nykyiset ja edelliset näytöt(Suositeltavaa)</Text>
-		</CheckBox6>
-		<CheckBox7>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
 			<Text>Poista AMD Audio Bus</Text>
-		</CheckBox7>
-		<CheckBox8>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
 			<Text>Poista "C:\AMD" ajuri kansiot (EI suositeltavaa) </Text>
-		</CheckBox8>
-		<CheckBox9>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
 			<Text>Poista AMDKMPFD ajuri (Varmuuskopio AMD piirisarjan omistaville suositeltavaa)</Text>
-		</CheckBox9>
-		<CheckBox10>
+		</lblRemAMDKMPFD>
+		<lblshowSafeModeMsg>
 			<Text>Näytä käynnistysvalinta ikkuna käynnistäessä</Text>
-		</CheckBox10>
-		<CheckBox11>
+		</lblshowSafeModeMsg>
+		<lblUseRoamingCfg>
 			<Text>Tallenna asetukset 'Roaming' kansioon</Text>
-		</CheckBox11>
-		<CheckBox12>
+		</lblUseRoamingCfg>
+		<lblDontCheckUpdates>
 			<Text>Älä tarkista ohjelman päivityksiä käynnistäessä (EI suositeltavaa)</Text>
-		</CheckBox12>
-		<CheckBox13>
+		</lblDontCheckUpdates>
+		<lblRemGFE>
 			<Text>Poista Geforce Experience (GFE)</Text>
-		</CheckBox13>
-		<CheckBox14>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
 			<Text>Poista AMD Crimson Shader Cache kansio</Text>
 			<Tooltip>Suositeltavaa jos ilmenee grafiikka ongelmia (nopeus tai virheet kuvassa) korruptoituneiden varjostimien välimuistin takia.|Myös suositeltavaa jos ole vaihtamassa näytönohjain valmistajan merkkiä kuten Nvidiaan</Tooltip>
-		</CheckBox14>
+		</lblRemCrimsonCache>
 	</frmOptions>
 	<frmLaunch Text="Käynnistysvalinta">
 		<btnAccept>

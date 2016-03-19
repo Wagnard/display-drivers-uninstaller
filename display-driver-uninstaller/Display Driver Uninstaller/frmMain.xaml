@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:local="clr-namespace:Display_Driver_Uninstaller"
 	mc:Ignorable="d" 
 	
     Title="{Binding AppName}" Height="600" Width="800" ResizeMode="noresize" Loaded="frmMain_Loaded" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" Visibility="Visible" WindowStartupLocation="CenterScreen">
@@ -19,15 +20,11 @@
         <Button x:Name="btnWuRestore" Content="Button" HorizontalAlignment="Left" Margin="425,331,0,0" VerticalAlignment="Top" Width="154" Height="54" />
         <Button x:Name="btnExtendedLog" Content="btnExtendedLog" HorizontalAlignment="Left" Margin="425,300,0,0" VerticalAlignment="Top" Width="154" Height="25" />
 
-        <ComboBox x:Name="ComboBox1" HorizontalAlignment="Left" Margin="219,31,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedValuePath="Content">
-            <ComboBoxItem Content="NVIDIA"/>
-            <ComboBoxItem Content="AMD"/>
-            <ComboBoxItem Content="INTEL"/>
-        </ComboBox>
-        <ComboBox x:Name="cbLanguage" ItemsSource="{Binding Main.LanguageOptions}" DisplayMemberPath="DisplayText" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="172" Height="22" IsReadOnly="True" />
+		<ComboBox Name="ComboBox1" ItemsSource="{Binding GPUOptions, Mode=OneWay}" HorizontalAlignment="Left" Margin="219,31,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedItem="{Binding SelectedGPU, Mode=OneWayToSource}" />
+		<ComboBox x:Name="cbLanguage" ItemsSource="{Binding LanguageOptions, Mode=OneWay}" DisplayMemberPath="DisplayText" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="172" Height="22" IsReadOnly="True" />
 
-		<Label x:Name="lblUpdate" Content="Label" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="1" />
-        <Label x:Name="Label2" Content="Label" HorizontalAlignment="Left" Margin="10,27,0,0" VerticalAlignment="Top" Height="26" Width="71"/>
+		<Label x:Name="lblUpdate" Content="lblUpdate" Height="26" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" />
+		<Label x:Name="lblWinVersion" Content="lblWinVersion" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,27,0,0" />
         <Label x:Name="Label3" Content="Label" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
 
         <TextBox x:Name="tbLog" HorizontalAlignment="Left" Height="172" Margin="10,335,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="366" />
@@ -47,5 +44,5 @@
             </MenuItem>
         </Menu>
         <Image x:Name="imgLogo" HorizontalAlignment="Left" Height="141" Margin="359,103,0,0" VerticalAlignment="Top" Width="200" Source="Resources/RadeonLogo1.png"/>
-	</Grid>
+		</Grid>
 </Window>
