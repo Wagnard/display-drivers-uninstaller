@@ -4,20 +4,20 @@ Imports System.Reflection
 Imports System.Text
 
 Public Class Languages
+	Private Const newlineStr As String = "|"
+	Private Shared ReadOnly threadLock As String = "You shall not pass!" 'lock access for one thread at time
+
 	Private Shared isEngLoaded As Boolean = False
 	Private Shared isUserLoaded As Boolean = False
 	Private Shared useTranslated As Boolean = True
-	Private Shared currentLang As String = ""
-	Private Shared ReadOnly threadLock As String = "You shall not pass!" 'lock access for one thread at time
-	Private Const newlineStr As String = "|"
+	Private Shared currentLang As LanguageOption = Nothing
 
-	Public Shared Property Current As String
+	Public Shared ReadOnly Property Current As LanguageOption
 		Get
-			Return currentLang
+			SyncLock threadLock
+				Return currentLang
+			End SyncLock
 		End Get
-		Private Set(value As String)
-			currentLang = value
-		End Set
 	End Property
 
 	Private Shared englishDictionary As TranslatedFile = Nothing
@@ -26,40 +26,29 @@ Public Class Languages
 	''' <param name="langOption">Which language to load for use. Use 'Nothing' for defaul (English)</param>
 	Public Shared Sub Load(Optional ByVal langOption As LanguageOption = Nothing)
 		SyncLock (threadLock)
-			If langOption Is Nothing Then
+			If langOption Is Nothing OrElse langOption.ISOLanguage.Equals("en", StringComparison.OrdinalIgnoreCase) Then
 				If Not isEngLoaded Or englishDictionary Is Nothing Then
 					isEngLoaded = ReadFile("en", False, englishDictionary)
 				End If
 
 				useTranslated = False
-				currentLang = englishDictionary.ISOLanguage
+				currentLang = englishDictionary.Details
 			Else
-				If langOption.ISOLanguage.Equals("en", StringComparison.OrdinalIgnoreCase) Then
-					If Not isEngLoaded Or englishDictionary Is Nothing Then
-						isEngLoaded = ReadFile("en", False, englishDictionary)
-					End If
-
-					useTranslated = False
-					currentLang = englishDictionary.ISOLanguage
-				Else
-					If isUserLoaded And translatedDictionary IsNot Nothing Then
-						translatedDictionary.Parents.Clear()
-					End If
-
-					isUserLoaded = ReadFile(langOption.Filename, False, translatedDictionary)
-					useTranslated = True
-					currentLang = translatedDictionary.ISOLanguage
+				If isUserLoaded And translatedDictionary IsNot Nothing Then
+					translatedDictionary.Parents.Clear()
 				End If
+
+				isUserLoaded = ReadFile(langOption.Filename, False, translatedDictionary)
+				useTranslated = True
+				currentLang = translatedDictionary.Details
 			End If
 		End SyncLock
 	End Sub
 
 	Private Shared Sub LoadDefault()
-		If Not isEngLoaded Or englishDictionary Is Nothing Then
-			isEngLoaded = ReadFile("English", False, englishDictionary)
-			useTranslated = False
-			currentLang = englishDictionary.ISOLanguage
-		End If
+		isEngLoaded = ReadFile("en", False, englishDictionary)
+		useTranslated = False
+		currentLang = englishDictionary.Details
 	End Sub
 
 	''' <param name="parent">Which form (Form1, fmrLaunch)</param>
@@ -211,6 +200,25 @@ notFound:
 		End SyncLock
 	End Sub
 
+	Public Shared Function ScanFolderForLang(ByVal folder As String) As List(Of LanguageOption)
+		SyncLock (threadLock)
+			Dim tf As TranslatedFile = Nothing
+			Dim ValidLangFiles As New List(Of LanguageOption)(30)
+
+			For Each file As String In Directory.GetFiles(folder, "*.xml", SearchOption.TopDirectoryOnly)
+				If file.EndsWith("\English.xml", StringComparison.OrdinalIgnoreCase) Then
+					Continue For 'Skip english file
+				End If
+
+				If ReadFile(file, True, tf) AndAlso Not tf.Details.ISOLanguage.Equals("en") Then
+					ValidLangFiles.Add(tf.Details)
+				End If
+			Next
+
+			Return ValidLangFiles
+		End SyncLock
+	End Function
+
 	Private Shared Sub GetChildren(ByVal parent As DependencyObject, ByRef controls As List(Of Control))
 		If parent IsNot Nothing Then
 			For i As Int32 = 0 To VisualTreeHelper.GetChildrenCount(parent) - 1
@@ -351,7 +359,7 @@ notFound:
 						Throw New InvalidDataException("Language file's format is invalid!" & vbCrLf & "Missing required attributes 'ISO' and 'Text'" & vbCrLf & "(eg. 'ISO=""en""' and 'Text=""English""' )")
 					End If
 
-					Dim file As TranslatedFile = New TranslatedFile(lang_iso, lang_text)
+					Dim file As TranslatedFile = New TranslatedFile(lang_iso, lang_text, langFile)
 					Dim controls As List(Of TranslatedControl)
 					Dim ctrl As TranslatedControl
 					Dim parent As TranslatedControl
@@ -464,38 +472,14 @@ notFound:
 		Return Nothing
 	End Function
 
-	Public Shared Function ScanFolderForLang(ByVal folder As String) As List(Of LanguageOption)
-		SyncLock (threadLock)
-			Dim tf As TranslatedFile = Nothing
-			Dim ValidLangFiles As New List(Of LanguageOption)(30)
-
-			For Each file As String In Directory.GetFiles(folder, "*.xml", SearchOption.TopDirectoryOnly)
-				If file.EndsWith("\English.xml", StringComparison.OrdinalIgnoreCase) Then
-					Continue For 'Skip english file
-				End If
-
-				If ReadFile(file, True, tf) AndAlso Not tf.ISOLanguage.Equals("en") Then
-					ValidLangFiles.Add(New LanguageOption(tf.ISOLanguage, tf.LanguageText, file))
-				End If
-			Next
-
-			Return ValidLangFiles
-		End SyncLock
-	End Function
 
 	Private Class TranslatedFile
-		Private m_langIso As String
-		Private m_langText As String
+		Private m_details As LanguageOption
 		Private m_parents As Dictionary(Of TranslatedControl, List(Of TranslatedControl))
 
-		Public ReadOnly Property ISOLanguage As String
+		Public ReadOnly Property Details As LanguageOption
 			Get
-				Return m_langIso
-			End Get
-		End Property
-		Public ReadOnly Property LanguageText As String
-			Get
-				Return m_langText
+				Return m_details
 			End Get
 		End Property
 		Public ReadOnly Property Parents As Dictionary(Of TranslatedControl, List(Of TranslatedControl))
@@ -504,14 +488,13 @@ notFound:
 			End Get
 		End Property
 
-		Public Sub New(ByVal lang As String, ByVal text As String)
-			m_langIso = lang
-			m_langText = text
+		Public Sub New(ByVal langISO As String, ByVal langText As String, ByVal langFile As String)
+			m_details = New LanguageOption(langISO, langText, langFile)
 			m_parents = New Dictionary(Of TranslatedControl, List(Of TranslatedControl))(100)
 		End Sub
 
 		Public Overrides Function ToString() As String
-			Return String.Format("{0} ({1})", LanguageText, ISOLanguage)
+			Return String.Format("{0} ({1})", m_details.DisplayText, m_details.ISOLanguage)
 		End Function
 	End Class
 
@@ -548,18 +531,20 @@ notFound:
 	End Class
 
 	Public Class LanguageOption
-		Private m_lang As String
-		Private m_text As String
+		Implements IComparable(Of LanguageOption)
+
+		Private m_isolang As String
+		Private m_displaytext As String
 		Private m_filename As String
 
 		Public ReadOnly Property ISOLanguage As String
 			Get
-				Return m_lang
+				Return m_isolang
 			End Get
 		End Property
 		Public ReadOnly Property DisplayText As String
 			Get
-				Return m_text
+				Return m_displaytext
 			End Get
 		End Property
 		Public ReadOnly Property Filename As String
@@ -569,14 +554,26 @@ notFound:
 		End Property
 
 		Public Sub New(ByVal langISO As String, ByVal langText As String, ByVal langFile As String)
-			m_lang = langISO
-			m_text = langText
+			m_isolang = langISO
+			m_displaytext = langText
 			m_filename = langFile
 		End Sub
 
 		Public Overrides Function ToString() As String
 			'Return String.Format("{0} - {1} - {2}", m_lang, m_text, m_filename)
-			Return m_text
+			Return String.Format("{0} ({1})", m_displaytext, m_isolang)
+		End Function
+
+		Public Overloads Overrides Function Equals(obj As Object) As Boolean
+			If obj IsNot Nothing AndAlso TypeOf (obj) Is LanguageOption Then
+				Return Me.ISOLanguage.Equals(CType(obj, LanguageOption).ISOLanguage, StringComparison.OrdinalIgnoreCase)
+			End If
+
+			Return False
+		End Function
+
+		Public Function CompareTo(other As LanguageOption) As Integer Implements System.IComparable(Of LanguageOption).CompareTo
+			Return Me.DisplayText.CompareTo(other.DisplayText)
 		End Function
 	End Class
 

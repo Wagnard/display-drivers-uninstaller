@@ -1,23 +1,33 @@
 ﻿Imports System.IO
+Imports System.Xml
 Imports System.Windows
 Imports System.Reflection
 Imports System.Collections.ObjectModel
 
-Public Class ApplicationSettings
+Public Class AppSettings
 	Inherits DependencyObject
-
 	'Class is reserver for ALL settings ( DontCheckUpdates, Silent etc...)
 
-	Public Shared Property AppName As String		' Name of application (DDU)
-	Public Shared Property AppExeFile As String	' Fullpath to application's .Exe
-	Public Shared Property DirApp As String		' Fullpath to application's directory (where .exe is)
-	Public Shared Property DirSettings As String	' DirApp + \Settings\
-	Public Shared Property DirLanguage As String	' DirApp + \Settings\Langauges\
+	Private m_appname As DependencyProperty = Reg("AppName", GetType(String), GetType(AppSettings), "Display Driver Uninstaller (DDU)")
+	Private v_main As ViewMain
 
-	Public Property Main As ViewMain
+	Public Property AppName As String ' Name of application (DDU)
+		Get
+			Return CStr(GetValue(m_appname))
+		End Get
+		Private Set(value As String)
+			SetValue(m_appname, value)
+		End Set
+	End Property
 
-	' Register values for 'Binding' (Don't need to undestand)
+	Public ReadOnly Property Main As ViewMain	' All stuff for "frmMain" window
+		Get
+			Return v_main
+		End Get
+	End Property
+
 	Friend Shared Function Reg(ByVal s As String, ByVal t As Type, ByVal c As Type, ByVal m As Object) As DependencyProperty
+		' Register values for 'Binding' (just shorthand, Don't need to undestand)
 		If TypeOf (m) Is FrameworkPropertyMetadata Then
 			Return DependencyProperty.Register(s, t, c, CType(m, FrameworkPropertyMetadata))
 		Else
@@ -25,33 +35,11 @@ Public Class ApplicationSettings
 		End If
 	End Function
 
+
 	Public Sub New()
-		If Windows.Application.ResourceAssembly IsNot Nothing Then
-			AppName = Application.ResourceAssembly.GetName().Name
-		Else
-			AppName = "Display Driver Uninstaller"
-		End If
-
-		AppExeFile = Assembly.GetExecutingAssembly().Location
-		DirApp = Path.GetDirectoryName(AppExeFile)
-
-		If Not DirApp.EndsWith("\") Then
-			DirApp &= "\"
-		End If
-
-		DirSettings = DirApp & "Settings\"
-		DirLanguage = DirSettings & "Languages\"
-
-		If Not Directory.Exists(DirSettings) Then
-			Directory.CreateDirectory(DirSettings)
-		End If
-
-		If Not Directory.Exists(DirLanguage) Then
-			Directory.CreateDirectory(DirLanguage)
-		End If
-
-		Main = New ViewMain()
+		v_main = New ViewMain()
 	End Sub
+
 
 	Public Class ViewMain
 		Inherits DependencyObject

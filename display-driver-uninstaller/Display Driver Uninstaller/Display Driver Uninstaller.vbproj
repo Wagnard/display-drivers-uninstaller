@@ -69,6 +69,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppPaths.vb" />
     <Compile Include="frmLaunch.xaml.vb">
       <DependentUpon>frmLaunch.xaml</DependentUpon>
     </Compile>

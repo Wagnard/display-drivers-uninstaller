@@ -5,12 +5,17 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	mc:Ignorable="d" 
 	
-    Title="Display Driver Uninstaller" Height="600" Width="800" ResizeMode="noresize" Loaded="frmMain_Loaded" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" Visibility="Visible" WindowStartupLocation="CenterScreen">
+    Title="{Binding AppName}" Height="600" Width="800" ResizeMode="noresize" Loaded="frmMain_Loaded" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" Visibility="Visible" WindowStartupLocation="CenterScreen">
 
     <Grid>
-        <Button x:Name="btnCleanRestart" Content="BtnRestart" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="180" Height="53" />
-        <Button x:Name="btnClean" Content="btnCleanonly" HorizontalAlignment="Left" Margin="10,175,0,0" VerticalAlignment="Top" Width="180" Height="53" />
-        <Button x:Name="btnCleanShutdown" Content="btnCleanShutdown" HorizontalAlignment="Left" Margin="10,253,0,0" VerticalAlignment="Top" Width="180" Height="53" RenderTransformOrigin="0.518,1.792" />
+		<Grid.RowDefinitions>
+			<RowDefinition Height="528*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		
+		<Button x:Name="btnCleanRestart" Content="BtnRestart" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="200" Height="53" />
+        <Button x:Name="btnClean" Content="btnCleanonly" HorizontalAlignment="Left" Margin="10,175,0,0" VerticalAlignment="Top" Width="200" Height="53" />
+        <Button x:Name="btnCleanShutdown" Content="btnCleanShutdown" HorizontalAlignment="Left" Margin="10,253,0,0" VerticalAlignment="Top" Width="200" Height="53" RenderTransformOrigin="0.518,1.792" />
         <Button x:Name="btnWuRestore" Content="Button" HorizontalAlignment="Left" Margin="425,331,0,0" VerticalAlignment="Top" Width="154" Height="54" />
         <Button x:Name="btnExtendedLog" Content="btnExtendedLog" HorizontalAlignment="Left" Margin="425,300,0,0" VerticalAlignment="Top" Width="154" Height="25" />
 
@@ -21,11 +26,11 @@
         </ComboBox>
         <ComboBox x:Name="cbLanguage" ItemsSource="{Binding Main.LanguageOptions}" DisplayMemberPath="DisplayText" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="172" Height="22" IsReadOnly="True" />
 
-        <Label x:Name="Label11" Content="Label" HorizontalAlignment="Left" Margin="12,523,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
+		<Label x:Name="lblUpdate" Content="Label" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="1" />
         <Label x:Name="Label2" Content="Label" HorizontalAlignment="Left" Margin="10,27,0,0" VerticalAlignment="Top" Height="26" Width="71"/>
         <Label x:Name="Label3" Content="Label" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
 
-        <TextBox x:Name="Textbox1" HorizontalAlignment="Left" Height="172" Margin="10,335,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="366" />
+        <TextBox x:Name="tbLog" HorizontalAlignment="Left" Height="172" Margin="10,335,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="366" />
 
         <Menu x:Name="MenuStrip1" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
             <MenuItem x:Name="OptionsMenuItem" Header="Options"/>
@@ -42,5 +47,5 @@
             </MenuItem>
         </Menu>
         <Image x:Name="imgLogo" HorizontalAlignment="Left" Height="141" Margin="359,103,0,0" VerticalAlignment="Top" Width="200" Source="Resources/RadeonLogo1.png"/>
-    </Grid>
+	</Grid>
 </Window>
