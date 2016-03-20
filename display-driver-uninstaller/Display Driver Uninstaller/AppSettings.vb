@@ -16,7 +16,6 @@ Public Class AppSettings
 #Region "Private Fields"
 	Private m_appname As DependencyProperty = Reg("AppName", GetType(String), GetType(AppSettings), "Display Driver Uninstaller (DDU)")
 	Private m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
-	Private m_gpuOptions As ObservableCollection(Of GPUVendor)
 	Private m_gpuSelected As DependencyProperty = Reg("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
 
 	' Removals
@@ -53,11 +52,6 @@ Public Class AppSettings
 	Public ReadOnly Property LanguageOptions As ObservableCollection(Of Languages.LanguageOption)
 		Get
 			Return m_languageOptions
-		End Get
-	End Property
-	Public ReadOnly Property GPUOptions As ObservableCollection(Of GPUVendor)
-		Get
-			Return m_gpuOptions
 		End Get
 	End Property
 
@@ -198,7 +192,6 @@ Public Class AppSettings
 
 	Public Sub New()
 		m_languageOptions = New ObservableCollection(Of Languages.LanguageOption)()
-		m_gpuOptions = New ObservableCollection(Of GPUVendor)(New GPUVendor() {GPUVendor.Nvidia, GPUVendor.AMD, GPUVendor.Intel})
 	End Sub
 
 	Public Sub Load(ByVal fileName As String)
@@ -207,193 +200,6 @@ Public Class AppSettings
 
 	Public Sub Save(ByVal fileName As String)
 
-	End Sub
-
-End Class
-
-Public Class ThreadSettings
-
-#Region "Fields"
-	Private m_paths As AppPaths
-	Private m_selectedgpu As GPUVendor
-	Private m_remMonitors As Boolean
-	Private m_remCrimsonCache, m_remAMDDirs, m_remAMDAudioBus, m_remAMDKMPFD As Boolean
-	Private m_remNvidiaDirs, m_remPhysX, m_rem3DtvPlay, m_remGFE As Boolean
-	Private m_showSafeModeMsg, m_UseRoamingCfg, m_DontCheckUpdates, m_createRestorePoint, m_saveLogs As Boolean
-#End Region
-
-#Region "Properties"
-	Public Property Paths As AppPaths
-		Get
-			Return m_paths
-		End Get
-		Private Set(value As AppPaths)
-			m_paths = value
-		End Set
-	End Property
-
-	Public Property SelectedGPU As GPUVendor
-		Get
-			Return m_selectedgpu
-		End Get
-		Private Set(value As GPUVendor)
-			m_selectedgpu = value
-		End Set
-	End Property
-	Public Property RemoveMonitors As Boolean
-		Get
-			Return m_remMonitors
-		End Get
-		Private Set(value As Boolean)
-			m_remMonitors = value
-		End Set
-	End Property
-	Public Property RemoveCrimsonCache As Boolean
-		Get
-			Return m_remCrimsonCache
-		End Get
-		Private Set(value As Boolean)
-			m_remCrimsonCache = value
-		End Set
-	End Property
-	Public Property RemoveAMDDirs As Boolean
-		Get
-			Return m_remAMDDirs
-		End Get
-		Private Set(value As Boolean)
-			m_remAMDDirs = value
-		End Set
-	End Property
-	Public Property RemoveAMDAudioBus As Boolean
-		Get
-			Return m_remAMDAudioBus
-		End Get
-		Private Set(value As Boolean)
-			m_remAMDAudioBus = value
-		End Set
-	End Property
-	Public Property RemoveAMDKMPFD As Boolean
-		Get
-			Return m_remAMDKMPFD
-		End Get
-		Private Set(value As Boolean)
-			m_remAMDKMPFD = value
-		End Set
-	End Property
-
-	Public Property RemoveNvidiaDirs As Boolean
-		Get
-			Return m_remNvidiaDirs
-		End Get
-		Private Set(value As Boolean)
-			m_remNvidiaDirs = value
-		End Set
-	End Property
-	Public Property RemovePhysX As Boolean
-		Get
-			Return m_remPhysX
-		End Get
-		Private Set(value As Boolean)
-			m_remPhysX = value
-		End Set
-	End Property
-	Public Property Remove3DTVPlay As Boolean
-		Get
-			Return m_rem3DtvPlay
-		End Get
-		Private Set(value As Boolean)
-			m_rem3DtvPlay = value
-		End Set
-	End Property
-	Public Property RemoveGFE As Boolean
-		Get
-			Return m_remGFE
-		End Get
-		Private Set(value As Boolean)
-			m_remGFE = value
-		End Set
-	End Property
-
-	Public Property ShowSafeModeMsg As Boolean
-		Get
-			Return m_showSafeModeMsg
-		End Get
-		Private Set(value As Boolean)
-			m_showSafeModeMsg = value
-		End Set
-	End Property
-	Public Property UseRoamingConfig As Boolean
-		Get
-			Return m_UseRoamingCfg
-		End Get
-		Private Set(value As Boolean)
-			m_UseRoamingCfg = value
-		End Set
-	End Property
-	Public Property DontCheckUpdates As Boolean
-		Get
-			Return m_DontCheckUpdates
-		End Get
-		Private Set(value As Boolean)
-			m_DontCheckUpdates = value
-		End Set
-	End Property
-	Public Property CreateRestorePoint As Boolean
-		Get
-			Return m_createRestorePoint
-		End Get
-		Private Set(value As Boolean)
-			m_createRestorePoint = value
-		End Set
-	End Property
-	Public Property SaveLogs As Boolean
-		Get
-			Return m_saveLogs
-		End Get
-		Private Set(value As Boolean)
-			m_saveLogs = value
-		End Set
-	End Property
-
-#End Region
-
-	Public Shared Function Create() As ThreadSettings
-		Return New ThreadSettings(Application.Settings, Application.Paths)
-	End Function
-
-	Private Sub New(ByVal settings As AppSettings, ByVal paths As AppPaths)
-		' Property copier
-
-		Me.Paths = New AppPaths(False)
-
-		Dim ptype As Type = paths.GetType()
-		Dim ptypeNew As Type = Me.Paths.GetType()
-
-		Dim pproperties As PropertyInfo() = ptype.GetProperties(BindingFlags.Public Or BindingFlags.Instance)
-		Dim ppropertiesNew As PropertyInfo() = ptypeNew.GetProperties(BindingFlags.Public Or BindingFlags.Instance)
-
-		For Each pNew As PropertyInfo In ppropertiesNew
-			For Each p As PropertyInfo In pproperties
-				If p.Name = pNew.Name Then
-					pNew.SetValue(Me.Paths, p.GetValue(paths, Nothing), Nothing)
-				End If
-			Next
-		Next
-
-
-		Dim type As Type = settings.GetType()
-		Dim typeNew As Type = Me.GetType()
-
-		Dim properties As PropertyInfo() = type.GetProperties(BindingFlags.Public Or BindingFlags.Instance)
-		Dim propertiesNew As PropertyInfo() = typeNew.GetProperties(BindingFlags.Public Or BindingFlags.Instance)
-
-		For Each pNew As PropertyInfo In propertiesNew
-			For Each p As PropertyInfo In properties
-				If p.Name = pNew.Name Then
-					pNew.SetValue(Me, p.GetValue(settings, Nothing), Nothing)
-				End If
-			Next
-		Next
 	End Sub
 
 End Class

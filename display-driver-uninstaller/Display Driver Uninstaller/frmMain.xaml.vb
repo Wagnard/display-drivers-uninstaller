@@ -5180,17 +5180,23 @@ Public Class frmMain
 									If array(i).ToLower.Contains("pci\cc_03") Then
 										For j As Integer = 0 To array.Length - 1
 											If array(j).ToLower.Contains("ven_8086") Then
-												ComboBox1.SelectedIndex = 2
+												Application.Settings.SelectedGPU = GPUVendor.Intel
+												Return
+												'ComboBox1.SelectedIndex = 2
 												'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
 												'PictureBox2.Size = New Size(158, 126)
 											End If
 											If array(j).ToLower.Contains("ven_1002") Then
-												ComboBox1.SelectedIndex = 1
+												Application.Settings.SelectedGPU = GPUVendor.AMD
+												Return
+												'ComboBox1.SelectedIndex = 1
 												'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
 												'PictureBox2.Size = New Size(158, 126)
 											End If
 											If array(j).ToLower.Contains("ven_10de") Then
-												ComboBox1.SelectedIndex = 0
+												Application.Settings.SelectedGPU = GPUVendor.Nvidia
+												Return
+												'ComboBox1.SelectedIndex = 0
 												'PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
 												'PictureBox2.Size = New Size(252, 123)
 											End If
@@ -5301,8 +5307,10 @@ Public Class frmMain
 
 		reboot = True
 
-
-		BackgroundWorker1.RunWorkerAsync()
+		BackgroundWorker1.RunWorkerAsync(
+		 New ThreadSettings() With {
+		   .DoShutdown = False,
+		   .DoReboot = True})
 	End Sub
 
 	Private Sub btnClean_Click(sender As Object, e As RoutedEventArgs) Handles btnClean.Click
@@ -5318,7 +5326,10 @@ Public Class frmMain
 		reboot = False
 		shutdown = False
 
-		BackgroundWorker1.RunWorkerAsync()
+		BackgroundWorker1.RunWorkerAsync(
+		 New ThreadSettings() With {
+		   .DoShutdown = False,
+		   .DoReboot = False})
 
 	End Sub
 
@@ -5335,7 +5346,10 @@ Public Class frmMain
 		reboot = False
 		shutdown = True
 
-		BackgroundWorker1.RunWorkerAsync()
+		BackgroundWorker1.RunWorkerAsync(
+		 New ThreadSettings() With {
+		   .DoShutdown = True,
+		   .DoReboot = False})
 	End Sub
 
 	Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
@@ -5378,44 +5392,39 @@ Public Class frmMain
 
 	Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles ComboBox1.SelectionChanged
 		Dim bi3 As New BitmapImage
-		Try
 
-		Catch ex As Exception
-			combobox1value = ""
-		End Try
+		If Application.Settings.SelectedGPU = GPUVendor.Nvidia Then
 
-        If Application.Settings.SelectedGPU = GPUVendor.Nvidia Then
+			'PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
+			'PictureBox2.Size = New Size(252, 123)
+			'         PictureBox2.Source = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
+			bi3.BeginInit()
+			bi3.UriSource = New Uri("/Resources/NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg", UriKind.Relative)
+			bi3.EndInit()
+			imgLogo.Source = bi3
+		End If
 
-            'PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
-            'PictureBox2.Size = New Size(252, 123)
-            '         PictureBox2.Source = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
-            bi3.BeginInit()
-            bi3.UriSource = New Uri("/Resources/NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg", UriKind.Relative)
-            bi3.EndInit()
-            imgLogo.Source = bi3
-        End If
-
-        If Application.Settings.SelectedGPU = GPUVendor.AMD Then
+		If Application.Settings.SelectedGPU = GPUVendor.AMD Then
 
 
-            bi3.BeginInit()
-            bi3.UriSource = New Uri("/Resources/RadeonLogo1.png", UriKind.Relative)
-            bi3.EndInit()
-            imgLogo.Source = bi3
-            'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-            'PictureBox2.Size = New Size(158, 126)
-            '           PictureBox2.Source = My.Resources.RadeonLogo1
-        End If
+			bi3.BeginInit()
+			bi3.UriSource = New Uri("/Resources/RadeonLogo1.png", UriKind.Relative)
+			bi3.EndInit()
+			imgLogo.Source = bi3
+			'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+			'PictureBox2.Size = New Size(158, 126)
+			'           PictureBox2.Source = My.Resources.RadeonLogo1
+		End If
 
-        If Application.Settings.SelectedGPU = GPUVendor.Intel Then
-            bi3.BeginInit()
-            bi3.UriSource = New Uri("/Resources/intel_logo.png", UriKind.Relative)
-            bi3.EndInit()
-            imgLogo.Source = bi3
-            'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-            'PictureBox2.Size = New Size(158, 126)
-            '         PictureBox2.Source = My.Resources.intel_logo
-        End If
+		If Application.Settings.SelectedGPU = GPUVendor.Intel Then
+			bi3.BeginInit()
+			bi3.UriSource = New Uri("/Resources/intel_logo.png", UriKind.Relative)
+			bi3.EndInit()
+			imgLogo.Source = bi3
+			'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+			'PictureBox2.Size = New Size(158, 126)
+			'         PictureBox2.Source = My.Resources.intel_logo
+		End If
 
 	End Sub
 
@@ -6476,10 +6485,11 @@ skipboot:
 
 
 	Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs)
+		Dim config As ThreadSettings = CType(e.Argument, ThreadSettings)
 		Dim card1 As Integer = Nothing
 		Dim vendid As String = ""
 		Dim vendidexpected As String = ""
-		
+
 		Dim regkey As RegistryKey = Nothing
 		Dim subregkey As RegistryKey = Nothing
 		Dim array() As String
@@ -6494,40 +6504,47 @@ skipboot:
 		Dispatcher.Invoke(Sub() ComboBox1.IsEnabled = False)
 		Dispatcher.Invoke(Sub() MenuStrip1.IsEnabled = False)
 
-        Select Case Application.Settings.SelectedGPU
-            Case GPUVendor.AMD
-                combobox1value = "AMD"
-            Case GPUVendor.Intel
-                combobox1value = "INTEL"
-            Case GPUVendor.Nvidia
-                combobox1value = "NVIDIA"
-        End Select
-        MsgBox(combobox1value)
+		' Application.Settings is created on MainThread = crossthread
+		' Instead: use config.SelectedGPU  <-- Thread safe (actually, combobox1value not needed anymore)
+		' If you need any properties,  ThreadSettings.vb <-- just put new Propery line there and assign at btnClean / btnCleanShutdown / btnCleanRestart
+
+		'combobox1value = config.SelectedGPU.ToString()
+
+		MsgBox(config.SelectedGPU.ToString())
 		Try
 			systemrestore()
 
-			If combobox1value = "AMD" Then
-				vendidexpected = "VEN_1002"
-				provider = "AdvancedMicroDevices"
-			End If
+			Select Case config.SelectedGPU
+				Case GPUVendor.Nvidia
+					vendidexpected = "VEN_10DE"
+					provider = "NVIDIA"
+				Case GPUVendor.AMD
+					vendidexpected = "VEN_1002"
+					provider = "AdvancedMicroDevices"
+				Case GPUVendor.Intel
+					vendidexpected = "VEN_8086"
+					provider = "Intel"
+			End Select
 
-			If combobox1value = "NVIDIA" Then
-				vendidexpected = "VEN_10DE"
-				provider = "NVIDIA"
-			End If
+			'If combobox1value = "AMD" Then
+			'vendidexpected = "VEN_1002"
+			'provider = "AdvancedMicroDevices"
+			'End If
+			'If combobox1value = "NVIDIA" Then
+			'vendidexpected = "VEN_10DE"
+			'provider = "NVIDIA"
+			'End If
+			'If combobox1value = "INTEL" Then
+			'vendidexpected = "VEN_8086"
+			'provider = "Intel"
+			'End If
 
-			If combobox1value = "INTEL" Then
-				vendidexpected = "VEN_8086"
-				provider = "Intel"
-			End If
-
-			UpdateTextMethod(UpdateTextMethodmessagefn(20) + " " & combobox1value & " " + UpdateTextMethodmessagefn(21))
-			log("Uninstalling " + combobox1value + " driver ...")
+			UpdateTextMethod(UpdateTextMethodmessagefn(20) + " " & config.SelectedGPU.ToString() & " " + UpdateTextMethodmessagefn(21))
+			log("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
 			UpdateTextMethod(UpdateTextMethodmessagefn(22))
 
 			Try
-				If combobox1value = "NVIDIA" Then
-
+				If config.SelectedGPU = GPUVendor.Nvidia Then
 					temporarynvidiaspeedup()   'we do this If and until nvidia speed up their installer that is impacting "ddudr remove" of the GPU from device manager.
 				End If
 			Catch ex As Exception
@@ -6540,10 +6557,10 @@ skipboot:
 
 			' First , get the ParentIdPrefix
 
-			If removeamdaudiobus And combobox1value = "AMD" Then
+			If config.RemoveAMDAudioBus And config.SelectedGPU = GPUVendor.AMD Then
 
 				Try
-					If combobox1value = "AMD" Then
+					If config.SelectedGPU = GPUVendor.AMD Then
 						Dim removed As Boolean = False
 						log("Trying to remove the AMD HD Audio BUS")
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
@@ -6762,13 +6779,13 @@ skipboot:
 
 			log("DDUDR Remove Audio controler Complete.")
 
-			If Not combobox1value = "INTEL" Then
+			If config.SelectedGPU <> GPUVendor.Intel Then
 				cleandriverstore()
 			End If
 
 			'Here I remove 3dVision USB Adapter.
 
-			If combobox1value = "NVIDIA" Then
+			If config.SelectedGPU = GPUVendor.Nvidia Then
 				Try
 					'removing 3DVision USB driver
 					processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
@@ -6982,7 +6999,7 @@ skipboot:
 
 			End If
 
-			If combobox1value = "AMD" Then
+			If config.SelectedGPU = GPUVendor.AMD Then
 				' ------------------------------
 				' Removing some of AMD AudioEndpoints
 				' ------------------------------
@@ -7025,7 +7042,8 @@ skipboot:
 				End Try
 
 			End If
-			If combobox1value = "INTEL" Then
+
+			If config.SelectedGPU = GPUVendor.Intel Then
 				'Removing Intel WIdI bus Enumerator
 				log("Removing IWD Bus Enumerator")
 				processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
@@ -7089,7 +7107,7 @@ skipboot:
 
 
 
-			If removemonitor Then
+			If config.RemoveMonitors Then
 				log("ddudr Remove Monitor started")
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
@@ -7140,7 +7158,7 @@ skipboot:
 			'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont what that
 			'espcially if we are not using an AMD GPU
 
-			If removeamdkmpfd Then
+			If config.RemoveAMDKMPFD Then
 				Try
 					log("Checking and Removing AMDKMPFD Filter if present")
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
@@ -7205,7 +7223,7 @@ skipboot:
 				End If
 			End If
 
-			If combobox1value = "AMD" Then
+			If config.SelectedGPU = GPUVendor.AMD Then
 				cleanamdserviceprocess()
 				cleanamd()
 
@@ -7220,7 +7238,7 @@ skipboot:
 				cleanamdfolders()
 			End If
 
-			If combobox1value = "NVIDIA" Then
+			If config.SelectedGPU = GPUVendor.Nvidia Then
 				cleannvidiaserviceprocess()
 				cleannvidia()
 
@@ -7237,7 +7255,7 @@ skipboot:
 				checkpcieroot()
 			End If
 
-			If combobox1value = "INTEL" Then
+			If config.SelectedGPU = GPUVendor.Intel Then
 				cleanintelserviceprocess()
 				cleanintel()
 
@@ -7273,7 +7291,7 @@ skipboot:
 		'	Instead:
 		'
 		'		BackgroundWorker1.RunWorkerAsync()
-		' --->	BackgroundWorker1.RunWorkerAsync(ThreadSettings.Create())    'Creates Copy of AppSettings & AppPaths = Safe for Threading (no reference)
+		' --->	BackgroundWorker1.RunWorkerAsync(New ThreadSettings())    'Creates Copy of AppSettings & AppPaths = Safe for Threading (no reference)
 		'		"ThreadSettings" is passed to thread via "e.Argument"
 		'
 		'
@@ -7802,6 +7820,7 @@ skipboot:
 		'TODO: InitLanguage (just comment for quick find)
 
 		If firstLaunch Then
+			ComboBox1.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
 			cbLanguage.Items.Clear()
 
 			Dim defaultLang As New Languages.LanguageOption("en", "English", Application.Paths.Language & "English.xml")
@@ -8080,6 +8099,7 @@ skipboot:
 	Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
 		Me.WindowState = Windows.WindowState.Minimized
 	End Sub
+
 End Class
 
 Public Class checkvariables

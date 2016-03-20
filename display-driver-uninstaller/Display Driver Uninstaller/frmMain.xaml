@@ -20,7 +20,7 @@
         <Button x:Name="btnWuRestore" Content="Button" HorizontalAlignment="Left" Margin="425,331,0,0" VerticalAlignment="Top" Width="154" Height="54" />
         <Button x:Name="btnExtendedLog" Content="btnExtendedLog" HorizontalAlignment="Left" Margin="425,300,0,0" VerticalAlignment="Top" Width="154" Height="25" />
 
-		<ComboBox Name="ComboBox1" ItemsSource="{Binding GPUOptions, Mode=OneWay}" HorizontalAlignment="Left" Margin="219,31,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedItem="{Binding SelectedGPU, Mode=OneWayToSource}" />
+		<ComboBox Name="ComboBox1" HorizontalAlignment="Left" Margin="219,31,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedItem="{Binding SelectedGPU, Mode=TwoWay}" />
 		<ComboBox x:Name="cbLanguage" ItemsSource="{Binding LanguageOptions, Mode=OneWay}" DisplayMemberPath="DisplayText" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="172" Height="22" IsReadOnly="True" />
 
 		<Label x:Name="lblUpdate" Content="lblUpdate" Height="26" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" />
@@ -44,5 +44,5 @@
             </MenuItem>
         </Menu>
         <Image x:Name="imgLogo" HorizontalAlignment="Left" Height="141" Margin="359,103,0,0" VerticalAlignment="Top" Width="200" Source="Resources/RadeonLogo1.png"/>
-		</Grid>
+	</Grid>
 </Window>
