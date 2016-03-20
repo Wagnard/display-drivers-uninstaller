@@ -5300,7 +5300,7 @@ Public Class frmMain
 		'this shouldn't be slow, so it isn't on a thread/background worker
 
 		reboot = True
-		combobox1value = ComboBox1.Text
+
 
 		BackgroundWorker1.RunWorkerAsync()
 	End Sub
@@ -5317,7 +5317,7 @@ Public Class frmMain
 
 		reboot = False
 		shutdown = False
-		combobox1value = ComboBox1.Text
+
 		BackgroundWorker1.RunWorkerAsync()
 
 	End Sub
@@ -5334,7 +5334,7 @@ Public Class frmMain
 
 		reboot = False
 		shutdown = True
-		combobox1value = ComboBox1.Text
+
 		BackgroundWorker1.RunWorkerAsync()
 	End Sub
 
@@ -5380,44 +5380,42 @@ Public Class frmMain
 		Dim bi3 As New BitmapImage
 		Try
 
-
-			combobox1value = ComboBox1.SelectedValue.ToString()
 		Catch ex As Exception
 			combobox1value = ""
 		End Try
 
-		If combobox1value = "NVIDIA" Then
+        If Application.Settings.SelectedGPU = GPUVendor.Nvidia Then
 
-			'PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
-			'PictureBox2.Size = New Size(252, 123)
-			'         PictureBox2.Source = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
-			bi3.BeginInit()
-			bi3.UriSource = New Uri("/Resources/NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg", UriKind.Relative)
-			bi3.EndInit()
-			imgLogo.Source = bi3
-		End If
+            'PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
+            'PictureBox2.Size = New Size(252, 123)
+            '         PictureBox2.Source = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
+            bi3.BeginInit()
+            bi3.UriSource = New Uri("/Resources/NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg", UriKind.Relative)
+            bi3.EndInit()
+            imgLogo.Source = bi3
+        End If
 
-		If combobox1value = "AMD" Then
+        If Application.Settings.SelectedGPU = GPUVendor.AMD Then
 
 
-			bi3.BeginInit()
-			bi3.UriSource = New Uri("/Resources/RadeonLogo1.png", UriKind.Relative)
-			bi3.EndInit()
-			imgLogo.Source = bi3
-			'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-			'PictureBox2.Size = New Size(158, 126)
-			'           PictureBox2.Source = My.Resources.RadeonLogo1
-		End If
+            bi3.BeginInit()
+            bi3.UriSource = New Uri("/Resources/RadeonLogo1.png", UriKind.Relative)
+            bi3.EndInit()
+            imgLogo.Source = bi3
+            'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+            'PictureBox2.Size = New Size(158, 126)
+            '           PictureBox2.Source = My.Resources.RadeonLogo1
+        End If
 
-		If combobox1value = "INTEL" Then
-			bi3.BeginInit()
-			bi3.UriSource = New Uri("/Resources/intel_logo.png", UriKind.Relative)
-			bi3.EndInit()
-			imgLogo.Source = bi3
-			'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-			'PictureBox2.Size = New Size(158, 126)
-			'         PictureBox2.Source = My.Resources.intel_logo
-		End If
+        If Application.Settings.SelectedGPU = GPUVendor.Intel Then
+            bi3.BeginInit()
+            bi3.UriSource = New Uri("/Resources/intel_logo.png", UriKind.Relative)
+            bi3.EndInit()
+            imgLogo.Source = bi3
+            'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
+            'PictureBox2.Size = New Size(158, 126)
+            '         PictureBox2.Source = My.Resources.intel_logo
+        End If
 
 	End Sub
 
@@ -6496,7 +6494,15 @@ skipboot:
 		Dispatcher.Invoke(Sub() ComboBox1.IsEnabled = False)
 		Dispatcher.Invoke(Sub() MenuStrip1.IsEnabled = False)
 
-
+        Select Case Application.Settings.SelectedGPU
+            Case GPUVendor.AMD
+                combobox1value = "AMD"
+            Case GPUVendor.Intel
+                combobox1value = "INTEL"
+            Case GPUVendor.Nvidia
+                combobox1value = "NVIDIA"
+        End Select
+        MsgBox(combobox1value)
 		Try
 			systemrestore()
 
