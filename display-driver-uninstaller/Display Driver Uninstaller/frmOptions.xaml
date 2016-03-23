@@ -7,8 +7,8 @@
 	<Window.Resources>
 		<conv:NullableBooleanToBoolean x:Key="NulBoolToBool"></conv:NullableBooleanToBoolean>
 	</Window.Resources>
-	
-    <Grid>
+
+	<Grid DataContext="{Binding Settings}">
 		<CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" />
 		<CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" HorizontalAlignment="Left" Margin="12,34,0,0" VerticalAlignment="Top" />
 		<CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAMDAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" HorizontalAlignment="Left" Margin="12,54,0,0" VerticalAlignment="Top" />
@@ -25,6 +25,8 @@
 		<CheckBox x:Name="lblcreateRestorePoint" IsChecked="{Binding CreateRestorePoint, Converter={StaticResource NulBoolToBool}}" Content="lblcreateRestorePoint" HorizontalAlignment="Left" Margin="12,295,0,0" VerticalAlignment="Top" />
 		<CheckBox x:Name="lblshowSafeModeMsg" IsChecked="{Binding ShowSafeModeMsg, Converter={StaticResource NulBoolToBool}}" Content="lblshowSafeModeMsg" HorizontalAlignment="Left" Margin="12,317,0,0" VerticalAlignment="Top" />
 		<CheckBox x:Name="lblUseRoamingCfg" IsChecked="{Binding UseRoamingConfig, Converter={StaticResource NulBoolToBool}}" Content="lblUseRoamingCfg" HorizontalAlignment="Left" Margin="12,337,0,0" VerticalAlignment="Top" />
-		<CheckBox x:Name="lblDontCheckUpdates" IsChecked="{Binding DontCheckUpdates, Converter={StaticResource NulBoolToBool}}" Content="lblDontCheckUpdates" HorizontalAlignment="Left" Margin="12,357,0,0" VerticalAlignment="Top" />	
-    </Grid>
+		<CheckBox x:Name="lblDontCheckUpdates" IsChecked="{Binding DontCheckUpdates, Converter={StaticResource NulBoolToBool}}" Content="lblDontCheckUpdates" HorizontalAlignment="Left" Margin="12,357,0,0" VerticalAlignment="Top" />
+	
+		<Button Content="btnClose" Name="btnClose" HorizontalAlignment="Right" Width="80" Height="30" VerticalAlignment="Bottom" />
+	</Grid>
 </Window>

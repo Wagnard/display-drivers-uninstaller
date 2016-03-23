@@ -20,14 +20,11 @@
         <Button x:Name="btnWuRestore" Content="Button" HorizontalAlignment="Left" Margin="425,331,0,0" VerticalAlignment="Top" Width="154" Height="54" />
         <Button x:Name="btnExtendedLog" Content="btnExtendedLog" HorizontalAlignment="Left" Margin="425,300,0,0" VerticalAlignment="Top" Width="154" Height="25" />
 
-		<ComboBox Name="ComboBox1" HorizontalAlignment="Left" Margin="219,31,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedItem="{Binding SelectedGPU, Mode=TwoWay}" />
-		<ComboBox x:Name="cbLanguage" ItemsSource="{Binding LanguageOptions, Mode=OneWay}" DisplayMemberPath="DisplayText" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="172" Height="22" IsReadOnly="True" />
+		<ComboBox Name="cbSelectedGPU" HorizontalAlignment="Left" Margin="425,43,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedItem="{Binding Settings.SelectedGPU, Mode=TwoWay}" />
+		<ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" DisplayMemberPath="DisplayText" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="172" Height="22" IsReadOnly="True" />
 
 		<Label x:Name="lblUpdate" Content="lblUpdate" Height="26" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" />
-		<Label x:Name="lblWinVersion" Content="lblWinVersion" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,27,0,0" />
-        <Label x:Name="Label3" Content="Label" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" Height="26" Width="38"/>
-
-        <TextBox x:Name="tbLog" HorizontalAlignment="Left" Height="172" Margin="10,335,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="366" />
+		<TextBox x:Name="tbLog" HorizontalAlignment="Left" Height="172" Margin="10,335,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="366" />
 
         <Menu x:Name="MenuStrip1" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
             <MenuItem x:Name="OptionsMenuItem" Header="Options"/>
@@ -44,5 +41,10 @@
             </MenuItem>
         </Menu>
         <Image x:Name="imgLogo" HorizontalAlignment="Left" Height="141" Margin="359,103,0,0" VerticalAlignment="Top" Width="200" Source="Resources/RadeonLogo1.png"/>
+		<StackPanel Height="27" HorizontalAlignment="Left" Margin="0,26,0,0" Name="StackPanel1" VerticalAlignment="Top" Orientation="Horizontal">
+			<Label x:Name="lblWinVersion" Content="lblWinVersionText" />
+			<Label x:Name="lblWinVersionValue" Content="W7" />
+			<Label x:Name="lblArch" Content="x00" Height="26" Width="38" FontWeight="Bold" />
+		</StackPanel>
 	</Grid>
 </Window>

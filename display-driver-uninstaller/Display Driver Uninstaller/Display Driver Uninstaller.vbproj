@@ -10,7 +10,7 @@
     <RootNamespace>Display_Driver_Uninstaller</RootNamespace>
     <AssemblyName>Display Driver Uninstaller</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
-    <MyType>Custom</MyType>
+    <MyType>Custom</MyType> 
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -69,6 +69,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppLog.vb" />
     <Compile Include="AppPaths.vb" />
     <Compile Include="Converters.vb" />
     <Compile Include="frmLaunch.xaml.vb">
@@ -78,6 +79,9 @@
       <DependentUpon>frmLog.xaml</DependentUpon>
     </Compile>
     <Compile Include="AppSettings.vb" />
+    <Compile Include="LogEntry.xaml.vb">
+      <DependentUpon>LogEntry.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ThreadSettings.vb" />
     <Page Include="frmLaunch.xaml">
       <SubType>Designer</SubType>
@@ -100,6 +104,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="frmOptions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LogEntry.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

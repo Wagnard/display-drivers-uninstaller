@@ -5378,19 +5378,21 @@ Public Class frmMain
 	End Sub
 
 	Private Sub btnExtendedLog_Click(sender As Object, e As EventArgs) Handles btnExtendedLog.Click
-		'Using frm As New frmLog
-		'    frm.ShowDialog(Me)
-		'End Using
+		Dim frmLog As New frmLog
 
+		With frmLog
+			.Owner = Me
+			.DataContext = Me.DataContext
+			.ResizeMode = Windows.ResizeMode.CanResizeWithGrip
+			.WindowStyle = Windows.WindowStyle.SingleBorderWindow
+		End With
 
-		Dim frmLog = New frmLog
-		frmLog.Show()
-
+		frmLog.ShowDialog()
 	End Sub
 
 
 
-	Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles ComboBox1.SelectionChanged
+	Private Sub cbSelectedGPU_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedGPU.SelectionChanged
 		Dim bi3 As New BitmapImage
 
 		If Application.Settings.SelectedGPU = GPUVendor.Nvidia Then
@@ -5637,7 +5639,7 @@ Public Class frmMain
 
 	Private Sub frmMain_Loaded(sender As Object, e As RoutedEventArgs)
 		If Me.DataContext Is Nothing Then  ' ONLY ONCE!!! after launching application
-			Me.DataContext = Application.Settings
+			Me.DataContext = Application.Data
 		End If
 
 		Try
@@ -5763,7 +5765,7 @@ Public Class frmMain
 			Select Case version
 
 				Case "5.1"
-					lblWinVersion.Content = "Windows XP"
+					lblWinVersionValue.Content = "Windows XP"
 					winxp = True
 					btnCleanRestart.IsEnabled = True
 					btnClean.IsEnabled = True
@@ -5771,28 +5773,28 @@ Public Class frmMain
 					btnWuRestore.IsEnabled = True
 
 				Case "5.2"
-					lblWinVersion.Content = "Windows XP (x64) or Server 2003"
+					lblWinVersionValue.Content = "Windows XP (x64) or Server 2003"
 					winxp = True
 					btnCleanRestart.IsEnabled = True
 					btnClean.IsEnabled = True
 					btnCleanShutdown.IsEnabled = True
 					btnWuRestore.IsEnabled = True
 				Case "6.0"
-					lblWinVersion.Content = "Windows Vista or Server 2008"
+					lblWinVersionValue.Content = "Windows Vista or Server 2008"
 					btnCleanRestart.IsEnabled = True
 					btnClean.IsEnabled = True
 					btnCleanShutdown.IsEnabled = True
 					btnWuRestore.IsEnabled = True
 
 				Case "6.1"
-					lblWinVersion.Content = "Windows 7 or Server 2008R2"
+					lblWinVersionValue.Content = "Windows 7 or Server 2008R2"
 					btnCleanRestart.IsEnabled = True
 					btnClean.IsEnabled = True
 					btnCleanShutdown.IsEnabled = True
 					btnWuRestore.IsEnabled = True
 
 				Case "6.2"
-					lblWinVersion.Content = "Windows 8 or Server 2012"
+					lblWinVersionValue.Content = "Windows 8 or Server 2012"
 					win8higher = True
 					btnCleanRestart.IsEnabled = True
 					btnClean.IsEnabled = True
@@ -5800,10 +5802,10 @@ Public Class frmMain
 					btnWuRestore.IsEnabled = True
 
 				Case "6.3"
-					lblWinVersion.Content = "Windows 8.1"
+					lblWinVersionValue.Content = "Windows 8.1"
 					If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber"))) Then
 						If CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber")) = "10" Then
-							lblWinVersion.Content = "Windows 10"
+							lblWinVersionValue.Content = "Windows 10"
 							win10 = True
 						End If
 					End If
@@ -5814,7 +5816,7 @@ Public Class frmMain
 					btnWuRestore.IsEnabled = True
 
 				Case "6.4", "10.0"
-					lblWinVersion.Content = "Windows 10"
+					lblWinVersionValue.Content = "Windows 10"
 					win8higher = True
 					win10 = True
 					btnCleanRestart.IsEnabled = True
@@ -5823,7 +5825,7 @@ Public Class frmMain
 					btnWuRestore.IsEnabled = True
 
 				Case Else
-					lblWinVersion.Content = "Unsupported OS"
+					lblWinVersionValue.Content = "Unsupported OS"
 					log("Unsupported OS.")
 					btnCleanRestart.IsEnabled = False
 					btnClean.IsEnabled = False
@@ -5989,7 +5991,7 @@ Public Class frmMain
 				Dim arch As Boolean
 
 
-				Me.ComboBox1.SelectedIndex = 0
+				Application.Settings.SelectedGPU = GPUVendor.Nvidia
 				If IntPtr.Size = 8 Then
 
 					arch = True
@@ -6019,12 +6021,12 @@ Public Class frmMain
 				'Verifying if we are on X86 or x64
 
 				If arch = True Then
-					Label3.Content = "x64"
+					lblArch.Content = "x64"
 				Else
-					Label3.Content = "x86"
+					lblArch.Content = "x86"
 				End If
 				' Label3.Refresh()
-				ddudrfolder = CStr(Label3.Content)
+				ddudrfolder = CStr(lblArch.Content)
 
 				If arch = True Then
 					Try
@@ -6294,10 +6296,17 @@ Public Class frmMain
 					Me.WindowState = Windows.WindowState.Normal
 				End If
 skipboot:
+
+				Dim info As LogEntry = LogEntry.Create()
 				UpdateTextMethod(UpdateTextMethodmessagefn(10) + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
 				log("DDU Version: " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
-				log("OS: " + CStr(lblWinVersion.Content))
+				log("OS: " + CStr(lblWinVersionValue.Content))
 				log("Architecture: " & ddudrfolder)
+
+				info.Message = "System Information"
+				info.Add("DDU Version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
+				info.Add("OS", CStr(lblWinVersionValue.Content))
+				info.Add("Architecture", CStr(lblArch.Content))
 
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
@@ -6314,15 +6323,18 @@ skipboot:
 											currentdriverversion = subregkey.GetValue("Device Description").ToString
 											UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
 											log("GPU #" + child + " Detected : " + currentdriverversion)
+											info.Add("GPU #" + child, currentdriverversion)
 										Else
 											If (subregkey.GetValue("DriverDesc") IsNot Nothing) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
 												UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
 												log("GPU #" + child + " Detected :  " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
+												info.Add("GPU #" + child, HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
 											Else
 												If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DriverDesc"))) Then
 													currentdriverversion = subregkey.GetValue("DriverDesc").ToString
 													UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
 													log("GPU #" + child + " Detected : " + currentdriverversion)
+													info.Add("GPU #" + child, currentdriverversion)
 												End If
 											End If
 
@@ -6331,12 +6343,14 @@ skipboot:
 											currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
 											UpdateTextMethod(UpdateTextMethodmessagefn(13) + " " + currentdriverversion)
 											log("GPU DeviceId : " + currentdriverversion)
+											info.Add("GPU DeviceId", currentdriverversion)
 										End If
 
 										Try
 											If (Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString")))) AndAlso (subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary) Then
 												UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
 												log("Vbios :" + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
+												info.Add("Vbios", HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
 											Else
 												If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString"))) Then
 													currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
@@ -6346,6 +6360,7 @@ skipboot:
 													Next
 													UpdateTextMethod("Vbios :" + " " + currentdriverversion)
 													log("Vbios : " + currentdriverversion)
+													info.Add("Vbios", currentdriverversion)
 												End If
 											End If
 										Catch ex As Exception
@@ -6356,16 +6371,19 @@ skipboot:
 											currentdriverversion = subregkey.GetValue("DriverVersion").ToString
 											UpdateTextMethod(UpdateTextMethodmessagefn(14) + " " + currentdriverversion)
 											log("Detected Driver(s) Version(s) : " + currentdriverversion)
+											info.Add("Detected Driver(s) Version(s)", currentdriverversion)
 										End If
 										If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("InfPath"))) Then
 											currentdriverversion = subregkey.GetValue("InfPath").ToString
 											UpdateTextMethod(UpdateTextMethodmessagefn(15) + " " + currentdriverversion)
 											log("INF : " + currentdriverversion)
+											info.Add("INF", currentdriverversion)
 										End If
 										If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("InfSection"))) Then
 											currentdriverversion = subregkey.GetValue("InfSection").ToString
 											UpdateTextMethod(UpdateTextMethodmessagefn(16) + " " + currentdriverversion)
 											log("INF Section : " + currentdriverversion)
+											info.Add("INF", currentdriverversion)
 										End If
 									End If
 									UpdateTextMethod("--------------")
@@ -6436,6 +6454,7 @@ skipboot:
 
 
 				getoeminfo()
+				Application.Log.Add(info)
 
 			Catch ex As Exception
 				MsgBox(ex.Message + ex.StackTrace)
@@ -6501,7 +6520,6 @@ skipboot:
 		Dispatcher.Invoke(Sub() btnCleanRestart.IsEnabled = False)
 		Dispatcher.Invoke(Sub() btnClean.IsEnabled = False)
 		Dispatcher.Invoke(Sub() btnCleanShutdown.IsEnabled = False)
-		Dispatcher.Invoke(Sub() ComboBox1.IsEnabled = False)
 		Dispatcher.Invoke(Sub() MenuStrip1.IsEnabled = False)
 
 		' Application.Settings is created on MainThread = crossthread
@@ -6541,6 +6559,7 @@ skipboot:
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(20) + " " & config.SelectedGPU.ToString() & " " + UpdateTextMethodmessagefn(21))
 			log("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
+			Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
 			UpdateTextMethod(UpdateTextMethodmessagefn(22))
 
 			Try
@@ -6563,6 +6582,7 @@ skipboot:
 					If config.SelectedGPU = GPUVendor.AMD Then
 						Dim removed As Boolean = False
 						log("Trying to remove the AMD HD Audio BUS")
+						Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
@@ -6582,6 +6602,7 @@ skipboot:
 																		For i As Integer = 0 To array.Length - 1
 																			If Not checkvariables.isnullorwhitespace(array(i)) Then
 																				If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
+																					Application.Log.AddMessage("Found an AMD audio controller bus !")
 																					log("Found an AMD audio controller bus !")
 																					Try
 																						log("array result: " + array(i))
@@ -6599,6 +6620,8 @@ skipboot:
 																					'process.WaitForExit()
 																					process.StandardOutput.Close()
 																					process.Close()
+																					Application.Log.AddMessage(reply2)
+																					Application.Log.AddMessage("AMD HD Audio Bus Removed !")
 																					log(reply2)
 																					log("AMD HD Audio Bus Removed !")
 																					removed = True
@@ -6640,6 +6663,7 @@ skipboot:
 											For i As Integer = 0 To array.Length - 1
 												If Not checkvariables.isnullorwhitespace(array(i)) Then
 													If array(i).ToLower.Contains("amdkmafd") Then
+														Application.Log.AddMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
 														log("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
 														donotremoveamdhdaudiobusfiles = True
 													End If
@@ -6703,6 +6727,7 @@ skipboot:
 														process.StandardOutput.Close()
 														process.Close()
 														'process.WaitForExit()
+														Application.Log.AddMessage(reply2)
 														log(reply2)
 													End If
 													Exit For   'the card is removed so we exit the loop from here.
@@ -6721,11 +6746,13 @@ skipboot:
 			Next
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(23))
+			Application.Log.AddMessage("DDUDR Remove Display Driver: Complete.")
 			log("DDUDR Remove Display Driver: Complete.")
 
 			cleandriverstore()
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(24))
+			Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
 			log("Executing DDUDR Remove Audio controler.")
 
 			Try
@@ -6762,6 +6789,7 @@ skipboot:
 										process.Close()
 										'process.WaitForExit()
 										log(reply2)
+										Application.Log.AddMessage(reply2)
 
 									End If
 								Next
@@ -6778,6 +6806,7 @@ skipboot:
 
 
 			log("DDUDR Remove Audio controler Complete.")
+			Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
 
 			If config.SelectedGPU <> GPUVendor.Intel Then
 				cleandriverstore()
@@ -6824,6 +6853,7 @@ skipboot:
 						 vendid.Contains("USB\VID_0955&PID_700D&MI_00") Or
 						 vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
 							log("-" & vendid & "- 3D vision usb controler found")
+							Application.Log.AddMessage("-" & vendid & "- 3D vision usb controler found")
 
 							processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
 							processinfo.Arguments = "remove =USB " & Chr(34) & vendid & Chr(34)
@@ -6838,6 +6868,7 @@ skipboot:
 							process.Close()
 							'process.WaitForExit()
 							log(reply2)
+							Application.Log.AddMessage(reply2)
 
 
 						End If
@@ -6880,6 +6911,7 @@ skipboot:
 						vendid = reply.Substring(card1, position2 - card1).Trim
 						If vendid.ToLower.Contains("hid\vid_0955&pid_7210") Then
 							log("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
+							Application.Log.AddMessage("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
 
 							processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
 							processinfo.Arguments = "remove =MOUSE " & Chr(34) & vendid & Chr(34)
@@ -6894,6 +6926,7 @@ skipboot:
 							process.Close()
 							'process.WaitForExit()
 							log(reply2)
+							Application.Log.AddMessage(reply2)
 
 
 						End If
@@ -6942,6 +6975,7 @@ skipboot:
 													process.Close()
 													'process.WaitForExit()
 													log(reply2)
+													Application.Log.AddMessage(reply2)
 
 												End If
 											End If
@@ -6961,6 +6995,7 @@ skipboot:
 				' ------------------------------
 
 				log("Removing nVidia Audio Endpoints")
+				Application.Log.AddMessage("Removing nVidia Audio Endpoints")
 
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
@@ -6987,6 +7022,7 @@ skipboot:
 									process.Close()
 									'process.WaitForExit()
 									log(reply2)
+									Application.Log.AddMessage(reply2)
 
 								End If
 							End If
@@ -7005,6 +7041,7 @@ skipboot:
 				' ------------------------------
 
 				log("Removing AMD Audio Endpoints")
+				Application.Log.AddMessage("Removing AMD Audio Endpoints")
 
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
@@ -7031,6 +7068,7 @@ skipboot:
 									process.Close()
 									'process.WaitForExit()
 									log(reply2)
+									Application.Log.AddMessage(reply2)
 
 								End If
 							End If
@@ -7046,6 +7084,7 @@ skipboot:
 			If config.SelectedGPU = GPUVendor.Intel Then
 				'Removing Intel WIdI bus Enumerator
 				log("Removing IWD Bus Enumerator")
+				Application.Log.AddMessage("Removing IWD Bus Enumerator")
 				processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
 				processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
 				processinfo.UseShellExecute = False
@@ -7059,12 +7098,14 @@ skipboot:
 				process.Close()
 				'process.WaitForExit()
 				log(reply2)
+				Application.Log.AddMessage(reply2)
 
 
 				' ------------------------------
 				' Removing Intel AudioEndpoints
 				' ------------------------------
 				log("Removing Intel Audio Endpoints")
+				Application.Log.AddMessage("Removing Intel Audio Endpoints")
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
 					If regkey IsNot Nothing Then
@@ -7090,6 +7131,7 @@ skipboot:
 									process.Close()
 									'process.WaitForExit()
 									log(reply2)
+									Application.Log.AddMessage(reply2)
 
 								End If
 							End If
@@ -7103,12 +7145,14 @@ skipboot:
 
 
 			log("ddudr Remove Audio/HDMI Complete")
+			Application.Log.AddMessage("ddudr Remove Audio/HDMI Complete")
 			'removing monitor and hidden monitor
 
 
 
 			If config.RemoveMonitors Then
 				log("ddudr Remove Monitor started")
+				Application.Log.AddMessage("ddudr Remove Monitor started")
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
 					If regkey IsNot Nothing Then
@@ -7160,6 +7204,7 @@ skipboot:
 
 			If config.RemoveAMDKMPFD Then
 				Try
+					Application.Log.AddMessage("Checking and Removing AMDKMPFD Filter if present")
 					log("Checking and Removing AMDKMPFD Filter if present")
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
 					If regkey IsNot Nothing Then
@@ -7176,6 +7221,7 @@ skipboot:
 													For i As Integer = 0 To array.Length - 1
 														If Not checkvariables.isnullorwhitespace(array(i)) Then
 															If array(i).ToLower.Contains("amdkmpfd") Then
+																Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
 																log("Found an AMDKMPFD! in " + child)
 																Try
 																	log("array result: " + array(i))
@@ -7199,6 +7245,8 @@ skipboot:
 																process.Close()
 																log(reply2)
 																log(child + " Restored.")
+																Application.Log.AddMessage(reply2)
+																Application.Log.AddMessage(child + " Restored.")
 
 															End If
 														End If
@@ -7229,6 +7277,7 @@ skipboot:
 
 				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
 					log("Killing Explorer.exe")
+					Application.Log.AddMessage("Killing Explorer.exe")
 					Dim appproc = process.GetProcessesByName("explorer")
 					For i As Integer = 0 To appproc.Length - 1
 						appproc(i).Kill()
@@ -7243,6 +7292,7 @@ skipboot:
 				cleannvidia()
 
 				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+					Application.Log.AddMessage("Killing Explorer.exe")
 					log("Killing Explorer.exe")
 					Dim appproc = process.GetProcessesByName("explorer")
 					For i As Integer = 0 To appproc.Length - 1
@@ -7260,6 +7310,7 @@ skipboot:
 				cleanintel()
 
 				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+					Application.Log.AddMessage("Killing Explorer.exe")
 					log("Killing Explorer.exe")
 					Dim appproc = process.GetProcessesByName("explorer")
 					For i As Integer = 0 To appproc.Length - 1
@@ -7336,6 +7387,7 @@ skipboot:
 			UpdateTextMethod(UpdateTextMethodmessagefn(9))
 
 			log("Clean uninstall completed!")
+			Application.Log.AddMessage("Clean uninstall completed!")
 
 			If Not shutdown Then
 				rescan()
@@ -7344,7 +7396,6 @@ skipboot:
 			Dispatcher.Invoke(Sub() btnCleanRestart.IsEnabled = True)
 			Dispatcher.Invoke(Sub() btnClean.IsEnabled = True)
 			Dispatcher.Invoke(Sub() btnCleanShutdown.IsEnabled = True)
-			Dispatcher.Invoke(Sub() ComboBox1.IsEnabled = True)
 			Dispatcher.Invoke(Sub() MenuStrip1.IsEnabled = True)
 
 			If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
@@ -7705,15 +7756,12 @@ skipboot:
 	Private Sub cleananddonothing(ByVal gpu As String)
 		reboot = False
 		shutdown = False
-		Dispatcher.Invoke(Sub() ComboBox1.Text = gpu)
 		BackgroundWorker1.RunWorkerAsync()
-
 	End Sub
 
 	Private Sub cleanandandreboot(ByVal gpu As String)
 		reboot = True
 		shutdown = False
-		Dispatcher.Invoke(Sub() ComboBox1.Text = gpu)
 		BackgroundWorker1.RunWorkerAsync()
 
 	End Sub
@@ -7721,14 +7769,16 @@ skipboot:
 	Public Sub log(ByVal strmessage As String)
 		Try
 			If savelogs Then
-				Using wlog As New IO.StreamWriter(locations, True)
-					wlog.WriteLine(DateTime.Now & " >> " & strmessage)
+				' After 500+ entries of logfiles.........
 
-					UpdateTextMethod2(strmessage)
+				'Using wlog As New IO.StreamWriter(locations, True)
+				'wlog.WriteLine(DateTime.Now & " >> " & strmessage)
 
-					wlog.Flush()
-					wlog.Close()
-				End Using 'End using always calls .Dispose() 
+				'UpdateTextMethod2(strmessage)
+
+				'wlog.Flush()
+				'wlog.Close()
+				'End Using 'End using always calls .Dispose() 
 				'  System.Threading.Thread.Sleep(10)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
 			End If
 		Catch ex As Exception
@@ -7820,7 +7870,7 @@ skipboot:
 		'TODO: InitLanguage (just comment for quick find)
 
 		If firstLaunch Then
-			ComboBox1.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
+			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
 			cbLanguage.Items.Clear()
 
 			Dim defaultLang As New Languages.LanguageOption("en", "English", Application.Paths.Language & "English.xml")
@@ -7968,17 +8018,17 @@ skipboot:
 	End Sub
 
 	Public Sub UpdateTextMethod2(ByVal strMessage As String)
-		Dim frmLog As New frmLog
-
-		If Not frmLog.tbLog.Dispatcher.CheckAccess() Then
-			Dispatcher.Invoke(Sub() frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine)
-			Dispatcher.Invoke(Sub() frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0))
-			Dispatcher.Invoke(Sub() frmLog.tbLog.ScrollToEnd())
-		Else
-			frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine
-			frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0)
-			frmLog.tbLog.ScrollToEnd()
-		End If
+		'Dim frmLog As New frmLog
+		'
+		'If Not frmLog.tbLog.Dispatcher.CheckAccess() Then
+		'Dispatcher.Invoke(Sub() frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine)
+		'Dispatcher.Invoke(Sub() frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0))
+		'Dispatcher.Invoke(Sub() frmLog.tbLog.ScrollToEnd())
+		'Else
+		'frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine
+		'frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0)
+		'frmLog.tbLog.ScrollToEnd()
+		'End If
 
 	End Sub
 
@@ -8099,7 +8149,6 @@ skipboot:
 	Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
 		Me.WindowState = Windows.WindowState.Minimized
 	End Sub
-
 End Class
 
 Public Class checkvariables
