@@ -287,7 +287,7 @@
 		<StackPanel x:Key="logTitle">
 			<TextBlock  FontWeight="Bold" Foreground="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrush}, UpdateSourceTrigger=PropertyChanged}" >
 				[ <TextBlock FontWeight="Bold" Text="{Binding Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" /> ]
-				<TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Message, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+				<TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Message, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" />
 			</TextBlock>
 
 			<TextBlock Text="{Binding Time, UpdateSourceTrigger=PropertyChanged}" />
@@ -342,20 +342,7 @@
 								FontWeight="Bold"
 								Visibility="{Binding Path=HasException, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}">
 						<Border BorderThickness="1" BorderBrush="Black">
-							<StackPanel DataContext="{Binding Exception}">
-								<TextBlock Style="{StaticResource styleNormal}"  Text="Message" />
-								<TextBlock Style="{StaticResource styleValue}" Text="{Binding Message, Mode=OneWay, FallbackValue=Unknown}" TextWrapping="WrapWithOverflow" />
-								<TextBlock/>
-								<TextBlock Style="{StaticResource styleNormal}" Text="TargetSite" />
-								<TextBlock Style="{StaticResource styleValue}"  Text="{Binding TargetSite.Name, Mode=OneWay, FallbackValue=Unknown}" TextWrapping="WrapWithOverflow" />
-								<TextBlock/>
-								<TextBlock Style="{StaticResource styleNormal}" Text="Source" />
-								<TextBlock Style="{StaticResource styleValue}"  Text="{Binding Source, Mode=OneWay, FallbackValue=Unknown}" TextWrapping="WrapWithOverflow" />
-								<TextBlock/>
-								<TextBlock Style="{StaticResource styleNormal}" Text="StackTrace" />
-								<TextBlock Style="{StaticResource styleValue}"  Text="{Binding StackTrace, Mode=OneWay, FallbackValue=Unknown}" TextWrapping="WrapWithOverflow" />
-								<TextBlock/>
-							</StackPanel>
+							<ItemsControl DataContext="{Binding ExceptionData}" ItemsSource="{Binding}" ItemTemplate="{StaticResource logException}" />
 						</Border>
 					</Expander>
 				</StackPanel>

@@ -21,7 +21,7 @@
         <Button x:Name="btnExtendedLog" Content="btnExtendedLog" HorizontalAlignment="Left" Margin="425,300,0,0" VerticalAlignment="Top" Width="154" Height="25" />
 
 		<ComboBox Name="cbSelectedGPU" HorizontalAlignment="Left" Margin="425,43,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedItem="{Binding Settings.SelectedGPU, Mode=TwoWay}" />
-		<ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" DisplayMemberPath="DisplayText" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="172" Height="22" IsReadOnly="True" />
+		<ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" SelectedItem="{Binding Settings.SelectedLanguage,Mode=TwoWay}" DisplayMemberPath="DisplayText" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="172" Height="22" IsReadOnly="True" />
 
 		<Label x:Name="lblUpdate" Content="lblUpdate" Height="26" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" />
 		<TextBox x:Name="tbLog" HorizontalAlignment="Left" Height="172" Margin="10,335,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="366" />

@@ -10,13 +10,16 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
-		
-			<ListBox ItemsSource="{Binding Log.LogEntries, Mode=OneWay}" 
-					 ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-					 ScrollViewer.VerticalScrollBarVisibility="Visible" 
-					 ScrollViewer.IsDeferredScrollingEnabled="True"
-					 Focusable="False" 
-					 HorizontalContentAlignment="Stretch">
+
+		<ListBox Name="lbLog"
+				 DataContext="{Binding Log.LogEntries, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+				 ItemsSource="{Binding}" 
+				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+				 ScrollViewer.VerticalScrollBarVisibility="Visible" 
+				 ScrollViewer.IsDeferredScrollingEnabled="True"
+				 Focusable="False" 
+				 HorizontalContentAlignment="Stretch">
+			
 				<ListBox.ItemContainerStyle>
 					<Style TargetType="{x:Type Control}" >
 						<Setter Property="Focusable" Value="False" />
@@ -28,12 +31,16 @@
 		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Black">
 			<Button Margin="10" Content="Close" Grid.Row="1" Name="btnClose" HorizontalAlignment="Right" Width="80" Height="30" />
 		</Border>
-		<Button Content="..and binding in action &lt;-- click" Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="160,18,0,0" Name="Button1" VerticalAlignment="Top" Width="240" />
+		<Button Content="..and binding in action &lt;-- click" Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="160,0,0,0" Name="Button1" VerticalAlignment="Top" Width="184" />
 		<Button Grid.Row="1" Height="41" HorizontalAlignment="Left" Name="Button2" VerticalAlignment="Top" Width="154" Content="Launch Threads" />
 		<Button Margin="0,11,96,10" Content="Clear Log" Grid.Row="1"  HorizontalAlignment="Right" Width="80" Height="30" Name="Button3" />
 
 		<TextBlock Grid.Row="1"  HorizontalAlignment="Left" Margin="406,18,0,0" Name="TextBox1" VerticalAlignment="Top" >
 			Items: <TextBlock Text="{Binding Log.LogEntries.Count, Mode=OneWay, FallbackValue=0}" />
 		</TextBlock>
+		<Button Content="save log" Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="474,0,0,0" Name="Button4" VerticalAlignment="Top" Width="75" />
+		<Button Content="load log" Height="23" HorizontalAlignment="Left" Margin="474,0,0,0" Name="Button5" VerticalAlignment="Bottom" Width="75" Grid.Row="1" />
+		<Button Content="save settings" Height="23" HorizontalAlignment="Left" Margin="216,28,0,0" Name="Button6" VerticalAlignment="Top" Width="75" Grid.Row="1" />
+		<Button Content="load settings" Height="23" HorizontalAlignment="Right" Margin="0,0,359,0" Name="Button7" VerticalAlignment="Bottom" Width="75" Grid.Row="1" />
 	</Grid>
 </Window>

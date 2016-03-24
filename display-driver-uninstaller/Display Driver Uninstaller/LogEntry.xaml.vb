@@ -49,7 +49,7 @@ Public Class LogEntry
 
 	Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
-	Private m_exception As Exception
+	Private m_exData As Dictionary(Of String, String)
 	Private m_values As List(Of KvP)
 	Private m_time As DateTime
 	Private m_type As LogType
@@ -106,13 +106,13 @@ Public Class LogEntry
 		End Set
 	End Property
 
-	Public Property Exception As Exception
+	Public Property ExceptionData As Dictionary(Of String, String)
 		Get
-			Return m_exception
+			Return m_exData
 		End Get
-		Set(value As Exception)
-			m_exception = value
-			OnPropertyChanged("Exception")
+		Set(value As Dictionary(Of String, String))
+			m_exData = value
+			OnPropertyChanged("ExceptionData")
 		End Set
 	End Property
 	Public ReadOnly Property Values As List(Of KvP)
@@ -157,6 +157,7 @@ Public Class LogEntry
 		' Add any initialization after the InitializeComponent() call.
 		m_values = New List(Of KvP)
 
+		m_exData = New Dictionary(Of String, String)
 		Time = DateTime.Now
 		Type = LogType.Event
 
@@ -191,7 +192,12 @@ Public Class LogEntry
 		Type = LogType.Error
 		Time = DateTime.Now
 
-		Me.Exception = Ex
+		m_exData.Clear()
+		m_exData.Add("Message", If(String.IsNullOrEmpty(Ex.Message), "Unknown", Ex.Message))
+		m_exData.Add("TargetSite", If(Ex.TargetSite IsNot Nothing AndAlso Not String.IsNullOrEmpty(Ex.TargetSite.Name), Ex.TargetSite.Name, "Unknown"))
+		m_exData.Add("Source", If(String.IsNullOrEmpty(Ex.Source), "Unknown", Ex.Source))
+		m_exData.Add("StackTrace", If(String.IsNullOrEmpty(Ex.StackTrace), "Unknown", Ex.StackTrace))
+
 		HasException = True
 	End Sub
 
@@ -209,7 +215,15 @@ Public Class LogEntry
 	Protected Overridable Sub Dispose(disposing As Boolean)
 		If Not Me.disposedValue Then
 			If disposing Then
-				'TODO: ADD STUFF
+				If m_exData IsNot Nothing Then
+					m_exData.Clear()
+					m_exData = Nothing
+				End If
+
+				If m_values IsNot Nothing Then
+					m_values.Clear()
+					m_values = Nothing
+				End If
 			End If
 		End If
 		Me.disposedValue = True

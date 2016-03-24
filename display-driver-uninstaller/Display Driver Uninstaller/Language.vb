@@ -532,6 +532,7 @@ notFound:
 
 	Public Class LanguageOption
 		Implements IComparable(Of LanguageOption)
+		Implements IEquatable(Of LanguageOption)
 
 		Private m_isolang As String
 		Private m_displaytext As String
@@ -561,12 +562,12 @@ notFound:
 
 		Public Overrides Function ToString() As String
 			'Return String.Format("{0} - {1} - {2}", m_lang, m_text, m_filename)
-			Return String.Format("{0} ({1})", m_displaytext, m_isolang)
+			Return m_isolang
 		End Function
 
-		Public Overloads Overrides Function Equals(obj As Object) As Boolean
-			If obj IsNot Nothing AndAlso TypeOf (obj) Is LanguageOption Then
-				Return Me.ISOLanguage.Equals(CType(obj, LanguageOption).ISOLanguage, StringComparison.OrdinalIgnoreCase)
+		Public Overloads Function Equals(other As LanguageOption) As Boolean Implements System.IEquatable(Of LanguageOption).Equals
+			If other IsNot Nothing AndAlso TypeOf (other) Is LanguageOption Then
+				Return Me.ISOLanguage.Equals(CType(other, LanguageOption).ISOLanguage, StringComparison.OrdinalIgnoreCase)
 			End If
 
 			Return False

@@ -5,6 +5,7 @@
 	End Sub
 
 	Private Sub frmLog_Loaded(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles MyBase.Loaded
+		lbLog.Items.Refresh()
 		Languages.TranslateForm(Me)
 	End Sub
 
@@ -117,5 +118,52 @@
 	Private Sub Button3_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button3.Click
 		Application.Log.Clear()
 		GC.Collect()
+	End Sub
+
+	Private Sub Button4_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button4.Click
+
+		Using sfd As System.Windows.Forms.SaveFileDialog = New System.Windows.Forms.SaveFileDialog
+			sfd.Filter = "DDU Log (*.xml)|*.xml"
+			sfd.FilterIndex = 0
+			sfd.AddExtension = True
+
+			If sfd.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+				Application.Log.SaveToFile(sfd.FileName)
+			End If
+		End Using
+	End Sub
+
+	Private Sub Button5_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button5.Click
+		Using ofd As System.Windows.Forms.OpenFileDialog = New System.Windows.Forms.OpenFileDialog
+			ofd.Filter = "DDU Log (*.xml)|*.xml"
+			ofd.FilterIndex = 0
+
+			If ofd.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+				Application.Log.OpenFromFile(ofd.FileName)
+			End If
+		End Using
+	End Sub
+
+	Private Sub Button6_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button6.Click
+		Using sfd As System.Windows.Forms.SaveFileDialog = New System.Windows.Forms.SaveFileDialog
+			sfd.Filter = "DDU settings (*.xml)|*.xml"
+			sfd.FilterIndex = 0
+			sfd.AddExtension = True
+
+			If sfd.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+				Application.Settings.Save(sfd.FileName)
+			End If
+		End Using
+	End Sub
+
+	Private Sub Button7_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button7.Click
+		Using ofd As System.Windows.Forms.OpenFileDialog = New System.Windows.Forms.OpenFileDialog
+			ofd.Filter = "DDU settings (*.xml)|*.xml"
+			ofd.FilterIndex = 0
+
+			If ofd.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+				Application.Settings.Load(ofd.FileName)
+			End If
+		End Using
 	End Sub
 End Class

@@ -7871,7 +7871,6 @@ skipboot:
 
 		If firstLaunch Then
 			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
-			cbLanguage.Items.Clear()
 
 			Dim defaultLang As New Languages.LanguageOption("en", "English", Application.Paths.Language & "English.xml")
 			Dim foundLangs As List(Of Languages.LanguageOption) = Languages.ScanFolderForLang(Application.Paths.Language)
@@ -7898,32 +7897,33 @@ skipboot:
 
 			Languages.Load() 'default = english
 
-			Dim systemLang As String = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName	'en, fr, sv etc.
-			Dim lastUsedLang As String = settings.getconfig("language")
+			Dim systemLang As String = System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName	'en, fr, sv etc.
 
 			Dim hasLastUsed As Boolean = False
 			Dim hasNativeLang As Boolean = False
 
+			Dim lastUsedLang As Languages.LanguageOption = Nothing
 			Dim nativeLang As Languages.LanguageOption = Nothing
 
 			For Each item As Languages.LanguageOption In Application.Settings.LanguageOptions
-				If item.ISOLanguage.Equals(lastUsedLang, StringComparison.OrdinalIgnoreCase) Then
-					cbLanguage.SelectedItem = item
+				If Not hasLastUsed AndAlso item.Equals(Application.Settings.SelectedLanguage) Then
+					lastUsedLang = item
 					hasLastUsed = True
-					Exit For 'found last used lang, moving on
-
 				End If
 
 				If Not hasNativeLang AndAlso systemLang.Equals(item.ISOLanguage, StringComparison.OrdinalIgnoreCase) Then
 					nativeLang = item 'take native on hold incase last used language not found (avoid multiple loops)
+					hasNativeLang = True
 				End If
 			Next
 
-			If Not hasLastUsed Then
-				If Not hasNativeLang Then
-					cbLanguage.SelectedItem = defaultLang 'couldn't find last used nor native lang, using english.
+			If hasLastUsed Then
+				Application.Settings.SelectedLanguage = lastUsedLang
+			Else
+				If hasNativeLang Then
+					Application.Settings.SelectedLanguage = nativeLang 'couldn't find last used, using native lang
 				Else
-					cbLanguage.SelectedItem = nativeLang 'couldn't find last used, using native lang
+					Application.Settings.SelectedLanguage = defaultLang	'couldn't find last used nor native lang, using default (English)
 				End If
 			End If
 
