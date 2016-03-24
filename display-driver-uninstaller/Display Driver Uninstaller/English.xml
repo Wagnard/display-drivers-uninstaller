@@ -149,6 +149,9 @@
 
 </frmMain>
 	<frmOptions Text="Options">
+    <btnClose>
+      <Text>Close</Text>
+    </btnClose>
 		<Label1>
 			<Text>GPUs Specifics Options</Text>
 		</Label1>

@@ -10,7 +10,7 @@
     <RootNamespace>Display_Driver_Uninstaller</RootNamespace>
     <AssemblyName>Display Driver Uninstaller</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
-    <MyType>Custom</MyType> 
+    <MyType>Custom</MyType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -180,7 +180,9 @@
     <Resource Include="Resources\DDU.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="English.xml" />
+    <EmbeddedResource Include="English.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

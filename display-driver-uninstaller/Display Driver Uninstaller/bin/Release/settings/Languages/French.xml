@@ -16,27 +16,27 @@
 
 	-->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<btnCleanRestart>
 			<Text>Nettoyer et redémarrer|(Hautement Recommendé)</Text>
 			<Tooltip>Désinstaller les pilotes actuels et antérieurs et redémarrez l'ordinateur|(Fortement recommandé)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Nettoyer et NE PAS redémarrer.|(Possible écran noir)</Text>
 			<Tooltip>Désinstaller les pilotes actuels et antérieurs et ne PAS redémarrez l'ordinateur.|(Peut causer un écran noir)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Nettoyer et éteindre|(pour l'installation d'une nouvelle carte graphique)</Text>
 			<Tooltip>Désinstaller les pilotes et arrêt de l'ordinateur sans rescan|(Pour installer une nouvelle carte graphique)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Réglez l'installation du pilote Windows Update par défaut.</Text>
-		</Button4>
-		<Button5>
+		</btnWuRestore>
+		<btnExtendedLog>
 			<Text>Afficher "log" étendu.</Text>
-		</Button5>
-		<Label1>
+		</btnExtendedLog>
+		<lblWinVersion>
 			<Text>Version de Windows détecté :</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label4>
 			<Text>*** You like DDU? Think about a Donation, it will help further developement. ***</Text>
 		</Label4>
@@ -58,33 +58,33 @@
 			<Text3>Mise-à-jour trouvée!</Text3>
 			<Text4>Incapable de vérifier les mises-à-jour.</Text4>
 		</Label11>
-		<OptionsToolStripMenuItem>
+		<OptionsMenuItem>
 			<Text>Options</Text>
-		</OptionsToolStripMenuItem>
-		<ToolStripMenuItem1>
-			<Text>?</Text>
-		</ToolStripMenuItem1>
-		<ToSToolStripMenuItem>
-			<Text>ToS</Text>
-		</ToSToolStripMenuItem>
-		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
-		</VisitDDUHomepageToolStripMenuItem>
-		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
-		</SVNToolStripMenuItem>
-		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
-		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
-		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
-		</VisitGuru3dAMDThreadToolStripMenuItem>
-		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
-		</VisitGeforceThreadToolStripMenuItem>
-		<AboutToolStripMenuItem>
-			<Text>About</Text>
-		</AboutToolStripMenuItem>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ToSMenuItem>
+			<Text>Terms of Service (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
+			<Text>À propos</Text>
+		</AboutMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Visiter official DDU Website</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Visiter SVN Website</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Visiter Guru3d NVIDIA Thread</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Visiter Guru3d AMD Thread</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Visiter Geforce Thread</Text>
+		</VisitGeforceMenuItem>
 		<Messages>
 			<Text1>Mise à jour disponible! Visitez le site Internet DDU maintenant? </Text1>
 			<Text2>Attendez-vous un soutien limité sur les versions plus anciennes que la plus récente. S'il vous plaît vérifier la nouvelle version avant de signaler des bugs. </Text2>
@@ -146,6 +146,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Options">
+	<btnClose>
+      <Text>Fermer</Text>
+    </btnClose>
 		<Label1>
 			<Text>Options par GPUs</Text>
 		</Label1>

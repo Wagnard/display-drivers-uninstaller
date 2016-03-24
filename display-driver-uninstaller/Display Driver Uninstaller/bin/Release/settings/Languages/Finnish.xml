@@ -148,6 +148,9 @@
 	
 </frmMain>
 	<frmOptions Text="Asetukset">
+		<btnClose>
+			<Text>Sulje</Text>
+		</btnClose>
 		<Label1>
 			<Text>Näytönohjaimen asetukset</Text>
 		</Label1>
