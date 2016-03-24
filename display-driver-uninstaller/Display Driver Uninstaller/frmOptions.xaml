@@ -9,9 +9,9 @@
 	</Window.Resources>
 
 	<Grid DataContext="{Binding Settings}">
-		<CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" />
-		<CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" HorizontalAlignment="Left" Margin="12,34,0,0" VerticalAlignment="Top" />
-		<CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAMDAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" HorizontalAlignment="Left" Margin="12,54,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" HorizontalAlignment="Left" Margin="13,12,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" HorizontalAlignment="Left" Margin="13,34,0,0" VerticalAlignment="Top" />
+		<CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAMDAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" HorizontalAlignment="Left" Margin="13,54,0,0" VerticalAlignment="Top" />
 		<CheckBox x:Name="lblRemCrimsonCache" IsChecked="{Binding RemoveCrimsonCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemCrimsonCache" HorizontalAlignment="Left" Margin="13,76,0,0" VerticalAlignment="Top" />
 
 		<CheckBox x:Name="lblRemNvidiaDirs" IsChecked="{Binding RemoveNvidiaDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemNvidiaDirs" HorizontalAlignment="Left" Margin="13,123,0,0" VerticalAlignment="Top" />
