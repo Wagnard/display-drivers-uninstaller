@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="de" Text="German">
 	<!--
 	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
@@ -17,7 +17,7 @@
 	-->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<Button1>
-			<Text>Säubern und Neustart|(Empfohlene Aktion)</Text>
+			<Text>Säubern und Neustart|(Empfohlen)</Text>
 			<Tooltip>Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer neu|(sehr empfohlen)</Tooltip>
 		</Button1>
 		<Button2>
@@ -59,7 +59,7 @@
 			<Text4>Kann keine Updates abrufen!</Text4>
 		</Label11>
 		<OptionsToolStripMenuItem>
-			<Text>Options</Text>
+			<Text>Optionen</Text>
 		</OptionsToolStripMenuItem>
 		<ToolStripMenuItem1>
 			<Text>?</Text>
@@ -68,22 +68,22 @@
 			<Text>ToS</Text>
 		</ToSToolStripMenuItem>
 		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
+			<Text>Offizielle DDU Webseite besuchen</Text>
 		</VisitDDUHomepageToolStripMenuItem>
 		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
+			<Text>SVN Webseite besuchen</Text>
 		</SVNToolStripMenuItem>
 		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
+			<Text>Guru3d NVIDIA Thread besuchen</Text>
 		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
 		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
+			<Text>Guru3d AMD Thread besuchen</Text>
 		</VisitGuru3dAMDThreadToolStripMenuItem>
 		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
+			<Text>Geforce Thread besuchen</Text>
 		</VisitGeforceThreadToolStripMenuItem>
 		<AboutToolStripMenuItem>
-			<Text>About</Text>
+			<Text>Über</Text>
 		</AboutToolStripMenuItem>
 		<Messages>
 			<Text1>Updates sind erhältlich! Möchten Sie jetzt die DDU Webseite besuchen?</Text1>
@@ -94,12 +94,12 @@
 			<Text6>Ein Problem ist in einem der Module aufgetreten, senden Sie bitte die DDU Protokolle (Logs) an den Entwickler.</Text6>
 			<Text7>DDU hat festgestellt, dass es sich um einen "AMD-Switching-Laptop" handelt (Enduro oder ähnlich), DDU ist derzeit hierfür nicht vollständig kompatibel/mit Enduro Systemen gestest, Benutzung auf eigene Gefahr.</Text7>
 			<Text8>DDU hat festgestellt, dass Sie sich NICHT im abgesicherten Modus befinden... Für eine bessere Säuberung ohne Fehler wird ein Neustart im abgesicherten Modus empfohlen.</Text8>
-			<Text9>DDU hat eine Einstellung so geändert, sodass die automatische Installation von Treibern über Windows Update verhindert wird. Sie können dies auf die ursprüngliche Einstellung nach dem Neustart zurückstellen.</Text9>
+			<Text9>DDU hat eine Einstellung geändert, um die automatische Installation von Treibern über Windows Update zu verhindern. Sie können dies auf die ursprüngliche Einstellung nach dem Neustart zurückstellen.</Text9>
 			<Text10>Saubere Deinstallation vollständig! Möchten Sie jetzt beenden?</Text10>
 			<Text11>Fertig!</Text11>
-			<Text12>Sie sind nicht im abgesicherten Modus. Um Fehler zu vermeiden wird ein Neustart im abgesicherten Modus dringend empfohlen. Jetzt im abgesicherten Modus neustarten?</Text12>
+			<Text12>Sie sind nicht im abgesicherten Modus. Um Fehler zu vermeiden wird ein Neustart im abgesicherten Modus dringend empfohlen. Jetzt im abgesicherten Modus neu starten?</Text12>
 			<Text13>Folgendes müssen Sie bei einem blauen Wiederherstellungsbildschirm auswählen: Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
-			<Text14>Ein noch ausstehender Neustart ist vorhanden, bitte vor der Benutzung von DDU neustarten</Text14>
+			<Text14>Ein noch ausstehender Neustart ist vorhanden, bitte vor der Benutzung von DDU neu starten</Text14>
 		</Messages>
 		<UpdateLog>
 			<Text1>Ausführen von Driver Store Säuberung (Löschen vom OEM Schritt)...</Text1>
@@ -197,29 +197,29 @@
 			<Tooltip>Empfohlen, falls aufgrund von defekten Shader-Cache-Daten grafische Unregelmäßigkeiten (Geschwindigkeit oder sichtbare Fehler) auftreten.|Ebenfalls empfohlen, falls Sie zu einem anderen Hersteller, wie nVidia, wechseln.</Tooltip>
 		</CheckBox14>
 	</frmOptions>
-	<frmLaunch Text="Launch option">
+	<frmLaunch Text="Startoption">
 		<btnAccept>
-			<Text>Launch</Text>
+			<Text>Starten</Text>
 			<Text2>Reboot to|Safe Mode</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Schließen</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>Startoption</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>Sie sind nicht im abgesicherten Modus. Um mögliche Fehler zu|vermeiden, wird ausdrücklich empfohlen im abgesicherten Modus|neu zu starten.</Text>
 		</lblNotSafeMode>
 		<cbBootOption>
 			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
-			<Item3>Safe Mode With Networking</Item3>
+			<Item2>Abgesicherter Modus (Empfohlen)</Item2>
+			<Item3>Abgesicherter Modus mit Netzwerktreibern</Item3>
 		</cbBootOption>
 	</frmLaunch>
-	<frmLog Text="Extended log">
+	<frmLog Text="Ausführliche Logdatei">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Schließen</Text>
 		</btnClose>	
 	</frmLog>
 	<frmAbout>
@@ -276,7 +276,7 @@ Danke an alle, die ihre Systeme der Gefahr ausgesetzt haben (Besonderer Dank gil
 	<Misc>
 		<Tos>
 			<Text>
-NUTZERVEREINBARUNG - Display Driver Uninstaller ("DDU")
+NUTZUNGSBEDINGUNGEN - Display Driver Uninstaller ("DDU")
 
 Sie werden ein Nutzer von DDU ("Nutzer") durch die Anwendung des DDU Programms. Diese Vereinbarung tritt in Kraft, sobald Sie die Treiberdeinstallation beginnen.
 
