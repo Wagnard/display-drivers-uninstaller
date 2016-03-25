@@ -6173,56 +6173,57 @@ Public Class frmMain
 						Case BootMode.Normal
 							safemode = False
 
-							If winxp = False And isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
-								If restart Then	 'restart command line argument
-									restartinsafemode()
-									Exit Sub
-								Else
-									If safemodemb = True Then
-										If Not silent Then
-											Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
-											Dim frmSafeBoot As New frmLaunch
+                            If winxp = False AndAlso isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
+                                If restart Then  'restart command line argument
+                                    restartinsafemode()
+                                    Exit Sub
+                                Else
+                                    If safemodemb = True Then
+                                        If Not silent Then
+                                            Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
+                                            Dim frmSafeBoot As New frmLaunch
 
-											With frmSafeBoot
-												.Topmost = True
-												.ShowInTaskbar = False
-												.ResizeMode = Windows.ResizeMode.NoResize
-												.Owner = Application.Current.MainWindow
-											End With
+                                            With frmSafeBoot
+                                                .Topmost = True
+                                                .ShowInTaskbar = False
+                                                .ResizeMode = Windows.ResizeMode.NoResize
+                                                .Owner = Application.Current.MainWindow
+                                            End With
 
 
 
-											' frmMain could be Invisible from start and shown AFTER all "processing"
-											' (WPF renders UI too fast which cause 'flash' before frmLaunch on start)
-											' Me.Opacity = 100
-											Dim launch As Boolean? = frmSafeBoot.ShowDialog()
-											Me.WindowState = Windows.WindowState.Normal
+                                            ' frmMain could be Invisible from start and shown AFTER all "processing"
+                                            ' (WPF renders UI too fast which cause 'flash' before frmLaunch on start)
+                                            ' Me.Opacity = 100
+                                            Dim launch As Boolean? = frmSafeBoot.ShowDialog()
+                                            Me.WindowState = Windows.WindowState.Normal
 
-											If launch IsNot Nothing AndAlso launch Then
-												bootOption = frmSafeBoot.selection
-											End If
+                                            If launch IsNot Nothing AndAlso launch Then
+                                                bootOption = frmSafeBoot.selection
+                                            End If
 
-											Select Case bootOption
-												Case 0 'normal
+                                            Select Case bootOption
+                                                Case 0 'normal
 
-													Exit Select
-												Case 1 'SafeMode
-													restartinsafemode(False)
-													Exit Sub
-												Case 2 'SafeMode with network
-													restartinsafemode(True)
-													Exit Sub
-												Case Else '-1 = Close
-													Me.Topmost = False
-													closeddu()
-													Exit Sub
-											End Select
-										End If
-									End If
-								End If
-							Else
-								'    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text8"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
-							End If
+                                                    Exit Select
+                                                Case 1 'SafeMode
+                                                    restartinsafemode(False)
+                                                    Exit Sub
+                                                Case 2 'SafeMode with network
+                                                    restartinsafemode(True)
+                                                    Exit Sub
+                                                Case Else '-1 = Close
+                                                    Me.Topmost = False
+                                                    closeddu()
+                                                    Exit Sub
+                                            End Select
+                                        End If
+                                    End If
+                                End If
+                            Else
+                                'if we are here it means we are with Windows XP and the frmLaunch will not show so bring back to front thhe main window.
+                                Me.WindowState = Windows.WindowState.Normal
+                            End If
 
 					End Select
 					Topmost = False
