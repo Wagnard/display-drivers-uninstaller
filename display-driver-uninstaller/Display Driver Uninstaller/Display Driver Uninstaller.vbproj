@@ -82,6 +82,7 @@
       <DependentUpon>LogEntry.xaml</DependentUpon>
     </Compile>
     <Compile Include="ThreadSettings.vb" />
+    <Compile Include="Tools.vb" />
     <Page Include="frmLaunch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

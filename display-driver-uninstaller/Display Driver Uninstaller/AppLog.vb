@@ -87,12 +87,12 @@ Public Class AppLog
 		End If
 	End Function
 
-	Public Sub SaveToFile(ByVal fileName As String)
+	Public Sub SaveToFile()
 		SyncLock m_threadlock
 			If Not Me.Dispatcher.CheckAccess() Then
-				Me.Dispatcher.Invoke(New SaveLogDelegate(AddressOf Me.SaveLog), fileName)
+				Me.Dispatcher.Invoke(New SaveLogDelegate(AddressOf Me.SaveLog))
 			Else
-				Me.SaveLog(fileName)
+				Me.SaveLog()
 			End If
 		End SyncLock
 	End Sub
@@ -113,7 +113,14 @@ Public Class AppLog
 
 
 
-	Private Delegate Sub SaveLogDelegate(ByVal fileName As String)
+	Private Delegate Sub SaveLogDelegate()
+	Private Sub SaveLog()
+		If Application.Settings.SaveLogs Then
+			Dim time As DateTime = If(LogEntries.Count > 0, LogEntries(0).Time, DateTime.Now)
+
+			SaveLog(String.Format("{0}{1}_DDULog.xml", Application.Paths.Logs, time.ToString("yyyy-MM-dd__HH-mm-ss")))
+		End If
+	End Sub
 	Private Sub SaveLog(ByVal fileName As String)
 		If String.IsNullOrEmpty(fileName) Then
 			Return
@@ -138,7 +145,7 @@ Public Class AppLog
 
 					With writer
 						.WriteStartDocument()
-						.WriteStartElement(Application.Settings.AppName.Substring(0, Application.Settings.AppName.IndexOf("(")).Replace(" ", ""))
+						.WriteStartElement(Application.Settings.AppName.Replace(" ", ""))
 
 						Dim v As Version = Application.Settings.AppVersion
 
@@ -153,8 +160,7 @@ Public Class AppLog
 							.WriteStartElement(log.Type.ToString())
 
 							.WriteStartElement("Time")
-							.WriteAttributeString("UTC", If(hours <> 0, String.Format("{0}{1}", If(hours > 0, "+", "-"), hours), "+0"))
-							.WriteValue(log.Time.ToUniversalTime.ToString())
+							.WriteValue(log.Time.ToString())
 							.WriteEndElement()
 
 							.WriteStartElement("Message")
@@ -199,7 +205,7 @@ Public Class AppLog
 										.WriteEndElement()
 									End If
 								Next
-								
+
 								.WriteEndElement()
 							End If
 
@@ -224,7 +230,7 @@ Public Class AppLog
 	End Sub
 
 	Private Delegate Sub OpenLogDelegate(ByVal fileName As String)
-	Private Sub OpenLog(ByVal fileName As String)
+	Public Sub OpenLog(ByVal fileName As String)
 		If String.IsNullOrEmpty(fileName) OrElse Not File.Exists(fileName) Then
 			Return
 		End If
@@ -253,7 +259,7 @@ Public Class AppLog
 						Return
 					End If
 
-					If reader.NodeType <> XmlNodeType.Element Or Not reader.Name.Equals(Application.Settings.AppName.Substring(0, Application.Settings.AppName.IndexOf("(")).Replace(" ", ""), StringComparison.OrdinalIgnoreCase) Or Not reader.HasAttributes Then
+					If reader.NodeType <> XmlNodeType.Element Or Not reader.Name.Equals(Application.Settings.AppName.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) Or Not reader.HasAttributes Then
 						Throw New InvalidDataException("Log's format is invalid!" & vbCrLf & String.Format("Root node doesn't match '{0}'", Application.Current.MainWindow.GetType().Assembly.GetName().Name.Replace(" ", "")) & vbCrLf & "Or missing attributes")
 					End If
 
@@ -297,18 +303,9 @@ Public Class AppLog
 
 								If reader.NodeType = XmlNodeType.Element Then
 									If reader.Name.Equals("Time", StringComparison.OrdinalIgnoreCase) Then
-										Dim hours As Int32 = 0
-
-										If reader.HasAttributes Then
-											Do While reader.MoveToNextAttribute()
-												If Not String.IsNullOrEmpty(reader.Name) AndAlso reader.Name.Equals("UTC", StringComparison.OrdinalIgnoreCase) Then
-													hours = Int32.Parse(reader.Value)
-												End If
-											Loop
-										End If
 										reader.Read()
 
-										newEntry.Time = DateTime.Parse(reader.ReadContentAsString).AddHours(hours)
+										newEntry.Time = DateTime.Parse(reader.ReadContentAsString)
 									End If
 
 									If reader.Name.Equals("Message", StringComparison.OrdinalIgnoreCase) Then
@@ -359,7 +356,7 @@ Public Class AppLog
 								End If
 							Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
 
-							logEntries.Add(newEntry)
+							LogEntries.Add(newEntry)
 						End If
 					Loop
 

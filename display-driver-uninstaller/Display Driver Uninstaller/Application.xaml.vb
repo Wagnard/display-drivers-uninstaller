@@ -71,8 +71,8 @@ Public Class Data
 	End Property
 
 	Public Sub New()
-		m_paths = New AppPaths
 		m_settings = New AppSettings
+		m_paths = New AppPaths
 		m_log = New AppLog
 	End Sub
 End Class

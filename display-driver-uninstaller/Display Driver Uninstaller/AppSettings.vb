@@ -14,7 +14,7 @@ Public Class AppSettings
 	Inherits DependencyObject
 
 #Region "Private Fields"
-	Private m_appname As DependencyProperty = Reg("AppName", GetType(String), GetType(AppSettings), "Display Driver Uninstaller (DDU)")
+	Private m_appname As DependencyProperty = Reg("AppName", GetType(String), GetType(AppSettings), "Display Driver Uninstaller")
 	Private m_appversion As DependencyProperty = Reg("AppVersion", GetType(Version), GetType(AppSettings), New Version(0, 0, 0, 0))
 	Private m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
 	Private m_gpuSelected As DependencyProperty = Reg("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
@@ -34,11 +34,11 @@ Public Class AppSettings
 	Private m_remGFE As DependencyProperty = Reg("RemoveGFE", GetType(Boolean), GetType(AppSettings), False)
 
 	' Settings
-	Private m_showSafeModeMsg As DependencyProperty = Reg("ShowSafeModeMsg", GetType(Boolean), GetType(AppSettings), False)
+	Private m_showSafeModeMsg As DependencyProperty = Reg("ShowSafeModeMsg", GetType(Boolean), GetType(AppSettings), True)
 	Private m_UseRoamingCfg As DependencyProperty = Reg("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
 	Private m_DontCheckUpdates As DependencyProperty = Reg("DontCheckUpdates", GetType(Boolean), GetType(AppSettings), False)
-	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), False)
-	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), False)
+	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
+	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
 #End Region
 
 #Region "Public Properties"
@@ -209,32 +209,50 @@ Public Class AppSettings
 	End Function
 
 	Public Sub New()
+		Dim winFiles As List(Of String) = GetFiles(Path.Combine(Environment.GetEnvironmentVariable("windir"), "Prefetch"))
 		m_languageOptions = New ObservableCollection(Of Languages.LanguageOption)()
-		AppVersion = Assembly.GetExecutingAssembly().GetName().Version
+
+		Dim asseemblyName As AssemblyName = Assembly.GetExecutingAssembly().GetName()
+
+		AppName = asseemblyName.Name
+		AppVersion = asseemblyName.Version
 	End Sub
 
-	Public Sub SaveV2()
+	Public Sub Save()
+		Dim roamingFile As String = Path.Combine(Application.Paths.Roaming, String.Format("{0}\Settings.xml", AppName.Replace(" ", "")))
+
 		If UseRoamingConfig Then
-
+			Save(roamingFile)
 		Else
+			If File.Exists(roamingFile) Then
+				File.Delete(roamingFile) ' avoid opening from roaming file
+			End If
 
+			Save(Path.Combine(Application.Paths.Settings, "Settings.xml"))
 		End If
 	End Sub
 
-	Public Sub LoadV2()
-		If UseRoamingConfig Then
-
+	Public Sub Load()
+		If Load(Path.Combine(Application.Paths.Roaming, String.Format("{0}\Settings.xml", AppName.Replace(" ", "")))) Then
+			UseRoamingConfig = True
 		Else
-
+			Load(Path.Combine(Application.Paths.Settings, "Settings.xml"))
+			UseRoamingConfig = False
 		End If
 	End Sub
 
-	Public Sub Save(ByVal fileName As String)
+	Private Sub Save(ByVal fileName As String)
 		If String.IsNullOrEmpty(fileName) Then
 			Return
 		End If
 
 		Try
+			Dim dir As String = Path.GetDirectoryName(fileName)
+
+			If Not Directory.Exists(dir) Then
+				Directory.CreateDirectory(dir)
+			End If
+
 			If File.Exists(fileName) Then
 				File.Delete(fileName)
 			End If
@@ -253,7 +271,7 @@ Public Class AppSettings
 
 					With writer
 						.WriteStartDocument()
-						.WriteStartElement(AppName.Substring(0, AppName.IndexOf("(")).Replace(" ", ""))
+						.WriteStartElement(AppName.Replace(" ", ""))
 
 						Dim v As Version = AppVersion
 
@@ -294,9 +312,9 @@ Public Class AppSettings
 		End Try
 	End Sub
 
-	Public Sub Load(ByVal fileName As String)
+	Private Function Load(ByVal fileName As String) As Boolean
 		If String.IsNullOrEmpty(fileName) OrElse Not File.Exists(fileName) Then
-			Return
+			Return False
 		End If
 
 		Try
@@ -318,11 +336,11 @@ Public Class AppSettings
 					Loop
 
 					If reader.EOF Then
-						Return
+						Return False
 					End If
 
-					If reader.NodeType <> XmlNodeType.Element Or Not reader.Name.Equals(AppName.Substring(0, AppName.IndexOf("(")).Replace(" ", ""), StringComparison.OrdinalIgnoreCase) Or Not reader.HasAttributes Then
-						Throw New InvalidDataException("Log's format is invalid!" & vbCrLf & String.Format("Root node doesn't match '{0}'", AppName.Substring(0, AppName.IndexOf("(")).Replace(" ", "")) & vbCrLf & "Or missing attributes")
+					If reader.NodeType <> XmlNodeType.Element Or Not reader.Name.Equals(AppName.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) Or Not reader.HasAttributes Then
+						Throw New InvalidDataException("Log's format is invalid!" & vbCrLf & String.Format("Root node doesn't match '{0}'", AppName.Replace(" ", "")) & vbCrLf & "Or missing attributes")
 					End If
 
 					Dim verStr As String() = Nothing
@@ -427,9 +445,11 @@ Public Class AppSettings
 					sr.Close()
 				End Using
 			End Using
+
+			Return True
 		Catch ex As Exception
 			Application.Log.AddException(ex)
+			Return False
 		End Try
-	End Sub
-
+	End Function
 End Class

@@ -5385,9 +5385,11 @@ Public Class frmMain
 			.DataContext = Me.DataContext
 			.ResizeMode = Windows.ResizeMode.CanResizeWithGrip
 			.WindowStyle = Windows.WindowStyle.SingleBorderWindow
+			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
 		End With
 
 		frmLog.ShowDialog()
+		Me.Activate()
 	End Sub
 
 
@@ -5865,118 +5867,92 @@ Public Class frmMain
 
 				'read config file
 
+				Application.Settings.Load()
+
 				If settings.getconfig("logbox") = "true" Then
-					Application.Settings.SaveLogs = True
 					savelogs = True
 				Else
-					Application.Settings.SaveLogs = False
 					savelogs = False
 				End If
 
 				If settings.getconfig("roamingcfg") = "true" Then
-					Application.Settings.UseRoamingConfig = True
 					roamingcfg = True
 				Else
-					Application.Settings.UseRoamingConfig = False
 					roamingcfg = False
 				End If
 
 				If settings.getconfig("remove3dtvplay") = "true" Then
-					Application.Settings.Remove3DTVPlay = True
 					remove3dtvplay = True
 				Else
-					Application.Settings.Remove3DTVPlay = False
 					remove3dtvplay = False
 				End If
 
 				If settings.getconfig("systemrestore") = "true" Then
-					Application.Settings.CreateRestorePoint = True
 					trysystemrestore = True
 				Else
-					Application.Settings.CreateRestorePoint = False
 					trysystemrestore = False
 				End If
 
 				If settings.getconfig("removephysx") = "true" Then
-					Application.Settings.RemovePhysX = True
 					removephysx = True
 				Else
-					Application.Settings.RemovePhysX = False
 					removephysx = False
 				End If
 
 
 				If settings.getconfig("removeamdaudiobus") = "true" Then
-					Application.Settings.RemoveAMDAudioBus = True
-					removeamdaudiobus = True
+				removeamdaudiobus = True
 				Else
-					Application.Settings.RemoveAMDAudioBus = False
 					removeamdaudiobus = False
 				End If
 
 				If settings.getconfig("removeamdkmpfd") = "true" Then
-					Application.Settings.RemoveAMDKMPFD = True
 					removeamdkmpfd = True
 				Else
-					Application.Settings.RemoveAMDKMPFD = False
-					removeamdkmpfd = False
+				removeamdkmpfd = False
 				End If
 
 
 				If settings.getconfig("removemonitor") = "true" Then
-					Application.Settings.RemoveMonitors = True
 					removemonitor = True
 				Else
-					Application.Settings.RemoveMonitors = False
 					removemonitor = False
 				End If
 
 				If settings.getconfig("removecnvidia") = "true" Then
-					Application.Settings.RemoveNvidiaDirs = True
 					removecnvidia = True
 				Else
-					Application.Settings.RemoveNvidiaDirs = False
 					removecnvidia = False
 				End If
 
 				If settings.getconfig("removecamd") = "true" Then
-					Application.Settings.RemoveAMDDirs = True
-					removecamd = True
+						removecamd = True
 				Else
-					Application.Settings.RemoveAMDDirs = False
 					removecamd = False
 				End If
 
 				If settings.getconfig("removegfe") = "true" Then
-					Application.Settings.RemoveGFE = True
 					removegfe = True
 				Else
-					Application.Settings.RemoveGFE = False
 					removegfe = False
 				End If
 
 				If settings.getconfig("donotcheckupdatestartup") = "true" Then
-					Application.Settings.DontCheckUpdates = True
 					donotcheckupdatestartup = True
 				Else
-					Application.Settings.DontCheckUpdates = False
 					donotcheckupdatestartup = False
 				End If
 
 				If settings.getconfig("showsafemodebox") = "false" Then
-					Application.Settings.ShowSafeModeMsg = False
 					safemodemb = False
 				Else
-					Application.Settings.ShowSafeModeMsg = True
-					safemodemb = True
+						safemodemb = True
 				End If
 
 				If settings.getconfig("removedxcache") = "true" Then
-					Application.Settings.RemoveCrimsonCache = True
 					removedxcache = True
 				Else
-					Application.Settings.RemoveCrimsonCache = False
-					removedxcache = False
+						removedxcache = False
 				End If
 
 				If closeapp Then
@@ -5992,8 +5968,8 @@ Public Class frmMain
 
 
 				Application.Settings.SelectedGPU = GPUVendor.Nvidia
-				If IntPtr.Size = 8 Then
 
+				If IntPtr.Size = 8 Then
 					arch = True
 					Try
 						If Not My.Computer.FileSystem.DirectoryExists(baseDir & "\x64") Then
@@ -6005,8 +5981,8 @@ Public Class frmMain
 					End Try
 
 				ElseIf IntPtr.Size = 4 Then
-
 					arch = False
+
 					Try
 						If Not My.Computer.FileSystem.DirectoryExists(baseDir & "\x86") Then
 							My.Computer.FileSystem.CreateDirectory(baseDir & "\x86")
@@ -6499,6 +6475,8 @@ skipboot:
 			End Try
 		End If
 
+		Application.Settings.Save()
+		Application.Log.SaveToFile()
 	End Sub
 
 
@@ -7882,45 +7860,27 @@ skipboot:
 				Application.Settings.LanguageOptions.Add(lang)
 			Next
 
-			Using sr As New StreamReader(Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml")), Encoding.UTF8, True)
-				Using sw As New StreamWriter(defaultLang.Filename, False, Encoding.UTF8)
-					While (sr.Peek() <> -1)
-						sw.WriteLine(sr.ReadLine())
-					End While
-
-					sw.Flush()
-					sw.Close()
-				End Using
-
-				sr.Close()
-			End Using
-
+			ExtractEnglishLangFile(defaultLang)
 			Languages.Load() 'default = english
 
-			Dim systemLang As String = System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName	'en, fr, sv etc.
-
-			Dim hasLastUsed As Boolean = False
-			Dim hasNativeLang As Boolean = False
-
+			Dim systemLang As String = Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName	'en, fr, sv etc.
 			Dim lastUsedLang As Languages.LanguageOption = Nothing
 			Dim nativeLang As Languages.LanguageOption = Nothing
 
 			For Each item As Languages.LanguageOption In Application.Settings.LanguageOptions
-				If Not hasLastUsed AndAlso item.Equals(Application.Settings.SelectedLanguage) Then
+				If lastUsedLang Is Nothing AndAlso item.Equals(Application.Settings.SelectedLanguage) Then
 					lastUsedLang = item
-					hasLastUsed = True
 				End If
 
-				If Not hasNativeLang AndAlso systemLang.Equals(item.ISOLanguage, StringComparison.OrdinalIgnoreCase) Then
+				If nativeLang Is Nothing AndAlso systemLang.Equals(item.ISOLanguage, StringComparison.OrdinalIgnoreCase) Then
 					nativeLang = item 'take native on hold incase last used language not found (avoid multiple loops)
-					hasNativeLang = True
 				End If
 			Next
 
-			If hasLastUsed Then
+			If lastUsedLang IsNot Nothing Then
 				Application.Settings.SelectedLanguage = lastUsedLang
 			Else
-				If hasNativeLang Then
+				If nativeLang IsNot Nothing Then
 					Application.Settings.SelectedLanguage = nativeLang 'couldn't find last used, using native lang
 				Else
 					Application.Settings.SelectedLanguage = defaultLang	'couldn't find last used nor native lang, using default (English)
@@ -7936,6 +7896,32 @@ skipboot:
 				settings.setconfig("language", Languages.Current.ISOLanguage)
 			End If
 		End If
+	End Sub
+
+	Private Sub ExtractEnglishLangFile(ByVal langEng As Languages.LanguageOption)
+		Using stream As Stream = Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml"))
+			If File.Exists(langEng.Filename) Then
+				Using fsEnglish As FileStream = File.Open(langEng.Filename, FileMode.Open, FileAccess.Read, FileShare.None)
+					If CompareStreams(stream, fsEnglish) Then
+						Return
+					End If
+				End Using
+			End If
+
+			stream.Position = 0L
+			Using sr As New StreamReader(stream, Encoding.UTF8, True)
+				Using sw As New StreamWriter(langEng.Filename, False, Encoding.UTF8)
+					While (sr.Peek() <> -1)
+						sw.WriteLine(sr.ReadLine())
+					End While
+
+					sw.Flush()
+					sw.Close()
+				End Using
+
+				sr.Close()
+			End Using
+		End Using
 	End Sub
 
 	Public Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
@@ -8148,6 +8134,10 @@ skipboot:
 
 	Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
 		Me.WindowState = Windows.WindowState.Minimized
+	End Sub
+
+	Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
+
 	End Sub
 End Class
 
@@ -9767,25 +9757,25 @@ Public Class CleanupEngine
             End If
         Next
 
-        Try
-            For i As Integer = 0 To driverfiles.Length - 1
-                If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
-                    filePath = Environment.GetEnvironmentVariable("windir")
-                    For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
-                        If checkvariables.isnullorwhitespace(child) = False Then
-                            If child.ToLower.Contains(driverfiles(i).ToLower) Then
-                                Try
-                                    deletefile(child)
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        End If
-                    Next
-                End If
-            Next
-        Catch ex As Exception
-            log("info: " + ex.Message)
-        End Try
+		Try
+			For i As Integer = 0 To driverfiles.Length - 1
+				If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+					filePath = Environment.GetEnvironmentVariable("windir")
+					For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
+						If checkvariables.isnullorwhitespace(child) = False Then
+							If child.ToLower.Contains(driverfiles(i).ToLower) Then
+								Try
+									deletefile(child)
+								Catch ex As Exception
+								End Try
+							End If
+						End If
+					Next
+				End If
+			Next
+		Catch ex As Exception
+			log("info: " + ex.Message)
+		End Try
 
         Const CSIDL_WINDOWS As Integer = &H29
         Dim winPath As New StringBuilder(300)
