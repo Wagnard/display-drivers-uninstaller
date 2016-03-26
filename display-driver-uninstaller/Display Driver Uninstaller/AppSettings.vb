@@ -302,7 +302,8 @@ Public Class AppSettings
 						.WriteElementString("UseRoamingConfig", UseRoamingConfig.ToString())
 						.WriteElementString("DontCheckUpdates", DontCheckUpdates.ToString())
 						.WriteElementString("CreateRestorePoint", CreateRestorePoint.ToString())
-						.WriteElementString("SaveLogs", SaveLogs.ToString())
+                        .WriteElementString("SaveLogs", SaveLogs.ToString())
+                        .WriteElementString("GoodSite", GoodSite.ToString())
 
 						.WriteEndElement()
 
@@ -444,8 +445,11 @@ Public Class AppSettings
 								CreateRestorePoint = Boolean.Parse(KvP.Value)
 
 							Case "savelogs"
-								SaveLogs = Boolean.Parse(KvP.Value)
-						End Select
+                                SaveLogs = Boolean.Parse(KvP.Value)
+
+                            Case "goodsite"
+                                GoodSite = Boolean.Parse(KvP.Value)
+                        End Select
 					Next
 
 

@@ -5313,6 +5313,7 @@ Public Class frmMain
 	End Sub
 
 	Private Sub btnClean_Click(sender As Object, e As RoutedEventArgs) Handles btnClean.Click
+        MsgBox(Application.Settings.GoodSite)
         If Not CBool(Application.Settings.GoodSite) Then
             MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
             Application.Settings.GoodSite = True
