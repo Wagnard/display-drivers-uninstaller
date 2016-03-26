@@ -38,7 +38,8 @@ Public Class AppSettings
 	Private m_UseRoamingCfg As DependencyProperty = Reg("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
 	Private m_DontCheckUpdates As DependencyProperty = Reg("DontCheckUpdates", GetType(Boolean), GetType(AppSettings), False)
 	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
-	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
+    Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
+    Private m_goodsite As DependencyProperty = Reg("GoodSite", GetType(Boolean), GetType(AppSettings), False)
 #End Region
 
 #Region "Public Properties"
@@ -196,7 +197,15 @@ Public Class AppSettings
 		Set(value As Boolean)
 			SetValue(m_saveLogs, value)
 		End Set
-	End Property
+    End Property
+    Public Property GoodSite As Boolean
+        Get
+            Return CBool(GetValue(m_goodsite))
+        End Get
+        Set(value As Boolean)
+            SetValue(m_goodsite, value)
+        End Set
+    End Property
 #End Region
 
 	Friend Shared Function Reg(ByVal s As String, ByVal t As Type, ByVal c As Type, ByVal m As Object) As DependencyProperty
