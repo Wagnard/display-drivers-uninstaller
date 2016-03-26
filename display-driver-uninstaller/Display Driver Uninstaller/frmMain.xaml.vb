@@ -6170,9 +6170,6 @@ skipboot:
 
                 Dim info As LogEntry = LogEntry.Create()
                 UpdateTextMethod(UpdateTextMethodmessagefn(10) + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
-                log("DDU Version: " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
-                log("OS: " + CStr(lblWinVersionValue.Content))
-                log("Architecture: " & ddudrfolder)
 
                 info.Message = "System Information"
                 info.Add("DDU Version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
@@ -6193,18 +6190,15 @@ skipboot:
                                         If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("Device Description"))) Then
                                             currentdriverversion = subregkey.GetValue("Device Description").ToString
                                             UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
-                                            log("GPU #" + child + " Detected : " + currentdriverversion)
                                             info.Add("GPU #" + child, currentdriverversion)
                                         Else
                                             If (subregkey.GetValue("DriverDesc") IsNot Nothing) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
                                                 UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
-                                                log("GPU #" + child + " Detected :  " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
                                                 info.Add("GPU #" + child, HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
                                             Else
                                                 If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DriverDesc"))) Then
                                                     currentdriverversion = subregkey.GetValue("DriverDesc").ToString
                                                     UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
-                                                    log("GPU #" + child + " Detected : " + currentdriverversion)
                                                     info.Add("GPU #" + child, currentdriverversion)
                                                 End If
                                             End If
@@ -6213,14 +6207,12 @@ skipboot:
                                         If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("MatchingDeviceId"))) Then
                                             currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
                                             UpdateTextMethod(UpdateTextMethodmessagefn(13) + " " + currentdriverversion)
-                                            log("GPU DeviceId : " + currentdriverversion)
                                             info.Add("GPU DeviceId", currentdriverversion)
                                         End If
 
                                         Try
                                             If (Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString")))) AndAlso (subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary) Then
                                                 UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
-                                                log("Vbios :" + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
                                                 info.Add("Vbios", HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
                                             Else
                                                 If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString"))) Then
@@ -6230,7 +6222,6 @@ skipboot:
                                                         currentdriverversion = currentdriverversion.Replace("." + i.ToString + ".", ".0" + i.ToString + ".")
                                                     Next
                                                     UpdateTextMethod("Vbios :" + " " + currentdriverversion)
-                                                    log("Vbios : " + currentdriverversion)
                                                     info.Add("Vbios", currentdriverversion)
                                                 End If
                                             End If
@@ -6241,19 +6232,16 @@ skipboot:
                                         If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DriverVersion"))) Then
                                             currentdriverversion = subregkey.GetValue("DriverVersion").ToString
                                             UpdateTextMethod(UpdateTextMethodmessagefn(14) + " " + currentdriverversion)
-                                            log("Detected Driver(s) Version(s) : " + currentdriverversion)
                                             info.Add("Detected Driver(s) Version(s)", currentdriverversion)
                                         End If
                                         If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("InfPath"))) Then
                                             currentdriverversion = subregkey.GetValue("InfPath").ToString
                                             UpdateTextMethod(UpdateTextMethodmessagefn(15) + " " + currentdriverversion)
-                                            log("INF : " + currentdriverversion)
                                             info.Add("INF", currentdriverversion)
                                         End If
                                         If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("InfSection"))) Then
                                             currentdriverversion = subregkey.GetValue("InfSection").ToString
                                             UpdateTextMethod(UpdateTextMethodmessagefn(16) + " " + currentdriverversion)
-                                            log("INF Section : " + currentdriverversion)
                                             info.Add("INF", currentdriverversion)
                                         End If
                                     End If
@@ -6298,7 +6286,6 @@ skipboot:
                                                 If subregkey.OpenSubKey(childs).GetValue("Service").ToString.ToLower.Contains("amdkmdap") Then
                                                     enduro = True
                                                     UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
-                                                    log("System seems to be an AMD Enduro (Intel)")
                                                 End If
                                             End If
                                         End If
@@ -6315,17 +6302,17 @@ skipboot:
                 If MyIdentity.IsSystem Then
                     Select Case System.Windows.Forms.SystemInformation.BootMode
                         Case BootMode.FailSafe
-                            log("We are in Safe Mode")
+                            info.Add("We are in Safe Mode")
                         Case BootMode.FailSafeWithNetwork
-                            log("We are in Safe Mode with Networking")
+                            info.Add("We are in Safe Mode with Networking")
                         Case BootMode.Normal
-                            log("We are not in Safe Mode")
+                            info.Add("We are not in Safe Mode")
                     End Select
                 End If
 
+                Application.Log.Add(info)
 
                 getoeminfo()
-                Application.Log.Add(info)
 
             Catch ex As Exception
                 MsgBox(ex.Message + ex.StackTrace)
@@ -7401,15 +7388,19 @@ skipboot:
 
 	Sub getoeminfo()
 
-		log("The following third-party driver packages are installed on this computer: ")
+        Dim info As LogEntry = LogEntry.Create()
+        info.Message = "The following third-party driver packages are installed on this computer: "
+        log("The following third-party driver packages are installed on this computer: ")
 		Dim infisvalid As Boolean = True
 		Try
 			For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
 				If Not checkvariables.isnullorwhitespace(infs) Then
 
-					log("---")
-					log(infs)
-					infisvalid = False 'false unless we find either a provider or class 
+                    log("---")
+                    info.Add("---")
+                    log(infs)
+                    info.Add("", infs)
+                    infisvalid = False 'false unless we find either a provider or class 
 					For Each child As String In IO.File.ReadAllLines(infs)
 						If Not checkvariables.isnullorwhitespace(child) Then
 							child = child.Replace(" ", "").Replace(vbTab, "")
@@ -7423,13 +7414,15 @@ skipboot:
 											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
 											   Not provider.Contains("%") Then
 												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
-												Exit For
+                                                info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
+                                                Exit For
 											End If
 										End If
 									Next
 									Exit For
 								End If
-								log(child)
+                                log(child)
+                                info.Add(child)
 								Exit For
 							End If
 						End If
@@ -7449,23 +7442,27 @@ skipboot:
 											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso
 											   Not provider.Contains("%") Then
 												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
-												Exit For
+                                                info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
+                                                Exit For
 											End If
 										End If
 									Next
 									Exit For
 								End If
-								log(child)
+                                log(child)
+                                info.Add(child)
 								Exit For
 							End If
 						End If
 					Next
 					If Not infisvalid Then
-						log("This inf entry is corrupted or invalid.")
+                        log("This inf entry is corrupted or invalid.")
+                        info.Add("This inf entry is corrupted or invalid.")
 						deletefile(infs)
 					End If
 				End If
-			Next
+            Next
+            Application.Log.Add(info)
 		Catch ex As Exception
 			log(ex.Message + ex.StackTrace)
 		End Try
