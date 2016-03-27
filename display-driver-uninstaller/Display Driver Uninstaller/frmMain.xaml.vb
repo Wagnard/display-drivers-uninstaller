@@ -6298,15 +6298,14 @@ skipboot:
                     log(ex.Message + ex.StackTrace)
                 End Try
 
-
                 If MyIdentity.IsSystem Then
                     Select Case System.Windows.Forms.SystemInformation.BootMode
                         Case BootMode.FailSafe
-                            info.Add("We are in Safe Mode")
+							Application.Log.AddMessage("We are in Safe Mode")
                         Case BootMode.FailSafeWithNetwork
-                            info.Add("We are in Safe Mode with Networking")
+							Application.Log.AddMessage("We are in Safe Mode with Networking")
                         Case BootMode.Normal
-                            info.Add("We are not in Safe Mode")
+							Application.Log.AddMessage("We are not in Safe Mode")
                     End Select
                 End If
 
@@ -7387,9 +7386,12 @@ skipboot:
 	End Sub
 
 	Sub getoeminfo()
+		Dim info As LogEntry = LogEntry.Create()
+		info.Type = LogType.Event
+		info.CanExpand = True
+		info.IsExpanded = False
+		info.Message = "The following third-party driver packages are installed on this computer"
 
-        Dim info As LogEntry = LogEntry.Create()
-        info.Message = "The following third-party driver packages are installed on this computer: "
         log("The following third-party driver packages are installed on this computer: ")
 		Dim infisvalid As Boolean = True
 		Try
@@ -7414,7 +7416,7 @@ skipboot:
 											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
 											   Not provider.Contains("%") Then
 												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
-                                                info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
+												info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
                                                 Exit For
 											End If
 										End If

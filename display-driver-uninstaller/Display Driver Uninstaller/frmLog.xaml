@@ -16,7 +16,8 @@
 				 ItemsSource="{Binding}" 
 				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				 ScrollViewer.VerticalScrollBarVisibility="Visible" 
-				 ScrollViewer.IsDeferredScrollingEnabled="True"
+				 ScrollViewer.IsDeferredScrollingEnabled="False"
+				 ScrollViewer.CanContentScroll="False"
 				 Focusable="False" 
 				 HorizontalContentAlignment="Stretch">
 			

@@ -51,6 +51,7 @@ Public Class LogEntry
 
 	Private m_exData As Dictionary(Of String, String)
 	Private m_values As List(Of KvP)
+	Private m_separator As String
 	Private m_time As DateTime
 	Private m_type As LogType
 	Private m_isExpanded, m_canExpand, m_hasValues, m_hasException, m_hasAnyData As Boolean
@@ -72,6 +73,15 @@ Public Class LogEntry
 		Set(value As Boolean)
 			m_canExpand = value
 			OnPropertyChanged("CanExpand")
+		End Set
+	End Property
+	Public Property Separator As String
+		Get
+			Return m_separator
+		End Get
+		Set(value As String)
+			m_separator = value
+			OnPropertyChanged("Separator")
 		End Set
 	End Property
 	Public Property Type As LogType
@@ -115,10 +125,14 @@ Public Class LogEntry
 			OnPropertyChanged("ExceptionData")
 		End Set
 	End Property
-	Public ReadOnly Property Values As List(Of KvP)
+	Public Property Values As List(Of KvP)
 		Get
 			Return m_values
 		End Get
+		Set(value As List(Of KvP))
+			m_values = value
+			OnPropertyChanged("Values")
+		End Set
 	End Property
 	Public Property HasException As Boolean
 		Get
@@ -155,9 +169,10 @@ Public Class LogEntry
 		InitializeComponent()
 
 		' Add any initialization after the InitializeComponent() call.
-		m_values = New List(Of KvP)
+		Values = New List(Of KvP)
+		ExceptionData = New Dictionary(Of String, String)
 
-		m_exData = New Dictionary(Of String, String)
+		Separator = " : "
 		Time = DateTime.Now
 		Type = LogType.Event
 

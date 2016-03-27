@@ -309,7 +309,8 @@
 					Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToStyle},UpdateSourceTrigger=PropertyChanged}" 
 					Visibility="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" >
 				
-					<TextBlock Text="{Binding Key, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" /> : 
+					<TextBlock Text="{Binding Key, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+					<TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Separator, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 				</TextBlock>
 					
 				<TextBlock Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToStyle},UpdateSourceTrigger=PropertyChanged}" 
