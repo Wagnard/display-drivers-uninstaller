@@ -42,7 +42,7 @@
 			<GradientStop Color="#FFFFFFFF" Offset="1" />
 		</LinearGradientBrush>
 		
-		<conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" TrueValue="Visible" FalseValue="Collapsed" />
+		<conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" Reversed="False" TrueValue="Visible" FalseValue="Collapsed" />
 		<conv:LogTypeIsType x:Key="IsType" Reversed="False" />
 		<conv:LogTypeIsType x:Key="IsNotType" Reversed="True"/>
 		<conv:BooleanToColor x:Key="BoolToColor" Reversed="False" TrueValue="{StaticResource cValue}" FalseValue="{StaticResource cNormal}"/>
@@ -302,24 +302,21 @@
 		</DataTemplate>
 
 		<DataTemplate x:Key="logValues" DataType="{x:Type local:LogEntry}">
-			<TextBlock  
-				Visibility="{Binding HasAnyValue, Mode=OneWay, Converter={StaticResource NullToVis}, UpdateSourceTrigger=PropertyChanged}">
-				
-				<TextBlock 
-					Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToStyle},UpdateSourceTrigger=PropertyChanged}" 
-					Visibility="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" >
-				
-					<TextBlock Text="{Binding Key, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-					<TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Separator, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-				</TextBlock>
-					
-				<TextBlock Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToStyle},UpdateSourceTrigger=PropertyChanged}" 
-						   Visibility="{Binding HasValue, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}">
-					<TextBlock 
-						Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource NotBoolToStyle},UpdateSourceTrigger=PropertyChanged}" 
-						Text="{Binding Value, Mode=OneWay}" TextWrapping="Wrap" />
-				</TextBlock>	
-			</TextBlock>		
+			<TextBlock Visibility="{Binding HasAnyValue, Mode=OneWay, Converter={StaticResource NullToVis}, UpdateSourceTrigger=PropertyChanged}">
+							
+				<TextBlock Visibility="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
+						   Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToStyle},UpdateSourceTrigger=PropertyChanged}" >
+					<TextBlock.Text>
+						<MultiBinding StringFormat="{}{0}{1}" Mode="OneWay">
+							<Binding Path="Key" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
+							<Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type UserControl}}" Path="DataContext.Separator" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock><TextBlock 
+					Visibility="{Binding HasValue, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
+					Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource NotBoolToStyle},UpdateSourceTrigger=PropertyChanged}" 
+					Text="{Binding Value, Mode=OneWay}" TextWrapping="Wrap" />
+			</TextBlock>			
 		</DataTemplate>
 	</UserControl.Resources>
 

@@ -6,6 +6,8 @@ Imports System.Runtime.InteropServices
 Imports System.Collections.ObjectModel
 
 Module Tools
+	' 9 = vbTAB --- 10 = vbLF --- 11 = vbVerticalTab --- 12 = vbFormFeed --- 13 = vbCR --- 32 = vbSPACE
+	Private ReadOnly whiteSpaceChars As Char() = New Char() {ChrW(9), ChrW(10), ChrW(11), ChrW(12), ChrW(13), ChrW(32)}
 
 	''' <summary>Compares two streams equality by using MD5 checksums</summary>
 	Public Function CompareStreams(ByVal stream1 As Stream, ByVal stream2 As Stream) As Boolean
@@ -31,7 +33,7 @@ Module Tools
 	End Function
 
 	Public Function IsNullOrWhitespace(ByRef str As String) As Boolean
-		Return If(str IsNot Nothing, String.IsNullOrEmpty(str.Trim), True)
+		Return If(str IsNot Nothing, String.IsNullOrEmpty(str.Trim(whiteSpaceChars)), True)
 	End Function
 
 	''' <summary>Concats all given parameters to single text</summary>
@@ -50,7 +52,7 @@ Module Tools
 		Return StrAppend(New StringBuilder(), str)
 	End Function
 
-	''' <summary>Replaces all given parameters from text</summary>
+	''' <summary>Replaces all given parameters from text (Case Sensitive!)</summary>
 	Public Function StrReplace(ByRef sb As StringBuilder, ByRef oldStr As String, ByRef newStr As String) As StringBuilder
 		If String.IsNullOrEmpty(oldStr) Then
 			Return sb
@@ -59,7 +61,7 @@ Module Tools
 		Return sb.Replace(oldStr, newStr)
 	End Function
 
-	''' <summary>Replaces all given parameters from text</summary>
+	''' <summary>Replaces all given parameters from text (Case Sensitive!)</summary>
 	Public Function StrReplace(ByRef text As String, ByRef oldStr As String, ByRef newStr As String) As StringBuilder
 		Return StrReplace(New StringBuilder(text), oldStr, newStr)
 	End Function
@@ -80,6 +82,19 @@ Module Tools
 	''' <summary>Removes all given parameters from text</summary>
 	Public Function StrRemove(ByRef text As String, ParamArray Str As String()) As StringBuilder
 		Return StrRemove(New StringBuilder(Str.Length), Str)
+	End Function
+
+	''' <summary>Removes all given parameters from text (Case InSensitive!)</summary>
+	Public Function StrRemoveAll(ByRef text As String, ParamArray Str As String()) As String
+		If Str IsNot Nothing And Str.Length > 0 Then
+			For i As Int32 = 0 To Str.Length - 1
+				If Not String.IsNullOrEmpty(Str(i)) Then
+					text = Strings.Replace(text, Str(i), String.Empty, 1, -1, CompareMethod.Text)
+				End If
+			Next
+		End If
+
+		Return text
 	End Function
 
 	''' <summary>Check if text contains any of the give parameters</summary>
@@ -107,14 +122,81 @@ Module Tools
 			wildCard = "*"
 		End If
 
-		WINDOWS_API.GetFilenames(directory, fileNames, wildCard, searchSubDirs)
+		WINDOWS_API_FIND.GetFilenames(directory, fileNames, wildCard, searchSubDirs)
 
 		Return fileNames
 	End Function
 
+	Public Function GetOemInfList(ByVal directory As String) As List(Of OemINF)
+		Dim oemInfList As New List(Of OemINF)
+		Dim oemInf As OemINF
+
+		For Each inf As String In GetFiles(Application.Paths.WinDir & "inf\", "oem*.inf", True)
+			oemInf = New OemINF(inf)
+
+			Try
+				oemInf.Provider = WINDOWS_API_INI.GetINIValue(inf, "Version", "Provider")
+				oemInf.Class = WINDOWS_API_INI.GetINIValue(inf, "Version", "Class")
+
+				If Not String.IsNullOrEmpty(oemInf.Provider) Or Not String.IsNullOrEmpty(oemInf.Class) Then
+					oemInf.IsValid = True
+				End If
+
+			Catch ex As Exception
+				oemInf.IsValid = False
+				Application.Log.AddException(ex)
+			End Try
+
+			oemInfList.Add(oemInf)
+		Next
+
+		Return oemInfList
+	End Function
+
 End Module
 
-Public Class WINDOWS_API
+Public Class OemINF
+	Public Property FileName As String
+	Public Property Provider As String
+	Public Property [Class] As String
+	Public Property IsValid As Boolean
+
+	Public Sub New(ByVal fileName As String)
+		Me.FileName = fileName
+	End Sub
+
+End Class
+
+Public Class WINDOWS_API_INI
+	Private Declare Auto Function GetPrivateProfileString Lib "kernel32" (ByVal lpAppName As String, ByVal lpKeyName As String, ByVal lpDefault As String, ByVal lpReturnedString As StringBuilder, ByVal nSize As Integer, ByVal lpFileName As String) As Integer
+
+	''' <summary>Read Section->Key->Value from INI using Win API</summary>
+	''' <param name="infFile">Fullpath to file</param>
+	''' <param name="section">[Version]</param>
+	''' <param name="key">Key under section. eg 'Provider'</param>
+	''' <returns>Found value or Nothing</returns>
+	Public Shared Function GetINIValue(ByRef infFile As String, ByRef section As String, ByRef key As String) As String
+		Dim searchStrings As String = "Strings"
+		Dim sb As New StringBuilder(256)
+		Dim value As String
+
+		GetPrivateProfileString(section, key, Nothing, sb, sb.Capacity, infFile)
+		value = sb.ToString()
+
+		If value.Contains("%") Then
+			sb.Remove(0, sb.Length)
+			If GetPrivateProfileString(searchStrings, value, Nothing, sb, sb.Capacity, infFile) = 0 Then
+				GetPrivateProfileString(searchStrings, value.Replace("%", String.Empty), Nothing, sb, sb.Capacity, infFile)
+			End If
+
+			value = sb.ToString()
+		End If
+
+		Return value
+	End Function
+End Class
+
+Public Class WINDOWS_API_FIND
 	<StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Auto)>
 	Structure WIN32_FIND_DATA
 		Public dwFileAttributes As UInteger

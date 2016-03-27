@@ -6311,26 +6311,26 @@ skipboot:
 
                 Application.Log.Add(info)
 
-                getoeminfo()
+				GetOemInfo()
 
-            Catch ex As Exception
-                MsgBox(ex.Message + ex.StackTrace)
-                log(ex.Message + ex.StackTrace)
-                closeddu()
-                Exit Sub
-            End Try
+			Catch ex As Exception
+				MsgBox(ex.Message + ex.StackTrace)
+				log(ex.Message + ex.StackTrace)
+				closeddu()
+				Exit Sub
+			End Try
 
 
-            Topmost = False
+			Topmost = False
 
-            If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
-                trd = New Thread(AddressOf ThreadTask)
-                trd.IsBackground = True
-                trd.Start()
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message + ex.StackTrace)
-        End Try
+			If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
+				trd = New Thread(AddressOf ThreadTask)
+				trd.IsBackground = True
+				trd.Start()
+			End If
+		Catch ex As Exception
+			MsgBox(ex.Message + ex.StackTrace)
+		End Try
 	End Sub
 
 	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
@@ -6403,18 +6403,6 @@ skipboot:
 					provider = "Intel"
 			End Select
 
-			'If combobox1value = "AMD" Then
-			'vendidexpected = "VEN_1002"
-			'provider = "AdvancedMicroDevices"
-			'End If
-			'If combobox1value = "NVIDIA" Then
-			'vendidexpected = "VEN_10DE"
-			'provider = "NVIDIA"
-			'End If
-			'If combobox1value = "INTEL" Then
-			'vendidexpected = "VEN_8086"
-			'provider = "Intel"
-			'End If
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(20) + " " & config.SelectedGPU.ToString() & " " + UpdateTextMethodmessagefn(21))
 			log("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
@@ -7385,24 +7373,52 @@ skipboot:
 		'        End If
 	End Sub
 
-	Sub getoeminfo()
+	Private Sub GetOemInfo()
+		Dim info As LogEntry = LogEntry.Create()
+		info.Type = LogType.Event
+		info.CanExpand = True
+		info.IsExpanded = False
+		info.Separator = " = "
+		info.Message = "The following third-party driver packages are installed on this computer"
+
+		Try
+			For Each oem As OemINF In GetOemInfList(Application.Paths.WinDir & "inf\")
+				info.Add(oem.FileName)
+				info.Add("Provider", oem.Provider)
+				info.Add("Class", oem.Class)
+
+				If Not oem.IsValid Then
+					info.Add("This inf entry is corrupted or invalid.")
+					'	deletefile(oem.FileName)  ' DOUBLE CHECK THIS before uncommentting
+				End If
+
+				info.Add("")
+			Next
+
+			Application.Log.Add(info)
+		Catch ex As Exception
+			log(ex.Message + ex.StackTrace)
+		End Try
+	End Sub
+
+	Sub getoeminfoOLD()
 		Dim info As LogEntry = LogEntry.Create()
 		info.Type = LogType.Event
 		info.CanExpand = True
 		info.IsExpanded = False
 		info.Message = "The following third-party driver packages are installed on this computer"
 
-        log("The following third-party driver packages are installed on this computer: ")
+		log("The following third-party driver packages are installed on this computer: ")
 		Dim infisvalid As Boolean = True
 		Try
 			For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
 				If Not checkvariables.isnullorwhitespace(infs) Then
 
-                    log("---")
-                    info.Add("---")
-                    log(infs)
-                    info.Add("", infs)
-                    infisvalid = False 'false unless we find either a provider or class 
+					log("---")
+					info.Add("---")
+					log(infs)
+					info.Add("", infs)
+					infisvalid = False 'false unless we find either a provider or class 
 					For Each child As String In IO.File.ReadAllLines(infs)
 						If Not checkvariables.isnullorwhitespace(child) Then
 							child = child.Replace(" ", "").Replace(vbTab, "")
@@ -7417,14 +7433,14 @@ skipboot:
 											   Not provider.Contains("%") Then
 												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
 												info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
-                                                Exit For
+												Exit For
 											End If
 										End If
 									Next
 									Exit For
 								End If
-                                log(child)
-                                info.Add(child)
+								log(child)
+								info.Add(child)
 								Exit For
 							End If
 						End If
@@ -7444,27 +7460,27 @@ skipboot:
 											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso
 											   Not provider.Contains("%") Then
 												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
-                                                info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
-                                                Exit For
+												info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
+												Exit For
 											End If
 										End If
 									Next
 									Exit For
 								End If
-                                log(child)
-                                info.Add(child)
+								log(child)
+								info.Add(child)
 								Exit For
 							End If
 						End If
 					Next
 					If Not infisvalid Then
-                        log("This inf entry is corrupted or invalid.")
-                        info.Add("This inf entry is corrupted or invalid.")
+						log("This inf entry is corrupted or invalid.")
+						info.Add("This inf entry is corrupted or invalid.")
 						deletefile(infs)
 					End If
 				End If
-            Next
-            Application.Log.Add(info)
+			Next
+			Application.Log.Add(info)
 		Catch ex As Exception
 			log(ex.Message + ex.StackTrace)
 		End Try
