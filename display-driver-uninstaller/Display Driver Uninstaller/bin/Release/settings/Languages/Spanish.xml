@@ -50,7 +50,7 @@
 			<Text>Aviso: Cualquier daño o error causado a su PC será bajo su propia responsabilidad.|</Text>
 		</Label9>
 		<Label10>
-			<Text>Se recomienda usar DDU en Modo a Prueba de Fallos.|</Text>
+			<Text>Se recomienda usar DDU en Modo Seguro.|</Text>
 		</Label10>
 		<Label11>
 			<Text>Buscando actualizaciones...</Text>
@@ -59,31 +59,31 @@
 			<Text4>¡Error al intentar obtener actualización!</Text4>
 		</Label11>
 		<OptionsToolStripMenuItem>
-			<Text>Options</Text>
+			<Text>Opciones</Text>
 		</OptionsToolStripMenuItem>
 		<ToolStripMenuItem1>
 			<Text>?</Text>
 		</ToolStripMenuItem1>
 		<ToSToolStripMenuItem>
-			<Text>ToS</Text>
+			<Text>TdS</Text>
 		</ToSToolStripMenuItem>
 		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
+			<Text>Visite el sitio web oficial de DDU</Text>
 		</VisitDDUHomepageToolStripMenuItem>
 		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
+			<Text>Visite el sitio web de SVN</Text>
 		</SVNToolStripMenuItem>
 		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
+			<Text>Visite el Hilo de NVIDIA en Guru3d</Text>
 		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
 		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
+			<Text>Visite el Hilo de AMD en Guru3d</Text>
 		</VisitGuru3dAMDThreadToolStripMenuItem>
 		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
+			<Text>Visite el Hilo de Geforce</Text>
 		</VisitGeforceThreadToolStripMenuItem>
 		<AboutToolStripMenuItem>
-			<Text>About</Text>
+			<Text>Acerca de</Text>
 		</AboutToolStripMenuItem>
 		<Messages>
 			<Text1>¡Hay actualizaciones disponibles! ¿Desea visitar la web de DDU ahora?</Text1>
@@ -93,12 +93,12 @@
 			<Text5>Display Driver Uninstaller (DDU) realizará muchas modificaciones en su registro. DDU tratará de crear un punto de Restauración del Sistema automáticamente (modo Normal únicamente).</Text5>
 			<Text6>Ha ocurrido un problema en uno de los módulos, envíe su registro (log) de DDU al desarrollador.</Text6>
 			<Text7>DDU ha detectado que posee un portátil con gráfica “AMD switching” (Enduro o equivalente), DDU no es totalmente compatible / fiable con sistemas Enduro aún. Úselo bajo su propia responsabilidad.</Text7>
-			<Text8>DDU ha detectado que no está en modo a Prueba de Fallos... Para una mejor Limpieza sin conflictos, se recomienda que reinicie en dicho modo.</Text8>
+			<Text8>DDU ha detectado que no está en modo Seguro... Para una mejor Limpieza sin conflictos, se recomienda que reinicie en dicho modo.</Text8>
 			<Text9>DDU ha cambiado un parámetro que impide que los controladores se descarguen automáticamente desde Windows Update. Puede revertir dicho cambio si así lo desea, TRAS la instalación de su nuevo controlador.</Text9>
 			<Text10>¡Proceso de limpieza de desinstalación completado! ¿Desea salir ahora?</Text10>
 			<Text11>¡Proceso terminado!</Text11>
-			<Text12>No se encuentra en modo a Prueba de Fallos. Se recomienda encarecidamente reiniciar en dicho modo para evitar conflictos. ¿Desea reiniciar en modo a Prueba de Fallos ahora?</Text12>
-			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text12>No se encuentra en modo Seguro. Se recomienda encarecidamente reiniciar en dicho modo para evitar conflictos. ¿Desea reiniciar en Modo Seguro ahora?</Text12>
+			<Text13>Esto es lo que necesita seleccionar en la pantalla azul de recuperación: Solucionar problemas-&gt; Opciones avanzadas -&gt; Configuración de inicio.</Text13>
 		</Messages>
 		<UpdateLog>
 			<Text1>Ejecutando limpieza de biblioteca de controladores(Borrar OEM)...</Text1>
@@ -152,73 +152,73 @@
 		<Label2>
 			<Text>Opciones Generales</Text>
 		</Label2>
-		<lblRemNvidiaDirs>
+		<CheckBox1>
 			<Text>Eliminar las carpetas de Controladores "C:\nVidia" (No recomendado)</Text>
-		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		</CheckBox1>
+		<CheckBox2>
 			<Text>Guardar archivos de registro en la ruta de arranque\n(recomendado)|</Text>
-		</lblsaveLogs>
-		<lblRemPhysX>
+		</CheckBox2>
+		<CheckBox3>
 			<Text>Eliminar PhysX|</Text>
-		</lblRemPhysX>
-		<lblRem3DtvPlay>
+		</CheckBox3>
+		<CheckBox4>
 			<Text>Eliminar 3DTV Play|</Text>
-		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		</CheckBox4>
+		<CheckBox5>
 			<Text>Crear un Punto de Restauración de Sistema (si es posible)|</Text>
-		</lblcreateRestorePoint>
-		<lblRemMonitors>
+		</CheckBox5>
+		<CheckBox6>
 			<Text>Eliminar los monitores presentes y no presentes (Recomendado)</Text>
-		</lblRemMonitors>
-		<lblRemAMDAudioBus>
+		</CheckBox6>
+		<CheckBox7>
 			<Text>Eliminar Bus de Audio AMD</Text>
-		</lblRemAMDAudioBus>
-		<lblRemAMDDirs>
+		</CheckBox7>
+		<CheckBox8>
 			<Text>Eliminar las carpetas de Controladores "C:\AMD" (No recomendado)</Text>
-		</lblRemAMDDirs>
-		<lblRemAMDKMPFD>
+		</CheckBox8>
+		<CheckBox9>
 			<Text>Eliminar el controlador/filtro AMDKMPFD (Se recomienda realizar una copia de seguridad en sistemas con chipset AMD)</Text>
-		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
-			<Text>Mostrar mensaje de Modo a prueba de Fallos al arrancar</Text>
-		</lblshowSafeModeMsg>
-		<lblUseRoamingCfg>
+		</CheckBox9>
+		<CheckBox10>
+			<Text>Mostrar mensaje de Modo Seguro al arrancar</Text>
+		</CheckBox10>
+		<CheckBox11>
 			<Text>Guardar el archivo de configuración en la carpeta roaming</Text>
-		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
+		</CheckBox11>
+		<CheckBox12>
 			<Text>Desactivar la búsqueda de nuevas actualizaciones al arrancar (NO se Recomienda)</Text>
-		</lblDontCheckUpdates>
-		<lblRemGFE>
+		</CheckBox12>
+		<CheckBox13>
 			<Text>Eliminar 'Geforce Experience' (GFE)</Text>
-		</lblRemGFE>
-		<lblRemCrimsonCache>
+		</CheckBox13>
+		<CheckBox14>
 			<Text>Eliminar carpeta de caché de AMD 'Crimson Shader'</Text>
 			<Tooltip>Recomendado en caso de anomalías gráficas (velocidad o corrupción de imagen) causadas por datos de caché de 'shader' corruptos.|También recomendado si se va a proceder a cambiar a otra marca como nVidia.</Tooltip>
-		</lblRemCrimsonCache>
+		</CheckBox14>
 	</frmOptions>
 	<frmLaunch Text="Launch option">
 		<btnAccept>
-			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text>Arranque</Text>
+			<Text2>Reiniciar en|Modo Seguro</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Cerrar</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>Opciones de Arranque</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>No se encuentra en modo Seguro. Se recomienda|encarecidamente reiniciar en dicho modo para evitar conflictos.</Text>
 		</lblNotSafeMode>
 		<cbBootOption>
 			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
-			<Item3>Safe Mode With Networking</Item3>
+			<Item2>Modo Seguro (Recomendado)</Item2>
+			<Item3>Modo Seguro con Funciones de Red</Item3>
 		</cbBootOption>
 	</frmLaunch>
-	<frmLog Text="Extended log">
+	<frmLog Text="Registro 'log' Extendido">
      	<btnClose>
-			<Text>Close</Text>
+			<Text>Cerrar</Text>
 		</btnClose>	
 	</frmLog>
 	<frmAbout>
@@ -236,7 +236,7 @@ testimonios que afirman que puede corregir dichos problemas.
 
 USO RECOMENDADO:
 -La herramienta DDU puede ser usada en Modo Normal pero para una estabilidad absoluta,
-el Modo a Prueba de Fallos es siempre la mejor opción.
+el modo Seguro es siempre la mejor opción.
 -Nos complacería reunir opiniones de todo el mundo, conocer si os funciona
 correctamente o no.
 -Realice una Copia de Seguridad o cree un nuevo Punto de Restauración.
