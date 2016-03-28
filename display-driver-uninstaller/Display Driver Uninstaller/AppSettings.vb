@@ -39,7 +39,18 @@ Public Class AppSettings
 	Private m_DontCheckUpdates As DependencyProperty = Reg("DontCheckUpdates", GetType(Boolean), GetType(AppSettings), False)
 	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
     Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
-    Private m_goodsite As DependencyProperty = Reg("GoodSite", GetType(Boolean), GetType(AppSettings), False)
+
+	' Visit links
+	Private m_goodsite As DependencyProperty = Reg("GoodSite", GetType(Boolean), GetType(AppSettings), False)
+
+	Private m_visitDonate As DependencyProperty = Reg("VisitDonate", GetType(Boolean), GetType(AppSettings), False)
+	Private m_visitSVN As DependencyProperty = Reg("VisitSVN", GetType(Boolean), GetType(AppSettings), False)
+	Private m_visitGuru3DNvidia As DependencyProperty = Reg("VisitGuru3DNvidia", GetType(Boolean), GetType(AppSettings), False)
+	Private m_visitGuru3DAMD As DependencyProperty = Reg("VisitGuru3DAMD", GetType(Boolean), GetType(AppSettings), False)
+	Private m_visitDDUHome As DependencyProperty = Reg("VisitDDUHome", GetType(Boolean), GetType(AppSettings), False)
+	Private m_visitGeforce As DependencyProperty = Reg("VisitGeforce", GetType(Boolean), GetType(AppSettings), False)
+
+	Private m_arguments As DependencyProperty = Reg("Arguments", GetType(String), GetType(AppSettings), String.Empty)
 #End Region
 
 #Region "Public Properties"
@@ -198,14 +209,73 @@ Public Class AppSettings
 			SetValue(m_saveLogs, value)
 		End Set
     End Property
-    Public Property GoodSite As Boolean
-        Get
-            Return CBool(GetValue(m_goodsite))
-        End Get
-        Set(value As Boolean)
-            SetValue(m_goodsite, value)
-        End Set
-    End Property
+
+	Public Property GoodSite As Boolean
+		Get
+			Return CBool(GetValue(m_goodsite))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_goodsite, value)
+		End Set
+	End Property
+
+	Public Property VisitDonate As Boolean
+		Get
+			Return CBool(GetValue(m_visitDonate))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_visitDonate, value)
+		End Set
+	End Property
+	Public Property VisitSVN As Boolean
+		Get
+			Return CBool(GetValue(m_visitSVN))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_visitSVN, value)
+		End Set
+	End Property
+	Public Property VisitGuru3DNvidia As Boolean
+		Get
+			Return CBool(GetValue(m_visitGuru3DNvidia))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_visitGuru3DNvidia, value)
+		End Set
+	End Property
+	Public Property VisitGuru3DAMD As Boolean
+		Get
+			Return CBool(GetValue(m_visitGuru3DAMD))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_visitGuru3DAMD, value)
+		End Set
+	End Property
+	Public Property VisitDDUHome As Boolean
+		Get
+			Return CBool(GetValue(m_visitDDUHome))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_visitDDUHome, value)
+		End Set
+	End Property
+	Public Property VisitGeforce As Boolean
+		Get
+			Return CBool(GetValue(m_visitGeforce))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_visitGeforce, value)
+		End Set
+	End Property
+	Public Property Arguments As String
+		Get
+			Return CStr(GetValue(m_arguments))
+		End Get
+		Set(value As String)
+			SetValue(m_arguments, value)
+		End Set
+	End Property
+
 #End Region
 
 	Friend Shared Function Reg(ByVal s As String, ByVal t As Type, ByVal c As Type, ByVal m As Object) As DependencyProperty
@@ -248,6 +318,36 @@ Public Class AppSettings
 			Load(Path.Combine(Application.Paths.Settings, "Settings.xml"))
 			UseRoamingConfig = False
 		End If
+
+		Dim args As String() = Environment.GetCommandLineArgs()
+
+		If args.Length > 1 Then
+			Arguments = String.Join(" ", args, 1, args.Length - 1)
+
+			For i As Int32 = 1 To args.Length - 1
+				If StrContainsAll(args(i), "donate") Then
+					VisitDonate = True
+
+				ElseIf StrContainsAll(args(i), "svn") Then
+					VisitSVN = True
+
+				ElseIf StrContainsAll(args(i), "guru3dnvidia") Then
+					VisitGuru3DNvidia = True
+
+				ElseIf StrContainsAll(args(i), "guru3damd") Then
+					VisitGuru3DAMD = True
+
+				ElseIf StrContainsAll(args(i), "dduhome") Then
+					VisitDDUHome = True
+
+				ElseIf StrContainsAll(args(i), "geforce") Then
+					VisitGeforce = True
+				End If
+			Next
+		Else
+			Arguments = String.Empty
+		End If
+
 	End Sub
 
 	Private Sub Save(ByVal fileName As String)

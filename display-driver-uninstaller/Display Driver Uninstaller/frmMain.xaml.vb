@@ -5640,16 +5640,12 @@ Public Class frmMain
 
 
 	Private Sub frmMain_Loaded(sender As Object, e As RoutedEventArgs)
-		If Me.DataContext Is Nothing Then  ' ONLY ONCE!!! after launching application
+		If Me.DataContext Is Nothing Then
 			Me.DataContext = Application.Data
 		End If
 
 		Try
-			'We try to create config.cfg if non existant.
-			If roamingcfg = True Then
-				My.Computer.FileSystem.CreateDirectory(userpthn & "\Display Driver Uninstaller")
-			End If
-
+			Application.Settings.Load()
 			InitLanguage(True)
 
 			If Not donotcheckupdatestartup Then
@@ -5657,6 +5653,7 @@ Public Class frmMain
 				Checkupdates2()
 
 				Me.Topmost = False
+
 				If closeapp Then
 					Exit Sub
 				End If
@@ -5664,16 +5661,20 @@ Public Class frmMain
 
 			Dim regkey As RegistryKey = Nothing
 			Dim subregkey As RegistryKey = Nothing
-
-			' CheckForIllegalCrossThreadCalls = True
-
-
-
 			Dim webAddress As String = ""
 
+			' used arguments: -dduhome -svn -donate -guru3dnvidia -guru3damd -geforce
+			' NOTE: Application.Settings & Paths creates needed folders (-> moved to beginning of Sub)
 
-
-
+			MessageBox.Show(
+			 "Arguments: " & Application.Settings.Arguments & vbCrLf & vbCrLf & vbCrLf &
+			 "VisitDDUHome: " & Application.Settings.VisitDDUHome.ToString() & vbCrLf &
+			 "VisitDonate: " & Application.Settings.VisitDonate.ToString() & vbCrLf &
+			 "VisitGeforce: " & Application.Settings.VisitGeforce.ToString() & vbCrLf &
+			 "VisitGuru3DAMD: " & Application.Settings.VisitGuru3DAMD.ToString() & vbCrLf &
+			 "VisitGuru3DNvidia: " & Application.Settings.VisitGuru3DNvidia.ToString() & vbCrLf &
+			 "VisitSVN: " & Application.Settings.VisitSVN.ToString()
+			 )
 
 			'we check if the donate/guru3dnvidia/gugu3damd/geforce/dduhome is trigger here directly.
             'If CBool(settings.getconfig("donate")) = True Then
@@ -5684,13 +5685,11 @@ Public Class frmMain
             '	webAddress = "http://forums.guru3d.com/showthread.php?t=379506"
             'End If
 
-            '         If CBool(settings.getconfig("guru3damd")) = True Then
-
+			'If CBool(settings.getconfig("guru3damd")) = True Then
             '	webAddress = "http://forums.guru3d.com/showthread.php?t=379505"
             'End If
 
             'If CBool(settings.getconfig("geforce")) = True Then
-
             '	webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
             'End If
 
@@ -5738,97 +5737,65 @@ Public Class frmMain
                 Exit Sub
             End If
 
-            'moved this log code up higher so the directory is created sooner to avoid potential issues
-            If Not My.Computer.FileSystem.DirectoryExists(baseDir & "\DDU Logs") Then
-                My.Computer.FileSystem.CreateDirectory(baseDir & "\DDU Logs")
-            End If
-
             'second, we check on what we are running and set variables accordingly (os, architecture)
-
             If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion"))) Then
                 version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
-
             Else
                 version = "5.0"
             End If
 
             ' https://msdn.microsoft.com/en-us/library/windows/desktop/ms724832%28v=vs.85%29.aspx
-            Select Case version
 
-                Case "5.1"
-                    lblWinVersionValue.Content = "Windows XP"
-                    winxp = True
-                    btnCleanRestart.IsEnabled = True
-                    btnClean.IsEnabled = True
-                    btnCleanShutdown.IsEnabled = True
-                    btnWuRestore.IsEnabled = True
+			btnCleanRestart.IsEnabled = True
+			btnClean.IsEnabled = True
+			btnCleanShutdown.IsEnabled = True
+			btnWuRestore.IsEnabled = True
 
-                Case "5.2"
-                    lblWinVersionValue.Content = "Windows XP (x64) or Server 2003"
-                    winxp = True
-                    btnCleanRestart.IsEnabled = True
-                    btnClean.IsEnabled = True
-                    btnCleanShutdown.IsEnabled = True
-                    btnWuRestore.IsEnabled = True
-                Case "6.0"
-                    lblWinVersionValue.Content = "Windows Vista or Server 2008"
-                    btnCleanRestart.IsEnabled = True
-                    btnClean.IsEnabled = True
-                    btnCleanShutdown.IsEnabled = True
-                    btnWuRestore.IsEnabled = True
+			Select Case version
+				Case "5.1"
+					lblWinVersionValue.Content = "Windows XP"
+					winxp = True
 
-                Case "6.1"
-                    lblWinVersionValue.Content = "Windows 7 or Server 2008R2"
-                    btnCleanRestart.IsEnabled = True
-                    btnClean.IsEnabled = True
-                    btnCleanShutdown.IsEnabled = True
-                    btnWuRestore.IsEnabled = True
+				Case "5.2"
+					lblWinVersionValue.Content = "Windows XP (x64) or Server 2003"
+					winxp = True
 
-                Case "6.2"
-                    lblWinVersionValue.Content = "Windows 8 or Server 2012"
-                    win8higher = True
-                    btnCleanRestart.IsEnabled = True
-                    btnClean.IsEnabled = True
-                    btnCleanShutdown.IsEnabled = True
-                    btnWuRestore.IsEnabled = True
+				Case "6.0"
+					lblWinVersionValue.Content = "Windows Vista or Server 2008"
 
-                Case "6.3"
-                    lblWinVersionValue.Content = "Windows 8.1"
-                    If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber"))) Then
-                        If CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber")) = "10" Then
-                            lblWinVersionValue.Content = "Windows 10"
-                            win10 = True
-                        End If
-                    End If
-                    win8higher = True
-                    btnCleanRestart.IsEnabled = True
-                    btnClean.IsEnabled = True
-                    btnCleanShutdown.IsEnabled = True
-                    btnWuRestore.IsEnabled = True
+				Case "6.1"
+					lblWinVersionValue.Content = "Windows 7 or Server 2008R2"
 
-                Case "6.4", "10.0"
-                    lblWinVersionValue.Content = "Windows 10"
-                    win8higher = True
-                    win10 = True
-                    btnCleanRestart.IsEnabled = True
-                    btnClean.IsEnabled = True
-                    btnCleanShutdown.IsEnabled = True
-                    btnWuRestore.IsEnabled = True
+				Case "6.2"
+					lblWinVersionValue.Content = "Windows 8 or Server 2012"
+					win8higher = True
 
-                Case Else
-                    lblWinVersionValue.Content = "Unsupported OS"
-                    log("Unsupported OS.")
-                    btnCleanRestart.IsEnabled = False
-                    btnClean.IsEnabled = False
-                    btnCleanShutdown.IsEnabled = False
-                    btnWuRestore.IsEnabled = False
-            End Select
+				Case "6.3"
+					lblWinVersionValue.Content = "Windows 8.1"
+					If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber"))) Then
+						If CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber")) = "10" Then
+							lblWinVersionValue.Content = "Windows 10"
+							win10 = True
+						End If
+					End If
+					win8higher = True
 
+				Case "6.4", "10.0"
+					lblWinVersionValue.Content = "Windows 10"
+					win8higher = True
+					win10 = True
 
+				Case Else
+					lblWinVersionValue.Content = "Unsupported OS"
+					log("Unsupported OS.")
+					btnCleanRestart.IsEnabled = False
+					btnClean.IsEnabled = False
+					btnCleanShutdown.IsEnabled = False
+					btnWuRestore.IsEnabled = False
+			End Select
 
 
             Try
-
                 'allow Paexec to run in safemode
 
                 '  If BootMode.FailSafe Or BootMode.FailSafeWithNetwork Then ' we do this in safemode because of some Antivirus....(Kaspersky)
@@ -5846,8 +5813,6 @@ Public Class frmMain
                 'End If
 
                 'read config file
-
-                Application.Settings.Load()
 
                 If closeapp Then
                     Exit Sub

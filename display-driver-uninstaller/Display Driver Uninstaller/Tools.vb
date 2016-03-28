@@ -39,8 +39,8 @@ Module Tools
 	''' <summary>Concats all given parameters to single text</summary>
 	Public Function StrAppend(ByRef sb As StringBuilder, ParamArray str As String()) As StringBuilder
 		If str IsNot Nothing Then
-			For i As Int32 = 0 To str.Length - 1
-				sb.Append(str(i))
+			For Each s As String In str
+				sb.Append(s)
 			Next
 		End If
 
@@ -66,12 +66,12 @@ Module Tools
 		Return StrReplace(New StringBuilder(text), oldStr, newStr)
 	End Function
 
-	''' <summary>Removes all given parameters from text</summary>
+	''' <summary>Removes all given parameters from text (Case Sensitive!)</summary>
 	Public Function StrRemove(ByRef sb As StringBuilder, ParamArray Str As String()) As StringBuilder
 		If Str IsNot Nothing And Str.Length > 0 Then
-			For i As Int32 = 0 To Str.Length - 1
-				If Not String.IsNullOrEmpty(Str(i)) Then
-					sb.Replace(Str(i), String.Empty)
+			For Each s As String In Str
+				If Not String.IsNullOrEmpty(s) Then
+					sb.Replace(s, String.Empty)
 				End If
 			Next
 		End If
@@ -79,7 +79,7 @@ Module Tools
 		Return sb
 	End Function
 
-	''' <summary>Removes all given parameters from text</summary>
+	''' <summary>Removes all given parameters from text (Case Sensitive!)</summary>
 	Public Function StrRemove(ByRef text As String, ParamArray Str As String()) As StringBuilder
 		Return StrRemove(New StringBuilder(Str.Length), Str)
 	End Function
@@ -87,9 +87,9 @@ Module Tools
 	''' <summary>Removes all given parameters from text (Case InSensitive!)</summary>
 	Public Function StrRemoveAll(ByRef text As String, ParamArray Str As String()) As String
 		If Str IsNot Nothing And Str.Length > 0 Then
-			For i As Int32 = 0 To Str.Length - 1
-				If Not String.IsNullOrEmpty(Str(i)) Then
-					text = Strings.Replace(text, Str(i), String.Empty, 1, -1, CompareMethod.Text)
+			For Each s As String In Str
+				If Not String.IsNullOrEmpty(s) Then
+					text = Strings.Replace(text, s, String.Empty, 1, -1, CompareMethod.Text)
 				End If
 			Next
 		End If
@@ -97,12 +97,12 @@ Module Tools
 		Return text
 	End Function
 
-	''' <summary>Check if text contains any of the give parameters</summary>
-	Public Function StrContains(ByRef text As String, ParamArray Str As String()) As Boolean
+	''' <summary>Check if text contains any of the given parameters (Case InSensitive!)</summary>
+	Public Function StrContainsAll(ByRef text As String, ParamArray Str As String()) As Boolean
 		If Str IsNot Nothing And Str.Length > 0 Then
 			For Each s As String In Str
 				If Not String.IsNullOrEmpty(s) Then
-					Return text.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1
+					Return text.IndexOf(s, StringComparison.OrdinalIgnoreCase) <> -1
 				End If
 			Next
 		End If
@@ -110,7 +110,20 @@ Module Tools
 		Return False
 	End Function
 
-	''' <summary>Get files from directory using Windows API (fast)</summary>
+	''' <summary>Check if text contains any of the given parameters (Case Sensitive!)</summary>
+	Public Function StrContains(ByRef text As String, ParamArray Str As String()) As Boolean
+		If Str IsNot Nothing And Str.Length > 0 Then
+			For Each s As String In Str
+				If Not String.IsNullOrEmpty(s) Then
+					Return text.IndexOf(s, StringComparison.Ordinal) <> -1
+				End If
+			Next
+		End If
+
+		Return False
+	End Function
+
+	''' <summary>Get files from directory using Windows API (FAST!)</summary>
 	''' <param name="directory">Directory where to look for files</param>
 	''' <param name="wildCard">Wilcard for files (default = *)</param>
 	''' <param name="searchSubDirs">Search subdirectories of directory (recursive)</param>
@@ -127,11 +140,11 @@ Module Tools
 		Return fileNames
 	End Function
 
-	Public Function GetOemInfList(ByVal directory As String) As List(Of OemINF)
+	Public Function GetOemInfList(ByVal directory As String, Optional ByVal wildCard As String = "oem*.inf", Optional ByVal searchSubDirs As Boolean = False) As List(Of OemINF)
 		Dim oemInfList As New List(Of OemINF)
 		Dim oemInf As OemINF
 
-		For Each inf As String In GetFiles(Application.Paths.WinDir & "inf\", "oem*.inf", True)
+		For Each inf As String In GetFiles(directory, wildCard, searchSubDirs)
 			oemInf = New OemINF(inf)
 
 			Try
@@ -185,8 +198,9 @@ Public Class WINDOWS_API_INI
 
 		If value.Contains("%") Then
 			sb.Remove(0, sb.Length)
-			If GetPrivateProfileString(searchStrings, value, Nothing, sb, sb.Capacity, infFile) = 0 Then
-				GetPrivateProfileString(searchStrings, value.Replace("%", String.Empty), Nothing, sb, sb.Capacity, infFile)
+
+			If GetPrivateProfileString(searchStrings, value.Replace("%", String.Empty), Nothing, sb, sb.Capacity, infFile) = 0 Then
+				GetPrivateProfileString(searchStrings, value, Nothing, sb, sb.Capacity, infFile)
 			End If
 
 			value = sb.ToString()
