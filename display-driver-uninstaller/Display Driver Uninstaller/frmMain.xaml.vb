@@ -56,18 +56,15 @@ Public Class frmMain
 	Public Shared winxp As Boolean = False
 	Dim stopme As Boolean = False
 	Public Shared removemonitor As Boolean
-	Public Shared removedxcache As Boolean
-	Public Shared removecamd As Boolean
+    Public Shared removecamd As Boolean
 	Public Shared removecnvidia As Boolean
-	Public Shared removephysx As Boolean
-	Public Shared removeamdaudiobus As Boolean
+    Public Shared removeamdaudiobus As Boolean
 	Public Shared remove3dtvplay As Boolean
 	Public Shared removeamdkmpfd As Boolean
     Public Shared roamingcfg As Boolean
 	Public Shared donotcheckupdatestartup As Boolean
 	Public Shared trysystemrestore As Boolean
-	Public Shared removegfe As Boolean
-	Public Shared savelogs As Boolean
+    Public Shared savelogs As Boolean
 
 	Dim locations As String = baseDir & "\DDU Logs\" & DateAndTime.Now.Year & " _" & DateAndTime.Now.Month & "_" & DateAndTime.Now.Day _
 			& "_" & DateAndTime.Now.Hour & "_" & DateAndTime.Now.Minute & "_" & DateAndTime.Now.Second & "_DDULog.log"
@@ -100,45 +97,41 @@ Public Class frmMain
 	Public picturebox2originalx As Integer
 	Public picturebox2originaly As Integer
 
-	Public Shared Function getremovephysx() As Boolean
-		Return removephysx
-	End Function
+    Private Sub Checkupdates2()
+        If Not Me.Dispatcher.CheckAccess() Then
+            Dispatcher.Invoke(New MethodInvoker(AddressOf Checkupdates2))
+        Else
+            lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text")
+            Dim updates As Integer = checkupdates.checkupdates
 
-	Private Sub Checkupdates2()
-		If Not Me.Dispatcher.CheckAccess() Then
-			Dispatcher.Invoke(New MethodInvoker(AddressOf Checkupdates2))
-		Else
-			lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text")
-			Dim updates As Integer = checkupdates.checkupdates
+            If updates = 1 Then
+                lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text2")
 
-			If updates = 1 Then
-				lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text2")
+            ElseIf updates = 2 Then
+                lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text3")
 
-			ElseIf updates = 2 Then
-				lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text3")
+                If Not MyIdentity.IsSystem Then  'we dont want to open a webpage when the app is under "System" user.
+                    Select Case MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text1"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                        Case Windows.Forms.DialogResult.Yes
+                            process.Start("http://www.wagnardmobile.com")
+                            closeapp = True
+                            closeddu()
+                            Exit Sub
+                        Case Windows.Forms.DialogResult.No
+                            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text2"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+                        Case Windows.Forms.DialogResult.Cancel
+                            closeapp = True
+                            closeddu()
+                            Exit Sub
+                    End Select
 
-				If Not MyIdentity.IsSystem Then	 'we dont want to open a webpage when the app is under "System" user.
-					Select Case MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text1"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-						Case Windows.Forms.DialogResult.Yes
-							process.Start("http://www.wagnardmobile.com")
-							closeapp = True
-							closeddu()
-							Exit Sub
-						Case Windows.Forms.DialogResult.No
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text2"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-						Case Windows.Forms.DialogResult.Cancel
-							closeapp = True
-							closeddu()
-							Exit Sub
-					End Select
+                End If
 
-				End If
-
-			ElseIf updates = 3 Then
-				lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text4")
-			End If
-		End If
-	End Sub
+            ElseIf updates = 3 Then
+                lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text4")
+            End If
+        End If
+    End Sub
 
 	Private Sub cleandriverstore()
 		Dim catalog As String = ""
@@ -381,6 +374,7 @@ Public Class frmMain
 
     Private Sub cleanamdfolders()
         Dim filePath As String = Nothing
+        Dim removedxcache As Boolean = Application.Settings.RemoveCrimsonCache
         'Delete AMD data Folders
         UpdateTextMethod(UpdateTextMethodmessagefn(1))
 
@@ -909,7 +903,7 @@ Public Class frmMain
                                 Try
                                     deletedirectory(child)
                                 Catch ex As Exception
-                                    Application.log.AddException(ex)
+                                    Application.Log.AddException(ex)
                                     TestDelete(child)
                                 End Try
                                 If Not Directory.Exists(child) Then
@@ -2165,7 +2159,7 @@ Public Class frmMain
             End Try
         End If
 
-        CleanupEngine.installer(IO.File.ReadAllLines(baseDir & "\settings\AMD\packages.cfg"))
+        CleanupEngine.installer(IO.File.ReadAllLines(baseDir & "\settings\AMD\packages.cfg"), False)
 
         Try
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -2487,9 +2481,8 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub cleannvidiaserviceprocess()
+    Private Sub cleannvidiaserviceprocess(ByVal removegfe As Boolean)
         CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\services.cfg"))
-
         If removegfe Then
             CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\gfeservice.cfg"))
         End If
@@ -2528,10 +2521,11 @@ Public Class frmMain
         End Try
     End Sub
 
-    Private Sub cleannvidiafolders()
+    Private Sub cleannvidiafolders(ByVal removegfe As Boolean, removephysx As Boolean)
         Dim regkey As RegistryKey = Nothing
         Dim subregkey As RegistryKey = Nothing
         Dim filePath As String = Nothing
+
         'Delete NVIDIA data Folders
         'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
 
@@ -2559,7 +2553,7 @@ Public Class frmMain
                 deletedirectory(filePath)
             Catch ex As Exception
 
-                Application.log.AddException(ex)
+                Application.Log.AddException(ex)
                 TestDelete(filePath)
             End Try
 
@@ -2613,7 +2607,7 @@ Public Class frmMain
                                 Try
                                     deletedirectory(child)
                                 Catch ex As Exception
-                                    Application.log.AddException(ex)
+                                    Application.Log.AddException(ex)
                                     TestDelete(child)
                                 End Try
                             End If
@@ -2624,7 +2618,7 @@ Public Class frmMain
                             Try
                                 deletedirectory(filePath)
                             Catch ex As Exception
-                                Application.log.AddException(ex)
+                                Application.Log.AddException(ex)
                                 TestDelete(filePath)
                             End Try
                         Else
@@ -2649,7 +2643,7 @@ Public Class frmMain
                             Try
                                 deletedirectory(child)
                             Catch ex As Exception
-                                Application.log.AddException(ex)
+                                Application.Log.AddException(ex)
                                 TestDelete(child)
                             End Try
                         End If
@@ -2660,7 +2654,7 @@ Public Class frmMain
                         Try
                             deletedirectory(filePath)
                         Catch ex As Exception
-                            Application.log.AddException(ex)
+                            Application.Log.AddException(ex)
                             TestDelete(filePath)
                         End Try
                     Else
@@ -2691,7 +2685,7 @@ Public Class frmMain
                                 Try
                                     deletedirectory(child)
                                 Catch ex As Exception
-                                    Application.log.AddException(ex)
+                                    Application.Log.AddException(ex)
                                 End Try
                             End If
                         End If
@@ -2701,7 +2695,7 @@ Public Class frmMain
                             Try
                                 deletedirectory(filePath)
                             Catch ex As Exception
-                                Application.log.AddException(ex)
+                                Application.Log.AddException(ex)
                             End Try
                         Else
                             For Each data As String In Directory.GetDirectories(filePath)
@@ -2728,7 +2722,7 @@ Public Class frmMain
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
-                            Application.log.AddException(ex)
+                            Application.Log.AddException(ex)
                             TestDelete(child)
                         End Try
                     End If
@@ -2739,7 +2733,7 @@ Public Class frmMain
                     Try
                         deletedirectory(filePath)
                     Catch ex As Exception
-                        Application.log.AddException(ex)
+                        Application.Log.AddException(ex)
                         TestDelete(filePath)
                     End Try
                 Else
@@ -2770,7 +2764,7 @@ Public Class frmMain
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
-                            Application.log.AddException(ex)
+                            Application.Log.AddException(ex)
                             TestDelete(child)
                         End Try
                     End If
@@ -2780,7 +2774,7 @@ Public Class frmMain
                 Try
                     deletedirectory(filePath)
                 Catch ex As Exception
-                    Application.log.AddException(ex)
+                    Application.Log.AddException(ex)
                     TestDelete(filePath)
                 End Try
             Else
@@ -2801,7 +2795,7 @@ Public Class frmMain
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
-                            Application.log.AddException(ex)
+                            Application.Log.AddException(ex)
                             TestDelete(child)
                         End Try
                     End If
@@ -2812,7 +2806,7 @@ Public Class frmMain
                     Try
                         deletedirectory(filePath)
                     Catch ex As Exception
-                        Application.log.AddException(ex)
+                        Application.Log.AddException(ex)
                         TestDelete(filePath)
                     End Try
                 Else
@@ -2858,7 +2852,7 @@ Public Class frmMain
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
-                            Application.log.AddException(ex)
+                            Application.Log.AddException(ex)
                             TestDelete(child)
                         End Try
 
@@ -2895,7 +2889,7 @@ Public Class frmMain
                                     Try
                                         deletedirectory(child2)
                                     Catch ex As Exception
-                                        Application.log.AddException(ex)
+                                        Application.Log.AddException(ex)
                                         TestDelete(child2)
                                     End Try
 
@@ -2910,7 +2904,7 @@ Public Class frmMain
                             Try
                                 deletedirectory(child)
                             Catch ex As Exception
-                                Application.log.AddException(ex)
+                                Application.Log.AddException(ex)
                                 TestDelete(child)
                             End Try
                         Else
@@ -2929,7 +2923,7 @@ Public Class frmMain
                 Try
                     deletedirectory(filePath)
                 Catch ex As Exception
-                    Application.log.AddException(ex)
+                    Application.Log.AddException(ex)
                     TestDelete(filePath)
                 End Try
             Else
@@ -2980,7 +2974,7 @@ Public Class frmMain
                                 Try
                                     deletedirectory(child)
                                 Catch ex As Exception
-                                    Application.log.AddException(ex)
+                                    Application.Log.AddException(ex)
                                     TestDelete(child)
                                 End Try
                             Else
@@ -2990,7 +2984,7 @@ Public Class frmMain
                                     Try
                                         deletedirectory(child)
                                     Catch ex As Exception
-                                        Application.log.AddException(ex)
+                                        Application.Log.AddException(ex)
                                         TestDelete(child)
                                     End Try
                                 End If
@@ -3006,7 +3000,7 @@ Public Class frmMain
                     Try
                         deletedirectory(filePath)
                     Catch ex As Exception
-                        Application.log.AddException(ex)
+                        Application.Log.AddException(ex)
                         TestDelete(filePath)
                     End Try
                 Else
@@ -3079,7 +3073,7 @@ Public Class frmMain
                         Try
                             deletedirectory(child)
                         Catch ex As Exception
-                            Application.log.AddException(ex)
+                            Application.Log.AddException(ex)
                             TestDelete(child)
                         End Try
                     End If
@@ -3090,7 +3084,7 @@ Public Class frmMain
                     Try
                         deletedirectory(filePath)
                     Catch ex As Exception
-                        Application.log.AddException(ex)
+                        Application.Log.AddException(ex)
                         TestDelete(filePath)
                     End Try
                 Else
@@ -3118,7 +3112,7 @@ Public Class frmMain
                             Try
                                 deletedirectory(child)
                             Catch ex As Exception
-                                Application.log.AddException(ex)
+                                Application.Log.AddException(ex)
                                 TestDelete(child)
                             End Try
                         End If
@@ -3129,7 +3123,7 @@ Public Class frmMain
                         Try
                             deletedirectory(filePath)
                         Catch ex As Exception
-                            Application.log.AddException(ex)
+                            Application.Log.AddException(ex)
                             TestDelete(filePath)
                         End Try
                     Else
@@ -3153,7 +3147,7 @@ Public Class frmMain
                             Try
                                 deletedirectory(child)
                             Catch ex As Exception
-                                Application.log.AddException(ex)
+                                Application.Log.AddException(ex)
                                 TestDelete(child)
                             End Try
                         End If
@@ -3164,7 +3158,7 @@ Public Class frmMain
                         Try
                             deletedirectory(filePath)
                         Catch ex As Exception
-                            Application.log.AddException(ex)
+                            Application.Log.AddException(ex)
                             TestDelete(filePath)
                         End Try
                     Else
@@ -3187,7 +3181,7 @@ Public Class frmMain
                             Try
                                 deletedirectory(child)
                             Catch ex As Exception
-                                Application.log.AddException(ex)
+                                Application.Log.AddException(ex)
                                 TestDelete(child)
                             End Try
                         End If
@@ -3198,7 +3192,7 @@ Public Class frmMain
                         Try
                             deletedirectory(filePath)
                         Catch ex As Exception
-                            Application.log.AddException(ex)
+                            Application.Log.AddException(ex)
                             TestDelete(filePath)
                         End Try
                     Else
@@ -3227,7 +3221,7 @@ Public Class frmMain
                                             Try
                                                 deletedirectory(child)
                                             Catch ex As Exception
-                                                Application.log.AddException(ex)
+                                                Application.Log.AddException(ex)
                                                 TestDelete(child)
                                             End Try
                                         End If
@@ -3238,7 +3232,7 @@ Public Class frmMain
                                     Try
                                         deletedirectory(filePath)
                                     Catch ex As Exception
-                                        Application.log.AddException(ex)
+                                        Application.Log.AddException(ex)
                                         TestDelete(filePath)
                                     End Try
                                 Else
@@ -3274,7 +3268,7 @@ Public Class frmMain
                             Try
                                 deletedirectory(child)
                             Catch ex As Exception
-                                Application.log.AddException(ex)
+                                Application.Log.AddException(ex)
                                 TestDelete(child)
                             End Try
                         End If
@@ -3309,7 +3303,7 @@ Public Class frmMain
                                                         Try
                                                             deletevalue(subregkey.OpenSubKey(childs, True), Keyname)
                                                         Catch ex As Exception
-                                                            Application.log.AddException(ex)
+                                                            Application.Log.AddException(ex)
                                                         End Try
                                                     End If
                                                 End If
@@ -3323,7 +3317,7 @@ Public Class frmMain
                 End If
             Next
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         Try
@@ -3342,7 +3336,7 @@ Public Class frmMain
                                     Try
                                         deletevalue(regkey, Keyname)
                                     Catch ex As Exception
-                                        Application.log.AddException(ex)
+                                        Application.Log.AddException(ex)
                                     End Try
                                 End If
                             End If
@@ -3351,7 +3345,7 @@ Public Class frmMain
                 End If
             Next
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         If removephysx Then
@@ -3364,12 +3358,13 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub cleannvidia()
+    Private Sub cleannvidia(ByVal removegfe As Boolean, removephysx As Boolean)
         Dim regkey As RegistryKey = Nothing
         Dim subregkey As RegistryKey = Nothing
         Dim subregkey2 As RegistryKey = Nothing
         Dim wantedvalue As String = Nothing
         Dim wantedvalue2 As String = Nothing
+
         '-----------------
         'Registry Cleaning
         '-----------------
@@ -3401,14 +3396,14 @@ Public Class frmMain
                             Try
                                 deletesubregkey(regkey, child)
                             Catch ex As Exception
-                                Application.log.AddException(ex)
+                                Application.Log.AddException(ex)
                             End Try
                         End If
                     End If
                 Next
             End If
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         '-----------------
@@ -3518,7 +3513,7 @@ Public Class frmMain
                     End If
                 End If
             Catch ex As Exception
-                Application.log.AddException(ex)
+                Application.Log.AddException(ex)
             End Try
         End If
         '--------------------------
@@ -3579,7 +3574,7 @@ Public Class frmMain
                 End If
             End If
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         '--------------------------
@@ -3632,7 +3627,7 @@ Public Class frmMain
                     Next
                 End If
             Catch ex As Exception
-                Application.log.AddException(ex)
+                Application.Log.AddException(ex)
             End Try
         End If
         '-------------------------------------
@@ -3672,7 +3667,7 @@ Public Class frmMain
             End If
             sysdrv = sysdrv.ToLower
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         Try
@@ -3708,7 +3703,7 @@ Public Class frmMain
                 End If
             End If
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         'remove opencl registry Khronos
@@ -3841,7 +3836,7 @@ Public Class frmMain
                 End If
             Next
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\UFH\ARP", True)
@@ -4109,7 +4104,7 @@ Public Class frmMain
                     Next
                 End If
             Catch ex As Exception
-                Application.log.AddException(ex)
+                Application.Log.AddException(ex)
             End Try
         End If
 
@@ -4173,7 +4168,7 @@ Public Class frmMain
                 Next
             End If
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         regkey = My.Computer.Registry.CurrentUser.OpenSubKey _
@@ -4217,7 +4212,7 @@ Public Class frmMain
                 End If
             Next
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
 
@@ -4240,7 +4235,7 @@ Public Class frmMain
             Next
 
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
 
@@ -4397,7 +4392,7 @@ Public Class frmMain
                                         Try
                                             deletesubregkey(regkey, child)
                                         Catch ex As Exception
-                                            Application.log.AddException(ex)
+                                            Application.Log.AddException(ex)
                                         End Try
                                     End If
                                 End If
@@ -4473,7 +4468,7 @@ Public Class frmMain
                 End If
             Next
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         Try
@@ -4491,7 +4486,7 @@ Public Class frmMain
                 End If
             Next
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
 
@@ -4553,7 +4548,7 @@ Public Class frmMain
                 End Try
             End If
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         Try
@@ -4569,10 +4564,10 @@ Public Class frmMain
                 End If
             End If
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
-        CleanupEngine.installer(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\packages.cfg"))
+        CleanupEngine.installer(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\packages.cfg"), removephysx)
 
 
         If remove3dtvplay Then
@@ -4612,7 +4607,7 @@ Public Class frmMain
                 Next
             End If
         Catch ex As Exception
-            Application.log.AddException(ex)
+            Application.Log.AddException(ex)
         End Try
 
         Try
@@ -4911,7 +4906,7 @@ Public Class frmMain
             Application.log.AddException(ex)
         End Try
 
-        CleanupEngine.installer(IO.File.ReadAllLines(baseDir & "\settings\INTEL\packages.cfg"))
+        CleanupEngine.installer(IO.File.ReadAllLines(baseDir & "\settings\INTEL\packages.cfg"), False)
 
         If IntPtr.Size = 8 Then
             packages = IO.File.ReadAllLines(baseDir & "\settings\INTEL\packages.cfg") '// add each line as String Array.
@@ -6104,7 +6099,7 @@ Public Class frmMain
                     Topmost = False
 
 
-                    'GoTo skipboot 'TODO: REMOVE THIS LINE!!!! Blocked restart for faster debugging
+                    GoTo skipboot 'TODO: REMOVE THIS LINE!!!! Blocked restart for faster debugging
                     Dim stopservice As New ProcessStartInfo
                     stopservice.FileName = "cmd.exe"
                     stopservice.Arguments = " /Csc stop PAExec"
@@ -6348,7 +6343,7 @@ skipboot:
         Dim card1 As Integer = Nothing
         Dim vendid As String = ""
         Dim vendidexpected As String = ""
-
+        Dim removegfe As Boolean = config.RemoveGFE
         Dim regkey As RegistryKey = Nothing
         Dim subregkey As RegistryKey = Nothing
         Dim array() As String
@@ -7112,8 +7107,8 @@ skipboot:
             End If
 
             If config.SelectedGPU = GPUVendor.Nvidia Then
-                cleannvidiaserviceprocess()
-                cleannvidia()
+                cleannvidiaserviceprocess(removegfe)
+                cleannvidia(removegfe, config.RemovePhysX)
 
                 If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
                     Application.Log.AddMessage("Killing Explorer.exe")
@@ -7125,7 +7120,7 @@ skipboot:
                 End If
 
 
-                cleannvidiafolders()
+                cleannvidiafolders(removegfe, config.RemovePhysX)
                 checkpcieroot()
             End If
 
@@ -7486,12 +7481,12 @@ skipboot:
                 diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
                 diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
                 diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-                If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+                If (Application.Settings.RemovePhysX Or Not ((Not Application.Settings.RemovePhysX) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
 
                     Try
                         TraverseDirectory(diChild)
                     Catch ex As Exception
-                        Application.log.AddException(ex)
+                        Application.Log.AddException(ex)
                     End Try
                 End If
             Next
@@ -7524,12 +7519,12 @@ skipboot:
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
             diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-            If (removephysx Or Not ((Not removephysx) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+            If (Application.Settings.RemovePhysX Or Not ((Not Application.Settings.RemovePhysX) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
 
                 Try
                     TraverseDirectory(diChild)
                 Catch ex As Exception
-                    Application.log.AddException(ex)
+                    Application.Log.AddException(ex)
                 End Try
             End If
         Next
@@ -7816,7 +7811,7 @@ skipboot:
     End Function
 
     Private Sub temporarynvidiaspeedup()   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
-
+        Dim removegfe As Boolean = Application.Settings.RemoveGFE
         Dim filePath As String = Nothing
 
         Try
@@ -8120,7 +8115,7 @@ Public Class CleanupEngine
 
     Public Sub deletedirectory(ByVal directorypath As String)
 
-        Dim removephysx As Boolean = frmMain.getremovephysx
+        Dim removephysx As Boolean = Application.Settings.RemovePhysX
         If Not checkvariables.isnullorwhitespace(directorypath) Then
 
             If (removephysx Or Not ((Not removephysx) And directorypath.ToLower.Contains("physx"))) Then
@@ -8302,19 +8297,18 @@ Public Class CleanupEngine
         application.log.addmessage("End classroot CleanUP")
     End Sub
 
-    Public Sub installer(ByVal packages As String())
+    Public Sub installer(ByVal packages As String(), removephysx As Boolean)
         Dim regkey As RegistryKey
         Dim basekey As RegistryKey
         Dim superregkey As RegistryKey
         Dim subregkey As RegistryKey
         Dim subsuperregkey As RegistryKey
         Dim wantedvalue As String = Nothing
-        Dim removephysx As Boolean = frmMain.getremovephysx
 
         updatetextmethod(UpdateTextMethodmessagefn(29))
 
         Try
-            application.log.addmessage("-Starting S-1-5-xx region cleanUP")
+            Application.Log.AddMessage("-Starting S-1-5-xx region cleanUP")
             basekey = My.Computer.Registry.LocalMachine.OpenSubKey _
                   ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
             If basekey IsNot Nothing Then
@@ -8373,7 +8367,7 @@ Public Class CleanupEngine
                                                                         End If
                                                                     End If
                                                                 Catch ex As Exception
-                                                                    application.log.AddException(ex)
+                                                                    Application.Log.AddException(ex)
                                                                 End Try
 
                                                                 Try
@@ -8446,8 +8440,8 @@ Public Class CleanupEngine
             updatetextmethod(UpdateTextMethodmessagefn(30))
             Application.Log.AddMessage("-End of S-1-5-xx region cleanUP")
         Catch ex As Exception
-            MsgBox(languages.GetTranslation("frmMain", "Messages", "Text6"))
-            application.log.AddException(ex)
+            MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text6"))
+            Application.Log.AddException(ex)
         End Try
 
         updatetextmethod(UpdateTextMethodmessagefn(31))
@@ -8489,7 +8483,7 @@ Public Class CleanupEngine
                                                         End If
                                                     End If
                                                 Catch ex As Exception
-                                                    application.log.AddException(ex)
+                                                    Application.Log.AddException(ex)
                                                 End Try
 
                                                 Try
@@ -8535,7 +8529,7 @@ Public Class CleanupEngine
             End If
             updatetextmethod(UpdateTextMethodmessagefn(32))
         Catch ex As Exception
-            MsgBox(languages.GetTranslation("frmMain", "Messages", "Text6"))
+            MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text6"))
             Application.Log.AddException(ex)
         End Try
 
@@ -8604,7 +8598,7 @@ Public Class CleanupEngine
             End If
             updatetextmethod(UpdateTextMethodmessagefn(34))
         Catch ex As Exception
-            MsgBox(languages.GetTranslation("frmMain", "Messages", "Text6"))
+            MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text6"))
             Application.Log.AddException(ex)
         End Try
 
@@ -8677,7 +8671,7 @@ Public Class CleanupEngine
             Next
             updatetextmethod(UpdateTextMethodmessagefn(36))
         Catch ex As Exception
-            MsgBox(languages.GetTranslation("frmMain", "Messages", "Text6"))
+            MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text6"))
             Application.Log.AddException(ex)
         End Try
 
