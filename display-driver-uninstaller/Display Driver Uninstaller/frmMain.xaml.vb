@@ -5870,52 +5870,53 @@ Public Class frmMain
 
 				ddudrfolder = CStr(lblArch.Content)
 
-				If archIs64 Then
-					Try
-						If winxp Then  'XP64
-							File.WriteAllBytes(Application.Paths.AppBase & "x64\ddudr.exe", My.Resources.ddudrxp64)
-						Else
-							File.WriteAllBytes(Application.Paths.AppBase & "x64\ddudr.exe", My.Resources.ddudr64)
-						End If
+				If Not identity.IsSystem Then
+					If archIs64 Then
+						Try
+							If winxp Then  'XP64
+								File.WriteAllBytes(Application.Paths.AppBase & "x64\ddudr.exe", My.Resources.ddudrxp64)
+							Else
+								File.WriteAllBytes(Application.Paths.AppBase & "x64\ddudr.exe", My.Resources.ddudr64)
+							End If
 
-						File.WriteAllBytes(Application.Paths.AppBase & "x64\paexec.exe", My.Resources.paexec)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-				Else
-					Try
-						If winxp Then  'XP32
-							System.IO.File.WriteAllBytes(Application.Paths.AppBase & "x86\ddudr.exe", My.Resources.ddudrxp32)
-						Else 'all other 32 bits
-							System.IO.File.WriteAllBytes(Application.Paths.AppBase & "x86\ddudr.exe", My.Resources.ddudr32)
-						End If
+							File.WriteAllBytes(Application.Paths.AppBase & "x64\paexec.exe", My.Resources.paexec)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					Else
+						Try
+							If winxp Then  'XP32
+								System.IO.File.WriteAllBytes(Application.Paths.AppBase & "x86\ddudr.exe", My.Resources.ddudrxp32)
+							Else 'all other 32 bits
+								System.IO.File.WriteAllBytes(Application.Paths.AppBase & "x86\ddudr.exe", My.Resources.ddudr32)
+							End If
 
-						System.IO.File.WriteAllBytes(Application.Paths.AppBase & "x86\paexec.exe", My.Resources.paexec)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-				End If
-
-				If archIs64 = True Then
-					If Not File.Exists(Application.Paths.AppBase & "x64\ddudr.exe") Then
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-
-						btnCleanRestart.IsEnabled = False
-						btnClean.IsEnabled = False
-						btnCleanShutdown.IsEnabled = False
-						Exit Sub
+							System.IO.File.WriteAllBytes(Application.Paths.AppBase & "x86\paexec.exe", My.Resources.paexec)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 					End If
-				ElseIf archIs64 = False Then
-					If Not File.Exists(Application.Paths.AppBase & "x86\ddudr.exe") Then
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 
-						btnCleanRestart.IsEnabled = False
-						btnClean.IsEnabled = False
-						btnCleanShutdown.IsEnabled = False
-						Exit Sub
+					If archIs64 = True Then
+						If Not File.Exists(Application.Paths.AppBase & "x64\ddudr.exe") Then
+							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+							btnCleanRestart.IsEnabled = False
+							btnClean.IsEnabled = False
+							btnCleanShutdown.IsEnabled = False
+							Exit Sub
+						End If
+					ElseIf archIs64 = False Then
+						If Not File.Exists(Application.Paths.AppBase & "x86\ddudr.exe") Then
+							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+							btnCleanRestart.IsEnabled = False
+							btnClean.IsEnabled = False
+							btnCleanShutdown.IsEnabled = False
+							Exit Sub
+						End If
 					End If
 				End If
-
 				'processing arguments
 
 				'arg = String.Join(" ", arguments, 1, arguments.Length - 1)
@@ -6073,12 +6074,9 @@ Public Class frmMain
 										End If
 									End If
 								End If
-							Else
-								'if we are here it means we are with Windows XP and the frmLaunch will not show so bring back to front thhe main window.
-								Me.WindowState = Windows.WindowState.Normal
 							End If
-
 					End Select
+
 					Topmost = False
 
 
@@ -6211,7 +6209,7 @@ skipboot:
 						Next
 					End If
 				Catch ex As Exception
-					Application.log.AddException(ex)
+					Application.Log.AddException(ex)
 				End Try
 
 				' ----------------------------------------------------------------------------
@@ -6254,7 +6252,7 @@ skipboot:
 						Next
 					End If
 				Catch ex As Exception
-					Application.log.AddException(ex)
+					Application.Log.AddException(ex)
 				End Try
 
 				If MyIdentity.IsSystem Then
@@ -6274,7 +6272,7 @@ skipboot:
 
 			Catch ex As Exception
 				MsgBox(ex)
-				Application.log.AddException(ex)
+				Application.Log.AddException(ex)
 				closeddu()
 				Exit Sub
 			End Try
