@@ -325,22 +325,22 @@ Public Class AppSettings
 			Arguments = String.Join(" ", args, 1, args.Length - 1)
 
 			For i As Int32 = 1 To args.Length - 1
-				If StrContainsAll(args(i), "donate") Then
+				If StrContainsAny(args(i), True, "donate") Then
 					VisitDonate = True
 
-				ElseIf StrContainsAll(args(i), "svn") Then
+				ElseIf StrContainsAny(args(i), True, "svn") Then
 					VisitSVN = True
 
-				ElseIf StrContainsAll(args(i), "guru3dnvidia") Then
+				ElseIf StrContainsAny(args(i), True, "guru3dnvidia") Then
 					VisitGuru3DNvidia = True
 
-				ElseIf StrContainsAll(args(i), "guru3damd") Then
+				ElseIf StrContainsAny(args(i), True, "guru3damd") Then
 					VisitGuru3DAMD = True
 
-				ElseIf StrContainsAll(args(i), "dduhome") Then
+				ElseIf StrContainsAny(args(i), True, "dduhome") Then
 					VisitDDUHome = True
 
-				ElseIf StrContainsAll(args(i), "geforce") Then
+				ElseIf StrContainsAny(args(i), True, "geforce") Then
 					VisitGeforce = True
 				End If
 			Next

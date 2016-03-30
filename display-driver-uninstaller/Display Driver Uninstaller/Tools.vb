@@ -6,7 +6,7 @@ Imports System.Runtime.InteropServices
 Imports System.Collections.ObjectModel
 
 Module Tools
-	' 9 = vbTAB --- 10 = vbLF --- 11 = vbVerticalTab --- 12 = vbFormFeed --- 13 = vbCR --- 32 = vbSPACE
+	' 9 = vbTAB --- 10 = vbLF --- 11 = vbVerticalTab --- 12 = vbFormFeed --- 13 = vbCR --- 32 = SPACE
 	Private ReadOnly whiteSpaceChars As Char() = New Char() {ChrW(9), ChrW(10), ChrW(11), ChrW(12), ChrW(13), ChrW(32)}
 
 	''' <summary>Compares two streams equality by using MD5 checksums</summary>
@@ -54,7 +54,7 @@ Module Tools
 
 	''' <summary>Replaces all given parameters from text (Case Sensitive!)</summary>
 	Public Function StrReplace(ByRef sb As StringBuilder, ByRef oldStr As String, ByRef newStr As String) As StringBuilder
-		If String.IsNullOrEmpty(oldStr) Then
+		If IsNullOrWhitespace(oldStr) Then
 			Return sb
 		End If
 
@@ -66,56 +66,45 @@ Module Tools
 		Return StrReplace(New StringBuilder(text), oldStr, newStr)
 	End Function
 
-	''' <summary>Removes all given parameters from text (Case Sensitive!)</summary>
-	Public Function StrRemove(ByRef sb As StringBuilder, ParamArray Str As String()) As StringBuilder
-		If Str IsNot Nothing And Str.Length > 0 Then
-			For Each s As String In Str
-				If Not String.IsNullOrEmpty(s) Then
-					sb.Replace(s, String.Empty)
-				End If
-			Next
-		End If
-
-		Return sb
-	End Function
-
-	''' <summary>Removes all given parameters from text (Case Sensitive!)</summary>
-	Public Function StrRemove(ByRef text As String, ParamArray Str As String()) As StringBuilder
-		Return StrRemove(New StringBuilder(Str.Length), Str)
-	End Function
-
 	''' <summary>Removes all given parameters from text (Case InSensitive!)</summary>
-	Public Function StrRemoveAll(ByRef text As String, ParamArray Str As String()) As String
+	Public Function StrRemoveAny(ByRef text As String, ByVal ignoreCase As Boolean, ParamArray Str As String()) As String
 		If Str IsNot Nothing And Str.Length > 0 Then
-			For Each s As String In Str
-				If Not String.IsNullOrEmpty(s) Then
-					text = Strings.Replace(text, s, String.Empty, 1, -1, CompareMethod.Text)
+			If ignoreCase Then
+				For Each s As String In Str
+					If Not IsNullOrWhitespace(s) Then
+						text = Strings.Replace(text, s, String.Empty, 1, -1, CompareMethod.Text)
+					End If
+				Next
+			Else
+				If Str.Length = 1 Then
+					Return text.Replace(Str(0), String.Empty)
 				End If
-			Next
+
+				Dim sb As New StringBuilder(text)
+
+				For Each s As String In Str
+					If Not IsNullOrWhitespace(s) Then
+						sb.Replace(s, String.Empty)
+					End If
+				Next
+
+				Return sb.ToString()
+			End If
 		End If
 
-		Return text
+			Return text
 	End Function
 
-	''' <summary>Check if text contains any of the given parameters (Case InSensitive!)</summary>
-	Public Function StrContainsAll(ByRef text As String, ParamArray Str As String()) As Boolean
+	''' <summary>Check if text contains any of the given parameters</summary>
+	Public Function StrContainsAny(ByRef text As String, ByVal ignoreCase As Boolean, ParamArray Str As String()) As Boolean
 		If Str IsNot Nothing And Str.Length > 0 Then
-			For Each s As String In Str
-				If Not String.IsNullOrEmpty(s) Then
-					Return text.IndexOf(s, StringComparison.OrdinalIgnoreCase) <> -1
-				End If
-			Next
-		End If
+			Dim comparison As StringComparison = If(ignoreCase, StringComparison.OrdinalIgnoreCase, StringComparison.Ordinal)
 
-		Return False
-	End Function
-
-	''' <summary>Check if text contains any of the given parameters (Case Sensitive!)</summary>
-	Public Function StrContains(ByRef text As String, ParamArray Str As String()) As Boolean
-		If Str IsNot Nothing And Str.Length > 0 Then
 			For Each s As String In Str
-				If Not String.IsNullOrEmpty(s) Then
-					Return text.IndexOf(s, StringComparison.Ordinal) <> -1
+				If Not IsNullOrWhitespace(s) Then
+					If text.IndexOf(s, comparison) <> -1 Then	' -1 = NOT FOUND
+						Return True
+					End If
 				End If
 			Next
 		End If
@@ -131,13 +120,25 @@ Module Tools
 	Public Function GetFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
 		Dim fileNames As New List(Of String)(100)
 
-		If String.IsNullOrEmpty(wildCard) Or Not wildCard.Contains("*") Then
+		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
 			wildCard = "*"
 		End If
 
 		WINDOWS_API_FIND.GetFilenames(directory, fileNames, wildCard, searchSubDirs)
 
 		Return fileNames
+	End Function
+
+	Public Function GetDirectories(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
+		Dim dirNames As New List(Of String)(100)
+
+		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
+			wildCard = "*"
+		End If
+
+		WINDOWS_API_FIND.GetDirnames(directory, dirNames, wildCard, searchSubDirs)
+
+		Return dirNames
 	End Function
 
 	Public Function GetOemInfList(ByVal directory As String, Optional ByVal wildCard As String = "oem*.inf", Optional ByVal searchSubDirs As Boolean = False) As List(Of OemINF)
@@ -151,7 +152,7 @@ Module Tools
 				oemInf.Provider = WINDOWS_API_INI.GetINIValue(inf, "Version", "Provider")
 				oemInf.Class = WINDOWS_API_INI.GetINIValue(inf, "Version", "Class")
 
-				If Not String.IsNullOrEmpty(oemInf.Provider) Or Not String.IsNullOrEmpty(oemInf.Class) Then
+				If Not IsNullOrWhitespace(oemInf.Provider) Or Not IsNullOrWhitespace(oemInf.Class) Then
 					oemInf.IsValid = True
 				End If
 
@@ -264,6 +265,44 @@ Public Class WINDOWS_API_FIND
 							End If
 						End If
 
+					End If
+				Loop While (FindNextFile(findHandle, findData))
+
+				FindClose(findHandle)
+			End If
+		Catch ex As Exception
+			If findHandle <> INVALID_HANDLE_VALUE Then
+				FindClose(findHandle)
+			End If
+
+			Application.Log.AddException(ex)
+		Finally
+
+		End Try
+	End Sub
+
+	Public Shared Sub GetDirnames(ByVal directory As String, ByRef dirNames As List(Of String), Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False)
+		Dim findData As New WIN32_FIND_DATA
+		Dim findHandle As New IntPtr
+		Dim INVALID_HANDLE_VALUE As New IntPtr(-1)
+
+		If Not directory.EndsWith(Path.DirectorySeparatorChar) Then directory &= Path.DirectorySeparatorChar
+
+		Dim findDir As String = directory & wildCard
+
+		Try
+			findHandle = FindFirstFile(findDir, findData)
+
+			If findHandle <> INVALID_HANDLE_VALUE Then
+				Do
+					If findData.cFileName <> "." AndAlso findData.cFileName <> ".." Then
+						If (findData.dwFileAttributes And FileAttributes.Directory) = FileAttributes.Directory Then
+							dirNames.Add(directory & findData.cFileName)
+
+							If searchSubDirs Then
+								GetDirnames(directory & findData.cFileName, dirNames, wildCard, searchSubDirs)
+							End If
+						End If
 					End If
 				Loop While (FindNextFile(findHandle, findData))
 

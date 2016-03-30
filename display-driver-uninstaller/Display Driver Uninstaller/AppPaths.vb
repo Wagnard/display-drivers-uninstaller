@@ -124,9 +124,13 @@ Public Class AppPaths
 
 	Public Sub CreateDirectories(ParamArray dirs As String())
 		For Each dir As String In dirs
-			If Not Directory.Exists(dir) Then
-				Directory.CreateDirectory(dir)
-			End If
+			Try
+				If Not Directory.Exists(dir) Then
+					Directory.CreateDirectory(dir)
+				End If
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
 		Next
 	End Sub
 End Class
