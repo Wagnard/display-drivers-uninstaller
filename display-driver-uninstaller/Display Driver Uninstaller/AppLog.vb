@@ -169,9 +169,11 @@ Public Class AppLog
 
 							If log.HasValues Then
 								.WriteStartElement("Values")
+								.WriteAttributeString("Separator", log.Separator)
 
 								For Each kvp As KvP In log.Values
 									If Not kvp.HasAnyValue Then
+										.WriteElementString("KvP", String.Empty)
 										Continue For
 									End If
 
@@ -313,13 +315,28 @@ Public Class AppLog
 									End If
 
 									If reader.Name.Equals("Values", StringComparison.OrdinalIgnoreCase) Then
-										value = String.Empty
-										key = String.Empty
+										value = Nothing
+										key = Nothing
+
+										If reader.HasAttributes Then
+											Do While reader.MoveToNextAttribute()
+												If Not String.IsNullOrEmpty(reader.Name) Then
+													If reader.Name.Equals("Separator", StringComparison.OrdinalIgnoreCase) Then
+														newEntry.Separator = reader.Value
+													End If
+												End If
+											Loop
+										End If
 
 										Do
 											reader.Read()
 
 											If reader.Name.Equals("KvP", StringComparison.OrdinalIgnoreCase) Then
+												If reader.IsEmptyElement Then
+													newEntry.Add(String.Empty)
+													Continue Do
+												End If
+
 												reader.Read()
 
 												Do
@@ -330,12 +347,24 @@ Public Class AppLog
 													End If
 												Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals("KvP", StringComparison.OrdinalIgnoreCase))
 
-												newEntry.Add(key, value)
+												If key Is Nothing Then
+													newEntry.Add(value)
+												Else
+													newEntry.Add(key, value)
+												End If
+
+												key = Nothing
+												value = Nothing
 											End If
 										Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals("Values", StringComparison.OrdinalIgnoreCase))
 
-										newEntry.HasAnyData = True
-										newEntry.HasValues = True
+										If newEntry.Values.Count > 0 Then
+											newEntry.CanExpand = True
+											newEntry.IsExpanded = False
+
+											newEntry.HasAnyData = True
+											newEntry.HasValues = True
+										End If
 									End If
 
 									If reader.Name.Equals("ExceptionData", StringComparison.OrdinalIgnoreCase) Then
@@ -348,10 +377,15 @@ Public Class AppLog
 											End If
 										Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals("ExceptionData", StringComparison.OrdinalIgnoreCase))
 
-										newEntry.ExceptionData = exData
+										If exData.Count > 0 Then
+											newEntry.ExceptionData = exData
 
-										newEntry.HasAnyData = True
-										newEntry.HasException = True
+											newEntry.CanExpand = True
+											newEntry.IsExpanded = False
+
+											newEntry.HasAnyData = True
+											newEntry.HasException = True
+										End If
 									End If
 								End If
 							Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals(name, StringComparison.OrdinalIgnoreCase))

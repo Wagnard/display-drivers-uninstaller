@@ -23,8 +23,9 @@
 				   .Title = ofd.FileName,
 				   .Owner = Me,
 				   .ShowInTaskbar = False,
-				   .ResizeMode = Windows.ResizeMode.CanResizeWithGrip,
-				   .WindowStyle = Windows.WindowStyle.SingleBorderWindow,
+				   .Width = Me.ActualWidth,
+				   .Height = Me.ActualHeight,
+				   .WindowState = Me.WindowState,
 				   .WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
 				  }
 
@@ -36,6 +37,12 @@
 				Me.Visibility = Windows.Visibility.Hidden
 
 				newLogWindow.ShowDialog()
+
+				Me.WindowState = newLogWindow.WindowState
+				Me.Width = newLogWindow.ActualWidth
+				Me.Height = newLogWindow.ActualHeight
+				Me.Top = newLogWindow.Top
+				Me.Left = newLogWindow.Left
 
 				Me.Visibility = Windows.Visibility.Visible
 

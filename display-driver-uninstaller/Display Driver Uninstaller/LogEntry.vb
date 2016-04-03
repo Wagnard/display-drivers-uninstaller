@@ -39,7 +39,6 @@ Public Class KvP
 End Class
 
 Public Class LogEntry
-	Inherits UserControl
 	Implements INotifyPropertyChanged
 	Implements IDisposable
 
@@ -165,10 +164,6 @@ Public Class LogEntry
 
 	''' <summary>DO NOT USE unless on STA Thread (MainThread)</summary>
 	Friend Sub New(Optional ByRef Ex As Exception = Nothing)
-		' This call is required by the designer.
-		InitializeComponent()
-
-		' Add any initialization after the InitializeComponent() call.
 		Values = New List(Of KvP)
 		ExceptionData = New Dictionary(Of String, String)
 
@@ -214,10 +209,6 @@ Public Class LogEntry
 		m_exData.Add("StackTrace", If(String.IsNullOrEmpty(Ex.StackTrace), "Unknown", Ex.StackTrace))
 
 		HasException = True
-	End Sub
-
-	Private Sub UserControl_Loaded(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles MyBase.Loaded
-		Me.DataContext = Me
 	End Sub
 
 	Protected Overloads Sub OnPropertyChanged(ByVal name As String)
