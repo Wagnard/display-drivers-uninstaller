@@ -2983,7 +2983,7 @@ Public Class frmMain
 					   child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvstreamc") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE Or
-					   child.ToLower.EndsWith("\physx") Or
+					   child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
 					   child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("update common") AndAlso config.RemoveGFE Or
@@ -3017,7 +3017,7 @@ Public Class frmMain
 								   child2.ToLower.Contains("osc.") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("osclib.") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.nvirusb") Or
-								   child2.ToLower.Contains("display.physx") Or
+								   child2.ToLower.Contains("display.physx") AndAlso config.RemovePhysX Or
 								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.gamemonitor") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
@@ -3084,19 +3084,20 @@ Public Class frmMain
 
 
 
+		If config.RemoveVulkan Then
+			filePath = Environment.GetFolderPath _
+			 (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
+			If Directory.Exists(filePath) Then
+				Try
+					deletedirectory(filePath)
+				Catch ex As Exception
+				End Try
+			End If
+			If Not Directory.Exists(filePath) Then
+				CleanupEngine.shareddlls(filePath)
+			End If
+		End If
 
-		filePath = Environment.GetFolderPath _
-		 (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
-		If Directory.Exists(filePath) Then
-			Try
-				deletedirectory(filePath)
-			Catch ex As Exception
-			End Try
-		End If
-		If Not Directory.Exists(filePath) Then
-			CleanupEngine.shareddlls(filePath)
-		End If
-		
 		If config.RemoveVulkan Then
 			filePath = config.Paths.ProgramFiles + "VulkanRT"
 			If Directory.Exists(filePath) Then
@@ -3126,7 +3127,7 @@ Public Class frmMain
 							child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE Or
 							child.ToLower.Contains("update common") AndAlso config.RemoveGFE Or
 							child.ToLower.Contains("nvgsync") Or
-							child.ToLower.EndsWith("\physx") Or
+							child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
 							child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 							If removephysx Then
 								Try
@@ -3174,18 +3175,19 @@ Public Class frmMain
 		End If
 
 
-
-		If IntPtr.Size = 8 Then
-			filePath = Environment.GetFolderPath _
-			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
-			If Directory.Exists(filePath) Then
-				Try
-					deletedirectory(filePath)
-				Catch ex As Exception
-				End Try
-			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
+		If config.RemovePhysX Then
+			If IntPtr.Size = 8 Then
+				filePath = Environment.GetFolderPath _
+				 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
+				If Directory.Exists(filePath) Then
+					Try
+						deletedirectory(filePath)
+					Catch ex As Exception
+					End Try
+				End If
+				If Not Directory.Exists(filePath) Then
+					CleanupEngine.shareddlls(filePath)
+				End If
 			End If
 		End If
 
@@ -7948,7 +7950,7 @@ skipboot:
 								   child2.ToLower.Contains("display.gfexperience") AndAlso removegfe Or
 								   child2.ToLower.Contains("display.nvirusb") Or
 								   child2.ToLower.Contains("display.optimus") Or
-								   child2.ToLower.Contains("display.physx") Or
+								   child2.ToLower.Contains("display.physx") AndAlso Application.Settings.RemovePhysX Or
 								   child2.ToLower.Contains("display.update") AndAlso removegfe Or
 								   child2.ToLower.Contains("display.nview") Or
 								   child2.ToLower.Contains("display.nvwmi") Or
@@ -8181,20 +8183,15 @@ Public Class CleanupEngine
         End If
     End Sub
 
-    Public Sub deletedirectory(ByVal directorypath As String)
+	Public Sub deletedirectory(ByVal directorypath As String)
+		If Not IsNullOrWhitespace(directorypath) Then
 
-        Dim removephysx As Boolean = Application.Settings.RemovePhysX
-        If Not checkvariables.isnullorwhitespace(directorypath) Then
 
-            If (removephysx Or Not ((Not removephysx) And directorypath.ToLower.Contains("physx"))) Then
-                My.Computer.FileSystem.DeleteDirectory _
-                        (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-                application.log.addmessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
-            End If
-
-        End If
-
-    End Sub
+			My.Computer.FileSystem.DeleteDirectory _
+					(directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+			Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
+		End If
+	End Sub
 
     Public Sub deletefile(ByVal filepath As String)
 
