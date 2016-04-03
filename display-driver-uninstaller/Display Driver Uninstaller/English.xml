@@ -201,6 +201,10 @@
 			<Text>Remove AMD Crimson Shader Cache folder</Text>
 			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text> Remove Vulkan Runtime </Text>
+			<Tooltip> Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API. </Tooltip>
+		</lblVulkan>
 	</frmOptions>
 	<frmLaunch Text="Launch option">
 		<btnAccept>

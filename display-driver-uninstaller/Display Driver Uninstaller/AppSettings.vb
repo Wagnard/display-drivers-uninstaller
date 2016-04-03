@@ -38,7 +38,8 @@ Public Class AppSettings
 	Private m_UseRoamingCfg As DependencyProperty = Reg("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
 	Private m_DontCheckUpdates As DependencyProperty = Reg("DontCheckUpdates", GetType(Boolean), GetType(AppSettings), False)
 	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
-    Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
+	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
+	Private m_removevulkan As DependencyProperty = Reg("RemoveVulkan", GetType(Boolean), GetType(AppSettings), False)
 
 	' Visit links
 	Private m_goodsite As DependencyProperty = Reg("GoodSite", GetType(Boolean), GetType(AppSettings), False)
@@ -208,7 +209,15 @@ Public Class AppSettings
 		Set(value As Boolean)
 			SetValue(m_saveLogs, value)
 		End Set
-    End Property
+	End Property
+	Public Property RemoveVulkan As Boolean
+		Get
+			Return CBool(GetValue(m_removevulkan))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_removevulkan, value)
+		End Set
+	End Property
 
 	Public Property GoodSite As Boolean
 		Get
@@ -402,7 +411,8 @@ Public Class AppSettings
 						.WriteElementString("UseRoamingConfig", UseRoamingConfig.ToString())
 						.WriteElementString("DontCheckUpdates", DontCheckUpdates.ToString())
 						.WriteElementString("CreateRestorePoint", CreateRestorePoint.ToString())
-                        .WriteElementString("SaveLogs", SaveLogs.ToString())
+						.WriteElementString("SaveLogs", SaveLogs.ToString())
+						.WriteElementString("RemoveVulkan", SaveLogs.ToString())
                         .WriteElementString("GoodSite", GoodSite.ToString())
 
 						.WriteEndElement()
@@ -545,7 +555,10 @@ Public Class AppSettings
 								CreateRestorePoint = Boolean.Parse(KvP.Value)
 
 							Case "savelogs"
-                                SaveLogs = Boolean.Parse(KvP.Value)
+								SaveLogs = Boolean.Parse(KvP.Value)
+
+							Case "removevulkan"
+								RemoveVulkan = Boolean.Parse(KvP.Value)
 
                             Case "goodsite"
                                 GoodSite = Boolean.Parse(KvP.Value)
