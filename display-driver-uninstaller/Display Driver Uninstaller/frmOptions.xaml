@@ -28,6 +28,6 @@
 		<CheckBox x:Name="lblDontCheckUpdates" IsChecked="{Binding DontCheckUpdates, Converter={StaticResource NulBoolToBool}}" Content="lblDontCheckUpdates" HorizontalAlignment="Left" Margin="12,357,0,0" VerticalAlignment="Top" />
 	
 		<Button Content="btnClose" Name="btnClose" HorizontalAlignment="Right" Width="80" Height="30" VerticalAlignment="Bottom" Margin="0,0,10,10" />
-        <CheckBox x:Name="lblVulkan" IsChecked="{Binding DontCheckUpdates, Converter={StaticResource NulBoolToBool}}" Content="lblVulkan" HorizontalAlignment="Left" Margin="12,377.098,0,0" VerticalAlignment="Top" />
+        <CheckBox x:Name="lblVulkan" IsChecked="{Binding RemoveVulkan, Converter={StaticResource NulBoolToBool}}" Content="lblVulkan" HorizontalAlignment="Left" Margin="12,377.098,0,0" VerticalAlignment="Top" />
     </Grid>
 </Window>
