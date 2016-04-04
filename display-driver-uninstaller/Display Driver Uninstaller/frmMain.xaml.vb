@@ -55,47 +55,24 @@ Public Class frmMain
 	Public win10 As Boolean = False
 	Public Shared winxp As Boolean = False
 	Dim stopme As Boolean = False
-
-	Public Shared removecamd As Boolean
-	Public Shared removecnvidia As Boolean
-	Public Shared removeamdaudiobus As Boolean
-	Public Shared remove3dtvplay As Boolean
-	Public Shared removeamdkmpfd As Boolean
-
-
 	Public Shared trysystemrestore As Boolean
 
-
-
-
 	Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
-	Dim windir As String = System.Environment.GetEnvironmentVariable("windir").ToLower
 	Dim userpth As String = CStr(My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory")) & "\"
-
-
-
 	Dim reply As String = Nothing
 	Dim reply2 As String = Nothing
 	Dim version As String = Nothing
 	Dim position2 As Integer = Nothing
 	Dim currentdriverversion As String = Nothing
 	Dim safemode As Boolean = False
-
-
-
 	Dim CleanupEngine As New CleanupEngine
 	Dim enduro As Boolean = False
 	Dim provider As String = ""
 	Public Shared preventclose As Boolean = False
-	Public Shared combobox1value As String = Nothing
-	Dim buttontext As String()
 	Dim closeapp As Boolean = False
 	Public ddudrfolder As String
 	Public Shared donotremoveamdhdaudiobusfiles As Boolean = True
-	Public msgboxmessage As String()
-	Public UpdateTextMethodmessage As String()
-	Public picturebox2originalx As Integer
-	Public picturebox2originaly As Integer
+
 
 	Private Sub Checkupdates2()
 		If Not Me.Dispatcher.CheckAccess() Then
@@ -133,7 +110,7 @@ Public Class frmMain
 		End If
 	End Sub
 
-	Public Function HasUpdates() As Integer
+	Private Function HasUpdates() As Integer
 		Return 3  'TODO: REMOVE THIS LINE!!!! Blocked updates for faster debugging
 
 		Try
@@ -430,7 +407,7 @@ Public Class frmMain
 		log("Cleaning Directory (Please Wait...)")
 
 
-		If removecamd Then
+		If config.RemoveAMDDirs Then
 			filePath = sysdrv + "\AMD"
 
 			Try
@@ -1636,16 +1613,16 @@ Public Class frmMain
 										If regkey IsNot Nothing Then
 											For Each child As String In regkey.GetSubKeyNames()
 												If checkvariables.isnullorwhitespace(child) = False Then
-													If child.ToLower.Contains("legacy_amdkmdag") Or _
-													 (child.ToLower.Contains("legacy_amdkmdag") AndAlso removeamdkmpfd) Or _
-													 child.ToLower.Contains("legacy_amdacpksd") Then
+											If child.ToLower.Contains("legacy_amdkmdag") Or _
+											 (child.ToLower.Contains("legacy_amdkmdag") AndAlso config.RemoveAMDKMPFD) Or _
+											 child.ToLower.Contains("legacy_amdacpksd") Then
 
-														Try
-															deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\" & childs & "\Enum\Root\" & child)
-														Catch ex As Exception
-															Application.Log.AddException(ex)
-														End Try
-													End If
+												Try
+													deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\" & childs & "\Enum\Root\" & child)
+												Catch ex As Exception
+													Application.Log.AddException(ex)
+												End Try
+											End If
 												End If
 											Next
 										End If
@@ -2693,7 +2670,7 @@ Public Class frmMain
 		log("Cleaning Directory")
 
 
-		If removecnvidia = True Then
+		If config.RemoveNvidiaDirs = True Then
 			filePath = sysdrv + "\NVIDIA"
 			Try
 				deletedirectory(filePath)
@@ -4280,7 +4257,7 @@ Public Class frmMain
 								If removephysx = False And child.ToLower.Contains("physx") Then
 									Continue For
 								End If
-								If remove3dtvplay = False And child.ToLower.Contains("3dtv") Then
+								If config.Remove3DTVPlay = False And child.ToLower.Contains("3dtv") Then
 									Continue For
 								End If
 								Try
@@ -4345,7 +4322,7 @@ Public Class frmMain
 								Continue For
 							End If
 
-							If remove3dtvplay = False And child.ToLower.Contains("3dtv") Then
+							If config.Remove3DTVPlay = False And child.ToLower.Contains("3dtv") Then
 								Continue For
 							End If
 							Try
@@ -4716,7 +4693,7 @@ Public Class frmMain
 		CleanupEngine.installer(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\packages.cfg"), config)
 
 
-		If remove3dtvplay Then
+		If config.Remove3DTVPlay Then
 			Try
 				deletesubregkey(My.Computer.Registry.ClassesRoot, "mpegfile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
 			Catch ex As Exception
@@ -6422,6 +6399,9 @@ skipboot:
 
 			If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
 				Dim trd As Thread = New Thread(AddressOf ThreadTask)
+				trd.CurrentCulture = New Globalization.CultureInfo("en-US")
+				trd.CurrentUICulture = New Globalization.CultureInfo("en-US")
+
 				trd.IsBackground = True
 				trd.Start()
 			End If
@@ -7169,9 +7149,9 @@ skipboot:
 																End Try
 																processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
 																If win10 Then
-																	processinfo.Arguments = "update " & windir & "\inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
+																	processinfo.Arguments = "update " & config.Paths.WinDir & "inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
 																Else
-																	processinfo.Arguments = "update " & windir & "\inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
+																	processinfo.Arguments = "update " & config.Paths.WinDir & "inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
 																End If
 																processinfo.UseShellExecute = False
 																processinfo.CreateNoWindow = True
@@ -7417,7 +7397,7 @@ skipboot:
 		End Try
 	End Sub
 
-	Sub systemrestore()
+	Private Sub systemrestore()
 		'THIS NEEDS TO BE FIXED!!! DOES NOT WORK WITH OPTION STRICT ON. I WAS UNABLE TO FIGURE OUT MY SELF. BE SURE TO FIX BEFORE RELEASE.
 
 		If trysystemrestore Then
@@ -7707,31 +7687,38 @@ skipboot:
 		End Try
 	End Sub
 
-	Private Sub KillP(processname As String)
-		Dim processList() As Process
-		processList = process.GetProcessesByName(processname)
+	Private Sub KillProcess(ByVal ParamArray processnames As String())
+		For Each processName As String In processnames
+			If String.IsNullOrEmpty(processName) Then
+				Continue For
+			End If
 
-		For Each proc As Process In processList
-			Try
-				proc.Kill()
-			Catch ex As Exception
-				log("!! ERROR !! Failed to kill process(es): " & ex.Message)
-			End Try
+			For Each process As Process In process.GetProcessesByName(processName)
+				Try
+					process.Kill()
+				Catch ex As Exception
+					Application.Log.AddException(ex, "@KillProcesses()", String.Concat("ProcessName: ", processName))
+				End Try
+			Next
 		Next
 	End Sub
 
 	Private Sub KillGPUStatsProcesses()
-		KillP("MSIAfterburner")
-		KillP("PrecisionX_x64")	' Not sure for the x86 one...      Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
-		KillP("PrecisionXServer_x64")
-		KillP("PrecisionXServer")
-		KillP("PrecisionX")
-		KillP("RTSS")
-		KillP("RTSSHooksLoader64")
-		KillP("EncoderServer64")
-		KillP("RTSSHooksLoader")
-		KillP("EncoderServer")
-		KillP("nvidiaInspector")
+		' Not sure for the x86 one...
+		' Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
+
+		KillProcess(
+		 "MSIAfterburner",
+		  "PrecisionX_x64",
+		  "PrecisionXServer_x64",
+		  "PrecisionX",
+		  "PrecisionXServer",
+		  "RTSS",
+		  "RTSSHooksLoader64",
+		  "EncoderServer64",
+		  "RTSSHooksLoader",
+		  "EncoderServer",
+		  "nvidiaInspector")
 	End Sub
 
 	Private Sub cleananddonothing(ByVal gpu As String)
@@ -8140,9 +8127,6 @@ skipboot:
         Me.WindowState = Windows.WindowState.Minimized
     End Sub
 
-    Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
-
-    End Sub
 End Class
 
 Public Class checkvariables
@@ -8188,7 +8172,7 @@ Public Class CleanupEngine
 
 
 			My.Computer.FileSystem.DeleteDirectory _
-					(directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+			  (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 			Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
 		End If
 	End Sub

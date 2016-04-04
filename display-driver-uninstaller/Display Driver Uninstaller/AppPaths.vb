@@ -62,7 +62,7 @@ Public Class AppPaths
 			m_dirlog = value
 		End Set
 	End Property
-	''' <summary>System Drive ( "C:" )</summary>
+	''' <summary>System Drive ( "C:\" )</summary>
 	Public Property SystemDrive As String
 		Get
 			Return m_sysdrive
@@ -71,7 +71,7 @@ Public Class AppPaths
 			m_sysdrive = value
 		End Set
 	End Property
-	''' <summary>Windows Directory ( "C:\Windows" )</summary>
+	''' <summary>Windows Directory ( "C:\Windows\" )</summary>
 	Public Property WinDir As String
 		Get
 			Return m_windir
@@ -80,7 +80,7 @@ Public Class AppPaths
 			m_windir = value
 		End Set
 	End Property
-	''' <summary>ProgramFiles Directory(32 and 64bits) ( "C:\ProgramFiles" )</summary>
+	''' <summary>ProgramFiles Directory(32 and 64bits) ( "C:\Program Files\" )</summary>
 	Public Property ProgramFiles As String
 		Get
 			Return m_programfiles
@@ -89,7 +89,7 @@ Public Class AppPaths
 			m_programfiles = value
 		End Set
 	End Property
-	''' <summary>ProgramFiles(x86) Directory(64bits only) ( "C:\ProgramFiles (x86)" )</summary>
+	''' <summary>ProgramFiles(x86) Directory(64bits only) ( "C:\Program Files (x86)\" )</summary>
 	Public Property ProgramFilesx86 As String
 		Get
 			Return m_programfilesx86

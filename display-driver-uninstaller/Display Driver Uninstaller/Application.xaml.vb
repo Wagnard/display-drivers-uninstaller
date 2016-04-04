@@ -2,7 +2,6 @@
 Imports System.Globalization
 Imports System.Windows
 Imports System.Windows.Markup
-Imports System.Windows.Threading
 
 Class Application
 	' Application-level events, such as Startup, Exit, and DispatcherUnhandledException

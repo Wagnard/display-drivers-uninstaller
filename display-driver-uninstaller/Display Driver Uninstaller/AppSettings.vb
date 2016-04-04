@@ -297,7 +297,6 @@ Public Class AppSettings
 	End Function
 
 	Public Sub New()
-		Dim winFiles As List(Of String) = GetFiles(Path.Combine(Environment.GetEnvironmentVariable("windir"), "Prefetch"))
 		m_languageOptions = New ObservableCollection(Of Languages.LanguageOption)()
 
 		Dim asseemblyName As AssemblyName = Assembly.GetExecutingAssembly().GetName()

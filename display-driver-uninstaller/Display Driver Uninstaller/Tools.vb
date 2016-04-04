@@ -238,10 +238,6 @@ Public Class WINDOWS_API_FIND
 	Public Shared Function FindClose(ByVal hFindFile As IntPtr) As Boolean
 	End Function
 
-	<DllImport("kernel32.dll", CharSet:=CharSet.Unicode, ExactSpelling:=False, SetLastError:=True)>
-	Public Shared Function DeleteFile(ByVal path As String) As Boolean
-	End Function
-
 	Public Shared Sub GetFilenames(ByVal directory As String, ByRef fileNames As List(Of String), Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False)
 		Dim findData As New WIN32_FIND_DATA
 		Dim findHandle As New IntPtr
@@ -249,35 +245,42 @@ Public Class WINDOWS_API_FIND
 
 		If Not directory.EndsWith(Path.DirectorySeparatorChar) Then directory &= Path.DirectorySeparatorChar
 
-		Dim findDir As String = directory & wildCard
+		Dim findDir As String
+		Dim dirs As Queue(Of String) = New Queue(Of String)(1000)
+		dirs.Enqueue(directory)
+
+		If fileNames Is Nothing Then
+			fileNames = New List(Of String)(1000)
+		Else : fileNames.Clear()
+		End If
 
 		Try
-			findHandle = FindFirstFile(findDir, findData)
+			While dirs.Count > 0
+				findDir = dirs.Dequeue()
+				findHandle = FindFirstFile(findDir & wildCard, findData)
 
-			If findHandle <> INVALID_HANDLE_VALUE Then
-				Do
-					If findData.cFileName <> "." AndAlso findData.cFileName <> ".." Then
-						If (findData.dwFileAttributes And FileAttributes.Directory) <> FileAttributes.Directory Then
-							fileNames.Add(directory & findData.cFileName)
-						Else
-							If searchSubDirs Then
-								GetFilenames(directory & findData.cFileName, fileNames, wildCard, searchSubDirs)
+				If findHandle <> INVALID_HANDLE_VALUE Then
+					Do
+						If findData.cFileName <> "." AndAlso findData.cFileName <> ".." Then
+							If (findData.dwFileAttributes And FileAttributes.Directory) <> FileAttributes.Directory Then
+								fileNames.Add(String.Concat(findDir, findData.cFileName))
+							Else
+								If searchSubDirs Then
+									dirs.Enqueue(String.Concat(findDir, findData.cFileName, Path.DirectorySeparatorChar))
+								End If
 							End If
 						End If
+					Loop While FindNextFile(findHandle, findData)
 
-					End If
-				Loop While (FindNextFile(findHandle, findData))
-
-				FindClose(findHandle)
-			End If
+					FindClose(findHandle)
+				End If
+			End While
 		Catch ex As Exception
+			Application.Log.AddException(ex)
+		Finally
 			If findHandle <> INVALID_HANDLE_VALUE Then
 				FindClose(findHandle)
 			End If
-
-			Application.Log.AddException(ex)
-		Finally
-
 		End Try
 	End Sub
 
@@ -288,34 +291,42 @@ Public Class WINDOWS_API_FIND
 
 		If Not directory.EndsWith(Path.DirectorySeparatorChar) Then directory &= Path.DirectorySeparatorChar
 
-		Dim findDir As String = directory & wildCard
+		Dim findDir As String
+		Dim dirs As Queue(Of String) = New Queue(Of String)(1000)
+		dirs.Enqueue(directory)
+
+		If dirNames Is Nothing Then
+			dirNames = New List(Of String)(1000)
+		Else : dirNames.Clear()
+		End If
 
 		Try
-			findHandle = FindFirstFile(findDir, findData)
+			While dirs.Count > 0
+				findDir = dirs.Dequeue()
+				findHandle = FindFirstFile(findDir & wildCard, findData)
 
-			If findHandle <> INVALID_HANDLE_VALUE Then
-				Do
-					If findData.cFileName <> "." AndAlso findData.cFileName <> ".." Then
-						If (findData.dwFileAttributes And FileAttributes.Directory) = FileAttributes.Directory Then
-							dirNames.Add(directory & findData.cFileName)
+				If findHandle <> INVALID_HANDLE_VALUE Then
+					Do
+						If findData.cFileName <> "." AndAlso findData.cFileName <> ".." Then
+							If (findData.dwFileAttributes And FileAttributes.Directory) = FileAttributes.Directory Then
+								dirNames.Add(findDir & findData.cFileName)
 
-							If searchSubDirs Then
-								GetDirnames(directory & findData.cFileName, dirNames, wildCard, searchSubDirs)
+								If searchSubDirs Then
+									dirs.Enqueue(findDir & findData.cFileName & Path.DirectorySeparatorChar)
+								End If
 							End If
 						End If
-					End If
-				Loop While (FindNextFile(findHandle, findData))
+					Loop While (FindNextFile(findHandle, findData))
 
-				FindClose(findHandle)
-			End If
+					FindClose(findHandle)
+				End If
+			End While
 		Catch ex As Exception
+			Application.Log.AddException(ex)
+		Finally
 			If findHandle <> INVALID_HANDLE_VALUE Then
 				FindClose(findHandle)
 			End If
-
-			Application.Log.AddException(ex)
-		Finally
-
 		End Try
 	End Sub
 End Class

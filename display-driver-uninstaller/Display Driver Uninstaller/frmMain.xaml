@@ -46,6 +46,5 @@
 			<Label x:Name="lblWinVersionValue" Content="W7" />
 			<Label x:Name="lblArch" Content="x00" Height="26" Width="38" FontWeight="Bold" />
 		</StackPanel>
-		<Button Content="Button" Height="23" HorizontalAlignment="Left" Margin="642,186,0,0" Name="Button1" VerticalAlignment="Top" Width="75" />
 	</Grid>
 </Window>
