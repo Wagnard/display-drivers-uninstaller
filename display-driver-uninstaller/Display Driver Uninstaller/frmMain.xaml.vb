@@ -1614,7 +1614,7 @@ Public Class frmMain
 											For Each child As String In regkey.GetSubKeyNames()
 												If checkvariables.isnullorwhitespace(child) = False Then
 											If child.ToLower.Contains("legacy_amdkmdag") Or _
-											 (child.ToLower.Contains("legacy_amdkmdag") AndAlso config.RemoveAMDKMPFD) Or _
+											 (child.ToLower.Contains("legacy_amdkmpfd") AndAlso config.RemoveAMDKMPFD) Or _
 											 child.ToLower.Contains("legacy_amdacpksd") Then
 
 												Try
