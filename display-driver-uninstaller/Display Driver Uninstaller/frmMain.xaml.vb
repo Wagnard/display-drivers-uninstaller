@@ -158,7 +158,7 @@ Public Class frmMain
 		End Try
 	End Function
 
-	Private Sub cleandriverstore()
+	Private Sub cleandriverstore(ByVal config As ThreadSettings)
 		Dim catalog As String = ""
 		Dim CurrentProvider As String
 		UpdateTextMethod("-Executing Driver Store cleanUP(finding OEM step)...")
@@ -173,7 +173,7 @@ Public Class frmMain
 
 		UpdateTextMethod(UpdateTextMethodmessagefn(0))
 
-		Select Case Application.Settings.SelectedGPU
+		Select Case config.SelectedGPU
 			Case GPUVendor.Nvidia
 				CurrentProvider = "NVIDIA"
 			Case GPUVendor.AMD
@@ -309,7 +309,7 @@ Public Class frmMain
 				End If
 			Next
 		Catch ex As Exception
-			Application.log.AddException(ex)
+			Application.Log.AddException(ex)
 		End Try
 		UpdateTextMethod("-Driver Store cleanUP complete.")
 
@@ -6674,7 +6674,7 @@ skipboot:
 			Application.Log.AddMessage("DDUDR Remove Display Driver: Complete.")
 			log("DDUDR Remove Display Driver: Complete.")
 
-			cleandriverstore()
+			cleandriverstore(config)
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(24))
 			Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
@@ -6734,7 +6734,7 @@ skipboot:
 			Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
 
 			If config.SelectedGPU <> GPUVendor.Intel Then
-				cleandriverstore()
+				cleandriverstore(config)
 			End If
 
 			'Here I remove 3dVision USB Adapter.
@@ -7246,7 +7246,7 @@ skipboot:
 				cleanintelfolders()
 			End If
 
-			cleandriverstore()
+			cleandriverstore(config)
 			fixregistrydriverstore()
 			'rebuildcountercache()
 		Catch ex As Exception
