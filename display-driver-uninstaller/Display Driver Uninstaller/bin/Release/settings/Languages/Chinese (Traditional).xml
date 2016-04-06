@@ -196,6 +196,10 @@
 			<Text>移除 AMD Crimson Shader 快取資料夾</Text>
 			<Tooltip>建議如果有損壞的著色器快取資料引起的圖形化異常(速度或視覺效果損毀)。|此外建議如果您切換到另一個像 nVidia 這樣的品牌。</Tooltip>
 		</CheckBox14>
+		<cbxVulkan>
+			<Text>移除 Vulkan 執行階段</Text>
+			<Tooltip>不建議，如果您有 2 不同 GPU 支援使用 Vulkan 應用程式開發介面。</Tooltip>
+		</cbxVulkan>
 	</frmOptions>
 	<frmLaunch Text="啟動選項">
 		<btnAccept>

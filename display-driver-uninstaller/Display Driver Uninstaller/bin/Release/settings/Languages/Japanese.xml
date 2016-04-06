@@ -196,8 +196,12 @@
       <Text>AMD Crimson Shader Cache フォルダーを削除</Text>
       <Tooltip>破損したシェーダー キャッシュ データによるグラフィックの異常 (速度または視覚的な破損) がある場合に推奨します。|また、nVidia のような別のブランドに換装している場合にも推奨します。</Tooltip>
     </CheckBox14>
+    <cbxVulkan>
+      <Text>Vulkan ランタイムを削除</Text>
+      <Tooltip>Vulkan APIを利用できる2つの異なるGPUを持っている場合非推奨。</Tooltip>
+    </cbxVulkan>
   </frmOptions>
-  <frmLaunch Text="Launch option">
+  <frmLaunch Text="起動オプション">
     <btnAccept>
       <Text>起動</Text>
       <Text2>セーフモードで
