@@ -67,7 +67,6 @@ Public Class frmMain
 	Dim safemode As Boolean = False
 	Dim CleanupEngine As New CleanupEngine
 	Dim enduro As Boolean = False
-	Dim provider As String = ""
 	Public Shared preventclose As Boolean = False
 	Dim closeapp As Boolean = False
 	Public ddudrfolder As String
@@ -161,7 +160,7 @@ Public Class frmMain
 
 	Private Sub cleandriverstore()
 		Dim catalog As String = ""
-
+		Dim CurrentProvider As String
 		UpdateTextMethod("-Executing Driver Store cleanUP(finding OEM step)...")
 		log("Executing Driver Store cleanUP(Find OEM)...")
 		'Check the driver from the driver store  ( oemxx.inf)
@@ -173,6 +172,15 @@ Public Class frmMain
 		processinfo.Arguments = "dp_enum"
 
 		UpdateTextMethod(UpdateTextMethodmessagefn(0))
+
+		Select Case Application.Settings.SelectedGPU
+			Case GPUVendor.Nvidia
+				CurrentProvider = "NVIDIA"
+			Case GPUVendor.AMD
+				CurrentProvider = "AdvancedMicroDevices"
+			Case GPUVendor.Intel
+				CurrentProvider = "Intel"
+		End Select
 
 		Try
 			For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
@@ -193,7 +201,7 @@ Public Class frmMain
 											providers = providers.Replace(" ", "").Replace(vbTab, "")
 											If Not checkvariables.isnullorwhitespace(providers) AndAlso providers.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
 											   Not providers.Contains("%") Then
-												If providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(provider.ToLower) Or
+												If providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(CurrentProvider.ToLower) Or
 												   providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.StartsWith("atitech") Or
 												   providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("amd") Then
 
@@ -248,7 +256,7 @@ Public Class frmMain
 
 								Else
 
-									If child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(provider.ToLower) Or
+									If child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(CurrentProvider.ToLower) Or
 									   child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.StartsWith("atitech") Or
 									   child.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains("amd") Then
 										deloem.Arguments = "dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
@@ -6467,13 +6475,10 @@ skipboot:
 			Select Case config.SelectedGPU
 				Case GPUVendor.Nvidia
 					vendidexpected = "VEN_10DE"
-					provider = "NVIDIA"
 				Case GPUVendor.AMD
 					vendidexpected = "VEN_1002"
-					provider = "AdvancedMicroDevices"
 				Case GPUVendor.Intel
 					vendidexpected = "VEN_8086"
-					provider = "Intel"
 			End Select
 
 
