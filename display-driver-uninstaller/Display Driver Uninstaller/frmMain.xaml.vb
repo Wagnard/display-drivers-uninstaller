@@ -463,9 +463,6 @@ Public Class frmMain
 							Application.Log.AddException(ex)
 							TestDelete(child)
 						End Try
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 				End If
 			Next
@@ -483,9 +480,7 @@ Public Class frmMain
 
 			End If
 		End If
-		If Not Directory.Exists(filePath) Then
-			CleanupEngine.shareddlls(filePath)
-		End If
+
 
 
 		filePath = Environment.GetFolderPath _
@@ -500,9 +495,6 @@ Public Class frmMain
 							Application.Log.AddException(ex)
 							TestDelete(child)
 						End Try
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 				End If
 			Next
@@ -519,9 +511,6 @@ Public Class frmMain
 				Next
 
 			End If
-		End If
-		If Not Directory.Exists(filePath) Then
-			CleanupEngine.shareddlls(filePath)
 		End If
 
 
@@ -537,9 +526,6 @@ Public Class frmMain
 							Application.Log.AddException(ex)
 							TestDelete(child)
 						End Try
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 				End If
 			Next
@@ -559,9 +545,6 @@ Public Class frmMain
 
 			End If
 		End If
-		If Not Directory.Exists(filePath) Then
-			CleanupEngine.shareddlls(filePath)
-		End If
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD APP"
@@ -572,9 +555,6 @@ Public Class frmMain
 				Application.Log.AddException(ex)
 				TestDelete(filePath)
 			End Try
-		End If
-		If Not Directory.Exists(filePath) Then
-			CleanupEngine.shareddlls(filePath)
 		End If
 
 		If IntPtr.Size = 8 Then
@@ -588,9 +568,6 @@ Public Class frmMain
 					Application.Log.AddException(ex)
 					TestDelete(filePath)
 				End Try
-			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
 			End If
 
 			filePath = Environment.GetFolderPath _
@@ -610,9 +587,6 @@ Public Class frmMain
 									Application.Log.AddException(ex)
 									TestDelete(child)
 								End Try
-								If Not Directory.Exists(child) Then
-									CleanupEngine.shareddlls(child)
-								End If
 							End If
 						End If
 					Next
@@ -631,9 +605,6 @@ Public Class frmMain
 					End If
 				Catch ex As Exception
 				End Try
-			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
 			End If
 
 			filePath = System.Environment.SystemDirectory
@@ -657,9 +628,6 @@ Public Class frmMain
 					TestDelete(filePath)
 				End Try
 			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
-			End If
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
@@ -669,9 +637,6 @@ Public Class frmMain
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
-			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
 			End If
 
 			filePath = Environment.GetFolderPath _
@@ -683,9 +648,6 @@ Public Class frmMain
 					Application.Log.AddException(ex)
 				End Try
 			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
-			End If
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoChrome"
@@ -695,9 +657,6 @@ Public Class frmMain
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
-			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
 			End If
 
 			filePath = Environment.GetFolderPath _
@@ -712,9 +671,6 @@ Public Class frmMain
 								Application.Log.AddException(ex)
 								TestDelete(child)
 							End Try
-							If Not Directory.Exists(child) Then
-								CleanupEngine.shareddlls(child)
-							End If
 						End If
 					End If
 				Next
@@ -734,9 +690,6 @@ Public Class frmMain
 					End If
 				Catch ex As Exception
 				End Try
-			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
 			End If
 		End If
 
@@ -774,9 +727,6 @@ Public Class frmMain
 							Application.Log.AddException(ex)
 							TestDelete(child)
 						End Try
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 				End If
 			Next
@@ -793,9 +743,6 @@ Public Class frmMain
 				Next
 
 			End If
-		End If
-		If Not Directory.Exists(filePath) Then
-			CleanupEngine.shareddlls(filePath)
 		End If
 
 		filePath = Environment.GetFolderPath _
@@ -811,9 +758,6 @@ Public Class frmMain
 							Application.Log.AddException(ex)
 							TestDelete(child)
 						End Try
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 				End If
 			Next
@@ -830,9 +774,6 @@ Public Class frmMain
 				Next
 
 			End If
-		End If
-		If Not Directory.Exists(filePath) Then
-			CleanupEngine.shareddlls(filePath)
 		End If
 
 		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(userpth))
@@ -851,9 +792,6 @@ Public Class frmMain
 									Application.Log.AddException(ex)
 									TestDelete(child)
 								End Try
-								If Not Directory.Exists(child) Then
-									CleanupEngine.shareddlls(child)
-								End If
 							End If
 						End If
 					Next
@@ -873,10 +811,6 @@ Public Class frmMain
 				Catch ex As Exception
 					log("Possible permission issue detected on : " + filePath)
 				End Try
-			End If
-
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
 			End If
 
 
@@ -895,9 +829,6 @@ Public Class frmMain
 									Application.Log.AddException(ex)
 									TestDelete(child)
 								End Try
-								If Not Directory.Exists(child) Then
-									CleanupEngine.shareddlls(child)
-								End If
 							End If
 						End If
 					Next
@@ -917,9 +848,6 @@ Public Class frmMain
 				Catch ex As Exception
 					log("Possible permission issue detected on : " + filePath)
 				End Try
-			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
 			End If
 
 			filePath = filepaths + "\AppData\Local\AMD"
@@ -940,9 +868,6 @@ Public Class frmMain
 									Application.Log.AddException(ex)
 									TestDelete(child)
 								End Try
-								If Not Directory.Exists(child) Then
-									CleanupEngine.shareddlls(child)
-								End If
 							End If
 						End If
 					Next
@@ -962,9 +887,6 @@ Public Class frmMain
 				Catch ex As Exception
 					log("Possible permission issue detected on : " + filePath)
 				End Try
-			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
 			End If
 
 		Next
@@ -987,9 +909,6 @@ Public Class frmMain
 							Application.Log.AddException(ex)
 							TestDelete(child)
 						End Try
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 				End If
 			Next
@@ -1010,9 +929,6 @@ Public Class frmMain
 			Catch ex As Exception
 			End Try
 		End If
-		If Not Directory.Exists(filePath) Then
-			CleanupEngine.shareddlls(filePath)
-		End If
 
 		filePath = Environment.GetFolderPath _
 	   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD"
@@ -1028,9 +944,6 @@ Public Class frmMain
 							Application.Log.AddException(ex)
 							TestDelete(child)
 						End Try
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 				End If
 			Next
@@ -1048,9 +961,7 @@ Public Class frmMain
 
 			End If
 		End If
-		If Not Directory.Exists(filePath) Then
-			CleanupEngine.shareddlls(filePath)
-		End If
+
 		'Cleaning the CCC assemblies.
 
 
@@ -1085,9 +996,6 @@ Public Class frmMain
 							Application.Log.AddException(ex)
 							TestDelete(child)
 						End Try
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 				End If
 			Next
@@ -1125,9 +1033,6 @@ Public Class frmMain
 							Application.Log.AddException(ex)
 							TestDelete(child)
 						End Try
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 				End If
 			Next
@@ -1892,52 +1797,39 @@ Public Class frmMain
 											appproc(i).Kill()
 										Next i
 									End If
-
-									Try
-										If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("InstallDir"))) Then
-											filePath = regkey.OpenSubKey(child).GetValue("InstallDir").ToString
-											If Not checkvariables.isnullorwhitespace(filePath) AndAlso My.Computer.FileSystem.DirectoryExists(filePath) Then
-
-												For Each childf As String In Directory.GetDirectories(filePath)
-													If checkvariables.isnullorwhitespace(childf) = False Then
-														If childf.ToLower.Contains("ati.ace") Or
-														 childf.ToLower.Contains("cnext") Or
-														 childf.ToLower.Contains("amdkmpfd") Or
-														 childf.ToLower.Contains("cim") Then
-															Try
-																deletedirectory(childf)
-															Catch ex As Exception
-																Application.Log.AddException(ex)
-																TestDelete(childf)
-															End Try
-															If Not Directory.Exists(childf) Then
-																CleanupEngine.shareddlls(childf)
-															End If
-														End If
-													End If
-												Next
-
-												If Directory.GetDirectories(filePath).Length = 0 Then
+							Try
+								If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("InstallDir"))) Then
+									filePath = regkey.OpenSubKey(child).GetValue("InstallDir").ToString
+									If Not checkvariables.isnullorwhitespace(filePath) AndAlso My.Computer.FileSystem.DirectoryExists(filePath) Then
+										For Each childf As String In Directory.GetDirectories(filePath)
+											If checkvariables.isnullorwhitespace(childf) = False Then
+												If childf.ToLower.Contains("ati.ace") Or
+											 childf.ToLower.Contains("cnext") Or
+											 childf.ToLower.Contains("amdkmpfd") Or
+											 childf.ToLower.Contains("cim") Then
 													Try
-														deletedirectory(filePath)
-
+														deletedirectory(childf)
 													Catch ex As Exception
 														Application.Log.AddException(ex)
-														TestDelete(filePath)
+														TestDelete(childf)
 													End Try
 												End If
-												If Not Directory.Exists(filePath) Then
-													CleanupEngine.shareddlls(filePath)
-													'here we will do a special environement path cleanup as there is chances that the installation is
-													'somewhere else.
-													amdenvironementpath(filePath)
-												End If
 											End If
+										Next
+										If Directory.GetDirectories(filePath).Length = 0 Then
+											Try
+												deletedirectory(filePath)
+											Catch ex As Exception
+												Application.Log.AddException(ex)
+												TestDelete(filePath)
+											End Try
 										End If
+									End If
+								End If
 
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-									End Try
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
 									For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
 										If Not checkvariables.isnullorwhitespace(child2) Then
 											If child2.ToLower.Contains("ati catalyst") Or
@@ -2986,10 +2878,6 @@ Public Class frmMain
 							Application.Log.AddException(ex)
 							TestDelete(child)
 						End Try
-
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 					If child.ToLower.Contains("installer2") Then
 						For Each child2 As String In Directory.GetDirectories(child)
@@ -3023,10 +2911,6 @@ Public Class frmMain
 										Application.Log.AddException(ex)
 										TestDelete(child2)
 									End Try
-
-									If Not Directory.Exists(child2) Then
-										CleanupEngine.shareddlls(child2)
-									End If
 								End If
 							End If
 						Next
@@ -3044,9 +2928,6 @@ Public Class frmMain
 							Next
 
 						End If
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
-						End If
 					End If
 				End If
 			Next
@@ -3063,10 +2944,6 @@ Public Class frmMain
 				Next
 			End If
 		End If
-		If Not Directory.Exists(filePath) Then
-			CleanupEngine.shareddlls(filePath)
-		End If
-
 
 
 		If config.RemoveVulkan Then
@@ -3078,9 +2955,6 @@ Public Class frmMain
 				Catch ex As Exception
 				End Try
 			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
-			End If
 		End If
 
 		If config.RemoveVulkan Then
@@ -3090,9 +2964,6 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 				End Try
-			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
 			End If
 		End If
 
@@ -3133,9 +3004,6 @@ Public Class frmMain
 									End Try
 								End If
 							End If
-							If Not Directory.Exists(child) Then
-								CleanupEngine.shareddlls(child)
-							End If
 						End If
 					End If
 				Next
@@ -3154,9 +3022,6 @@ Public Class frmMain
 
 				End If
 			End If
-			If Not Directory.Exists(filePath) Then
-				CleanupEngine.shareddlls(filePath)
-			End If
 		End If
 
 
@@ -3170,9 +3035,6 @@ Public Class frmMain
 					Catch ex As Exception
 					End Try
 				End If
-				If Not Directory.Exists(filePath) Then
-					CleanupEngine.shareddlls(filePath)
-				End If
 			End If
 		End If
 
@@ -3184,9 +3046,6 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 					End Try
-				End If
-				If Not Directory.Exists(filePath) Then
-					CleanupEngine.shareddlls(filePath)
 				End If
 			End If
 		End If
@@ -3506,14 +3365,6 @@ Public Class frmMain
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
-
-		If removephysx Then
-			filePath = Environment.GetFolderPath _
-			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation\physx"
-			CleanupEngine.shareddlls(filePath)
-			filePath = Environment.GetFolderPath _
-			 (Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation\physx"
-		End If
 
 	End Sub
 
@@ -7961,10 +7812,6 @@ skipboot:
 										deletedirectory(child2)
 									Catch ex As Exception
 									End Try
-
-									If Not Directory.Exists(child2) Then
-										CleanupEngine.shareddlls(child2)
-									End If
 								End If
 							End If
 						Next
@@ -7974,9 +7821,6 @@ skipboot:
 								deletedirectory(child)
 							Catch ex As Exception
 							End Try
-						End If
-						If Not Directory.Exists(child) Then
-							CleanupEngine.shareddlls(child)
 						End If
 					End If
 				End If
@@ -8174,11 +8018,50 @@ Public Class CleanupEngine
 
 	Public Sub deletedirectory(ByVal directorypath As String)
 		If Not IsNullOrWhitespace(directorypath) Then
-
-
 			My.Computer.FileSystem.DeleteDirectory _
 			  (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 			Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
+		End If
+
+		If Not Directory.Exists(directorypath) Then
+			If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
+				For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
+					If Not checkvariables.isnullorwhitespace(child) Then
+						If child.ToLower.Contains(directorypath.ToLower + "\") Then
+							Try
+								deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
+							Catch ex As Exception
+							End Try
+						End If
+					End If
+				Next
+			End If
+			If My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False) IsNot Nothing Then
+				For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False).GetValueNames
+					If Not checkvariables.isnullorwhitespace(child) Then
+						If child.ToLower.Contains(directorypath.ToLower + "\") Then
+							Try
+								deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
+							Catch ex As Exception
+							End Try
+						End If
+					End If
+				Next
+			End If
+			If IntPtr.Size = 8 Then
+				If My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", False) IsNot Nothing Then
+					For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", False).GetValueNames
+						If Not checkvariables.isnullorwhitespace(child) Then
+							If child.ToLower.Contains(directorypath.ToLower + "\") Then
+								Try
+									deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
+								Catch ex As Exception
+								End Try
+							End If
+						End If
+					Next
+				End If
+			End If
 		End If
 	End Sub
 
@@ -9667,50 +9550,6 @@ Public Class CleanupEngine
         End If
     End Sub
 
-    Public Sub shareddlls(ByVal filepath As String)
-        If Not checkvariables.isnullorwhitespace(filepath) Then
-            If Not Directory.Exists(filepath) Then
-                If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
-                    For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
-                        If Not checkvariables.isnullorwhitespace(child) Then
-                            If child.ToLower.Contains(filepath.ToLower + "\") Then
-                                Try
-                                    deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        End If
-                    Next
-                End If
-                If My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False) IsNot Nothing Then
-                    For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False).GetValueNames
-                        If Not checkvariables.isnullorwhitespace(child) Then
-                            If child.ToLower.Contains(filepath.ToLower + "\") Then
-                                Try
-                                    deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
-                                Catch ex As Exception
-                                End Try
-                            End If
-                        End If
-                    Next
-                End If
-                If IntPtr.Size = 8 Then
-                    If My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", False) IsNot Nothing Then
-                        For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", False).GetValueNames
-                            If Not checkvariables.isnullorwhitespace(child) Then
-                                If child.ToLower.Contains(filepath.ToLower + "\") Then
-                                    Try
-                                        deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
-                                    Catch ex As Exception
-                                    End Try
-                                End If
-                            End If
-                        Next
-                    End If
-                End If
-            End If
-        End If
-    End Sub
 End Class
 
 Public Class WindowsApi
