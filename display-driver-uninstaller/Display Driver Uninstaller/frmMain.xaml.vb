@@ -41,7 +41,6 @@ Public Class frmMain
 	Dim nbclean As Integer = 0
 	Dim restart As Boolean = False
 	Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
-	Dim checkvariables As New checkvariables
 	Dim identity As WindowsIdentity = WindowsIdentity.GetCurrent()
 	Dim principal As WindowsPrincipal = New WindowsPrincipal(identity)
 	Dim isElevated As Boolean = principal.IsInRole(WindowsBuiltInRole.Administrator)
@@ -160,7 +159,7 @@ Public Class frmMain
 
 	Private Sub cleandriverstore(ByVal config As ThreadSettings)
 		Dim catalog As String = ""
-		Dim CurrentProvider As String
+		Dim CurrentProvider As String = ""
 		UpdateTextMethod("-Executing Driver Store cleanUP(finding OEM step)...")
 		log("Executing Driver Store cleanUP(Find OEM)...")
 		'Check the driver from the driver store  ( oemxx.inf)
@@ -168,9 +167,7 @@ Public Class frmMain
 		Dim deloem As New Diagnostics.ProcessStartInfo
 		deloem.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
 		Dim proc3 As New Diagnostics.Process
-		processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-		processinfo.Arguments = "dp_enum"
-
+		
 		UpdateTextMethod(UpdateTextMethodmessagefn(0))
 
 		Select Case config.SelectedGPU
@@ -185,21 +182,21 @@ Public Class frmMain
 		Try
 			For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
 
-				If Not checkvariables.isnullorwhitespace(infs) Then
+				If Not IsNullOrWhitespace(infs) Then
 					For Each child As String In IO.File.ReadAllLines(infs)
-						If Not checkvariables.isnullorwhitespace(child) Then
+						If Not IsNullOrWhitespace(child) Then
 
 							child = child.Replace(" ", "").Replace(vbTab, "")
 
-							If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
+							If Not IsNullOrWhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
 								If child.EndsWith("%") Then
 									For Each providers As String In IO.File.ReadAllLines(infs)
-										If Not checkvariables.isnullorwhitespace(providers) Then
+										If Not IsNullOrWhitespace(providers) Then
 
 
 
 											providers = providers.Replace(" ", "").Replace(vbTab, "")
-											If Not checkvariables.isnullorwhitespace(providers) AndAlso providers.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
+											If Not IsNullOrWhitespace(providers) AndAlso providers.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
 											   Not providers.Contains("%") Then
 												If providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.Contains(CurrentProvider.ToLower) Or
 												   providers.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "").ToLower.StartsWith("atitech") Or
@@ -208,7 +205,7 @@ Public Class frmMain
 													deloem.Arguments = "dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
 													Try
 														For Each child3 As String In IO.File.ReadAllLines(infs)
-															If Not checkvariables.isnullorwhitespace(child3) Then
+															If Not IsNullOrWhitespace(child3) Then
 																If child3.ToLower.Trim.Replace(" ", "").Contains("class=display") Or
 																 child3.ToLower.Trim.Replace(" ", "").Contains("class=media") Then
 																	deloem.Arguments = "-f dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
@@ -244,8 +241,8 @@ Public Class frmMain
 													proc3.Close()
 													UpdateTextMethod(reply2)
 													log(reply2)
-													'check if the oem was remove to process to the pnplockdownfile if necessary
-													If win8higher AndAlso (Not System.IO.File.Exists(Environment.GetEnvironmentVariable("windir") & "\inf\" + infs.Substring(infs.IndexOf("oem")))) AndAlso (Not checkvariables.isnullorwhitespace(catalog)) Then
+													'check if the oem was removed to process to the pnplockdownfile if necessary
+													If win8higher AndAlso (Not System.IO.File.Exists(Environment.GetEnvironmentVariable("windir") & "\inf\" + infs.Substring(infs.IndexOf("oem")))) AndAlso (Not IsNullOrWhitespace(catalog)) Then
 														CleanupEngine.prePnplockdownfiles(catalog)
 													End If
 													Exit For
@@ -262,7 +259,7 @@ Public Class frmMain
 										deloem.Arguments = "dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
 										Try
 											For Each child3 As String In IO.File.ReadAllLines(infs)
-												If Not checkvariables.isnullorwhitespace(child3) Then
+												If Not IsNullOrWhitespace(child3) Then
 													If child3.ToLower.Trim.Replace(" ", "").Contains("class=display") Or
 													 child3.ToLower.Trim.Replace(" ", "").Contains("class=media") Then
 														deloem.Arguments = "-f dp_delete " + Chr(34) + infs.Substring(infs.IndexOf("oem")) + Chr(34)
@@ -451,7 +448,7 @@ Public Class frmMain
 		If Directory.Exists(filePath) Then
 
 			For Each child As String In Directory.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ati.ace") Or
 					   child.ToLower.Contains("ati catalyst control center") Or
 					   child.ToLower.Contains("application profiles") Or
@@ -487,7 +484,7 @@ Public Class frmMain
 		 (Environment.SpecialFolder.ProgramFiles) + "\ATI"
 		If Directory.Exists(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("cim") Then
 						Try
 							deletedirectory(child)
@@ -518,7 +515,7 @@ Public Class frmMain
 		  (Environment.SpecialFolder.ProgramFiles) + "\Common Files" + "\ATI Technologies"
 		If Directory.Exists(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("multimedia") Then
 						Try
 							deletedirectory(child)
@@ -575,7 +572,7 @@ Public Class frmMain
 			If Directory.Exists(filePath) Then
 				Try
 					For Each child As String In Directory.GetDirectories(filePath)
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ati.ace") Or
 							 child.ToLower.Contains("ati catalyst control center") Or
 							 child.ToLower.Contains("application profiles") Or
@@ -610,7 +607,7 @@ Public Class frmMain
 			filePath = System.Environment.SystemDirectory
 			Dim files() As String = IO.Directory.GetFiles(filePath + "\", "coinst_*.*")
 			For i As Integer = 0 To files.Length - 1
-				If Not checkvariables.isnullorwhitespace(files(i)) Then
+				If Not IsNullOrWhitespace(files(i)) Then
 					Try
 						deletefile(files(i))
 					Catch ex As Exception
@@ -663,7 +660,7 @@ Public Class frmMain
 			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies"
 			If Directory.Exists(filePath) Then
 				For Each child As String In Directory.GetDirectories(filePath)
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("multimedia") Then
 							Try
 								deletedirectory(child)
@@ -719,7 +716,7 @@ Public Class frmMain
 	  (Environment.SpecialFolder.CommonApplicationData) + "\ATI"
 		If Directory.Exists(filePath) Then
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ace") Then
 						Try
 							deletedirectory(child)
@@ -749,7 +746,7 @@ Public Class frmMain
 	  (Environment.SpecialFolder.CommonApplicationData) + "\AMD"
 		If Directory.Exists(filePath) Then
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("kdb") Or _
 					   child.ToLower.Contains("fuel") Then
 						Try
@@ -784,7 +781,7 @@ Public Class frmMain
 			If Directory.Exists(filePath) Then
 				Try
 					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ace") Then
 								Try
 									deletedirectory(child)
@@ -821,7 +818,7 @@ Public Class frmMain
 			If Directory.Exists(filePath) Then
 				Try
 					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ace") Then
 								Try
 									deletedirectory(child)
@@ -857,7 +854,7 @@ Public Class frmMain
 			If Directory.Exists(filePath) Then
 				Try
 					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("cn") Or
 							 child.ToLower.Contains("fuel") Or _
 							 removedxcache AndAlso child.ToLower.Contains("dxcache") Or _
@@ -897,7 +894,7 @@ Public Class frmMain
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD"
 		If Directory.Exists(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("amdkmpfd") Or
 					 child.ToLower.Contains("cnext") Or
 					 child.ToLower.Contains("steadyvideo") Or
@@ -935,7 +932,7 @@ Public Class frmMain
 		If Directory.Exists(filePath) Then
 
 			For Each child As String In Directory.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ati.ace") Or _
 					   child.ToLower.Contains("cnext") Then
 						Try
@@ -968,7 +965,7 @@ Public Class frmMain
 		filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_64"
 		If Directory.Exists(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.EndsWith("\mom") Or
 					 child.ToLower.Contains("\mom.") Or
 					 child.ToLower.Contains("newaem.foundation") Or
@@ -1004,7 +1001,7 @@ Public Class frmMain
 		filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\GAC_MSIL"
 		If Directory.Exists(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.EndsWith("\mom") Or
 					 child.ToLower.Contains("\mom.") Or
 					 child.ToLower.Contains("newaem.foundation") Or
@@ -1076,16 +1073,16 @@ Public Class frmMain
 			regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", False)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child, False)
 						If subregkey IsNot Nothing Then
 							subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\Instance", False)
 							If subregkey2 IsNot Nothing Then
 								For Each child2 As String In subregkey2.GetSubKeyNames()
-									If checkvariables.isnullorwhitespace(child2) = False Then
+									If IsNullOrWhitespace(child2) = False Then
 										superkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\Instance\" & child2)
 										If superkey IsNot Nothing Then
-											If checkvariables.isnullorwhitespace(CStr(superkey.GetValue("FriendlyName"))) = False Then
+											If IsNullOrWhitespace(CStr(superkey.GetValue("FriendlyName"))) = False Then
 												wantedvalue2 = superkey.GetValue("FriendlyName").ToString
 												If wantedvalue2.ToLower.Contains("ati mpeg") Or
 												 wantedvalue2.ToLower.Contains("amd mjpeg") Or
@@ -1118,16 +1115,16 @@ Public Class frmMain
 				regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", False)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child, False)
 							If subregkey IsNot Nothing Then
 								subregkey2 = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\Instance", False)
 								If subregkey2 IsNot Nothing Then
 									For Each child2 As String In subregkey2.GetSubKeyNames()
-										If checkvariables.isnullorwhitespace(child2) = False Then
+										If IsNullOrWhitespace(child2) = False Then
 											superkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\Instance\" & child2)
 											If superkey IsNot Nothing Then
-												If checkvariables.isnullorwhitespace(CStr(superkey.GetValue("FriendlyName"))) = False Then
+												If IsNullOrWhitespace(CStr(superkey.GetValue("FriendlyName"))) = False Then
 													wantedvalue2 = superkey.GetValue("FriendlyName").ToString
 													If wantedvalue2.ToLower.Contains("ati mpeg") Or
 													wantedvalue2.ToLower.Contains("amd mjpeg") Or
@@ -1161,9 +1158,9 @@ Public Class frmMain
 			regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transforms", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 
-						If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue(""))) Then
+						If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue(""))) Then
 							If regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd d3d11 hardware mft") Or
 							  regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd fast (dnd) decoder") Or
 							   regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd h.264 hardware mft encoder") Or
@@ -1194,9 +1191,9 @@ Public Class frmMain
 				regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 
-							If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue(""))) Then
+							If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue(""))) Then
 								If regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd d3d11 hardware mft") Or
 								 regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd fast (dnd) decoder") Or
 								 regkey.OpenSubKey(child).GetValue("").ToString.ToLower.Contains("amd h.264 hardware mft encoder") Or
@@ -1237,13 +1234,13 @@ Public Class frmMain
 			regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Record", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						subregkey = regkey.OpenSubKey(child)
 						If subregkey IsNot Nothing Then
 							For Each childs As String In subregkey.GetSubKeyNames()
-								If checkvariables.isnullorwhitespace(childs) = False Then
+								If IsNullOrWhitespace(childs) = False Then
 									Try
-										If checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey(childs, False).GetValue("Assembly"))) = False Then
+										If IsNullOrWhitespace(CStr(subregkey.OpenSubKey(childs, False).GetValue("Assembly"))) = False Then
 											If subregkey.OpenSubKey(childs, False).GetValue("Assembly").ToString.ToLower.Contains("aticccom") Then
 												deletesubregkey(regkey, child)
 											End If
@@ -1269,7 +1266,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Installer\Assemblies", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("ati.ace") Then
 							Try
 								deletesubregkey(regkey, child)
@@ -1304,7 +1301,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Khronos\OpenCL\Vendors", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetValueNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("amdocl") Then
 							Try
 								deletevalue(regkey, child)
@@ -1339,7 +1336,7 @@ Public Class frmMain
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Khronos\OpenCL\Vendors", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetValueNames()
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("amdocl") Then
 								Try
 									deletevalue(regkey, child)
@@ -1377,7 +1374,7 @@ Public Class frmMain
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("ati.ace") Then
 									Try
 										deletesubregkey(regkey, child)
@@ -1402,7 +1399,7 @@ Public Class frmMain
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetValueNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If regkey.GetValue(child).ToString.ToLower.Contains("catalyst context menu extension") Or
 								 regkey.GetValue(child).ToString.ToLower.Contains("display cpl extension") Then
 									Try
@@ -1422,7 +1419,7 @@ Public Class frmMain
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetValueNames()
-								If checkvariables.isnullorwhitespace(child) = False Then
+								If IsNullOrWhitespace(child) = False Then
 									If regkey.GetValue(child).ToString.ToLower.Contains("catalyst context menu extension") Or
 									 regkey.GetValue(child).ToString.ToLower.Contains("display cpl extension") Then
 										Try
@@ -1519,13 +1516,13 @@ Public Class frmMain
 						 ("SYSTEM")
 						If subregkey IsNot Nothing Then
 							For Each childs As String In subregkey.GetSubKeyNames()
-								If checkvariables.isnullorwhitespace(childs) = False Then
+								If IsNullOrWhitespace(childs) = False Then
 									If childs.ToLower.Contains("controlset") Then
 										regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 										  ("SYSTEM\" & childs & "\Enum\Root")
 										If regkey IsNot Nothing Then
 											For Each child As String In regkey.GetSubKeyNames()
-												If checkvariables.isnullorwhitespace(child) = False Then
+												If IsNullOrWhitespace(child) = False Then
 											If child.ToLower.Contains("legacy_amdkmdag") Or _
 											 (child.ToLower.Contains("legacy_amdkmpfd") AndAlso config.RemoveAMDKMPFD) Or _
 											 child.ToLower.Contains("legacy_amdacpksd") Then
@@ -1565,7 +1562,7 @@ Public Class frmMain
 								regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
 								If regkey IsNot Nothing Then
 									For Each child As String In regkey.GetValueNames()
-										If checkvariables.isnullorwhitespace(child) = False Then
+										If IsNullOrWhitespace(child) = False Then
 											If child.Contains("AMDAPPSDKROOT") Then
 												Try
 													deletesubregkey(regkey, child)
@@ -1573,7 +1570,7 @@ Public Class frmMain
 												End Try
 											End If
 											If child.Contains("Path") Then
-												If checkvariables.isnullorwhitespace(CStr(regkey.GetValue(child))) = False Then
+												If IsNullOrWhitespace(CStr(regkey.GetValue(child))) = False Then
 													wantedvalue = regkey.GetValue(child).ToString.ToLower
 													Try
 														Select Case True
@@ -1634,12 +1631,12 @@ Public Class frmMain
 					subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
 					If subregkey IsNot Nothing Then
 						For Each child2 As String In subregkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child2) = False Then
+							If IsNullOrWhitespace(child2) = False Then
 								If child2.ToLower.Contains("controlset") Then
 									regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog", True)
 									If regkey IsNot Nothing Then
 										For Each child As String In regkey.GetSubKeyNames()
-											If checkvariables.isnullorwhitespace(child) = False Then
+											If IsNullOrWhitespace(child) = False Then
 												If child.ToLower.Contains("aceeventlog") Then
 													deletesubregkey(regkey, child)
 												End If
@@ -1683,7 +1680,7 @@ Public Class frmMain
 					 ("Directory\background\shellex\ContextMenuHandlers", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If child.Contains("ACE") Then
 
 									deletesubregkey(regkey, child)
@@ -1701,11 +1698,11 @@ Public Class frmMain
 				' to fix later, the range is too large and could lead to problems.
 				Try
 					For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-						If Not checkvariables.isnullorwhitespace(users) Then
+						If Not IsNullOrWhitespace(users) Then
 							regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software", True)
 							If regkey IsNot Nothing Then
 								For Each child As String In regkey.GetSubKeyNames()
-									If checkvariables.isnullorwhitespace(child) = False Then
+									If IsNullOrWhitespace(child) = False Then
 										If child.StartsWith("ATI") Then
 											deletesubregkey(regkey, child)
 										End If
@@ -1721,11 +1718,11 @@ Public Class frmMain
 				' to fix later, the range is too large and could lead to problems.
 				Try
 					For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-						If Not checkvariables.isnullorwhitespace(users) Then
+						If Not IsNullOrWhitespace(users) Then
 							regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software", True)
 							If regkey IsNot Nothing Then
 								For Each child As String In regkey.GetSubKeyNames()
-									If checkvariables.isnullorwhitespace(child) = False Then
+									If IsNullOrWhitespace(child) = False Then
 										If child.StartsWith("AMD") Then
 											deletesubregkey(regkey, child)
 										End If
@@ -1742,7 +1739,7 @@ Public Class frmMain
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("ace") Or
 								 child.ToLower.Contains("appprofiles") Or
 								   child.ToLower.Contains("install") Then
@@ -1768,7 +1765,7 @@ Public Class frmMain
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI Technologies", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("cbt") Then
 									Try
 										deletesubregkey(regkey, child)
@@ -1798,11 +1795,11 @@ Public Class frmMain
 										Next i
 									End If
 							Try
-								If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("InstallDir"))) Then
+								If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("InstallDir"))) Then
 									filePath = regkey.OpenSubKey(child).GetValue("InstallDir").ToString
-									If Not checkvariables.isnullorwhitespace(filePath) AndAlso My.Computer.FileSystem.DirectoryExists(filePath) Then
+									If Not IsNullOrWhitespace(filePath) AndAlso My.Computer.FileSystem.DirectoryExists(filePath) Then
 										For Each childf As String In Directory.GetDirectories(filePath)
-											If checkvariables.isnullorwhitespace(childf) = False Then
+											If IsNullOrWhitespace(childf) = False Then
 												If childf.ToLower.Contains("ati.ace") Or
 											 childf.ToLower.Contains("cnext") Or
 											 childf.ToLower.Contains("amdkmpfd") Or
@@ -1831,7 +1828,7 @@ Public Class frmMain
 								Application.Log.AddException(ex)
 							End Try
 									For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-										If Not checkvariables.isnullorwhitespace(child2) Then
+										If Not IsNullOrWhitespace(child2) Then
 											If child2.ToLower.Contains("ati catalyst") Or
 											 child2.ToLower.Contains("ati mcat") Or
 											 child2.ToLower.Contains("avt") Or
@@ -1882,7 +1879,7 @@ Public Class frmMain
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\AMD", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("eeu") Or
 								   child.ToLower.Contains("fuel") Or
 								   child.ToLower.Contains("cn") Or
@@ -1910,7 +1907,7 @@ Public Class frmMain
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\ATI", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If checkvariables.isnullorwhitespace(child) = False Then
+								If IsNullOrWhitespace(child) = False Then
 									If child.ToLower.Contains("ace") Or
 									   child.ToLower.Contains("appprofiles") Then
 										Try
@@ -1931,7 +1928,7 @@ Public Class frmMain
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\AMD", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If checkvariables.isnullorwhitespace(child) = False Then
+								If IsNullOrWhitespace(child) = False Then
 									If child.ToLower.Contains("eeu") Or
 									   child.ToLower.Contains("mftvdecoder") Then
 
@@ -1952,7 +1949,7 @@ Public Class frmMain
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\ATI Technologies", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If checkvariables.isnullorwhitespace(child) = False Then
+								If IsNullOrWhitespace(child) = False Then
 									If child.ToLower.Contains("system wide settings") Then
 										Try
 											deletesubregkey(regkey, child)
@@ -2001,7 +1998,7 @@ Public Class frmMain
 
 				Try
 					For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-						If checkvariables.isnullorwhitespace(users) Then
+						If IsNullOrWhitespace(users) Then
 							regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Microsoft\Windows\CurrentVersion\Run", True)
 							If regkey IsNot Nothing Then
 								Try
@@ -2040,17 +2037,17 @@ Public Class frmMain
 					("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 
 								subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 							   ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
 
 								If subregkey IsNot Nothing Then
-									If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
+									If IsNullOrWhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
 										wantedvalue = subregkey.GetValue("DisplayName").ToString
-										If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+										If IsNullOrWhitespace(wantedvalue) = False Then
 											For i As Integer = 0 To packages.Length - 1
-												If Not checkvariables.isnullorwhitespace(packages(i)) Then
+												If Not IsNullOrWhitespace(packages(i)) Then
 													If wantedvalue.ToLower.Contains(packages(i).ToLower) Then
 												Try
 													If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
@@ -2078,15 +2075,15 @@ Public Class frmMain
 						 ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If checkvariables.isnullorwhitespace(child) = False Then
+								If IsNullOrWhitespace(child) = False Then
 									subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 									 ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
 									If subregkey IsNot Nothing Then
-										If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
+										If IsNullOrWhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
 											wantedvalue = subregkey.GetValue("DisplayName").ToString
-											If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+											If IsNullOrWhitespace(wantedvalue) = False Then
 												For i As Integer = 0 To packages.Length - 1
-													If Not checkvariables.isnullorwhitespace(packages(i)) Then
+													If Not IsNullOrWhitespace(packages(i)) Then
 														If wantedvalue.ToLower.Contains(packages(i).ToLower) Then
 															Try
 																deletesubregkey(regkey, child)
@@ -2173,7 +2170,7 @@ Public Class frmMain
 					 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetValueNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If child.Contains("ATI\CIM\") Or
 								   child.Contains("AMD\CNext\") Or
 								   child.Contains("AMD APP\") Or
@@ -2197,7 +2194,7 @@ Public Class frmMain
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetValueNames()
-							If Not checkvariables.isnullorwhitespace(child) Then
+							If Not IsNullOrWhitespace(child) Then
 								If child.ToLower.Contains("launchwuapp") Then
 									deletevalue(regkey, child)
 								End If
@@ -2213,7 +2210,7 @@ Public Class frmMain
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\RunOnce", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetValueNames()
-								If Not checkvariables.isnullorwhitespace(child) Then
+								If Not IsNullOrWhitespace(child) Then
 									If child.ToLower.Contains("launchwuapp") Then
 										deletevalue(regkey, child)
 									End If
@@ -2231,9 +2228,9 @@ Public Class frmMain
 					regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AudioEngine\AudioProcessingObjects", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If Not checkvariables.isnullorwhitespace(child) Then
+							If Not IsNullOrWhitespace(child) Then
 								Try
-									If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) Then
+									If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) Then
 										If regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("cdelayapogfx") Then
 											deletesubregkey(regkey, child)
 										End If
@@ -2254,12 +2251,12 @@ Public Class frmMain
 				 ("Software\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							subregkey = regkey.OpenSubKey(child, False)
 							If subregkey IsNot Nothing Then
-								If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+								If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
 									wantedvalue = subregkey.GetValue("").ToString
-									If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+									If IsNullOrWhitespace(wantedvalue) = False Then
 										If wantedvalue.ToLower.Contains("steadyvideo") Then
 											Try
 												deletesubregkey(regkey, child)
@@ -2278,12 +2275,12 @@ Public Class frmMain
 					regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("PROTOCOLS\Filter", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If Not checkvariables.isnullorwhitespace(child) Then
+							If Not IsNullOrWhitespace(child) Then
 								subregkey = regkey.OpenSubKey(child, False)
 								If subregkey IsNot Nothing Then
-									If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) Then
+									If Not IsNullOrWhitespace(CStr(subregkey.GetValue(""))) Then
 										wantedvalue = CStr(subregkey.GetValue(""))
-										If Not checkvariables.isnullorwhitespace(wantedvalue) Then
+										If Not IsNullOrWhitespace(wantedvalue) Then
 											If wantedvalue.ToLower.Contains("steadyvideo") Then
 												Try
 													deletesubregkey(regkey, child)
@@ -2308,12 +2305,12 @@ Public Class frmMain
 				 ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								subregkey = regkey.OpenSubKey(child, False)
 								If subregkey IsNot Nothing Then
-									If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+									If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
 										wantedvalue = subregkey.GetValue("").ToString
-										If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+										If IsNullOrWhitespace(wantedvalue) = False Then
 											If wantedvalue.ToLower.Contains("steadyvideo") Then
 												Try
 													deletesubregkey(regkey, child)
@@ -2333,12 +2330,12 @@ Public Class frmMain
 						regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\PROTOCOLS\Filter", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If Not checkvariables.isnullorwhitespace(child) Then
+								If Not IsNullOrWhitespace(child) Then
 									subregkey = regkey.OpenSubKey(child, False)
 									If subregkey IsNot Nothing Then
-										If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) Then
+										If Not IsNullOrWhitespace(CStr(subregkey.GetValue(""))) Then
 											wantedvalue = CStr(subregkey.GetValue(""))
-											If Not checkvariables.isnullorwhitespace(wantedvalue) Then
+											If Not IsNullOrWhitespace(wantedvalue) Then
 												If wantedvalue.ToLower.Contains("steadyvideo") Then
 													Try
 														deletesubregkey(regkey, child)
@@ -2395,14 +2392,14 @@ Public Class frmMain
 				Dim regkey As RegistryKey = Nothing
 				Dim infslist As String = ""
 				For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
-					If Not checkvariables.isnullorwhitespace(infs) Then
+					If Not IsNullOrWhitespace(infs) Then
 						infslist = infslist + infs
 					End If
 				Next
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("DRIVERS\DriverDatabase\DriverInfFiles", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If Not checkvariables.isnullorwhitespace(child) Then
+						If Not IsNullOrWhitespace(child) Then
 							If child.ToLower.StartsWith("oem") AndAlso child.ToLower.EndsWith(".inf") Then
 								If Not infslist.ToLower.Contains(child) Then
 									Try
@@ -2459,7 +2456,7 @@ Public Class frmMain
 				filePath = System.Environment.SystemDirectory
 				files = IO.Directory.GetFiles(filePath + "\", "vulkan-1*.dll")
 				For i As Integer = 0 To files.Length - 1
-					If Not checkvariables.isnullorwhitespace(files(i)) Then
+					If Not IsNullOrWhitespace(files(i)) Then
 						Try
 							deletefile(files(i))
 						Catch ex As Exception
@@ -2469,7 +2466,7 @@ Public Class frmMain
 
 				files = IO.Directory.GetFiles(filePath + "\", "vulkaninfo*.*")
 				For i As Integer = 0 To files.Length - 1
-					If Not checkvariables.isnullorwhitespace(files(i)) Then
+					If Not IsNullOrWhitespace(files(i)) Then
 						Try
 							deletefile(files(i))
 						Catch ex As Exception
@@ -2483,7 +2480,7 @@ Public Class frmMain
 					filePath = Environment.GetEnvironmentVariable("windir") + "\SysWOW64"
 					files = IO.Directory.GetFiles(filePath + "\", "vulkan-1*.dll")
 					For i As Integer = 0 To files.Length - 1
-						If Not checkvariables.isnullorwhitespace(files(i)) Then
+						If Not IsNullOrWhitespace(files(i)) Then
 							Try
 								deletefile(files(i))
 							Catch ex As Exception
@@ -2493,7 +2490,7 @@ Public Class frmMain
 
 					files = IO.Directory.GetFiles(filePath + "\", "vulkaninfo*.*")
 					For i As Integer = 0 To files.Length - 1
-						If Not checkvariables.isnullorwhitespace(files(i)) Then
+						If Not IsNullOrWhitespace(files(i)) Then
 							Try
 								deletefile(files(i))
 							Catch ex As Exception
@@ -2585,7 +2582,7 @@ Public Class frmMain
 		' here I erase the folders / files of the nvidia GFE / update in users.
 		filePath = IO.Path.GetDirectoryName(userpth)
 		For Each child As String In Directory.GetDirectories(filePath)
-			If checkvariables.isnullorwhitespace(child) = False Then
+			If IsNullOrWhitespace(child) = False Then
 				If child.ToLower.Contains("updatususer") Then
 					Try
 						TestDelete(child)
@@ -2622,7 +2619,7 @@ Public Class frmMain
 			If config.RemoveGFE Then
 				Try
 					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							If (child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvosc.") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shareconnect") AndAlso config.RemoveGFE) Or
@@ -2660,7 +2657,7 @@ Public Class frmMain
 
 			Try
 				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("computecache") Or
 						 child.ToLower.Contains("glcache") Then
 							Try
@@ -2696,7 +2693,7 @@ Public Class frmMain
 			If config.RemoveGFE Then
 				Try
 					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							If (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
@@ -2739,7 +2736,7 @@ Public Class frmMain
 
 		Try
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("updatus") Or _
 					 (child.ToLower.Contains("grid") AndAlso config.RemoveGFE) Then
 						Try
@@ -2773,7 +2770,7 @@ Public Class frmMain
 	  (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
 		Try
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("drs") Or
 					 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
@@ -2813,7 +2810,7 @@ Public Class frmMain
 	  (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\NVIDIA Corporation"
 		Try
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("3d vision") Then
 						Try
 							deletedirectory(child)
@@ -2847,7 +2844,7 @@ Public Class frmMain
 		(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 		If Directory.Exists(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("control panel client") Or
 					   child.ToLower.Contains("display") Or
 					   child.ToLower.Contains("coprocmanager") Or
@@ -2881,7 +2878,7 @@ Public Class frmMain
 					End If
 					If child.ToLower.Contains("installer2") Then
 						For Each child2 As String In Directory.GetDirectories(child)
-							If checkvariables.isnullorwhitespace(child2) = False Then
+							If IsNullOrWhitespace(child2) = False Then
 								If child2.ToLower.Contains("display.3dvision") Or
 								   child2.ToLower.Contains("display.controlpanel") Or
 								   child2.ToLower.Contains("display.driver") Or
@@ -2972,7 +2969,7 @@ Public Class frmMain
 					(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
 			If Directory.Exists(filePath) Then
 				For Each child As String In Directory.GetDirectories(filePath)
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("3d vision") Or
 							child.ToLower.Contains("coprocmanager") Or
 							child.ToLower.Contains("led visualizer") AndAlso config.RemoveGFE Or
@@ -3058,7 +3055,7 @@ Public Class frmMain
 		filePath = System.Environment.SystemDirectory
 		Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
 		For i As Integer = 0 To files.Length - 1
-			If Not checkvariables.isnullorwhitespace(files(i)) Then
+			If Not IsNullOrWhitespace(files(i)) Then
 				Try
 					deletefile(files(i))
 				Catch ex As Exception
@@ -3069,7 +3066,7 @@ Public Class frmMain
 		filePath = System.Environment.SystemDirectory
 		files = IO.Directory.GetFiles(filePath + "\", "nvhdagenco*.*")
 		For i As Integer = 0 To files.Length - 1
-			If Not checkvariables.isnullorwhitespace(files(i)) Then
+			If Not IsNullOrWhitespace(files(i)) Then
 				Try
 					deletefile(files(i))
 				Catch ex As Exception
@@ -3086,7 +3083,7 @@ Public Class frmMain
 		Try
 			filePath = Environment.GetEnvironmentVariable("windir") + "\Temp\NVIDIA Corporation"
 			For Each child As String In Directory.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("nv_cache") Then
 						Try
 							deletedirectory(child)
@@ -3124,7 +3121,7 @@ Public Class frmMain
 
 			Try
 				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("nv_cache") Or
 						 child.ToLower.Contains("displaydriver") Then
 							Try
@@ -3159,7 +3156,7 @@ Public Class frmMain
 
 			Try
 				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE Or _
 						   child.ToLower.Contains("displaydriver") Then
 							Try
@@ -3194,7 +3191,7 @@ Public Class frmMain
 
 			Try
 				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("nv_cache") Then
 							Try
 								deletedirectory(child)
@@ -3229,12 +3226,12 @@ Public Class frmMain
 				If win8higher Then
 					Dim prefilePath As String = filepaths + "\AppData\Local\Packages"
 					For Each childs As String In My.Computer.FileSystem.GetDirectories(prefilePath)
-						If Not checkvariables.isnullorwhitespace(childs) Then
+						If Not IsNullOrWhitespace(childs) Then
 							filePath = childs + "\AC\Temp\NVIDIA Corporation"
 
 							If Directory.Exists(filePath) Then
 								For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-									If checkvariables.isnullorwhitespace(child) = False Then
+									If IsNullOrWhitespace(child) = False Then
 										If child.ToLower.Contains("nv_cache") Then
 											Try
 												deletedirectory(child)
@@ -3273,7 +3270,7 @@ Public Class frmMain
 			filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_32"
 			If Directory.Exists(filePath) Then
 				For Each child As String In Directory.GetDirectories(filePath)
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("gfexperience") Or
 						 child.ToLower.Contains("nvidia.sett") Or
 						 child.ToLower.Contains("nvidia.updateservice") Or
@@ -3302,17 +3299,17 @@ Public Class frmMain
 		log("MuiCache CleanUP")
 		Try
 			For Each regusers As String In My.Computer.Registry.Users.GetSubKeyNames
-				If Not checkvariables.isnullorwhitespace(regusers) Then
+				If Not IsNullOrWhitespace(regusers) Then
 					regkey = My.Computer.Registry.Users.OpenSubKey(regusers & "\software\classes\local settings\muicache", False)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								subregkey = regkey.OpenSubKey(child, False)
 								If subregkey IsNot Nothing Then
 									For Each childs As String In subregkey.GetSubKeyNames()
-										If checkvariables.isnullorwhitespace(childs) = False Then
+										If IsNullOrWhitespace(childs) = False Then
 											For Each Keyname As String In subregkey.OpenSubKey(childs).GetValueNames
-												If Not checkvariables.isnullorwhitespace(Keyname) Then
+												If Not IsNullOrWhitespace(Keyname) Then
 
 													If Keyname.ToLower.Contains("nvstlink.exe") Or
 													 Keyname.ToLower.Contains("nvstview.exe") Or
@@ -3340,12 +3337,12 @@ Public Class frmMain
 
 		Try
 			For Each regusers As String In My.Computer.Registry.Users.GetSubKeyNames
-				If Not checkvariables.isnullorwhitespace(regusers) Then
+				If Not IsNullOrWhitespace(regusers) Then
 					regkey = My.Computer.Registry.Users.OpenSubKey(regusers & "\software\classes\local settings\software\microsoft\windows\shell\muicache", True)
 					If regkey IsNot Nothing Then
 
 						For Each Keyname As String In regkey.GetValueNames
-							If Not checkvariables.isnullorwhitespace(Keyname) Then
+							If Not IsNullOrWhitespace(Keyname) Then
 
 								If Keyname.ToLower.Contains("nvstlink.exe") Or
 								 Keyname.ToLower.Contains("nvstview.exe") Or
@@ -3403,7 +3400,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If Not checkvariables.isnullorwhitespace(child) Then
+					If Not IsNullOrWhitespace(child) Then
 						If child.ToLower.Contains("nvidia_rebootneeded") Then
 							Try
 								deletesubregkey(regkey, child)
@@ -3505,8 +3502,8 @@ Public Class frmMain
 								regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\SharedAccess\Parameters\FirewallPolicy\FirewallRules", True)
 								If regkey IsNot Nothing Then
 									For Each child As String In regkey.GetValueNames()
-										If checkvariables.isnullorwhitespace(child) = False Then
-											If checkvariables.isnullorwhitespace(CStr(regkey.GetValue(child))) = False Then
+										If IsNullOrWhitespace(child) = False Then
+											If IsNullOrWhitespace(CStr(regkey.GetValue(child))) = False Then
 												wantedvalue = regkey.GetValue(child).ToString()
 											End If
 											If wantedvalue.ToLower.ToString.Contains("nvstreamsrv") Or
@@ -3545,10 +3542,10 @@ Public Class frmMain
 							regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Power\PowerSettings", True)
 							If regkey IsNot Nothing Then
 								For Each childs As String In regkey.GetSubKeyNames()
-									If checkvariables.isnullorwhitespace(childs) = False Then
+									If IsNullOrWhitespace(childs) = False Then
 										For Each child As String In regkey.OpenSubKey(childs).GetValueNames()
-											If checkvariables.isnullorwhitespace(child) = False And child.ToString.ToLower.Contains("description") Then
-												If checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(childs).GetValue(child))) = False Then
+											If IsNullOrWhitespace(child) = False And child.ToString.ToLower.Contains("description") Then
+												If IsNullOrWhitespace(CStr(regkey.OpenSubKey(childs).GetValue(child))) = False Then
 													wantedvalue = regkey.OpenSubKey(childs).GetValue(child).ToString()
 												End If
 												If wantedvalue.ToString.ToLower.Contains("nvsvc") Then
@@ -3558,10 +3555,10 @@ Public Class frmMain
 													subregkey2 = regkey.OpenSubKey(childs, True)
 													If subregkey2 IsNot Nothing Then
 														For Each childinsubregkey2 As String In subregkey2.GetSubKeyNames()
-															If checkvariables.isnullorwhitespace(childinsubregkey2) = False Then
+															If IsNullOrWhitespace(childinsubregkey2) = False Then
 																For Each childinsubregkey2value As String In subregkey2.OpenSubKey(childinsubregkey2).GetValueNames()
-																	If checkvariables.isnullorwhitespace(childinsubregkey2value) = False And childinsubregkey2value.ToString.ToLower.Contains("description") Then
-																		If checkvariables.isnullorwhitespace(CStr(subregkey2.OpenSubKey(childinsubregkey2).GetValue(childinsubregkey2value))) = False Then
+																	If IsNullOrWhitespace(childinsubregkey2value) = False And childinsubregkey2value.ToString.ToLower.Contains("description") Then
+																		If IsNullOrWhitespace(CStr(subregkey2.OpenSubKey(childinsubregkey2).GetValue(childinsubregkey2value))) = False Then
 																			wantedvalue2 = subregkey2.OpenSubKey(childinsubregkey2).GetValue(childinsubregkey2value).ToString
 																		End If
 																		If wantedvalue2.ToString.ToLower.Contains("nvsvc") Then
@@ -3609,9 +3606,9 @@ Public Class frmMain
 							regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
 							If regkey IsNot Nothing Then
 								For Each child As String In regkey.GetValueNames()
-									If checkvariables.isnullorwhitespace(child) = False Then
+									If IsNullOrWhitespace(child) = False Then
 										If child.Contains("Path") Then
-											If Not checkvariables.isnullorwhitespace(regkey.GetValue(child).ToString()) Then
+											If Not IsNullOrWhitespace(regkey.GetValue(child).ToString()) Then
 												wantedvalue = regkey.GetValue(child).ToString.ToLower
 												Try
 													Select Case True
@@ -3652,9 +3649,9 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 			  ("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
 			If regkey IsNot Nothing Then
-				If checkvariables.isnullorwhitespace(CStr(regkey.GetValue("AppInit_DLLs"))) = False Then
+				If IsNullOrWhitespace(CStr(regkey.GetValue("AppInit_DLLs"))) = False Then
 					wantedvalue = CStr(regkey.GetValue("AppInit_DLLs"))	  'Will need to consider the comma in the future for multiple value
-					If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+					If IsNullOrWhitespace(wantedvalue) = False Then
 						Select Case True
 							Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
 								wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
@@ -3688,9 +3685,9 @@ Public Class frmMain
 				   ("SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Windows", True)
 
 				If regkey IsNot Nothing Then
-					If checkvariables.isnullorwhitespace(CStr(regkey.GetValue("AppInit_DLLs"))) = False Then
+					If IsNullOrWhitespace(CStr(regkey.GetValue("AppInit_DLLs"))) = False Then
 						wantedvalue = CStr(regkey.GetValue("AppInit_DLLs"))
-						If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+						If IsNullOrWhitespace(wantedvalue) = False Then
 							Select Case True
 								Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
 									wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
@@ -3723,7 +3720,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Khronos\OpenCL\Vendors", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetValueNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("nvopencl") Then
 							Try
 								deletevalue(regkey, child)
@@ -3756,7 +3753,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Khronos\OpenCL\Vendors", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetValueNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("nvopencl") Then
 							Try
 								deletevalue(regkey, child)
@@ -3778,14 +3775,14 @@ Public Class frmMain
 
 		Try
 			For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-				If Not checkvariables.isnullorwhitespace(users) Then
+				If Not IsNullOrWhitespace(users) Then
 					regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("nvidia corporation") Then
 									For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-										If checkvariables.isnullorwhitespace(child2) = False Then
+										If IsNullOrWhitespace(child2) = False Then
 											If child2.ToLower.Contains("global") Then
 												If removegfe Then
 													Try
@@ -3794,7 +3791,7 @@ Public Class frmMain
 													End Try
 												Else
 													For Each child3 As String In regkey.OpenSubKey(child + "\" + child2).GetSubKeyNames()
-														If checkvariables.isnullorwhitespace(child3) = False Then
+														If IsNullOrWhitespace(child3) = False Then
 															If child3.ToLower.Contains("gfeclient") Or _
 															 child3.ToLower.Contains("gfexperience") Or _
 															 child3.ToLower.Contains("shadowplay") Or _
@@ -3839,10 +3836,10 @@ Public Class frmMain
 					regkey = My.Computer.Registry.Users.OpenSubKey(users & "\SOFTWARE\Microsoft\Windows\CurrentVersion\UFH\SHC", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetValueNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								Dim tArray() As String = CType(regkey.GetValue(child), String())
 								For i As Integer = 0 To tArray.Length - 1
-									If checkvariables.isnullorwhitespace(tArray(i)) = False AndAlso Not tArray(i) = "" Then
+									If IsNullOrWhitespace(tArray(i)) = False AndAlso Not tArray(i) = "" Then
 										If tArray(i).ToLower.ToString.Contains("nvstview.exe") Or _
 										   tArray(i).ToLower.ToString.Contains("vulkaninfo") Or _
 										   tArray(i).ToLower.ToString.Contains("nvstlink.exe") Then
@@ -3865,10 +3862,10 @@ Public Class frmMain
 		regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\UFH\ARP", True)
 		If regkey IsNot Nothing Then
 			For Each child As String In regkey.GetValueNames()
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					Dim tArray() As String = CType(regkey.GetValue(child), String())
 					For i As Integer = 0 To tArray.Length - 1
-						If checkvariables.isnullorwhitespace(tArray(i)) = False AndAlso Not tArray(i) = "" Then
+						If IsNullOrWhitespace(tArray(i)) = False AndAlso Not tArray(i) = "" Then
 							If tArray(i).ToLower.ToString.Contains("nvi2.dll") Or _
 							   tArray(i).ToLower.ToString.Contains("vulkaninfo") Or _
 							   tArray(i).ToLower.ToString.Contains("nvstlink.exe") Then
@@ -3886,10 +3883,10 @@ Public Class frmMain
 		regkey = My.Computer.Registry.Users.OpenSubKey(".DEFAULT\Software", True)
 		If regkey IsNot Nothing Then
 			For Each child As String In regkey.GetSubKeyNames()
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("nvidia corporation") Then
 						For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child2) = False Then
+							If IsNullOrWhitespace(child2) = False Then
 								If child2.ToLower.Contains("global") Or
 								   child2.ToLower.Contains("nvbackend") Or
 								   child2.ToLower.Contains("nvidia update core") AndAlso removegfe Or
@@ -3917,7 +3914,7 @@ Public Class frmMain
 		regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software", True)
 		If regkey IsNot Nothing Then
 			For Each child As String In regkey.GetSubKeyNames()
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ageia technologies") Then
 						If removephysx Then
 							Try
@@ -3928,7 +3925,7 @@ Public Class frmMain
 					End If
 					If child.ToLower.Contains("nvidia corporation") Then
 						For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child2) = False Then
+							If IsNullOrWhitespace(child2) = False Then
 								If child2.ToLower.Contains("global") Then
 									If removegfe Then
 										Try
@@ -3937,7 +3934,7 @@ Public Class frmMain
 										End Try
 									Else
 										For Each child3 As String In regkey.OpenSubKey(child + "\" + child2).GetSubKeyNames()
-											If checkvariables.isnullorwhitespace(child3) = False Then
+											If IsNullOrWhitespace(child3) = False Then
 												If child3.ToLower.Contains("gfeclient") Or _
 												 child3.ToLower.Contains("gfexperience") Or _
 												 child3.ToLower.Contains("nvbackend") Or _
@@ -4003,7 +4000,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("ageia technologies") Then
 							If removephysx Then
 								deletesubregkey(regkey, child)
@@ -4011,7 +4008,7 @@ Public Class frmMain
 						End If
 						If child.ToLower.Contains("nvidia corporation") Then
 							For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-								If checkvariables.isnullorwhitespace(child2) = False Then
+								If IsNullOrWhitespace(child2) = False Then
 									If child2.ToLower.Contains("global") Then
 										If removegfe Then
 											Try
@@ -4020,7 +4017,7 @@ Public Class frmMain
 											End Try
 										Else
 											For Each child3 As String In regkey.OpenSubKey(child + "\" + child2).GetSubKeyNames()
-												If checkvariables.isnullorwhitespace(child3) = False Then
+												If IsNullOrWhitespace(child3) = False Then
 													If child3.ToLower.Contains("gfeclient") Or _
 													 child3.ToLower.Contains("gfexperience") Or _
 													 child3.ToLower.Contains("nvbackend") Or _
@@ -4081,10 +4078,10 @@ Public Class frmMain
 				 ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							Try
 								If removephysx Then
-									If checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("DisplayName"))) = False Then
+									If IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("DisplayName"))) = False Then
 										If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
 											deletesubregkey(regkey, child)
 											Continue For
@@ -4139,10 +4136,10 @@ Public Class frmMain
 			 ("Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						Try
 							If removephysx Then
-								If checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("DisplayName"))) = False Then
+								If IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("DisplayName"))) = False Then
 									If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
 										deletesubregkey(regkey, child)
 										Continue For
@@ -4200,7 +4197,7 @@ Public Class frmMain
 		 ("Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
 		If regkey IsNot Nothing Then
 			For Each child As String In regkey.GetValueNames()
-				If Not checkvariables.isnullorwhitespace(child) Then
+				If Not IsNullOrWhitespace(child) Then
 					If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
 						deletevalue(regkey, child)
 					End If
@@ -4212,7 +4209,7 @@ Public Class frmMain
 	  ("Software\Microsoft\.NETFramework\SQM\Apps", True)
 		If regkey IsNot Nothing Then
 			For Each child As String In regkey.GetSubKeyNames()
-				If Not checkvariables.isnullorwhitespace(child) Then
+				If Not IsNullOrWhitespace(child) Then
 					If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
 						deletesubregkey(regkey, child)
 					End If
@@ -4222,12 +4219,12 @@ Public Class frmMain
 
 		Try
 			For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-				If Not checkvariables.isnullorwhitespace(users) Then
+				If Not IsNullOrWhitespace(users) Then
 					regkey = My.Computer.Registry.Users.OpenSubKey _
 				  (users + "\Software\Microsoft\.NETFramework\SQM\Apps", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If Not checkvariables.isnullorwhitespace(child) Then
+							If Not IsNullOrWhitespace(child) Then
 								If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
 									deletesubregkey(regkey, child)
 								End If
@@ -4244,12 +4241,12 @@ Public Class frmMain
 		Try
 
 			For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-				If Not checkvariables.isnullorwhitespace(users) Then
+				If Not IsNullOrWhitespace(users) Then
 					regkey = My.Computer.Registry.Users.OpenSubKey _
 				  (users + "\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetValueNames()
-							If Not checkvariables.isnullorwhitespace(child) Then
+							If Not IsNullOrWhitespace(child) Then
 								If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
 									deletevalue(regkey, child)
 								End If
@@ -4268,13 +4265,13 @@ Public Class frmMain
 		 ("Software\Microsoft\Windows NT\CurrentVersion\ProfileList", True)
 		If regkey IsNot Nothing Then
 			For Each child As String In regkey.GetSubKeyNames()
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 					("Software\Microsoft\Windows NT\CurrentVersion\ProfileList\" & child, False)
 					If subregkey IsNot Nothing Then
-						If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("ProfileImagePath"))) = False Then
+						If IsNullOrWhitespace(CStr(subregkey.GetValue("ProfileImagePath"))) = False Then
 							wantedvalue = subregkey.GetValue("ProfileImagePath").ToString
-							If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+							If IsNullOrWhitespace(wantedvalue) = False Then
 								If wantedvalue.Contains("UpdatusUser") Then
 									Try
 										deletesubregkey(regkey, child)
@@ -4293,13 +4290,13 @@ Public Class frmMain
 		 ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace", True)
 		If regkey IsNot Nothing Then
 			For Each child As String In regkey.GetSubKeyNames()
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 			   ("Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\" & child, False)
 					If subregkey IsNot Nothing Then
-						If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+						If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
 							wantedvalue = subregkey.GetValue("").ToString
-							If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+							If IsNullOrWhitespace(wantedvalue) = False Then
 								If wantedvalue.ToLower.Contains("nvidia control panel") Or
 								   wantedvalue.ToLower.Contains("nvidia nview desktop manager") Then
 									Try
@@ -4328,7 +4325,7 @@ Public Class frmMain
 		regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
 		If regkey IsNot Nothing Then
 			For Each child As String In regkey.GetSubKeyNames()
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
 						Try
 							deletesubregkey(regkey, child)
@@ -4344,7 +4341,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
 							Try
 								deletesubregkey(regkey, child)
@@ -4366,7 +4363,7 @@ Public Class frmMain
 		regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\MozillaPlugins", True)
 		If regkey IsNot Nothing Then
 			For Each child As String In regkey.GetSubKeyNames()
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("nvidia.com/3dvision") Then
 						Try
 							deletesubregkey(regkey, child)
@@ -4382,7 +4379,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\MozillaPlugins", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("nvidia.com/3dvision") Then
 							Try
 								deletesubregkey(regkey, child)
@@ -4403,12 +4400,12 @@ Public Class frmMain
 		subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
 		If subregkey IsNot Nothing Then
 			For Each child2 As String In subregkey.GetSubKeyNames()
-				If checkvariables.isnullorwhitespace(child2) = False Then
+				If IsNullOrWhitespace(child2) = False Then
 					If child2.ToLower.Contains("controlset") Then
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog\Application", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If checkvariables.isnullorwhitespace(child) = False Then
+								If IsNullOrWhitespace(child) = False Then
 									If child.ToLower.StartsWith("nvidia update") Or
 									 (child.ToLower.StartsWith("nvstreamsvc") AndAlso removegfe) Or
 									 child.ToLower.StartsWith("nvidia opengl driver") Or
@@ -4431,12 +4428,12 @@ Public Class frmMain
 		subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
 		If subregkey IsNot Nothing Then
 			For Each child2 As String In subregkey.GetSubKeyNames()
-				If checkvariables.isnullorwhitespace(child2) = False Then
+				If IsNullOrWhitespace(child2) = False Then
 					If child2.ToLower.Contains("controlset") Then
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Services\eventlog\System", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If checkvariables.isnullorwhitespace(child) = False Then
+								If IsNullOrWhitespace(child) = False Then
 									If child.ToLower.StartsWith("nvidia update") Or
 									 child.ToLower.StartsWith("nvidia opengl driver") Or
 									 child.ToLower.StartsWith("nvwmi") Or
@@ -4476,7 +4473,7 @@ Public Class frmMain
 
 		Try
 			For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-				If Not checkvariables.isnullorwhitespace(users) Then
+				If Not IsNullOrWhitespace(users) Then
 					regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
 					If regkey IsNot Nothing Then
 						Try
@@ -4498,7 +4495,7 @@ Public Class frmMain
 
 		Try
 			For Each child As String In My.Computer.Registry.Users.GetSubKeyNames()
-				If Not checkvariables.isnullorwhitespace(child) Then
+				If Not IsNullOrWhitespace(child) Then
 					If child.ToLower.Contains("s-1-5") Then
 						Try
 							deletesubregkey(My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True), "Global")
@@ -4574,7 +4571,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetValueNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If regkey.GetValue(child).ToString.ToLower.Contains("nvcpl desktopcontext class") Or
 						   regkey.GetValue(child).ToString.ToLower.Contains("nview desktop context menu") Or
 						   regkey.GetValue(child).ToString.ToLower.Contains("nvappshext extension") Or
@@ -4601,9 +4598,9 @@ Public Class frmMain
 		regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Extended Properties", False)
 		If regkey IsNot Nothing Then
 			For Each child As String In regkey.GetSubKeyNames()
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					For Each childs As String In regkey.OpenSubKey(child).GetValueNames()
-						If Not checkvariables.isnullorwhitespace(childs) Then
+						If Not IsNullOrWhitespace(childs) Then
 							If childs.ToLower.Contains("nvcpl.cpl") Then
 								Try
 									deletevalue(regkey.OpenSubKey(child, True), childs)
@@ -4622,7 +4619,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetValueNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If regkey.GetValue(child).ToString.ToLower.Contains("nvcpl desktopcontext class") Then
 							Try
 								deletevalue(regkey, child)
@@ -4662,7 +4659,7 @@ Public Class frmMain
 		'Cleaning of some "open with application" related to 3d vision
 		regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("jpsfile\shell\open\command", True)
 		If regkey IsNot Nothing Then
-			If (Not checkvariables.isnullorwhitespace(CType(regkey.GetValue(""), String))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
+			If (Not IsNullOrWhitespace(CType(regkey.GetValue(""), String))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
 			 ("nvstview") Then
 				Try
 					deletesubregkey(My.Computer.Registry.ClassesRoot, "jpsfile")
@@ -4672,7 +4669,7 @@ Public Class frmMain
 		End If
 		regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("mpofile\shell\open\command", True)
 		If regkey IsNot Nothing Then
-			If (Not checkvariables.isnullorwhitespace(CStr(regkey.GetValue("")))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
+			If (Not IsNullOrWhitespace(CStr(regkey.GetValue("")))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
 			 ("nvstview") Then
 				Try
 					deletesubregkey(My.Computer.Registry.ClassesRoot, "mpofile")
@@ -4683,7 +4680,7 @@ Public Class frmMain
 
 		regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("pnsfile\shell\open\command", True)
 		If regkey IsNot Nothing Then
-			If (Not checkvariables.isnullorwhitespace(CStr(regkey.GetValue("")))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
+			If (Not IsNullOrWhitespace(CStr(regkey.GetValue("")))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
 			 ("nvstview") Then
 				Try
 					deletesubregkey(My.Computer.Registry.ClassesRoot, "pnsfile")
@@ -4716,7 +4713,7 @@ Public Class frmMain
 		filePath = System.Environment.SystemDirectory
 		Dim files() As String = IO.Directory.GetFiles(filePath + "\", "igfxcoin*.*")
 		For i As Integer = 0 To files.Length - 1
-			If Not checkvariables.isnullorwhitespace(files(i)) Then
+			If Not IsNullOrWhitespace(files(i)) Then
 				Try
 					deletefile(files(i))
 				Catch ex As Exception
@@ -4760,7 +4757,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Intel", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("igfx") Or
 						   child.ToLower.Contains("mediasdk") Or
 						   child.ToLower.Contains("opencl") Or
@@ -4785,11 +4782,11 @@ Public Class frmMain
 
 		Try
 			For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-				If Not checkvariables.isnullorwhitespace(users) Then
+				If Not IsNullOrWhitespace(users) Then
 					regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Intel", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("display") Then
 									Try
 										deletesubregkey(regkey, child)
@@ -4816,7 +4813,7 @@ Public Class frmMain
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Intel", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("igfx") Or
 							   child.ToLower.Contains("mediasdk") Or
 							   child.ToLower.Contains("opencl") Or
@@ -4872,7 +4869,7 @@ Public Class frmMain
 			 ("Directory\background\shellex\ContextMenuHandlers", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("igfxcui") Or
 						   child.ToLower.Contains("igfxosp") Or
 						 child.ToLower.Contains("igfxdtcm") Then
@@ -4897,7 +4894,7 @@ Public Class frmMain
 				 ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If checkvariables.isnullorwhitespace(child) = False Then
+						If IsNullOrWhitespace(child) = False Then
 							Try
 								subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 								("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
@@ -4905,11 +4902,11 @@ Public Class frmMain
 								Continue For
 							End Try
 							If subregkey IsNot Nothing Then
-								If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
+								If IsNullOrWhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
 									wantedvalue = subregkey.GetValue("DisplayName").ToString
-									If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+									If IsNullOrWhitespace(wantedvalue) = False Then
 										For i As Integer = 0 To packages.Length - 1
-											If Not checkvariables.isnullorwhitespace(packages(i)) Then
+											If Not IsNullOrWhitespace(packages(i)) Then
 												If wantedvalue.ToLower.Contains(packages(i).ToLower) Then
 													Try
 														If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
@@ -4934,7 +4931,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Cpls", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("igfxcpl") Then
 							Try
 								deletesubregkey(regkey, child)
@@ -4955,9 +4952,9 @@ Public Class frmMain
 				If regkey IsNot Nothing Then
 					Dim classroot As String() = IO.File.ReadAllLines(baseDir & "\settings\INTEL\classroot.cfg")
 					For Each child As String In regkey.GetSubKeyNames()
-						If Not checkvariables.isnullorwhitespace(child) Then
+						If Not IsNullOrWhitespace(child) Then
 							For i As Integer = 0 To classroot.Length - 1
-								If Not checkvariables.isnullorwhitespace(classroot(i)) Then
+								If Not IsNullOrWhitespace(classroot(i)) Then
 									If child.ToLower.Contains(classroot(i).ToLower) Then
 										Try
 											deletesubregkey(regkey, child)
@@ -4978,7 +4975,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If Not checkvariables.isnullorwhitespace(child) Then
+					If Not IsNullOrWhitespace(child) Then
 						If child.ToLower.Contains("igfx") Then
 							Try
 								deletesubregkey(regkey, child)
@@ -5016,16 +5013,16 @@ Public Class frmMain
 			   ("SYSTEM\CurrentControlSet\Enum\PCI")
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If Not checkvariables.isnullorwhitespace(child) Then
+					If Not IsNullOrWhitespace(child) Then
 						If child.ToLower.Contains("ven_8086") Then
 							subregkey = regkey.OpenSubKey(child)
 							If subregkey IsNot Nothing Then
 								For Each childs As String In subregkey.GetSubKeyNames()
-									If checkvariables.isnullorwhitespace(childs) = False Then
+									If IsNullOrWhitespace(childs) = False Then
 										array = CType(subregkey.OpenSubKey(childs).GetValue("UpperFilters"), String())
 										If (array IsNot Nothing) AndAlso (Not array.Length < 1) Then
 											For i As Integer = 0 To array.Length - 1
-												If Not checkvariables.isnullorwhitespace(array(i)) Then
+												If Not IsNullOrWhitespace(array(i)) Then
 													log("UpperFilter found : " + array(i))
 													If (array(i).ToLower.Contains("nvpciflt")) Then
 														Dim AList As ArrayList = New ArrayList(array)
@@ -5147,7 +5144,7 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
 
 			For Each child As String In regkey.GetSubKeyNames
-				If Not checkvariables.isnullorwhitespace(child) Then
+				If Not IsNullOrWhitespace(child) Then
 					If child.ToLower.Contains(gpu) Then
 
 						subregkey = regkey.OpenSubKey(child)
@@ -5735,7 +5732,7 @@ Public Class frmMain
 			End If
 
 			'second, we check on what we are running and set variables accordingly (os, architecture)
-			If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion"))) Then
+			If Not IsNullOrWhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion"))) Then
 				version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
 			Else
 				version = "5.0"
@@ -5775,7 +5772,7 @@ Public Class frmMain
 
 				Case "6.3"
 					lblWinVersionValue.Content = "Windows 8.1"
-					If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber"))) Then
+					If Not IsNullOrWhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber"))) Then
 						If CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber")) = "10" Then
 							lblWinVersionValue.Content = "Windows 10"
 							win10 = True
@@ -5898,13 +5895,13 @@ Public Class frmMain
 				'arg = String.Join(" ", arguments, 1, arguments.Length - 1)
 				'arg = arg.ToLower.Replace("  ", " ")
 
-				'If Not checkvariables.isnullorwhitespace(settings.getconfig("arguments")) Then
+				'If Not IsNullOrWhitespace(settings.getconfig("arguments")) Then
 				'    arg = settings.getconfig("arguments")
 				'End If
 
 				'settings.setconfig("arguments", "")
 
-				'If Not checkvariables.isnullorwhitespace(arg) Then
+				'If Not IsNullOrWhitespace(arg) Then
 				'    If Not arg = " " Then
 				'        settings.setconfig("logbox", "false")
 				'        settings.setconfig("systemrestore", "false")
@@ -6113,14 +6110,14 @@ skipboot:
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
-							If Not checkvariables.isnullorwhitespace(child) Then
+							If Not IsNullOrWhitespace(child) Then
 
 								If Not child.ToLower.Contains("properties") Then
 
 									subregkey = regkey.OpenSubKey(child)
 									If subregkey IsNot Nothing Then
 
-										If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("Device Description"))) Then
+										If Not IsNullOrWhitespace(CStr(subregkey.GetValue("Device Description"))) Then
 											currentdriverversion = subregkey.GetValue("Device Description").ToString
 											UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
 											info.Add("GPU #" + child, currentdriverversion)
@@ -6129,7 +6126,7 @@ skipboot:
 												UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
 												info.Add("GPU #" + child, HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
 											Else
-												If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DriverDesc"))) Then
+												If Not IsNullOrWhitespace(CStr(subregkey.GetValue("DriverDesc"))) Then
 													currentdriverversion = subregkey.GetValue("DriverDesc").ToString
 													UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
 													info.Add("GPU #" + child, currentdriverversion)
@@ -6137,18 +6134,18 @@ skipboot:
 											End If
 
 										End If
-										If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("MatchingDeviceId"))) Then
+										If Not IsNullOrWhitespace(CStr(subregkey.GetValue("MatchingDeviceId"))) Then
 											currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
 											UpdateTextMethod(UpdateTextMethodmessagefn(13) + " " + currentdriverversion)
 											info.Add("GPU DeviceId", currentdriverversion)
 										End If
 
 										Try
-											If (Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString")))) AndAlso (subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary) Then
+											If (Not IsNullOrWhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString")))) AndAlso (subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary) Then
 												UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
 												info.Add("Vbios", HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
 											Else
-												If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString"))) Then
+												If Not IsNullOrWhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString"))) Then
 													currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
 													For i As Integer = 0 To 9
 														'this is a little fix to correctly show the vbios version info
@@ -6162,17 +6159,17 @@ skipboot:
 										End Try
 
 
-										If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DriverVersion"))) Then
+										If Not IsNullOrWhitespace(CStr(subregkey.GetValue("DriverVersion"))) Then
 											currentdriverversion = subregkey.GetValue("DriverVersion").ToString
 											UpdateTextMethod(UpdateTextMethodmessagefn(14) + " " + currentdriverversion)
 											info.Add("Detected Driver(s) Version(s)", currentdriverversion)
 										End If
-										If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("InfPath"))) Then
+										If Not IsNullOrWhitespace(CStr(subregkey.GetValue("InfPath"))) Then
 											currentdriverversion = subregkey.GetValue("InfPath").ToString
 											UpdateTextMethod(UpdateTextMethodmessagefn(15) + " " + currentdriverversion)
 											info.Add("INF", currentdriverversion)
 										End If
-										If Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("InfSection"))) Then
+										If Not IsNullOrWhitespace(CStr(subregkey.GetValue("InfSection"))) Then
 											currentdriverversion = subregkey.GetValue("InfSection").ToString
 											UpdateTextMethod(UpdateTextMethodmessagefn(16) + " " + currentdriverversion)
 											info.Add("INF", currentdriverversion)
@@ -6206,7 +6203,7 @@ skipboot:
 
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("ven_8086") Then
 									Try
 										subregkey = regkey.OpenSubKey(child)
@@ -6214,8 +6211,8 @@ skipboot:
 										Continue For
 									End Try
 									For Each childs As String In subregkey.GetSubKeyNames()
-										If checkvariables.isnullorwhitespace(childs) = False Then
-											If Not checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey(childs).GetValue("Service"))) Then
+										If IsNullOrWhitespace(childs) = False Then
+											If Not IsNullOrWhitespace(CStr(subregkey.OpenSubKey(childs).GetValue("Service"))) Then
 												If subregkey.OpenSubKey(childs).GetValue("Service").ToString.ToLower.Contains("amdkmdap") Then
 													enduro = True
 													UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
@@ -6362,21 +6359,21 @@ skipboot:
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If checkvariables.isnullorwhitespace(child) = False Then
+								If IsNullOrWhitespace(child) = False Then
 									If child.ToLower.Contains("ven_1002") Then
 										For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
 											subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
 											If subregkey IsNot Nothing Then
 												For Each child2 As String In subregkey.GetSubKeyNames()
 													removed = False
-													If checkvariables.isnullorwhitespace(child2) = False Then
+													If IsNullOrWhitespace(child2) = False Then
 														If child2.ToLower.Contains("ven_1002") Then
 															For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-																If checkvariables.isnullorwhitespace(child3) = False Then
+																If IsNullOrWhitespace(child3) = False Then
 																	array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
 																	If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
 																		For i As Integer = 0 To array.Length - 1
-																			If Not checkvariables.isnullorwhitespace(array(i)) Then
+																			If Not IsNullOrWhitespace(array(i)) Then
 																				If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
 																					Application.Log.AddMessage("Found an AMD audio controller bus !")
 																					log("Found an AMD audio controller bus !")
@@ -6431,13 +6428,13 @@ skipboot:
 					subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
 					If subregkey IsNot Nothing Then
 						For Each child2 As String In subregkey.GetSubKeyNames()
-							If Not checkvariables.isnullorwhitespace(child2) AndAlso child2.ToLower.Contains("ven_1002") Then
+							If Not IsNullOrWhitespace(child2) AndAlso child2.ToLower.Contains("ven_1002") Then
 								For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-									If checkvariables.isnullorwhitespace(child3) = False Then
+									If IsNullOrWhitespace(child3) = False Then
 										array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
 										If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
 											For i As Integer = 0 To array.Length - 1
-												If Not checkvariables.isnullorwhitespace(array(i)) Then
+												If Not IsNullOrWhitespace(array(i)) Then
 													If array(i).ToLower.Contains("amdkmafd") Then
 														Application.Log.AddMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
 														log("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
@@ -6467,7 +6464,7 @@ skipboot:
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
-							If Not checkvariables.isnullorwhitespace(child) AndAlso
+							If Not IsNullOrWhitespace(child) AndAlso
 							 (child.ToLower.Contains("ven_10de") Or
 							 child.ToLower.Contains("ven_8086") Or
 							 child.ToLower.Contains("ven_1002")) Then
@@ -6486,7 +6483,7 @@ skipboot:
 										If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
 											For i As Integer = 0 To array.Length - 1
 
-												If Not checkvariables.isnullorwhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
+												If Not IsNullOrWhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
 
 													vendid = child & "\" & child2
 
@@ -6535,7 +6532,7 @@ skipboot:
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames
-						If Not checkvariables.isnullorwhitespace(child) AndAlso
+						If Not IsNullOrWhitespace(child) AndAlso
 						   (child.ToLower.Contains("ven_10de") Or
 						   child.ToLower.Contains("ven_8086") Or
 						   child.ToLower.Contains("ven_1002")) Then
@@ -6722,18 +6719,18 @@ skipboot:
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ROOT")
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames
-								If Not checkvariables.isnullorwhitespace(child) Then
+								If Not IsNullOrWhitespace(child) Then
 
 									subregkey = regkey.OpenSubKey(child)
 									If subregkey IsNot Nothing Then
 
 										For Each child2 As String In subregkey.GetSubKeyNames
-											If Not checkvariables.isnullorwhitespace(child2) Then
+											If Not IsNullOrWhitespace(child2) Then
 												If subregkey.OpenSubKey(child2) Is Nothing Then
 													Continue For
 												End If
 
-												If Not checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey(child2).GetValue("DeviceDesc"))) AndAlso
+												If Not IsNullOrWhitespace(CStr(subregkey.OpenSubKey(child2).GetValue("DeviceDesc"))) AndAlso
 												   subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
 
 													vendid = child & "\" & child2
@@ -6777,9 +6774,9 @@ skipboot:
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
-							If Not checkvariables.isnullorwhitespace(child) Then
+							If Not IsNullOrWhitespace(child) Then
 
-								If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
+								If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
 								   (regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia virtual audio device") AndAlso removegfe) Or
 								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia high definition audio") Then
 
@@ -6823,9 +6820,9 @@ skipboot:
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
-							If Not checkvariables.isnullorwhitespace(child) Then
+							If Not IsNullOrWhitespace(child) Then
 
-								If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
+								If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
 								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("amd high definition audio device") Or
 								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("digital audio (hdmi) (high definition audio device)") Then
 
@@ -6886,9 +6883,9 @@ skipboot:
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
-							If Not checkvariables.isnullorwhitespace(child) Then
+							If Not IsNullOrWhitespace(child) Then
 
-								If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
+								If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
 								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel widi") Or
 								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel(r)") Then
 
@@ -6933,13 +6930,13 @@ skipboot:
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
-							If Not checkvariables.isnullorwhitespace(child) Then
+							If Not IsNullOrWhitespace(child) Then
 
 								subregkey = regkey.OpenSubKey(child)
 								If subregkey IsNot Nothing Then
 
 									For Each child2 As String In subregkey.GetSubKeyNames
-										If Not checkvariables.isnullorwhitespace(child2) Then
+										If Not IsNullOrWhitespace(child2) Then
 
 											If subregkey.OpenSubKey(child2) Is Nothing Then
 												Continue For
@@ -6985,17 +6982,17 @@ skipboot:
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("pnp0a08") Or
 								   child.ToLower.Contains("pnp0a03") Then
 									subregkey = regkey.OpenSubKey(child)
 									If subregkey IsNot Nothing Then
 										For Each child2 As String In subregkey.GetSubKeyNames()
-											If Not checkvariables.isnullorwhitespace(child2) Then
+											If Not IsNullOrWhitespace(child2) Then
 												array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
 												If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
 													For i As Integer = 0 To array.Length - 1
-														If Not checkvariables.isnullorwhitespace(array(i)) Then
+														If Not IsNullOrWhitespace(array(i)) Then
 															If array(i).ToLower.Contains("amdkmpfd") Then
 																Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
 																log("Found an AMDKMPFD! in " + child)
@@ -7337,7 +7334,7 @@ skipboot:
 		Dim infisvalid As Boolean = True
 		Try
 			For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
-				If Not checkvariables.isnullorwhitespace(infs) Then
+				If Not IsNullOrWhitespace(infs) Then
 
 					log("---")
 					info.Add("---")
@@ -7345,16 +7342,16 @@ skipboot:
 					info.Add("", infs)
 					infisvalid = False 'false unless we find either a provider or class 
 					For Each child As String In IO.File.ReadAllLines(infs)
-						If Not checkvariables.isnullorwhitespace(child) Then
+						If Not IsNullOrWhitespace(child) Then
 							child = child.Replace(" ", "").Replace(vbTab, "")
 
-							If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
+							If Not IsNullOrWhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
 								infisvalid = True
 								If child.EndsWith("%") Then
 									For Each provider As String In IO.File.ReadAllLines(infs)
-										If Not checkvariables.isnullorwhitespace(provider) Then
+										If Not IsNullOrWhitespace(provider) Then
 											provider = provider.Replace(" ", "").Replace(vbTab, "")
-											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
+											If Not IsNullOrWhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
 											   Not provider.Contains("%") Then
 												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
 												info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
@@ -7372,17 +7369,17 @@ skipboot:
 					Next
 
 					For Each child As String In IO.File.ReadAllLines(infs)
-						If Not checkvariables.isnullorwhitespace(child) Then
+						If Not IsNullOrWhitespace(child) Then
 
 							child = child.Replace(" ", "").Replace(vbTab, "")
 
-							If Not checkvariables.isnullorwhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
+							If Not IsNullOrWhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
 								infisvalid = True
 								If child.EndsWith("%") Then
 									For Each provider As String In IO.File.ReadAllLines(infs)
-										If Not checkvariables.isnullorwhitespace(provider) Then
+										If Not IsNullOrWhitespace(provider) Then
 											provider = provider.Replace(" ", "").Replace(vbTab, "")
-											If Not checkvariables.isnullorwhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso
+											If Not IsNullOrWhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso
 											   Not provider.Contains("%") Then
 												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
 												info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
@@ -7648,17 +7645,17 @@ skipboot:
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("pnp0a08") Or
 						   child.ToLower.Contains("pnp0a03") Then
 							subregkey = regkey.OpenSubKey(child)
 							If subregkey IsNot Nothing Then
 								For Each child2 As String In subregkey.GetSubKeyNames()
-									If Not checkvariables.isnullorwhitespace(child2) Then
+									If Not IsNullOrWhitespace(child2) Then
 										array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
 										If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
 											For i As Integer = 0 To array.Length - 1
-												If Not checkvariables.isnullorwhitespace(array(i)) Then
+												If Not IsNullOrWhitespace(array(i)) Then
 													If array(i).ToLower.Contains("amdkmpfd") Then
 														log("Found an AMDKMPFD! in " + child)
 														log("We do not remove the AMDKMPFP service yet")
@@ -7779,10 +7776,10 @@ skipboot:
 			(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 
 			For Each child As String In Directory.GetDirectories(filePath)
-				If checkvariables.isnullorwhitespace(child) = False Then
+				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("installer2") Then
 						For Each child2 As String In Directory.GetDirectories(child)
-							If checkvariables.isnullorwhitespace(child2) = False Then
+							If IsNullOrWhitespace(child2) = False Then
 								If child2.ToLower.Contains("display.3dvision") Or
 								   child2.ToLower.Contains("display.controlpanel") Or
 								   child2.ToLower.Contains("display.driver") Or
@@ -7911,7 +7908,7 @@ skipboot:
                         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
                         If regkey IsNot Nothing Then
                             For Each child As String In regkey.GetValueNames()
-                                If checkvariables.isnullorwhitespace(child) = False Then
+                                If IsNullOrWhitespace(child) = False Then
                                     If child.Contains("Path") Then
 										If IsNullOrWhitespace(CStr(regkey.GetValue(child))) = False Then
 											wantedvalue = regkey.GetValue(child).ToString.ToLower
@@ -7974,24 +7971,11 @@ skipboot:
 
 End Class
 
-Public Class checkvariables
-
-	Public Function isnullorwhitespace(ByVal stringtocheck As String) As Boolean
-		If String.IsNullOrEmpty(Trim(stringtocheck)) = True Then
-			Return True
-		Else
-			Return False
-		End If
-	End Function
-End Class
-
 Public Class CleanupEngine
 
-    Dim checkvariables As New checkvariables
-
-    Private Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
-        Return languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1))
-    End Function
+	Private Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
+		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1))
+	End Function
 
     Private Sub updatetextmethod(strmessage As String)
         'updatetextmethod(strmessage)
@@ -8004,7 +7988,7 @@ Public Class CleanupEngine
 
     Public Sub deletesubregkey(ByVal regkeypath As RegistryKey, ByVal child As String)
 
-        If (regkeypath IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child)) Then
+        If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
 
             regkeypath.DeleteSubKeyTree(child)
             application.log.addmessage(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn(39))
@@ -8022,7 +8006,7 @@ Public Class CleanupEngine
 		If Not Directory.Exists(directorypath) Then
 			If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
 				For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
-					If Not checkvariables.isnullorwhitespace(child) Then
+					If Not IsNullOrWhitespace(child) Then
 						If child.ToLower.Contains(directorypath.ToLower + "\") Then
 							Try
 								deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
@@ -8034,7 +8018,7 @@ Public Class CleanupEngine
 			End If
 			If My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False) IsNot Nothing Then
 				For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False).GetValueNames
-					If Not checkvariables.isnullorwhitespace(child) Then
+					If Not IsNullOrWhitespace(child) Then
 						If child.ToLower.Contains(directorypath.ToLower + "\") Then
 							Try
 								deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
@@ -8047,7 +8031,7 @@ Public Class CleanupEngine
 			If IntPtr.Size = 8 Then
 				If My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", False) IsNot Nothing Then
 					For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", False).GetValueNames
-						If Not checkvariables.isnullorwhitespace(child) Then
+						If Not IsNullOrWhitespace(child) Then
 							If child.ToLower.Contains(directorypath.ToLower + "\") Then
 								Try
 									deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
@@ -8064,7 +8048,7 @@ Public Class CleanupEngine
     Public Sub deletefile(ByVal filepath As String)
 
 
-        If Not checkvariables.isnullorwhitespace(filepath) Then
+        If Not IsNullOrWhitespace(filepath) Then
 
             My.Computer.FileSystem.DeleteFile(filepath) 'filepath here include the file too.
 
@@ -8076,7 +8060,7 @@ Public Class CleanupEngine
     Public Sub deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String)
 
 
-        If (regkeypath IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child)) Then
+        If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
 
             regkeypath.DeleteValue(child)
             application.log.addmessage(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn(40))
@@ -8100,18 +8084,18 @@ Public Class CleanupEngine
             regkey = My.Computer.Registry.ClassesRoot
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
+                    If IsNullOrWhitespace(child) = False Then
                         For i As Integer = 0 To classroot.Length - 1
-                            If Not checkvariables.isnullorwhitespace(classroot(i)) Then
+                            If Not IsNullOrWhitespace(classroot(i)) Then
                                 If child.ToLower.StartsWith(classroot(i).ToLower) Then
                                     subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID")
                                     If subregkey IsNot Nothing Then
-                                        If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                                        If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
                                             wantedvalue = subregkey.GetValue("").ToString
-                                            If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                            If IsNullOrWhitespace(wantedvalue) = False Then
                                                 Try
                                                     Try
-                                                        If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID"))) Then
+                                                        If Not IsNullOrWhitespace(CStr(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID"))) Then
                                                             appid = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID").ToString
                                                             Try
 
@@ -8123,7 +8107,7 @@ Public Class CleanupEngine
                                                     End Try
 
                                                     Try
-                                                        If Not checkvariables.isnullorwhitespace(CStr(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue(""))) Then
+                                                        If Not IsNullOrWhitespace(CStr(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue(""))) Then
                                                             typelib = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("").ToString
                                                             Try
                                                                 deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
@@ -8166,18 +8150,18 @@ Public Class CleanupEngine
                 regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
+                        If IsNullOrWhitespace(child) = False Then
                             For i As Integer = 0 To classroot.Length - 1
-                                If Not checkvariables.isnullorwhitespace(classroot(i)) Then
+                                If Not IsNullOrWhitespace(classroot(i)) Then
                                     If child.ToLower.StartsWith(classroot(i).ToLower) Then
                                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey(child & "\CLSID")
                                         If subregkey IsNot Nothing Then
-                                            If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                                            If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
                                                 wantedvalue = subregkey.GetValue("").ToString
-                                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                                If IsNullOrWhitespace(wantedvalue) = False Then
                                                     Try
                                                         Try
-                                                            If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID"))) Then
+                                                            If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID"))) Then
                                                                 appid = regkey.OpenSubKey("CLSID\" & wantedvalue).GetValue("AppID").ToString
                                                                 Try
                                                                     deletesubregkey(regkey.OpenSubKey("AppID", True), appid)
@@ -8188,7 +8172,7 @@ Public Class CleanupEngine
                                                         End Try
 
                                                         Try
-                                                            If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue(""))) Then
+                                                            If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue(""))) Then
                                                                 typelib = regkey.OpenSubKey("CLSID\" & wantedvalue & "\TypeLib").GetValue("").ToString
                                                                 Try
                                                                     deletesubregkey(regkey.OpenSubKey("TypeLib", True), typelib)
@@ -8247,7 +8231,7 @@ Public Class CleanupEngine
 				  ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
 			If basekey IsNot Nothing Then
 				For Each super As String In basekey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(super) = False Then
+					If IsNullOrWhitespace(super) = False Then
 						If super.ToLower.Contains("s-1-5") Then
 
 							regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -8255,18 +8239,18 @@ Public Class CleanupEngine
 
 							If regkey IsNot Nothing Then
 								For Each child As String In regkey.GetSubKeyNames()
-									If checkvariables.isnullorwhitespace(child) = False Then
+									If IsNullOrWhitespace(child) = False Then
 
 										subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 							("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
 							"\InstallProperties", False)
 
 										If subregkey IsNot Nothing Then
-											If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
+											If IsNullOrWhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
 												wantedvalue = subregkey.GetValue("DisplayName").ToString
-												If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+												If IsNullOrWhitespace(wantedvalue) = False Then
 													For i As Integer = 0 To packages.Length - 1
-														If Not checkvariables.isnullorwhitespace(packages(i)) Then
+														If Not IsNullOrWhitespace(packages(i)) Then
 															If wantedvalue.ToLower.Contains(packages(i).ToLower) And
 															   (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
 
@@ -8274,7 +8258,7 @@ Public Class CleanupEngine
 
 																'Deleting here the c:\windows\installer entries.
 																Try
-																	If (Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("LocalPackage")))) AndAlso
+																	If (Not IsNullOrWhitespace(CStr(subregkey.GetValue("LocalPackage")))) AndAlso
 																	  subregkey.GetValue("LocalPackage").ToString.ToLower.Contains(".msi") Then
 																		deletefile(subregkey.GetValue("LocalPackage").ToString)
 																	End If
@@ -8283,7 +8267,7 @@ Public Class CleanupEngine
 
 
 																Try
-																	If (Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("UninstallString")))) AndAlso
+																	If (Not IsNullOrWhitespace(CStr(subregkey.GetValue("UninstallString")))) AndAlso
 																	  subregkey.GetValue("UninstallString").ToString.ToLower.Contains("{") Then
 																		Dim folder As String = subregkey.GetValue("UninstallString").ToString
 																		folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
@@ -8291,7 +8275,7 @@ Public Class CleanupEngine
 																		If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
 																			For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
 					  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
-																				If Not checkvariables.isnullorwhitespace(subkeyname) Then
+																				If Not IsNullOrWhitespace(subkeyname) Then
 																					If subkeyname.ToLower.Contains(folder.ToLower) Then
 																						deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey _
 					  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True), subkeyname)
@@ -8313,14 +8297,14 @@ Public Class CleanupEngine
 	("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
 																If superregkey IsNot Nothing Then
 																	For Each child2 As String In superregkey.GetSubKeyNames()
-																		If checkvariables.isnullorwhitespace(child2) = False Then
+																		If IsNullOrWhitespace(child2) = False Then
 
 																			subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, False)
 
 																			If subsuperregkey IsNot Nothing Then
 																				For Each wantedstring As String In subsuperregkey.GetValueNames()
-																					If checkvariables.isnullorwhitespace(wantedstring) = False Then
+																					If IsNullOrWhitespace(wantedstring) = False Then
 																						If wantedstring.Contains(child) Then
 																							Try
 																								deletesubregkey(superregkey, child2)
@@ -8337,7 +8321,7 @@ Public Class CleanupEngine
 	("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
 																If superregkey IsNot Nothing Then
 																	For Each child2 As String In superregkey.GetSubKeyNames()
-																		If checkvariables.isnullorwhitespace(child2) = False Then
+																		If IsNullOrWhitespace(child2) = False Then
 
 																			subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
@@ -8345,7 +8329,7 @@ Public Class CleanupEngine
 
 																			If subsuperregkey IsNot Nothing Then
 																				For Each wantedstring In subsuperregkey.GetValueNames()
-																					If checkvariables.isnullorwhitespace(wantedstring) = False Then
+																					If IsNullOrWhitespace(wantedstring) = False Then
 																						If wantedstring.Contains(child) Then
 																							Try
 																								deletesubregkey(superregkey, child2)
@@ -8384,22 +8368,22 @@ Public Class CleanupEngine
 	  ("Installer\Products", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 
 						subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
 ("Installer\Products\" & child, False)
 
 						If subregkey IsNot Nothing Then
-							If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
+							If IsNullOrWhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
 								wantedvalue = subregkey.GetValue("ProductName").ToString
-								If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+								If IsNullOrWhitespace(wantedvalue) = False Then
 									For i As Integer = 0 To packages.Length - 1
-										If Not checkvariables.isnullorwhitespace(packages(i)) Then
+										If Not IsNullOrWhitespace(packages(i)) Then
 											If wantedvalue.ToLower.Contains(packages(i).ToLower) And
 											   (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
 
 												Try
-													If (Not checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("ProductIcon")))) AndAlso
+													If (Not IsNullOrWhitespace(CStr(subregkey.GetValue("ProductIcon")))) AndAlso
 													  subregkey.GetValue("ProductIcon").ToString.ToLower.Contains("{") Then
 														Dim folder As String = subregkey.GetValue("ProductIcon").ToString
 														folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
@@ -8407,7 +8391,7 @@ Public Class CleanupEngine
 														If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
 															For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
 	("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
-																If Not checkvariables.isnullorwhitespace(subkeyname) Then
+																If Not IsNullOrWhitespace(subkeyname) Then
 																	If subkeyname.ToLower.Contains(folder.ToLower) Then
 																		deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey _
 	  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True), subkeyname)
@@ -8432,14 +8416,14 @@ Public Class CleanupEngine
 					 ("Installer\UpgradeCodes", True)
 												If superregkey IsNot Nothing Then
 													For Each child2 As String In superregkey.GetSubKeyNames()
-														If checkvariables.isnullorwhitespace(child2) = False Then
+														If IsNullOrWhitespace(child2) = False Then
 
 															subsuperregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
 														("Installer\UpgradeCodes\" & child2, False)
 
 															If subsuperregkey IsNot Nothing Then
 																For Each wantedstring As String In subsuperregkey.GetValueNames()
-																	If checkvariables.isnullorwhitespace(wantedstring) = False Then
+																	If IsNullOrWhitespace(wantedstring) = False Then
 																		If wantedstring.Contains(child) Then
 																			Try
 																				deletesubregkey(superregkey, child2)
@@ -8475,17 +8459,17 @@ Public Class CleanupEngine
 	  ("Software\Classes\Installer\Products", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If checkvariables.isnullorwhitespace(child) = False Then
+					If IsNullOrWhitespace(child) = False Then
 
 						subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 ("Software\Classes\Installer\Products\" & child, False)
 
 						If subregkey IsNot Nothing Then
-							If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
+							If IsNullOrWhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
 								wantedvalue = subregkey.GetValue("ProductName").ToString
-								If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+								If IsNullOrWhitespace(wantedvalue) = False Then
 									For i As Integer = 0 To packages.Length - 1
-										If Not checkvariables.isnullorwhitespace(packages(i)) Then
+										If Not IsNullOrWhitespace(packages(i)) Then
 											If wantedvalue.ToLower.Contains(packages(i).ToLower) And
 											   (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
 												Try
@@ -8501,14 +8485,14 @@ Public Class CleanupEngine
 					 ("Software\Classes\Installer\UpgradeCodes", True)
 												If superregkey IsNot Nothing Then
 													For Each child2 As String In superregkey.GetSubKeyNames()
-														If checkvariables.isnullorwhitespace(child2) = False Then
+														If IsNullOrWhitespace(child2) = False Then
 
 															subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 														("Software\Classes\Installer\UpgradeCodes\" & child2, False)
 
 															If subsuperregkey IsNot Nothing Then
 																For Each wantedstring As String In subsuperregkey.GetValueNames()
-																	If checkvariables.isnullorwhitespace(wantedstring) = False Then
+																	If IsNullOrWhitespace(wantedstring) = False Then
 																		If wantedstring.Contains(child) Then
 																			Try
 																				deletesubregkey(superregkey, child2)
@@ -8539,24 +8523,24 @@ Public Class CleanupEngine
 		updatetextmethod(UpdateTextMethodmessagefn(35))
 		Try
 			For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-				If Not checkvariables.isnullorwhitespace(users) Then
+				If Not IsNullOrWhitespace(users) Then
 
 					regkey = My.Computer.Registry.Users.OpenSubKey _
 			  (users & "\Software\Microsoft\Installer\Products", True)
 
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If checkvariables.isnullorwhitespace(child) = False Then
+							If IsNullOrWhitespace(child) = False Then
 
 								subregkey = My.Computer.Registry.Users.OpenSubKey _
 	(users & "\Software\Microsoft\Installer\Products\" & child, False)
 
 								If subregkey IsNot Nothing Then
-									If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
+									If IsNullOrWhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
 										wantedvalue = subregkey.GetValue("ProductName").ToString
-										If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+										If IsNullOrWhitespace(wantedvalue) = False Then
 											For i As Integer = 0 To packages.Length - 1
-												If Not checkvariables.isnullorwhitespace(packages(i)) Then
+												If Not IsNullOrWhitespace(packages(i)) Then
 													If wantedvalue.ToLower.Contains(packages(i).ToLower) And
 													   (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
 														Try
@@ -8572,14 +8556,14 @@ Public Class CleanupEngine
 							 (users & "\Software\Microsoft\Installer\UpgradeCodes", True)
 														If superregkey IsNot Nothing Then
 															For Each child2 As String In superregkey.GetSubKeyNames()
-																If checkvariables.isnullorwhitespace(child2) = False Then
+																If IsNullOrWhitespace(child2) = False Then
 
 																	subsuperregkey = My.Computer.Registry.Users.OpenSubKey _
 																(users & "\Software\Microsoft\Installer\UpgradeCodes" & child2, False)
 
 																	If subsuperregkey IsNot Nothing Then
 																		For Each wantedstring As String In subsuperregkey.GetValueNames()
-																			If checkvariables.isnullorwhitespace(wantedstring) = False Then
+																			If IsNullOrWhitespace(wantedstring) = False Then
 																				If wantedstring.Contains(child) Then
 																					Try
 																						deletesubregkey(superregkey, child2)
@@ -8624,7 +8608,7 @@ Public Class CleanupEngine
         regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Services", False)
         If regkey IsNot Nothing Then
             For i As Integer = 0 To services.Length - 1
-                If Not checkvariables.isnullorwhitespace(services(i)) Then
+                If Not IsNullOrWhitespace(services(i)) Then
                     If regkey.OpenSubKey(services(i), False) IsNot Nothing Then
 
                         If Not (donotremoveamdhdaudiobusfiles AndAlso services(i).ToLower.Contains("amdkmafd")) Then
@@ -8688,11 +8672,11 @@ Public Class CleanupEngine
             regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames
-                    If checkvariables.isnullorwhitespace(child) = False Then
+                    If IsNullOrWhitespace(child) = False Then
                         subregkey = regkey.OpenSubKey(child & "\Video", False)
                         If subregkey IsNot Nothing Then
                             For i As Integer = 0 To services.Length - 1
-                                If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("Service"))) = False Then
+                                If IsNullOrWhitespace(CStr(subregkey.GetValue("Service"))) = False Then
                                     If subregkey.GetValue("Service").ToString.ToLower = services(i).ToLower Then
                                         Try
                                             deletesubregkey(regkey, child)
@@ -8734,11 +8718,11 @@ Public Class CleanupEngine
             If CBool(win8higher) Then
                 regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                 If regkey IsNot Nothing Then
-                    If Not checkvariables.isnullorwhitespace(oeminf) Then
+                    If Not IsNullOrWhitespace(oeminf) Then
                         If Not (donotremoveamdhdaudiobusfiles AndAlso oeminf.ToLower.Contains("amdkmafd.sys")) Then
                             For Each child As String In regkey.GetSubKeyNames()
-                                If checkvariables.isnullorwhitespace(child) = False Then
-                                    If (Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("Source")))) AndAlso regkey.OpenSubKey(child).GetValue("Source").ToString.ToLower.Contains(oeminf.ToLower) Then
+                                If IsNullOrWhitespace(child) = False Then
+                                    If (Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("Source")))) AndAlso regkey.OpenSubKey(child).GetValue("Source").ToString.ToLower.Contains(oeminf.ToLower) Then
                                         Try
                                             deletesubregkey(regkey, child)
                                         Catch ex As Exception
@@ -8771,10 +8755,10 @@ Public Class CleanupEngine
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                     If regkey IsNot Nothing Then
                         For i As Integer = 0 To driverfiles.Length - 1
-                            If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+                            If Not IsNullOrWhitespace(driverfiles(i)) Then
                                 If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd.sys")) Then
                                     For Each child As String In regkey.GetSubKeyNames()
-                                        If checkvariables.isnullorwhitespace(child) = False Then
+                                        If IsNullOrWhitespace(child) = False Then
                                             If child.ToLower.Replace("/", "\").Contains("\" + driverfiles(i).ToLower) Then
                                                 Try
                                                     deletesubregkey(regkey, child)
@@ -8794,10 +8778,10 @@ Public Class CleanupEngine
                     regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
                     If regkey IsNot Nothing Then
                         For i As Integer = 0 To driverfiles.Length - 1
-                            If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+                            If Not IsNullOrWhitespace(driverfiles(i)) Then
                                 If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
                                     For Each child As String In regkey.GetValueNames()
-                                        If checkvariables.isnullorwhitespace(child) = False Then
+                                        If IsNullOrWhitespace(child) = False Then
                                             If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                                 Try
                                                     deletevalue(regkey, child)
@@ -8834,18 +8818,18 @@ Public Class CleanupEngine
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
+                    If IsNullOrWhitespace(child) = False Then
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\InProcServer32", False)
                         If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                            If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
                                 wantedvalue = subregkey.GetValue("").ToString
-                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                If IsNullOrWhitespace(wantedvalue) = False Then
                                     For i As Integer = 0 To clsidleftover.Length - 1
-                                        If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                        If Not IsNullOrWhitespace(clsidleftover(i)) Then
                                             If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
 
                                                 Try
-                                                    If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
+                                                    If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
                                                         appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                         Try
                                                             deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True), appid)
@@ -8856,7 +8840,7 @@ Public Class CleanupEngine
                                                 End Try
 
                                                 Try
-                                                    If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
+                                                    If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
                                                         typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                         Try
                                                             deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
@@ -8899,18 +8883,18 @@ Public Class CleanupEngine
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
+                    If IsNullOrWhitespace(child) = False Then
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child, False)
                         If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                            If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
                                 wantedvalue = subregkey.GetValue("").ToString
-                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                If IsNullOrWhitespace(wantedvalue) = False Then
                                     For i As Integer = 0 To clsidleftover.Length - 1
-                                        If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                        If Not IsNullOrWhitespace(clsidleftover(i)) Then
                                             If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
 
                                                 Try
-                                                    If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
+                                                    If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
                                                         appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                         Try
                                                             deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True), appid)
@@ -8921,7 +8905,7 @@ Public Class CleanupEngine
                                                 End Try
 
                                                 Try
-                                                    If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
+                                                    If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
                                                         typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                         Try
                                                             deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
@@ -8965,19 +8949,19 @@ Public Class CleanupEngine
                 regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
+                        If IsNullOrWhitespace(child) = False Then
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\InProcServer32", False)
 
                             If subregkey IsNot Nothing Then
-                                If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                                If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
                                     wantedvalue = subregkey.GetValue("").ToString
-                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                    If IsNullOrWhitespace(wantedvalue) = False Then
                                         For i As Integer = 0 To clsidleftover.Length - 1
-                                            If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                            If Not IsNullOrWhitespace(clsidleftover(i)) Then
                                                 If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
 
                                                     Try
-                                                        If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
+                                                        If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
                                                             appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                             Try
                                                                 deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True), appid)
@@ -8988,7 +8972,7 @@ Public Class CleanupEngine
                                                     End Try
 
                                                     Try
-                                                        If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
+                                                        If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
                                                             typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                             Try
                                                                 deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
@@ -9032,18 +9016,18 @@ Public Class CleanupEngine
                 regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
+                        If IsNullOrWhitespace(child) = False Then
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child, False)
                             If subregkey IsNot Nothing Then
-                                If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                                If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
                                     wantedvalue = subregkey.GetValue("").ToString
-                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                    If IsNullOrWhitespace(wantedvalue) = False Then
                                         For i As Integer = 0 To clsidleftover.Length - 1
-                                            If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                            If Not IsNullOrWhitespace(clsidleftover(i)) Then
                                                 If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
 
                                                     Try
-                                                        If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
+                                                        If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
                                                             appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                             Try
                                                                 deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True), appid)
@@ -9054,7 +9038,7 @@ Public Class CleanupEngine
                                                     End Try
 
                                                     Try
-                                                        If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
+                                                        If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
                                                             typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                             Try
                                                                 deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
@@ -9097,18 +9081,18 @@ Public Class CleanupEngine
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
+                    If IsNullOrWhitespace(child) = False Then
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID\" & child & "\LocalServer32", False)
                         If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                            If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
                                 wantedvalue = subregkey.GetValue("").ToString
-                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                If IsNullOrWhitespace(wantedvalue) = False Then
                                     For i As Integer = 0 To clsidleftover.Length - 1
-                                        If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                        If Not IsNullOrWhitespace(clsidleftover(i)) Then
                                             If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
 
                                                 Try
-                                                    If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
+                                                    If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
                                                         appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                         Try
                                                             deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True), appid)
@@ -9119,7 +9103,7 @@ Public Class CleanupEngine
                                                 End Try
 
                                                 Try
-                                                    If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
+                                                    If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
                                                         typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                         Try
                                                             deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
@@ -9162,19 +9146,19 @@ Public Class CleanupEngine
                 regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
+                        If IsNullOrWhitespace(child) = False Then
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\LocalServer32", False)
                             If subregkey IsNot Nothing Then
-                                If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                                If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
                                     wantedvalue = subregkey.GetValue("").ToString
-                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                    If IsNullOrWhitespace(wantedvalue) = False Then
                                         For i As Integer = 0 To clsidleftover.Length - 1
-                                            If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                            If Not IsNullOrWhitespace(clsidleftover(i)) Then
                                                 If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
 
 
                                                     Try
-                                                        If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
+                                                        If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
                                                             appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
                                                             Try
                                                                 deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True), appid)
@@ -9185,7 +9169,7 @@ Public Class CleanupEngine
                                                     End Try
 
                                                     Try
-                                                        If Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
+                                                        If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
                                                             typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
                                                             Try
                                                                 deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
@@ -9228,15 +9212,15 @@ Public Class CleanupEngine
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AppID", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
+                    If IsNullOrWhitespace(child) = False Then
                         For i As Integer = 0 To clsidleftover.Length - 1
-                            If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                            If Not IsNullOrWhitespace(clsidleftover(i)) Then
                                 If child.ToLower.Contains(clsidleftover(i).ToLower) Then
                                     subregkey = regkey.OpenSubKey(child)
                                     If subregkey IsNot Nothing Then
-                                        If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("AppID"))) = False Then
+                                        If IsNullOrWhitespace(CStr(subregkey.GetValue("AppID"))) = False Then
                                             wantedvalue = subregkey.GetValue("AppID").ToString
-                                            If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                            If IsNullOrWhitespace(wantedvalue) = False Then
 
                                                 Try
                                                     deletesubregkey(regkey, wantedvalue)
@@ -9266,15 +9250,15 @@ Public Class CleanupEngine
                 regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
+                        If IsNullOrWhitespace(child) = False Then
                             For i As Integer = 0 To clsidleftover.Length - 1
-                                If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
+                                If Not IsNullOrWhitespace(clsidleftover(i)) Then
                                     If child.ToLower.Contains(clsidleftover(i).ToLower) Then
                                         subregkey = regkey.OpenSubKey(child)
                                         If subregkey IsNot Nothing Then
-                                            If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue("AppID"))) = False Then
+                                            If IsNullOrWhitespace(CStr(subregkey.GetValue("AppID"))) = False Then
                                                 wantedvalue = subregkey.GetValue("AppID").ToString
-                                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                                If IsNullOrWhitespace(wantedvalue) = False Then
 
                                                     Try
                                                         deletesubregkey(regkey, wantedvalue)
@@ -9307,16 +9291,16 @@ Public Class CleanupEngine
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If (Not checkvariables.isnullorwhitespace(child)) AndAlso (regkey.OpenSubKey(child) IsNot Nothing) Then
+                    If (Not IsNullOrWhitespace(child)) AndAlso (regkey.OpenSubKey(child) IsNot Nothing) Then
                         For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-                            If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child2)) Then
+                            If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child2)) Then
                                 For Each child3 As String In regkey.OpenSubKey(child).OpenSubKey(child2).GetSubKeyNames()
-                                    If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(child3)) Then
+                                    If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child3)) Then
                                         For Each child4 As String In regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).GetSubKeyNames()
-                                            If (Not checkvariables.isnullorwhitespace(child4)) AndAlso regkey.OpenSubKey(child, False) IsNot Nothing Then
+                                            If (Not IsNullOrWhitespace(child4)) AndAlso regkey.OpenSubKey(child, False) IsNot Nothing Then
                                                 For i As Integer = 0 To clsidleftover.Length - 1
-                                                    If Not checkvariables.isnullorwhitespace(clsidleftover(i)) Then
-                                                        If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not checkvariables.isnullorwhitespace(CStr(regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("")))) Then
+                                                    If Not IsNullOrWhitespace(clsidleftover(i)) Then
+                                                        If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("")))) Then
                                                             If regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("").ToString.ToLower.Contains(clsidleftover(i).ToLower) Then
                                                                 Try
                                                                     deletesubregkey(regkey, child)
@@ -9357,21 +9341,21 @@ Public Class CleanupEngine
             regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
             If regkey IsNot Nothing Then
                 For Each child As String In regkey.GetSubKeyNames()
-                    If checkvariables.isnullorwhitespace(child) = False Then
+                    If IsNullOrWhitespace(child) = False Then
 
                         subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
 
                         If subregkey IsNot Nothing Then
-                            If checkvariables.isnullorwhitespace(CStr(subregkey.GetValue(""))) = False Then
+                            If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
                                 wantedvalue = subregkey.GetValue("").ToString
-                                If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                If IsNullOrWhitespace(wantedvalue) = False Then
                                     For i As Integer = 0 To interfaces.Length - 1
-                                        If Not checkvariables.isnullorwhitespace(interfaces(i)) Then
+                                        If Not IsNullOrWhitespace(interfaces(i)) Then
                                             If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
                                                 If subregkey.OpenSubKey("Typelib", False) IsNot Nothing Then
-                                                    If checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey("TypeLib", False).GetValue(""))) = False Then
+                                                    If IsNullOrWhitespace(CStr(subregkey.OpenSubKey("TypeLib", False).GetValue(""))) = False Then
                                                         typelib = CStr(subregkey.OpenSubKey("TypeLib", False).GetValue(""))
-                                                        If checkvariables.isnullorwhitespace(typelib) = False Then
+                                                        If IsNullOrWhitespace(typelib) = False Then
                                                             Try
                                                                 deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
                                                             Catch ex As Exception
@@ -9402,30 +9386,30 @@ Public Class CleanupEngine
                 regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\Interface", True)
                 If regkey IsNot Nothing Then
                     For Each child As String In regkey.GetSubKeyNames()
-                        If checkvariables.isnullorwhitespace(child) = False Then
+                        If IsNullOrWhitespace(child) = False Then
 
                             subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\Interface\" & child, False)
 
                             If subregkey IsNot Nothing Then
                                 'Hack for some weird registry state  "For user: Watcher"
                                 Try
-                                    If checkvariables.isnullorwhitespace(CStr((subregkey.GetValue("")))) = False Then
+                                    If IsNullOrWhitespace(CStr((subregkey.GetValue("")))) = False Then
                                         'do nothing
                                     End If
                                 Catch ex As Exception
                                     application.log.addmessage("non standard keytype found : " + child)
                                     Continue For
                                 End Try
-                                If checkvariables.isnullorwhitespace(CStr((subregkey.GetValue("")))) = False Then
+                                If IsNullOrWhitespace(CStr((subregkey.GetValue("")))) = False Then
                                     wantedvalue = subregkey.GetValue("").ToString
-                                    If checkvariables.isnullorwhitespace(wantedvalue) = False Then
+                                    If IsNullOrWhitespace(wantedvalue) = False Then
                                         For i As Integer = 0 To interfaces.Length - 1
-                                            If Not checkvariables.isnullorwhitespace(interfaces(i)) Then
+                                            If Not IsNullOrWhitespace(interfaces(i)) Then
                                                 If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
                                                     If subregkey.OpenSubKey("Typelib", False) IsNot Nothing Then
-                                                        If checkvariables.isnullorwhitespace(CStr(subregkey.OpenSubKey("TypeLib", False).GetValue(""))) = False Then
+                                                        If IsNullOrWhitespace(CStr(subregkey.OpenSubKey("TypeLib", False).GetValue(""))) = False Then
                                                             typelib = CStr(subregkey.OpenSubKey("TypeLib", False).GetValue(""))
-                                                            If checkvariables.isnullorwhitespace(typelib) = False Then
+                                                            If IsNullOrWhitespace(typelib) = False Then
                                                                 Try
                                                                     deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
                                                                 Catch ex As Exception
@@ -9462,7 +9446,7 @@ Public Class CleanupEngine
         Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 
         For i As Integer = 0 To driverfiles.Length - 1
-            If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+            If Not IsNullOrWhitespace(driverfiles(i)) Then
                 If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
 
                     filePath = System.Environment.SystemDirectory
@@ -9489,10 +9473,10 @@ Public Class CleanupEngine
 
         Try
             For i As Integer = 0 To driverfiles.Length - 1
-                If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+                If Not IsNullOrWhitespace(driverfiles(i)) Then
                     filePath = Environment.GetEnvironmentVariable("windir")
                     For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
-                        If checkvariables.isnullorwhitespace(child) = False Then
+                        If IsNullOrWhitespace(child) = False Then
                             If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                 Try
                                     deletefile(child)
@@ -9517,11 +9501,11 @@ Public Class CleanupEngine
 
         If IntPtr.Size = 8 Then
             For i As Integer = 0 To driverfiles.Length - 1
-                If Not checkvariables.isnullorwhitespace(driverfiles(i)) Then
+                If Not IsNullOrWhitespace(driverfiles(i)) Then
                     If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
 
                         For Each child As String In My.Computer.FileSystem.GetFiles(winPath.ToString, FileIO.SearchOption.SearchTopLevelOnly, "*.log")
-                            If checkvariables.isnullorwhitespace(child) = False Then
+                            If IsNullOrWhitespace(child) = False Then
                                 If child.ToLower.Contains(driverfiles(i).ToLower) Then
                                     Try
                                         deletefile(child)
