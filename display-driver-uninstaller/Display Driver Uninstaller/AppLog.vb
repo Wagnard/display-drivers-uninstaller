@@ -59,6 +59,16 @@ Public Class AppLog
 		End SyncLock
 	End Sub
 
+	Public Sub AddWarning(ByRef Ex As Exception)
+		SyncLock m_threadlock
+			If Not Me.Dispatcher.CheckAccess() Then
+				Me.Dispatcher.Invoke(New AddWarningEntryDelegate(AddressOf Me.AddWarningEntry), Ex)
+			Else
+				Me.AddWarningEntry(Ex)
+			End If
+		End SyncLock
+	End Sub
+
 	Public Sub AddException(ByRef Ex As Exception)
 		SyncLock m_threadlock
 			If Not Me.Dispatcher.CheckAccess() Then
@@ -402,6 +412,16 @@ Public Class AppLog
 	Private Function CreateLogEntry() As LogEntry
 		Return New LogEntry()
 	End Function
+
+	Private Delegate Sub AddWarningEntryDelegate(ByRef Ex As Exception)
+	Private Sub AddWarningEntry(ByRef Ex As Exception)
+		Dim logEntry As LogEntry = logEntry.Create()
+		logEntry.AddException(Ex)
+		logEntry.Type = LogType.Warning
+
+		AddEntry(logEntry)
+	End Sub
+
 
 	Private Delegate Sub AddExceptionEntryDelegate(ByRef Ex As Exception)
 	Private Sub AddExceptionEntry(ByRef Ex As Exception)

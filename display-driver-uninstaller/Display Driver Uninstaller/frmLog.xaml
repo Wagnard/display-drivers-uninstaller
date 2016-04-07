@@ -42,6 +42,7 @@
 			<GradientStop Color="#FFFFFFFF" Offset="1" />
 		</LinearGradientBrush>
 
+		<conv:NullableBooleanToBoolean x:Key="NulBoolToBool"></conv:NullableBooleanToBoolean>
 		<conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" Reversed="False" TrueValue="Visible" FalseValue="Collapsed" />
 		<conv:BooleanToVisibilityConverter x:Key="NotBoolToVisibility" Reversed="False" TrueValue="Collapsed" FalseValue="Visible" />
 		<conv:BooleanToColor x:Key="BoolToColor" Reversed="False" TrueValue="{StaticResource cValue}" FalseValue="{StaticResource cNormal}"/>
@@ -156,14 +157,23 @@
 	
 	<Grid x:Name="gridRoot">
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*"  MinHeight="100"/>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*"  MinHeight="100" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
-
+		
+		<Menu Grid.Row="0" FontSize="14" >
+			<MenuItem x:Name="showEvents" Header="Filters">
+				<MenuItem x:Name="menuEvents" Header="Show Events" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListEvents, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Click="menuEvents_Click"/>
+				<MenuItem x:Name="menuWarnings" Header="Show Warnings" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListWarnings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Click="menuWarnings_Click"/>
+				<MenuItem x:Name="menuErrors" Header="Show Errors" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListErrors, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Click="menuErrors_Click"/>
+			</MenuItem>
+		</Menu>
+		
 		<ListBox Name="lbLog"
-				 Grid.Row="0"
+				 Grid.Row="1"
 				 DataContext="{Binding Log.LogEntries, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 				 ItemsSource="{Binding}" 
 				 HorizontalContentAlignment="Stretch" 
@@ -176,17 +186,17 @@
 				 VirtualizingStackPanel.IsVirtualizing="True"
 				 VirtualizingStackPanel.VirtualizationMode="Recycling"
 				 ItemTemplate="{StaticResource logItem}">
-					
-				<ListBox.ItemContainerStyle>
-					<Style TargetType="{x:Type Control}" >
-						<Setter Property="Focusable" Value="True" />
-					</Style>
-				</ListBox.ItemContainerStyle>
-			</ListBox>
+
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="{x:Type Control}" >
+					<Setter Property="Focusable" Value="True" />
+				</Style>
+			</ListBox.ItemContainerStyle>
+		</ListBox>
 		
-		<GridSplitter Margin="0,0,0,0" Grid.Row="1" ResizeDirection="Rows" ShowsPreview="True" HorizontalAlignment="Stretch" Background="Black" MinHeight="2" />
+		<GridSplitter Margin="0,0,0,0" Grid.Row="2" ResizeDirection="Rows" ShowsPreview="True" HorizontalAlignment="Stretch" Background="Black" MinHeight="2" />
 	
-		<Border Grid.Row="2" 
+		<Border Grid.Row="3" 
 				DataContext="{Binding ElementName=frmLog, Path=SelectedEntry, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 				Background="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrushBg}, UpdateSourceTrigger=PropertyChanged}"
 				BorderThickness="1" 
@@ -245,7 +255,7 @@
 			</TabControl>
 		</Border>
 		
-		<Border Grid.Row="3" BorderThickness="0,1,0,0" BorderBrush="Black">
+		<Border Grid.Row="4" BorderThickness="0,1,0,0" BorderBrush="Black">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
