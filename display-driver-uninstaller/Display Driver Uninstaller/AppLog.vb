@@ -359,9 +359,6 @@ Public Class AppLog
 										Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals("Values", StringComparison.OrdinalIgnoreCase))
 
 										If newEntry.Values.Count > 0 Then
-											newEntry.CanExpand = True
-											newEntry.IsExpanded = False
-
 											newEntry.HasAnyData = True
 											newEntry.HasValues = True
 										End If
@@ -379,9 +376,6 @@ Public Class AppLog
 
 										If exData.Count > 0 Then
 											newEntry.ExceptionData = exData
-
-											newEntry.CanExpand = True
-											newEntry.IsExpanded = False
 
 											newEntry.HasAnyData = True
 											newEntry.HasException = True

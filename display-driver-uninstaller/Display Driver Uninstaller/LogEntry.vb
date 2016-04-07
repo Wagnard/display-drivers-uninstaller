@@ -53,25 +53,16 @@ Public Class LogEntry
 	Private m_separator As String
 	Private m_time As DateTime
 	Private m_type As LogType
-	Private m_isExpanded, m_canExpand, m_hasValues, m_hasException, m_hasAnyData As Boolean
+	Private m_isSelected, m_hasValues, m_hasException, m_hasAnyData As Boolean
 	Private m_message As String
 
-	Public Property IsExpanded As Boolean
+	Public Property IsSelected As Boolean
 		Get
-			Return m_isExpanded
+			Return m_isSelected
 		End Get
 		Set(value As Boolean)
-			m_isExpanded = value
-			OnPropertyChanged("IsExpanded")
-		End Set
-	End Property
-	Public Property CanExpand As Boolean
-		Get
-			Return m_canExpand
-		End Get
-		Set(value As Boolean)
-			m_canExpand = value
-			OnPropertyChanged("CanExpand")
+			m_isSelected = value
+			OnPropertyChanged("IsSelected")
 		End Set
 	End Property
 	Public Property Separator As String
@@ -89,10 +80,6 @@ Public Class LogEntry
 		End Get
 		Set(value As LogType)
 			m_type = value
-
-			CanExpand = If(value <> LogType.Error, False, True)
-			IsExpanded = If(value <> LogType.Error, True, False)
-
 			OnPropertyChanged("Type")
 		End Set
 	End Property
@@ -170,6 +157,7 @@ Public Class LogEntry
 		Separator = " : "
 		Time = DateTime.Now
 		Type = LogType.Event
+		IsSelected = False
 
 		If Ex IsNot Nothing Then
 			AddException(Ex)

@@ -10,11 +10,13 @@
 		<Color x:Key="cValue">#FF0000D2</Color>
 		<Color x:Key="cWarning">Black</Color>
 		<Color x:Key="cError">Red</Color>
+		<Color x:Key="cSelected">#FFCBCBCB</Color>
 
 		<SolidColorBrush x:Key="bNormal" Color="{StaticResource cNormal}"/>
 		<SolidColorBrush x:Key="bValue" Color="{StaticResource cValue}"/>
 		<SolidColorBrush x:Key="bWarning" Color="{StaticResource cWarning}"/>
 		<SolidColorBrush x:Key="bError" Color="{StaticResource cError}"/>
+		<SolidColorBrush x:Key="bSelected" Color="{StaticResource cSelected}" />
 
 		<Style x:Key="styleNormal" TargetType="{x:Type TextBlock}">
 			<Setter Property="Foreground" Value="{StaticResource bNormal}"/>
@@ -41,249 +43,20 @@
 		</LinearGradientBrush>
 
 		<conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" Reversed="False" TrueValue="Visible" FalseValue="Collapsed" />
-		<conv:LogTypeIsType x:Key="IsType" Reversed="False" />
-		<conv:LogTypeIsType x:Key="IsNotType" Reversed="True"/>
+		<conv:BooleanToVisibilityConverter x:Key="NotBoolToVisibility" Reversed="False" TrueValue="Collapsed" FalseValue="Visible" />
 		<conv:BooleanToColor x:Key="BoolToColor" Reversed="False" TrueValue="{StaticResource cValue}" FalseValue="{StaticResource cNormal}"/>
 		<conv:BooleanToFontWeight x:Key="BoolToBold" Reversed="False" TrueValue="Normal" FalseValue="Bold"/>
 		<conv:BooleanToStyle x:Key="BoolToStyle" Reversed="False" TrueValue="{StaticResource styleNormal}" FalseValue="{StaticResource styleValue}"/>
 		<conv:BooleanToStyle x:Key="NotBoolToStyle" Reversed="True" TrueValue="{StaticResource styleNormal}" FalseValue="{StaticResource styleValue}"/>
 
-		<conv:LogTypeToBrush x:Key="TypeToBrush" Brush1="{StaticResource bNormal}" Brush2="{StaticResource bWarning}" Brush3="{StaticResource bError}"/>
+		<conv:LogTypeToBrush x:Key="TypeToBrush" Brush1="{StaticResource bValue}" Brush2="{StaticResource bWarning}" Brush3="{StaticResource bError}"/>
 		<conv:LogTypeToBrush x:Key="TypeToBrushBg" Brush1="{StaticResource bgBrushEvent}" Brush2="{StaticResource bgBrushWarning}" Brush3="{StaticResource bgBrushError}"/>
 
 		<conv:StringIsNotNullOrEmpty x:Key="NullOrEmpty" Reversed="True" />
-		<conv:StringIsNotNullOrEmpty x:Key="NotNullOrEmpty" Reversed="False" />
 		<conv:CombiningConverter x:Key="NullToVis" Converter1="{StaticResource NullOrEmpty}" Converter2="{StaticResource BoolToVisibility}" />
-		<conv:CombiningConverter x:Key="NotNullToVis" Converter1="{StaticResource NotNullOrEmpty}" Converter2="{StaticResource BoolToVisibility}" />
-
-		<conv:CombiningConverter x:Key="TypeToVis" Converter1="{StaticResource IsType}" Converter2="{StaticResource BoolToVisibility}" />
-		<conv:CombiningConverter x:Key="NotTypeToVis" Converter1="{StaticResource IsNotType}" Converter2="{StaticResource BoolToVisibility}" />
-
-		<Style x:Key="ExpanderRightHeaderStyle" TargetType="{x:Type ToggleButton}">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type ToggleButton}">
-						<Border Padding="{TemplateBinding Padding}" >
-							<Grid SnapsToDevicePixels="False" Background="Transparent">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="19"/>
-									<RowDefinition Height="*"/>
-								</Grid.RowDefinitions>
-								<Grid>
-									<Grid.LayoutTransform>
-										<TransformGroup>
-											<TransformGroup.Children>
-												<TransformCollection>
-													<RotateTransform Angle="-90"/>
-												</TransformCollection>
-											</TransformGroup.Children>
-										</TransformGroup>
-									</Grid.LayoutTransform>
-									<Ellipse x:Name="circle" Stroke="DarkGray" HorizontalAlignment="Center" VerticalAlignment="Center" Width="19" Height="19"/>
-									<Path x:Name="arrow" Stroke="#666" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false" Data="M 1,1.5 L 4.5,5 L 8,1.5"/>
-								</Grid>
-								<ContentPresenter HorizontalAlignment="Center" Margin="0,4,0,0" VerticalAlignment="Top" SnapsToDevicePixels="True" Grid.Row="1" RecognizesAccessKey="True"/>
-							</Grid>
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsChecked" Value="true">
-								<Setter Property="Data" TargetName="arrow" Value="M 1,4.5  L 4.5,1  L 8,4.5"/>
-							</Trigger>
-							<Trigger Property="IsMouseOver" Value="true">
-								<Setter Property="Stroke" TargetName="circle" Value="#FF3C7FB1"/>
-								<Setter Property="Stroke" TargetName="arrow" Value="#222"/>
-							</Trigger>
-							<Trigger Property="IsPressed" Value="true">
-								<Setter Property="Stroke" TargetName="circle" Value="#FF526C7B"/>
-								<Setter Property="StrokeThickness" TargetName="circle" Value="1.5"/>
-								<Setter Property="Stroke" TargetName="arrow" Value="#FF003366"/>
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="ExpanderUpHeaderStyle" TargetType="{x:Type ToggleButton}">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type ToggleButton}">
-						<Border Padding="{TemplateBinding Padding}">
-							<Grid SnapsToDevicePixels="False" Background="Transparent">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="19"/>
-									<ColumnDefinition Width="*"/>
-								</Grid.ColumnDefinitions>
-								<Grid>
-									<Grid.LayoutTransform>
-										<TransformGroup>
-											<TransformGroup.Children>
-												<TransformCollection>
-													<RotateTransform Angle="180"/>
-												</TransformCollection>
-											</TransformGroup.Children>
-										</TransformGroup>
-									</Grid.LayoutTransform>
-									<Ellipse x:Name="circle" Stroke="DarkGray" HorizontalAlignment="Center" VerticalAlignment="Center" Width="19" Height="19"/>
-									<Path x:Name="arrow" Stroke="#666" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false" Data="M 1,1.5 L 4.5,5 L 8,1.5"/>
-								</Grid>
-								<ContentPresenter HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Center" SnapsToDevicePixels="True" Grid.Column="1" RecognizesAccessKey="True"/>
-							</Grid>
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsChecked" Value="true">
-								<Setter Property="Data" TargetName="arrow" Value="M 1,4.5  L 4.5,1  L 8,4.5"/>
-							</Trigger>
-							<Trigger Property="IsMouseOver" Value="true">
-								<Setter Property="Stroke" TargetName="circle" Value="#FF3C7FB1"/>
-								<Setter Property="Stroke" TargetName="arrow" Value="#222"/>
-							</Trigger>
-							<Trigger Property="IsPressed" Value="true">
-								<Setter Property="Stroke" TargetName="circle" Value="#FF526C7B"/>
-								<Setter Property="StrokeThickness" TargetName="circle" Value="1.5"/>
-								<Setter Property="Stroke" TargetName="arrow" Value="#FF003366"/>
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="ExpanderLeftHeaderStyle" TargetType="{x:Type ToggleButton}">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type ToggleButton}">
-						<Border Padding="{TemplateBinding Padding}">
-							<Grid SnapsToDevicePixels="False" Background="Transparent">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="19"/>
-									<RowDefinition Height="*"/>
-								</Grid.RowDefinitions>
-								<Grid>
-									<Grid.LayoutTransform>
-										<TransformGroup>
-											<TransformGroup.Children>
-												<TransformCollection>
-													<RotateTransform Angle="90"/>
-												</TransformCollection>
-											</TransformGroup.Children>
-										</TransformGroup>
-									</Grid.LayoutTransform>
-									<Ellipse x:Name="circle" Stroke="DarkGray" HorizontalAlignment="Center" VerticalAlignment="Center" Width="19" Height="19"/>
-									<Path x:Name="arrow" Stroke="#666" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false" Data="M 1,1.5 L 4.5,5 L 8,1.5"/>
-								</Grid>
-								<ContentPresenter HorizontalAlignment="Center" Margin="0,4,0,0" VerticalAlignment="Top" SnapsToDevicePixels="True" Grid.Row="1" RecognizesAccessKey="True"/>
-							</Grid>
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsChecked" Value="true">
-								<Setter Property="Data" TargetName="arrow" Value="M 1,4.5  L 4.5,1  L 8,4.5"/>
-							</Trigger>
-							<Trigger Property="IsMouseOver" Value="true">
-								<Setter Property="Stroke" TargetName="circle" Value="#FF3C7FB1"/>
-								<Setter Property="Stroke" TargetName="arrow" Value="#222"/>
-							</Trigger>
-							<Trigger Property="IsPressed" Value="true">
-								<Setter Property="Stroke" TargetName="circle" Value="#FF526C7B"/>
-								<Setter Property="StrokeThickness" TargetName="circle" Value="1.5"/>
-								<Setter Property="Stroke" TargetName="arrow" Value="#FF003366"/>
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="ExpanderHeaderFocusVisual">
-			<Setter Property="Control.Template">
-				<Setter.Value>
-					<ControlTemplate>
-						<Border>
-							<Rectangle Stroke="Black" StrokeDashArray="1 2" StrokeThickness="1" Margin="0" SnapsToDevicePixels="true"/>
-						</Border>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="ExpanderDownHeaderStyle" TargetType="{x:Type ToggleButton}">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type ToggleButton}">
-						<Border Padding="{TemplateBinding Padding}">
-							<Grid SnapsToDevicePixels="False" Background="Transparent">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="19"/>
-									<ColumnDefinition Width="*"/>
-								</Grid.ColumnDefinitions>
-
-								<Grid Visibility="{Binding Path=CanExpand, Converter={StaticResource BoolToVisibility}, ConverterParameter=Event, UpdateSourceTrigger=PropertyChanged}">
-									<Ellipse x:Name="circle" Stroke="DarkGray" HorizontalAlignment="Center" VerticalAlignment="Center" Width="19" Height="19"/>
-									<Path x:Name="arrow" Stroke="#666" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="false" Data="M 1,1.5 L 4.5,5 L 8,1.5"/>
-								</Grid>
-								<ContentPresenter HorizontalAlignment="Stretch" Margin="4,0,0,0" VerticalAlignment="Center" SnapsToDevicePixels="True" Grid.Column="1" RecognizesAccessKey="True"/>
-							</Grid>
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsChecked" Value="true">
-								<Setter Property="Data" TargetName="arrow" Value="M 1,4.5  L 4.5,1  L 8,4.5"/>
-							</Trigger>
-							<Trigger Property="IsMouseOver" Value="true">
-								<Setter Property="Stroke" TargetName="circle" Value="#FF3C7FB1"/>
-								<Setter Property="Stroke" TargetName="arrow" Value="#222"/>
-							</Trigger>
-							<Trigger Property="IsPressed" Value="true">
-								<Setter Property="Stroke" TargetName="circle" Value="#FF526C7B"/>
-								<Setter Property="StrokeThickness" TargetName="circle" Value="1.5"/>
-								<Setter Property="Stroke" TargetName="arrow" Value="#FF003366"/>
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="ExpanderStyle" TargetType="{x:Type Expander}">
-			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-			<Setter Property="Background" Value="Transparent"/>
-			<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-			<Setter Property="VerticalContentAlignment" Value="Stretch"/>
-			<Setter Property="BorderBrush" Value="Transparent"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type Expander}" >
-						<Border SnapsToDevicePixels="true" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3">
-							<DockPanel>
-								<ToggleButton IsEnabled="{Binding Path=CanExpand, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  x:Name="HeaderSite" FocusVisualStyle="{StaticResource ExpanderHeaderFocusVisual}" Margin="1" MinHeight="0" MinWidth="0" Style="{StaticResource ExpanderDownHeaderStyle}" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" FontStretch="{TemplateBinding FontStretch}" FontStyle="{TemplateBinding FontStyle}" FontWeight="{TemplateBinding FontWeight}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" DockPanel.Dock="Top" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
-								<ContentPresenter x:Name="ExpandSite" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Focusable="false" Visibility="Collapsed" DockPanel.Dock="Bottom"/>
-							</DockPanel>
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsExpanded" Value="true">
-								<Setter Property="Visibility" TargetName="ExpandSite" Value="Visible"/>
-							</Trigger>
-							<Trigger Property="ExpandDirection" Value="Right">
-								<Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Right"/>
-								<Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Left"/>
-								<Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderRightHeaderStyle}"/>
-							</Trigger>
-							<Trigger Property="ExpandDirection" Value="Up">
-								<Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Top"/>
-								<Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Bottom"/>
-								<Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderUpHeaderStyle}"/>
-							</Trigger>
-							<Trigger Property="ExpandDirection" Value="Left">
-								<Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Left"/>
-								<Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Right"/>
-								<Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderLeftHeaderStyle}"/>
-							</Trigger>
-							<Trigger Property="IsEnabled" Value="false">
-								<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-
-		<DataTemplate x:Key="logTitle">
-			<Grid>
+		
+		<ControlTemplate x:Key="logTitle" TargetType="{x:Type Control}">
+			<Grid Margin="5">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="*" />
@@ -292,16 +65,48 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
+				
+				<Grid.Resources>
+					<Style TargetType="{x:Type TextBlock}" >
+						
+						<Setter Property="Foreground" Value="Black" />
+					</Style>
+				</Grid.Resources>
 
-				<TextBlock Grid.Row="0" VerticalAlignment="Center">
-					[ <TextBlock FontWeight="Bold" Foreground="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrush}, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" /> ]
+				<TextBlock>
+					<TextBlock Grid.Row="0" 
+							   Grid.Column="0" 
+							   VerticalAlignment="Center" 
+							   Foreground="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrush}, UpdateSourceTrigger=PropertyChanged}" 
+							   FontWeight="Bold"
+							   Text=""
+					
+							   Visibility="{Binding IsSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" />
+				
+					<TextBlock Grid.Row="0" 
+							   Grid.Column="0" 
+							   VerticalAlignment="Center" 
+							   Foreground="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrush}, UpdateSourceTrigger=PropertyChanged}" 
+							   FontWeight="Bold"
+							   Text="{Binding Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat='[ {0} ]'}" />
 				</TextBlock>
-				<TextBlock Margin="10,0,0,0" Grid.Column="1" FontWeight="Bold" FontSize="14" Foreground="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrush}, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Message, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" />
+				
+				<TextBlock Margin="10,0,0,0" 
+						   Grid.RowSpan="2"
+						   Grid.Column="1" 
+						   FontWeight="SemiBold" 
+						   FontSize="14" 
+						   Foreground="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrush}, UpdateSourceTrigger=PropertyChanged}" 
+						   Text="{Binding Message, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" />
 
-				<TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Time, UpdateSourceTrigger=PropertyChanged}" />
+				<TextBlock Grid.Row="1" 
+						   Grid.Column="0" 
+						   Grid.ColumnSpan="1" 
+						   Foreground="Black" 
+						   Text="{Binding Time, UpdateSourceTrigger=PropertyChanged}" />
 			</Grid>
-		</DataTemplate>
-		
+		</ControlTemplate>
+
 		<DataTemplate x:Key="logException" DataType="{x:Type local:LogEntry}">
 			<StackPanel>
 				<TextBlock Style="{StaticResource styleNormal}" Text="{Binding Key, UpdateSourceTrigger=PropertyChanged}" />
@@ -329,70 +134,118 @@
 		</DataTemplate>
 
 		<DataTemplate x:Key="logItem" >
-			<StackPanel	
-				Background="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrushBg}, UpdateSourceTrigger=PropertyChanged}">
-			
-				<Expander
-					Margin="0,10,0,0"
-					IsExpanded="{Binding Path=IsExpanded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, ConverterParameter=Event}"
-					Style="{StaticResource ExpanderStyle}"
-					Header="{Binding}" HeaderTemplate="{StaticResource logTitle}"
-					Height="Auto" BorderThickness="0">
-
-					<StackPanel Margin="30,0,0,0" Visibility="{Binding Path=HasAnyData, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}">
-						<StackPanel Margin="0,10,0,0" Visibility="{Binding Path=HasValues, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}">
-							<ItemsControl 
-								ItemsSource="{Binding Values, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-								ItemTemplate="{StaticResource logValues}" />
-						</StackPanel>
-
-						<Expander Margin="0,10,0,0" 
-								Header="Exception data" 
-								FontWeight="Bold"
-								Visibility="{Binding Path=HasException, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}">
-							<Border BorderThickness="1" BorderBrush="Black">
-								<ItemsControl 
-									DataContext="{Binding ExceptionData}" 
-									ItemsSource="{Binding}" 
-									ItemTemplate="{StaticResource logException}" />
-							</Border>
-						</Expander>
-					</StackPanel>
-				</Expander>
-				
-				<Separator BorderThickness="1" BorderBrush="Black" Background="{x:Null}" Margin="0,5,0,5" />
-			</StackPanel>
+			<Border BorderThickness="0.5" 
+					BorderBrush="Black">
+				<Border.Style>
+					<Style TargetType="{x:Type Border}">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding IsSelected}" Value="True">
+								<Setter Property="Background" Value="{StaticResource bSelected}" />
+							</DataTrigger>
+							<DataTrigger Binding="{Binding IsSelected}" Value="False">
+								<Setter Property="Background" Value="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrushBg}, UpdateSourceTrigger=PropertyChanged}" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Border.Style>
+				<ContentControl Template="{StaticResource logTitle}" />
+			</Border>
 		</DataTemplate>
 	</Window.Resources>
 
 	
-	<Grid>
+	<Grid x:Name="gridRoot">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="*" />
+			<RowDefinition Height="*"  MinHeight="100"/>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*"  MinHeight="100" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
-
 		<ListBox Name="lbLog"
+				 Grid.Row="0"
 				 DataContext="{Binding Log.LogEntries, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 				 ItemsSource="{Binding}" 
+				 HorizontalContentAlignment="Stretch" 
+				 BorderThickness="0"
+				 Focusable="False" 
 				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				 ScrollViewer.VerticalScrollBarVisibility="Visible" 
 				 ScrollViewer.IsDeferredScrollingEnabled="False"
-				 ScrollViewer.CanContentScroll="False"
-				 Focusable="False" 
-				 ItemTemplate="{StaticResource logItem}"
-				 HorizontalContentAlignment="Stretch" BorderThickness="0">
+				 ScrollViewer.CanContentScroll="True"
+				 VirtualizingStackPanel.IsVirtualizing="True"
+				 VirtualizingStackPanel.VirtualizationMode="Recycling"
+				 ItemTemplate="{StaticResource logItem}">
 					
 				<ListBox.ItemContainerStyle>
 					<Style TargetType="{x:Type Control}" >
-						<Setter Property="Focusable" Value="False" />
-						<Setter Property="Margin" Value="-2" />
+						<Setter Property="Focusable" Value="True" />
 					</Style>
 				</ListBox.ItemContainerStyle>
 			</ListBox>
+		
+		<GridSplitter Margin="0,0,0,0" Grid.Row="1" ResizeDirection="Rows" ShowsPreview="True" HorizontalAlignment="Stretch" Background="Black" MinHeight="2" />
 	
-		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Black">
+		<Border Grid.Row="2" 
+				DataContext="{Binding ElementName=frmLog, Path=SelectedEntry, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+				Background="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrushBg}, UpdateSourceTrigger=PropertyChanged}"
+				BorderThickness="1" 
+				BorderBrush="Black">
+
+			<TabControl Background="{x:Null}" 
+						Grid.Row="1"
+						Name="tabControl">	
+				<TabItem Header="[ Exception ]" 
+						 Visibility="{Binding Path=HasException, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" 
+						 Background="{x:Null}">
+				
+					<ListBox  
+						ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+						ScrollViewer.VerticalScrollBarVisibility="Visible"
+						ScrollViewer.CanContentScroll="True"
+						VirtualizingStackPanel.IsVirtualizing="True"
+						VirtualizingStackPanel.VirtualizationMode="Recycling"
+						ItemsSource="{Binding ExceptionData, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+						ItemTemplate="{StaticResource logException}" Background="{x:Null}">
+
+						<ListBox.ItemContainerStyle>
+							<Style TargetType="{x:Type Control}" >
+								<Setter Property="Focusable" Value="False" />
+							</Style>
+						</ListBox.ItemContainerStyle>
+					</ListBox>
+				</TabItem>
+				
+				<TabItem Header="[ Values ]" 
+						Visibility="{Binding Path=HasValues, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" 
+						Background="{x:Null}">
+
+					<ListBox  
+						ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+						ScrollViewer.VerticalScrollBarVisibility="Visible"
+						ScrollViewer.CanContentScroll="True"
+						VirtualizingStackPanel.IsVirtualizing="True"
+						VirtualizingStackPanel.VirtualizationMode="Recycling"
+						ItemsSource="{Binding Values, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+						ItemTemplate="{StaticResource logValues}" Background="{x:Null}">
+					
+						<ListBox.ItemContainerStyle>
+							<Style TargetType="{x:Type Control}" >
+								<Setter Property="Focusable" Value="False" />
+							</Style>
+						</ListBox.ItemContainerStyle>
+					</ListBox>
+				</TabItem>
+				
+				<TabItem Header="[ No data ]" 
+						 Visibility="{Binding HasAnyData, Mode=OneWay, Converter={StaticResource NotBoolToVisibility},ConverterParameter=True, UpdateSourceTrigger=PropertyChanged}" 
+						 Background="{x:Null}">
+					<TextBlock Text="&lt; No Data &gt;" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+				</TabItem>
+			</TabControl>
+		</Border>
+		
+		<Border Grid.Row="3" BorderThickness="0,1,0,0" BorderBrush="Black">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />

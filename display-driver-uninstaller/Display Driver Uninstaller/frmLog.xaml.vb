@@ -1,4 +1,25 @@
-﻿Public Class frmLog
+﻿Imports System.ComponentModel
+
+Public Class frmLog
+	Implements INotifyPropertyChanged
+
+	Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+
+	Private _lastHeights() As GridLength = Nothing
+	Private _selectedEntry As LogEntry = Nothing
+	Public Property SelectedEntry As LogEntry
+		Get
+			Return _selectedEntry
+		End Get
+		Set(value As LogEntry)
+			value.IsSelected = True
+			_selectedEntry = value
+			RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs("SelectedEntry"))
+
+			UpdateSelection()
+		End Set
+	End Property
+
 
 	Private Sub Close_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnClose.Click
 		Me.Close()
@@ -7,6 +28,10 @@
 	Private Sub frmLog_Loaded(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles MyBase.Loaded
 		lbLog.Items.Refresh()
 		Languages.TranslateForm(Me)
+
+		If lbLog.Items.Count > 0 Then
+			SelectedEntry = DirectCast(lbLog.Items(0), LogEntry)
+		End If
 	End Sub
 
 	Private Sub btnLoadLog_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnLoadLog.Click
@@ -53,4 +78,38 @@
 		End Using
 	End Sub
 
+	Public Sub New()
+
+		' This call is required by the designer.
+		InitializeComponent()
+
+		' Add any initialization after the InitializeComponent() call.
+
+		EventManager.RegisterClassHandler(GetType(ListBoxItem), ListBoxItem.MouseLeftButtonDownEvent, New RoutedEventHandler(AddressOf ListBoxItem_MouseLeftButtonDown))
+	End Sub
+
+	Private Sub ListBoxItem_MouseLeftButtonDown(sender As System.Object, e As System.Windows.RoutedEventArgs)
+		Dim lvi As ListBoxItem = TryCast(sender, ListBoxItem)
+		Dim logEntry As LogEntry = TryCast(lvi.Content, LogEntry)
+
+		If logEntry IsNot Nothing Then
+			If SelectedEntry IsNot Nothing Then
+				If Not SelectedEntry.Equals(logEntry) Then
+					SelectedEntry.IsSelected = False
+				End If
+			End If
+
+			SelectedEntry = logEntry
+		End If
+	End Sub
+
+	Private Sub UpdateSelection()
+		If SelectedEntry.HasException Then
+			tabControl.SelectedIndex = 0
+		ElseIf SelectedEntry.HasValues Then
+			tabControl.SelectedIndex = 1
+		Else
+			tabControl.SelectedIndex = 2
+		End If
+	End Sub
 End Class

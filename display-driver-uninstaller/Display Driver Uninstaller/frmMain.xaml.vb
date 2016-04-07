@@ -7305,8 +7305,6 @@ skipboot:
 	Private Sub GetOemInfo()
 		Dim info As LogEntry = LogEntry.Create()
 		info.Type = LogType.Event
-		info.CanExpand = True
-		info.IsExpanded = False
 		info.Separator = " = "
 		info.Message = "The following third-party driver packages are installed on this computer"
 
@@ -7333,8 +7331,6 @@ skipboot:
 	Sub getoeminfoOLD()
 		Dim info As LogEntry = LogEntry.Create()
 		info.Type = LogType.Event
-		info.CanExpand = True
-		info.IsExpanded = False
 		info.Message = "The following third-party driver packages are installed on this computer"
 
 		log("The following third-party driver packages are installed on this computer: ")
