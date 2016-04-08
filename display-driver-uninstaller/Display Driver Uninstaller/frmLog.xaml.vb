@@ -1,6 +1,12 @@
 ﻿Imports System.ComponentModel
 Imports System.Reflection
 
+Public Enum CopyOption
+	CopyKey
+	CopyValue
+	CopyLine
+End Enum
+
 Public Class frmLog
 	Implements INotifyPropertyChanged
 
@@ -11,6 +17,7 @@ Public Class frmLog
 	Private _listEvents As Boolean = True
 	Private _listWarnings As Boolean = True
 	Private _listErrors As Boolean = True
+	Private _enableCopy As Boolean = False
 
 	Public Property SelectedEntry As LogEntry
 		Get
@@ -59,7 +66,21 @@ Public Class frmLog
 			RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs("ListErrors"))
 		End Set
 	End Property
+	Public Property EnableCopy As Boolean
+		Get
+			Return _enableCopy
+		End Get
+		Set(value As Boolean)
+			_enableCopy = value
 
+			If Not value Then
+				lbValues.SelectedIndex = -1
+				lbException.SelectedIndex = -1
+			End If
+
+			RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs("EnableCopy"))
+		End Set
+	End Property
 
 	Private Sub Close_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnClose.Click
 		Me.Close()
@@ -71,6 +92,12 @@ Public Class frmLog
 
 		If lbLog.Items.Count > 0 Then
 			SelectedEntry = DirectCast(lbLog.Items(0), LogEntry)
+		End If
+	End Sub
+
+	Private Sub frmLog_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+		If SelectedEntry IsNot Nothing Then
+			SelectedEntry.IsSelected = False
 		End If
 	End Sub
 
@@ -132,18 +159,6 @@ Public Class frmLog
 		End If
 	End Sub
 
-	Private Sub menuEvents_Click(sender As System.Object, e As System.Windows.RoutedEventArgs)
-		ListEvents = (ListEvents = False)
-	End Sub
-
-	Private Sub menuWarnings_Click(sender As System.Object, e As System.Windows.RoutedEventArgs)
-		ListWarnings = (ListWarnings = False)
-	End Sub
-
-	Private Sub menuErrors_Click(sender As System.Object, e As System.Windows.RoutedEventArgs)
-		ListErrors = (ListErrors = False)
-	End Sub
-
 	Public Sub New()
 
 		' This call is required by the designer.
@@ -197,29 +212,123 @@ Public Class frmLog
 	Private Sub ListBoxItem_MouseLeftButtonDown(sender As System.Object, e As System.Windows.RoutedEventArgs)
 		Dim lvi As ListBoxItem = TryCast(sender, ListBoxItem)
 
-		If lvi IsNot Nothing Then
+		If lvi IsNot Nothing AndAlso TypeOf (lvi.Content) Is LogEntry Then
 			SelectEntry(TryCast(lvi.Content, LogEntry))
 		End If
 	End Sub
 
 	Private Sub SelectEntry(ByRef logEntry As LogEntry)
-		If logEntry IsNot Nothing Then
-			If SelectedEntry IsNot Nothing Then
-				If Not SelectedEntry.Equals(logEntry) Then
-					SelectedEntry.IsSelected = False
-					SelectedEntry = logEntry
+		If logEntry Is Nothing OrElse SelectedEntry Is Nothing Then
+			Return
+		End If
 
-					If lbLog.Items.Count > 0 Then
-						Dim vsp As VirtualizingStackPanel =
-						 TryCast(GetType(ItemsControl).InvokeMember("_itemsHost",
-							   BindingFlags.Instance Or BindingFlags.GetField Or BindingFlags.NonPublic, Nothing, lbLog, Nothing), VirtualizingStackPanel)
+		If Not SelectedEntry.Equals(logEntry) Then
+			SelectedEntry.IsSelected = False
+			SelectedEntry = logEntry
 
-						If vsp IsNot Nothing Then
-							vsp.SetVerticalOffset(vsp.ScrollOwner.ScrollableHeight * 0.0 / lbLog.Items.Count)
-						End If
-					End If
+			If lbLog.Items.Count > 0 Then
+				Dim vsp As VirtualizingStackPanel =
+				 TryCast(GetType(ItemsControl).InvokeMember("_itemsHost",
+				 BindingFlags.Instance Or BindingFlags.GetField Or BindingFlags.NonPublic, Nothing, lbLog, Nothing), VirtualizingStackPanel)
+
+				If vsp IsNot Nothing Then
+					vsp.SetVerticalOffset(vsp.ScrollOwner.ScrollableHeight * 0.0 / lbLog.Items.Count)
 				End If
 			End If
 		End If
 	End Sub
+
+	Private Sub CopyMessage()
+		Dim logEntry As LogEntry
+		Dim sb As New System.Text.StringBuilder(1000)
+
+		For Each o As Object In lbLog.SelectedItems
+			logEntry = DirectCast(o, LogEntry)
+
+			If logEntry IsNot Nothing Then
+				sb.AppendLine(logEntry.Message)
+			End If
+		Next
+
+		Clipboard.SetText(sb.ToString())
+	End Sub
+
+	Private Sub CopyValues(ByVal copy As CopyOption)
+		Dim kvp As KvP
+		Dim sb As New System.Text.StringBuilder(1000)
+
+		For Each o As Object In lbValues.SelectedItems
+			kvp = TryCast(o, KvP)
+
+			If kvp IsNot Nothing Then
+				Select Case copy
+					Case CopyOption.CopyKey
+						If kvp.HasKey Then
+							sb.AppendLine(kvp.Key)
+						End If
+					Case CopyOption.CopyValue
+						If kvp.HasValue Then
+							sb.AppendLine(kvp.Value)
+						End If
+					Case CopyOption.CopyLine
+						If kvp.HasKey Then
+							If kvp.HasValue Then
+								sb.AppendFormat("{0}{1}{2}{3}", kvp.Key, SelectedEntry.Separator, kvp.Value, vbCrLf)
+							Else : sb.AppendLine(kvp.Key)
+							End If
+						Else : sb.AppendLine(kvp.Value)
+						End If
+				End Select
+			End If
+		Next
+
+		Clipboard.SetText(sb.ToString())
+	End Sub
+
+	Private Sub CopyException(ByVal copy As CopyOption)
+		Dim kvp As KeyValuePair(Of String, String)
+		Dim sb As New System.Text.StringBuilder(1000)
+
+		For i As Int32 = 0 To lbException.SelectedItems.Count - 1
+			kvp = DirectCast(lbException.SelectedItems(i), KeyValuePair(Of String, String))
+
+			Select Case copy
+				Case CopyOption.CopyKey
+					sb.AppendLine(kvp.Key)
+				Case CopyOption.CopyValue
+					sb.AppendLine(kvp.Value)
+				Case CopyOption.CopyLine
+					sb.AppendFormat("{0}{1}{2}", kvp.Key, vbCrLf, kvp.Value)
+			End Select
+
+			If i < lbException.SelectedItems.Count - 1 Then
+				sb.AppendLine(vbCrLf)
+			End If
+		Next
+
+		Clipboard.SetText(sb.ToString())
+	End Sub
+
+	Private Sub CopyCommand(ByVal sender As Object, ByVal e As ExecutedRoutedEventArgs)
+		If Not EnableCopy Then
+			Return
+		End If
+
+		Dim lb As ListBox = TryCast(sender, ListBox)
+
+		If lb Is Nothing Then
+			Return
+		End If
+
+		Dim copyOption As CopyOption = CType(e.Parameter, CopyOption)
+
+		If lb Is lbValues Then
+			CopyValues(copyOption)
+		ElseIf lb Is lbException Then
+			CopyException(copyOption)
+		ElseIf lb Is lbLog Then
+			CopyMessage()
+		End If
+	End Sub
+
 End Class

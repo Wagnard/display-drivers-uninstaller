@@ -152,6 +152,44 @@
 				<ContentControl Template="{StaticResource logTitle}" />
 			</Border>
 		</DataTemplate>
+
+		<ContextMenu x:Key="cmMessage">
+			<MenuItem x:Name="copyMessage" Header="Copy Message" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
+		</ContextMenu>
+		<ContextMenu x:Key="cmValues">
+			<MenuItem x:Name="copyValValue" Header="Copy Value(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyValue}"/>
+			<MenuItem x:Name="copyValLine" Header="Copy Line(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
+		</ContextMenu>
+		<ContextMenu x:Key="cmException">
+			<MenuItem x:Name="copyExKey" Header="Copy Key(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyKey}"/>
+			<MenuItem x:Name="copyExValue" Header="Copy Value(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyValue}"/>
+			<MenuItem x:Name="copyExLine" Header="Copy Line(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
+		</ContextMenu>
+
+		<Style x:Key="styleCMLog" TargetType="{x:Type ListBox}">
+			<Setter Property="ContextMenu" Value="{StaticResource cmMessage}" />		
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding ElementName=frmLog, Path=EnableCopy}" Value="False">
+					<Setter Property="ContextMenu" Value="{x:Null}" />
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+		<Style x:Key="styleCMValues" TargetType="{x:Type ListBox}">
+			<Setter Property="ContextMenu" Value="{StaticResource cmValues}" />
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding ElementName=frmLog, Path=EnableCopy}" Value="False">
+					<Setter Property="ContextMenu" Value="{x:Null}" />
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+		<Style x:Key="styleCMException" TargetType="{x:Type ListBox}">
+			<Setter Property="ContextMenu" Value="{StaticResource cmException}" />
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding ElementName=frmLog, Path=EnableCopy}" Value="False">
+					<Setter Property="ContextMenu" Value="{x:Null}" />
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
 	</Window.Resources>
 
 	
@@ -166,10 +204,14 @@
 		
 		<Menu Grid.Row="0" FontSize="14" >
 			<MenuItem x:Name="showEvents" Header="Filters">
-				<MenuItem x:Name="menuEvents" Header="Show Events" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListEvents, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Click="menuEvents_Click"/>
-				<MenuItem x:Name="menuWarnings" Header="Show Warnings" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListWarnings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Click="menuWarnings_Click"/>
-				<MenuItem x:Name="menuErrors" Header="Show Errors" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListErrors, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Click="menuErrors_Click"/>
+				<MenuItem x:Name="menuEvents" Header="Show Events" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListEvents, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				<MenuItem x:Name="menuWarnings" Header="Show Warnings" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListWarnings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				<MenuItem x:Name="menuErrors" Header="Show Errors" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListErrors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 			</MenuItem>
+			
+			<MenuItem x:Name="showOptions" Header="Options">
+				<MenuItem x:Name="menuCopy" Header="Copy Enabled" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=EnableCopy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+			</MenuItem>	
 		</Menu>
 		
 		<ListBox Name="lbLog"
@@ -178,7 +220,8 @@
 				 ItemsSource="{Binding}" 
 				 HorizontalContentAlignment="Stretch" 
 				 BorderThickness="0"
-				 Focusable="False" 
+				 Focusable="False"
+				 Style="{StaticResource styleCMLog}"
 				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				 ScrollViewer.VerticalScrollBarVisibility="Visible" 
 				 ScrollViewer.IsDeferredScrollingEnabled="False"
@@ -186,7 +229,15 @@
 				 VirtualizingStackPanel.IsVirtualizing="True"
 				 VirtualizingStackPanel.VirtualizationMode="Recycling"
 				 ItemTemplate="{StaticResource logItem}">
-
+	
+			
+			<ListBox.CommandBindings>
+				<CommandBinding Command="Copy" Executed="CopyCommand" />
+			</ListBox.CommandBindings>
+			<ListBox.InputBindings>
+				<KeyBinding Key="C" Modifiers="Control" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
+			</ListBox.InputBindings>
+			
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="{x:Type Control}" >
 					<Setter Property="Focusable" Value="True" />
@@ -210,17 +261,27 @@
 						 Background="{x:Null}">
 				
 					<ListBox  
+						Name="lbException"
+						Style="{StaticResource styleCMValues}"
 						ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 						ScrollViewer.VerticalScrollBarVisibility="Visible"
 						ScrollViewer.CanContentScroll="True"
 						VirtualizingStackPanel.IsVirtualizing="True"
 						VirtualizingStackPanel.VirtualizationMode="Recycling"
+						SelectionMode="Extended"
 						ItemsSource="{Binding ExceptionData, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
 						ItemTemplate="{StaticResource logException}" Background="{x:Null}">
 
-						<ListBox.ItemContainerStyle>
+						<ListBox.CommandBindings>
+							<CommandBinding Command="Copy" Executed="CopyCommand" />
+						</ListBox.CommandBindings>
+						<ListBox.InputBindings>
+							<KeyBinding Key="C" Modifiers="Control" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
+						</ListBox.InputBindings>
+						
+						<ListBox.ItemContainerStyle>		
 							<Style TargetType="{x:Type Control}" >
-								<Setter Property="Focusable" Value="False" />
+								<Setter Property="Focusable" Value="{Binding ElementName=frmLog, Path=EnableCopy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 							</Style>
 						</ListBox.ItemContainerStyle>
 					</ListBox>
@@ -230,18 +291,28 @@
 						Visibility="{Binding Path=HasValues, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" 
 						Background="{x:Null}">
 
-					<ListBox  
+					<ListBox 
+						Name="lbValues"
+						Style="{StaticResource styleCMException}"
 						ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 						ScrollViewer.VerticalScrollBarVisibility="Visible"
 						ScrollViewer.CanContentScroll="True"
 						VirtualizingStackPanel.IsVirtualizing="True"
 						VirtualizingStackPanel.VirtualizationMode="Recycling"
+						SelectionMode="Extended"
 						ItemsSource="{Binding Values, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
 						ItemTemplate="{StaticResource logValues}" Background="{x:Null}">
 					
+						<ListBox.CommandBindings>
+							<CommandBinding Command="Copy" Executed="CopyCommand" />
+						</ListBox.CommandBindings>
+						<ListBox.InputBindings>
+							<KeyBinding Key="C" Modifiers="Control" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
+						</ListBox.InputBindings>
+						
 						<ListBox.ItemContainerStyle>
 							<Style TargetType="{x:Type Control}" >
-								<Setter Property="Focusable" Value="False" />
+								<Setter Property="Focusable" Value="{Binding ElementName=frmLog, Path=EnableCopy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 							</Style>
 						</ListBox.ItemContainerStyle>
 					</ListBox>
