@@ -49,6 +49,16 @@ Public Class AppLog
 		End SyncLock
 	End Sub
 
+	Public Sub AddWarningMessage(ByRef message As String)
+		SyncLock m_threadlock
+			If Not Me.Dispatcher.CheckAccess() Then
+				Me.Dispatcher.Invoke(New AddMessageEntryDelegate(AddressOf Me.AddWarningMessageEntry), message)
+			Else
+				Me.AddWarningMessageEntry(message)
+			End If
+		End SyncLock
+	End Sub
+
 	Public Sub Clear()
 		SyncLock m_threadlock
 			If Not Me.Dispatcher.CheckAccess() Then
@@ -452,6 +462,16 @@ Public Class AppLog
 
 		logEntry.Message = message
 		logEntry.Time = DateTime.Now
+
+		AddEntry(logEntry)
+	End Sub
+
+	Private Sub AddWarningMessageEntry(ByRef message As String)
+		Dim logEntry As LogEntry = logEntry.Create()
+
+		logEntry.Message = message
+		logEntry.Time = DateTime.Now
+		logEntry.Type = LogType.Warning
 
 		AddEntry(logEntry)
 	End Sub
