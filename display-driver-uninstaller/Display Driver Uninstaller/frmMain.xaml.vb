@@ -330,7 +330,7 @@ Public Class frmMain
 		'Delete AMD data Folders
 		UpdateTextMethod(UpdateTextMethodmessagefn(1))
 
-		log("Cleaning Directory (Please Wait...)")
+		Application.Log.AddMessage("Cleaning Directory (Please Wait...)")
 
 
 		If config.RemoveAMDDirs Then
@@ -727,7 +727,7 @@ Public Class frmMain
 
 					End If
 				Catch ex As Exception
-					log("Possible permission issue detected on : " + filePath)
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
 				End Try
 			End If
 
@@ -764,7 +764,7 @@ Public Class frmMain
 
 					End If
 				Catch ex As Exception
-					log("Possible permission issue detected on : " + filePath)
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
 				End Try
 			End If
 
@@ -803,7 +803,7 @@ Public Class frmMain
 
 					End If
 				Catch ex As Exception
-					log("Possible permission issue detected on : " + filePath)
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
 				End Try
 			End If
 
@@ -970,13 +970,13 @@ Public Class frmMain
 		Dim packages As String()
 
 		UpdateTextMethod(UpdateTextMethodmessagefn(2))
-		log("Cleaning known Regkeys")
+		Application.Log.AddMessage("Cleaning known Regkeys")
 
 
 		'Delete AMD regkey
 		'Deleting DCOM object
 
-		log("Starting dcom/clsid/appid/typelib cleanup")
+		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
 		CleanupEngine.classroot(IO.File.ReadAllLines(baseDir & "\settings\AMD\classroot.cfg")) '// add each line as String Array.
 
@@ -989,7 +989,7 @@ Public Class frmMain
 
 		CleanupEngine.interfaces(IO.File.ReadAllLines(baseDir & "\settings\AMD\interface.cfg"))	'// add each line as String Array.
 
-		log("Instance class cleanUP")
+		Application.Log.AddMessage("Instance class cleanUP")
 		Try
 			regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", False)
 			If regkey IsNot Nothing Then
@@ -1074,7 +1074,7 @@ Public Class frmMain
 			End Try
 		End If
 
-		log("MediaFoundation cleanUP")
+		Application.Log.AddMessage("MediaFoundation cleanUP")
 		Try
 			regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("MediaFoundation\Transforms", True)
 			If regkey IsNot Nothing Then
@@ -1141,12 +1141,12 @@ Public Class frmMain
 			End Try
 		End If
 
-		log("AppID and clsidleftover cleanUP")
+		Application.Log.AddMessage("AppID and clsidleftover cleanUP")
 		'old dcom 
 
 		CleanupEngine.clsidleftover(IO.File.ReadAllLines(baseDir & "\settings\AMD\clsidleftover.cfg")) '// add each line as String Array.
 
-		log("Record CleanUP")
+		Application.Log.AddMessage("Record CleanUP")
 
 		'--------------
 		'Record cleanup
@@ -1178,7 +1178,7 @@ Public Class frmMain
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
-		log("Assembly CleanUP")
+		Application.Log.AddMessage("Assembly CleanUP")
 
 		'------------------
 		'Assemblies cleanUP
@@ -1286,7 +1286,7 @@ Public Class frmMain
 			End Try
 		End If
 
-		log("ngenservice Clean")
+		Application.Log.AddMessage("ngenservice Clean")
 
 		'----------------------
 		'.net ngenservice clean
@@ -1359,7 +1359,7 @@ Public Class frmMain
 		'End Shell extensions\aprouved
 		'-----------------------------
 
-		log("Pnplockdownfiles region cleanUP")
+		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
 		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(baseDir & "\settings\AMD\driverfiles.cfg"))	'// add each line as String Array.
 
@@ -1432,7 +1432,7 @@ Public Class frmMain
 
 		Try
 			If version < "6.2" And System.Windows.Forms.SystemInformation.BootMode <> BootMode.Normal Then 'win 7 and lower + safemode only
-				log("Cleaning LEGACY_AMDKMDAG")
+				Application.Log.AddMessage("Cleaning LEGACY_AMDKMDAG")
 				subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 				 ("SYSTEM")
 				If subregkey IsNot Nothing Then
@@ -1474,7 +1474,7 @@ Public Class frmMain
 		'--------------------------------
 		'System environement path cleanup
 		'--------------------------------
-		log("System environement cleanUP")
+		Application.Log.AddMessage("System environement cleanUP")
 		Try
 			subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
 			If subregkey IsNot Nothing Then
@@ -1547,7 +1547,7 @@ Public Class frmMain
 		'-----------------------
 		'remove event view stuff
 		'-----------------------
-		log("Remove eventviewer stuff")
+		Application.Log.AddMessage("Remove eventviewer stuff")
 		Try
 			subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
 			If subregkey IsNot Nothing Then
@@ -1709,7 +1709,7 @@ Public Class frmMain
 							'here we check the install path location in case CCC is not installed on the system drive.  A kill to explorer must be made
 							'to help cleaning in normal mode.
 							If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-								log("Killing Explorer.exe")
+								Application.Log.AddMessage("Killing Explorer.exe")
 								Dim appproc = process.GetProcessesByName("explorer")
 								For i As Integer = 0 To appproc.Length - 1
 									appproc(i).Kill()
@@ -1950,7 +1950,7 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		log("Removing known Packages")
+		Application.Log.AddMessage("Removing known Packages")
 
 		packages = IO.File.ReadAllLines(baseDir & "\settings\AMD\packages.cfg")	'// add each line as String Array.
 		Try
@@ -2144,7 +2144,7 @@ Public Class frmMain
 		End If
 
 		'Saw on Win 10 cat 15.7
-		log("AudioEngine CleanUP")
+		Application.Log.AddMessage("AudioEngine CleanUP")
 		Try
 			regkey = My.Computer.Registry.ClassesRoot.OpenSubKey("AudioEngine\AudioProcessingObjects", True)
 			If regkey IsNot Nothing Then
@@ -2279,7 +2279,7 @@ Public Class frmMain
 	End Sub
 
 	Private Sub rebuildcountercache()
-		log("Rebuilding the Perf.Counter cache X2")
+		Application.Log.AddMessage("Rebuilding the Perf.Counter cache X2")
 		Try
 
 			For i = 0 To 1
@@ -2295,7 +2295,7 @@ Public Class frmMain
 				reply2 = process.StandardOutput.ReadToEnd
 				process.StandardOutput.Close()
 				process.Close()
-				log(reply2)
+				Application.Log.AddMessage(reply2)
 			Next
 
 		Catch ex As Exception
@@ -2471,7 +2471,7 @@ Public Class frmMain
 		'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
 
 		UpdateTextMethod(UpdateTextMethodmessagefn(3))
-		log("Cleaning UpdatusUser users ac if present")
+		Application.Log.AddMessage("Cleaning UpdatusUser users ac if present")
 
 		Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName.ToString())
 		Dim users As DirectoryEntries = AD.Children
@@ -2485,7 +2485,7 @@ Public Class frmMain
 
 		UpdateTextMethod(UpdateTextMethodmessagefn(4))
 
-		log("Cleaning Directory")
+		Application.Log.AddMessage("Cleaning Directory")
 
 
 		If config.RemoveNvidiaDirs = True Then
@@ -2907,7 +2907,7 @@ Public Class frmMain
 								Try
 									deletedirectory(child)
 								Catch ex As Exception
-									log(ex.Message)
+									Application.Log.AddException(ex)
 									TestDelete(child)
 								End Try
 							Else
@@ -2917,7 +2917,7 @@ Public Class frmMain
 									Try
 										deletedirectory(child)
 									Catch ex As Exception
-										log(ex.Message)
+										Application.Log.AddException(ex)
 										TestDelete(child)
 									End Try
 								End If
@@ -3217,7 +3217,7 @@ Public Class frmMain
 		'MUI cache cleanUP
 		'-----------------
 		'Note: this MUST be done after cleaning the folders.
-		log("MuiCache CleanUP")
+		Application.Log.AddMessage("MuiCache CleanUP")
 		Try
 			For Each regusers As String In My.Computer.Registry.Users.GetSubKeyNames
 				If Not IsNullOrWhitespace(regusers) Then
@@ -3299,11 +3299,11 @@ Public Class frmMain
 		'Registry Cleaning
 		'-----------------
 		UpdateTextMethod(UpdateTextMethodmessagefn(5))
-		log("Starting reg cleanUP... May take a minute or two.")
+		Application.Log.AddMessage("Starting reg cleanUP... May take a minute or two.")
 
 
 		'Deleting DCOM object /classroot
-		log("Starting dcom/clsid/appid/typelib cleanup")
+		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
 		CleanupEngine.classroot(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\classroot.cfg")) '// add each line as String Array.
 
@@ -3347,10 +3347,10 @@ Public Class frmMain
 			CleanupEngine.interfaces(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
 		End If
 
-		log("Finished dcom/clsid/appid/typelib/interface cleanup")
+		Application.Log.AddMessage("Finished dcom/clsid/appid/typelib/interface cleanup")
 
 		'end of deleting dcom stuff
-		log("Pnplockdownfiles region cleanUP")
+		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
 		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
 
@@ -3413,7 +3413,7 @@ Public Class frmMain
 			'----------------------
 			'Firewall entry cleanup
 			'----------------------
-			log("Firewall entry cleanUP")
+			Application.Log.AddMessage("Firewall entry cleanUP")
 			Try
 				If winxp = False Then
 					subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
@@ -3449,11 +3449,11 @@ Public Class frmMain
 		'--------------------------
 		'End Firewall entry cleanup
 		'--------------------------
-		log("End Firewall CleanUP")
+		Application.Log.AddMessage("End Firewall CleanUP")
 		'--------------------------
 		'Power Settings CleanUP
 		'--------------------------
-		log("Power Settings Cleanup")
+		Application.Log.AddMessage("Power Settings Cleanup")
 		Try
 			If winxp = False Then
 				subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
@@ -3510,7 +3510,7 @@ Public Class frmMain
 		'--------------------------
 		'End Power Settings CleanUP
 		'--------------------------
-		log("End Power Settings Cleanup")
+		Application.Log.AddMessage("End Power Settings Cleanup")
 
 		'--------------------------------
 		'System environement path cleanup
@@ -3518,7 +3518,7 @@ Public Class frmMain
 
 
 		If removephysx Then
-			log("System environement CleanUP")
+			Application.Log.AddMessage("System environement CleanUP")
 			Try
 				subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
 				If subregkey IsNot Nothing Then
@@ -3563,7 +3563,7 @@ Public Class frmMain
 		'-------------------------------------
 		'end system environement patch cleanup
 		'-------------------------------------
-		log("End System environement path cleanup")
+		Application.Log.AddMessage("End System environement path cleanup")
 
 		Try
 			sysdrv = sysdrv.ToUpper
@@ -4241,7 +4241,7 @@ Public Class frmMain
 		'----------------------
 		'.net ngenservice clean
 		'----------------------
-		log("ngenservice Clean")
+		Application.Log.AddMessage("ngenservice Clean")
 
 		regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\.NETFramework\v2.0.50727\NGenService\Roots", True)
 		If regkey IsNot Nothing Then
@@ -4273,7 +4273,7 @@ Public Class frmMain
 				Next
 			End If
 		End If
-		log("End ngenservice Clean")
+		Application.Log.AddMessage("End ngenservice Clean")
 		'-----------------------------
 		'End of .net ngenservice clean
 		'-----------------------------
@@ -4316,7 +4316,7 @@ Public Class frmMain
 		'-----------------------
 		'remove event view stuff
 		'-----------------------
-		log("Remove eventviewer stuff")
+		Application.Log.AddMessage("Remove eventviewer stuff")
 
 		subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
 		If subregkey IsNot Nothing Then
@@ -4369,7 +4369,7 @@ Public Class frmMain
 			Next
 		End If
 
-		log("End Remove eventviewer stuff")
+		Application.Log.AddMessage("End Remove eventviewer stuff")
 		'---------------------------
 		'end remove event view stuff
 		'---------------------------
@@ -4617,7 +4617,7 @@ Public Class frmMain
 
 		UpdateTextMethod("-End of Registry Cleaning")
 
-		log("End of Registry Cleaning")
+		Application.Log.AddMessage("End of Registry Cleaning")
 
 	End Sub
 
@@ -4627,7 +4627,7 @@ Public Class frmMain
 
 		UpdateTextMethod(UpdateTextMethodmessagefn(4))
 
-		log("Cleaning Directory")
+		Application.Log.AddMessage("Cleaning Directory")
 
 		CleanupEngine.folderscleanup(IO.File.ReadAllLines(baseDir & "\settings\INTEL\driverfiles.cfg"))	'// add each line as String Array.
 
@@ -4664,7 +4664,7 @@ Public Class frmMain
 
 		UpdateTextMethod(UpdateTextMethodmessagefn(5))
 
-		log("Cleaning registry")
+		Application.Log.AddMessage("Cleaning registry")
 
 		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(baseDir & "\settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
 
@@ -4927,7 +4927,7 @@ Public Class frmMain
 
 		UpdateTextMethod(UpdateTextMethodmessagefn(7))
 
-		log("Starting the removal of nVidia Optimus UpperFilter if present.")
+		Application.Log.AddMessage("Starting the removal of nVidia Optimus UpperFilter if present.")
 
 		Try
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -4944,14 +4944,14 @@ Public Class frmMain
 										If (array IsNot Nothing) AndAlso (Not array.Length < 1) Then
 											For i As Integer = 0 To array.Length - 1
 												If Not IsNullOrWhitespace(array(i)) Then
-													log("UpperFilter found : " + array(i))
+													Application.Log.AddMessage("UpperFilter found : " + array(i))
 													If (array(i).ToLower.Contains("nvpciflt")) Then
 														Dim AList As ArrayList = New ArrayList(array)
 
 														AList.Remove("nvpciflt")
 														AList.Remove("nvkflt")
 
-														log("nVidia Optimus UpperFilter Found.")
+														Application.Log.AddMessage("nVidia Optimus UpperFilter Found.")
 														Dim upfiler As String() = CType(AList.ToArray(GetType(String)), String())
 
 														Try
@@ -4962,7 +4962,7 @@ Public Class frmMain
 															End If
 														Catch ex As Exception
 															Application.log.AddException(ex)
-															log("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
+															Application.Log.AddMessage("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
 														End Try
 													End If
 												End If
@@ -4983,7 +4983,7 @@ Public Class frmMain
 
 	Private Sub restartcomputer()
 
-		log("Restarting Computer ")
+		Application.Log.AddMessage("Restarting Computer ")
 		processinfo.FileName = "shutdown"
 		processinfo.Arguments = "/r /t 0"
 		processinfo.WindowStyle = ProcessWindowStyle.Hidden
@@ -5028,7 +5028,7 @@ Public Class frmMain
 
 
 		UpdateTextMethod(UpdateTextMethodmessagefn(8))
-		log("Scanning for new device...")
+		Application.Log.AddMessage("Scanning for new device...")
 		Dim proc4 As New Process
 		proc4.StartInfo = scan
 		proc4.Start()
@@ -5115,7 +5115,7 @@ Public Class frmMain
 		Dim regkey As RegistryKey = Nothing
 
 		systemrestore()	'we try to do a system restore if allowed before going into safemode.
-		log("restarting in safemode")
+		Application.Log.AddMessage("restarting in safemode")
 
 
 		Me.Topmost = False
@@ -5708,7 +5708,7 @@ Public Class frmMain
 
 				Case Else
 					lblWinVersionValue.Content = "Unsupported OS"
-					log("Unsupported OS.")
+					Application.Log.AddMessage("Unsupported OS.")
 					btnCleanRestart.IsEnabled = False
 					btnClean.IsEnabled = False
 					btnCleanShutdown.IsEnabled = False
@@ -6097,7 +6097,7 @@ skipboot:
 										End If
 									End If
 									UpdateTextMethod("--------------")
-									log("--------------")
+									Application.Log.AddMessage("--------------")
 								End If
 							End If
 						Next
@@ -6252,7 +6252,7 @@ skipboot:
 
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(20) + " " & config.SelectedGPU.ToString() & " " + UpdateTextMethodmessagefn(21))
-			log("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
+			Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
 			Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
 			UpdateTextMethod(UpdateTextMethodmessagefn(22))
 
@@ -6275,7 +6275,7 @@ skipboot:
 				Try
 					If config.SelectedGPU = GPUVendor.AMD Then
 						Dim removed As Boolean = False
-						log("Trying to remove the AMD HD Audio BUS")
+						Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
 						Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
 						If regkey IsNot Nothing Then
@@ -6297,9 +6297,9 @@ skipboot:
 																			If Not IsNullOrWhitespace(array(i)) Then
 																				If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
 																					Application.Log.AddMessage("Found an AMD audio controller bus !")
-																					log("Found an AMD audio controller bus !")
+																					Application.Log.AddMessage("Found an AMD audio controller bus !")
 																					Try
-																						log("array result: " + array(i))
+																						Application.Log.AddMessage("array result: " + array(i))
 																					Catch ex As Exception
 																					End Try
 																					processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
@@ -6316,8 +6316,8 @@ skipboot:
 																					process.Close()
 																					Application.Log.AddMessage(reply2)
 																					Application.Log.AddMessage("AMD HD Audio Bus Removed !")
-																					log(reply2)
-																					log("AMD HD Audio Bus Removed !")
+																					Application.Log.AddMessage(reply2)
+																					Application.Log.AddMessage("AMD HD Audio Bus Removed !")
 																					removed = True
 																				End If
 																			End If
@@ -6358,7 +6358,7 @@ skipboot:
 												If Not IsNullOrWhitespace(array(i)) Then
 													If array(i).ToLower.Contains("amdkmafd") Then
 														Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
-														log("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
+														Application.Log.AddMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
 														donotremoveamdhdaudiobusfiles = True
 													End If
 												End If
@@ -6422,7 +6422,7 @@ skipboot:
 														process.Close()
 														'process.WaitForExit()
 														Application.Log.AddMessage(reply2)
-														log(reply2)
+														Application.Log.AddMessage(reply2)
 													End If
 													Exit For   'the card is removed so we exit the loop from here.
 												End If
@@ -6441,13 +6441,13 @@ skipboot:
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(23))
 			Application.Log.AddMessage("DDUDR Remove Display Driver: Complete.")
-			log("DDUDR Remove Display Driver: Complete.")
+			Application.Log.AddMessage("DDUDR Remove Display Driver: Complete.")
 
 			cleandriverstore(config)
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(24))
 			Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
-			log("Executing DDUDR Remove Audio controler.")
+			Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
 
 			Try
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
@@ -6482,7 +6482,7 @@ skipboot:
 										process.StandardOutput.Close()
 										process.Close()
 										'process.WaitForExit()
-										log(reply2)
+										Application.Log.AddMessage(reply2)
 										Application.Log.AddMessage(reply2)
 
 									End If
@@ -6499,7 +6499,7 @@ skipboot:
 			UpdateTextMethod(UpdateTextMethodmessagefn(25))
 
 
-			log("DDUDR Remove Audio controler Complete.")
+			Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
 			Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
 
 			If config.SelectedGPU <> GPUVendor.Intel Then
@@ -6546,7 +6546,7 @@ skipboot:
 						 vendid.Contains("USB\VID_0955&PID_700C") Or
 						 vendid.Contains("USB\VID_0955&PID_700D&MI_00") Or
 						 vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
-							log("-" & vendid & "- 3D vision usb controler found")
+							Application.Log.AddMessage("-" & vendid & "- 3D vision usb controler found")
 							Application.Log.AddMessage("-" & vendid & "- 3D vision usb controler found")
 
 							processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
@@ -6561,7 +6561,7 @@ skipboot:
 							process.StandardOutput.Close()
 							process.Close()
 							'process.WaitForExit()
-							log(reply2)
+							Application.Log.AddMessage(reply2)
 							Application.Log.AddMessage(reply2)
 
 
@@ -6604,7 +6604,7 @@ skipboot:
 						position2 = reply.IndexOf(":", card1)
 						vendid = reply.Substring(card1, position2 - card1).Trim
 						If vendid.ToLower.Contains("hid\vid_0955&pid_7210") Then
-							log("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
+							Application.Log.AddMessage("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
 							Application.Log.AddMessage("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
 
 							processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
@@ -6619,7 +6619,7 @@ skipboot:
 							process.StandardOutput.Close()
 							process.Close()
 							'process.WaitForExit()
-							log(reply2)
+							Application.Log.AddMessage(reply2)
 							Application.Log.AddMessage(reply2)
 
 
@@ -6668,7 +6668,7 @@ skipboot:
 													process.StandardOutput.Close()
 													process.Close()
 													'process.WaitForExit()
-													log(reply2)
+													Application.Log.AddMessage(reply2)
 													Application.Log.AddMessage(reply2)
 
 												End If
@@ -6688,7 +6688,7 @@ skipboot:
 				' Removing nVidia AudioEndpoints
 				' ------------------------------
 
-				log("Removing nVidia Audio Endpoints")
+				Application.Log.AddMessage("Removing nVidia Audio Endpoints")
 				Application.Log.AddMessage("Removing nVidia Audio Endpoints")
 
 				Try
@@ -6715,7 +6715,7 @@ skipboot:
 									process.StandardOutput.Close()
 									process.Close()
 									'process.WaitForExit()
-									log(reply2)
+									Application.Log.AddMessage(reply2)
 									Application.Log.AddMessage(reply2)
 
 								End If
@@ -6734,7 +6734,7 @@ skipboot:
 				' Removing some of AMD AudioEndpoints
 				' ------------------------------
 
-				log("Removing AMD Audio Endpoints")
+				Application.Log.AddMessage("Removing AMD Audio Endpoints")
 				Application.Log.AddMessage("Removing AMD Audio Endpoints")
 
 				Try
@@ -6761,7 +6761,7 @@ skipboot:
 									process.StandardOutput.Close()
 									process.Close()
 									'process.WaitForExit()
-									log(reply2)
+									Application.Log.AddMessage(reply2)
 									Application.Log.AddMessage(reply2)
 
 								End If
@@ -6777,7 +6777,7 @@ skipboot:
 
 			If config.SelectedGPU = GPUVendor.Intel Then
 				'Removing Intel WIdI bus Enumerator
-				log("Removing IWD Bus Enumerator")
+				Application.Log.AddMessage("Removing IWD Bus Enumerator")
 				Application.Log.AddMessage("Removing IWD Bus Enumerator")
 				processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
 				processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
@@ -6791,14 +6791,14 @@ skipboot:
 				process.StandardOutput.Close()
 				process.Close()
 				'process.WaitForExit()
-				log(reply2)
+				Application.Log.AddMessage(reply2)
 				Application.Log.AddMessage(reply2)
 
 
 				' ------------------------------
 				' Removing Intel AudioEndpoints
 				' ------------------------------
-				log("Removing Intel Audio Endpoints")
+				Application.Log.AddMessage("Removing Intel Audio Endpoints")
 				Application.Log.AddMessage("Removing Intel Audio Endpoints")
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
@@ -6824,7 +6824,7 @@ skipboot:
 									process.StandardOutput.Close()
 									process.Close()
 									'process.WaitForExit()
-									log(reply2)
+									Application.Log.AddMessage(reply2)
 									Application.Log.AddMessage(reply2)
 
 								End If
@@ -6838,14 +6838,14 @@ skipboot:
 			End If
 
 
-			log("ddudr Remove Audio/HDMI Complete")
+			Application.Log.AddMessage("ddudr Remove Audio/HDMI Complete")
 			Application.Log.AddMessage("ddudr Remove Audio/HDMI Complete")
 			'removing monitor and hidden monitor
 
 
 
 			If config.RemoveMonitors Then
-				log("ddudr Remove Monitor started")
+				Application.Log.AddMessage("ddudr Remove Monitor started")
 				Application.Log.AddMessage("ddudr Remove Monitor started")
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
@@ -6899,7 +6899,7 @@ skipboot:
 			If config.RemoveAMDKMPFD Then
 				Try
 					Application.Log.AddMessage("Checking and Removing AMDKMPFD Filter if present")
-					log("Checking and Removing AMDKMPFD Filter if present")
+					Application.Log.AddMessage("Checking and Removing AMDKMPFD Filter if present")
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
@@ -6916,9 +6916,9 @@ skipboot:
 														If Not IsNullOrWhitespace(array(i)) Then
 															If array(i).ToLower.Contains("amdkmpfd") Then
 																Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
-																log("Found an AMDKMPFD! in " + child)
+																Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
 																Try
-																	log("array result: " + array(i))
+																	Application.Log.AddMessage("array result: " + array(i))
 																Catch ex As Exception
 																End Try
 																processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
@@ -6937,8 +6937,7 @@ skipboot:
 																'process.WaitForExit()
 																process.StandardOutput.Close()
 																process.Close()
-																log(reply2)
-																log(child + " Restored.")
+
 																Application.Log.AddMessage(reply2)
 																Application.Log.AddMessage(child + " Restored.")
 
@@ -6970,7 +6969,7 @@ skipboot:
 				cleanamd(config)
 
 				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-					log("Killing Explorer.exe")
+					Application.Log.AddMessage("Killing Explorer.exe")
 					Application.Log.AddMessage("Killing Explorer.exe")
 					Dim appproc = process.GetProcessesByName("explorer")
 					For i As Integer = 0 To appproc.Length - 1
@@ -6987,7 +6986,7 @@ skipboot:
 
 				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
 					Application.Log.AddMessage("Killing Explorer.exe")
-					log("Killing Explorer.exe")
+					Application.Log.AddMessage("Killing Explorer.exe")
 					Dim appproc = process.GetProcessesByName("explorer")
 					For i As Integer = 0 To appproc.Length - 1
 						appproc(i).Kill()
@@ -7005,7 +7004,7 @@ skipboot:
 
 				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
 					Application.Log.AddMessage("Killing Explorer.exe")
-					log("Killing Explorer.exe")
+					Application.Log.AddMessage("Killing Explorer.exe")
 					Dim appproc = process.GetProcessesByName("explorer")
 					For i As Integer = 0 To appproc.Length - 1
 						appproc(i).Kill()
@@ -7080,7 +7079,7 @@ skipboot:
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(9))
 
-			log("Clean uninstall completed!")
+			Application.Log.AddMessage("Clean uninstall completed!")
 			Application.Log.AddMessage("Clean uninstall completed!")
 
 			If Not shutdown Then
@@ -7146,7 +7145,7 @@ skipboot:
 			Loop
 
 			If restart Then
-				log("Restarting Computer ")
+				Application.Log.AddMessage("Restarting Computer ")
 				processinfo.FileName = "shutdown"
 				processinfo.Arguments = "/r /t 0"
 				processinfo.WindowStyle = ProcessWindowStyle.Hidden
@@ -7177,7 +7176,7 @@ skipboot:
 		If trysystemrestore Then
 			Try
 				UpdateTextMethod("Creating System Restore point (If allowed by the system)")
-				log("Trying to Create a System Restored Point")
+				Application.Log.AddMessage("Trying to Create a System Restored Point")
 				Dim oScope As New ManagementScope("\\localhost\root\default")
 				Dim oPath As New ManagementPath("SystemRestore")
 				Dim oGetOp As New ObjectGetOptions()
@@ -7190,9 +7189,9 @@ skipboot:
 
 				Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
 
-				log("System Restored Point Created. code: " + CStr(oOutParams("ReturnValue")))
+				Application.Log.AddMessage("System Restored Point Created. code: " + CStr(oOutParams("ReturnValue")))
 			Catch ex As Exception
-				log("System Restored Point Could not be Created! Err Code: 0x" & Hex(Err.Number))
+				Application.Log.AddMessage("System Restored Point Could not be Created! Err Code: 0x" & Hex(Err.Number))
 			End Try
 
 		End If
@@ -7202,13 +7201,13 @@ skipboot:
 		'     If f.CheckBox5.isChecked = True Then
 		'     UpdateTextMethod("Creating System Restore point (If allowed by the system)")
 		'     Try
-		'     log("Trying to Create a System Restored Point")
+		'     Application.Log.AddMessage("Trying to Create a System Restored Point")
 		'     Dim SysterRestoredPoint As Object = GetObject("winmgmts:\\.\root\default:Systemrestore")
 		'     If SysterRestoredPoint IsNot Nothing Then
 		'     If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
-		'     log("System Restored Point Created")
+		'     Application.Log.AddMessage("System Restored Point Created")
 		'     Else
-		'     log("System Restored Point Could not Created!")
+		'     Application.Log.AddMessage("System Restored Point Could not Created!")
 		'     End If
 		'     End If
 		'
@@ -7246,93 +7245,9 @@ skipboot:
 		End Try
 	End Sub
 
-	Sub getoeminfoOLD()
-		Dim info As LogEntry = LogEntry.Create()
-		info.Type = LogType.Event
-		info.Message = "The following third-party driver packages are installed on this computer"
-
-		log("The following third-party driver packages are installed on this computer: ")
-		Dim infisvalid As Boolean = True
-		Try
-			For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
-				If Not IsNullOrWhitespace(infs) Then
-
-					log("---")
-					info.Add("---")
-					log(infs)
-					info.Add("", infs)
-					infisvalid = False 'false unless we find either a provider or class 
-					For Each child As String In IO.File.ReadAllLines(infs)
-						If Not IsNullOrWhitespace(child) Then
-							child = child.Replace(" ", "").Replace(vbTab, "")
-
-							If Not IsNullOrWhitespace(child) AndAlso child.ToLower.StartsWith("provider=") Then
-								infisvalid = True
-								If child.EndsWith("%") Then
-									For Each provider As String In IO.File.ReadAllLines(infs)
-										If Not IsNullOrWhitespace(provider) Then
-											provider = provider.Replace(" ", "").Replace(vbTab, "")
-											If Not IsNullOrWhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("provider=", "").Replace("%", "") + "=") AndAlso
-											   Not provider.Contains("%") Then
-												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
-												info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("provider=", "").Replace("%", "") + "=", "Provider="))
-												Exit For
-											End If
-										End If
-									Next
-									Exit For
-								End If
-								log(child)
-								info.Add(child)
-								Exit For
-							End If
-						End If
-					Next
-
-					For Each child As String In IO.File.ReadAllLines(infs)
-						If Not IsNullOrWhitespace(child) Then
-
-							child = child.Replace(" ", "").Replace(vbTab, "")
-
-							If Not IsNullOrWhitespace(child) AndAlso child.ToLower.StartsWith("class=") Then
-								infisvalid = True
-								If child.EndsWith("%") Then
-									For Each provider As String In IO.File.ReadAllLines(infs)
-										If Not IsNullOrWhitespace(provider) Then
-											provider = provider.Replace(" ", "").Replace(vbTab, "")
-											If Not IsNullOrWhitespace(provider) AndAlso provider.ToLower.StartsWith(child.ToLower.Replace("class=", "").Replace("%", "") + "=") AndAlso
-											   Not provider.Contains("%") Then
-												log(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
-												info.Add(provider.ToLower.Replace(Chr(34), "").Replace(child.ToLower.Replace("class=", "").Replace("%", "") + "=", "Class="))
-												Exit For
-											End If
-										End If
-									Next
-									Exit For
-								End If
-								log(child)
-								info.Add(child)
-								Exit For
-							End If
-						End If
-					Next
-					If Not infisvalid Then
-						log("This inf entry is corrupted or invalid.")
-						info.Add("This inf entry is corrupted or invalid.")
-						deletefile(infs)
-					End If
-				End If
-			Next
-			Application.Log.Add(info)
-		Catch ex As Exception
-			Application.log.AddException(ex)
-		End Try
-
-	End Sub
-
 	Public Sub TestDelete(ByVal folder As String)
 		' UpdateTextMethod(UpdateTextMethodmessagefn("18"))
-		'log("Deleting some specials folders, it could take some times...")
+		'Application.Log.AddMessage("Deleting some specials folders, it could take some times...")
 		'ensure that this folder can be accessed with current user ac.
 		If Not Directory.Exists(folder) Then
 			Exit Sub
@@ -7362,7 +7277,7 @@ skipboot:
 				End If
 			Next
 		Catch ex As Exception
-			log("test delete : " + ex.Message)
+			Application.Log.AddException(ex)
 		End Try
 		'Finally, clean all of the files directly in the root directory
 		CleanAllFilesInDirectory(di)
@@ -7373,10 +7288,10 @@ skipboot:
 		Try
 			If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
 				di.Delete()
-				log(di.ToString + " - " + "Folder removed via testdelete sub")
+				Application.Log.AddMessage(di.ToString + " - " + "Folder removed via testdelete sub")
 			End If
 		Catch ex As Exception
-			log("testdelete @ di.getfiles() : " + ex.Message)
+			Application.Log.AddException(ex)
 		End Try
 	End Sub
 
@@ -7453,7 +7368,7 @@ skipboot:
 
 			Next
 		Catch ex As Exception
-			log("cleanallfilesindi : " + ex.Message)
+			Application.Log.AddException(ex)
 		End Try
 	End Sub
 
@@ -7504,30 +7419,10 @@ skipboot:
 
 	End Sub
 
-	Public Sub log(ByVal strmessage As String)
-		Try
-			'If savelogs Then
-				' After 500+ entries of logfiles.........
-
-				'Using wlog As New IO.StreamWriter(locations, True)
-				'wlog.WriteLine(DateTime.Now & " >> " & strmessage)
-
-				'UpdateTextMethod2(strmessage)
-
-				'wlog.Flush()
-				'wlog.Close()
-				'End Using 'End using always calls .Dispose() 
-				'  System.Threading.Thread.Sleep(10)  '20 millisecond stall (0.02 Seconds) just to be sure its really released.
-			'End If
-		Catch ex As Exception
-
-		End Try
-	End Sub
-
 	Private Sub disabledriversearch()
 		Dim regkey As RegistryKey = Nothing
-		log("Trying to disable search for Windows Updates :")
-		log("Version " + version + " detected")
+		Application.Log.AddMessage("Trying to disable search for Windows Updates :")
+		Application.Log.AddMessage("Version " + version + " detected")
 
 		If version >= "6.1" Then
 			Try
@@ -7562,7 +7457,7 @@ skipboot:
 		Dim iskmpfdpresent As Boolean = False
 
 		Try
-			log("Checking if AMDKMPFD is present before Service removal")
+			Application.Log.AddMessage("Checking if AMDKMPFD is present before Service removal")
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
@@ -7578,8 +7473,8 @@ skipboot:
 											For i As Integer = 0 To array.Length - 1
 												If Not IsNullOrWhitespace(array(i)) Then
 													If array(i).ToLower.Contains("amdkmpfd") Then
-														log("Found an AMDKMPFD! in " + child)
-														log("We do not remove the AMDKMPFP service yet")
+														Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
+														Application.Log.AddMessage("We do not remove the AMDKMPFP service yet")
 														iskmpfdpresent = True
 
 													End If
@@ -7795,42 +7690,42 @@ skipboot:
 
 	End Sub
 
-    Private Sub deletedirectory(ByVal directory As String)
-        CleanupEngine.deletedirectory(directory)
-    End Sub
+	Private Sub deletedirectory(ByVal directory As String)
+		CleanupEngine.deletedirectory(directory)
+	End Sub
 
-    Private Sub deletefile(ByVal file As String)
-        CleanupEngine.deletefile(file)
-    End Sub
+	Private Sub deletefile(ByVal file As String)
+		CleanupEngine.deletefile(file)
+	End Sub
 
-    Public Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
+	Public Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
 
-        CleanupEngine.deletevalue(value1, value2)
+		CleanupEngine.deletevalue(value1, value2)
 
-    End Sub
+	End Sub
 
-    Private Sub amdenvironementpath(ByVal filepath As String)
+	Private Sub amdenvironementpath(ByVal filepath As String)
 
-        Dim regkey As RegistryKey
-        Dim subregkey As RegistryKey
-        Dim wantedvalue As String = Nothing
+		Dim regkey As RegistryKey
+		Dim subregkey As RegistryKey
+		Dim wantedvalue As String = Nothing
 
-        '--------------------------------
-        'System environement path cleanup
-        '--------------------------------
+		'--------------------------------
+		'System environement path cleanup
+		'--------------------------------
 
-        log("System environement cleanUP")
-        filepath = filepath.ToLower
-        Try
-            subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
-            If subregkey IsNot Nothing Then
-                For Each child2 As String In subregkey.GetSubKeyNames()
-                    If child2.ToLower.Contains("controlset") Then
-                        regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetValueNames()
-                                If IsNullOrWhitespace(child) = False Then
-                                    If child.Contains("Path") Then
+		Application.Log.AddMessage("System environement cleanUP")
+		filepath = filepath.ToLower
+		Try
+			subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+			If subregkey IsNot Nothing Then
+				For Each child2 As String In subregkey.GetSubKeyNames()
+					If child2.ToLower.Contains("controlset") Then
+						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetValueNames()
+								If IsNullOrWhitespace(child) = False Then
+									If child.Contains("Path") Then
 										If IsNullOrWhitespace(CStr(regkey.GetValue(child))) = False Then
 											wantedvalue = regkey.GetValue(child).ToString.ToLower
 											Try
@@ -7871,20 +7766,20 @@ skipboot:
 											Catch ex As Exception
 											End Try
 										End If
-                                    End If
-                                End If
-                            Next
-                        End If
-                    End If
-                Next
+									End If
+								End If
+							Next
+						End If
+					End If
+				Next
 			End If
 
-        Catch ex As Exception
-            Application.Log.AddException(ex)
-        End Try
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
 
-        'end system environement patch cleanup
-    End Sub
+		'end system environement patch cleanup
+	End Sub
 
     Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
         Me.WindowState = Windows.WindowState.Minimized
@@ -9318,7 +9213,7 @@ Public Class CleanupEngine
                                         'do nothing
                                     End If
                                 Catch ex As Exception
-                                    application.log.addmessage("non standard keytype found : " + child)
+									Application.Log.AddException(ex, "non standard keytype found : " + child)
                                     Continue For
                                 End Try
                                 If IsNullOrWhitespace(CStr((subregkey.GetValue("")))) = False Then
@@ -9409,7 +9304,7 @@ Public Class CleanupEngine
                 End If
             Next
         Catch ex As Exception
-            Application.Log.AddMessage("info: " + ex.Message)
+			Application.Log.AddException(ex)
         End Try
 
         Const CSIDL_WINDOWS As Integer = &H29
