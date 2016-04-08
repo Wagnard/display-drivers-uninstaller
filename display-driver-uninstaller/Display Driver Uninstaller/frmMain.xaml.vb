@@ -54,7 +54,6 @@ Public Class frmMain
 	Public win10 As Boolean = False
 	Public Shared winxp As Boolean = False
 	Dim stopme As Boolean = False
-	Public Shared trysystemrestore As Boolean
 
 	Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
 	Dim userpth As String = CStr(My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory")) & "\"
@@ -2803,6 +2802,7 @@ Public Class frmMain
 								If child2.ToLower.Contains("display.3dvision") Or
 								   child2.ToLower.Contains("display.controlpanel") Or
 								   child2.ToLower.Contains("display.driver") Or
+								   child2.ToLower.Contains("display.optimus") Or
 								   child2.ToLower.Contains("msvcruntime") Or
 								   child2.ToLower.Contains("display.gfexperience") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("osc.") AndAlso config.RemoveGFE Or
@@ -4018,7 +4018,7 @@ Public Class frmMain
 							 child.ToLower.Contains("_display.driver") Or
 							 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
 							 child.ToLower.Contains("_display.nvirusb") Or
-							 child.ToLower.Contains("_display.physx") Or
+							 child.ToLower.Contains("_display.physx") AndAlso removephysx Or
 							 child.ToLower.Contains("_display.update") AndAlso removegfe Or
 							 child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
 							 child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
@@ -5207,7 +5207,7 @@ Public Class frmMain
 		'this shouldn't be slow, so it isn't on a thread/background worker
 
 		reboot = True
-
+		systemrestore()
 		BackgroundWorker1.RunWorkerAsync(
 		 New ThreadSettings() With {
 		   .DoShutdown = False,
@@ -5233,7 +5233,7 @@ Public Class frmMain
 
 		reboot = False
 		shutdown = False
-
+		systemrestore()
 		BackgroundWorker1.RunWorkerAsync(
 		 New ThreadSettings() With {
 		   .DoShutdown = False,
@@ -5259,7 +5259,7 @@ Public Class frmMain
 
 		reboot = False
 		shutdown = True
-
+		systemrestore()
 		BackgroundWorker1.RunWorkerAsync(
 		 New ThreadSettings() With {
 		   .DoShutdown = True,
@@ -6097,7 +6097,7 @@ skipboot:
 										End If
 									End If
 									UpdateTextMethod("--------------")
-									Application.Log.AddMessage("--------------")
+
 								End If
 							End If
 						Next
@@ -6237,9 +6237,9 @@ skipboot:
 
 		'combobox1value = config.SelectedGPU.ToString()
 
-		MsgBox(config.SelectedGPU.ToString)
+
 		Try
-			systemrestore()
+
 
 			Select Case config.SelectedGPU
 				Case GPUVendor.Nvidia
@@ -6252,7 +6252,6 @@ skipboot:
 
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(20) + " " & config.SelectedGPU.ToString() & " " + UpdateTextMethodmessagefn(21))
-			Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
 			Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
 			UpdateTextMethod(UpdateTextMethodmessagefn(22))
 
@@ -6276,7 +6275,6 @@ skipboot:
 					If config.SelectedGPU = GPUVendor.AMD Then
 						Dim removed As Boolean = False
 						Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
-						Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
 						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
@@ -6297,7 +6295,6 @@ skipboot:
 																			If Not IsNullOrWhitespace(array(i)) Then
 																				If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
 																					Application.Log.AddMessage("Found an AMD audio controller bus !")
-																					Application.Log.AddMessage("Found an AMD audio controller bus !")
 																					Try
 																						Application.Log.AddMessage("array result: " + array(i))
 																					Catch ex As Exception
@@ -6314,8 +6311,6 @@ skipboot:
 																					'process.WaitForExit()
 																					process.StandardOutput.Close()
 																					process.Close()
-																					Application.Log.AddMessage(reply2)
-																					Application.Log.AddMessage("AMD HD Audio Bus Removed !")
 																					Application.Log.AddMessage(reply2)
 																					Application.Log.AddMessage("AMD HD Audio Bus Removed !")
 																					removed = True
@@ -6358,7 +6353,6 @@ skipboot:
 												If Not IsNullOrWhitespace(array(i)) Then
 													If array(i).ToLower.Contains("amdkmafd") Then
 														Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
-														Application.Log.AddMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
 														donotremoveamdhdaudiobusfiles = True
 													End If
 												End If
@@ -6422,7 +6416,6 @@ skipboot:
 														process.Close()
 														'process.WaitForExit()
 														Application.Log.AddMessage(reply2)
-														Application.Log.AddMessage(reply2)
 													End If
 													Exit For   'the card is removed so we exit the loop from here.
 												End If
@@ -6441,13 +6434,13 @@ skipboot:
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(23))
 			Application.Log.AddMessage("DDUDR Remove Display Driver: Complete.")
-			Application.Log.AddMessage("DDUDR Remove Display Driver: Complete.")
+
 
 			cleandriverstore(config)
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(24))
 			Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
-			Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
+
 
 			Try
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
@@ -6483,7 +6476,7 @@ skipboot:
 										process.Close()
 										'process.WaitForExit()
 										Application.Log.AddMessage(reply2)
-										Application.Log.AddMessage(reply2)
+
 
 									End If
 								Next
@@ -6500,7 +6493,7 @@ skipboot:
 
 
 			Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
-			Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
+
 
 			If config.SelectedGPU <> GPUVendor.Intel Then
 				cleandriverstore(config)
@@ -6547,7 +6540,7 @@ skipboot:
 						 vendid.Contains("USB\VID_0955&PID_700D&MI_00") Or
 						 vendid.Contains("USB\VID_0955&PID_700E&MI_00") Then
 							Application.Log.AddMessage("-" & vendid & "- 3D vision usb controler found")
-							Application.Log.AddMessage("-" & vendid & "- 3D vision usb controler found")
+
 
 							processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
 							processinfo.Arguments = "remove =USB " & Chr(34) & vendid & Chr(34)
@@ -6562,7 +6555,7 @@ skipboot:
 							process.Close()
 							'process.WaitForExit()
 							Application.Log.AddMessage(reply2)
-							Application.Log.AddMessage(reply2)
+
 
 
 						End If
@@ -6605,7 +6598,7 @@ skipboot:
 						vendid = reply.Substring(card1, position2 - card1).Trim
 						If vendid.ToLower.Contains("hid\vid_0955&pid_7210") Then
 							Application.Log.AddMessage("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
-							Application.Log.AddMessage("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
+
 
 							processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
 							processinfo.Arguments = "remove =MOUSE " & Chr(34) & vendid & Chr(34)
@@ -6619,7 +6612,7 @@ skipboot:
 							process.StandardOutput.Close()
 							process.Close()
 							'process.WaitForExit()
-							Application.Log.AddMessage(reply2)
+
 							Application.Log.AddMessage(reply2)
 
 
@@ -6669,7 +6662,7 @@ skipboot:
 													process.Close()
 													'process.WaitForExit()
 													Application.Log.AddMessage(reply2)
-													Application.Log.AddMessage(reply2)
+
 
 												End If
 											End If
@@ -6689,7 +6682,7 @@ skipboot:
 				' ------------------------------
 
 				Application.Log.AddMessage("Removing nVidia Audio Endpoints")
-				Application.Log.AddMessage("Removing nVidia Audio Endpoints")
+
 
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
@@ -6716,7 +6709,7 @@ skipboot:
 									process.Close()
 									'process.WaitForExit()
 									Application.Log.AddMessage(reply2)
-									Application.Log.AddMessage(reply2)
+
 
 								End If
 							End If
@@ -6735,7 +6728,7 @@ skipboot:
 				' ------------------------------
 
 				Application.Log.AddMessage("Removing AMD Audio Endpoints")
-				Application.Log.AddMessage("Removing AMD Audio Endpoints")
+
 
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
@@ -6762,7 +6755,7 @@ skipboot:
 									process.Close()
 									'process.WaitForExit()
 									Application.Log.AddMessage(reply2)
-									Application.Log.AddMessage(reply2)
+
 
 								End If
 							End If
@@ -6778,7 +6771,7 @@ skipboot:
 			If config.SelectedGPU = GPUVendor.Intel Then
 				'Removing Intel WIdI bus Enumerator
 				Application.Log.AddMessage("Removing IWD Bus Enumerator")
-				Application.Log.AddMessage("Removing IWD Bus Enumerator")
+
 				processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
 				processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
 				processinfo.UseShellExecute = False
@@ -6792,14 +6785,14 @@ skipboot:
 				process.Close()
 				'process.WaitForExit()
 				Application.Log.AddMessage(reply2)
-				Application.Log.AddMessage(reply2)
+
 
 
 				' ------------------------------
 				' Removing Intel AudioEndpoints
 				' ------------------------------
 				Application.Log.AddMessage("Removing Intel Audio Endpoints")
-				Application.Log.AddMessage("Removing Intel Audio Endpoints")
+
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
 					If regkey IsNot Nothing Then
@@ -6825,7 +6818,7 @@ skipboot:
 									process.Close()
 									'process.WaitForExit()
 									Application.Log.AddMessage(reply2)
-									Application.Log.AddMessage(reply2)
+
 
 								End If
 							End If
@@ -6839,14 +6832,14 @@ skipboot:
 
 
 			Application.Log.AddMessage("ddudr Remove Audio/HDMI Complete")
-			Application.Log.AddMessage("ddudr Remove Audio/HDMI Complete")
+
 			'removing monitor and hidden monitor
 
 
 
 			If config.RemoveMonitors Then
 				Application.Log.AddMessage("ddudr Remove Monitor started")
-				Application.Log.AddMessage("ddudr Remove Monitor started")
+
 				Try
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\DISPLAY")
 					If regkey IsNot Nothing Then
@@ -6899,7 +6892,7 @@ skipboot:
 			If config.RemoveAMDKMPFD Then
 				Try
 					Application.Log.AddMessage("Checking and Removing AMDKMPFD Filter if present")
-					Application.Log.AddMessage("Checking and Removing AMDKMPFD Filter if present")
+
 					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
@@ -6916,7 +6909,7 @@ skipboot:
 														If Not IsNullOrWhitespace(array(i)) Then
 															If array(i).ToLower.Contains("amdkmpfd") Then
 																Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
-																Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
+
 																Try
 																	Application.Log.AddMessage("array result: " + array(i))
 																Catch ex As Exception
@@ -6970,7 +6963,7 @@ skipboot:
 
 				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
 					Application.Log.AddMessage("Killing Explorer.exe")
-					Application.Log.AddMessage("Killing Explorer.exe")
+
 					Dim appproc = process.GetProcessesByName("explorer")
 					For i As Integer = 0 To appproc.Length - 1
 						appproc(i).Kill()
@@ -6986,7 +6979,7 @@ skipboot:
 
 				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
 					Application.Log.AddMessage("Killing Explorer.exe")
-					Application.Log.AddMessage("Killing Explorer.exe")
+
 					Dim appproc = process.GetProcessesByName("explorer")
 					For i As Integer = 0 To appproc.Length - 1
 						appproc(i).Kill()
@@ -7004,7 +6997,7 @@ skipboot:
 
 				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
 					Application.Log.AddMessage("Killing Explorer.exe")
-					Application.Log.AddMessage("Killing Explorer.exe")
+
 					Dim appproc = process.GetProcessesByName("explorer")
 					For i As Integer = 0 To appproc.Length - 1
 						appproc(i).Kill()
@@ -7080,7 +7073,7 @@ skipboot:
 			UpdateTextMethod(UpdateTextMethodmessagefn(9))
 
 			Application.Log.AddMessage("Clean uninstall completed!")
-			Application.Log.AddMessage("Clean uninstall completed!")
+
 
 			If Not shutdown Then
 				rescan()
@@ -7173,7 +7166,7 @@ skipboot:
 	Private Sub systemrestore()
 		'THIS NEEDS TO BE FIXED!!! DOES NOT WORK WITH OPTION STRICT ON. I WAS UNABLE TO FIGURE OUT MY SELF. BE SURE TO FIX BEFORE RELEASE.
 
-		If trysystemrestore Then
+		If Application.Settings.CreateRestorePoint Then
 			Try
 				UpdateTextMethod("Creating System Restore point (If allowed by the system)")
 				Application.Log.AddMessage("Trying to Create a System Restored Point")
@@ -7195,28 +7188,7 @@ skipboot:
 			End Try
 
 		End If
-		'     If trysystemrestore Then
-		'     Select Case System.Windows.Forms.SystemInformation.BootMode
-		'     Case BootMode.Normal
-		'     If f.CheckBox5.isChecked = True Then
-		'     UpdateTextMethod("Creating System Restore point (If allowed by the system)")
-		'     Try
-		'     Application.Log.AddMessage("Trying to Create a System Restored Point")
-		'     Dim SysterRestoredPoint As Object = GetObject("winmgmts:\\.\root\default:Systemrestore")
-		'     If SysterRestoredPoint IsNot Nothing Then
-		'     If SysterRestoredPoint.CreateRestorePoint("DDU System Restored Point", 0, 100) = 0 Then
-		'     Application.Log.AddMessage("System Restored Point Created")
-		'     Else
-		'     Application.Log.AddMessage("System Restored Point Could not Created!")
-		'     End If
-		'     End If
-		'
-		'        Catch ex As Exception
-		'       Application.log.AddException(ex)
-		'        End Try
-		'        End If
-		'        End Select
-		'        End If
+
 	End Sub
 
 	Private Sub GetOemInfo()
@@ -7267,7 +7239,7 @@ skipboot:
 				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
 				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
 				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-				If (Application.Settings.RemovePhysX Or Not ((Not Application.Settings.RemovePhysX) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+				If Not (((Not Application.Settings.RemovePhysX) AndAlso diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
 
 					Try
 						TraverseDirectory(diChild)
@@ -7305,7 +7277,7 @@ skipboot:
 			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
 			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
 			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-			If (Application.Settings.RemovePhysX Or Not ((Not Application.Settings.RemovePhysX) And diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+			If Not (((Not Application.Settings.RemovePhysX) AndAlso diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
 
 				Try
 					TraverseDirectory(diChild)
@@ -8067,8 +8039,8 @@ Public Class CleanupEngine
 												If IsNullOrWhitespace(wantedvalue) = False Then
 													For i As Integer = 0 To packages.Length - 1
 														If Not IsNullOrWhitespace(packages(i)) Then
-															If wantedvalue.ToLower.Contains(packages(i).ToLower) And
-															   (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
+															If wantedvalue.ToLower.Contains(packages(i).ToLower) AndAlso
+															  Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
 
 
 
@@ -8195,8 +8167,8 @@ Public Class CleanupEngine
 								If IsNullOrWhitespace(wantedvalue) = False Then
 									For i As Integer = 0 To packages.Length - 1
 										If Not IsNullOrWhitespace(packages(i)) Then
-											If wantedvalue.ToLower.Contains(packages(i).ToLower) And
-											   (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
+											If wantedvalue.ToLower.Contains(packages(i).ToLower) AndAlso
+											   Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
 
 												Try
 													If (Not IsNullOrWhitespace(CStr(subregkey.GetValue("ProductIcon")))) AndAlso
@@ -8286,8 +8258,8 @@ Public Class CleanupEngine
 								If IsNullOrWhitespace(wantedvalue) = False Then
 									For i As Integer = 0 To packages.Length - 1
 										If Not IsNullOrWhitespace(packages(i)) Then
-											If wantedvalue.ToLower.Contains(packages(i).ToLower) And
-											   (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
+											If wantedvalue.ToLower.Contains(packages(i).ToLower) AndAlso
+											  Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
 												Try
 													deletesubregkey(regkey, child)
 												Catch ex As Exception
@@ -8357,8 +8329,8 @@ Public Class CleanupEngine
 										If IsNullOrWhitespace(wantedvalue) = False Then
 											For i As Integer = 0 To packages.Length - 1
 												If Not IsNullOrWhitespace(packages(i)) Then
-													If wantedvalue.ToLower.Contains(packages(i).ToLower) And
-													   (removephysx Or Not ((Not removephysx) And child.ToLower.Contains("physx"))) Then
+													If wantedvalue.ToLower.Contains(packages(i).ToLower) AndAlso
+													   Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
 														Try
 															deletesubregkey(regkey, child)
 														Catch ex As Exception
