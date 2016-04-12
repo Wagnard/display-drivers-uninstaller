@@ -5276,7 +5276,7 @@ Public Class frmMain
 				regkey.SetValue("SearchOrderConfig", 1)
 				MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
 			Catch ex As Exception
-				Application.log.AddException(ex)
+				Application.Log.AddException(ex)
 			End Try
 		End If
 		If version >= "6.0" And version < "6.1" Then
@@ -5285,7 +5285,7 @@ Public Class frmMain
 				regkey.SetValue("DontSearchWindowsUpdate", 0)
 				MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
 			Catch ex As Exception
-				Application.log.AddException(ex)
+				Application.Log.AddException(ex)
 			End Try
 		End If
 
@@ -5359,7 +5359,7 @@ Public Class frmMain
 
 		'Create the ddu.bat file
 		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
-		sw.WriteLine(Chr(34) + baseDir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
+		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34))
 		sw.Flush()
 		sw.Close()
 
@@ -5369,7 +5369,7 @@ Public Class frmMain
 		Dim StartInfo As New WindowsApi.STARTUPINFOW
 		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, baseDir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
 		Else
 			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
 		End If
@@ -5496,32 +5496,29 @@ Public Class frmMain
 	'    End If
 	'End Sub
 
-	'Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomepageToolStripMenuItem.Click
+	Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomeMenuItem.Click
 
-	'    settings.setconfig("dduhome", "true")
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitdduhome")
+		sw.Flush()
+		sw.Close()
 
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-	'    'Create the ddu.bat file
-	'    Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
-	'    sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-	'    sw.Flush()
-	'    sw.Close()
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
 
-	'    Dim UserTokenHandle As IntPtr = IntPtr.Zero
-	'    WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-	'    Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-	'    Dim StartInfo As New WindowsApi.STARTUPINFOW
-	'    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-	'    If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-	'    Else
-	'        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-	'    End If
-
-	'    If Not UserTokenHandle = IntPtr.Zero Then
-	'        WindowsApi.CloseHandle(UserTokenHandle)
-	'    End If
-	'End Sub
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
 
 	Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
 		Dim frmOptions As New frmOptions
@@ -5608,42 +5605,43 @@ Public Class frmMain
 			'	webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
 			'End If
 
-			'If CBool(settings.getconfig("dduhome")) = True Then
-			'	webAddress = "http://www.wagnardmobile.com"
-			'End If
+			If CBool(Application.Settings.VisitDDUHome) Then
+				webAddress = "http://www.wagnardmobile.com"
+			End If
 
 			'If CBool(settings.getconfig("svn")) = True Then
 			'	webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
 			'End If
 
-			'If CBool(settings.getconfig("donate")) = True Or
-			'   CBool(settings.getconfig("guru3dnvidia")) = True Or
-			'   CBool(settings.getconfig("guru3damd")) = True Or
-			'   CBool(settings.getconfig("geforce")) = True Or
-			'   CBool(settings.getconfig("svn")) = True Or
-			'   CBool(settings.getconfig("dduhome")) = True Then
+			If CBool(Application.Settings.VisitDonate) = True Or
+			   CBool(Application.Settings.VisitGuru3DNvidia) = True Or
+			   CBool(Application.Settings.VisitGuru3DAMD) = True Or
+			   CBool(Application.Settings.VisitGeforce) = True Or
+			   CBool(Application.Settings.VisitSVN) = True Or
+			   CBool(Application.Settings.VisitDDUHome) = True Then
 
-			'         processinfo.FileName = webAddress
-			'         processinfo.Arguments = Nothing
-			'         processinfo.UseShellExecute = True
-			'         processinfo.CreateNoWindow = True
-			'         processinfo.RedirectStandardOutput = False
+				processinfo.FileName = webAddress
+				processinfo.Arguments = Nothing
+				processinfo.UseShellExecute = True
+				processinfo.CreateNoWindow = True
+				processinfo.RedirectStandardOutput = False
 
-			'         process.StartInfo = processinfo
-			'         process.Start()
-			'         'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
-			'         process.Close()
+				process.StartInfo = processinfo
+				process.Start()
+				'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
+				process.Close()
 
-			'         settings.setconfig("donate", "false")
-			'         settings.setconfig("guru3dnvidia", "false")
-			'         settings.setconfig("guru3damd", "false")
-			'         settings.setconfig("geforce", "false")
-			'         settings.setconfig("dduhome", "false")
-			'         settings.setconfig("svn", "false")
+				'         settings.setconfig("donate", "false")
+				'         settings.setconfig("guru3dnvidia", "false")
+				'         settings.setconfig("guru3damd", "false")
+				'         settings.setconfig("geforce", "false")
+				'         settings.setconfig("dduhome", "false")
+				'         settings.setconfig("svn", "false")
 
-			'         closeddu()
-			'         Exit Sub
-			'End If
+				closeddu()
+				deletefile(Application.Paths.AppBase + "DDU.bat")
+				Exit Sub
+			End If
 
 
 			If Not isElevated Then
