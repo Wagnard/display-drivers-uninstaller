@@ -503,12 +503,20 @@ Public Class AppSettings
 						End If
 					Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
 
+					Dim defaultLang As New Languages.LanguageOption("en", "English", Application.Paths.Language & "English.xml")
+					Dim foundLangs As List(Of Languages.LanguageOption) = Languages.ScanFolderForLang(Application.Paths.Language)
 
+					foundLangs.Add(defaultLang)
+					foundLangs.Sort(Function(x, y) x.DisplayText.CompareTo(y.DisplayText))
+
+					For Each lang As Languages.LanguageOption In foundLangs
+						Application.Settings.LanguageOptions.Add(lang)
+					Next
 
 					For Each KvP As KeyValuePair(Of String, String) In props
 						Select Case KvP.Key.ToLower()
 							Case "selectedlanguage"
-								For Each langOption As Languages.LanguageOption In LanguageOptions
+								For Each langOption As Languages.LanguageOption In Application.Settings.LanguageOptions
 									If langOption.ISOLanguage.Equals(KvP.Value, StringComparison.OrdinalIgnoreCase) Then
 										SelectedLanguage = langOption
 										Exit For

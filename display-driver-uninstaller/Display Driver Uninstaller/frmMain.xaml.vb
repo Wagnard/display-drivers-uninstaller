@@ -7476,14 +7476,6 @@ skipboot:
 			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
 
 			Dim defaultLang As New Languages.LanguageOption("en", "English", Application.Paths.Language & "English.xml")
-			Dim foundLangs As List(Of Languages.LanguageOption) = Languages.ScanFolderForLang(Application.Paths.Language)
-
-			foundLangs.Add(defaultLang)
-			foundLangs.Sort(Function(x, y) x.DisplayText.CompareTo(y.DisplayText))
-
-			For Each lang As Languages.LanguageOption In foundLangs
-				Application.Settings.LanguageOptions.Add(lang)
-			Next
 
 			ExtractEnglishLangFile(defaultLang)
 			Languages.Load() 'default = english
