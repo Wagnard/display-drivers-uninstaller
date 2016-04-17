@@ -38,8 +38,15 @@ Module Tools
 		If regkey IsNot Nothing Then
 			Dim wantedvalue As String() = CType(regkey.GetValue("PreferredUILanguages"), String())
 			If wantedvalue IsNot Nothing Then
+				If StrContainsAny(wantedvalue(0), True, "zh-tw") Then
+					Return "zh"	 'Chinese Traditional
+				ElseIf StrContainsAny(wantedvalue(0), True, "zh-cn") Then
+					Return "zh2"	 'Chinese Simplified
+				End If
 				wantedvalue(0) = wantedvalue(0).Substring(0, If(wantedvalue(0).Length >= 2, 2, wantedvalue(0).Length))
 				Return wantedvalue(0) 'Mutistring here, but only need the first value.
+			Else
+				Return Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName	'Return en, fr, sv etc. if preferedUILanguages is null (usually old OS)
 			End If
 		End If
 		Return "en"	  'Return en (English) by default if nothing found.

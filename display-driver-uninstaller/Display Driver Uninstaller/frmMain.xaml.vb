@@ -7492,7 +7492,6 @@ skipboot:
 
 			'Dim systemLang As String = Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName	'en, fr, sv etc.
 			Dim systemlang = PreferredUILanguages()
-			MsgBox(systemLang)
 			Dim lastUsedLang As Languages.LanguageOption = Nothing
 			Dim nativeLang As Languages.LanguageOption = Nothing
 
