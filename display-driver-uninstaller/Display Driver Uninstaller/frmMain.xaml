@@ -26,7 +26,7 @@
 		<Label x:Name="lblUpdate" Content="lblUpdate" Height="26" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" />
 		<TextBox x:Name="tbLog" HorizontalAlignment="Left" Height="172" Margin="10,335,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="366" />
 
-        <Menu x:Name="MenuStrip1" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
+        <Menu x:Name="MenuStrip1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="{x:Null}" >
             <MenuItem x:Name="OptionsMenuItem" Header="Options"/>
             <MenuItem x:Name="LinksMenuItem" Header="Links">
                 <MenuItem x:Name="VisitDDUHomeMenuItem" Header="ddu_home" />

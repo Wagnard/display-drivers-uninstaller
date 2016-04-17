@@ -32,6 +32,19 @@ Module Tools
 		End Using
 	End Function
 
+	Public Function PreferredUILanguages() As String
+		Dim regkey As Microsoft.Win32.RegistryKey
+		regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Control Panel\Desktop", False)
+		If regkey IsNot Nothing Then
+			Dim wantedvalue As String() = CType(regkey.GetValue("PreferredUILanguages"), String())
+			If wantedvalue IsNot Nothing Then
+				wantedvalue(0) = wantedvalue(0).Substring(0, If(wantedvalue(0).Length >= 2, 2, wantedvalue(0).Length))
+				Return wantedvalue(0) 'Mutistring here, but only need the first value.
+			End If
+		End If
+		Return "en"	  'Return en (English) by default if nothing found.
+	End Function
+
 	Public Function IsNullOrWhitespace(ByRef str As String) As Boolean
 		Return If(str IsNot Nothing, String.IsNullOrEmpty(str.Trim(whiteSpaceChars)), True)
 	End Function
@@ -92,7 +105,7 @@ Module Tools
 			End If
 		End If
 
-			Return text
+		Return text
 	End Function
 
 	''' <summary>Check if text contains any of the given parameters</summary>
