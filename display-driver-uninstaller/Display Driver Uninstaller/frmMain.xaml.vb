@@ -5588,6 +5588,7 @@ Public Class frmMain
 			' used arguments: -dduhome -svn -donate -guru3dnvidia -guru3damd -geforce
 			' NOTE: Application.Settings & Paths creates needed folders (-> moved to beginning of Sub)
 
+#If 1 + 1 = 3 Then ' TODO: REMOVE (msgboxes gets annoying...)
 			MessageBox.Show(
 			 "Arguments: " & Application.Settings.Arguments & vbCrLf & vbCrLf & vbCrLf &
 			 "VisitDDUHome: " & Application.Settings.VisitDDUHome.ToString() & vbCrLf &
@@ -5597,7 +5598,7 @@ Public Class frmMain
 			 "VisitGuru3DNvidia: " & Application.Settings.VisitGuru3DNvidia.ToString() & vbCrLf &
 			 "VisitSVN: " & Application.Settings.VisitSVN.ToString()
 			 )
-
+#End If
 			'we check if the donate/guru3dnvidia/gugu3damd/geforce/dduhome is trigger here directly.
 			'If CBool(settings.getconfig("donate")) = True Then
 			'	webAddress = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
@@ -5668,11 +5669,11 @@ Public Class frmMain
 			End If
 
 
-
+#If 1 + 1 = 3 Then ' TODO: REMOVE (msgboxes gets annoying...)
 			MessageBox.Show("version (regkey): " & version & vbCrLf & vbCrLf &
 			"My.Computer.Info.OSFullName: " & My.Computer.Info.OSFullName &
 			"My.Computer.Info.OSVersion: " & My.Computer.Info.OSVersion)
-
+#End If
 			' https://msdn.microsoft.com/en-us/library/windows/desktop/ms724832%28v=vs.85%29.aspx
 
 			btnCleanRestart.IsEnabled = True
@@ -7758,6 +7759,11 @@ skipboot:
         Me.WindowState = Windows.WindowState.Minimized
     End Sub
 
+    Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
+        Dim setupAPIWindow As New SetupAPITestWindow
+
+        setupAPIWindow.ShowDialog()
+    End Sub
 End Class
 
 Public Class CleanupEngine

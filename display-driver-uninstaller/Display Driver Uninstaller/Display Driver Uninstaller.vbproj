@@ -82,6 +82,10 @@
     </Compile>
     <Compile Include="AppSettings.vb" />
     <Compile Include="LogEntry.vb" />
+    <Compile Include="SetupAPI.vb" />
+    <Compile Include="SetupAPITestWindow.xaml.vb">
+      <DependentUpon>SetupAPITestWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ThreadSettings.vb" />
     <Compile Include="Tools.vb" />
     <Page Include="frmLaunch.xaml">
@@ -105,6 +109,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="frmOptions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SetupAPITestWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
