@@ -16,6 +16,7 @@ Imports System.IO
 Imports System.Windows.Forms
 Imports System.Security.Principal
 
+
 Namespace SetupAPI
     <ComVisible(False)>
     Public Module Extensions
@@ -84,6 +85,7 @@ Namespace SetupAPI
     Public Module SetupAPI
         Private Const LINE_LEN As Int32 = 256
         Private Const MAX_LEN As Int32 = 260
+        Private ReadOnly CRLF As String = Environment.NewLine
 
         Private ReadOnly Is64 As Boolean = False
         Private ReadOnly IsAdmin As Boolean = False
@@ -756,7 +758,7 @@ Namespace SetupAPI
             <[In]()> ByVal Reserved As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
         End Function
 
-        <DllImport("setupapi.dll", CharSet:=CharSet.Ansi, SetLastError:=True)>
+        <DllImport("newdev.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
         Private Function UpdateDriverForPlugAndPlayDevices(
             <[In](), [Optional]()> ByVal hwndParent As IntPtr,
             <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal HardwareId As String,
@@ -935,7 +937,7 @@ Namespace SetupAPI
                                     GetDriverDetails(infoSet, ptrDevInfo.Ptr, device)
 
                                     Dim msgResult As DialogResult = MessageBox.Show(
-                                        String.Format("Are you sure you want to remove device:{2}{2}{3}{0}\r\n\r\nHardware IDs{2}{2}{3}{1}", device.Description, String.Join(vbNewLine & vbTab, device.HardwareIDs), vbNewLine, vbTab),
+                                        String.Format("Are you sure you want to remove device:{2}{2}{3}{0}\r\n\r\nHardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab),
                                         "Warning!",
                                         MessageBoxButtons.YesNoCancel,
                                         MessageBoxIcon.Warning)
@@ -960,7 +962,7 @@ Namespace SetupAPI
                             Return
                         End If
 
-                        If MessageBox.Show(String.Format("CONFIRM!!!{2}{2}Are you sure you want to remove device:{2}{2}{3}{0}\r\n\r\nHardware IDs{2}{2}{3}{1}", device.Description, String.Join(vbNewLine & vbTab, device.HardwareIDs), vbNewLine, vbTab),
+                        If MessageBox.Show(String.Format("CONFIRM!!!{2}{2}Are you sure you want to remove device:{2}{2}{3}{0}\r\n\r\nHardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab),
                                "Warning!",
                                MessageBoxButtons.YesNo,
                                MessageBoxIcon.Warning) <> DialogResult.Yes Then
@@ -979,7 +981,6 @@ Namespace SetupAPI
                                     End If
 
                                     CheckWin32Error(SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.SUOI_FORCEDELETE), IntPtr.Zero))
-
                                 Else
                                     MessageBox.Show(String.Format("Inf isn't Oem's, skipping Inf uninstall for '{0}' !", inf), "Device removal", MessageBoxButtons.OK, MessageBoxIcon.Information)
                                 End If
@@ -988,13 +989,12 @@ Namespace SetupAPI
 
                         CheckWin32Error(SetupDiCallClassInstaller(CUInt(DIF.REMOVE), infoSet, ptrDevInfo.Ptr))
 
-
                         If RebootRequired(infoSet, ptrDevInfo.Ptr) Then
-                            If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", vbNewLine), "Device removed!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+                            If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", CRLF), "Device removed!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
                                 Reboot()
                             End If
                         Else
-                            MessageBox.Show(String.Format("Reboot not required!{0}NOTE: Windows XP doesn't 'set' reboot flag even if reboot required", "Device removed!", vbNewLine))
+                            MessageBox.Show(String.Format("Reboot not required!{0}NOTE: Windows XP doesn't 'set' reboot flag even if reboot required", "Device removed!", CRLF))
                         End If
                     Finally
                         If ptrDevInfo IsNot Nothing Then
@@ -1065,7 +1065,7 @@ Namespace SetupAPI
                                     GetDeviceDetails(infoSet, ptrDevInfo.Ptr, device)
 
                                     Dim msgResult As DialogResult = MessageBox.Show(
-                                       String.Format("Are you sure you want to {0} device:{3}{3}{4}{1}\r\n\r\nHardware IDs{3}{3}{4}{2}", If(enable, "enable", "disable"), device.Description, String.Join(vbNewLine & vbTab, device.HardwareIDs), vbNewLine, vbTab),
+                                       String.Format("Are you sure you want to {0} device:{3}{3}{4}{1}\r\n\r\nHardware IDs{3}{3}{4}{2}", If(enable, "enable", "disable"), device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab),
                                         "Warning!",
                                         MessageBoxButtons.YesNoCancel,
                                         MessageBoxIcon.Warning)
@@ -1090,7 +1090,7 @@ Namespace SetupAPI
                             Return
                         End If
 
-                        If MessageBox.Show(String.Format("CONFIRM!!!{3}Are you sure you want to {0} device:{3}{3}{4}{1}\r\n\r\nHardware IDs{3}{3}{4}{2}", If(enable, "enable", "disable"), device.Description, String.Join(vbNewLine & vbTab, device.HardwareIDs), vbNewLine, vbTab),
+                        If MessageBox.Show(String.Format("CONFIRM!!!{3}Are you sure you want to {0} device:{3}{3}{4}{1}\r\n\r\nHardware IDs{3}{3}{4}{2}", If(enable, "enable", "disable"), device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab),
                             "Warning!",
                             MessageBoxButtons.YesNo,
                             MessageBoxIcon.Warning) <> DialogResult.Yes Then
@@ -1142,11 +1142,11 @@ Namespace SetupAPI
                             CheckWin32Error(SetupDiChangeState(infoSet, ptrDevInfo.Ptr))
 
                             If RebootRequired(infoSet, ptrDevInfo.Ptr) Then
-                                If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", vbNewLine), "Device removed!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+                                If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", CRLF), "Device removed!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
                                     Reboot()
                                 End If
                             Else
-                                MessageBox.Show(String.Format("Reboot not required!{0}NOTE: Windows XP doesn't 'set' reboot flag even if reboot required", vbNewLine), "Device removed!")
+                                MessageBox.Show(String.Format("Reboot not required!{0}NOTE: Windows XP doesn't 'set' reboot flag even if reboot required", CRLF), "Device removed!")
                             End If
                         Finally
                             If ptrSetParams IsNot Nothing Then
@@ -1223,7 +1223,7 @@ Namespace SetupAPI
                                     GetDeviceDetails(infoSet, ptrDevInfo.Ptr, device)
 
                                     Dim msgResult As DialogResult = MessageBox.Show(
-                                       String.Format("Are you sure you want to update device:{2}{2}{3}{0}\r\n\r\nHardware IDs{2}{2}{3}{1}", device.Description, String.Join(vbNewLine & vbTab, device.HardwareIDs), vbNewLine, vbTab),
+                                       String.Format("Are you sure you want to update device:{2}{2}{3}{0}{2}Inf file: {2}{2}{3}{4}{2}Hardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab, infFile),
                                         "Warning!",
                                         MessageBoxButtons.YesNoCancel,
                                         MessageBoxIcon.Warning)
@@ -1248,8 +1248,8 @@ Namespace SetupAPI
                             Return
                         End If
 
-                        If MessageBox.Show(String.Format("Are you sure you want to update device:{2}{2}{3}{0}\r\n\r\nHardware IDs{2}{2}{3}{1}", device.Description, String.Join(vbNewLine & vbTab, device.HardwareIDs), vbNewLine, vbTab),
-                            "Warning!",
+                        If MessageBox.Show(String.Format("CONFIRM!!!{2}{2}Are you sure you want to update device:{2}{2}{3}{0}{2}Inf file: {2}{2}{3}{4}{2}Hardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab, infFile),
+                                       "Warning!",
                             MessageBoxButtons.YesNo,
                             MessageBoxIcon.Warning) <> DialogResult.Yes Then
 
@@ -1257,14 +1257,19 @@ Namespace SetupAPI
                         End If
 
                         Dim requiresReboot As Boolean
-                        CheckWin32Error(UpdateDriverForPlugAndPlayDevices(IntPtr.Zero, device.HardwareIDs(0), infFile, 0UI, requiresReboot))
+                        If Not UpdateDriverForPlugAndPlayDevices(IntPtr.Zero, device.HardwareIDs(0), infFile, CUInt(INSTALLFLAG.NULL), requiresReboot) Then
+                            MessageBox.Show("The function found a match for the HardwareId value, but the specified driver was not a better match" + CRLF + "than the current driver and the caller did not specify the INSTALLFLAG_FORCE flag.")
+                            Return
+                        Else
+                            CheckWin32Error(False)
+                        End If
 
                         If requiresReboot Then
-                            If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", vbNewLine), "Device removed!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+                            If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", CRLF), "Device removed!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
                                 Reboot()
                             End If
                         Else
-                            MessageBox.Show(String.Format("Reboot not required!{0}NOTE: Windows XP doesn't 'set' reboot flag even if reboot required", vbNewLine), "Device removed!")
+                            MessageBox.Show(String.Format("Reboot not required!{0}NOTE: Windows XP doesn't 'set' reboot flag even if reboot required", CRLF), "Device removed!")
                         End If
                     Finally
                         If ptrDevInfo IsNot Nothing Then
@@ -1314,7 +1319,7 @@ Namespace SetupAPI
             End If
 
             If regType = RegistryValueKind.MultiString Then
-                Return Encoding.Unicode.GetString(buffer, 0, size - DefaultCharSize).TrimEnd(NullChar).Replace(vbNullChar, vbNewLine)
+                Return Encoding.Unicode.GetString(buffer, 0, size - DefaultCharSize).TrimEnd(NullChar).Replace(vbNullChar, CRLF)
             Else
                 Return Encoding.Unicode.GetString(buffer, 0, size - DefaultCharSize).TrimEnd(NullChar)
             End If
@@ -1587,19 +1592,18 @@ Namespace SetupAPI
             p.Close()
         End Sub
 
-        Public Sub ShowException(ByVal ex As Exception)
+        Private Sub ShowException(ByVal ex As Exception)
             If TypeOf (ex) Is Win32Exception Then
                 Dim e As UInt32 = GetUInt32(DirectCast(ex, Win32Exception).NativeErrorCode)
                 Dim detailMsg As String = Nothing
 
                 If GetErrorMessage(e, detailMsg) Then
-                    MessageBox.Show(String.Format(detailMsg & "{0}{0}Error code: " & e.ToString() & "{0}" & ex.Message, "Win32Exception!", vbNewLine))
+                    MessageBox.Show(String.Format(detailMsg & "{0}{0}Error code: " & e.ToString() & "{0}" & ex.Message, "Win32Exception!", CRLF))
                 Else
-
-                    MessageBox.Show(String.Format("Error code: " & e.ToString() & "{0}" & ex.Message, "Win32Exception!", vbNewLine))
+                    MessageBox.Show(String.Format("Error code: " & e.ToString() & "{0}" & ex.Message, "Win32Exception!", CRLF))
                 End If
             Else
-                MessageBox.Show(String.Format(ex.Message & "{0}{0}" & If(ex.TargetSite IsNot Nothing, ex.TargetSite.Name, "<null>") & "{0}{0}" & ex.Source + "{0}{0}" & ex.StackTrace, "Exception!", vbNewLine))
+                MessageBox.Show(String.Format(ex.Message & "{0}{0}" & If(ex.TargetSite IsNot Nothing, ex.TargetSite.Name, "<null>") & "{0}{0}" & ex.Source + "{0}{0}" & ex.StackTrace, "Exception!", CRLF))
             End If
         End Sub
 

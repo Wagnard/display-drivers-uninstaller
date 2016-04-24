@@ -347,4 +347,17 @@ Public Class SetupAPITestWindow
     Private Sub cbFilter_SelectionChanged(ByVal sender As Object, ByVal e As SelectionChangedEventArgs)
         UpdateFilter()
     End Sub
+
+    Private Sub btnUpdate_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnUpdate.Click
+        Dim ofd As Microsoft.Win32.OpenFileDialog = New Microsoft.Win32.OpenFileDialog()
+
+        ofd.InitialDirectory = "C:\Windows\inf"
+        ofd.Filter = "Inf Files (*.inf)|*.inf"
+
+        Dim result As Boolean? = ofd.ShowDialog(Me)
+
+        If result IsNot Nothing AndAlso result.Value Then
+            SetupAPI.TEST_UpdateDevice(DirectCast(listBox1.SelectedItem, Device).HardwareIDs(0), ofd.FileName)
+        End If
+    End Sub
 End Class
