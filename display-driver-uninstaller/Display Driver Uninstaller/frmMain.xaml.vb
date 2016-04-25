@@ -6390,13 +6390,14 @@ skipboot:
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
-								SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
+								'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
+								SetupAPI.UninstallDevice(d.HardwareIDs(0), d.OemInfs)
 							End If
 						Next
 					End If
 
 				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
 
