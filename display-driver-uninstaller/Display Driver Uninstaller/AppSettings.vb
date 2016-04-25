@@ -40,6 +40,7 @@ Public Class AppSettings
 	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
 	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
 	Private m_removevulkan As DependencyProperty = Reg("RemoveVulkan", GetType(Boolean), GetType(AppSettings), False)
+	Private m_UseSetupAPI As DependencyProperty = Reg("UseSetupAPI", GetType(Boolean), GetType(AppSettings), True)
 
 	' Visit links
 	Private m_goodsite As DependencyProperty = Reg("GoodSite", GetType(Boolean), GetType(AppSettings), False)
@@ -216,6 +217,15 @@ Public Class AppSettings
 		End Get
 		Set(value As Boolean)
 			SetValue(m_removevulkan, value)
+		End Set
+	End Property
+
+	Public Property UseSetupAPI As Boolean
+		Get
+			Return CBool(GetValue(m_UseSetupAPI))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_UseSetupAPI, value)
 		End Set
 	End Property
 
@@ -411,7 +421,8 @@ Public Class AppSettings
 						.WriteElementString("DontCheckUpdates", DontCheckUpdates.ToString())
 						.WriteElementString("CreateRestorePoint", CreateRestorePoint.ToString())
 						.WriteElementString("SaveLogs", SaveLogs.ToString())
-						.WriteElementString("RemoveVulkan", SaveLogs.ToString())
+						.WriteElementString("RemoveVulkan", RemoveVulkan.ToString())
+						.WriteElementString("UseSetupAPI", UseSetupAPI.ToString())
                         .WriteElementString("GoodSite", GoodSite.ToString())
 
 						.WriteEndElement()
@@ -556,6 +567,9 @@ Public Class AppSettings
 
 							Case "removevulkan"
 								RemoveVulkan = Boolean.Parse(KvP.Value)
+
+							Case "usesetupapi"
+								UseSetupAPI = Boolean.Parse(KvP.Value)
 
 							Case "goodsite"
 								GoodSite = Boolean.Parse(KvP.Value)

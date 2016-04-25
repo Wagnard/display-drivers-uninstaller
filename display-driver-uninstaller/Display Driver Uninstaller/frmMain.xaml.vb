@@ -6264,12 +6264,12 @@ skipboot:
 			Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
 			UpdateTextMethod(UpdateTextMethodmessagefn(22))
 
-			Try
-				If config.SelectedGPU = GPUVendor.Nvidia Then
-					temporarynvidiaspeedup()   'we do this If and until nvidia speed up their installer that is impacting "ddudr remove" of the GPU from device manager.
-				End If
-			Catch ex As Exception
-			End Try
+
+			'SpeedUP the removal of the NVIDIA adapter due to how the NVIDIA installer work.
+			If config.SelectedGPU = GPUVendor.Nvidia Then
+				temporarynvidiaspeedup(config)
+			End If
+
 
 
 			'----------------------------------------------
@@ -6314,8 +6314,8 @@ skipboot:
 																					processinfo.CreateNoWindow = True
 																					processinfo.RedirectStandardOutput = True
 																					process.StartInfo = processinfo
-
-																					process.Start()
+																					'SetupAPI.TEST_RemoveDevice(child2)
+																					'process.Start()
 																					reply2 = process.StandardOutput.ReadToEnd
 																					'process.WaitForExit()
 																					process.StandardOutput.Close()
@@ -6383,66 +6383,86 @@ skipboot:
 			' ----------------------
 			' Removing the videocard
 			' ----------------------
-			For a = 1 To 2	 'loop 2 time here for nVidia SLI pupose in normal mode.(4 may be necessary for quad SLI... need to check.)
+
+			If config.UseSetupAPI Then
 				Try
-					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetSubKeyNames
-							If Not IsNullOrWhitespace(child) AndAlso
-							 (child.ToLower.Contains("ven_10de") Or
-							 child.ToLower.Contains("ven_8086") Or
-							 child.ToLower.Contains("ven_1002")) Then
-
-								subregkey = regkey.OpenSubKey(child)
-								If subregkey IsNot Nothing Then
-
-									For Each child2 As String In subregkey.GetSubKeyNames
-
-										If subregkey.OpenSubKey(child2) Is Nothing Then
-											Continue For
-										End If
-
-										array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
-
-										If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-											For i As Integer = 0 To array.Length - 1
-
-												If Not IsNullOrWhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
-
-													vendid = child & "\" & child2
-
-													If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-														processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-														processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
-														processinfo.UseShellExecute = False
-														processinfo.CreateNoWindow = True
-														processinfo.RedirectStandardOutput = True
-														process.StartInfo = processinfo
-
-														process.Start()
-														reply2 = process.StandardOutput.ReadToEnd
-														process.StandardOutput.Close()
-														process.Close()
-														'process.WaitForExit()
-														Application.Log.AddMessage(reply2)
-													End If
-													Exit For   'the card is removed so we exit the loop from here.
-												End If
-											Next
-										End If
-									Next
-								End If
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "display")
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
+								SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
 							End If
 						Next
 					End If
+
 				Catch ex As Exception
 					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
-			Next
+
+			Else
+				'OLD DDUDR (DEVCON Section)
+				For a = 1 To 2	 'loop 2 time here for nVidia SLI pupose in normal mode.(4 may be necessary for quad SLI... need to check.)
+					Try
+						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetSubKeyNames
+								If Not IsNullOrWhitespace(child) AndAlso
+								 (child.ToLower.Contains("ven_10de") Or
+								 child.ToLower.Contains("ven_8086") Or
+								 child.ToLower.Contains("ven_1002")) Then
+
+									subregkey = regkey.OpenSubKey(child)
+									If subregkey IsNot Nothing Then
+
+										For Each child2 As String In subregkey.GetSubKeyNames
+
+											If subregkey.OpenSubKey(child2) Is Nothing Then
+												Continue For
+											End If
+
+											array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
+
+											If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+												For i As Integer = 0 To array.Length - 1
+
+													If Not IsNullOrWhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
+
+														vendid = child & "\" & child2
+
+														If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+															processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+															processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
+															processinfo.UseShellExecute = False
+															processinfo.CreateNoWindow = True
+															processinfo.RedirectStandardOutput = True
+															process.StartInfo = processinfo
+
+															process.Start()
+															reply2 = process.StandardOutput.ReadToEnd
+															process.StandardOutput.Close()
+															process.Close()
+															'process.WaitForExit()
+															Application.Log.AddMessage(reply2)
+														End If
+														Exit For   'the card is removed so we exit the loop from here.
+													End If
+												Next
+											End If
+										Next
+									End If
+								End If
+							Next
+						End If
+					Catch ex As Exception
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+						Application.Log.AddException(ex)
+					End Try
+				Next
+			End If
 
 			UpdateTextMethod(UpdateTextMethodmessagefn(23))
-			Application.Log.AddMessage("DDUDR Remove Display Driver: Complete.")
+			Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
 
 
 			cleandriverstore(config)
@@ -7557,8 +7577,7 @@ skipboot:
 		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1))
 	End Function
 
-	Private Sub temporarynvidiaspeedup()   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
-		Dim removegfe As Boolean = Application.Settings.RemoveGFE
+	Private Sub temporarynvidiaspeedup(ByVal config As ThreadSettings)	 'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
 		Dim filePath As String = Nothing
 
 		Try
@@ -7573,23 +7592,23 @@ skipboot:
 								If child2.ToLower.Contains("display.3dvision") Or
 								   child2.ToLower.Contains("display.controlpanel") Or
 								   child2.ToLower.Contains("display.driver") Or
-								   child2.ToLower.Contains("display.gfexperience") AndAlso removegfe Or
+								   child2.ToLower.Contains("display.gfexperience") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.nvirusb") Or
 								   child2.ToLower.Contains("display.optimus") Or
-								   child2.ToLower.Contains("display.physx") AndAlso Application.Settings.RemovePhysX Or
-								   child2.ToLower.Contains("display.update") AndAlso removegfe Or
+								   child2.ToLower.Contains("display.physx") AndAlso config.RemovePhysX Or
+								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.nview") Or
 								   child2.ToLower.Contains("display.nvwmi") Or
-								   child2.ToLower.Contains("gfexperience") AndAlso removegfe Or
-								   child2.ToLower.Contains("nvidia.update") AndAlso removegfe Or
-								   child2.ToLower.Contains("installer2\installer") AndAlso removegfe Or
-								   child2.ToLower.Contains("network.service") AndAlso removegfe Or
-								   child2.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
-								   child2.ToLower.Contains("shadowplay") AndAlso removegfe Or
-								   child2.ToLower.Contains("update.core") AndAlso removegfe Or
-								   child2.ToLower.Contains("virtualaudio.driver") AndAlso removegfe Or
-								   child2.ToLower.Contains("coretemp") AndAlso removegfe Or
-								   child2.ToLower.Contains("shield") AndAlso removegfe Or
+								   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("network.service") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("miracast.virtualaudio") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("update.core") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("virtualaudio.driver") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("coretemp") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("shield") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("hdaudio.driver") Then
 									Try
 										deletedirectory(child2)

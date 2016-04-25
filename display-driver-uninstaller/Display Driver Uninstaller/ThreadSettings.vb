@@ -26,6 +26,7 @@ Public Class ThreadSettings
 	Public Property CreateRestorePoint As Boolean
 	Public Property SaveLogs As Boolean
 	Public Property RemoveVulkan As Boolean
+	Public Property UseSetupAPI As Boolean
 
 	Public Sub New()
 		PropertyCopy(Application.Paths, Me.Paths)

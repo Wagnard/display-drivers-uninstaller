@@ -202,9 +202,13 @@
 			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text> Remove Vulkan Runtime </Text>
-			<Tooltip> Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API. </Tooltip>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
 		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental* </Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	<frmLaunch Text="Launch option">
 		<btnAccept>
