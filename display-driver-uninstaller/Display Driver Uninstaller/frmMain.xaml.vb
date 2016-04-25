@@ -6409,7 +6409,7 @@ skipboot:
 						For Each d As SetupAPI.Device In found
 							If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
 								'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
-								SetupAPI.UninstallDevice(d.HardwareIDs(0), d.OemInfs)
+								SetupAPI.UninstallDevice(d)
 							End If
 						Next
 					End If
