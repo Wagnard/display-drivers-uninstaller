@@ -1286,151 +1286,173 @@ Namespace SetupAPI
             End Try
         End Sub
 
+	' REVERSED FOR CLEANING FROM CODE
+        ' eg.  venID = VEN_10DE  = for more accurate result, otherwise AMD + Nvidia (physx card) => both removed (both has 'Display' as class)
+        ' Class GUID is also good choice (can be used as ROOT deviceSet => loop only gpus)
+        ' may change
+        Public Function GetDevices(ByVal className As String, Optional ByVal venID As String = Nothing) As List(Of Device)
+            Application.Log.AddMessage("Beginning of GetDevices")
 
-        ' DONT USE!!! NO CONFIRMS!!!
+            Try
+
+
+
+
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            Finally
+                Application.Log.AddMessage("End of GetDevices")
+            End Try
+
+            Return Nothing
+        End Function
+       
         ' REVERSED FOR CLEANING FROM CODE
-		Public Sub UninstallDevice(ByVal hardwareIDFilter As String, ByVal infFile As String())
-			Try
+        Public Sub UninstallDevice(ByRef device As Device)
+            Application.Log.AddMessage("Beginning of UninstallDevice")
 
-				Dim logEntry As LogEntry = Application.Log.CreateEntry()
-				logEntry.Message = "Beginning of UninstallDevice"
-				logEntry.Add("hardwareIDFilter", hardwareIDFilter)
-				If infFile IsNot Nothing Then
-					For Each infs As String In infFile
-						logEntry.Add("infFile", infs)
-					Next
-				Else
-					logEntry.Add("infFile", "No inf associated")
-				End If
-				Application.Log.Add(logEntry)
+            Try
+                If device Is Nothing Then
+                    Application.Log.AddWarningMessage("Cancelling! Empty device!")
+                    Return
+                End If
 
-				'If String.IsNullOrEmpty(infFile) OrElse Not File.Exists(infFile) Then
-				'    Application.Log.AddWarningMessage("Cancelling! Empty infFile or infFile doesn't exists!")
-				'    Return
-				'End If
+                If device.HardwareIDs Is Nothing OrElse device.HardwareIDs.Length = 0 Then
+                    Application.Log.AddWarningMessage("Cancelling! empty or no Hardware IDs!")
+                    Return
+                End If
 
-				If String.IsNullOrEmpty(hardwareIDFilter) Then
-					Application.Log.AddWarningMessage("Cancelling! Empty Hardware ID Filter!")
-					Return
-				End If
+                Dim logEntry As LogEntry = Application.Log.CreateEntry()
+                logEntry.Message = "Device: " & device.Description
+                logEntry.Add("Hardware IDs", String.Join(CRLF, device.HardwareIDs))
 
-				Dim nullGuid As Guid = Guid.Empty
-				Dim hardwareIds(0) As String
-				Dim found As Boolean = False
-				Dim device As Device = Nothing
+                If device.OemInfs IsNot Nothing Then
+                    logEntry.Add("infFiles", String.Join(CRLF, device.OemInfs))
+                Else
+                    logEntry.Add("infFile", "No inf(s) associated")
+                End If
 
-				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
-					CheckWin32Error(Not infoSet.IsInvalid)
+                Application.Log.Add(logEntry)
 
-					Dim ptrDevInfo As StructPtr = Nothing
-					Try
-						If Is64 Then
-							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = CUInt(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
-						Else
-							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = CUInt(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
-						End If
-
-						Dim i As UInt32 = 0UI
-
-						While True
-							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
-								If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
-									Exit While
-								Else
-									CheckWin32Error(False)
-								End If
-							End If
-
-							i += 1UI
-							hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
-
-							If hardwareIds Is Nothing Then
-								Continue While
-							End If
-
-							For Each hdID As String In hardwareIds
-								If hdID.IndexOf(hardwareIDFilter, StringComparison.OrdinalIgnoreCase) <> -1 Then
-									Device = New Device() With
-									{
-										.ClassGuid = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASSGUID),
-										.HardwareIDs = hardwareIds
-									}
-
-									GetDriverDetails(infoSet, ptrDevInfo.Ptr, Device)
-									found = True
-									Exit For
-								End If
-							Next
-
-							If found Then
-								Exit While
-							End If
-						End While
-
-						If Not found OrElse Device Is Nothing Then
-							Return
-						End If
+                Dim nullGuid As Guid = Guid.Empty
+                Dim hardwareIds(0) As String
+                Dim found As Boolean = False
 
 
-						If Device.OemInfs IsNot Nothing Then
-							For Each inf As String In Device.OemInfs
-								If Not File.Exists(inf) Then
-									Continue For
-								End If
+                Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
+                    CheckWin32Error(Not infoSet.IsInvalid)
 
-								Dim infName As String = Path.GetFileName(inf)
+                    Dim ptrDevInfo As StructPtr = Nothing
+                    Try
+                        If Is64 Then
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = CUInt(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
+                        Else
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = CUInt(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
+                        End If
 
-								If CheckIsOemInf(infName) Then
-									Application.Log.AddMessage("Uninstalling OEM Inf.", "InfFile", inf)
+                        Dim i As UInt32 = 0UI
 
-									Dim attrs As FileAttributes = File.GetAttributes(inf)
+                        While True
+                            If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
+                                If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
+                                    Exit While
+                                Else
+                                    CheckWin32Error(False)
+                                End If
+                            End If
 
-									If (attrs And FileAttributes.ReadOnly) = FileAttributes.ReadOnly Then
-										Application.Log.AddMessage("InfFile is readonly. Disabling readonly attribute.")
-										File.SetAttributes(inf, attrs And Not FileAttributes.ReadOnly)
-									End If
+                            i += 1UI
+                            hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
 
-									If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.SUOI_FORCEDELETE), IntPtr.Zero) Then
-										Application.Log.AddMessage("Inf uninstalled!")
-									Else
-										Dim logDeviceEx As LogEntry = Application.Log.CreateEntry()
-										logDeviceEx.AddException(New Win32Exception())
-										logDeviceEx.Message = "Inf uninstalling failed!"
-										Application.Log.Add(logDeviceEx)
-									End If
-								Else
-									Application.Log.AddMessage("Skipping Inf uninstall, not OEM!", "InfFile", inf)
-								End If
-							Next
-						End If
+                            If hardwareIds Is Nothing Then
+                                Continue While
+                            End If
 
-						Dim logDevice As LogEntry = Application.Log.CreateEntry()
-						logDevice.Message = "Uninstalling device"
-						logDevice.Add("Description", Device.Description)
-						logDevice.Add("Class", Device.ClassName)
-						logDevice.Add("HardwareID", String.Join(CRLF, Device.HardwareIDs))
+                            For Each hdID As String In hardwareIds
+                                If hdID.Equals(device.HardwareIDs(0), StringComparison.OrdinalIgnoreCase) Then
+                                    GetDriverDetails(infoSet, ptrDevInfo.Ptr, device) ' Updating DriverDetails (if changed during app running time)
+                                    found = True
+                                    Exit For
+                                End If
+                            Next
 
-						Application.Log.Add(logDevice)
-						If SetupDiCallClassInstaller(CUInt(DIF.REMOVE), infoSet, ptrDevInfo.Ptr) Then
-							Application.Log.AddMessage("Device uninstalled!")
-						Else
-							Dim logDeviceEx As LogEntry = Application.Log.CreateEntry()
-							logDeviceEx.AddException(New Win32Exception())
-							logDeviceEx.Message = "Device uninstalling failed!"
-							Application.Log.Add(logDeviceEx)
-						End If
-					Finally
-						If ptrDevInfo IsNot Nothing Then
-							ptrDevInfo.Dispose()
-						End If
-					End Try
-				End Using
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			Finally
-				Application.Log.AddMessage("End of UninstallDevice")
-			End Try
-		End Sub
+                            If found Then
+                                Exit While
+                            End If
+                        End While
+
+                        If Not found Then
+                            Return
+                        End If
+
+                        If device.OemInfs IsNot Nothing Then
+                            Dim logInfs As LogEntry = Application.Log.CreateEntry()
+                            logInfs.Message = "Uninstalling OEM Inf(s)."
+
+                            For Each inf As String In device.OemInfs
+                                If Not File.Exists(inf) Then
+                                    logInfs.Add(inf, "File not exists")
+                                    Continue For
+                                End If
+
+                                Dim infName As String = Path.GetFileName(inf)
+
+                                If CheckIsOemInf(infName) Then 'Useless check since only OEM infs are added, but just incase ( see: GetDriverDetails )
+                                    Dim attrs As FileAttributes = File.GetAttributes(inf)
+
+                                    If (attrs And FileAttributes.ReadOnly) = FileAttributes.ReadOnly Then
+                                        File.SetAttributes(inf, attrs And Not FileAttributes.ReadOnly)
+                                    End If
+
+                                    If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.SUOI_FORCEDELETE), IntPtr.Zero) Then
+                                        logInfs.Add(inf, "Uninstalled!")
+                                    Else
+                                        logInfs.Add(inf, "Uninstalling failed! See exceptions for details!")
+
+                                        Dim logInfEx As LogEntry = Application.Log.CreateEntry()
+                                        logInfEx.AddException(New Win32Exception())
+                                        logInfEx.Add("InfFile", inf)
+
+                                        Application.Log.Add(logInfEx)
+                                    End If
+                                End If
+                            Next
+
+                            Application.Log.Add(logInfs)
+                        End If
+
+                        Dim logDevice As LogEntry = Application.Log.CreateEntry()
+                        logDevice.Message = "Uninstalling device"
+                        logDevice.Add("Description", device.Description)
+                        logDevice.Add("Class", device.ClassName)
+                        logDevice.Add("HardwareID", String.Join(CRLF, device.HardwareIDs))
+                        Application.Log.Add(logDevice)
+
+                        If SetupDiCallClassInstaller(CUInt(DIF.REMOVE), infoSet, ptrDevInfo.Ptr) Then
+                            Application.Log.AddMessage("Device uninstalled!")
+                        Else
+                            Dim logDeviceEx As LogEntry = Application.Log.CreateEntry()
+                            logDeviceEx.AddException(New Win32Exception())
+                            logDeviceEx.Message = "Device uninstalling failed!"
+                            Application.Log.Add(logDeviceEx)
+                        End If
+                    Finally
+                        If ptrDevInfo IsNot Nothing Then
+                            ptrDevInfo.Dispose()
+                        End If
+                    End Try
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            Finally
+                Application.Log.AddMessage("End of UninstallDevice")
+            End Try
+        End Sub
+
+        ' REVERSED FOR CLEANING FROM CODE
+        Public Sub UpdateDevice(ByRef device As Device)
+
+        End Sub
 
 
         Private Function GetProperty(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr, ByVal [property] As SPDRP, ByRef bytes() As Byte, ByRef regType As RegistryValueKind, ByRef size As Int32) As Boolean
@@ -1538,6 +1560,10 @@ Namespace SetupAPI
         End Sub
 
         Private Sub GetDriverDetails(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr, ByRef device As Device)
+            If device.DriverInfo IsNot Nothing AndAlso device.DriverInfo.Count > 0 Then
+                device.DriverInfo.Clear()
+            End If
+
             If SetupDiBuildDriverInfoList(infoSet, ptrDevInfo, CUInt(SPDIT.COMPATDRIVER)) Then
                 Dim oemInfs As List(Of String) = New List(Of String)(5)
 
@@ -1665,7 +1691,7 @@ Namespace SetupAPI
                                                 drvInfo.InfDate = FileTimeToDateTime(drvDetailData86.InfDate)
                                             End If
 
-                                            If (CheckIsOemInf(Path.GetFileName(drvInfo.InfFileName))) Then
+                                            If CheckIsOemInf(Path.GetFileName(drvInfo.InfFileName)) Then
                                                 oemInfs.Add(drvInfo.InfFileName)
                                             End If
 
