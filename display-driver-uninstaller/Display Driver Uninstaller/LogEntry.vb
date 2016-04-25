@@ -196,6 +196,15 @@ Public Class LogEntry
 		m_exData.Add("Source", If(String.IsNullOrEmpty(Ex.Source), "Unknown", Ex.Source))
 		m_exData.Add("StackTrace", If(String.IsNullOrEmpty(Ex.StackTrace), "Unknown", Ex.StackTrace))
 
+        If TypeOf (Ex) Is Win32Exception Then
+            Dim win32Ex As Win32Exception = TryCast(Ex, Win32Exception)
+
+            If win32Ex IsNot Nothing Then
+                m_values.Add(New KvP("Win32_ErrorCode", SetupAPI.GetUInt32(win32Ex.NativeErrorCode).ToString()))
+                m_values.Add(New KvP("Win32_Message", win32Ex.Message))
+            End If
+        End If
+
 		HasException = True
 	End Sub
 

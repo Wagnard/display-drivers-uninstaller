@@ -39,20 +39,20 @@ Public Class AppLog
 		End SyncLock
 	End Sub
 
-	Public Sub AddMessage(ByRef message As String)
-		SyncLock m_threadlock
-			If Not Me.Dispatcher.CheckAccess() Then
-				Me.Dispatcher.Invoke(New AddMessageEntryDelegate(AddressOf Me.AddMessageEntry), message)
-			Else
-				Me.AddMessageEntry(message)
-			End If
-		End SyncLock
-	End Sub
+    Public Sub AddMessage(ByRef message As String, Optional ByRef key As String = Nothing, Optional ByRef value As String = Nothing)
+        SyncLock m_threadlock
+            If Not Me.Dispatcher.CheckAccess() Then
+                Me.Dispatcher.Invoke(New AddMessageEntryDelegate(AddressOf Me.AddMessageEntry), message, key, value)
+            Else
+                Me.AddMessageEntry(message, key, value)
+            End If
+        End SyncLock
+    End Sub
 
 	Public Sub AddWarningMessage(ByRef message As String)
 		SyncLock m_threadlock
 			If Not Me.Dispatcher.CheckAccess() Then
-				Me.Dispatcher.Invoke(New AddMessageEntryDelegate(AddressOf Me.AddWarningMessageEntry), message)
+                Me.Dispatcher.Invoke(New AddWarningMessageEntryDelegate(AddressOf Me.AddWarningMessageEntry), message)
 			Else
 				Me.AddWarningMessageEntry(message)
 			End If
@@ -432,7 +432,6 @@ Public Class AppLog
 		AddEntry(logEntry)
 	End Sub
 
-
 	Private Delegate Sub AddExceptionEntryDelegate(ByRef Ex As Exception)
 	Private Sub AddExceptionEntry(ByRef Ex As Exception)
 		Dim logEntry As LogEntry = logEntry.Create()
@@ -456,22 +455,30 @@ Public Class AppLog
 		AddEntry(logEntry)
 	End Sub
 
-	Private Delegate Sub AddMessageEntryDelegate(ByRef message As String)
-	Private Sub AddMessageEntry(ByRef message As String)
-		Dim logEntry As LogEntry = logEntry.Create()
+    Private Delegate Sub AddMessageEntryDelegate(ByRef message As String, ByRef key As String, ByRef value As String)
+    Private Sub AddMessageEntry(ByRef message As String, ByRef key As String, ByRef value As String)
+        Dim logEntry As LogEntry = logEntry.Create()
 
-		logEntry.Message = message
-		logEntry.Time = DateTime.Now
+        logEntry.Message = message
+        logEntry.Time = DateTime.Now
 
-		AddEntry(logEntry)
-	End Sub
+        If key IsNot Nothing Then
+            If value IsNot Nothing Then
+                logEntry.Add(key, value)
+            Else : logEntry.Add(key)
+            End If
+        End If
 
+        AddEntry(logEntry)
+    End Sub
+
+    Private Delegate Sub AddWarningMessageEntryDelegate(ByRef message As String)
 	Private Sub AddWarningMessageEntry(ByRef message As String)
 		Dim logEntry As LogEntry = logEntry.Create()
 
-		logEntry.Message = message
+        logEntry.Type = LogType.Warning
+        logEntry.Message = message
 		logEntry.Time = DateTime.Now
-		logEntry.Type = LogType.Warning
 
 		AddEntry(logEntry)
 	End Sub
