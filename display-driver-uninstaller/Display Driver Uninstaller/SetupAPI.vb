@@ -98,6 +98,165 @@ Namespace SetupAPI
             IsAdmin = Tools.UserHasAdmin
         End Sub
 
+        <Flags()>
+        Private Enum CR As UInteger
+            SUCCESS = &H0UI
+            [DEFAULT] = &H1UI
+            OUT_OF_MEMORY = &H2UI
+            INVALID_POINTER = &H3UI
+            INVALID_FLAG = &H4UI
+            INVALID_DEVNODE = &H5UI
+            INVALID_DEVINST = INVALID_DEVNODE
+            INVALID_RES_DES = &H6UI
+            INVALID_LOG_CONF = &H7UI
+            INVALID_ARBITRATOR = &H8UI
+            INVALID_NODELIST = &H9UI
+            DEVNODE_HAS_REQS = &HAUI
+            DEVINST_HAS_REQS = DEVNODE_HAS_REQS
+            INVALID_RESOURCEID = &HBUI
+            DLVXD_NOT_FOUND = &HCUI
+            NO_SUCH_DEVNODE = &HDUI
+            NO_SUCH_DEVINST = NO_SUCH_DEVNODE
+            NO_MORE_LOG_CONF = &HEUI
+            NO_MORE_RES_DES = &HFUI
+            ALREADY_SUCH_DEVNODE = &H10UI
+            ALREADY_SUCH_DEVINST = ALREADY_SUCH_DEVNODE
+            INVALID_RANGE_LIST = &H11UI
+            INVALID_RANGE = &H12UI
+            FAILURE = &H13UI
+            NO_SUCH_LOGICAL_DEV = &H14UI
+            CREATE_BLOCKED = &H15UI
+            NOT_SYSTEM_VM = &H16UI
+            REMOVE_VETOED = &H17UI
+            APM_VETOED = &H18UI
+            INVALID_LOAD_TYPE = &H19UI
+            BUFFER_SMALL = &H1AUI
+            NO_ARBITRATOR = &H1BUI
+            NO_REGISTRY_HANDLE = &H1CUI
+            REGISTRY_ERROR = &H1DUI
+            INVALID_DEVICE_ID = &H1EUI
+            INVALID_DATA = &H1FUI
+            INVALID_API = &H20UI
+            DEVLOADER_NOT_READY = &H21UI
+            NEED_RESTART = &H22UI
+            NO_MORE_HW_PROFILES = &H23UI
+            DEVICE_NOT_THERE = &H24UI
+            NO_SUCH_VALUE = &H25UI
+            WRONG_TYPE = &H26UI
+            INVALID_PRIORITY = &H27UI
+            NOT_DISABLEABLE = &H28UI
+            FREE_RESOURCES = &H29UI
+            QUERY_VETOED = &H2AUI
+            CANT_SHARE_IRQ = &H2BUI
+            NO_DEPENDENT = &H2CUI
+            SAME_RESOURCES = &H2DUI
+            NO_SUCH_REGISTRY_KEY = &H2EUI
+            INVALID_MACHINENAME = &H2FUI
+            REMOTE_COMM_FAILURE = &H30UI
+            MACHINE_UNAVAILABLE = &H31UI
+            NO_CM_SERVICES = &H32UI
+            ACCESS_DENIED = &H33UI
+            CALL_NOT_IMPLEMENTED = &H34UI
+            INVALID_PROPERTY = &H35UI
+            DEVICE_INTERFACE_ACTIVE = &H36UI
+            NO_SUCH_DEVICE_INTERFACE = &H37UI
+            INVALID_REFERENCE_STRING = &H38UI
+            INVALID_CONFLICT_LIST = &H39UI
+            INVALID_INDEX = &H3AUI
+            INVALID_STRUCTURE_SIZE = &H3B
+        End Enum
+
+        <Flags()>
+        Private Enum DN As UInteger
+            ROOT_ENUMERATED = &H1UI
+            DRIVER_LOADED = &H2UI
+            ENUM_LOADED = &H4UI
+            STARTED = &H8UI
+            MANUAL = &H10UI
+            NEED_TO_ENUM = &H20UI
+            NOT_FIRST_TIME = &H40UI
+            HARDWARE_ENUM = &H80UI
+            LIAR = &H100UI
+            HAS_MARK = &H200UI
+            HAS_PROBLEM = &H400UI
+            FILTERED = &H800UI
+            MOVED = &H1000UI
+            DISABLEABLE = &H2000UI
+            REMOVABLE = &H4000UI
+            PRIVATE_PROBLEM = &H8000UI
+            MF_PARENT = &H10000UI
+            MF_CHILD = &H20000UI
+            WILL_BE_REMOVED = &H40000UI
+        End Enum
+
+        <Flags()>
+        Private Enum CM_PROB As UInteger
+            NOT_CONFIGURED = &H1UI
+            DEVLOADER_FAILED = &H2UI
+            OUT_OF_MEMORY = &H3UI
+            ENTRY_IS_WRONG_TYPE = &H4UI
+            LACKED_ARBITRATOR = &H5UI
+            BOOT_CONFIG_CONFLICT = &H6UI
+            FAILED_FILTER = &H7UI
+            DEVLOADER_NOT_FOUND = &H8UI
+            INVALID_DATA = &H9UI
+            FAILED_START = &HAUI
+            LIAR = &HBUI
+            NORMAL_CONFLICT = &HCUI
+            NOT_VERIFIED = &HDUI
+            NEED_RESTART = &HEUI
+            REENUMERATION = &HFUI
+            PARTIAL_LOG_CONF = &H10UI
+            UNKNOWN_RESOURCE = &H11UI
+            REINSTALL = &H12UI
+            REGISTRY = &H13UI
+            VXDLDR = &H14UI
+            WILL_BE_REMOVED = &H15UI
+            DISABLED = &H16UI
+            DEVLOADER_NOT_READY = &H17UI
+            DEVICE_NOT_THERE = &H18UI
+            MOVED = &H19UI
+            TOO_EARLY = &H1AUI
+            NO_VALID_LOG_CONF = &H1BUI
+            FAILED_INSTALL = &H1CUI
+            HARDWARE_DISABLED = &H1DUI
+            CANT_SHARE_IRQ = &H1EUI
+            FAILED_ADD = &H1FUI
+            DISABLED_SERVICE = &H20UI
+            TRANSLATION_FAILED = &H21UI
+            NO_SOFTCONFIG = &H22UI
+            BIOS_TABLE = &H23UI
+            IRQ_TRANSLATION_FAILED = &H24UI
+            FAILED_DRIVER_ENTRY = &H25UI
+            DRIVER_FAILED_PRIOR_UNLOAD = &H26UI
+            DRIVER_FAILED_LOAD = &H27UI
+            DRIVER_SERVICE_KEY_INVALID = &H28UI
+            LEGACY_SERVICE_NO_DEVICES = &H29UI
+            DUPLICATE_DEVICE = &H2AUI
+            FAILED_POST_START = &H2BUI
+            HALTED = &H2CUI
+            PHANTOM = &H2DUI
+            SYSTEM_SHUTDOWN = &H2EUI
+            HELD_FOR_EJECT = &H2FUI
+            DRIVER_BLOCKED = &H30UI
+            REGISTRY_TOO_LARGE = &H31
+        End Enum
+
+        <DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Private Function CM_Get_Child(
+           <[Out]()> ByRef pdnDevInst As UInt32,
+           <[In]()> ByVal DevInst As UInt32,
+           <[In]()> ByVal ulFlags As UInt32) As UInt32
+        End Function
+
+        <DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Private Function CM_Get_DevNode_Status(
+           <[Out]()> ByRef pulStatus As UInt32,
+           <[Out]()> ByRef pulProblemNumber As UInt32,
+           <[In]()> ByVal dnDevInst As UInt32,
+           <[In]()> ByVal ulFlags As UInt32) As UInt32
+        End Function
+
 #Region "Errors"
         Friend Const APPLICATION_ERROR_MASK = &H20000000UI
         Friend Const ERROR_SEVERITY_ERROR = &HC0000000UI
@@ -893,6 +1052,7 @@ Namespace SetupAPI
 
                                 GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d)
                                 GetDriverDetails(infoSet, ptrDevInfo.Ptr, d)
+                                GetDeviceCMDetails( ptrDevInfo.Ptr, d)
 
                                 Devices.Add(d)
                             End If
@@ -1327,10 +1487,15 @@ Namespace SetupAPI
         ' Class GUID is also good choice (can be used as ROOT deviceSet => loop only gpus)
         ' may change
         Public Function GetDevices(ByVal className As String, Optional ByVal venID As String = Nothing) As List(Of Device)
+            Dim Devices As List(Of Device) = New List(Of Device)(5)
             Application.Log.AddMessage("Beginning of GetDevices")
 
             Try
-                Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(Guid.Empty, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
+                Dim nullGuid As Guid = Guid.Empty
+                Dim devClass As String
+                Dim device As Device = Nothing
+
+                Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
                     CheckWin32Error(Not infoSet.IsInvalid)
 
                     Dim ptrDevInfo As StructPtr = Nothing
@@ -1354,22 +1519,38 @@ Namespace SetupAPI
 
                             i += 1UI
 
-                            MessageBox.Show(GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC))
+                            devClass = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASS)
+
+                            If 1 + 1 = 2 Then 'OrElse Not IsNullOrWhitespace(devClass) AndAlso devClass.Equals(className, StringComparison.OrdinalIgnoreCase) Then
+                                Dim d As Device = New Device() With
+                                {
+                                    .ClassName = devClass
+                                }
+
+                                GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d)
+                                GetDriverDetails(infoSet, ptrDevInfo.Ptr, d)
+
+                                GetDeviceCMDetails(ptrDevInfo.Ptr, d)
+
+                                Devices.Add(d)
+                            End If
+
+
                         End While
+
+                        Return Devices
                     Finally
                         If ptrDevInfo IsNot Nothing Then
-
                             ptrDevInfo.Dispose()
                         End If
                     End Try
                 End Using
             Catch ex As Exception
                 Application.Log.AddException(ex)
+                Return New List(Of Device)(0)
             Finally
                 Application.Log.AddMessage("End of GetDevices")
             End Try
-
-            Return Nothing
         End Function
 
         ' REVERSED FOR CLEANING FROM CODE
@@ -1633,13 +1814,51 @@ Namespace SetupAPI
         End Function
 
         Private Sub GetDeviceDetails(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr, ByRef device As Device)
-            device.ClassGuid = GetStringProperty(infoSet, ptrDevInfo, SPDRP.CLASSGUID)
-            device.CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.COMPATIBLEIDS)
-            device.InstallState = GetDescription(DirectCast(GetUInt32Property(infoSet, ptrDevInfo, SPDRP.INSTALL_STATE), DEVICE_INSTALL_STATE))
-            device.Capabilities = ToStringArray(Of CM_DEVCAP)(DirectCast(GetUInt32Property(infoSet, ptrDevInfo, SPDRP.CAPABILITIES), CM_DEVCAP))
-            device.InstallFlags = ToStringArray(Of DI)(DirectCast(GetInstallParamsFlags(infoSet, ptrDevInfo), DI))
-            device.ConfigFlags = ToStringArray(Of CONFIGFLAGS)(DirectCast(GetUInt32Property(infoSet, ptrDevInfo, SPDRP.CONFIGFLAGS), CONFIGFLAGS))
+            If device.ClassGuid Is Nothing Then device.ClassGuid = GetStringProperty(infoSet, ptrDevInfo, SPDRP.CLASSGUID)
+            If device.FriendlyName Is Nothing Then device.FriendlyName = GetStringProperty(infoSet, ptrDevInfo, SPDRP.FRIENDLYNAME)
+            If device.CompatibleIDs Is Nothing Then device.CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.COMPATIBLEIDS)
+            If device.InstallState Is Nothing Then device.InstallState = GetDescription(DirectCast(GetUInt32Property(infoSet, ptrDevInfo, SPDRP.INSTALL_STATE), DEVICE_INSTALL_STATE))
+            If device.LowerFilters Is Nothing Then device.LowerFilters = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.LOWERFILTERS)
+            If device.Capabilities Is Nothing Then device.Capabilities = ToStringArray(Of CM_DEVCAP)(DirectCast(GetUInt32Property(infoSet, ptrDevInfo, SPDRP.CAPABILITIES), CM_DEVCAP))
+            If device.InstallFlags Is Nothing Then device.InstallFlags = ToStringArray(Of DI)(DirectCast(GetInstallParamsFlags(infoSet, ptrDevInfo), DI))
+            If device.ConfigFlags Is Nothing Then device.ConfigFlags = ToStringArray(Of CONFIGFLAGS)(DirectCast(GetUInt32Property(infoSet, ptrDevInfo, SPDRP.CONFIGFLAGS), CONFIGFLAGS))
         End Sub
+
+        Private Sub GetDeviceCMDetails(ByVal ptrDevInfo As IntPtr, ByRef device As Device)
+            Dim DevInst As UInt32
+
+            If Is64 Then
+                DevInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+            Else
+                DevInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+            End If
+
+            Dim pdnDevInst As UInt32 = 0UI
+
+            ' Dim result As CR = DirectCast(CM_Get_Child(pdnDevInst, data.DevInst, 0UI), CR)
+
+            ' If result = CR.SUCCESS Then
+            ' has child device!
+            ' CM_Get_Sibling -> child has child device!
+            ' ElseIf result = CR.NO_SUCH_DEVINST Then
+            ' Else
+            ' CheckWin32Error(False)
+            ' End If
+
+            Dim pulStatus As UInt32 = 0UI
+            Dim pulProblemNumber As UInt32 = 0UI
+
+            Dim result2 As CR = DirectCast(CM_Get_DevNode_Status(pulStatus, pulProblemNumber, DevInst, 0UI), CR)
+
+            If result2 = CR.SUCCESS Then
+                device.DevStatus = ToStringArray(Of DN)(DirectCast(pulStatus, DN))
+                device.DevProblems = ToStringArray(Of CM_PROB)(DirectCast(pulProblemNumber, CM_PROB))
+            ElseIf result2 = CR.NO_SUCH_DEVINST Then
+            Else
+                CheckWin32Error(False)
+            End If
+        End Sub
+
 
         Private Sub GetDriverDetails(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr, ByRef device As Device)
             If device.DriverInfo IsNot Nothing AndAlso device.DriverInfo.Count > 0 Then
@@ -1930,6 +2149,9 @@ Namespace SetupAPI
             Private _capabilities As String()
             Private _configFlags As String()
 
+            Private _devProblems As String()
+            Private _devStatus As String()
+
             Public Property HardwareIDs As String()
                 Get
                     Return _hardwareIDs
@@ -2042,6 +2264,24 @@ Namespace SetupAPI
                 End Get
                 Friend Set(value As String())
                     _configFlags = value
+                End Set
+            End Property
+
+            Public Property DevProblems As String()
+                Get
+                    Return _devProblems
+                End Get
+                Friend Set(value As String())
+                    _devProblems = value
+                End Set
+            End Property
+
+            Public Property DevStatus As String()
+                Get
+                    Return _devStatus
+                End Get
+                Friend Set(value As String())
+                    _devStatus = value
                 End Set
             End Property
 
@@ -2222,7 +2462,6 @@ Namespace SetupAPI
 
     End Module
 End Namespace
-
 
 ' INF FILE
 Namespace SetupAPI

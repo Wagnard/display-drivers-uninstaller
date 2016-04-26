@@ -42,6 +42,34 @@
                 <TextBlock />
 
                 <StackPanel>
+                    <TextBlock FontWeight="Bold" Text="Dev Status:    " />
+
+                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding DevStatus}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <TextBlock />
+
+                <StackPanel>
+                    <TextBlock FontWeight="Bold" Text="Dev Problems:    " />
+
+                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding DevProblems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <TextBlock />
+                
+                <StackPanel>
                     <TextBlock FontWeight="Bold" Text="Install Flags:    " />
 
                     <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding InstallFlags}">
