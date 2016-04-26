@@ -7054,11 +7054,11 @@ skipboot:
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
-									If StrContainsAny(d.LowerFilters(0), True, "amdkmpfd") Then
+									If d.LowerFilters IsNot Nothing AndAlso StrContainsAny(d.LowerFilters(0), True, "amdkmpfd") Then
 										If win10 Then
-											SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\PCI.inf")
+											SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\PCI.inf", True)
 										Else
-											SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\machine.inf")
+											SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\machine.inf", True)
 										End If
 									End If
 								End If
@@ -7071,66 +7071,65 @@ skipboot:
 					End Try
 				Else
 
-				End If
-				Try
-					Application.Log.AddMessage("Checking and Removing AMDKMPFD Filter if present")
+					Try
+						Application.Log.AddMessage("Checking and Removing AMDKMPFD Filter if present")
 
-					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) = False Then
-								If child.ToLower.Contains("pnp0a08") Or
-								   child.ToLower.Contains("pnp0a03") Then
-									subregkey = regkey.OpenSubKey(child)
-									If subregkey IsNot Nothing Then
-										For Each child2 As String In subregkey.GetSubKeyNames()
-											If Not IsNullOrWhitespace(child2) Then
-												array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
-												If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-													For i As Integer = 0 To array.Length - 1
-														If Not IsNullOrWhitespace(array(i)) Then
-															If array(i).ToLower.Contains("amdkmpfd") Then
-																Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
+						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetSubKeyNames()
+								If IsNullOrWhitespace(child) = False Then
+									If child.ToLower.Contains("pnp0a08") Or
+									   child.ToLower.Contains("pnp0a03") Then
+										subregkey = regkey.OpenSubKey(child)
+										If subregkey IsNot Nothing Then
+											For Each child2 As String In subregkey.GetSubKeyNames()
+												If Not IsNullOrWhitespace(child2) Then
+													array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
+													If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+														For i As Integer = 0 To array.Length - 1
+															If Not IsNullOrWhitespace(array(i)) Then
+																If array(i).ToLower.Contains("amdkmpfd") Then
+																	Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
 
-																Try
-																	Application.Log.AddMessage("array result: " + array(i))
-																Catch ex As Exception
-																End Try
-																processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-																If win10 Then
-																	processinfo.Arguments = "update " & config.Paths.WinDir & "inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
-																Else
-																	processinfo.Arguments = "update " & config.Paths.WinDir & "inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
+																	Try
+																		Application.Log.AddMessage("array result: " + array(i))
+																	Catch ex As Exception
+																	End Try
+																	processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+																	If win10 Then
+																		processinfo.Arguments = "update " & config.Paths.WinDir & "inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
+																	Else
+																		processinfo.Arguments = "update " & config.Paths.WinDir & "inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
+																	End If
+																	processinfo.UseShellExecute = False
+																	processinfo.CreateNoWindow = True
+																	processinfo.RedirectStandardOutput = True
+																	process.StartInfo = processinfo
+
+																	process.Start()
+																	reply2 = process.StandardOutput.ReadToEnd
+																	'process.WaitForExit()
+																	process.StandardOutput.Close()
+																	process.Close()
+
+																	Application.Log.AddMessage(reply2)
+																	Application.Log.AddMessage(child + " Restored.")
+
 																End If
-																processinfo.UseShellExecute = False
-																processinfo.CreateNoWindow = True
-																processinfo.RedirectStandardOutput = True
-																process.StartInfo = processinfo
-
-																process.Start()
-																reply2 = process.StandardOutput.ReadToEnd
-																'process.WaitForExit()
-																process.StandardOutput.Close()
-																process.Close()
-
-																Application.Log.AddMessage(reply2)
-																Application.Log.AddMessage(child + " Restored.")
-
 															End If
-														End If
-													Next
+														Next
+													End If
 												End If
-											End If
-										Next
+											Next
+										End If
 									End If
 								End If
-							End If
-						Next
-					End If
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
-
+							Next
+						End If
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				End If
 				'We now try to remove the service AMDPMPFD if its lowerfilter is not found
 				If reboot Or shutdown Then
 					If Not checkamdkmapfd() Then

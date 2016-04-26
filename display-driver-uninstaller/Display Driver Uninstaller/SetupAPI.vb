@@ -1364,123 +1364,133 @@ Namespace SetupAPI
             End Try
         End Sub
 
-        Public Sub TEST_UpdateDevice(ByVal hardwareIDFilter As String, ByVal infFile As String)
-            If String.IsNullOrEmpty(infFile) OrElse Not File.Exists(infFile) Then
-                Throw New ArgumentException("Empty infFile or infFile doesn't exists!", "infFile")
-                Return
-            End If
+		Public Sub TEST_UpdateDevice(ByVal hardwareIDFilter As String, ByVal infFile As String, Optional ByVal force As Boolean = False)
+			If String.IsNullOrEmpty(infFile) OrElse Not File.Exists(infFile) Then
+				Throw New ArgumentException("Empty infFile or infFile doesn't exists!", "infFile")
+				Return
+			End If
 
-            If String.IsNullOrEmpty(hardwareIDFilter) Then
-                Throw New ArgumentException("Empty Hardware ID Filter!", "hardwareIDFilter")
-                Return
-            End If
+			If String.IsNullOrEmpty(hardwareIDFilter) Then
+				Throw New ArgumentException("Empty Hardware ID Filter!", "hardwareIDFilter")
+				Return
+			End If
 
-            Try
-                Dim nullGuid As Guid = Guid.Empty
-                Dim hardwareIds(0) As String
-                Dim found As Boolean = False
-                Dim device As Device = Nothing
+			Try
+				Dim nullGuid As Guid = Guid.Empty
+				Dim hardwareIds(0) As String
+				Dim found As Boolean = False
+				Dim device As Device = Nothing
 
-                Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
-                    CheckWin32Error(Not infoSet.IsInvalid)
+				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
+					CheckWin32Error(Not infoSet.IsInvalid)
 
-                    Dim ptrDevInfo As StructPtr = Nothing
-                    Try
-                        If Is64 Then
-                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = CUInt(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
-                        Else
-                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = CUInt(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
-                        End If
+					Dim ptrDevInfo As StructPtr = Nothing
+					Try
+						If Is64 Then
+							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = CUInt(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
+						Else
+							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = CUInt(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
+						End If
 
-                        Dim i As UInt32 = 0UI
+						Dim i As UInt32 = 0UI
 
-                        While True
-                            If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
-                                If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
-                                    Exit While
-                                Else
-                                    CheckWin32Error(False)
-                                End If
-                            End If
+						While True
+							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
+								If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
+									Exit While
+								Else
+									CheckWin32Error(False)
+								End If
+							End If
 
-                            i += 1UI
-                            hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
+							i += 1UI
+							hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
 
-                            If hardwareIds Is Nothing Then
-                                Continue While
-                            End If
+							If hardwareIds Is Nothing Then
+								Continue While
+							End If
 
-                            For Each hdID As String In hardwareIds
-                                If hdID.IndexOf(hardwareIDFilter, StringComparison.OrdinalIgnoreCase) <> -1 Then
-                                    device = New Device() With
-                                    {
-                                        .Description = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC),
-                                        .ClassGuid = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASSGUID),
-                                        .CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS),
-                                        .HardwareIDs = hardwareIds
-                                    }
+							For Each hdID As String In hardwareIds
+								If hdID.IndexOf(hardwareIDFilter, StringComparison.OrdinalIgnoreCase) <> -1 Then
+									device = New Device() With
+									{
+										.Description = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC),
+										.ClassGuid = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASSGUID),
+										.CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS),
+										.HardwareIDs = hardwareIds
+									}
 
-                                    GetDeviceDetails(infoSet, ptrDevInfo.Ptr, device)
+									GetDeviceDetails(infoSet, ptrDevInfo.Ptr, device)
 
-                                    Dim msgResult As DialogResult = MessageBox.Show(
-                                       String.Format("Are you sure you want to update device:{2}{2}{3}{0}{2}Inf file: {2}{2}{3}{4}{2}Hardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab, infFile),
-                                        "Warning!",
-                                        MessageBoxButtons.YesNoCancel,
-                                        MessageBoxIcon.Warning)
+									Dim msgResult As DialogResult = MessageBox.Show(
+									   String.Format("Are you sure you want to update device:{2}{2}{3}{0}{2}Inf file: {2}{2}{3}{4}{2}Hardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab, infFile),
+										"Warning!",
+										MessageBoxButtons.YesNoCancel,
+										MessageBoxIcon.Warning)
 
-                                    If msgResult = DialogResult.Yes Then
-                                        found = True
-                                        Exit For
-                                    ElseIf (msgResult = DialogResult.No) Then
-                                        Exit For
-                                    Else
-                                        Return
-                                    End If
-                                End If
-                            Next
+									If msgResult = DialogResult.Yes Then
+										found = True
+										Exit For
+									ElseIf (msgResult = DialogResult.No) Then
+										Exit For
+									Else
+										Return
+									End If
+								End If
+							Next
 
-                            If found Then
-                                Exit While
-                            End If
-                        End While
+							If found Then
+								Exit While
+							End If
+						End While
 
-                        If Not found OrElse device Is Nothing Then
-                            Return
-                        End If
+						If Not found OrElse device Is Nothing Then
+							Return
+						End If
 
-                        If MessageBox.Show(String.Format("CONFIRM!!!{2}{2}Are you sure you want to update device:{2}{2}{3}{0}{2}Inf file: {2}{2}{3}{4}{2}Hardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab, infFile),
-                                       "Warning!",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Warning) <> DialogResult.Yes Then
+						If MessageBox.Show(String.Format("CONFIRM!!!{2}{2}Are you sure you want to update device:{2}{2}{3}{0}{2}Inf file: {2}{2}{3}{4}{2}Hardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab, infFile),
+									   "Warning!",
+							MessageBoxButtons.YesNo,
+							MessageBoxIcon.Warning) <> DialogResult.Yes Then
 
-                            Return
-                        End If
+							Return
+						End If
 
-                        Dim requiresReboot As Boolean
-                        If Not UpdateDriverForPlugAndPlayDevices(IntPtr.Zero, device.HardwareIDs(0), infFile, CUInt(INSTALLFLAG.NULL), requiresReboot) Then
-                            MessageBox.Show("The function found a match for the HardwareId value, but the specified driver was not a better match" + CRLF + "than the current driver and the caller did not specify the INSTALLFLAG_FORCE flag.")
-                            Return
-                        Else
-                            CheckWin32Error(False)
-                        End If
+						If force Then
+							Dim requiresReboot As Boolean
+							If Not UpdateDriverForPlugAndPlayDevices(IntPtr.Zero, device.HardwareIDs(0), infFile, CUInt(INSTALLFLAG.FORCE), requiresReboot) Then
+								MessageBox.Show("The function found a match for the HardwareId value, but the specified driver was not a better match" + CRLF + "than the current driver and the caller did not specify the INSTALLFLAG_FORCE flag.")
+								Return
+							Else
+								CheckWin32Error(False)
+							End If
+						Else
+							Dim requiresReboot As Boolean
+							If Not UpdateDriverForPlugAndPlayDevices(IntPtr.Zero, device.HardwareIDs(0), infFile, CUInt(INSTALLFLAG.NULL), requiresReboot) Then
+								MessageBox.Show("The function found a match for the HardwareId value, but the specified driver was not a better match" + CRLF + "than the current driver and the caller did not specify the INSTALLFLAG_FORCE flag.")
+								Return
+							Else
+								CheckWin32Error(False)
+							End If
 
-                        If requiresReboot Then
-                            If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", CRLF), "Device removed!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
-                                Reboot()
-                            End If
-                        Else
-                            MessageBox.Show(String.Format("Reboot not required!{0}NOTE: Windows XP doesn't 'set' reboot flag even if reboot required", CRLF), "Device removed!")
-                        End If
-                    Finally
-                        If ptrDevInfo IsNot Nothing Then
-                            ptrDevInfo.Dispose()
-                        End If
-                    End Try
-                End Using
-            Catch ex As Exception
-                ShowException(ex)
-            End Try
-        End Sub
+							If requiresReboot Then
+								If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", CRLF), "Device removed!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+									Reboot()
+								End If
+							Else
+								MessageBox.Show(String.Format("Reboot not required!{0}NOTE: Windows XP doesn't 'set' reboot flag even if reboot required", CRLF), "Device removed!")
+							End If
+						End If
+					Finally
+						If ptrDevInfo IsNot Nothing Then
+							ptrDevInfo.Dispose()
+						End If
+					End Try
+				End Using
+			Catch ex As Exception
+				ShowException(ex)
+			End Try
+		End Sub
 
         ' REVERSED FOR CLEANING FROM CODE
         ' eg.  venID = VEN_10DE  = for more accurate result, otherwise AMD + Nvidia (physx card) => both removed (both has 'Display' as class)
