@@ -49,15 +49,15 @@ Public Class AppLog
         End SyncLock
     End Sub
 
-	Public Sub AddWarningMessage(ByRef message As String)
-		SyncLock m_threadlock
-			If Not Me.Dispatcher.CheckAccess() Then
-                Me.Dispatcher.Invoke(New AddWarningMessageEntryDelegate(AddressOf Me.AddWarningMessageEntry), message)
-			Else
-				Me.AddWarningMessageEntry(message)
-			End If
-		End SyncLock
-	End Sub
+    Public Sub AddWarningMessage(ByRef message As String, Optional ByRef key As String = Nothing, Optional ByRef value As String = Nothing)
+        SyncLock m_threadlock
+            If Not Me.Dispatcher.CheckAccess() Then
+                Me.Dispatcher.Invoke(New AddWarningMessageEntryDelegate(AddressOf Me.AddWarningMessageEntry), message, key, value)
+            Else
+                Me.AddWarningMessageEntry(message, key, value)
+            End If
+        End SyncLock
+    End Sub
 
 	Public Sub Clear()
 		SyncLock m_threadlock
@@ -472,16 +472,23 @@ Public Class AppLog
         AddEntry(logEntry)
     End Sub
 
-    Private Delegate Sub AddWarningMessageEntryDelegate(ByRef message As String)
-	Private Sub AddWarningMessageEntry(ByRef message As String)
-		Dim logEntry As LogEntry = logEntry.Create()
+    Private Delegate Sub AddWarningMessageEntryDelegate(ByRef message As String, ByRef key As String, ByRef value As String)
+    Private Sub AddWarningMessageEntry(ByRef message As String, ByRef key As String, ByRef value As String)
+        Dim logEntry As LogEntry = logEntry.Create()
 
         logEntry.Type = LogType.Warning
         logEntry.Message = message
-		logEntry.Time = DateTime.Now
+        logEntry.Time = DateTime.Now
 
-		AddEntry(logEntry)
-	End Sub
+        If key IsNot Nothing Then
+            If value IsNot Nothing Then
+                logEntry.Add(key, value)
+            Else : logEntry.Add(key)
+            End If
+        End If
+
+        AddEntry(logEntry)
+    End Sub
 
 	Private Delegate Sub AddParamEntryDelegate(otherData As KvP())
 	Private Sub AddParamEntry(ParamArray otherData As KvP())

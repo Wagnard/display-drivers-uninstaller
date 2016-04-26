@@ -7932,6 +7932,7 @@ skipboot:
     End Sub
 
     Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
+        SetupAPI.GetDevices("Display")
         Dim setupAPIWindow As New SetupAPITestWindow
 
         setupAPIWindow.ShowDialog()

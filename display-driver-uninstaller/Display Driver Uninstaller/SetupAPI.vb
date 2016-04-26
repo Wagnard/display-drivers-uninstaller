@@ -85,7 +85,7 @@ Namespace SetupAPI
     Public Module SetupAPI
         Private Const LINE_LEN As Int32 = 256
         Private Const MAX_LEN As Int32 = 260
-        Private ReadOnly CRLF As String = Environment.NewLine
+        Friend ReadOnly CRLF As String = Environment.NewLine
 
         Private ReadOnly Is64 As Boolean = False
         Private ReadOnly IsAdmin As Boolean = False
@@ -94,13 +94,13 @@ Namespace SetupAPI
         Private ReadOnly NullChar() As Char = New Char() {CChar(vbNullChar)}
 
         Sub New()
-            Is64 = Win32.Is64()
-            IsAdmin = Win32.IsAdmin()
+            Is64 = Tools.ProcessIs64
+            IsAdmin = Tools.UserHasAdmin
         End Sub
 
 #Region "Errors"
-        Private Const APPLICATION_ERROR_MASK = &H20000000UI
-        Private Const ERROR_SEVERITY_ERROR = &HC0000000UI
+        Friend Const APPLICATION_ERROR_MASK = &H20000000UI
+        Friend Const ERROR_SEVERITY_ERROR = &HC0000000UI
 
         <Flags()>
         Private Enum [Errors] As UInteger
@@ -651,8 +651,17 @@ Namespace SetupAPI
 #Region "P/Invoke"
 
         <DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Private Function SetupDiClassGuidsFromName(
+            <[In]()> ByVal ClassName As String,
+            <[Out]()> ByRef ClassGuidList As Guid,
+            <[In]()> ByRef ClassGuidListSize As UInt32,
+            <[Out]()> ByRef RequiredSize As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
+        End Function
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
         <ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)>
-        Private Function SetupDiDestroyDeviceInfoList(ByVal DeviceInfoSet As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+        Private Function SetupDiDestroyDeviceInfoList(
+            <[In]()> ByVal DeviceInfoSet As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
         End Function
 
         <DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
@@ -776,9 +785,9 @@ Namespace SetupAPI
 
             Try
                 Dim nullGuid As Guid = Guid.Empty
-				Dim hardwareIds(0) As String
-				Dim lowerfilters(0) As String
-				Dim friendlyname As String
+                Dim hardwareIds(0) As String
+                Dim lowerfilters(0) As String
+                Dim friendlyname As String
                 Dim desc As String = Nothing
                 Dim className As String = Nothing
                 Dim match As Boolean = False
@@ -809,9 +818,9 @@ Namespace SetupAPI
                             match = False
                             desc = Nothing
                             className = Nothing
-							hardwareIds = Nothing
-							lowerfilters = Nothing
-							friendlyname = Nothing
+                            hardwareIds = Nothing
+                            lowerfilters = Nothing
+                            friendlyname = Nothing
 
                             If Not String.IsNullOrEmpty(text) Then
                                 Select Case filter
@@ -831,56 +840,56 @@ Namespace SetupAPI
                                         Exit Select
                                     Case "Device_HardwareID"
                                         hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
-										If hardwareIds IsNot Nothing Then
-											For Each hdID As String In hardwareIds
-												If hdID.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-													match = True
-													Exit Select
-												End If
-											Next
-										End If
-									Case "Device_LowerFilters"
-										lowerfilters = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.LOWERFILTERS)
-										If lowerfilters IsNot Nothing Then
-											For Each LFs As String In lowerfilters
-												If LFs.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-													match = True
-													Exit Select
-												End If
-											Next
-										End If
-									Case "Device_FriendlyName"
-										friendlyname = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.FRIENDLYNAME)
-										If friendlyname IsNot Nothing Then
-											For Each FRn As String In friendlyname
-												If FRn.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-													match = True
-													Exit Select
-												End If
-											Next
-										End If
+                                        If hardwareIds IsNot Nothing Then
+                                            For Each hdID As String In hardwareIds
+                                                If hdID.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+                                                    match = True
+                                                    Exit Select
+                                                End If
+                                            Next
+                                        End If
+                                    Case "Device_LowerFilters"
+                                        lowerfilters = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.LOWERFILTERS)
+                                        If lowerfilters IsNot Nothing Then
+                                            For Each LFs As String In lowerfilters
+                                                If LFs.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+                                                    match = True
+                                                    Exit Select
+                                                End If
+                                            Next
+                                        End If
+                                    Case "Device_FriendlyName"
+                                        friendlyname = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.FRIENDLYNAME)
+                                        If friendlyname IsNot Nothing Then
+                                            For Each FRn As String In friendlyname
+                                                If FRn.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+                                                    match = True
+                                                    Exit Select
+                                                End If
+                                            Next
+                                        End If
 
-										Exit Select
-								End Select
+                                        Exit Select
+                                End Select
                             Else
                                 match = True
                             End If
 
                             If match Then
-								If (hardwareIds Is Nothing) Then hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
-								If (lowerfilters Is Nothing) Then lowerfilters = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.LOWERFILTERS)
-								If (friendlyname Is Nothing) Then friendlyname = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.FRIENDLYNAME)
+                                If (hardwareIds Is Nothing) Then hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
+                                If (lowerfilters Is Nothing) Then lowerfilters = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.LOWERFILTERS)
+                                If (friendlyname Is Nothing) Then friendlyname = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.FRIENDLYNAME)
                                 If (desc Is Nothing) Then desc = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC)
                                 If (className Is Nothing) Then className = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASS)
 
-								Dim d As Device = New Device() With
-								{
-									.Description = desc,
-									.ClassName = className,
-									.HardwareIDs = hardwareIds,
-									.LowerFilters = lowerfilters,
-								.FriendlyName = friendlyname
-								}
+                                Dim d As Device = New Device() With
+                                {
+                                 .Description = desc,
+                                 .ClassName = className,
+                                 .HardwareIDs = hardwareIds,
+                                 .LowerFilters = lowerfilters,
+                                 .FriendlyName = friendlyname
+                                }
 
                                 GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d)
                                 GetDriverDetails(infoSet, ptrDevInfo.Ptr, d)
@@ -1313,7 +1322,7 @@ Namespace SetupAPI
             End Try
         End Sub
 
-	' REVERSED FOR CLEANING FROM CODE
+        ' REVERSED FOR CLEANING FROM CODE
         ' eg.  venID = VEN_10DE  = for more accurate result, otherwise AMD + Nvidia (physx card) => both removed (both has 'Display' as class)
         ' Class GUID is also good choice (can be used as ROOT deviceSet => loop only gpus)
         ' may change
@@ -1321,10 +1330,39 @@ Namespace SetupAPI
             Application.Log.AddMessage("Beginning of GetDevices")
 
             Try
+                Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(Guid.Empty, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
+                    CheckWin32Error(Not infoSet.IsInvalid)
 
+                    Dim ptrDevInfo As StructPtr = Nothing
+                    Try
+                        If Is64 Then
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
+                        Else
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
+                        End If
 
+                        Dim i As UInt32 = 0UI
 
+                        While True
+                            If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
+                                If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
+                                    Exit While
+                                Else
+                                    CheckWin32Error(False)
+                                End If
+                            End If
 
+                            i += 1UI
+
+                            MessageBox.Show(GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC))
+                        End While
+                    Finally
+                        If ptrDevInfo IsNot Nothing Then
+
+                            ptrDevInfo.Dispose()
+                        End If
+                    End Try
+                End Using
             Catch ex As Exception
                 Application.Log.AddException(ex)
             Finally
@@ -1333,7 +1371,7 @@ Namespace SetupAPI
 
             Return Nothing
         End Function
-       
+
         ' REVERSED FOR CLEANING FROM CODE
         Public Sub UninstallDevice(ByRef device As Device)
             Application.Log.AddMessage("Beginning of UninstallDevice")
@@ -1481,6 +1519,23 @@ Namespace SetupAPI
 
         End Sub
 
+
+
+        Private Function GetClassGUIDsFromClassName(ByVal className As String) As Guid()
+            Dim requiredSize As UInt32 = 0
+            Dim guidArray(0) As Guid
+
+
+            CheckWin32Error(SetupDiClassGuidsFromName(className, guidArray(0), GetUInt32(guidArray.Length), requiredSize))
+
+            If requiredSize > 1 Then
+                ReDim guidArray(GetInt32(requiredSize))
+
+                CheckWin32Error(SetupDiClassGuidsFromName(className, guidArray(0), GetUInt32(guidArray.Length), requiredSize))
+            End If
+
+            Return guidArray
+        End Function
 
         Private Function GetProperty(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr, ByVal [property] As SPDRP, ByRef bytes() As Byte, ByRef regType As RegistryValueKind, ByRef size As Int32) As Boolean
             Dim requiredSize As UInt32 = 1024UI
@@ -1809,7 +1864,7 @@ Namespace SetupAPI
             End If
         End Sub
 
-        Private Function GetLastWin32ErrorU() As UInt32
+        Friend Function GetLastWin32ErrorU() As UInt32
             Return GetUInt32(Marshal.GetLastWin32Error())
         End Function
 
@@ -1858,9 +1913,9 @@ Namespace SetupAPI
 #Region "Classes"
 
         Public Class Device
-			Private _hardwareIDs As String()
-			Private _lowerfilters As String()
-			Private _friendlyname As String
+            Private _hardwareIDs As String()
+            Private _lowerfilters As String()
+            Private _friendlyname As String
             Private _compatibleIDs As String()
             Private _RregInf As String
             Private _oemInfs As String()
@@ -1882,25 +1937,25 @@ Namespace SetupAPI
                 Friend Set(value As String())
                     _hardwareIDs = value
                 End Set
-			End Property
+            End Property
 
-			Public Property LowerFilters As String()
-				Get
-					Return _lowerfilters
-				End Get
-				Friend Set(value As String())
-					_lowerfilters = value
-				End Set
-			End Property
+            Public Property LowerFilters As String()
+                Get
+                    Return _lowerfilters
+                End Get
+                Friend Set(value As String())
+                    _lowerfilters = value
+                End Set
+            End Property
 
-			Public Property FriendlyName As String
-				Get
-					Return _friendlyname
-				End Get
-				Friend Set(value As String)
-					_friendlyname = value
-				End Set
-			End Property
+            Public Property FriendlyName As String
+                Get
+                    Return _friendlyname
+                End Get
+                Friend Set(value As String)
+                    _friendlyname = value
+                End Set
+            End Property
             Public Property CompatibleIDs As String()
                 Get
                     Return _compatibleIDs
@@ -2166,61 +2221,339 @@ Namespace SetupAPI
 #End Region
 
     End Module
+End Namespace
 
-    <ComVisible(False)>
-    Public Class Win32
-        Private Enum BinaryType As UInteger
-            <Description("A 32-bit Windows-based application")>
-            SCS_32BIT_BINARY = 0
 
-            <Description("A 64-bit Windows-based application.")>
-            SCS_64BIT_BINARY = 6
+' INF FILE
+Namespace SetupAPI
 
-            <Description("An MS-DOS – based application")>
-            SCS_DOS_BINARY = 1
+    Public Class InfError
+        Private Const ERROR_LINE_NOT_FOUND As UInt32 = &H800F0102UI
+        Private Const ERROR_NO_MORE_ITEMS As UInt32 = &H80070103UI
+        Private Const ERROR_INVALID_PARAMETER As UInt32 = &H80070057UI
 
-            <Description("A 16-bit OS/2-based application")>
-            SCS_OS216_BINARY = 5
+        Private Const FACILITY_SETUPAPI As UInt32 = 15UI
+        Private Const FACILITY_WIN32 As UInt32 = 7UI
 
-            <Description("A PIF file that executes an MS-DOS – based application")>
-            SCS_PIF_BINARY = 3
+        Protected _lastError As UInt32 = 0UI
+        Protected _lastMessage As String
 
-            <Description("A POSIX – based application")>
-            SCS_POSIX_BINARY = 4
+        Public ReadOnly Property LastError As UInt32
+            Get
+                Return _lastError
+            End Get
+        End Property
 
-            <Description("A 16-bit Windows-based application")>
-            SCS_WOW_BINARY = 2
-        End Enum
+        Public ReadOnly Property LastMessage As String
+            Get
+                Return If(_lastMessage, "Success")
+            End Get
+        End Property
 
-        <DllImport("kernel32.dll", CharSet:=CharSet.Ansi, SetLastError:=True)>
-        Private Shared Function GetBinaryType(
-        <[In](), MarshalAs(UnmanagedType.LPStr)> ByVal lpApplicationName As String,
-        <[Out]()> ByRef lpBinaryType As BinaryType) As <MarshalAs(UnmanagedType.Bool)> Boolean
+        Protected Sub ResetError()
+            _lastError = 0UI
+            _lastMessage = Nothing
+        End Sub
+
+        Protected Function GetLastError() As UInt32
+            Return GetLastError(True)
         End Function
 
-        Public Shared Function Is64() As Boolean
-            Dim binaryType As BinaryType
+        Protected Function GetLastError(ByVal setLastError As Boolean) As UInt32
+            Dim hresult As UInt32 = HRESULT_FROM_SETUPAPI(GetLastWin32ErrorU())
 
-            Try
-                If GetBinaryType(Assembly.GetExecutingAssembly().Location, binaryType) Then
-                    Return binaryType = binaryType.SCS_64BIT_BINARY
-                End If
-            Catch ex As Exception
-            End Try
+            If setLastError Then
+                _lastError = hresult
+                _lastMessage = New System.ComponentModel.Win32Exception(GetInt32(_lastError)).Message
+            End If
 
-            Return False
+            Return hresult
         End Function
 
-        Public Shared Function IsAdmin() As Boolean
-            Try
-                Return New WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)
-            Catch ex As UnauthorizedAccessException
-                Return False
-            Catch ex As Exception
-                Return False
-            End Try
-
-            Return False
+        Private Shared Function HRESULT_FROM_WIN32(ByVal x As UInt32) As UInt32
+            Return If(x <= 0,
+                      x,
+                      ((x And &HFFFFUI) Or (FACILITY_WIN32 << 16UI) Or &H80000000UI))
         End Function
+
+        Private Shared Function HRESULT_FROM_SETUPAPI(ByVal x As UInt32) As UInt32
+            Return CUInt(If(((x And (APPLICATION_ERROR_MASK Or ERROR_SEVERITY_ERROR)) = (APPLICATION_ERROR_MASK Or ERROR_SEVERITY_ERROR)),
+             (((x And &HFFFFUI) Or (FACILITY_SETUPAPI << 16UI) Or &H80000000UI)),
+             HRESULT_FROM_WIN32(x)))
+        End Function
+
     End Class
+
+    Public Class InfFile
+        Inherits InfError
+        Implements IDisposable
+
+        Private Class PrivateSection
+            Inherits InfLine
+
+            Public Sub New(ByVal context As NativeMethods.INFCONTEXT, ByVal section As String, ByVal file As String)
+                _context = context
+                _section = section
+                _file = file
+            End Sub
+        End Class
+
+        Private _file As String
+        Private _handle As IntPtr = NativeMethods.INVALID_HANDLE
+        Private _disposed As Boolean
+
+        Public ReadOnly Property FilePath As String
+            Get
+                Return If(_file, "<null>")
+            End Get
+        End Property
+
+        Public ReadOnly Property IsOpen As Boolean
+            Get
+                Return _handle <> NativeMethods.INVALID_HANDLE
+            End Get
+        End Property
+
+        Public Sub New(ByVal path As String)
+            _file = path
+        End Sub
+
+        Public Function Open(ByRef errorLineNumber As UInt32) As UInt32
+            _handle = NativeMethods.SetupOpenInfFile(_file, Nothing, (NativeMethods.INF_STYLE_OLDNT Or NativeMethods.INF_STYLE_WIN4), errorLineNumber)
+
+            If (_handle = NativeMethods.INVALID_HANDLE) Then
+                GetLastError()
+                _lastMessage = String.Format("Error opening file '{0}',{3}Bad line = {1},{3}Message = ""{2}""", FilePath, errorLineNumber, LastMessage, CRLF)
+            Else
+                ResetError()
+                errorLineNumber = 0UI
+            End If
+
+            Return LastError
+        End Function
+
+        Public Function Open() As UInt32
+            Dim errLine As UInt32
+            Return Open(errLine)
+        End Function
+
+        Public Sub Close()
+            If _handle <> NativeMethods.INVALID_HANDLE Then
+                NativeMethods.SetupCloseInfFile(_handle)
+
+                _handle = NativeMethods.INVALID_HANDLE
+            End If
+        End Sub
+
+        Public Function FindFirstKey(ByVal section As String, ByVal key As String) As InfLine
+            Dim retval As PrivateSection = Nothing
+            Dim sectionContext As NativeMethods.INFCONTEXT = New NativeMethods.INFCONTEXT
+
+            If Not NativeMethods.SetupFindFirstLine(_handle, section, key, sectionContext) Then
+                GetLastError()
+                _lastMessage = String.Format("Error finding key '{0}' in section '{1}' of file '{2}',{4}Message = ""{3}""", If(key, "<null>"), section, FilePath, LastMessage, CRLF)
+            Else
+                ResetError()
+                retval = New PrivateSection(sectionContext, section, _file)
+            End If
+
+            Return retval
+        End Function
+
+        Public Overrides Function ToString() As String
+            Return FilePath
+        End Function
+
+        Protected Overrides Sub Finalize()
+            Dispose(False)
+        End Sub
+
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not _disposed Then
+                If disposing Then
+
+                End If
+
+                Close()
+            End If
+
+            _disposed = True
+        End Sub
+
+        Public Sub Dispose() Implements IDisposable.Dispose
+            Dispose(True)
+            GC.SuppressFinalize(Me)
+        End Sub
+
+    End Class
+
+    Public Class InfLine
+        Inherits InfError
+
+        Protected _context As NativeMethods.INFCONTEXT = New NativeMethods.INFCONTEXT
+        Protected _section As String
+        Protected _file As String
+
+        Public ReadOnly Property Section As String
+            Get
+                Return If(_section, "<null>")
+            End Get
+        End Property
+
+        Public ReadOnly Property FilePath As String
+            Get
+                Return If(_file, "<null>")
+            End Get
+        End Property
+
+        Protected Sub New()
+        End Sub
+
+        Public Function GetLineText(ByRef line As String) As UInt32
+            _lastError = InternalGetLineText(_lastMessage, line)
+
+            Return LastError
+        End Function
+
+        Public Function GetLineText() As String
+            Dim line As String = Nothing
+
+            GetLineText(line)
+
+            Return line
+        End Function
+
+        Public Function GetString(ByVal fieldNum As Int32, ByRef strVal As String) As UInt32
+            Dim requiredSize As UInt32 = 0UI
+            Dim builder As StringBuilder = New StringBuilder(100)
+            Dim lineText As String = Nothing
+            Dim msg As String = Nothing
+
+            ResetError()
+
+            Dim setupRetVal As Boolean = NativeMethods.SetupGetStringField(_context, fieldNum, builder, builder.Capacity, requiredSize)
+
+            If requiredSize > builder.Capacity Then
+                builder.Capacity = CType(requiredSize, Int32)
+
+                setupRetVal = NativeMethods.SetupGetStringField(_context, fieldNum, builder, builder.Capacity, requiredSize)
+            End If
+
+            If Not setupRetVal Then
+                strVal = Nothing
+                GetLastError()
+
+                If (InternalGetLineText(msg, lineText) <> 0) Then lineText = "<unknown>"
+
+                _lastMessage = String.Format("Error reading string value from field {0} of line '{1}'{5}in section [{2}] in file '{3}',{5}Message = ""{4}""", fieldNum, lineText, Section, FilePath, LastMessage, CRLF)
+            Else
+                strVal = builder.ToString()
+            End If
+
+            Return LastError
+        End Function
+
+        Public Function GetString(ByVal fieldNum As Int32) As String
+            Dim val As String = Nothing
+
+            GetString(fieldNum, val)
+
+            Return val
+        End Function
+
+        Private Function InternalGetLineText(ByRef errorMessage As String, ByRef line As String) As UInt32
+            Dim requiredSize As UInt32 = 0
+            Dim builder As StringBuilder = New StringBuilder(200)
+            Dim rc As UInt32
+
+            Dim setupRetVal As Boolean = NativeMethods.SetupGetLineText(_context, IntPtr.Zero, Nothing, Nothing, builder, GetUInt32(builder.Capacity), requiredSize)
+
+            If requiredSize > builder.Capacity Then
+                builder.Capacity = CType(requiredSize, Int32)
+                setupRetVal = NativeMethods.SetupGetLineText(_context, IntPtr.Zero, Nothing, Nothing, builder, GetUInt32(builder.Capacity), requiredSize)
+            End If
+
+            If Not setupRetVal Then
+                rc = GetLastError(False)
+                errorMessage = String.Format("Error reading INF line text in file '{0}',{2}Message = ""{1}""", FilePath, New System.ComponentModel.Win32Exception(GetInt32(rc)).Message, CRLF)
+                line = Nothing
+            Else
+                rc = 0
+                errorMessage = Nothing
+                line = builder.ToString()
+            End If
+
+            Return rc
+        End Function
+
+        Public Overrides Function ToString() As String
+            Return String.Format("Section = {0}, FilePath = {1}", Section, FilePath)
+        End Function
+
+    End Class
+
+    Public Module NativeMethods
+        Friend ReadOnly INVALID_HANDLE As IntPtr = New IntPtr(-1)
+
+        Friend Const INF_STYLE_OLDNT As UInt32 = &H1UI
+        Friend Const INF_STYLE_WIN4 As UInt32 = &H2UI
+
+        <StructLayout(LayoutKind.Sequential)>
+        Public Structure INFCONTEXT
+            Dim Inf As IntPtr
+            Dim CurrentInf As IntPtr
+            Dim Section As UInt32
+            Dim Line As UInt32
+        End Structure
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Public Function SetupGetLineText(
+            <[In]()> ByRef context As INFCONTEXT,
+            <[In]()> ByVal InfHandle As IntPtr,
+            <[In]()> ByVal Section As String,
+            <[In]()> ByVal [Key] As String,
+            <[In](), [Out]()> ByVal ReturnBuffer As StringBuilder,
+            <[In]()> ByVal ReturnBufferSize As UInt32,
+            <[In](), [Out]()> ByRef RequiredSize As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
+        End Function
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Public Function SetupGetStringField(
+            <[In]()> ByRef context As INFCONTEXT,
+            <[In]()> ByVal fieldIndex As Int32,
+            <[In](), [Out]()> ByVal ReturnBuffer As StringBuilder,
+            <[In]()> ByVal ReturnBufferSize As Int32,
+            <[Out]()> ByRef RequiredSize As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
+        End Function
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Public Function SetupOpenInfFile(
+            <[In]()> <MarshalAs(UnmanagedType.LPWStr)> ByVal FileName As String,
+            <[In]()> <MarshalAs(UnmanagedType.LPWStr)> ByVal InfClass As String,
+            <[In]()> ByVal InfStyle As UInt32,
+            <[In]()> ByRef ErrorLine As UInt32) As IntPtr
+        End Function
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Public Sub SetupCloseInfFile(
+            <[In]()> ByVal InfHandle As IntPtr)
+        End Sub
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Public Function SetupFindFirstLine(
+            <[In]()> ByVal InfHandle As IntPtr,
+            <[In]()> ByVal Section As String,
+            <[In]()> ByVal Key As String,
+            <[In](), [Out]()> ByRef context As INFCONTEXT) As <MarshalAs(UnmanagedType.Bool)> Boolean
+        End Function
+
+        <DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Public Function SetupFindNextMatchLine(
+            <[In]()> ByRef contextIn As INFCONTEXT,
+            <[In]()> ByVal key As String, <MarshalAs(UnmanagedType.Struct)>
+            <[In](), [Out]()> ByRef contextOut As INFCONTEXT) As <MarshalAs(UnmanagedType.Bool)> Boolean
+        End Function
+
+    End Module
+
 End Namespace

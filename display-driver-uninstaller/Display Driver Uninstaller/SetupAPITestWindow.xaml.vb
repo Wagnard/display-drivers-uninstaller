@@ -316,16 +316,16 @@ Public Class SetupAPITestWindow
         cbFilter.ItemsSource = Filters
         cbFilterDev.ItemsSource = FiltersDev
 
-        Dim isAdmin As Boolean = Win32.IsAdmin()
+        Dim isAdmin As Boolean = Tools.UserHasAdmin
 
         If isAdmin Then
-            MessageBox.Show("Process running as " & (If(Win32.Is64(), "x64", "x86")) & vbCrLf & "Admin? Yes")
+            MessageBox.Show("Process running as " & (If(Tools.ProcessIs64, "x64", "x86")) & vbCrLf & "Admin? Yes")
         Else
             btnDisable.IsEnabled = False
             btnEnable.IsEnabled = False
             btnRemove.IsEnabled = False
 
-            MessageBox.Show("Process running as " & (If(Win32.Is64(), "x64", "x86")) & vbCrLf & "Admin? No!" & vbCrLf & vbCrLf & "You can find devices but can't enable/disable/remove!")
+            MessageBox.Show("Process running as " & (If(Tools.ProcessIs64, "x64", "x86")) & vbCrLf & "Admin? No!" & vbCrLf & vbCrLf & "You can find devices but can't enable/disable/remove!")
         End If
     End Sub
 
