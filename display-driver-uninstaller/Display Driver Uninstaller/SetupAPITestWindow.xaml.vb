@@ -217,7 +217,18 @@ Public Class SetupAPITestWindow
         End If
 
         Dim sb As New StringBuilder()
-        sb.AppendLine("Description: " + device.Description)
+		sb.AppendLine("Description: " + device.Description)
+		If device.FriendlyName IsNot Nothing AndAlso device.FriendlyName.Length > 0 Then
+			sb.AppendLine("FriendlyName:")
+
+			For Each cid As String In device.FriendlyName
+				sb.AppendLine(vbTab + cid)
+			Next
+
+			sb.AppendLine(String.Empty)
+		Else
+			sb.AppendLine("FriendlyName: <null>")
+		End If
         sb.AppendLine("ClassGuid: " + device.ClassGuid)
 
         If device.OemInfs IsNot Nothing AndAlso device.OemInfs.Length > 0 Then
@@ -255,7 +266,20 @@ Public Class SetupAPITestWindow
             sb.AppendLine(String.Empty)
         Else
             sb.AppendLine("Compatible IDs: <null>")
-        End If
+		End If
+
+		If device.LowerFilters IsNot Nothing AndAlso device.LowerFilters.Length > 0 Then
+			sb.AppendLine("LowerFilters:")
+
+			For Each cid As String In device.LowerFilters
+				sb.AppendLine(vbTab + cid)
+			Next
+
+			sb.AppendLine(String.Empty)
+		Else
+			sb.AppendLine("LowerFilters: <null>")
+		End If
+
 
         If device.DriverInfo IsNot Nothing AndAlso device.DriverInfo.Count > 0 Then
             sb.AppendLine("Driver(s) details:")

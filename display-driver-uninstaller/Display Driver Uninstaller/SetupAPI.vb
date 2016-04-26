@@ -776,7 +776,9 @@ Namespace SetupAPI
 
             Try
                 Dim nullGuid As Guid = Guid.Empty
-                Dim hardwareIds(0) As String
+				Dim hardwareIds(0) As String
+				Dim lowerfilters(0) As String
+				Dim friendlyname As String
                 Dim desc As String = Nothing
                 Dim className As String = Nothing
                 Dim match As Boolean = False
@@ -807,7 +809,9 @@ Namespace SetupAPI
                             match = False
                             desc = Nothing
                             className = Nothing
-                            hardwareIds = Nothing
+							hardwareIds = Nothing
+							lowerfilters = Nothing
+							friendlyname = Nothing
 
                             If Not String.IsNullOrEmpty(text) Then
                                 Select Case filter
@@ -827,33 +831,56 @@ Namespace SetupAPI
                                         Exit Select
                                     Case "Device_HardwareID"
                                         hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
+										If hardwareIds IsNot Nothing Then
+											For Each hdID As String In hardwareIds
+												If hdID.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+													match = True
+													Exit Select
+												End If
+											Next
+										End If
+									Case "Device_LowerFilters"
+										lowerfilters = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.LOWERFILTERS)
+										If lowerfilters IsNot Nothing Then
+											For Each LFs As String In lowerfilters
+												If LFs.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+													match = True
+													Exit Select
+												End If
+											Next
+										End If
+									Case "Device_FriendlyName"
+										friendlyname = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.FRIENDLYNAME)
+										If friendlyname IsNot Nothing Then
+											For Each FRn As String In friendlyname
+												If FRn.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+													match = True
+													Exit Select
+												End If
+											Next
+										End If
 
-                                        If hardwareIds IsNot Nothing Then
-                                            For Each hdID As String In hardwareIds
-                                                If hdID.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-                                                    match = True
-                                                    Exit Select
-                                                End If
-                                            Next
-                                        End If
-
-                                        Exit Select
-                                End Select
+										Exit Select
+								End Select
                             Else
                                 match = True
                             End If
 
                             If match Then
-                                If (hardwareIds Is Nothing) Then hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
+								If (hardwareIds Is Nothing) Then hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
+								If (lowerfilters Is Nothing) Then lowerfilters = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.LOWERFILTERS)
+								If (friendlyname Is Nothing) Then friendlyname = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.FRIENDLYNAME)
                                 If (desc Is Nothing) Then desc = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC)
                                 If (className Is Nothing) Then className = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASS)
 
-                                Dim d As Device = New Device() With
-                                {
-                                    .Description = desc,
-                                    .ClassName = className,
-                                    .HardwareIDs = hardwareIds
-                                }
+								Dim d As Device = New Device() With
+								{
+									.Description = desc,
+									.ClassName = className,
+									.HardwareIDs = hardwareIds,
+									.LowerFilters = lowerfilters,
+								.FriendlyName = friendlyname
+								}
 
                                 GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d)
                                 GetDriverDetails(infoSet, ptrDevInfo.Ptr, d)
@@ -1831,7 +1858,9 @@ Namespace SetupAPI
 #Region "Classes"
 
         Public Class Device
-            Private _hardwareIDs As String()
+			Private _hardwareIDs As String()
+			Private _lowerfilters As String()
+			Private _friendlyname As String
             Private _compatibleIDs As String()
             Private _RregInf As String
             Private _oemInfs As String()
@@ -1853,7 +1882,25 @@ Namespace SetupAPI
                 Friend Set(value As String())
                     _hardwareIDs = value
                 End Set
-            End Property
+			End Property
+
+			Public Property LowerFilters As String()
+				Get
+					Return _lowerfilters
+				End Get
+				Friend Set(value As String())
+					_lowerfilters = value
+				End Set
+			End Property
+
+			Public Property FriendlyName As String
+				Get
+					Return _friendlyname
+				End Get
+				Friend Set(value As String)
+					_friendlyname = value
+				End Set
+			End Property
             Public Property CompatibleIDs As String()
                 Get
                     Return _compatibleIDs

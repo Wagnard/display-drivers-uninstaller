@@ -6296,74 +6296,80 @@ skipboot:
 
 			' First , get the ParentIdPrefix
 
-			If config.RemoveAMDAudioBus And config.SelectedGPU = GPUVendor.AMD Then
+			If config.RemoveAMDAudioBus AndAlso config.SelectedGPU = GPUVendor.AMD Then
+				If config.UseSetupAPI Then
+					Try
+						'Need to be able to find the "Sibling" with SetupAPI before doing this section
 
-				Try
-					If config.SelectedGPU = GPUVendor.AMD Then
-						Dim removed As Boolean = False
-						Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
-						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
-						If regkey IsNot Nothing Then
-							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) = False Then
-									If child.ToLower.Contains("ven_1002") Then
-										For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
-											subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-											If subregkey IsNot Nothing Then
-												For Each child2 As String In subregkey.GetSubKeyNames()
-													removed = False
-													If IsNullOrWhitespace(child2) = False Then
-														If child2.ToLower.Contains("ven_1002") Then
-															For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-																If IsNullOrWhitespace(child3) = False Then
-																	array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
-																	If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-																		For i As Integer = 0 To array.Length - 1
-																			If Not IsNullOrWhitespace(array(i)) Then
-																				If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
-																					Application.Log.AddMessage("Found an AMD audio controller bus !")
-																					Try
-																						Application.Log.AddMessage("array result: " + array(i))
-																					Catch ex As Exception
-																					End Try
-																					processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-																					processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
-																					processinfo.UseShellExecute = False
-																					processinfo.CreateNoWindow = True
-																					processinfo.RedirectStandardOutput = True
-																					process.StartInfo = processinfo
-																					'SetupAPI.TEST_RemoveDevice(child2)
-																					'process.Start()
-																					reply2 = process.StandardOutput.ReadToEnd
-																					'process.WaitForExit()
-																					process.StandardOutput.Close()
-																					process.Close()
-																					Application.Log.AddMessage(reply2)
-																					Application.Log.AddMessage("AMD HD Audio Bus Removed !")
-																					removed = True
+					Catch ex As Exception
+						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+						Application.Log.AddException(ex)
+					End Try
+				Else
+					Try
+						If config.SelectedGPU = GPUVendor.AMD Then
+							Dim removed As Boolean = False
+							Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
+							regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
+							If regkey IsNot Nothing Then
+								For Each child As String In regkey.GetSubKeyNames()
+									If IsNullOrWhitespace(child) = False Then
+										If child.ToLower.Contains("ven_1002") Then
+											For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
+												subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+												If subregkey IsNot Nothing Then
+													For Each child2 As String In subregkey.GetSubKeyNames()
+														removed = False
+														If IsNullOrWhitespace(child2) = False Then
+															If child2.ToLower.Contains("ven_1002") Then
+																For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
+																	If IsNullOrWhitespace(child3) = False Then
+																		array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
+																		If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+																			For i As Integer = 0 To array.Length - 1
+																				If Not IsNullOrWhitespace(array(i)) Then
+																					If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
+																						Application.Log.AddMessage("Found an AMD audio controller bus !")
+																						Try
+																							Application.Log.AddMessage("array result: " + array(i))
+																						Catch ex As Exception
+																						End Try
+																						processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+																						processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
+																						processinfo.UseShellExecute = False
+																						processinfo.CreateNoWindow = True
+																						processinfo.RedirectStandardOutput = True
+																						process.StartInfo = processinfo
+																						process.Start()
+																						reply2 = process.StandardOutput.ReadToEnd
+																						process.StandardOutput.Close()
+																						process.Close()
+																						Application.Log.AddMessage(reply2)
+																						Application.Log.AddMessage("AMD HD Audio Bus Removed !")
+																						removed = True
+																					End If
 																				End If
-																			End If
-																		Next
+																			Next
+																		End If
+																		If removed Then
+																			Exit For
+																		End If
 																	End If
-																	If removed Then
-																		Exit For
-																	End If
-																End If
-															Next
+																Next
+															End If
 														End If
-													End If
-												Next
-											End If
-										Next
+													Next
+												End If
+											Next
+										End If
 									End If
-								End If
-							Next
+								Next
+							End If
 						End If
-					End If
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
-
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				End If
 
 				'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
 				Try
@@ -6398,38 +6404,122 @@ skipboot:
 
 
 
-			' ----------------------
-			' Removing the videocard
-			' ----------------------
+				' ----------------------
+				' Removing the videocard
+				' ----------------------
 
-			If config.UseSetupAPI Then
-				Try
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "display")
-					If found.Count > 0 Then
-						For Each d As SetupAPI.Device In found
-							If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
-								'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
-								SetupAPI.UninstallDevice(d)
-							End If
-						Next
-					End If
-
-				Catch ex As Exception
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-					Application.Log.AddException(ex)
-				End Try
-
-			Else
-				'OLD DDUDR (DEVCON Section)
-				For a = 1 To 2	 'loop 2 time here for nVidia SLI pupose in normal mode.(4 may be necessary for quad SLI... need to check.)
+				If config.UseSetupAPI Then
 					Try
-						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "display")
+						If found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
+									'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
+									SetupAPI.UninstallDevice(d)
+								End If
+							Next
+						End If
+
+					Catch ex As Exception
+						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+						Application.Log.AddException(ex)
+					End Try
+
+				Else
+					'OLD DDUDR (DEVCON Section)
+					For a = 1 To 2	 'loop 2 time here for nVidia SLI pupose in normal mode.(4 may be necessary for quad SLI... need to check.)
+						Try
+							regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+							If regkey IsNot Nothing Then
+								For Each child As String In regkey.GetSubKeyNames
+									If Not IsNullOrWhitespace(child) AndAlso
+									 (child.ToLower.Contains("ven_10de") Or
+									 child.ToLower.Contains("ven_8086") Or
+									 child.ToLower.Contains("ven_1002")) Then
+
+										subregkey = regkey.OpenSubKey(child)
+										If subregkey IsNot Nothing Then
+
+											For Each child2 As String In subregkey.GetSubKeyNames
+
+												If subregkey.OpenSubKey(child2) Is Nothing Then
+													Continue For
+												End If
+
+												array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
+
+												If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+													For i As Integer = 0 To array.Length - 1
+
+														If Not IsNullOrWhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
+
+															vendid = child & "\" & child2
+
+															If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+																processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+																processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
+																processinfo.UseShellExecute = False
+																processinfo.CreateNoWindow = True
+																processinfo.RedirectStandardOutput = True
+																process.StartInfo = processinfo
+
+																process.Start()
+																reply2 = process.StandardOutput.ReadToEnd
+																process.StandardOutput.Close()
+																process.Close()
+																'process.WaitForExit()
+																Application.Log.AddMessage(reply2)
+															End If
+															Exit For   'the card is removed so we exit the loop from here.
+														End If
+													Next
+												End If
+											Next
+										End If
+									End If
+								Next
+							End If
+						Catch ex As Exception
+							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+							Application.Log.AddException(ex)
+						End Try
+					Next
+				End If
+
+				UpdateTextMethod(UpdateTextMethodmessagefn(23))
+				Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
+
+
+				cleandriverstore(config)
+
+				UpdateTextMethod(UpdateTextMethodmessagefn(24))
+				Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
+
+				If config.UseSetupAPI Then
+					Try
+						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
+						If found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
+									'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
+									SetupAPI.UninstallDevice(d)
+								End If
+							Next
+						End If
+
+					Catch ex As Exception
+						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+						Application.Log.AddException(ex)
+					End Try
+				Else
+					Try
+						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames
 								If Not IsNullOrWhitespace(child) AndAlso
-								 (child.ToLower.Contains("ven_10de") Or
-								 child.ToLower.Contains("ven_8086") Or
-								 child.ToLower.Contains("ven_1002")) Then
+								   (child.ToLower.Contains("ven_10de") Or
+								   child.ToLower.Contains("ven_8086") Or
+								   child.ToLower.Contains("ven_1002")) Then
 
 									subregkey = regkey.OpenSubKey(child)
 									If subregkey IsNot Nothing Then
@@ -6440,33 +6530,24 @@ skipboot:
 												Continue For
 											End If
 
-											array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
+											vendid = child & "\" & child2
 
-											If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-												For i As Integer = 0 To array.Length - 1
+											If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+												processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+												processinfo.Arguments = "remove " & Chr(34) & "@HDAUDIO\" & vendid & Chr(34)
+												processinfo.UseShellExecute = False
+												processinfo.CreateNoWindow = True
+												processinfo.RedirectStandardOutput = True
+												process.StartInfo = processinfo
 
-													If Not IsNullOrWhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
+												process.Start()
+												reply2 = process.StandardOutput.ReadToEnd
+												process.StandardOutput.Close()
+												process.Close()
+												'process.WaitForExit()
+												Application.Log.AddMessage(reply2)
 
-														vendid = child & "\" & child2
 
-														If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-															processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-															processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
-															processinfo.UseShellExecute = False
-															processinfo.CreateNoWindow = True
-															processinfo.RedirectStandardOutput = True
-															process.StartInfo = processinfo
-
-															process.Start()
-															reply2 = process.StandardOutput.ReadToEnd
-															process.StandardOutput.Close()
-															process.Close()
-															'process.WaitForExit()
-															Application.Log.AddMessage(reply2)
-														End If
-														Exit For   'the card is removed so we exit the loop from here.
-													End If
-												Next
 											End If
 										Next
 									End If
@@ -6477,157 +6558,90 @@ skipboot:
 						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 						Application.Log.AddException(ex)
 					End Try
-				Next
-			End If
-
-			UpdateTextMethod(UpdateTextMethodmessagefn(23))
-			Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
+				End If
+				UpdateTextMethod(UpdateTextMethodmessagefn(25))
 
 
-			cleandriverstore(config)
-
-			UpdateTextMethod(UpdateTextMethodmessagefn(24))
-			Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
-
-			If config.UseSetupAPI Then
-				Try
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
-					If found.Count > 0 Then
-						For Each d As SetupAPI.Device In found
-							If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
-								'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
-								SetupAPI.UninstallDevice(d.HardwareIDs(0), d.OemInfs)
-							End If
-						Next
-					End If
-
-				Catch ex As Exception
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-					Application.Log.AddException(ex)
-				End Try
-			Else
-				Try
-					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetSubKeyNames
-							If Not IsNullOrWhitespace(child) AndAlso
-							   (child.ToLower.Contains("ven_10de") Or
-							   child.ToLower.Contains("ven_8086") Or
-							   child.ToLower.Contains("ven_1002")) Then
-
-								subregkey = regkey.OpenSubKey(child)
-								If subregkey IsNot Nothing Then
-
-									For Each child2 As String In subregkey.GetSubKeyNames
-
-										If subregkey.OpenSubKey(child2) Is Nothing Then
-											Continue For
-										End If
-
-										vendid = child & "\" & child2
-
-										If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-											processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-											processinfo.Arguments = "remove " & Chr(34) & "@HDAUDIO\" & vendid & Chr(34)
-											processinfo.UseShellExecute = False
-											processinfo.CreateNoWindow = True
-											processinfo.RedirectStandardOutput = True
-											process.StartInfo = processinfo
-
-											process.Start()
-											reply2 = process.StandardOutput.ReadToEnd
-											process.StandardOutput.Close()
-											process.Close()
-											'process.WaitForExit()
-											Application.Log.AddMessage(reply2)
+				Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
 
 
-										End If
-									Next
-								End If
-							End If
-						Next
-					End If
-				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-					Application.Log.AddException(ex)
-				End Try
-			End If
-			UpdateTextMethod(UpdateTextMethodmessagefn(25))
-
-
-			Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
-
-
-			If config.SelectedGPU <> GPUVendor.Intel Then
-				cleandriverstore(config)
-			End If
+				If config.SelectedGPU <> GPUVendor.Intel Then
+					cleandriverstore(config)
+				End If
 
 			'Here I remove 3dVision USB Adapter.
-			If config.UseSetupAPI Then
-				Try
-					Dim HWID3dvision As String() =
-						{"USB\VID_0955&PID_0007",
-						 "USB\VID_0955&PID_7001",
-						 "USB\VID_0955&PID_7002",
-						 "USB\VID_0955&PID_7003",
-						 "USB\VID_0955&PID_7004",
-						 "USB\VID_0955&PID_7008",
-						 "USB\VID_0955&PID_7009",
-						 "USB\VID_0955&PID_700A",
-						 "USB\VID_0955&PID_700C",
-						 "USB\VID_0955&PID_700D&MI_00",
-						 "USB\VID_0955&PID_700E&MI_00"}
+			If config.SelectedGPU = GPUVendor.Nvidia Then
 
-					'3dVision Removal
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
-					If found.Count > 0 Then
-						For Each d As SetupAPI.Device In found
-							If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
-								'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
-								SetupAPI.UninstallDevice(d.HardwareIDs(0), d.OemInfs)
-							End If
-						Next
-						found.Clear()
-					End If
+				If config.UseSetupAPI Then
+					Try
+						Dim HWID3dvision As String() =
+							{"USB\VID_0955&PID_0007",
+							 "USB\VID_0955&PID_7001",
+							 "USB\VID_0955&PID_7002",
+							 "USB\VID_0955&PID_7003",
+							 "USB\VID_0955&PID_7004",
+							 "USB\VID_0955&PID_7008",
+							 "USB\VID_0955&PID_7009",
+							 "USB\VID_0955&PID_700A",
+							 "USB\VID_0955&PID_700C",
+							 "USB\VID_0955&PID_700D&MI_00",
+							 "USB\VID_0955&PID_700E&MI_00"}
 
-
-
-					'NVIDIA SHIELD Wireless Controller Trackpad
-					found = SetupAPI.TEST_GetDevices("Device_ClassName", "mouse")
-					If found.Count > 0 Then
-						For Each d As SetupAPI.Device In found
-							If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
-								'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
-								SetupAPI.UninstallDevice(d.HardwareIDs(0), d.OemInfs)
-							End If
-						Next
-						found.Clear()
-					End If
-
-					If config.RemoveGFE Then
-						' NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removal
-
-						found = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
+						'3dVision Removal
+						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
-								If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0955&PID_9000") Then
+								If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
 									'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
-									SetupAPI.UninstallDevice(d.HardwareIDs(0), d.OemInfs)
+									SetupAPI.UninstallDevice(d)
 								End If
 							Next
 							found.Clear()
 						End If
-					End If
-					'nVidia AudioEndpoints Removal
-					'For the moment, we CANT remove theses as we require to find them with their FriendlyName and remove them with their Instance ID.
 
-				Catch ex As Exception
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-					Application.Log.AddException(ex)
-				End Try
-			Else
-				If config.SelectedGPU = GPUVendor.Nvidia Then
+
+
+						'NVIDIA SHIELD Wireless Controller Trackpad
+						found = SetupAPI.TEST_GetDevices("Device_ClassName", "mouse")
+						If found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							Next
+							found.Clear()
+						End If
+
+						If config.RemoveGFE Then
+							' NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removal
+
+							found = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
+							If found.Count > 0 Then
+								For Each d As SetupAPI.Device In found
+									If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0955&PID_9000") Then
+										SetupAPI.UninstallDevice(d)
+									End If
+								Next
+								found.Clear()
+							End If
+						End If
+
+						'nVidia AudioEndpoints Removal
+						found = SetupAPI.TEST_GetDevices("Device_ClassName", "audioendpoint")
+						If found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If StrContainsAny(d.FriendlyName, True, "nvidia virtual audio device", "nvidia high definition audio") Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							Next
+							found.Clear()
+						End If
+
+					Catch ex As Exception
+						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+						Application.Log.AddException(ex)
+					End Try
+				Else
 					Try
 						'removing 3DVision USB driver
 						processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
@@ -6845,49 +6859,59 @@ skipboot:
 						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 						Application.Log.AddException(ex)
 					End Try
-
 				End If
 			End If
+
 			If config.SelectedGPU = GPUVendor.AMD Then
 				' ------------------------------
 				' Removing some of AMD AudioEndpoints
 				' ------------------------------
-
 				Application.Log.AddMessage("Removing AMD Audio Endpoints")
-
-
 				Try
-					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetSubKeyNames
-							If Not IsNullOrWhitespace(child) Then
-
-								If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
-								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("amd high definition audio device") Or
-								   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("digital audio (hdmi) (high definition audio device)") Then
-
-									vendid = child
-
-									processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-									processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
-									processinfo.UseShellExecute = False
-									processinfo.CreateNoWindow = True
-									processinfo.RedirectStandardOutput = True
-									process.StartInfo = processinfo
-
-									process.Start()
-									reply2 = process.StandardOutput.ReadToEnd
-									process.StandardOutput.Close()
-									process.Close()
-									'process.WaitForExit()
-									Application.Log.AddMessage(reply2)
-
-
+					If config.UseSetupAPI Then
+						'nVidia AudioEndpoints Removal
+						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "audioendpoint")
+						If found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If StrContainsAny(d.FriendlyName, True, "amd high definition audio device", "digital audio (hdmi) (high definition audio device)") Then
+									SetupAPI.UninstallDevice(d)
 								End If
-							End If
-						Next
+							Next
+							found.Clear()
+						End If
+					Else
+						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetSubKeyNames
+								If Not IsNullOrWhitespace(child) Then
+
+									If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
+									   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("amd high definition audio device") Or
+									   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("digital audio (hdmi) (high definition audio device)") Then
+
+										vendid = child
+
+										processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+										processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
+										processinfo.UseShellExecute = False
+										processinfo.CreateNoWindow = True
+										processinfo.RedirectStandardOutput = True
+										process.StartInfo = processinfo
+
+										process.Start()
+										reply2 = process.StandardOutput.ReadToEnd
+										process.StandardOutput.Close()
+										process.Close()
+										'process.WaitForExit()
+										Application.Log.AddMessage(reply2)
+
+
+									End If
+								End If
+							Next
+						End If
 					End If
-				Catch ex As Exception
+			Catch ex As Exception
 					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
@@ -6970,7 +6994,7 @@ skipboot:
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
-							SetupAPI.UninstallDevice(d.HardwareIDs(0), d.OemInfs)
+							SetupAPI.UninstallDevice(d)
 						Next
 					End If
 				Else
@@ -7018,132 +7042,156 @@ skipboot:
 				End If
 				UpdateTextMethod(UpdateTextMethodmessagefn(27))
 			End If
-				UpdateTextMethod(UpdateTextMethodmessagefn(28))
+			UpdateTextMethod(UpdateTextMethodmessagefn(28))
 
-				'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont what that
-				'espcially if we are not using an AMD GPU
+			'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont what that
+			'espcially if we are not using an AMD GPU
 
-				If config.RemoveAMDKMPFD Then
+			If config.RemoveAMDKMPFD Then
+				If config.UseSetupAPI Then
 					Try
-						Application.Log.AddMessage("Checking and Removing AMDKMPFD Filter if present")
-
-						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
-						If regkey IsNot Nothing Then
-							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) = False Then
-									If child.ToLower.Contains("pnp0a08") Or
-									   child.ToLower.Contains("pnp0a03") Then
-										subregkey = regkey.OpenSubKey(child)
-										If subregkey IsNot Nothing Then
-											For Each child2 As String In subregkey.GetSubKeyNames()
-												If Not IsNullOrWhitespace(child2) Then
-													array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
-													If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-														For i As Integer = 0 To array.Length - 1
-															If Not IsNullOrWhitespace(array(i)) Then
-																If array(i).ToLower.Contains("amdkmpfd") Then
-																	Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
-
-																	Try
-																		Application.Log.AddMessage("array result: " + array(i))
-																	Catch ex As Exception
-																	End Try
-																	processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-																	If win10 Then
-																		processinfo.Arguments = "update " & config.Paths.WinDir & "inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
-																	Else
-																		processinfo.Arguments = "update " & config.Paths.WinDir & "inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
-																	End If
-																	processinfo.UseShellExecute = False
-																	processinfo.CreateNoWindow = True
-																	processinfo.RedirectStandardOutput = True
-																	process.StartInfo = processinfo
-
-																	process.Start()
-																	reply2 = process.StandardOutput.ReadToEnd
-																	'process.WaitForExit()
-																	process.StandardOutput.Close()
-																	process.Close()
-
-																	Application.Log.AddMessage(reply2)
-																	Application.Log.AddMessage(child + " Restored.")
-
-																End If
-															End If
-														Next
-													End If
-												End If
-											Next
+						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "system")
+						If found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
+									If StrContainsAny(d.LowerFilters(0), True, "amdkmpfd") Then
+										If win10 Then
+											SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\PCI.inf")
+										Else
+											SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\machine.inf")
 										End If
 									End If
 								End If
 							Next
 						End If
+
 					Catch ex As Exception
+						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 						Application.Log.AddException(ex)
 					End Try
+				Else
 
-					'We now try to remove the service AMDPMPFD if its lowerfilter is not found
-					If reboot Or shutdown Then
-						If Not checkamdkmapfd() Then
-							CleanupEngine.cleanserviceprocess({"amdkmpfd"})
-						End If
+				End If
+				Try
+					Application.Log.AddMessage("Checking and Removing AMDKMPFD Filter if present")
+
+					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(child) = False Then
+								If child.ToLower.Contains("pnp0a08") Or
+								   child.ToLower.Contains("pnp0a03") Then
+									subregkey = regkey.OpenSubKey(child)
+									If subregkey IsNot Nothing Then
+										For Each child2 As String In subregkey.GetSubKeyNames()
+											If Not IsNullOrWhitespace(child2) Then
+												array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
+												If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+													For i As Integer = 0 To array.Length - 1
+														If Not IsNullOrWhitespace(array(i)) Then
+															If array(i).ToLower.Contains("amdkmpfd") Then
+																Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
+
+																Try
+																	Application.Log.AddMessage("array result: " + array(i))
+																Catch ex As Exception
+																End Try
+																processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+																If win10 Then
+																	processinfo.Arguments = "update " & config.Paths.WinDir & "inf\pci.inf " & Chr(34) & "*" & child & Chr(34)
+																Else
+																	processinfo.Arguments = "update " & config.Paths.WinDir & "inf\machine.inf " & Chr(34) & "*" & child & Chr(34)
+																End If
+																processinfo.UseShellExecute = False
+																processinfo.CreateNoWindow = True
+																processinfo.RedirectStandardOutput = True
+																process.StartInfo = processinfo
+
+																process.Start()
+																reply2 = process.StandardOutput.ReadToEnd
+																'process.WaitForExit()
+																process.StandardOutput.Close()
+																process.Close()
+
+																Application.Log.AddMessage(reply2)
+																Application.Log.AddMessage(child + " Restored.")
+
+															End If
+														End If
+													Next
+												End If
+											End If
+										Next
+									End If
+								End If
+							End If
+						Next
+					End If
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
+
+				'We now try to remove the service AMDPMPFD if its lowerfilter is not found
+				If reboot Or shutdown Then
+					If Not checkamdkmapfd() Then
+						CleanupEngine.cleanserviceprocess({"amdkmpfd"})
 					End If
 				End If
+			End If
 
-				If config.SelectedGPU = GPUVendor.AMD Then
-					cleanamdserviceprocess()
-					cleanamd(config)
+			If config.SelectedGPU = GPUVendor.AMD Then
+				cleanamdserviceprocess()
+				cleanamd(config)
 
-					If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-						Application.Log.AddMessage("Killing Explorer.exe")
+				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+					Application.Log.AddMessage("Killing Explorer.exe")
 
-						Dim appproc = process.GetProcessesByName("explorer")
-						For i As Integer = 0 To appproc.Length - 1
-							appproc(i).Kill()
-						Next i
-					End If
-
-					cleanamdfolders(config)
+					Dim appproc = process.GetProcessesByName("explorer")
+					For i As Integer = 0 To appproc.Length - 1
+						appproc(i).Kill()
+					Next i
 				End If
 
-				If config.SelectedGPU = GPUVendor.Nvidia Then
-					cleannvidiaserviceprocess(config)
-					cleannvidia(config)
+				cleanamdfolders(config)
+			End If
 
-					If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-						Application.Log.AddMessage("Killing Explorer.exe")
+			If config.SelectedGPU = GPUVendor.Nvidia Then
+				cleannvidiaserviceprocess(config)
+				cleannvidia(config)
 
-						Dim appproc = process.GetProcessesByName("explorer")
-						For i As Integer = 0 To appproc.Length - 1
-							appproc(i).Kill()
-						Next i
-					End If
+				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+					Application.Log.AddMessage("Killing Explorer.exe")
 
-
-					cleannvidiafolders(config)
-					checkpcieroot()
+					Dim appproc = process.GetProcessesByName("explorer")
+					For i As Integer = 0 To appproc.Length - 1
+						appproc(i).Kill()
+					Next i
 				End If
 
-				If config.SelectedGPU = GPUVendor.Intel Then
-					cleanintelserviceprocess()
-					cleanintel(config)
 
-					If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-						Application.Log.AddMessage("Killing Explorer.exe")
+				cleannvidiafolders(config)
+				checkpcieroot()
+			End If
 
-						Dim appproc = process.GetProcessesByName("explorer")
-						For i As Integer = 0 To appproc.Length - 1
-							appproc(i).Kill()
-						Next i
-					End If
+			If config.SelectedGPU = GPUVendor.Intel Then
+				cleanintelserviceprocess()
+				cleanintel(config)
 
-					cleanintelfolders()
+				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+					Application.Log.AddMessage("Killing Explorer.exe")
+
+					Dim appproc = process.GetProcessesByName("explorer")
+					For i As Integer = 0 To appproc.Length - 1
+						appproc(i).Kill()
+					Next i
 				End If
 
-				cleandriverstore(config)
-				fixregistrydriverstore()
-				'rebuildcountercache()
+				cleanintelfolders()
+			End If
+
+			cleandriverstore(config)
+			fixregistrydriverstore()
+			'rebuildcountercache()
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 			MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)

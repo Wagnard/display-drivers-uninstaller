@@ -21,6 +21,13 @@
                 <TextBlock />
 
                 <DockPanel LastChildFill="true">
+                    <TextBlock FontWeight="Bold" Text="FriendlyName:   " />
+                    <TextBlock Text="{Binding Path=FriendlyName, Mode=OneWay}" />
+                </DockPanel>
+                
+                <TextBlock />
+                
+                <DockPanel LastChildFill="true">
                     <TextBlock FontWeight="Bold" Text="Class Guid:    " />
                     <TextBlock Text="{Binding Path=ClassGuid, Mode=OneWay}" />
                 </DockPanel>
@@ -108,6 +115,20 @@
                     <TextBlock FontWeight="Bold" Text="Compatible IDs:    " />
 
                     <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding CompatibleIDs}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <TextBlock />
+
+                <StackPanel>
+                    <TextBlock FontWeight="Bold" Text="LowerFilters:    " />
+
+                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding LowerFilters}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}"/>
