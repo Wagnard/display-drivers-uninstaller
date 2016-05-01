@@ -5537,6 +5537,28 @@ Public Class frmMain
 			WindowsApi.CloseHandle(UserTokenHandle)
 		End If
 	End Sub
+	Private Sub imgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitdonate")
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
 
 	Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
 		Dim frmOptions As New frmOptions
@@ -5618,29 +5640,29 @@ Public Class frmMain
 			 )
 #End If
 			'we check if the donate/guru3dnvidia/gugu3damd/geforce/dduhome is trigger here directly.
-			'If CBool(settings.getconfig("donate")) = True Then
-			'	webAddress = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-			'End If
+			If CBool(Application.Settings.VisitDonate) Then
+				webAddress = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
+			End If
 
-			'If CBool(settings.getconfig("guru3dnvidia")) = True Then
-			'	webAddress = "http://forums.guru3d.com/showthread.php?t=379506"
-			'End If
+			If CBool(Application.Settings.VisitGuru3DNvidia) Then
+				webAddress = "http://forums.guru3d.com/showthread.php?t=379506"
+			End If
 
-			'If CBool(settings.getconfig("guru3damd")) = True Then
-			'	webAddress = "http://forums.guru3d.com/showthread.php?t=379505"
-			'End If
+			If CBool(Application.Settings.VisitGuru3DAMD) Then
+				webAddress = "http://forums.guru3d.com/showthread.php?t=379505"
+			End If
 
-			'If CBool(settings.getconfig("geforce")) = True Then
-			'	webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
-			'End If
+			If CBool(Application.Settings.VisitGeforce) Then
+				webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
+			End If
 
 			If CBool(Application.Settings.VisitDDUHome) Then
 				webAddress = "http://www.wagnardmobile.com"
 			End If
 
-			'If CBool(settings.getconfig("svn")) = True Then
-			'	webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
-			'End If
+			If CBool(Application.Settings.VisitSVN) Then
+				webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
+			End If
 
 			If CBool(Application.Settings.VisitDonate) = True Or
 			   CBool(Application.Settings.VisitGuru3DNvidia) = True Or
@@ -5659,14 +5681,6 @@ Public Class frmMain
 				process.Start()
 				'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
 				process.Close()
-
-				'         settings.setconfig("donate", "false")
-				'         settings.setconfig("guru3dnvidia", "false")
-				'         settings.setconfig("guru3damd", "false")
-				'         settings.setconfig("geforce", "false")
-				'         settings.setconfig("dduhome", "false")
-				'         settings.setconfig("svn", "false")
-
 				closeddu()
 				deletefile(Application.Paths.AppBase + "DDU.bat")
 				Exit Sub
@@ -7936,6 +7950,98 @@ skipboot:
 
         setupAPIWindow.ShowDialog()
     End Sub
+
+	Private Sub VisitSVNMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitSVNMenuItem.Click
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitsvn")
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
+
+	Private Sub VisitGuru3DNvidiaMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DNvidiaMenuItem.Click
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitguru3dnvidia")
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
+
+	Private Sub VisitGuru3DAMDMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DAMDMenuItem.Click
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitguru3damd")
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
+
+	Private Sub VisitGeforceMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGeforceMenuItem.Click
+		'Create the ddu.bat file
+		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
+		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitgeforce")
+		sw.Flush()
+		sw.Close()
+
+		Dim UserTokenHandle As IntPtr = IntPtr.Zero
+		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+		Dim StartInfo As New WindowsApi.STARTUPINFOW
+		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		Else
+			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+		End If
+
+		If Not UserTokenHandle = IntPtr.Zero Then
+			WindowsApi.CloseHandle(UserTokenHandle)
+		End If
+	End Sub
 End Class
 
 Public Class CleanupEngine
