@@ -5534,12 +5534,15 @@ Public Class frmMain
 				'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 				'closeddu()
 				' Restart program and run as admin
-				Dim exeName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
-				Dim startInfo As New ProcessStartInfo(exeName)
-				startInfo.Verb = "runas"
-				System.Diagnostics.Process.Start(startInfo)
+				Try
+					Dim exeName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
+					Dim startInfo As New ProcessStartInfo(exeName)
+					startInfo.Verb = "runas"
+					System.Diagnostics.Process.Start(startInfo)
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
 				Application.Current.Shutdown()
-
 				Exit Sub
 			End If
 
