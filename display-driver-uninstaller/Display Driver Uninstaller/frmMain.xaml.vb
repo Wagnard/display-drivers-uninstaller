@@ -5160,11 +5160,6 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
 
 			If regkey IsNot Nothing Then
-				'Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
-				'sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34) + " " + arg)
-				'sw.Flush()
-				'sw.Close()
-				'settings.setconfig("arguments", arg)   'May need to fix in the future to support command argument.
 				regkey.SetValue("*" + Application.Current.MainWindow.GetType().Assembly.GetName().Name, System.Reflection.Assembly.GetExecutingAssembly().Location)
 				regkey.SetValue("*UndoSM", "BCDEDIT /deletevalue safeboot")
 			End If
@@ -5372,163 +5367,16 @@ Public Class frmMain
 		Checkupdates2()
 	End Sub
 
-	Private Sub PictureBox1_Click(sender As Object, e As EventArgs)
-		'settings.setconfig("donate", "true")   'Will fix later.
-
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34))
-		sw.Flush()
-		sw.Close()
-
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-
-	End Sub
-
-
-
-	'Private Sub ToSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ToSToolStripMenuItem.Click
-	'    MessageBox.Show(Languages.GetTranslation("Misc", "Tos", "Text"))
-	'End Sub
-
-	'Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
-	'    Using frm As New frmAbout
-	'        frm.ShowDialog(Me)
-	'    End Using
-	'End Sub
-
-	'Private Sub VisitGuru3dNVIDIAThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dNVIDIAThreadToolStripMenuItem.Click
-
-	'    settings.setconfig("guru3dnvidia", "true")
-
-	'    'Create the ddu.bat file
-	'    Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
-	'    sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-	'    sw.Flush()
-	'    sw.Close()
-
-	'    Dim UserTokenHandle As IntPtr = IntPtr.Zero
-	'    WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-	'    Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-	'    Dim StartInfo As New WindowsApi.STARTUPINFOW
-	'    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-	'    If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-	'    Else
-	'        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-	'    End If
-
-	'    If Not UserTokenHandle = IntPtr.Zero Then
-	'        WindowsApi.CloseHandle(UserTokenHandle)
-	'    End If
-	'End Sub
-
-	'Private Sub VisitGuru3dAMDThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGuru3dAMDThreadToolStripMenuItem.Click
-
-	'    settings.setconfig("guru3damd", "true")
-
-	'    'Create the ddu.bat file
-	'    Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
-	'    sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-	'    sw.Flush()
-	'    sw.Close()
-
-	'    Dim UserTokenHandle As IntPtr = IntPtr.Zero
-	'    WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-	'    Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-	'    Dim StartInfo As New WindowsApi.STARTUPINFOW
-	'    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-	'    If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-	'    Else
-	'        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-	'    End If
-
-	'    If Not UserTokenHandle = IntPtr.Zero Then
-	'        WindowsApi.CloseHandle(UserTokenHandle)
-	'    End If
-	'End Sub
-
-	'Private Sub VisitGeforceThreadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitGeforceThreadToolStripMenuItem.Click
-
-	'    settings.setconfig("geforce", "true")
-
-	'    'Create the ddu.bat file
-	'    Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
-	'    sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-	'    sw.Flush()
-	'    sw.Close()
-
-	'    Dim UserTokenHandle As IntPtr = IntPtr.Zero
-	'    WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-	'    Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-	'    Dim StartInfo As New WindowsApi.STARTUPINFOW
-	'    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-	'    If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-	'    Else
-	'        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-	'    End If
-
-	'    If Not UserTokenHandle = IntPtr.Zero Then
-	'        WindowsApi.CloseHandle(UserTokenHandle)
-	'    End If
-	'End Sub
-
-	'Private Sub SVNToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SVNToolStripMenuItem.Click
-
-	'    settings.setconfig("svn", "true")
-
-	'    'Create the ddu.bat file
-	'    Dim sw As StreamWriter = System.IO.File.CreateText(basedir + "\DDU.bat")
-	'    sw.WriteLine(Chr(34) + basedir + "\" + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + Chr(34))
-	'    sw.Flush()
-	'    sw.Close()
-
-	'    Dim UserTokenHandle As IntPtr = IntPtr.Zero
-	'    WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-	'    Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-	'    Dim StartInfo As New WindowsApi.STARTUPINFOW
-	'    StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-	'    If WindowsApi.CreateProcessAsUser(UserTokenHandle, basedir + "\DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-	'    Else
-	'        MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-	'    End If
-
-	'    If Not UserTokenHandle = IntPtr.Zero Then
-	'        WindowsApi.CloseHandle(UserTokenHandle)
-	'    End If
-	'End Sub
-
 	Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomeMenuItem.Click
 
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitdduhome")
-		sw.Flush()
-		sw.Close()
-
+		Dim commandline As StringBuilder = StrAppend(" -visitdduhome")
 		Dim UserTokenHandle As IntPtr = IntPtr.Zero
 		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
 		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
 		Dim StartInfo As New WindowsApi.STARTUPINFOW
 		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
 		Else
 			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
 		End If
@@ -5538,19 +5386,15 @@ Public Class frmMain
 		End If
 	End Sub
 	Private Sub imgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitdonate")
-		sw.Flush()
-		sw.Close()
 
+		Dim commandline As StringBuilder = StrAppend(" -visitdonate")
 		Dim UserTokenHandle As IntPtr = IntPtr.Zero
 		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
 		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
 		Dim StartInfo As New WindowsApi.STARTUPINFOW
 		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
 		Else
 			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
 		End If
@@ -5682,14 +5526,20 @@ Public Class frmMain
 				'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
 				process.Close()
 				closeddu()
-				deletefile(Application.Paths.AppBase + "DDU.bat")
 				Exit Sub
 			End If
 
 
 			If Not isElevated Then
-				MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-				closeddu()
+				'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+				'closeddu()
+				' Restart program and run as admin
+				Dim exeName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
+				Dim startInfo As New ProcessStartInfo(exeName)
+				startInfo.Verb = "runas"
+				System.Diagnostics.Process.Start(startInfo)
+				Application.Current.Shutdown()
+
 				Exit Sub
 			End If
 
@@ -6418,122 +6268,38 @@ skipboot:
 
 
 
-				' ----------------------
-				' Removing the videocard
-				' ----------------------
+			' ----------------------
+			' Removing the videocard
+			' ----------------------
 
-				If config.UseSetupAPI Then
-					Try
-						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "display")
-						If found.Count > 0 Then
-							For Each d As SetupAPI.Device In found
-								If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
-									'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
-									SetupAPI.UninstallDevice(d)
-								End If
-							Next
-						End If
-
-					Catch ex As Exception
-						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-						Application.Log.AddException(ex)
-					End Try
-
-				Else
-					'OLD DDUDR (DEVCON Section)
-					For a = 1 To 2	 'loop 2 time here for nVidia SLI pupose in normal mode.(4 may be necessary for quad SLI... need to check.)
-						Try
-							regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-							If regkey IsNot Nothing Then
-								For Each child As String In regkey.GetSubKeyNames
-									If Not IsNullOrWhitespace(child) AndAlso
-									 (child.ToLower.Contains("ven_10de") Or
-									 child.ToLower.Contains("ven_8086") Or
-									 child.ToLower.Contains("ven_1002")) Then
-
-										subregkey = regkey.OpenSubKey(child)
-										If subregkey IsNot Nothing Then
-
-											For Each child2 As String In subregkey.GetSubKeyNames
-
-												If subregkey.OpenSubKey(child2) Is Nothing Then
-													Continue For
-												End If
-
-												array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
-
-												If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-													For i As Integer = 0 To array.Length - 1
-
-														If Not IsNullOrWhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
-
-															vendid = child & "\" & child2
-
-															If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-																processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-																processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
-																processinfo.UseShellExecute = False
-																processinfo.CreateNoWindow = True
-																processinfo.RedirectStandardOutput = True
-																process.StartInfo = processinfo
-
-																process.Start()
-																reply2 = process.StandardOutput.ReadToEnd
-																process.StandardOutput.Close()
-																process.Close()
-																'process.WaitForExit()
-																Application.Log.AddMessage(reply2)
-															End If
-															Exit For   'the card is removed so we exit the loop from here.
-														End If
-													Next
-												End If
-											Next
-										End If
-									End If
-								Next
+			If config.UseSetupAPI Then
+				Try
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "display")
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
+								'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
+								SetupAPI.UninstallDevice(d)
 							End If
-						Catch ex As Exception
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-							Application.Log.AddException(ex)
-						End Try
-					Next
-				End If
+						Next
+					End If
 
-				UpdateTextMethod(UpdateTextMethodmessagefn(23))
-				Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
+				Catch ex As Exception
+					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					Application.Log.AddException(ex)
+				End Try
 
-
-				cleandriverstore(config)
-
-				UpdateTextMethod(UpdateTextMethodmessagefn(24))
-				Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
-
-				If config.UseSetupAPI Then
+			Else
+				'OLD DDUDR (DEVCON Section)
+				For a = 1 To 2	 'loop 2 time here for nVidia SLI pupose in normal mode.(4 may be necessary for quad SLI... need to check.)
 					Try
-						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
-						If found.Count > 0 Then
-							For Each d As SetupAPI.Device In found
-								If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
-									'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
-									SetupAPI.UninstallDevice(d)
-								End If
-							Next
-						End If
-
-					Catch ex As Exception
-						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-						Application.Log.AddException(ex)
-					End Try
-				Else
-					Try
-						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
+						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames
 								If Not IsNullOrWhitespace(child) AndAlso
-								   (child.ToLower.Contains("ven_10de") Or
-								   child.ToLower.Contains("ven_8086") Or
-								   child.ToLower.Contains("ven_1002")) Then
+								 (child.ToLower.Contains("ven_10de") Or
+								 child.ToLower.Contains("ven_8086") Or
+								 child.ToLower.Contains("ven_1002")) Then
 
 									subregkey = regkey.OpenSubKey(child)
 									If subregkey IsNot Nothing Then
@@ -6544,24 +6310,33 @@ skipboot:
 												Continue For
 											End If
 
-											vendid = child & "\" & child2
+											array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
 
-											If vendid.ToLower.Contains(vendidexpected.ToLower) Then
-												processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-												processinfo.Arguments = "remove " & Chr(34) & "@HDAUDIO\" & vendid & Chr(34)
-												processinfo.UseShellExecute = False
-												processinfo.CreateNoWindow = True
-												processinfo.RedirectStandardOutput = True
-												process.StartInfo = processinfo
+											If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+												For i As Integer = 0 To array.Length - 1
 
-												process.Start()
-												reply2 = process.StandardOutput.ReadToEnd
-												process.StandardOutput.Close()
-												process.Close()
-												'process.WaitForExit()
-												Application.Log.AddMessage(reply2)
+													If Not IsNullOrWhitespace(array(i)) AndAlso array(i).ToLower.Contains("pci\cc_03") Then
 
+														vendid = child & "\" & child2
 
+														If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+															processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+															processinfo.Arguments = "remove " & Chr(34) & "@pci\" & vendid & Chr(34)
+															processinfo.UseShellExecute = False
+															processinfo.CreateNoWindow = True
+															processinfo.RedirectStandardOutput = True
+															process.StartInfo = processinfo
+
+															process.Start()
+															reply2 = process.StandardOutput.ReadToEnd
+															process.StandardOutput.Close()
+															process.Close()
+															'process.WaitForExit()
+															Application.Log.AddMessage(reply2)
+														End If
+														Exit For   'the card is removed so we exit the loop from here.
+													End If
+												Next
 											End If
 										Next
 									End If
@@ -6572,16 +6347,91 @@ skipboot:
 						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 						Application.Log.AddException(ex)
 					End Try
-				End If
-				UpdateTextMethod(UpdateTextMethodmessagefn(25))
+				Next
+			End If
+
+			UpdateTextMethod(UpdateTextMethodmessagefn(23))
+			Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
 
 
-				Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
+			cleandriverstore(config)
+
+			UpdateTextMethod(UpdateTextMethodmessagefn(24))
+			Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
+
+			If config.UseSetupAPI Then
+				Try
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
+								'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
+								SetupAPI.UninstallDevice(d)
+							End If
+						Next
+					End If
+
+				Catch ex As Exception
+					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					Application.Log.AddException(ex)
+				End Try
+			Else
+				Try
+					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames
+							If Not IsNullOrWhitespace(child) AndAlso
+							   (child.ToLower.Contains("ven_10de") Or
+							   child.ToLower.Contains("ven_8086") Or
+							   child.ToLower.Contains("ven_1002")) Then
+
+								subregkey = regkey.OpenSubKey(child)
+								If subregkey IsNot Nothing Then
+
+									For Each child2 As String In subregkey.GetSubKeyNames
+
+										If subregkey.OpenSubKey(child2) Is Nothing Then
+											Continue For
+										End If
+
+										vendid = child & "\" & child2
+
+										If vendid.ToLower.Contains(vendidexpected.ToLower) Then
+											processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+											processinfo.Arguments = "remove " & Chr(34) & "@HDAUDIO\" & vendid & Chr(34)
+											processinfo.UseShellExecute = False
+											processinfo.CreateNoWindow = True
+											processinfo.RedirectStandardOutput = True
+											process.StartInfo = processinfo
+
+											process.Start()
+											reply2 = process.StandardOutput.ReadToEnd
+											process.StandardOutput.Close()
+											process.Close()
+											'process.WaitForExit()
+											Application.Log.AddMessage(reply2)
 
 
-				If config.SelectedGPU <> GPUVendor.Intel Then
-					cleandriverstore(config)
-				End If
+										End If
+									Next
+								End If
+							End If
+						Next
+					End If
+				Catch ex As Exception
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					Application.Log.AddException(ex)
+				End Try
+			End If
+			UpdateTextMethod(UpdateTextMethodmessagefn(25))
+
+
+			Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
+
+
+			If config.SelectedGPU <> GPUVendor.Intel Then
+				cleandriverstore(config)
+			End If
 
 			'Here I remove 3dVision USB Adapter.
 			If config.SelectedGPU = GPUVendor.Nvidia Then
@@ -6925,7 +6775,7 @@ skipboot:
 							Next
 						End If
 					End If
-			Catch ex As Exception
+				Catch ex As Exception
 					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
@@ -7940,31 +7790,27 @@ skipboot:
 		'end system environement patch cleanup
 	End Sub
 
-    Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
-        Me.WindowState = Windows.WindowState.Minimized
-    End Sub
+	Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
+		Me.WindowState = Windows.WindowState.Minimized
+	End Sub
 
-    Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
-        ' SetupAPI.GetDevices("Display")
-        Dim setupAPIWindow As New SetupAPITestWindow
+	Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
+		' SetupAPI.GetDevices("Display")
+		Dim setupAPIWindow As New SetupAPITestWindow
 
-        setupAPIWindow.ShowDialog()
-    End Sub
+		setupAPIWindow.ShowDialog()
+	End Sub
 
 	Private Sub VisitSVNMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitSVNMenuItem.Click
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitsvn")
-		sw.Flush()
-		sw.Close()
 
+		Dim commandline As StringBuilder = StrAppend(" -visitsvn")
 		Dim UserTokenHandle As IntPtr = IntPtr.Zero
 		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
 		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
 		Dim StartInfo As New WindowsApi.STARTUPINFOW
 		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
 		Else
 			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
 		End If
@@ -7975,11 +7821,9 @@ skipboot:
 	End Sub
 
 	Private Sub VisitGuru3DNvidiaMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DNvidiaMenuItem.Click
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitguru3dnvidia")
-		sw.Flush()
-		sw.Close()
+
+		Dim commandline As StringBuilder = StrAppend(" -visitguru3dnvidia")
+
 
 		Dim UserTokenHandle As IntPtr = IntPtr.Zero
 		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
@@ -7987,7 +7831,7 @@ skipboot:
 		Dim StartInfo As New WindowsApi.STARTUPINFOW
 		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
 		Else
 			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
 		End If
@@ -7998,11 +7842,9 @@ skipboot:
 	End Sub
 
 	Private Sub VisitGuru3DAMDMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DAMDMenuItem.Click
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitguru3damd")
-		sw.Flush()
-		sw.Close()
+
+		Dim commandline As StringBuilder = StrAppend(" -visitguru3damd")
+
 
 		Dim UserTokenHandle As IntPtr = IntPtr.Zero
 		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
@@ -8010,7 +7852,7 @@ skipboot:
 		Dim StartInfo As New WindowsApi.STARTUPINFOW
 		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
 		Else
 			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
 		End If
@@ -8021,11 +7863,10 @@ skipboot:
 	End Sub
 
 	Private Sub VisitGeforceMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGeforceMenuItem.Click
-		'Create the ddu.bat file
-		Dim sw As StreamWriter = System.IO.File.CreateText(baseDir + "\DDU.bat")
-		sw.WriteLine(Chr(34) + Application.Paths.AppExeFile + Chr(34) + " -visitgeforce")
-		sw.Flush()
-		sw.Close()
+
+
+		Dim commandline As StringBuilder = StrAppend(" -visitgeforce")
+
 
 		Dim UserTokenHandle As IntPtr = IntPtr.Zero
 		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
@@ -8033,7 +7874,7 @@ skipboot:
 		Dim StartInfo As New WindowsApi.STARTUPINFOW
 		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
 
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppBase + "DDU.bat", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
 		Else
 			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
 		End If
@@ -9637,59 +9478,60 @@ Public Class WindowsApi
     Public Shared Function CloseHandle(<InAttribute()> ByVal hObject As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
     End Function
 
-    <DllImport("advapi32.dll", EntryPoint:="CreateProcessAsUserW", SetLastError:=True)> _
-    Public Shared Function CreateProcessAsUser(<InAttribute()> ByVal hToken As IntPtr, _
-                                                    <InAttribute(), MarshalAs(UnmanagedType.LPWStr)> ByVal lpApplicationName As String, _
-                                                    ByVal lpCommandLine As IntPtr, _
-                                                    <InAttribute()> ByVal lpProcessAttributes As IntPtr, _
-                                                    <InAttribute()> ByVal lpThreadAttributes As IntPtr, _
-                                                    <MarshalAs(UnmanagedType.Bool)> ByVal bInheritHandles As Boolean, _
-                                                    ByVal dwCreationFlags As UInteger, _
-                                                    <InAttribute()> ByVal lpEnvironment As IntPtr, _
-                                                    <InAttribute(), MarshalAsAttribute(UnmanagedType.LPWStr)> ByVal lpCurrentDirectory As String, _
-                                                    <InAttribute()> ByRef lpStartupInfo As STARTUPINFOW, _
-                                                    <OutAttribute()> ByRef lpProcessInformation As PROCESS_INFORMATION) As <MarshalAs(UnmanagedType.Bool)> Boolean
-    End Function
+	<DllImport("Advapi32.dll", ExactSpelling:=False, SetLastError:=True, CharSet:=CharSet.Unicode)> _
+	Public Shared Function CreateProcessAsUser( _
+						   ByVal hToken As IntPtr, _
+						   ByVal lpApplicationName As String, _
+						   <[In](), Out(), [Optional]()> ByVal lpCommandLine As StringBuilder, _
+						   ByVal lpProcessAttributes As IntPtr, _
+						   ByVal lpThreadAttributes As IntPtr, _
+						   <MarshalAs(UnmanagedType.Bool)> ByVal bInheritHandles As Boolean, _
+						   ByVal dwCreationFlags As Integer, _
+						   ByVal lpEnvironment As IntPtr, _
+						   ByVal lpCurrentDirectory As String, _
+						   <[In]()> ByRef lpStartupInfo As STARTUPINFOW, _
+						   <Out()> ByRef lpProcessInformation As PROCESS_INFORMATION) As <MarshalAs(UnmanagedType.Bool)> Boolean
+	End Function
 
-    <StructLayout(LayoutKind.Sequential)> _
-    Public Structure SECURITY_ATTRIBUTES
-        Public nLength As UInteger
-        Public lpSecurityDescriptor As IntPtr
-        <MarshalAs(UnmanagedType.Bool)> _
-        Public bInheritHandle As Boolean
-    End Structure
+	<StructLayout(LayoutKind.Sequential)> _
+	Public Structure SECURITY_ATTRIBUTES
+		Public nLength As UInteger
+		Public lpSecurityDescriptor As IntPtr
+		<MarshalAs(UnmanagedType.Bool)> _
+		Public bInheritHandle As Boolean
+	End Structure
 
-    <StructLayout(LayoutKind.Sequential)> _
-    Public Structure STARTUPINFOW
-        Public cb As UInteger
-        <MarshalAs(UnmanagedType.LPWStr)> _
-        Public lpReserved As String
-        <MarshalAs(UnmanagedType.LPWStr)> _
-        Public lpDesktop As String
-        <MarshalAs(UnmanagedType.LPWStr)> _
-        Public lpTitle As String
-        Public dwX As UInteger
-        Public dwY As UInteger
-        Public dwXSize As UInteger
-        Public dwYSize As UInteger
-        Public dwXCountChars As UInteger
-        Public dwYCountChars As UInteger
-        Public dwFillAttribute As UInteger
-        Public dwFlags As UInteger
-        Public wShowWindow As UShort
-        Public cbReserved2 As UShort
-        Public lpReserved2 As IntPtr
-        Public hStdInput As IntPtr
-        Public hStdOutput As IntPtr
-        Public hStdError As IntPtr
-    End Structure
+	<StructLayout(LayoutKind.Sequential)> _
+	Public Structure STARTUPINFOW
+		Public cb As UInteger
+		<MarshalAs(UnmanagedType.LPWStr)> _
+		Public lpReserved As String
+		<MarshalAs(UnmanagedType.LPWStr)> _
+		Public lpDesktop As String
+		<MarshalAs(UnmanagedType.LPWStr)> _
+		Public lpTitle As String
+		Public dwX As UInteger
+		Public dwY As UInteger
+		Public dwXSize As UInteger
+		Public dwYSize As UInteger
+		Public dwXCountChars As UInteger
+		Public dwYCountChars As UInteger
+		Public dwFillAttribute As UInteger
+		Public dwFlags As UInteger
+		Public wShowWindow As UShort
+		Public cbReserved2 As UShort
+		Public lpReserved2 As IntPtr
+		Public hStdInput As IntPtr
+		Public hStdOutput As IntPtr
+		Public hStdError As IntPtr
+	End Structure
 
-    <StructLayout(LayoutKind.Sequential)> _
-    Public Structure PROCESS_INFORMATION
-        Public hProcess As IntPtr
-        Public hThread As IntPtr
-        Public dwProcessId As UInteger
-        Public dwThreadId As UInteger
-    End Structure
+	<StructLayout(LayoutKind.Sequential)> _
+	Public Structure PROCESS_INFORMATION
+		Public hProcess As IntPtr
+		Public hThread As IntPtr
+		Public dwProcessId As UInteger
+		Public dwThreadId As UInteger
+	End Structure
 
 End Class
