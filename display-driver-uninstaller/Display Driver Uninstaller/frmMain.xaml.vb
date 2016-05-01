@@ -7964,10 +7964,24 @@ Public Class CleanupEngine
     End Sub
 
 	Public Sub deletedirectory(ByVal directorypath As String)
-		If Not IsNullOrWhitespace(directorypath) Then
-			My.Computer.FileSystem.DeleteDirectory _
-			  (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
-			Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
+		Dim fixacls As Boolean = False
+		If Not IsNullOrWhitespace(directorypath) AndAlso Directory.Exists(directorypath) Then
+			Try
+				My.Computer.FileSystem.DeleteDirectory _
+				  (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
+			Catch ex As Exception
+				Application.Log.AddWarningMessage("Failed to remove " + directorypath + " Will try to set ACLs permission and try again.")
+				fixacls = True
+			End Try
+
+			'If exists, it means we need to modify it's ACls.
+			If fixacls AndAlso Directory.Exists(directorypath) Then
+				FixACL.AddDirectorySecurity(directorypath, FileSystemRights.FullControl, AccessControlType.Allow)
+				My.Computer.FileSystem.DeleteDirectory _
+  (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
+			End If
 		End If
 
 		If Not Directory.Exists(directorypath) Then

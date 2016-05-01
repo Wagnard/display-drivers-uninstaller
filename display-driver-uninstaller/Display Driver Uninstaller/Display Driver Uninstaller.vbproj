@@ -71,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ACL.vb" />
     <Compile Include="AppLog.vb" />
     <Compile Include="AppPaths.vb" />
     <Compile Include="Converters.vb" />
