@@ -5529,30 +5529,31 @@ Public Class frmMain
 				Exit Sub
 			End If
 
+			If Not System.Diagnostics.Debugger.IsAttached Then
 
-			If Not isElevated Then
-				'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-				'closeddu()
-				' Restart program and run as admin
-				Try
-					Dim exeName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
-					Dim startInfo As New ProcessStartInfo(exeName)
-					startInfo.Verb = "runas"
-					System.Diagnostics.Process.Start(startInfo)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
-				Application.Current.Shutdown()
-				Exit Sub
+				If Not isElevated Then
+					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					'closeddu()
+					' Restart program and run as admin
+					Try
+						Dim exeName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
+						Dim startInfo As New ProcessStartInfo(exeName)
+						startInfo.Verb = "runas"
+						System.Diagnostics.Process.Start(startInfo)
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+					Application.Current.Shutdown()
+					Exit Sub
+				End If
+
+				'second, we check on what we are running and set variables accordingly (os, architecture)
+				If Not IsNullOrWhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion"))) Then
+					version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
+				Else
+					version = "5.0"
+				End If
 			End If
-
-			'second, we check on what we are running and set variables accordingly (os, architecture)
-			If Not IsNullOrWhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion"))) Then
-				version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
-			Else
-				version = "5.0"
-			End If
-
 
 #If 1 + 1 = 3 Then ' TODO: REMOVE (msgboxes gets annoying...)
 			MessageBox.Show("version (regkey): " & version & vbCrLf & vbCrLf &

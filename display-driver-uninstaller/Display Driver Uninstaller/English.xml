@@ -152,12 +152,15 @@
     <btnClose>
       <Text>Close</Text>
     </btnClose>
-		<Label1>
-			<Text>GPUs Specifics Options</Text>
-		</Label1>
-		<Label2>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specific Options</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specific Options</Text>
+		</lblAmdspecific>
+		<lblGeneral>
 			<Text>General Options</Text>
-		</Label2>
+		</lblGeneral>
 		<lblRemNvidiaDirs>
 			<Text>Remove "C:\nVidia" Drivers folders (NOT recommended) </Text>
 		</lblRemNvidiaDirs>
