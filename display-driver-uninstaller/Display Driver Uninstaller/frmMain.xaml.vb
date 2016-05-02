@@ -5868,52 +5868,54 @@ Public Class frmMain
 
 					Topmost = False
 
+					If Not System.Diagnostics.Debugger.IsAttached Then
 
-					GoTo skipboot 'TODO: REMOVE THIS LINE!!!! Blocked restart for faster debugging
-					Dim stopservice As New ProcessStartInfo
-					stopservice.FileName = "cmd.exe"
-					stopservice.Arguments = " /Csc stop PAExec"
-					stopservice.UseShellExecute = False
-					stopservice.CreateNoWindow = True
-					stopservice.RedirectStandardOutput = False
+						Dim stopservice As New ProcessStartInfo
+						stopservice.FileName = "cmd.exe"
+						stopservice.Arguments = " /Csc stop PAExec"
+						stopservice.UseShellExecute = False
+						stopservice.CreateNoWindow = True
+						stopservice.RedirectStandardOutput = False
 
-					processstopservice.StartInfo = stopservice
-					processstopservice.Start()
-					processstopservice.WaitForExit()
-					processstopservice.Close()
-					System.Threading.Thread.Sleep(10)
+						processstopservice.StartInfo = stopservice
+						processstopservice.Start()
+						processstopservice.WaitForExit()
+						processstopservice.Close()
+						System.Threading.Thread.Sleep(10)
 
-					stopservice.Arguments = " /Csc delete PAExec"
+						stopservice.Arguments = " /Csc delete PAExec"
 
-					processstopservice.StartInfo = stopservice
-					processstopservice.Start()
-					processstopservice.WaitForExit()
-					processstopservice.Close()
+						processstopservice.StartInfo = stopservice
+						processstopservice.Start()
+						processstopservice.WaitForExit()
+						processstopservice.Close()
 
-					stopservice.Arguments = " /Csc interrogate PAExec"
-					processstopservice.StartInfo = stopservice
-					processstopservice.Start()
-					processstopservice.WaitForExit()
-					processstopservice.Close()
+						stopservice.Arguments = " /Csc interrogate PAExec"
+						processstopservice.StartInfo = stopservice
+						processstopservice.Start()
+						processstopservice.WaitForExit()
+						processstopservice.Close()
 
-					processinfo.FileName = baseDir & "\" & ddudrfolder & "\paexec.exe"
-					processinfo.Arguments = "-noname -i -s " & Chr(34) & baseDir & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + arg
-					processinfo.UseShellExecute = False
-					processinfo.CreateNoWindow = True
-					processinfo.RedirectStandardOutput = False
+						processinfo.FileName = baseDir & "\" & ddudrfolder & "\paexec.exe"
+						processinfo.Arguments = "-noname -i -s " & Chr(34) & baseDir & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + arg
+						processinfo.UseShellExecute = False
+						processinfo.CreateNoWindow = True
+						processinfo.RedirectStandardOutput = False
 
-					process.StartInfo = processinfo
-					process.Start()
-					'Do not add waitforexit here or DDU(current user)will not close
-					process.Close()
+						process.StartInfo = processinfo
+						process.Start()
+						'Do not add waitforexit here or DDU(current user)will not close
+						process.Close()
 
-					closeddu()
-					Exit Sub
+						closeddu()
+						Exit Sub
+					Else
+						Me.WindowState = Windows.WindowState.Normal
+					End If
 				Else
 					Me.WindowState = Windows.WindowState.Normal
 				End If
-skipboot:
-				Me.WindowState = Windows.WindowState.Normal	  'temporary so we can easilly debug.
+
 				Dim info As LogEntry = LogEntry.Create()
 				UpdateTextMethod(UpdateTextMethodmessagefn(10) + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
 
