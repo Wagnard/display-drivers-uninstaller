@@ -194,9 +194,9 @@
 		<lblUseRoamingCfg>
 			<Text>Store config file in roaming folder</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>Do not check for DDU updates on startup (NOT Recommended)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automaticall check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Remove Geforce Experience (GFE)</Text>
 		</lblRemGFE>

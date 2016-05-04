@@ -36,7 +36,7 @@ Public Class AppSettings
 	' Settings
 	Private m_showSafeModeMsg As DependencyProperty = Reg("ShowSafeModeMsg", GetType(Boolean), GetType(AppSettings), True)
 	Private m_UseRoamingCfg As DependencyProperty = Reg("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
-	Private m_DontCheckUpdates As DependencyProperty = Reg("DontCheckUpdates", GetType(Boolean), GetType(AppSettings), False)
+    Private m_CheckUpdates As DependencyProperty = Reg("CheckUpdates", GetType(Boolean), GetType(AppSettings), False)
 	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
 	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
 	Private m_removevulkan As DependencyProperty = Reg("RemoveVulkan", GetType(Boolean), GetType(AppSettings), False)
@@ -187,14 +187,14 @@ Public Class AppSettings
 			SetValue(m_UseRoamingCfg, value)
 		End Set
 	End Property
-	Public Property DontCheckUpdates As Boolean
-		Get
-			Return CBool(GetValue(m_DontCheckUpdates))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_DontCheckUpdates, value)
-		End Set
-	End Property
+    Public Property CheckUpdates As Boolean
+        Get
+            Return CBool(GetValue(m_CheckUpdates))
+        End Get
+        Set(value As Boolean)
+            SetValue(m_CheckUpdates, value)
+        End Set
+    End Property
 	Public Property CreateRestorePoint As Boolean
 		Get
 			Return CBool(GetValue(m_createRestorePoint))
@@ -418,7 +418,7 @@ Public Class AppSettings
 						.WriteElementString("RemoveGFE", RemoveGFE.ToString())
 						.WriteElementString("ShowSafeModeMsg", ShowSafeModeMsg.ToString())
 						.WriteElementString("UseRoamingConfig", UseRoamingConfig.ToString())
-						.WriteElementString("DontCheckUpdates", DontCheckUpdates.ToString())
+                        .WriteElementString("CheckUpdates", CheckUpdates.ToString())
 						.WriteElementString("CreateRestorePoint", CreateRestorePoint.ToString())
 						.WriteElementString("SaveLogs", SaveLogs.ToString())
 						.WriteElementString("RemoveVulkan", RemoveVulkan.ToString())
@@ -556,8 +556,8 @@ Public Class AppSettings
 							Case "useroamingconfig"
 								UseRoamingConfig = Boolean.Parse(KvP.Value)
 
-							Case "dontcheckupdates"
-								DontCheckUpdates = Boolean.Parse(KvP.Value)
+                            Case "checkupdates"
+                                CheckUpdates = Boolean.Parse(KvP.Value)
 
 							Case "createrestorepoint"
 								CreateRestorePoint = Boolean.Parse(KvP.Value)
