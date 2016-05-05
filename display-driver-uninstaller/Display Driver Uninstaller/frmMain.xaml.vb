@@ -1918,30 +1918,16 @@ Public Class frmMain
 
 		Try
 			For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-				If IsNullOrWhitespace(users) Then
+				If Not IsNullOrWhitespace(users) Then
 					regkey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Microsoft\Windows\CurrentVersion\Run", True)
 					If regkey IsNot Nothing Then
-						Try
-							deletevalue(regkey, "HydraVisionDesktopManager")
-						Catch ex As Exception
-
-							Application.Log.AddException(ex)
-						End Try
-
-						Try
-							deletevalue(regkey, "Grid")
-						Catch ex As Exception
-
-							Application.Log.AddException(ex)
-						End Try
-
-						Try
-							deletevalue(regkey, "HydraVisionMDEngine")
-						Catch ex As Exception
-
-							Application.Log.AddException(ex)
-						End Try
-
+						For Each child As String In regkey.GetValueNames
+							If Not IsNullOrWhitespace(child) Then
+								If StrContainsAny(child, True, "HydraVisionDesktopManager", "Grid", "HydraVisionMDEngine") Then
+									deletevalue(regkey, child)
+								End If
+							End If
+						Next
 					End If
 				End If
 			Next
@@ -2029,28 +2015,13 @@ Public Class frmMain
 			regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 			 ("Software\Microsoft\Windows\CurrentVersion\Run", True)
 			If regkey IsNot Nothing Then
-				Try
-					deletevalue(regkey, "StartCCC")
-
-				Catch ex As Exception
-
-					Application.Log.AddException(ex)
-				End Try
-				Try
-					deletevalue(regkey, "StartCN")
-
-				Catch ex As Exception
-
-					Application.Log.AddException(ex)
-				End Try
-				Try
-
-					deletevalue(regkey, "AMD AVT")
-
-				Catch ex As Exception
-
-					Application.Log.AddException(ex)
-				End Try
+				For Each child As String In regkey.GetValueNames
+					If Not IsNullOrWhitespace(child) Then
+						If StrContainsAny(child, True, "StartCCC", "StartCN", "AMD AVT") Then
+							deletevalue(regkey, child)
+						End If
+					End If
+				Next
 			End If
 		Catch ex As Exception
 			Application.Log.AddException(ex)
@@ -2062,23 +2033,13 @@ Public Class frmMain
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 				 ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
 				If regkey IsNot Nothing Then
-					Try
-						deletevalue(regkey, "StartCCC")
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-
-					Try
-						deletevalue(regkey, "StartCN")
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-
-					Try
-						deletevalue(regkey, "AMD AVT")
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
+					For Each child As String In regkey.GetValueNames
+						If Not IsNullOrWhitespace(child) Then
+							If StrContainsAny(child, True, "StartCCC", "StartCN", "AMD AVT") Then
+								deletevalue(regkey, child)
+							End If
+						End If
+					Next
 				End If
 			Catch ex As Exception
 				Application.Log.AddException(ex)

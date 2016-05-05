@@ -36,7 +36,7 @@ Public Class AppSettings
 	' Settings
 	Private m_showSafeModeMsg As DependencyProperty = Reg("ShowSafeModeMsg", GetType(Boolean), GetType(AppSettings), True)
 	Private m_UseRoamingCfg As DependencyProperty = Reg("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
-    Private m_CheckUpdates As DependencyProperty = Reg("CheckUpdates", GetType(Boolean), GetType(AppSettings), False)
+    Private m_CheckUpdates As DependencyProperty = Reg("CheckUpdates", GetType(Boolean), GetType(AppSettings), True)
 	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
 	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
 	Private m_removevulkan As DependencyProperty = Reg("RemoveVulkan", GetType(Boolean), GetType(AppSettings), False)
