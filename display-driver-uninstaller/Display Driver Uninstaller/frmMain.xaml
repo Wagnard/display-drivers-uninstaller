@@ -6,7 +6,7 @@
 	xmlns:local="clr-namespace:Display_Driver_Uninstaller"
 	mc:Ignorable="d" 
 	
-    Title="{Binding Settings.AppName}" Height="600" Width="800" ResizeMode="noresize" Loaded="frmMain_Loaded" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" Visibility="Visible" WindowStartupLocation="CenterScreen">
+    Title="{Binding Settings.AppName}" Height="600" Width="608" ResizeMode="noresize" Loaded="frmMain_Loaded" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" Visibility="Visible" WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,11 +17,11 @@
         <Button x:Name="btnCleanRestart" Content="BtnRestart" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="200" Height="53" />
         <Button x:Name="btnClean" Content="btnCleanonly" HorizontalAlignment="Left" Margin="10,175,0,0" VerticalAlignment="Top" Width="200" Height="53" />
         <Button x:Name="btnCleanShutdown" Content="btnCleanShutdown" HorizontalAlignment="Left" Margin="10,253,0,0" VerticalAlignment="Top" Width="200" Height="53" RenderTransformOrigin="0.518,1.792" />
-        <Button x:Name="btnWuRestore" Content="Button" HorizontalAlignment="Left" Margin="425,331,0,0" VerticalAlignment="Top" Width="154" Height="54" />
-        <Button x:Name="btnExtendedLog" Content="btnExtendedLog" HorizontalAlignment="Left" Margin="425,300,0,0" VerticalAlignment="Top" Width="154" Height="25" />
+        <Button x:Name="btnWuRestore" Content="Button" Margin="407,365,12,0" VerticalAlignment="Top" Height="39"  />
+        <Button x:Name="btnExtendedLog" Content="btnExtendedLog" Margin="407,335,12,0" VerticalAlignment="Top" Height="25" />
 
         <ComboBox Name="cbSelectedGPU" HorizontalAlignment="Left" Margin="425,43,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedItem="{Binding Settings.SelectedGPU, Mode=TwoWay}" />
-        <ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" SelectedItem="{Binding Settings.SelectedLanguage,Mode=TwoWay}" DisplayMemberPath="DisplayText" HorizontalAlignment="Right" Margin="0,503,12,0" VerticalAlignment="Top" Width="172" Height="22" IsReadOnly="True" />
+        <ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" SelectedItem="{Binding Settings.SelectedLanguage,Mode=TwoWay}" DisplayMemberPath="DisplayText" Margin="407,503,12,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" />
 
         <Label x:Name="lblUpdate" Content="lblUpdate" Height="26" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" />
         <TextBox x:Name="tbLog" HorizontalAlignment="Left" Height="172" Margin="10,335,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="366" />
@@ -46,8 +46,8 @@
             <Label x:Name="lblWinVersionValue" Content="W7" />
             <Label x:Name="lblArch" Content="x00" Height="26" Width="38" FontWeight="Bold" />
         </StackPanel>
-        <Button Content="SETUPAPI!!!" Height="44" HorizontalAlignment="Left" Margin="407,427,0,0" Name="Button1" VerticalAlignment="Top" Width="230" />
-        <Button x:Name="imgDonate" Margin="691,530,88,-10" Grid.RowSpan="2">
+        <Button Content="SETUPAPI!!!" Height="44" HorizontalAlignment="Left" Margin="407,427,0,0" Name="Button1" VerticalAlignment="Top" Width="230" IsEnabled="False" Visibility="Collapsed" />
+        <Button x:Name="imgDonate" Margin="0,530,89,-10" Grid.RowSpan="2" Height="51" VerticalAlignment="Top" HorizontalAlignment="Right" Width="2">
             <Button.Template>
                 <ControlTemplate>
                     <Image Source="Resources/btn_donate_LG.gif" Margin="0,0,-78,19"/>
