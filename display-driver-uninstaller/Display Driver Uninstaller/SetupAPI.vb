@@ -1705,6 +1705,60 @@ Namespace SetupAPI
             End Try
         End Sub
 
+        ' RESERVED FOR CLEANING FROM CODE
+        Public Sub RemoveInf(ByRef oem As OemINF, ByVal force As Boolean)
+
+            If oem Is Nothing Then
+                Application.Log.AddWarningMessage("Cancelling! oem is nothing")
+                Return
+            End If
+
+            If oem.FileName Is Nothing OrElse oem.FileName.Length = 0 Then
+                Application.Log.AddWarningMessage("Cancelling! empty or no oem info!")
+                Return
+            End If
+            Dim logEntry As LogEntry = Application.Log.CreateEntry()
+            logEntry.Message = "Class: " & oem.FileName
+            logEntry.Add("Provider", oem.Provider)
+            logEntry.Add("Class", oem.Class)
+            Application.Log.Add(logEntry)
+            Dim infName As String = Path.GetFileName(oem.FileName)
+            Dim logInfs As LogEntry = Application.Log.CreateEntry()
+            logInfs.Message = "Uninstalling OEM Inf(s). " + infName
+            Dim attrs As FileAttributes = File.GetAttributes(oem.FileName)
+
+            If (attrs And FileAttributes.ReadOnly) = FileAttributes.ReadOnly Then
+                File.SetAttributes(oem.FileName, attrs And Not FileAttributes.ReadOnly)
+            End If
+
+            If force Then
+                If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.SUOI_FORCEDELETE), IntPtr.Zero) Then
+                    logInfs.Add(oem.FileName, "Uninstalled!")
+                Else
+                    logInfs.Add(oem.FileName, "Uninstalling failed! See exceptions for details!")
+
+                    Dim logInfEx As LogEntry = Application.Log.CreateEntry()
+                    logInfEx.AddException(New Win32Exception())
+                    logInfEx.Add("InfFile", oem.FileName)
+
+                    Application.Log.Add(logInfEx)
+                End If
+            Else
+                If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.NONE), IntPtr.Zero) Then
+                    logInfs.Add(oem.FileName, "Uninstalled!")
+                Else
+                    logInfs.Add(oem.FileName, "Uninstalling failed! See exceptions for details!")
+
+                    Dim logInfEx As LogEntry = Application.Log.CreateEntry()
+                    logInfEx.AddException(New Win32Exception())
+                    logInfEx.Add("InfFile", oem.FileName)
+
+                    Application.Log.Add(logInfEx)
+                End If
+            End If
+            Application.Log.Add(logInfs)
+            Application.Log.AddMessage("End of UninstallDevice")
+        End Sub
         ' REVERSED FOR CLEANING FROM CODE
         Public Sub UpdateDevice(ByRef device As Device)
 

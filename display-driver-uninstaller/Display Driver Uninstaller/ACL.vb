@@ -67,7 +67,7 @@ Module FixACL
 		Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
 		' Get a DirectorySecurity object that represents the 
 		' current security settings.
-		Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
+        'Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
 		'Activate necessary admin privileges to make changes without NTFS perms
 		TokenManipulator.AddPrivilege("SeRestorePrivilege")
 		TokenManipulator.AddPrivilege("SeBackupPrivilege")

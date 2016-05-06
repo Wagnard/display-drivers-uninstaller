@@ -177,63 +177,94 @@ Public Class frmMain
 			Case GPUVendor.Intel
 				CurrentProvider = "Intel"
 		End Select
+        If config.UseSetupAPI Then
+            For Each oem As OemINF In GetOemInfList(Application.Paths.WinDir & "inf\")
+                If Not oem.IsValid Then
+                    Continue For
+                End If
 
-		For Each oem As OemINF In GetOemInfList(Application.Paths.WinDir & "inf\")
+                If StrContainsAny(oem.Provider, True, CurrentProvider) Or
+                   oem.Provider.ToLower.StartsWith("atitech") Or
+                   oem.Provider.ToLower.StartsWith("amd") Then
 
-			If Not oem.IsValid Then
-				Continue For
-			End If
+                    'before removing the oem we try to get the original inf name (win8+)
+                    If win8higher Then
+                        Try
+                            catalog = My.Computer.Registry.LocalMachine.OpenSubKey("DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName).GetValue("Active").ToString
+                            catalog = catalog.Substring(0, catalog.IndexOf("inf_") + 3)
+                        Catch ex As Exception
+                            catalog = ""
+                        End Try
+                    End If
+                    If StrContainsAny(oem.Class, True, "display") Or StrContainsAny(oem.Class, True, "media") Then
+                        SetupAPI.RemoveInf(oem, True)
+                    Else
+                        SetupAPI.RemoveInf(oem, False)
+                    End If
+                End If
+                'check if the oem was removed to process to the pnplockdownfile if necessary
+                If win8higher AndAlso (Not System.IO.File.Exists(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
+                    CleanupEngine.prePnplockdownfiles(catalog)
+                End If
+            Next
+        Else
+            For Each oem As OemINF In GetOemInfList(Application.Paths.WinDir & "inf\")
 
-			If StrContainsAny(oem.Provider, True, CurrentProvider) Or
-			   oem.Provider.ToLower.StartsWith("atitech") Or
-			   StrContainsAny(oem.Provider, True, "amd") Then
+                If Not oem.IsValid Then
+                    Continue For
+                End If
 
-				deloem.Arguments = "dp_delete " + oem.FileName
+                If StrContainsAny(oem.Provider, True, CurrentProvider) Or
+                   oem.Provider.ToLower.StartsWith("atitech") Or
+                   StrContainsAny(oem.Provider, True, "amd") Then
 
-				'We can force the OEMs removal if they are of Display or Media class.
-				If StrContainsAny(oem.Class, True, "display") Or
-				   StrContainsAny(oem.Class, True, "media") Then
-					deloem.Arguments = "-f dp_delete " + oem.FileName
-				End If
-			Else
-				Continue For
-			End If
+                    deloem.Arguments = "dp_delete " + oem.FileName
 
-			'before removing the oem we try to get the original inf name (win8+)
-			If win8higher Then
-				Try
-				catalog = My.Computer.Registry.LocalMachine.OpenSubKey("DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName) .GetValue("Active").ToString
-					catalog = catalog.Substring(0, catalog.IndexOf("inf_") + 3)
-				Catch ex As Exception
-					catalog = ""
-				End Try
-			End If
+                    'We can force the OEMs removal if they are of Display or Media class.
+                    If StrContainsAny(oem.Class, True, "display") Or
+                       StrContainsAny(oem.Class, True, "media") Then
+                        deloem.Arguments = "-f dp_delete " + oem.FileName
+                    End If
+                Else
+                    Continue For
+                End If
 
-			'Uninstall Driver from driver store  delete from (oemxx.inf)
+                'before removing the oem we try to get the original inf name (win8+)
+                If win8higher Then
+                    Try
+                        catalog = My.Computer.Registry.LocalMachine.OpenSubKey("DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName).GetValue("Active").ToString
+                        catalog = catalog.Substring(0, catalog.IndexOf("inf_") + 3)
+                    Catch ex As Exception
+                        catalog = ""
+                    End Try
+                End If
 
-			Application.Log.AddMessage(deloem.Arguments)
+                'Uninstall Driver from driver store  delete from (oemxx.inf)
 
-			deloem.UseShellExecute = False
-			deloem.CreateNoWindow = True
-			deloem.RedirectStandardOutput = True
-			'creation dun process fantome pour le wait on exit.
+                Application.Log.AddMessage(deloem.Arguments)
 
-			proc3.StartInfo = deloem
-			proc3.Start()
-			reply2 = proc3.StandardOutput.ReadToEnd
-			'proc3.WaitForExit()
-			proc3.StandardOutput.Close()
-			proc3.Close()
-			UpdateTextMethod(reply2)
-			Application.Log.AddMessage(reply2)
-			'check if the oem was removed to process to the pnplockdownfile if necessary
-			If win8higher AndAlso (Not System.IO.File.Exists(Environment.GetEnvironmentVariable("windir") & "\inf\" + oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
-				CleanupEngine.prePnplockdownfiles(catalog)
-			End If
-		Next
-		UpdateTextMethod("-Driver Store cleanUP complete.")
+                deloem.UseShellExecute = False
+                deloem.CreateNoWindow = True
+                deloem.RedirectStandardOutput = True
+                'creation dun process fantome pour le wait on exit.
 
-		Application.Log.AddMessage("Driver Store CleanUP Complete.")
+                proc3.StartInfo = deloem
+                proc3.Start()
+                reply2 = proc3.StandardOutput.ReadToEnd
+                'proc3.WaitForExit()
+                proc3.StandardOutput.Close()
+                proc3.Close()
+                UpdateTextMethod(reply2)
+                Application.Log.AddMessage(reply2)
+                'check if the oem was removed to process to the pnplockdownfile if necessary
+                If win8higher AndAlso (Not System.IO.File.Exists(Environment.GetEnvironmentVariable("windir") & "\inf\" + oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
+                    CleanupEngine.prePnplockdownfiles(catalog)
+                End If
+            Next
+        End If
+        UpdateTextMethod("-Driver Store cleanUP complete.")
+
+        Application.Log.AddMessage("Driver Store CleanUP Complete.")
 
 	End Sub
 
@@ -2473,7 +2504,7 @@ Public Class frmMain
 			Catch ex As Exception
 
 				Application.Log.AddException(ex)
-				TestDelete(filePath)
+                TestDelete(filePath)
 			End Try
 
 		End If
@@ -6987,14 +7018,14 @@ Public Class frmMain
 				cleannvidiaserviceprocess(config)
 				cleannvidia(config)
 
-				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-					Application.Log.AddMessage("Killing Explorer.exe")
+                'If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+                '	Application.Log.AddMessage("Killing Explorer.exe")
 
-					Dim appproc = process.GetProcessesByName("explorer")
-					For i As Integer = 0 To appproc.Length - 1
-						appproc(i).Kill()
-					Next i
-				End If
+                '	Dim appproc = process.GetProcessesByName("explorer")
+                '	For i As Integer = 0 To appproc.Length - 1
+                '		appproc(i).Kill()
+                '	Next i
+                'End If
 
 
 				cleannvidiafolders(config)
