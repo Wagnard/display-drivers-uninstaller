@@ -68,12 +68,18 @@ Module FixACL
 		' Get a DirectorySecurity object that represents the 
 		' current security settings.
         'Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
-		'Activate necessary admin privileges to make changes without NTFS perms
-		TokenManipulator.AddPrivilege("SeRestorePrivilege")
-		TokenManipulator.AddPrivilege("SeBackupPrivilege")
-		TokenManipulator.AddPrivilege("SeTakeOwnershipPrivilege")
-		Dim newacl As New System.Security.AccessControl.DirectorySecurity()
-		newacl.SetOwner(sid)
+        'Activate necessary admin privileges to make changes without NTFS perms
+        TokenManipulator.AddPrivilege("SeSecurityPrivilege")
+        TokenManipulator.AddPrivilege("SeBackupPrivilege")
+        TokenManipulator.AddPrivilege("SeRestorePrivilege")
+        TokenManipulator.AddPrivilege("SeTakeOwnershipPrivilege")
+        'Create a new acl from scratch.
+        Dim newacl As New System.Security.AccessControl.DirectorySecurity()
+        'set owner only here (needed for WinXP)
+        newacl.SetOwner(sid)
+        dInfo.SetAccessControl(newacl)
+
+        'This remove inheritance.
 		newacl.SetAccessRuleProtection(True, False)
 		' Add the FileSystemAccessRule to the security settings. 
 		newacl.AddAccessRule(New FileSystemAccessRule(sid, Rights, ControlType))

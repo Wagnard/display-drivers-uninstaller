@@ -2502,8 +2502,7 @@ Public Class frmMain
 			Try
 				deletedirectory(filePath)
 			Catch ex As Exception
-
-				Application.Log.AddException(ex)
+                Application.Log.AddException(ex)
                 TestDelete(filePath)
 			End Try
 
@@ -7920,8 +7919,8 @@ Public Class CleanupEngine
 
 			'If exists, it means we need to modify it's ACls.
 			If fixacls AndAlso Directory.Exists(directorypath) Then
-				FixACL.AddDirectorySecurity(directorypath, FileSystemRights.FullControl, AccessControlType.Allow)
-				My.Computer.FileSystem.DeleteDirectory _
+                FixACL.AddDirectorySecurity(directorypath, FileSystemRights.FullControl, AccessControlType.Allow)
+                My.Computer.FileSystem.DeleteDirectory _
   (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
 			End If
