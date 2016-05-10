@@ -1687,27 +1687,28 @@ Public Class frmMain
 		End Try
 
 		Try
-			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI", True)
-			If regkey IsNot Nothing Then
-				For Each child As String In regkey.GetSubKeyNames()
-					If IsNullOrWhitespace(child) = False Then
-						If child.ToLower.Contains("ace") Or
-						 child.ToLower.Contains("appprofiles") Or
-						   child.ToLower.Contains("install") Then
-							Try
-								deletesubregkey(regkey, child)
-							Catch ex As Exception
-							End Try
-						End If
-					End If
-				Next
-				If regkey.SubKeyCount = 0 Then
-					Try
-						deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software", True), "ATI")
-					Catch ex As Exception
-					End Try
-				End If
-			End If
+
+            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\ATI", True)
+            If regkey IsNot Nothing Then
+                For Each child As String In regkey.GetSubKeyNames()
+                    If IsNullOrWhitespace(child) = False Then
+                        If child.ToLower.Contains("ace") Or
+                         child.ToLower.Contains("appprofiles") Or
+                           child.ToLower.Contains("install") Then
+                            Try
+                                deletesubregkey(regkey, child)
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End If
+                Next
+                If regkey.SubKeyCount = 0 Then
+                    Try
+                        deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software", True), "ATI")
+                    Catch ex As Exception
+                    End Try
+                End If
+            End If
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
@@ -2545,42 +2546,43 @@ Public Class frmMain
 
 			filePath = filepaths + "\AppData\Local\NVIDIA"
 
-			If config.RemoveGFE Then
-				Try
-					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-						If IsNullOrWhitespace(child) = False Then
-							If (child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvosc.") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("shareconnect") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Then
-								Try
-									deletedirectory(child)
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-									TestDelete(child)
-								End Try
-							End If
-						End If
-					Next
-					Try
-						If Directory.GetDirectories(filePath).Length = 0 Then
+
+			Try
+				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+					If IsNullOrWhitespace(child) = False Then
+						If (child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE) Or
+						 (child.ToLower.Contains("nvosc.") AndAlso config.RemoveGFE) Or
+						 (child.ToLower.Contains("shareconnect") AndAlso config.RemoveGFE) Or
+						 (child.ToLower.Contains("nvgs") AndAlso config.RemoveGFE) Or
+						 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Then
 							Try
-								deletedirectory(filePath)
+								deletedirectory(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
-								TestDelete(filePath)
+								TestDelete(child)
 							End Try
-						Else
-							For Each data As String In Directory.GetDirectories(filePath)
-								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
-							Next
-
 						End If
-					Catch ex As Exception
-					End Try
+					End If
+				Next
+				Try
+					If Directory.GetDirectories(filePath).Length = 0 Then
+						Try
+							deletedirectory(filePath)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+							TestDelete(filePath)
+						End Try
+					Else
+						For Each data As String In Directory.GetDirectories(filePath)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+						Next
+
+					End If
 				Catch ex As Exception
 				End Try
-			End If
+			Catch ex As Exception
+			End Try
+
 
 			filePath = filepaths + "\AppData\Roaming\NVIDIA"
 
@@ -6060,18 +6062,19 @@ Public Class frmMain
 
             Topmost = False
 
-            If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
-                Dim trd As Thread = New Thread(AddressOf ThreadTask)
-                trd.CurrentCulture = New Globalization.CultureInfo("en-US")
-                trd.CurrentUICulture = New Globalization.CultureInfo("en-US")
+			If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
+				Dim trd As Thread = New Thread(AddressOf ThreadTask)
+				trd.CurrentCulture = New Globalization.CultureInfo("en-US")
+				trd.CurrentUICulture = New Globalization.CultureInfo("en-US")
 
-                trd.IsBackground = True
-                trd.Start()
-            End If
+				trd.IsBackground = True
+				trd.Start()
+			End If
         Catch ex As Exception
             MsgBox(ex)
         End Try
-	End Sub
+        'RegistryPermissions.test2()
+    End Sub
 
 	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
 		If silent Then
@@ -7895,16 +7898,37 @@ Public Class CleanupEngine
         'TestDelete(folder)
     End Sub
 
-    Public Sub deletesubregkey(ByVal regkeypath As RegistryKey, ByVal child As String)
+	Public Sub deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String)
+		Dim fixregacls As Boolean = False
+		If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
+			Try
+				regkeypath.DeleteSubKeyTree(child)
+				Application.Log.AddMessage(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn(39))
+			Catch ex As UnauthorizedAccessException
+				Application.Log.AddWarningMessage("Failed to remove registry subkey " + child + " Will try to set ACLs permission and try again.")
+				fixregacls = True
+			End Try
+			'If exists, it means we need to modify it's ACls.
+			If fixregacls AndAlso regkeypath IsNot Nothing Then
+				FixACL.Addregistrysecurity(regkeypath, child, RegistryRights.FullControl, AccessControlType.Allow)
+				regkeypath.DeleteSubKeyTree(child)
+				Application.Log.AddMessage(child + " - " + UpdateTextMethodmessagefn(39))
+			End If
+		End If
+	End Sub
+	Public Function openregkey(ByVal location As RegistryKey, key As String, write As Boolean) As RegistryKey
+		Dim regkey As RegistryKey = Nothing
 
-        If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
+		Try
+			regkey = location.OpenSubKey(key, write)
+		Catch ex As UnauthorizedAccessException
+			Addregistrysecurity(location, key, RegistryRights.FullControl, AccessControlType.Allow)
 
-            regkeypath.DeleteSubKeyTree(child)
-            application.log.addmessage(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn(39))
+			Return regkey
+		End Try
+		Return regkey
 
-        End If
-    End Sub
-
+	End Function
 	Public Sub deletedirectory(ByVal directorypath As String)
 		Dim fixacls As Boolean = False
 		If Not IsNullOrWhitespace(directorypath) AndAlso Directory.Exists(directorypath) Then
@@ -7912,7 +7936,7 @@ Public Class CleanupEngine
 				My.Computer.FileSystem.DeleteDirectory _
 				  (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
-			Catch ex As Exception
+			Catch ex As UnauthorizedAccessException
 				Application.Log.AddWarningMessage("Failed to remove " + directorypath + " Will try to set ACLs permission and try again.")
 				fixacls = True
 			End Try

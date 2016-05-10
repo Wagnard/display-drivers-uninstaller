@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="AppSettings.vb" />
     <Compile Include="LogEntry.vb" />
+    <Compile Include="RegistryPermission.vb" />
     <Compile Include="SetupAPI.vb" />
     <Compile Include="SetupAPITestWindow.xaml.vb">
       <DependentUpon>SetupAPITestWindow.xaml</DependentUpon>

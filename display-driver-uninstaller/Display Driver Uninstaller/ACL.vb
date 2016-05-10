@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Security.Principal
 Imports System.Runtime.InteropServices
+Imports Microsoft.Win32
 
 Module FixACL
 	Public Class TokenManipulator
@@ -60,25 +61,24 @@ Module FixACL
 		End Function
 	End Class
 	' Adds an ACL entry on the specified directory for the specified account.
-	Sub AddDirectorySecurity(ByVal FileName As String, ByVal Rights As FileSystemRights, ByVal ControlType As AccessControlType)
+	Sub AddDirectorySecurity(ByVal path As String, ByVal Rights As FileSystemRights, ByVal ControlType As AccessControlType)
 		' Create a new DirectoryInfoobject.
-		Dim dInfo As New DirectoryInfo(FileName)
+		Dim dInfo As New DirectoryInfo(path)
 
 		Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
 		' Get a DirectorySecurity object that represents the 
 		' current security settings.
-        'Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
-        'Activate necessary admin privileges to make changes without NTFS perms
-        TokenManipulator.AddPrivilege("SeSecurityPrivilege")
-        TokenManipulator.AddPrivilege("SeBackupPrivilege")
-        TokenManipulator.AddPrivilege("SeRestorePrivilege")
-        TokenManipulator.AddPrivilege("SeTakeOwnershipPrivilege")
-        'Create a new acl from scratch.
-        Dim newacl As New System.Security.AccessControl.DirectorySecurity()
-        'set owner only here (needed for WinXP)
-        newacl.SetOwner(sid)
-        dInfo.SetAccessControl(newacl)
-
+		'Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
+		'Activate necessary admin privileges to make changes without NTFS perms
+		TokenManipulator.AddPrivilege("SeSecurityPrivilege")
+		TokenManipulator.AddPrivilege("SeBackupPrivilege")
+		TokenManipulator.AddPrivilege("SeRestorePrivilege")
+		TokenManipulator.AddPrivilege("SeTakeOwnershipPrivilege")
+		'Create a new acl from scratch.
+		Dim newacl As New System.Security.AccessControl.DirectorySecurity()
+		'set owner only here (needed for WinXP)
+		newacl.SetOwner(sid)
+		dInfo.SetAccessControl(newacl)
         'This remove inheritance.
 		newacl.SetAccessRuleProtection(True, False)
 		' Add the FileSystemAccessRule to the security settings. 
@@ -91,6 +91,32 @@ Module FixACL
 		' Set the new access settings.
 		dInfo.SetAccessControl(newacl)
 
+	End Sub
+	Sub Addregistrysecurity(ByVal regkey As RegistryKey, ByVal subkeyname As String, ByVal Rights As RegistryRights, ByVal ControlType As AccessControlType)
+		Dim subkey As RegistryKey
+		Dim rs As New RegistrySecurity()
+		Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
+
+		TokenManipulator.AddPrivilege("SeSecurityPrivilege")
+		TokenManipulator.AddPrivilege("SeBackupPrivilege")
+		TokenManipulator.AddPrivilege("SeRestorePrivilege")
+		TokenManipulator.AddPrivilege("SeTakeOwnershipPrivilege")
+
+        'Dim originalsid = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions).GetAccessControl.GetOwner(GetType(System.Security.Principal.SecurityIdentifier))
+        'MsgBox(originalsid.ToString)
+		subkey = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.TakeOwnership)
+        rs.SetOwner(sid)
+
+		' Set the new access settings.Owner
+		subkey.SetAccessControl(rs)
+		rs.SetAccessRuleProtection(True, False)
+		'rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
+		sid = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
+		rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
+		'sid = New SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, Nothing)
+		'rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
+		' Set the new access settings.
+		subkey.SetAccessControl(rs)
 	End Sub
 
 
