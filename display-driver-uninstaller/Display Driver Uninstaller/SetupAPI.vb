@@ -1492,7 +1492,7 @@ Namespace SetupAPI
 			End Try
 		End Sub
 
-        ' REVERSED FOR CLEANING FROM CODE
+		' REVERSED FOR CLEANING FROM CODE ***Not Working*** venID is not used.
         ' eg.  venID = VEN_10DE  = for more accurate result, otherwise AMD + Nvidia (physx card) => both removed (both has 'Display' as class)
         ' Class GUID is also good choice (can be used as ROOT deviceSet => loop only gpus)
         ' may change
