@@ -41,6 +41,7 @@ Public Class AppSettings
 	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
 	Private m_removevulkan As DependencyProperty = Reg("RemoveVulkan", GetType(Boolean), GetType(AppSettings), False)
 	Private m_UseSetupAPI As DependencyProperty = Reg("UseSetupAPI", GetType(Boolean), GetType(AppSettings), True)
+    Private m_showoffer As DependencyProperty = Reg("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
 
 	' Visit links
 	Private m_goodsite As DependencyProperty = Reg("GoodSite", GetType(Boolean), GetType(AppSettings), False)
@@ -50,7 +51,8 @@ Public Class AppSettings
 	Private m_visitGuru3DNvidia As DependencyProperty = Reg("VisitGuru3DNvidia", GetType(Boolean), GetType(AppSettings), False)
 	Private m_visitGuru3DAMD As DependencyProperty = Reg("VisitGuru3DAMD", GetType(Boolean), GetType(AppSettings), False)
 	Private m_visitDDUHome As DependencyProperty = Reg("VisitDDUHome", GetType(Boolean), GetType(AppSettings), False)
-	Private m_visitGeforce As DependencyProperty = Reg("VisitGeforce", GetType(Boolean), GetType(AppSettings), False)
+    Private m_visitGeforce As DependencyProperty = Reg("VisitGeforce", GetType(Boolean), GetType(AppSettings), False)
+    Private m_visitOffer As DependencyProperty = Reg("VisitOffer", GetType(Boolean), GetType(AppSettings), False)
 
 	Private m_arguments As DependencyProperty = Reg("Arguments", GetType(String), GetType(AppSettings), String.Empty)
 #End Region
@@ -227,7 +229,15 @@ Public Class AppSettings
 		Set(value As Boolean)
 			SetValue(m_UseSetupAPI, value)
 		End Set
-	End Property
+    End Property
+    Public Property ShowOffer As Boolean
+        Get
+            Return CBool(GetValue(m_showoffer))
+        End Get
+        Set(value As Boolean)
+            SetValue(m_showoffer, value)
+        End Set
+    End Property
 
 	Public Property GoodSite As Boolean
 		Get
@@ -285,7 +295,15 @@ Public Class AppSettings
 		Set(value As Boolean)
 			SetValue(m_visitGeforce, value)
 		End Set
-	End Property
+    End Property
+    Public Property VisitOffer As Boolean
+        Get
+            Return CBool(GetValue(m_visitOffer))
+        End Get
+        Set(value As Boolean)
+            SetValue(m_visitOffer, value)
+        End Set
+    End Property
 	Public Property Arguments As String
 		Get
 			Return CStr(GetValue(m_arguments))
@@ -359,9 +377,11 @@ Public Class AppSettings
 					VisitDDUHome = True
 
 				ElseIf StrContainsAny(args(i), True, "geforce") Then
-					VisitGeforce = True
-				End If
-			Next
+                    VisitGeforce = True
+                ElseIf StrContainsAny(args(i), True, "visitoffer") Then
+                    VisitOffer = True
+                End If
+            Next
 		Else
 			Arguments = String.Empty
 		End If
@@ -422,7 +442,8 @@ Public Class AppSettings
 						.WriteElementString("CreateRestorePoint", CreateRestorePoint.ToString())
 						.WriteElementString("SaveLogs", SaveLogs.ToString())
 						.WriteElementString("RemoveVulkan", RemoveVulkan.ToString())
-						.WriteElementString("UseSetupAPI", UseSetupAPI.ToString())
+                        .WriteElementString("UseSetupAPI", UseSetupAPI.ToString())
+                        .WriteElementString("ShowOffer", ShowOffer.ToString())
                         .WriteElementString("GoodSite", GoodSite.ToString())
 
 						.WriteEndElement()
@@ -569,7 +590,10 @@ Public Class AppSettings
 								RemoveVulkan = Boolean.Parse(KvP.Value)
 
 							Case "usesetupapi"
-								UseSetupAPI = Boolean.Parse(KvP.Value)
+                                UseSetupAPI = Boolean.Parse(KvP.Value)
+
+                            Case "showoffer"
+                                ShowOffer = Boolean.Parse(KvP.Value)
 
 							Case "goodsite"
 								GoodSite = Boolean.Parse(KvP.Value)

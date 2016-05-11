@@ -58,6 +58,13 @@
 			<Text3>Updates found! Expect limited support on older versions than the most recent.</Text3>
 			<Text4>Unable to Fetch updates!</Text4>
 		</Label11>
+    <lblOffer>
+      <Text>       Offers from our partners</Text>
+      <Tooltip>You can disable this from the option menu.</Tooltip>
+    </lblOffer>
+    <imgOffer>
+      <Tooltip>You can disable this from the option menu.</Tooltip>
+    </imgOffer>
 		<OptionsMenuItem>
 			<Text>Options</Text>
 		</OptionsMenuItem>
@@ -149,6 +156,10 @@
 
 </frmMain>
 	<frmOptions Text="Options">
+    <lblOffer>
+      <Text>Show Offers from our partners</Text>
+      <Tooltip>You can disable this from the option menu.</Tooltip>
+    </lblOffer>
     <btnClose>
       <Text>Close</Text>
     </btnClose>

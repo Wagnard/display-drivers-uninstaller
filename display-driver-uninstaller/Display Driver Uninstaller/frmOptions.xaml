@@ -9,15 +9,15 @@
     </Window.Resources>
 
     <Grid DataContext="{Binding Settings}">
-        <CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" HorizontalAlignment="Left" Margin="13,348.05,0,0" VerticalAlignment="Top" />
-        <CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" HorizontalAlignment="Left" Margin="13,370.05,0,0" VerticalAlignment="Top" />
-        <CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAMDAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" HorizontalAlignment="Left" Margin="13,390.05,0,0" VerticalAlignment="Top" />
-        <CheckBox x:Name="lblRemCrimsonCache" IsChecked="{Binding RemoveCrimsonCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemCrimsonCache" HorizontalAlignment="Left" Margin="13,412.05,0,0" VerticalAlignment="Top" />
+        <CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" HorizontalAlignment="Left" Margin="13,354.05,0,0" VerticalAlignment="Top" />
+        <CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" HorizontalAlignment="Left" Margin="13,376.05,0,0" VerticalAlignment="Top" />
+        <CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAMDAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" HorizontalAlignment="Left" Margin="13,396.05,0,0" VerticalAlignment="Top" />
+        <CheckBox x:Name="lblRemCrimsonCache" IsChecked="{Binding RemoveCrimsonCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemCrimsonCache" HorizontalAlignment="Left" Margin="13,418.05,0,0" VerticalAlignment="Top" />
 
-        <CheckBox x:Name="lblRemNvidiaDirs" IsChecked="{Binding RemoveNvidiaDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemNvidiaDirs" HorizontalAlignment="Left" Margin="13,222.999,0,0" VerticalAlignment="Top" />
-        <CheckBox x:Name="lblRemPhysX" IsChecked="{Binding RemovePhysX, Converter={StaticResource NulBoolToBool}}" Content="lblRemPhysX" HorizontalAlignment="Left" Margin="13,244.999,0,0" VerticalAlignment="Top" />
-        <CheckBox x:Name="lblRem3DtvPlay" IsChecked="{Binding Remove3DTVPlay, Converter={StaticResource NulBoolToBool}}" Content="lblRem3DtvPlay" HorizontalAlignment="Left" Margin="13,266.999,0,0" VerticalAlignment="Top" />
-        <CheckBox x:Name="lblRemGFE" IsChecked="{Binding RemoveGFE, Converter={StaticResource NulBoolToBool}}" Content="lblRemGFE" HorizontalAlignment="Left" Margin="13,288.999,0,0" VerticalAlignment="Top" />
+        <CheckBox x:Name="lblRemNvidiaDirs" IsChecked="{Binding RemoveNvidiaDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemNvidiaDirs" HorizontalAlignment="Left" Margin="13,234.999,0,0" VerticalAlignment="Top" />
+        <CheckBox x:Name="lblRemPhysX" IsChecked="{Binding RemovePhysX, Converter={StaticResource NulBoolToBool}}" Content="lblRemPhysX" HorizontalAlignment="Left" Margin="13,256.999,0,0" VerticalAlignment="Top" />
+        <CheckBox x:Name="lblRem3DtvPlay" IsChecked="{Binding Remove3DTVPlay, Converter={StaticResource NulBoolToBool}}" Content="lblRem3DtvPlay" HorizontalAlignment="Left" Margin="13,278.999,0,0" VerticalAlignment="Top" />
+        <CheckBox x:Name="lblRemGFE" IsChecked="{Binding RemoveGFE, Converter={StaticResource NulBoolToBool}}" Content="lblRemGFE" HorizontalAlignment="Left" Margin="13,300.999,0,0" VerticalAlignment="Top" />
 
         <CheckBox x:Name="lblRemMonitors" IsChecked="{Binding RemoveMonitors, Converter={StaticResource NulBoolToBool}}" Content="lblRemMonitors" HorizontalAlignment="Left" Margin="13,30.471,0,0" VerticalAlignment="Top" />
 
@@ -31,7 +31,8 @@
         <CheckBox x:Name="lblVulkan" IsChecked="{Binding RemoveVulkan, Converter={StaticResource NulBoolToBool}}" Content="lblVulkan" HorizontalAlignment="Left" Margin="13,152.569,0,0" VerticalAlignment="Top" />
         <CheckBox x:Name="lblUseSetupAPI" IsChecked="{Binding UseSetupAPI, Converter={StaticResource NulBoolToBool}}" Content="lblUseSetupAPI" HorizontalAlignment="Left" Margin="13,172.569,0,0" VerticalAlignment="Top" />
         <Label x:Name="lblGeneral" Content="lblGeneral" HorizontalAlignment="Left" Margin="13,0,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <Label x:Name="lblNvidiaspecific" Content="lblNvidiaspecific" HorizontalAlignment="Left" Margin="13,196.999,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <Label x:Name="lblAmdspecific" Content="lblAmdspecific" HorizontalAlignment="Left" Margin="13,322.05,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="lblNvidiaspecific" Content="lblNvidiaspecific" HorizontalAlignment="Left" Margin="13,208.999,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="lblAmdspecific" Content="lblAmdspecific" HorizontalAlignment="Left" Margin="13,328.05,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <CheckBox x:Name="lblOffer" IsChecked="{Binding ShowOffer, Converter={StaticResource NulBoolToBool}}" Content="lblOffer" HorizontalAlignment="Left" Margin="13,192.569,0,0" VerticalAlignment="Top" />
     </Grid>
 </Window>

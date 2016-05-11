@@ -68,7 +68,8 @@ Public Class frmMain
 	Public Shared preventclose As Boolean = False
 	Dim closeapp As Boolean = False
 	Public ddudrfolder As String
-	Public Shared donotremoveamdhdaudiobusfiles As Boolean = True
+    Public Shared donotremoveamdhdaudiobusfiles As Boolean = True
+
 
 
 	Private Sub Checkupdates2()
@@ -5405,7 +5406,17 @@ Public Class frmMain
 			.WindowStyle = Windows.WindowStyle.ToolWindow
 		End With
 
-		frmOptions.ShowDialog()
+        frmOptions.ShowDialog()
+
+        If Not Application.Settings.ShowOffer Then
+            lblOffer.Visibility = Windows.Visibility.Hidden
+            imgOffer.Visibility = Windows.Visibility.Hidden
+            imgOffer.IsEnabled = False
+        Else
+            lblOffer.Visibility = Windows.Visibility.Visible
+            imgOffer.Visibility = Windows.Visibility.Visible
+            imgOffer.IsEnabled = True
+        End If
 	End Sub
 
 	Private Sub LinksMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles LinksMenuItem.Click
@@ -5497,28 +5508,33 @@ Public Class frmMain
 
 			If CBool(Application.Settings.VisitSVN) Then
 				webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
-			End If
+            End If
 
-			If CBool(Application.Settings.VisitDonate) = True Or
-			   CBool(Application.Settings.VisitGuru3DNvidia) = True Or
-			   CBool(Application.Settings.VisitGuru3DAMD) = True Or
-			   CBool(Application.Settings.VisitGeforce) = True Or
-			   CBool(Application.Settings.VisitSVN) = True Or
-			   CBool(Application.Settings.VisitDDUHome) = True Then
+            If CBool(Application.Settings.VisitOffer) Then
+                webAddress = "https://www.driverdr.com/goto/affdownload.php?affid=620626"
+            End If
 
-				processinfo.FileName = webAddress
-				processinfo.Arguments = Nothing
-				processinfo.UseShellExecute = True
-				processinfo.CreateNoWindow = True
-				processinfo.RedirectStandardOutput = False
+            If CBool(Application.Settings.VisitDonate) = True Or
+               CBool(Application.Settings.VisitGuru3DNvidia) = True Or
+               CBool(Application.Settings.VisitGuru3DAMD) = True Or
+               CBool(Application.Settings.VisitGeforce) = True Or
+               CBool(Application.Settings.VisitSVN) = True Or
+               CBool(Application.Settings.VisitDDUHome) = True Or
+               CBool(Application.Settings.VisitOffer) = True Then
 
-				process.StartInfo = processinfo
-				process.Start()
-				'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
-				process.Close()
-				closeddu()
-				Exit Sub
-			End If
+                processinfo.FileName = webAddress
+                processinfo.Arguments = Nothing
+                processinfo.UseShellExecute = True
+                processinfo.CreateNoWindow = True
+                processinfo.RedirectStandardOutput = False
+
+                process.StartInfo = processinfo
+                process.Start()
+                'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
+                process.Close()
+                closeddu()
+                Exit Sub
+            End If
 
 			If Not System.Diagnostics.Debugger.IsAttached Then
 
@@ -6073,8 +6089,20 @@ Public Class frmMain
         Catch ex As Exception
             MsgBox(ex)
         End Try
+
+        If Not Application.Settings.ShowOffer Then
+            lblOffer.Visibility = Windows.Visibility.Hidden
+            imgOffer.Visibility = Windows.Visibility.Hidden
+            imgOffer.IsEnabled = False
+        Else
+            lblOffer.Visibility = Windows.Visibility.Visible
+            imgOffer.Visibility = Windows.Visibility.Visible
+            imgOffer.IsEnabled = True
+        End If
+
         'RegistryPermissions.test2()
     End Sub
+
 
 	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
 		If silent Then
@@ -6163,75 +6191,85 @@ Public Class frmMain
 					Try
 						'Need to be able to find the "Sibling" with SetupAPI before doing this section
 
-					Catch ex As Exception
-						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-						Application.Log.AddException(ex)
-					End Try
-				Else
-					Try
-						If config.SelectedGPU = GPUVendor.AMD Then
-							Dim removed As Boolean = False
-							Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
-							regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
-							If regkey IsNot Nothing Then
-								For Each child As String In regkey.GetSubKeyNames()
-									If IsNullOrWhitespace(child) = False Then
-										If child.ToLower.Contains("ven_1002") Then
-											For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
-												subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-												If subregkey IsNot Nothing Then
-													For Each child2 As String In subregkey.GetSubKeyNames()
-														removed = False
-														If IsNullOrWhitespace(child2) = False Then
-															If child2.ToLower.Contains("ven_1002") Then
-																For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-																	If IsNullOrWhitespace(child3) = False Then
-																		array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
-																		If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-																			For i As Integer = 0 To array.Length - 1
-																				If Not IsNullOrWhitespace(array(i)) Then
-																					If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
-																						Application.Log.AddMessage("Found an AMD audio controller bus !")
-																						Try
-																							Application.Log.AddMessage("array result: " + array(i))
-																						Catch ex As Exception
-																						End Try
-																						processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-																						processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
-																						processinfo.UseShellExecute = False
-																						processinfo.CreateNoWindow = True
-																						processinfo.RedirectStandardOutput = True
-																						process.StartInfo = processinfo
-																						process.Start()
-																						reply2 = process.StandardOutput.ReadToEnd
-																						process.StandardOutput.Close()
-																						process.Close()
-																						Application.Log.AddMessage(reply2)
-																						Application.Log.AddMessage("AMD HD Audio Bus Removed !")
-																						removed = True
-																					End If
-																				End If
-																			Next
-																		End If
-																		If removed Then
-																			Exit For
-																		End If
-																	End If
-																Next
-															End If
-														End If
-													Next
-												End If
-											Next
-										End If
-									End If
-								Next
-							End If
-						End If
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-				End If
+                        Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", "VEN_1002")
+                        If found.Count > 0 Then
+                            For Each d As SetupAPI.Device In found
+                                If StrContainsAny(d.DevStatus(0), True, vendidexpected) Then
+                                    'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
+                                    SetupAPI.UninstallDevice(d)
+                                End If
+                            Next
+                        End If
+
+                    Catch ex As Exception
+                        'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Application.Log.AddException(ex)
+                    End Try
+                Else
+                    Try
+                        If config.SelectedGPU = GPUVendor.AMD Then
+                            Dim removed As Boolean = False
+                            Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
+                            regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetSubKeyNames()
+                                    If IsNullOrWhitespace(child) = False Then
+                                        If child.ToLower.Contains("ven_1002") Then
+                                            For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
+                                                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+                                                If subregkey IsNot Nothing Then
+                                                    For Each child2 As String In subregkey.GetSubKeyNames()
+                                                        removed = False
+                                                        If IsNullOrWhitespace(child2) = False Then
+                                                            If child2.ToLower.Contains("ven_1002") Then
+                                                                For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
+                                                                    If IsNullOrWhitespace(child3) = False Then
+                                                                        array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
+                                                                        If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+                                                                            For i As Integer = 0 To array.Length - 1
+                                                                                If Not IsNullOrWhitespace(array(i)) Then
+                                                                                    If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
+                                                                                        Application.Log.AddMessage("Found an AMD audio controller bus !")
+                                                                                        Try
+                                                                                            Application.Log.AddMessage("array result: " + array(i))
+                                                                                        Catch ex As Exception
+                                                                                        End Try
+                                                                                        processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+                                                                                        processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
+                                                                                        processinfo.UseShellExecute = False
+                                                                                        processinfo.CreateNoWindow = True
+                                                                                        processinfo.RedirectStandardOutput = True
+                                                                                        process.StartInfo = processinfo
+                                                                                        process.Start()
+                                                                                        reply2 = process.StandardOutput.ReadToEnd
+                                                                                        process.StandardOutput.Close()
+                                                                                        process.Close()
+                                                                                        Application.Log.AddMessage(reply2)
+                                                                                        Application.Log.AddMessage("AMD HD Audio Bus Removed !")
+                                                                                        removed = True
+                                                                                    End If
+                                                                                End If
+                                                                            Next
+                                                                        End If
+                                                                        If removed Then
+                                                                            Exit For
+                                                                        End If
+                                                                    End If
+                                                                Next
+                                                            End If
+                                                        End If
+                                                    Next
+                                                End If
+                                            Next
+                                        End If
+                                    End If
+                                Next
+                            End If
+                        End If
+                    Catch ex As Exception
+                        Application.Log.AddException(ex)
+                    End Try
+                End If
 
 				'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
 				Try
@@ -6272,7 +6310,7 @@ Public Class frmMain
 
 			If config.UseSetupAPI Then
 				Try
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "display")
+                    Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display")
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
@@ -6359,7 +6397,7 @@ Public Class frmMain
 
 			If config.UseSetupAPI Then
 				Try
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
+                    Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media")
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If StrContainsAny(d.HardwareIDs(0), True, vendidexpected) Then
@@ -6450,7 +6488,7 @@ Public Class frmMain
 							 "USB\VID_0955&PID_700E&MI_00"}
 
 						'3dVision Removal
-						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
+                        Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media")
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
@@ -6464,12 +6502,12 @@ Public Class frmMain
 
 
 						'NVIDIA SHIELD Wireless Controller Trackpad
-						found = SetupAPI.TEST_GetDevices("Device_ClassName", "mouse")
+                        found = SetupAPI.GetDevices("mouse")
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
-								If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
-									SetupAPI.UninstallDevice(d)
-								End If
+                                If StrContainsAny(d.HardwareIDs(0), True, "hid\vid_0955&pid_7210") Then
+                                    SetupAPI.UninstallDevice(d)
+                                End If
 							Next
 							found.Clear()
 						End If
@@ -6477,7 +6515,7 @@ Public Class frmMain
 						If config.RemoveGFE Then
 							' NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removal
 
-							found = SetupAPI.TEST_GetDevices("Device_ClassName", "media")
+                            found = SetupAPI.GetDevices("media")
 							If found.Count > 0 Then
 								For Each d As SetupAPI.Device In found
 									If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0955&PID_9000") Then
@@ -6489,7 +6527,7 @@ Public Class frmMain
 						End If
 
 						'nVidia AudioEndpoints Removal
-						found = SetupAPI.TEST_GetDevices("Device_ClassName", "audioendpoint")
+                        found = SetupAPI.GetDevices("audioendpoint")
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If StrContainsAny(d.FriendlyName, True, "nvidia virtual audio device", "nvidia high definition audio") Then
@@ -6732,7 +6770,7 @@ Public Class frmMain
 				Try
 					If config.UseSetupAPI Then
 						'nVidia AudioEndpoints Removal
-						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "audioendpoint")
+                        Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint")
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If StrContainsAny(d.FriendlyName, True, "amd high definition audio device", "digital audio (hdmi) (high definition audio device)") Then
@@ -6852,7 +6890,7 @@ Public Class frmMain
 			If config.RemoveMonitors Then
 				Application.Log.AddMessage("ddudr Remove Monitor started")
 				If config.UseSetupAPI Then
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "monitor")
+                    Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("monitor", "monitor")
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
@@ -6912,16 +6950,16 @@ Public Class frmMain
 			If config.RemoveAMDKMPFD Then
 				If config.UseSetupAPI Then
 					Try
-						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "system")
+                        Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system")
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
 									If d.LowerFilters IsNot Nothing AndAlso StrContainsAny(d.LowerFilters(0), True, "amdkmpfd") Then
-										If win10 Then
-											SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\PCI.inf", True)
-										Else
-											SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\machine.inf", True)
-										End If
+                                        If win10 Then
+                                            SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\PCI.inf", True)
+                                        Else
+                                            SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\machine.inf", True)
+                                        End If
 									End If
 								End If
 							Next
@@ -7881,6 +7919,24 @@ Public Class frmMain
 			WindowsApi.CloseHandle(UserTokenHandle)
 		End If
 	End Sub
+
+    Private Sub imgOffer_Click(sender As Object, e As RoutedEventArgs) Handles imgOffer.Click
+        Dim commandline As StringBuilder = StrAppend(" -visitoffer")
+        Dim UserTokenHandle As IntPtr = IntPtr.Zero
+        WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
+        Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
+        Dim StartInfo As New WindowsApi.STARTUPINFOW
+        StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
+
+        If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
+        Else
+            MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
+        End If
+
+        If Not UserTokenHandle = IntPtr.Zero Then
+            WindowsApi.CloseHandle(UserTokenHandle)
+        End If
+    End Sub
 End Class
 
 Public Class CleanupEngine

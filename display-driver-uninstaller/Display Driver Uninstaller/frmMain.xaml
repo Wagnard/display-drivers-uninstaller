@@ -46,7 +46,7 @@
             <Label x:Name="lblWinVersionValue" Content="W7" />
             <Label x:Name="lblArch" Content="x00" Height="26" Width="38" FontWeight="Bold" />
         </StackPanel>
-        <Button Content="SETUPAPI!!!" Height="44" HorizontalAlignment="Left" Margin="407,427,0,0" Name="Button1" VerticalAlignment="Top" Width="230" IsEnabled="False" Visibility="Collapsed" />
+        <Button Content="SETUPAPI!!!" Height="44" HorizontalAlignment="Right" Margin="0,427,12,0" Name="Button1" VerticalAlignment="Top" Width="183" IsEnabled="False" Visibility="Collapsed" />
         <Button x:Name="imgDonate" Margin="500,530,12,0" Height="25" VerticalAlignment="Top" Grid.RowSpan="2">
             <Button.Template>
                 <ControlTemplate>
@@ -54,5 +54,13 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
+        <Button x:Name="imgOffer" Margin="408,450,12,0" Height="48" VerticalAlignment="Top" Visibility="Hidden" IsEnabled="False">
+            <Button.Template>
+                <ControlTemplate>
+                    <Image Source="Resources/btn (2).png" Margin="0,0,0,0"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Label x:Name="lblOffer" Content="lblOffer" HorizontalAlignment="Right" Margin="0,419,12,0" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.5" Width="182" Visibility="Hidden"/>
     </Grid>
 </Window>
