@@ -249,7 +249,7 @@
       <Text>Close</Text>
     </btnClose>
 	</frmLog>
-	<frmAbout>
+	<frmAbout Text="About">
 		<Label1>
 			<Text>
 Display Driver Uninstaller (DDU) / Cleaner made for Display (GPU) Drivers.(NVIDIA/AMD)

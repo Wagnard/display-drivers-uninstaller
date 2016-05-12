@@ -75,6 +75,9 @@
     <Compile Include="AppLog.vb" />
     <Compile Include="AppPaths.vb" />
     <Compile Include="Converters.vb" />
+    <Compile Include="frmAbout.xaml.vb">
+      <DependentUpon>frmAbout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="frmLaunch.xaml.vb">
       <DependentUpon>frmLaunch.xaml</DependentUpon>
     </Compile>
@@ -90,6 +93,10 @@
     </Compile>
     <Compile Include="ThreadSettings.vb" />
     <Compile Include="Tools.vb" />
+    <Page Include="frmAbout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="frmLaunch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

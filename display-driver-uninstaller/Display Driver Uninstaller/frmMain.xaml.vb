@@ -5418,6 +5418,18 @@ Public Class frmMain
             imgOffer.IsEnabled = True
         End If
 	End Sub
+	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click
+		Dim frmAbout As New frmAbout
+
+		With frmAbout
+			.Owner = Me
+			.DataContext = Me.DataContext
+			.ResizeMode = Windows.ResizeMode.NoResize
+			.WindowStyle = Windows.WindowStyle.ToolWindow
+		End With
+
+		frmAbout.ShowDialog()
+	End Sub
 
 	Private Sub LinksMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles LinksMenuItem.Click
 

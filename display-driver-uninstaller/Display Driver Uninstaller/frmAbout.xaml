@@ -1,0 +1,10 @@
+﻿<Window x:Name="frmabout" x:Class="frmAbout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="frmAbout" Height="363" Width="386" SizeToContent="WidthAndHeight">
+    <Grid>
+        <Label x:Name="Label1" Content="Label" HorizontalAlignment="Left" Margin="10,151,0,0" VerticalAlignment="Top"/>
+        <Image Height="136" Margin="10,10,10,0" VerticalAlignment="Top" Source="Resources/ddu logo3.png"/>
+
+    </Grid>
+</Window>
