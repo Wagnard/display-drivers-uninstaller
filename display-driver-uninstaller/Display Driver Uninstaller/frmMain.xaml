@@ -49,7 +49,7 @@
                 <MenuItem x:Name="AboutMenuItem" Header="About" />
             </MenuItem>
 
-            <MenuItem x:Name="TestMenuItem" Header="TESTING" Visibility="{Binding DevMode, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+            <MenuItem x:Name="TestMenuItem" Header="TESTING" Visibility="{Binding IsDebug, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
                 <MenuItem x:Name="Reg1MenuItem" Header="Reg (test3 = 0)" Tag="0" />
                 <MenuItem x:Name="Reg2MenuItem" Header="Reg (test3 = 1)" Tag="1" />
                 <MenuItem x:Name="Reg3MenuItem" Header="Reg (test3 = 2)" Tag="2" />

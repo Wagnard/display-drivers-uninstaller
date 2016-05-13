@@ -5497,41 +5497,41 @@ Public Class frmMain
 			 )
 #End If
 			'we check if the donate/guru3dnvidia/gugu3damd/geforce/dduhome is trigger here directly.
-			If CBool(Application.Settings.VisitDonate) Then
-				webAddress = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-			End If
-
-			If CBool(Application.Settings.VisitGuru3DNvidia) Then
-				webAddress = "http://forums.guru3d.com/showthread.php?t=379506"
-			End If
-
-			If CBool(Application.Settings.VisitGuru3DAMD) Then
-				webAddress = "http://forums.guru3d.com/showthread.php?t=379505"
-			End If
-
-			If CBool(Application.Settings.VisitGeforce) Then
-				webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
-			End If
-
-			If CBool(Application.Settings.VisitDDUHome) Then
-				webAddress = "http://www.wagnardmobile.com"
-			End If
-
-			If CBool(Application.Settings.VisitSVN) Then
-				webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
+            If Application.Settings.VisitDonate Then
+                webAddress = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
             End If
 
-            If CBool(Application.Settings.VisitOffer) Then
-				webAddress = "https://www.driverdr.com/lp/update-display-drivers.html"
+            If Application.Settings.VisitGuru3DNvidia Then
+                webAddress = "http://forums.guru3d.com/showthread.php?t=379506"
             End If
 
-            If CBool(Application.Settings.VisitDonate) = True Or
-               CBool(Application.Settings.VisitGuru3DNvidia) = True Or
-               CBool(Application.Settings.VisitGuru3DAMD) = True Or
-               CBool(Application.Settings.VisitGeforce) = True Or
-               CBool(Application.Settings.VisitSVN) = True Or
-               CBool(Application.Settings.VisitDDUHome) = True Or
-               CBool(Application.Settings.VisitOffer) = True Then
+            If Application.Settings.VisitGuru3DAMD Then
+                webAddress = "http://forums.guru3d.com/showthread.php?t=379505"
+            End If
+
+            If Application.Settings.VisitGeforce Then
+                webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
+            End If
+
+            If Application.Settings.VisitDDUHome Then
+                webAddress = "http://www.wagnardmobile.com"
+            End If
+
+            If Application.Settings.VisitSVN Then
+                webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
+            End If
+
+            If Application.Settings.VisitOffer Then
+                webAddress = "https://www.driverdr.com/lp/update-display-drivers.html"
+            End If
+
+            If Application.Settings.VisitDonate Or
+               Application.Settings.VisitGuru3DNvidia Or
+               Application.Settings.VisitGuru3DAMD Or
+               Application.Settings.VisitGeforce Or
+               Application.Settings.VisitSVN Or
+               Application.Settings.VisitDDUHome Or
+               Application.Settings.VisitOffer Then
 
                 processinfo.FileName = webAddress
                 processinfo.Arguments = Nothing
@@ -6089,14 +6089,14 @@ Public Class frmMain
 
             Topmost = False
 
-			If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
-				Dim trd As Thread = New Thread(AddressOf ThreadTask)
-				trd.CurrentCulture = New Globalization.CultureInfo("en-US")
-				trd.CurrentUICulture = New Globalization.CultureInfo("en-US")
+            If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
+                Dim trd As Thread = New Thread(AddressOf ThreadTask)
+                trd.CurrentCulture = New Globalization.CultureInfo("en-US")
+                trd.CurrentUICulture = New Globalization.CultureInfo("en-US")
 
-				trd.IsBackground = True
-				trd.Start()
-			End If
+                trd.IsBackground = True
+                trd.Start()
+            End If
         Catch ex As Exception
             MsgBox(ex)
         End Try

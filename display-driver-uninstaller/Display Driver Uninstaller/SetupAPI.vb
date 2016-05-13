@@ -303,6 +303,9 @@ Namespace SetupAPI
             IsAdmin = Tools.UserHasAdmin
         End Sub
 
+
+#Region "CM"
+
         <Flags()>
         Private Enum CR As UInteger
             SUCCESS = &H0UI
@@ -461,6 +464,57 @@ Namespace SetupAPI
            <[In]()> ByVal dnDevInst As UInt32,
            <[In]()> ByVal ulFlags As UInt32) As UInt32
         End Function
+
+        <DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Private Function CM_Get_DevNode_Property(
+             <[In]()> ByVal dnDevInst As UInt32,
+            <[In]()> ByVal PropertyKey As DEVPROPKEY,
+            <[Out]()> ByRef PropertyType As UInt32,
+            <[Out]()> ByVal PropertyBuffer() As Byte,
+            <[In](), [Out]()> ByRef PropertyBufferSize As UInt32,
+            <[In]()> ByVal ulFlags As UInt32) As UInt32
+        End Function
+
+        Private Enum DEVPROP_TYPE
+            MOD_ARRAY = &H1000UI
+            MOD_LIST = &H2000UI
+            EMPTY = &H0UI
+            NULL = &H1UI
+            [SBYTE] = &H2UI
+            [BYTE] = &H3UI
+            INT16 = &H4UI
+            UINT16 = &H5UI
+            INT32 = &H6UI
+            UINT32 = &H7UI
+            INT64 = &H8UI
+            UINT64 = &H9UI
+            FLOAT = &HAUI
+            [DOUBLE] = &HBUI
+            [DECIMAL] = &HCUI
+            GUID = &HDUI
+            CURRENCY = &HEUI
+            [DATE] = &HFUI
+            FILETIME = &H10UI
+            [BOOLEAN] = &H11UI
+            [STRING] = &H12UI
+            [STRING_LIST] = [STRING] Or MOD_LIST
+            SECURITY_DESCRIPTOR = &H13UI
+            SECURITY_DESCRIPTOR_STRING = &H14UI
+            DEVPROPKEY = &H15UI
+            DEVPROPTYPE = &H16UI
+            [BINARY] = [BYTE] Or MOD_ARRAY
+            [ERROR] = &H17UI
+            NTSTATUS = &H18UI
+            [STRING_INDIRECT] = &H19UI
+        End Enum
+
+        <StructLayout(LayoutKind.Sequential, Pack:=8, CharSet:=CharSet.Unicode)>
+        Private Structure DEVPROPKEY
+            Public fmtid As Guid
+            Public pid As UInt32
+        End Structure
+
+#End Region
 
 #Region "Enums"
         <Flags()>
@@ -1863,17 +1917,17 @@ Namespace SetupAPI
             If force Then
                 If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.SUOI_FORCEDELETE), IntPtr.Zero) Then
                     logInfs.Add(oem.FileName, "Uninstalled!")
-				Else
-					If New Win32Exception().ErrorCode = 0 Then
-						logInfs.Add(oem.FileName, "Uninstalling failed! OEM Still in use")
-					Else
-						Dim logInfEx As LogEntry = Application.Log.CreateEntry()
-						logInfEx.AddException(New Win32Exception())
-						logInfEx.Add("InfFile", oem.FileName)
+                Else
+                    If GetLastWin32Error() = 0 Then
+                        logInfs.Add(oem.FileName, "Uninstalling failed! OEM Still in use")
+                    Else
+                        Dim logInfEx As LogEntry = Application.Log.CreateEntry()
+                        logInfEx.AddException(New Win32Exception())
+                        logInfEx.Add("InfFile", oem.FileName)
 
-						Application.Log.Add(logInfEx)
-					End If
-			End If
+                        Application.Log.Add(logInfEx)
+                    End If
+                End If
             Else
                 If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.NONE), IntPtr.Zero) Then
                     logInfs.Add(oem.FileName, "Uninstalled!")
@@ -1891,6 +1945,7 @@ Namespace SetupAPI
             Application.Log.AddMessage("End of UninstallDevice")
         End Sub
         ' REVERSED FOR CLEANING FROM CODE
+
         Public Sub UpdateDevice(ByRef device As Device)
 
         End Sub
@@ -2020,30 +2075,31 @@ Namespace SetupAPI
         End Sub
 
         Private Sub GetDeviceCMDetails(ByVal ptrDevInfo As IntPtr, ByRef device As Device)
-            Dim DevInst As UInt32
+            Dim devInst As UInt32
 
             If Is64 Then
-                DevInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+                devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
             Else
-                DevInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+                devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
             End If
 
             Dim pdnDevInst As UInt32 = 0UI
 
-            ' Dim result As CR = DirectCast(CM_Get_Child(pdnDevInst, data.DevInst, 0UI), CR)
+            Dim result As CR = DirectCast(CM_Get_Child(pdnDevInst, devInst, 0UI), CR)
 
-            ' If result = CR.SUCCESS Then
-            ' has child device!
-            ' CM_Get_Sibling -> child has child device!
-            ' ElseIf result = CR.NO_SUCH_DEVINST Then
-            ' Else
-            ' CheckWin32Error(False)
-            ' End If
+            If result = CR.SUCCESS Then
+                '  CM_Get_DevNode_Property(devInst, 
+                '  result = DirectCast(CM_Get_Class_Property(device., CR)
+
+            ElseIf result = CR.NO_SUCH_DEVINST Then
+            Else
+                CheckWin32Error(False)
+            End If
 
             Dim pulStatus As UInt32 = 0UI
             Dim pulProblemNumber As UInt32 = 0UI
 
-            Dim result2 As CR = DirectCast(CM_Get_DevNode_Status(pulStatus, pulProblemNumber, DevInst, 0UI), CR)
+            Dim result2 As CR = DirectCast(CM_Get_DevNode_Status(pulStatus, pulProblemNumber, devInst, 0UI), CR)
 
             If result2 = CR.SUCCESS Then
                 device.DevStatus = ToStringArray(Of DN)(DirectCast(pulStatus, DN))
