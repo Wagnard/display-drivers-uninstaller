@@ -2035,31 +2035,33 @@ Namespace SetupAPI
                 If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.SUOI_FORCEDELETE), IntPtr.Zero) Then
                     logInfs.Add(oem.FileName, "Uninstalled!")
                 Else
-                    If GetLastWin32Error() = 0 Then
-                        logInfs.Add(oem.FileName, "Uninstalling failed! OEM Still in use")
-                    Else
-                        Dim logInfEx As LogEntry = Application.Log.CreateEntry()
-                        logInfEx.AddException(New Win32Exception())
-                        logInfEx.Add("InfFile", oem.FileName)
 
-                        Application.Log.Add(logInfEx)
-                    End If
-                End If
+					Dim logInfEx As LogEntry = Application.Log.CreateEntry()
+					logInfEx.AddException(New Win32Exception())
+					logInfEx.Add("InfFile", oem.FileName)
+
+					Application.Log.Add(logInfEx)
+
+				End If
             Else
-                If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.NONE), IntPtr.Zero) Then
-                    logInfs.Add(oem.FileName, "Uninstalled!")
-                Else
-                    logInfs.Add(oem.FileName, "Uninstalling failed! See exceptions for details!")
+			If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.NONE), IntPtr.Zero) Then
+				logInfs.Add(oem.FileName, "Uninstalled!")
+				Else
+					If GetLastWin32Error() = 0 Then
+						logInfs.Add(oem.FileName, "Uninstalling failed! OEM Still in use")
+					Else
+						logInfs.Add(oem.FileName, "Uninstalling failed! See exceptions for details!")
 
-                    Dim logInfEx As LogEntry = Application.Log.CreateEntry()
-                    logInfEx.AddException(New Win32Exception())
-                    logInfEx.Add("InfFile", oem.FileName)
+						Dim logInfEx As LogEntry = Application.Log.CreateEntry()
+						logInfEx.AddException(New Win32Exception())
+						logInfEx.Add("InfFile", oem.FileName)
 
-                    Application.Log.Add(logInfEx)
-                End If
-            End If
-            Application.Log.Add(logInfs)
-            Application.Log.AddMessage("End of UninstallDevice")
+						Application.Log.Add(logInfEx)
+					End If
+				End If
+			End If
+			Application.Log.Add(logInfs)
+			Application.Log.AddMessage("End of UninstallDevice")
         End Sub
         ' REVERSED FOR CLEANING FROM CODE
 
