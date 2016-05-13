@@ -33,7 +33,14 @@
                 </DockPanel>
 
                 <TextBlock />
-             
+
+                <DockPanel LastChildFill="true">
+                    <TextBlock FontWeight="Bold" Text="Device ID:    " />
+                    <TextBlock Text="{Binding Path=DeviceID, Mode=OneWay}" />
+                </DockPanel>
+
+                <TextBlock />
+
                 <DockPanel LastChildFill="true">
                     <TextBlock FontWeight="Bold" Text="Install State:    " />
                     <TextBlock Text="{Binding Path=InstallState, Mode=OneWay}" />
@@ -229,6 +236,40 @@
                                     </ItemsControl>
 
                                     <Separator Margin="0,5,0,5" Grid.Row="9" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="2" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+               
+                <TextBlock />
+
+                <StackPanel Visibility="{Binding Path=SiblingDevices, Mode=OneWay, Converter={StaticResource NullToVis}}">
+                    <TextBlock FontWeight="Bold" 
+                               Text="{Binding Path=SiblingDevices.Count, FallbackValue=0, StringFormat='{}Sibling(s): ( Count: {0} )'}"/>
+
+                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding SiblingDevices}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition MinWidth="100" Width="Auto" />
+                                        <ColumnDefinition MinWidth="10" Width="10" MaxWidth="10" />
+                                        <ColumnDefinition MinWidth="100" Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Description" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Path=Description, Mode=OneWay}" />
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Device ID" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=DeviceID, Mode=OneWay}" />
+
+                                    <Separator Margin="0,5,0,5" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="2" />
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

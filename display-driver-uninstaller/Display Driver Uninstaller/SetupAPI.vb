@@ -305,7 +305,7 @@ Namespace SetupAPI
 
 
 #Region "CM"
-
+       
         <Flags()>
         Private Enum CR As UInteger
             SUCCESS = &H0UI
@@ -451,9 +451,31 @@ Namespace SetupAPI
         End Enum
 
         <DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Private Function CM_Get_Parent(
+           <[Out]()> ByRef pdnDevInst As UInt32,
+           <[In]()> ByVal dnDevInst As UInt32,
+           <[In]()> ByVal ulFlags As UInt32) As UInt32
+        End Function
+
+        <DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
         Private Function CM_Get_Child(
            <[Out]()> ByRef pdnDevInst As UInt32,
            <[In]()> ByVal DevInst As UInt32,
+           <[In]()> ByVal ulFlags As UInt32) As UInt32
+        End Function
+
+        <DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Private Function CM_Get_Sibling(
+           <[Out]()> ByRef pdnDevInst As UInt32,
+           <[In]()> ByVal DevInst As UInt32,
+           <[In]()> ByVal ulFlags As UInt32) As UInt32
+        End Function
+
+        <DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        Private Function CM_Get_Device_ID(
+           <[In]()> ByVal dnDevInst As UInt32,
+           <[Out](), MarshalAs(UnmanagedType.LPWStr)> ByVal Buffer As StringBuilder,
+           <[In]()> ByRef BufferLen As UInt32,
            <[In]()> ByVal ulFlags As UInt32) As UInt32
         End Function
 
@@ -464,55 +486,6 @@ Namespace SetupAPI
            <[In]()> ByVal dnDevInst As UInt32,
            <[In]()> ByVal ulFlags As UInt32) As UInt32
         End Function
-
-        <DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-        Private Function CM_Get_DevNode_Property(
-             <[In]()> ByVal dnDevInst As UInt32,
-            <[In]()> ByVal PropertyKey As DEVPROPKEY,
-            <[Out]()> ByRef PropertyType As UInt32,
-            <[Out]()> ByVal PropertyBuffer() As Byte,
-            <[In](), [Out]()> ByRef PropertyBufferSize As UInt32,
-            <[In]()> ByVal ulFlags As UInt32) As UInt32
-        End Function
-
-        Private Enum DEVPROP_TYPE
-            MOD_ARRAY = &H1000UI
-            MOD_LIST = &H2000UI
-            EMPTY = &H0UI
-            NULL = &H1UI
-            [SBYTE] = &H2UI
-            [BYTE] = &H3UI
-            INT16 = &H4UI
-            UINT16 = &H5UI
-            INT32 = &H6UI
-            UINT32 = &H7UI
-            INT64 = &H8UI
-            UINT64 = &H9UI
-            FLOAT = &HAUI
-            [DOUBLE] = &HBUI
-            [DECIMAL] = &HCUI
-            GUID = &HDUI
-            CURRENCY = &HEUI
-            [DATE] = &HFUI
-            FILETIME = &H10UI
-            [BOOLEAN] = &H11UI
-            [STRING] = &H12UI
-            [STRING_LIST] = [STRING] Or MOD_LIST
-            SECURITY_DESCRIPTOR = &H13UI
-            SECURITY_DESCRIPTOR_STRING = &H14UI
-            DEVPROPKEY = &H15UI
-            DEVPROPTYPE = &H16UI
-            [BINARY] = [BYTE] Or MOD_ARRAY
-            [ERROR] = &H17UI
-            NTSTATUS = &H18UI
-            [STRING_INDIRECT] = &H19UI
-        End Enum
-
-        <StructLayout(LayoutKind.Sequential, Pack:=8, CharSet:=CharSet.Unicode)>
-        Private Structure DEVPROPKEY
-            Public fmtid As Guid
-            Public pid As UInt32
-        End Structure
 
 #End Region
 
@@ -1680,7 +1653,11 @@ Namespace SetupAPI
                 Throw New NotImplementedException()
             End If
 
+            Dim SiblingDevicesToFind As List(Of Device) = New List(Of Device)(5)
             Dim Devices As List(Of Device) = New List(Of Device)(5)
+            Dim d As Device
+            Dim devInst As UInt32
+
             Application.Log.AddMessage("Beginning of GetDevices")
 
             Try
@@ -1714,9 +1691,16 @@ Namespace SetupAPI
 
                             devClass = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASS)
 
-                            If 1 + 1 = 2 Then 'OrElse Not IsNullOrWhitespace(devClass) AndAlso devClass.Equals(className, StringComparison.OrdinalIgnoreCase) Then
-                                Dim d As Device = New Device() With
+                            If Not IsNullOrWhitespace(devClass) AndAlso devClass.Equals(className, StringComparison.OrdinalIgnoreCase) Then
+                                If Is64 Then
+                                    devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+                                Else
+                                    devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+                                End If
+
+                                d = New Device() With
                                 {
+                                    .devInst = devInst,
                                     .ClassName = devClass
                                 }
 
@@ -1725,10 +1709,16 @@ Namespace SetupAPI
 
                                 GetDeviceCMDetails(ptrDevInfo.Ptr, d)
 
+                                GetSiblings(d)
+
                                 Devices.Add(d)
+
+                                If d.SiblingDevices IsNot Nothing AndAlso d.SiblingDevices.Count > 0 Then
+                                    For Each sibling In d.SiblingDevices
+                                        SiblingDevicesToFind.Add(sibling)
+                                    Next
+                                End If
                             End If
-
-
                         End While
 
                         Return Devices
@@ -1742,9 +1732,136 @@ Namespace SetupAPI
                 Application.Log.AddException(ex)
                 Return New List(Of Device)(0)
             Finally
+                If SiblingDevicesToFind.Count > 0 Then
+                    GetDevicesByID(SiblingDevicesToFind)
+                End If
+
                 Application.Log.AddMessage("End of GetDevices")
             End Try
         End Function
+
+        Private Function GetSubDevices(ByVal device As Device) As List(Of Device)
+            Dim Devices As List(Of Device) = New List(Of Device)(5)
+
+            Try
+                Dim nullGuid As Guid = Guid.Empty
+                Dim d As Device = Nothing
+                Dim devInst As UInt32
+
+                Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, device.DeviceID, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
+                    CheckWin32Error(Not infoSet.IsInvalid)
+
+                    Dim ptrDevInfo As StructPtr = Nothing
+                    Try
+                        If Is64 Then
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
+                        Else
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
+                        End If
+
+                        Dim i As UInt32 = 0UI
+
+                        While True
+                            If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
+                                If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
+                                    Exit While
+                                Else
+                                    CheckWin32Error(False)
+                                End If
+                            End If
+
+                            i += 1UI
+
+                            If Is64 Then
+                                devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+                            Else
+                                devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+                            End If
+
+                            If device.devInst <> devInst Then
+                                d = New Device() With
+                                {
+                                    .devInst = devInst,
+                                    .DeviceID = GetDeviceID(devInst)
+                                }
+
+                                Devices.Add(d)
+                            End If
+                        End While
+
+                        Return Devices
+                    Finally
+                        If ptrDevInfo IsNot Nothing Then
+                            ptrDevInfo.Dispose()
+                        End If
+                    End Try
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+                Return New List(Of Device)(0)
+            End Try
+        End Function
+
+        Private Sub GetDevicesByID(ByRef devList As List(Of Device))
+            Try
+                Dim nullGuid As Guid = Guid.Empty
+                Dim device As Device = Nothing
+
+                Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
+                    CheckWin32Error(Not infoSet.IsInvalid)
+
+                    Dim ptrDevInfo As StructPtr = Nothing
+                    Try
+                        If Is64 Then
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
+                        Else
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
+                        End If
+
+                        Dim i As UInt32 = 0UI
+
+                        While True
+                            If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
+                                If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
+                                    Exit While
+                                Else
+                                    CheckWin32Error(False)
+                                End If
+                            End If
+
+                            i += 1UI
+
+
+                            Dim d As Device = New Device()
+                            Dim devInst As UInt32
+
+                            If Is64 Then
+                                devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+                            Else
+                                devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+                            End If
+
+                            d.DeviceID = GetDeviceID(devInst)
+
+                            For Each sDev As Device In devList
+                                If Not IsNullOrWhitespace(d.DeviceID) AndAlso Not IsNullOrWhitespace(sDev.DeviceID) AndAlso sDev.DeviceID.Equals(d.DeviceID, StringComparison.OrdinalIgnoreCase) Then
+                                    GetDeviceDetails(infoSet, ptrDevInfo.Ptr, sDev)
+                                    GetDriverDetails(infoSet, ptrDevInfo.Ptr, sDev)
+
+                                    GetDeviceCMDetails(ptrDevInfo.Ptr, sDev)
+                                End If
+                            Next
+                        End While
+                    Finally
+                        If ptrDevInfo IsNot Nothing Then
+                            ptrDevInfo.Dispose()
+                        End If
+                    End Try
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            End Try
+        End Sub
 
         ' REVERSED FOR CLEANING FROM CODE
         Public Sub UninstallDevice(ByRef device As Device)
@@ -2065,6 +2182,7 @@ Namespace SetupAPI
 
         Private Sub GetDeviceDetails(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr, ByRef device As Device)
             If device.ClassGuid Is Nothing Then device.ClassGuid = GetStringProperty(infoSet, ptrDevInfo, SPDRP.CLASSGUID)
+            If device.Description Is Nothing Then device.Description = GetStringProperty(infoSet, ptrDevInfo, SPDRP.DEVICEDESC)
             If device.FriendlyName Is Nothing Then device.FriendlyName = GetStringProperty(infoSet, ptrDevInfo, SPDRP.FRIENDLYNAME)
             If device.CompatibleIDs Is Nothing Then device.CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.COMPATIBLEIDS)
             If device.InstallState Is Nothing Then device.InstallState = GetDescription(DirectCast(GetUInt32Property(infoSet, ptrDevInfo, SPDRP.INSTALL_STATE), DEVICE_INSTALL_STATE))
@@ -2075,31 +2193,20 @@ Namespace SetupAPI
         End Sub
 
         Private Sub GetDeviceCMDetails(ByVal ptrDevInfo As IntPtr, ByRef device As Device)
-            Dim devInst As UInt32
-
-            If Is64 Then
-                devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
-            Else
-                devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+            If device.devInst = 0UI Then
+                If (Is64) Then
+                    device.devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+                Else
+                    device.devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+                End If
             End If
 
-            Dim pdnDevInst As UInt32 = 0UI
-
-            Dim result As CR = DirectCast(CM_Get_Child(pdnDevInst, devInst, 0UI), CR)
-
-            If result = CR.SUCCESS Then
-                '  CM_Get_DevNode_Property(devInst, 
-                '  result = DirectCast(CM_Get_Class_Property(device., CR)
-
-            ElseIf result = CR.NO_SUCH_DEVINST Then
-            Else
-                CheckWin32Error(False)
-            End If
+            device.DeviceID = GetDeviceID(device.devInst)
 
             Dim pulStatus As UInt32 = 0UI
             Dim pulProblemNumber As UInt32 = 0UI
 
-            Dim result2 As CR = DirectCast(CM_Get_DevNode_Status(pulStatus, pulProblemNumber, devInst, 0UI), CR)
+            Dim result2 As CR = DirectCast(CM_Get_DevNode_Status(pulStatus, pulProblemNumber, device.devInst, 0UI), CR)
 
             If result2 = CR.SUCCESS Then
                 device.DevStatus = ToStringArray(Of DN)(DirectCast(pulStatus, DN))
@@ -2279,6 +2386,56 @@ Namespace SetupAPI
             End If
         End Sub
 
+        Private Function GetDeviceID(ByVal devInst As UInt32) As String
+            Dim result As CR
+            Dim deviceID As New StringBuilder(MAX_LEN)
+
+            While True
+                result = DirectCast(CM_Get_Device_ID(devInst, deviceID, GetUInt32(deviceID.Capacity), 0UI), CR)
+
+                If result = CR.BUFFER_SMALL Then
+                    deviceID.EnsureCapacity(deviceID.Capacity * 2)
+                ElseIf result = CR.SUCCESS Then
+                    Return deviceID.ToString()
+                Else
+                    CheckWin32Error(False)
+                End If
+            End While
+
+            Return Nothing
+        End Function
+
+        Private Sub GetSiblings(ByVal device As Device)
+            Dim result As CR
+            Dim devInstParent As UInt32 = 0UI
+            Dim devInstChild As UInt32 = 0UI
+            Dim devInstSibling As UInt32 = 0UI
+            result = DirectCast(CM_Get_Parent(devInstParent, device.devInst, 0UI), CR)
+
+            If result = CR.SUCCESS Then
+                result = DirectCast(CM_Get_Child(devInstChild, devInstParent, 0UI), CR)
+
+                While True
+                    result = DirectCast(CM_Get_Sibling(devInstSibling, devInstChild, 0UI), CR)
+
+                    If result = CR.SUCCESS Then
+                        device.SiblingDevices.Add(New Device() With {.devInst = devInstSibling, .DeviceID = GetDeviceID(devInstSibling)})
+                      
+                        devInstChild = devInstSibling
+                    ElseIf result = CR.NO_SUCH_DEVINST Then
+                        Exit While
+                    End If
+                End While
+           
+            ElseIf result = CR.NO_SUCH_DEVINST Then
+            Else
+                CheckWin32Error(False)
+            End If
+
+            Dim pulStatus As UInt32 = 0UI
+            Dim pulProblemNumber As UInt32 = 0UI
+        End Sub
+
         Private Function RebootRequired(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr) As Boolean
             Return RebootRequired(GetInstallParamsFlags(infoSet, ptrDevInfo))
         End Function
@@ -2343,6 +2500,7 @@ Namespace SetupAPI
 #Region "Classes"
 
         Public Class Device
+            Friend devInst As UInt32
             Private _hardwareIDs As String()
             Private _lowerfilters As String()
             Private _friendlyname As String
@@ -2352,7 +2510,9 @@ Namespace SetupAPI
             Private _description As String
             Private _classGuid As String
             Private _className As String
+            Private _deviceID As String
             Private _driverInfo As List(Of DriverInfo)
+            Private _siblingDevices As List(Of Device)
 
 
             Private _installState As String
@@ -2437,12 +2597,28 @@ Namespace SetupAPI
                     _className = value
                 End Set
             End Property
+            Public Property DeviceID As String
+                Get
+                    Return _deviceID
+                End Get
+                Friend Set(value As String)
+                    _deviceID = value
+                End Set
+            End Property
             Public Property DriverInfo As List(Of DriverInfo)
                 Get
                     Return _driverInfo
                 End Get
                 Friend Set(value As List(Of DriverInfo))
                     _driverInfo = value
+                End Set
+            End Property
+            Public Property SiblingDevices As List(Of Device)
+                Get
+                    Return _siblingDevices
+                End Get
+                Friend Set(value As List(Of Device))
+                    _siblingDevices = value
                 End Set
             End Property
             Public Property InstallState As String
@@ -2498,6 +2674,7 @@ Namespace SetupAPI
 
             Friend Sub New()
                 _driverInfo = New List(Of DriverInfo)(5)
+                _siblingDevices = New List(Of Device)(2)
             End Sub
         End Class
 

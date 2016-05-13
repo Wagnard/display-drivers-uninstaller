@@ -133,6 +133,8 @@ Namespace Converters
             If value IsNot Nothing Then
                 If TypeOf (value) Is List(Of DriverInfo) Then
                     Return DirectCast(value, List(Of DriverInfo)).Count = 0
+                ElseIf TypeOf (value) Is List(Of Device) Then
+                    Return DirectCast(value, List(Of Device)).Count = 0
                 End If
             End If
 

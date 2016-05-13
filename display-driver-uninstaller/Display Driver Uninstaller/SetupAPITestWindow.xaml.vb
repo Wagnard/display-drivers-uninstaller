@@ -100,9 +100,6 @@ Public Class SetupAPITestWindow
             cbFilterDev.SelectedIndex = 0
         End If
 
-        If System.IO.File.Exists("C:\SafeWinAPI.log") Then
-            System.IO.File.Delete("C:\SafeWinAPI.log")
-        End If
         Dim found As List(Of Device) = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text)
 
         If found.Count > 0 Then
@@ -386,7 +383,20 @@ Public Class SetupAPITestWindow
     End Sub
 
     Private Sub btnTestDev_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnTestDev.Click
-        SetupAPI.GetDevices("Display")
+        Dim found As List(Of Device) = SetupAPI.GetDevices("Display")
+
+        If found.Count > 0 Then
+            For Each d As Device In found
+                Devices.Add(d)
+            Next
+
+            lblDevicesDev.Content = String.Format("Devices: {0}", Devices.Count)
+            UpdateFilter()
+
+            MessageBox.Show(String.Format("{0} devices found!", Devices.Count))
+        Else
+            MessageBox.Show("Devices not found!")
+        End If
     End Sub
 
 End Class
