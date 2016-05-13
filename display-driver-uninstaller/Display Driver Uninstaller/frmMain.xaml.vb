@@ -23,10 +23,10 @@ Imports System.Threading
 Imports System.Security.Principal
 Imports System.Management
 Imports System.Runtime.InteropServices
-Imports System.Windows.Forms
 Imports System.Reflection
 Imports System.Text
 
+Imports WinForm = System.Windows.Forms
 
 Public Class frmMain
 	Private WithEvents BackgroundWorker1 As New System.ComponentModel.BackgroundWorker
@@ -73,39 +73,39 @@ Public Class frmMain
 
 
 	Private Sub Checkupdates2()
-		If Not Me.Dispatcher.CheckAccess() Then
-			Dispatcher.Invoke(New MethodInvoker(AddressOf Checkupdates2))
-		Else
-			lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text")
-			Dim updates As Integer = HasUpdates()
+        If Not Me.Dispatcher.CheckAccess() Then
+            Dispatcher.Invoke(Sub() Checkupdates2())
+        Else
+            lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text")
+            Dim updates As Integer = HasUpdates()
 
-			If updates = 1 Then
+            If updates = 1 Then
                 lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text2")
 
-			ElseIf updates = 2 Then
-				lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text3")
+            ElseIf updates = 2 Then
+                lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text3")
 
-				If Not MyIdentity.IsSystem Then	 'we dont want to open a webpage when the app is under "System" user.
-					Select Case MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text1"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-						Case Windows.Forms.DialogResult.Yes
-							process.Start("http://www.wagnardmobile.com")
-							closeapp = True
-							closeddu()
-							Exit Sub
-						Case Windows.Forms.DialogResult.No
-                            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text2"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
-						Case Windows.Forms.DialogResult.Cancel
-							closeapp = True
-							closeddu()
-							Exit Sub
-					End Select
+                If Not MyIdentity.IsSystem Then  'we dont want to open a webpage when the app is under "System" user.
+                    Select Case MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text1"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
+                        Case MessageBoxResult.Yes
+                            process.Start("http://www.wagnardmobile.com")
+                            closeapp = True
+                            closeddu()
+                            Exit Sub
+                        Case MessageBoxResult.No
+                            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text2"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Information)
+                        Case MessageBoxResult.Cancel
+                            closeapp = True
+                            closeddu()
+                            Exit Sub
+                    End Select
 
-				End If
+                End If
 
-			ElseIf updates = 3 Then
-				lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text4")
-			End If
-		End If
+            ElseIf updates = 3 Then
+                lblUpdate.Content = Languages.GetTranslation(Me.Name, "Label11", "Text4")
+            End If
+        End If
 	End Sub
 
 	Private Function HasUpdates() As Integer
@@ -1462,37 +1462,37 @@ Public Class frmMain
 		'---------------------------------------------
 
 		Try
-			If version < "6.2" And System.Windows.Forms.SystemInformation.BootMode <> BootMode.Normal Then 'win 7 and lower + safemode only
-				Application.Log.AddMessage("Cleaning LEGACY_AMDKMDAG")
-				subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-				 ("SYSTEM")
-				If subregkey IsNot Nothing Then
-					For Each childs As String In subregkey.GetSubKeyNames()
-						If IsNullOrWhitespace(childs) = False Then
-							If childs.ToLower.Contains("controlset") Then
-								regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-								  ("SYSTEM\" & childs & "\Enum\Root")
-								If regkey IsNot Nothing Then
-									For Each child As String In regkey.GetSubKeyNames()
-										If IsNullOrWhitespace(child) = False Then
-											If child.ToLower.Contains("legacy_amdkmdag") Or _
-											 (child.ToLower.Contains("legacy_amdkmpfd") AndAlso config.RemoveAMDKMPFD) Or _
-											 child.ToLower.Contains("legacy_amdacpksd") Then
+            If version < "6.2" And System.Windows.Forms.SystemInformation.BootMode <> WinForm.BootMode.Normal Then 'win 7 and lower + safemode only
+                Application.Log.AddMessage("Cleaning LEGACY_AMDKMDAG")
+                subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                 ("SYSTEM")
+                If subregkey IsNot Nothing Then
+                    For Each childs As String In subregkey.GetSubKeyNames()
+                        If IsNullOrWhitespace(childs) = False Then
+                            If childs.ToLower.Contains("controlset") Then
+                                regkey = My.Computer.Registry.LocalMachine.OpenSubKey _
+                                  ("SYSTEM\" & childs & "\Enum\Root")
+                                If regkey IsNot Nothing Then
+                                    For Each child As String In regkey.GetSubKeyNames()
+                                        If IsNullOrWhitespace(child) = False Then
+                                            If child.ToLower.Contains("legacy_amdkmdag") Or _
+                                             (child.ToLower.Contains("legacy_amdkmpfd") AndAlso config.RemoveAMDKMPFD) Or _
+                                             child.ToLower.Contains("legacy_amdacpksd") Then
 
-												Try
-													deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\" & childs & "\Enum\Root\" & child)
-												Catch ex As Exception
-													Application.Log.AddException(ex)
-												End Try
-											End If
-										End If
-									Next
-								End If
-							End If
-						End If
-					Next
-				End If
-			End If
+                                                Try
+                                                    deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\" & childs & "\Enum\Root\" & child)
+                                                Catch ex As Exception
+                                                    Application.Log.AddException(ex)
+                                                End Try
+                                            End If
+                                        End If
+                                    Next
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
+            End If
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
@@ -1740,13 +1740,13 @@ Public Class frmMain
 						If child.ToLower.Contains("install") Then
 							'here we check the install path location in case CCC is not installed on the system drive.  A kill to explorer must be made
 							'to help cleaning in normal mode.
-							If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-								Application.Log.AddMessage("Killing Explorer.exe")
-								Dim appproc = process.GetProcessesByName("explorer")
-								For i As Integer = 0 To appproc.Length - 1
-									appproc(i).Kill()
-								Next i
-							End If
+                            If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
+                                Application.Log.AddMessage("Killing Explorer.exe")
+                                Dim appproc = process.GetProcessesByName("explorer")
+                                For i As Integer = 0 To appproc.Length - 1
+                                    appproc(i).Kill()
+                                Next i
+                            End If
 							Try
 								If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("InstallDir"))) Then
 									filePath = regkey.OpenSubKey(child).GetValue("InstallDir").ToString
@@ -4988,7 +4988,7 @@ Public Class frmMain
 				Next
 			End If
 		Catch ex As Exception
-			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 			Application.log.AddException(ex)
 		End Try
 	End Sub
@@ -5117,7 +5117,7 @@ Public Class frmMain
 				End If
 			Next
 		Catch ex As Exception
-			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 			Application.log.AddException(ex)
 		End Try
 	End Sub
@@ -5178,20 +5178,19 @@ Public Class frmMain
 	End Sub
 
 	Private Sub closeddu()
+        If Not Dispatcher.CheckAccess() Then
+            Dispatcher.Invoke(Sub() closeddu())
+        Else
+            Try
+                preventclose = False
 
-		If Not Dispatcher.CheckAccess() Then
-			Dispatcher.Invoke(New MethodInvoker(AddressOf closeddu))
-		Else
-			Try
-				preventclose = False
+                ' Me.Close()
+                Application.Current.MainWindow.Close()
 
-				' Me.Close()
-				Application.Current.MainWindow.Close()
-
-			Catch ex As Exception
-				Application.log.AddException(ex)
-			End Try
-		End If
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            End Try
+        End If
 	End Sub
 
 #Region "frmMain Controls"
@@ -5548,23 +5547,23 @@ Public Class frmMain
                 Exit Sub
             End If
 
-			If Not System.Diagnostics.Debugger.IsAttached Then
+            If Not Application.Data.IsDebug Then
 
-				If Not isElevated Then
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-					'closeddu()
-					' Restart program and run as admin
-					Try
-						Dim exeName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
-						Dim startInfo As New ProcessStartInfo(exeName)
-						startInfo.Verb = "runas"
-						System.Diagnostics.Process.Start(startInfo)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-					Application.Current.Shutdown()
-					Exit Sub
-				End If
+                If Not isElevated Then
+                    'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    'closeddu()
+                    ' Restart program and run as admin
+                    Try
+                        Dim exeName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
+                        Dim startInfo As New ProcessStartInfo(exeName)
+                        startInfo.Verb = "runas"
+                        System.Diagnostics.Process.Start(startInfo)
+                    Catch ex As Exception
+                        Application.Log.AddException(ex)
+                    End Try
+                    Application.Current.Shutdown()
+                    Exit Sub
+                End If
             End If
             'second, we check on what we are running and set variables accordingly (os, architecture)
             If Not IsNullOrWhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion"))) Then
@@ -5707,7 +5706,7 @@ Public Class frmMain
 
                     If archIs64 = True Then
                         If Not File.Exists(Application.Paths.AppBase & "x64\ddudr.exe") Then
-                            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 
                             btnCleanRestart.IsEnabled = False
                             btnClean.IsEnabled = False
@@ -5716,7 +5715,7 @@ Public Class frmMain
                         End If
                     ElseIf archIs64 = False Then
                         If Not File.Exists(Application.Paths.AppBase & "x86\ddudr.exe") Then
-                            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 
                             btnCleanRestart.IsEnabled = False
                             btnClean.IsEnabled = False
@@ -5799,7 +5798,7 @@ Public Class frmMain
 
                 'We check if there are any reboot from windows update pending. and if so we quit.
                 If winupdatepending() Then
-                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text14"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text14"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Warning)
                     closeddu()
                     Exit Sub
                 End If
@@ -5815,7 +5814,7 @@ Public Class frmMain
                     'This code checks to see which mode Windows has booted up in.
                     Dim processstopservice As New Process
                     Select Case System.Windows.Forms.SystemInformation.BootMode
-                        Case BootMode.FailSafeWithNetwork, BootMode.FailSafe
+                        Case WinForm.BootMode.FailSafeWithNetwork, WinForm.BootMode.FailSafe
                             'The computer was booted using only the basic files and drivers.
                             'This is the same as Safe Mode
                             safemode = True
@@ -5833,7 +5832,7 @@ Public Class frmMain
                                 processstopservice.WaitForExit()
                                 processstopservice.Close()
                             End If
-                        Case BootMode.Normal
+                        Case WinForm.BootMode.Normal
                             safemode = False
 
                             If winxp = False AndAlso isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
@@ -5887,7 +5886,7 @@ Public Class frmMain
 
                     Topmost = False
 
-                    If Not System.Diagnostics.Debugger.IsAttached Then
+                    If Not Application.Data.IsDebug Then
 
                         Dim stopservice As New ProcessStartInfo
                         stopservice.FileName = "cmd.exe"
@@ -6066,12 +6065,12 @@ Public Class frmMain
                 End Try
 
                 If MyIdentity.IsSystem Then
-                    Select Case System.Windows.Forms.SystemInformation.BootMode
-                        Case BootMode.FailSafe
+                    Select Case WinForm.SystemInformation.BootMode
+                        Case WinForm.BootMode.FailSafe
                             Application.Log.AddMessage("We are in Safe Mode")
-                        Case BootMode.FailSafeWithNetwork
+                        Case WinForm.BootMode.FailSafeWithNetwork
                             Application.Log.AddMessage("We are in Safe Mode with Networking")
-                        Case BootMode.Normal
+                        Case WinForm.BootMode.Normal
                             Application.Log.AddMessage("We are not in Safe Mode")
                     End Select
                 End If
@@ -6373,7 +6372,7 @@ Public Class frmMain
 							Next
 						End If
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 				Next
@@ -6448,7 +6447,7 @@ Public Class frmMain
 						Next
 					End If
 				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 					Application.Log.AddException(ex)
 				End Try
 			End If
@@ -6597,7 +6596,7 @@ Public Class frmMain
 						End While
 
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 
@@ -6655,7 +6654,7 @@ Public Class frmMain
 						End While
 
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 
@@ -6705,7 +6704,7 @@ Public Class frmMain
 								Next
 							End If
 						Catch ex As Exception
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 							Application.Log.AddException(ex)
 						End Try
 
@@ -6749,7 +6748,7 @@ Public Class frmMain
 							Next
 						End If
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 				End If
@@ -6805,7 +6804,7 @@ Public Class frmMain
 						End If
 					End If
 				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 					Application.Log.AddException(ex)
 				End Try
 
@@ -6868,7 +6867,7 @@ Public Class frmMain
 						Next
 					End If
 				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 					Application.Log.AddException(ex)
 				End Try
 			End If
@@ -6929,7 +6928,7 @@ Public Class frmMain
 							Next
 						End If
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 				End If
@@ -7035,14 +7034,14 @@ Public Class frmMain
 				cleanamdserviceprocess()
 				cleanamd(config)
 
-				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-					Application.Log.AddMessage("Killing Explorer.exe")
+                If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
+                    Application.Log.AddMessage("Killing Explorer.exe")
 
-					Dim appproc = process.GetProcessesByName("explorer")
-					For i As Integer = 0 To appproc.Length - 1
-						appproc(i).Kill()
-					Next i
-				End If
+                    Dim appproc = process.GetProcessesByName("explorer")
+                    For i As Integer = 0 To appproc.Length - 1
+                        appproc(i).Kill()
+                    Next i
+                End If
 
 				cleanamdfolders(config)
 			End If
@@ -7051,7 +7050,7 @@ Public Class frmMain
 				cleannvidiaserviceprocess(config)
 				cleannvidia(config)
 
-				'If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
+                'If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
 				'	Application.Log.AddMessage("Killing Explorer.exe")
 
 				'	Dim appproc = process.GetProcessesByName("explorer")
@@ -7069,14 +7068,14 @@ Public Class frmMain
 				cleanintelserviceprocess()
 				cleanintel(config)
 
-				If System.Windows.Forms.SystemInformation.BootMode = BootMode.Normal Then
-					Application.Log.AddMessage("Killing Explorer.exe")
+                If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
+                    Application.Log.AddMessage("Killing Explorer.exe")
 
-					Dim appproc = process.GetProcessesByName("explorer")
-					For i As Integer = 0 To appproc.Length - 1
-						appproc(i).Kill()
-					Next i
-				End If
+                    Dim appproc = process.GetProcessesByName("explorer")
+                    For i As Integer = 0 To appproc.Length - 1
+                        appproc(i).Kill()
+                    Next i
+                End If
 
 				cleanintelfolders()
 			End If
@@ -7086,7 +7085,7 @@ Public Class frmMain
 			'rebuildcountercache()
 		Catch ex As Exception
 			Application.Log.AddException(ex)
-			MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 			stopme = True
 		End Try
 
@@ -7159,10 +7158,10 @@ Public Class frmMain
 			MenuStrip1.IsEnabled = True
 
 			If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
-				If MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text10"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.YesNo, MessageBoxIcon.Information) = Windows.Forms.DialogResult.Yes Then
-					closeddu()
-					Exit Sub
-				End If
+                If MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text10"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.OK Then
+                    closeddu()
+                    Exit Sub
+                End If
 			End If
 
 			If reboot Then
@@ -7475,7 +7474,7 @@ Public Class frmMain
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
 				If CInt(regkey.GetValue("SearchOrderConfig").ToString) <> 0 Then
 					regkey.SetValue("SearchOrderConfig", 0)
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Information)
 				End If
 			Catch ex As Exception
 				Application.Log.AddException(ex)
@@ -7487,7 +7486,7 @@ Public Class frmMain
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
 				If CInt(regkey.GetValue("DontSearchWindowsUpdate").ToString) <> 1 Then
 					regkey.SetValue("DontSearchWindowsUpdate", 1)
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Information)
 				End If
 			Catch ex As Exception
 				Application.Log.AddException(ex)
@@ -7823,13 +7822,6 @@ Public Class frmMain
 		Me.WindowState = Windows.WindowState.Minimized
 	End Sub
 
-	Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
-		' SetupAPI.TEST_GetDevices("Display")
-		Dim setupAPIWindow As New SetupAPITestWindow
-
-		setupAPIWindow.ShowDialog()
-	End Sub
-
 	Private Sub VisitSVNMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitSVNMenuItem.Click
 
 		Dim commandline As StringBuilder = StrAppend(" -visitsvn")
@@ -7929,6 +7921,16 @@ Public Class frmMain
         If Not UserTokenHandle = IntPtr.Zero Then
             WindowsApi.CloseHandle(UserTokenHandle)
         End If
+    End Sub
+
+    Private Sub RegMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Reg1MenuItem.Click, Reg2MenuItem.Click, Reg3MenuItem.Click
+        ACL.test3(Int32.Parse(DirectCast(sender, Control).Tag.ToString()))
+    End Sub
+
+    Private Sub SetupAPIMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles SetupAPIMenuItem.Click
+        Dim testWindow As New SetupAPITestWindow
+
+        testWindow.ShowDialog()
     End Sub
 End Class
 

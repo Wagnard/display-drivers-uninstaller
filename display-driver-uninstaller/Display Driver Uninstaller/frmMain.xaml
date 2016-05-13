@@ -4,11 +4,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:local="clr-namespace:Display_Driver_Uninstaller"
+	xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
 	mc:Ignorable="d" 
 	
-    Title="{Binding Settings.AppName}" Height="600" Width="608" ResizeMode="noresize" Loaded="frmMain_Loaded" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" Visibility="Visible" WindowStartupLocation="CenterScreen">
-
-    <Grid>
+    Title="{Binding Settings.AppName}" 
+    Height="600" Width="608" ResizeMode="noresize" 
+    Loaded="frmMain_Loaded" 
+    Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" 
+    Visibility="Visible" WindowStartupLocation="CenterScreen">
+    
+    <Window.Resources>
+        <conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" TrueValue="Visible" FalseValue="Collapsed" />
+    </Window.Resources>
+    
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="528*" />
             <RowDefinition Height="Auto" />
@@ -39,6 +48,13 @@
                 <MenuItem x:Name="ToSMenuItem" Header="Terms of Service (ToS)" />
                 <MenuItem x:Name="AboutMenuItem" Header="About" />
             </MenuItem>
+
+            <MenuItem x:Name="TestMenuItem" Header="TESTING" Visibility="{Binding DevMode, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                <MenuItem x:Name="Reg1MenuItem" Header="Reg (test3 = 0)" Tag="0" />
+                <MenuItem x:Name="Reg2MenuItem" Header="Reg (test3 = 1)" Tag="1" />
+                <MenuItem x:Name="Reg3MenuItem" Header="Reg (test3 = 2)" Tag="2" />
+                <MenuItem x:Name="SetupAPIMenuItem" Header="SetupAPI" />
+            </MenuItem>
         </Menu>
         <Image x:Name="imgLogo" HorizontalAlignment="Left" Height="141" Margin="359,103,0,0" VerticalAlignment="Top" Width="200" Source="Resources/RadeonLogo1.png"/>
         <StackPanel Height="27" HorizontalAlignment="Left" Margin="0,26,0,0" Name="StackPanel1" VerticalAlignment="Top" Orientation="Horizontal">
@@ -46,7 +62,7 @@
             <Label x:Name="lblWinVersionValue" Content="W7" />
             <Label x:Name="lblArch" Content="x00" Height="26" Width="38" FontWeight="Bold" />
         </StackPanel>
-        <Button Content="SETUPAPI!!!" Height="44" HorizontalAlignment="Right" Margin="0,427,12,0" Name="Button1" VerticalAlignment="Top" Width="183" IsEnabled="False" Visibility="Collapsed" />
+       
         <Button x:Name="imgDonate" Margin="500,530,12,0" Height="25" VerticalAlignment="Top" Grid.RowSpan="2">
             <Button.Template>
                 <ControlTemplate>

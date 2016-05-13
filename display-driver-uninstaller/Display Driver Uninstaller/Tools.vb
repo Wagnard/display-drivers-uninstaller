@@ -216,7 +216,6 @@ Module Tools
     End Property
 
 
-
     <ComVisible(False)>
     Private Class WinAPI
         Private Shared _is64 As Boolean
@@ -231,6 +230,7 @@ Module Tools
                 _is64 = value
             End Set
         End Property
+
         Public Shared Property IsAdmin As Boolean
             Get
                 Return _isAdmin
@@ -428,37 +428,6 @@ Module Tools
 #End Region
 
     End Class
-
-    Private Class WINDOWS_API_INI
-        Private Declare Auto Function GetPrivateProfileString Lib "kernel32" (ByVal lpAppName As String, ByVal lpKeyName As String, ByVal lpDefault As String, ByVal lpReturnedString As StringBuilder, ByVal nSize As Integer, ByVal lpFileName As String) As Integer
-
-        ''' <summary>Read Section->Key->Value from INI using Win API</summary>
-        ''' <param name="infFile">Fullpath to file</param>
-        ''' <param name="section">[Version]</param>
-        ''' <param name="key">Key under section. eg 'Provider'</param>
-        ''' <returns>Found value or Nothing</returns>
-        Public Shared Function GetINIValue(ByRef infFile As String, ByRef section As String, ByRef key As String) As String
-            Dim searchStrings As String = "Strings"
-            Dim sb As New StringBuilder(256)
-            Dim value As String
-
-            GetPrivateProfileString(section, key, Nothing, sb, sb.Capacity, infFile)
-            value = sb.ToString()
-
-            If value.Contains("%") Then
-                sb.Remove(0, sb.Length)
-
-                If GetPrivateProfileString(searchStrings, value.Replace("%", String.Empty), Nothing, sb, sb.Capacity, infFile) = 0 Then
-                    GetPrivateProfileString(searchStrings, value, Nothing, sb, sb.Capacity, infFile)
-                End If
-
-                value = sb.ToString()
-            End If
-
-            Return value
-        End Function
-    End Class
-
 End Module
 
 Public Class OemINF

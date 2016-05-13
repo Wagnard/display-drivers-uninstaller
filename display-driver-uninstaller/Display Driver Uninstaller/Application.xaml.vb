@@ -6,54 +6,64 @@ Imports System.Windows.Markup
 Class Application
 	' Application-level events, such as Startup, Exit, and DispatcherUnhandledException
 	' can be handled in this file.
-	Private Shared m_Data As Data
+    Private Shared m_Data As Data
 	Public Shared ReadOnly Property Data As Data
 		Get
 			Return m_Data
 		End Get
 	End Property
 
-	Public Shared ReadOnly Property Settings As AppSettings
-		Get
-			Return m_Data.Settings
-		End Get
-	End Property
-	Public Shared ReadOnly Property Paths As AppPaths
-		Get
-			Return m_Data.Paths
-		End Get
-	End Property
-	Public Shared ReadOnly Property Log As AppLog
-		Get
-			Return m_Data.Log
-		End Get
-	End Property
+    Public Shared ReadOnly Property Settings As AppSettings
+        Get
+            Return m_Data.Settings
+        End Get
+    End Property
+    Public Shared ReadOnly Property Paths As AppPaths
+        Get
+            Return m_Data.Paths
+        End Get
+    End Property
+    Public Shared ReadOnly Property Log As AppLog
+        Get
+            Return m_Data.Log
+        End Get
+    End Property
 
-	Private Sub App_DispatcherUnhandledException(ByVal sender As Object, ByVal e As Windows.Threading.DispatcherUnhandledExceptionEventArgs) Handles Me.DispatcherUnhandledException
-		'TODO: CRITICAL FAILURES ARE HANDLED HERE
+    Private Sub App_DispatcherUnhandledException(ByVal sender As Object, ByVal e As Windows.Threading.DispatcherUnhandledExceptionEventArgs) Handles Me.DispatcherUnhandledException
+        'TODO: CRITICAL FAILURES ARE HANDLED HERE
 
 
-		e.Handled = True 'Close the app
-	End Sub
+        e.Handled = True 'Close the app
+    End Sub
 
-	Public Sub New()
-		m_Data = New Data()
+    Public Sub New()
+        m_Data = New Data()
 
-		'ALL Exceptions are shown in English
-		Thread.CurrentThread.CurrentCulture = New CultureInfo("en-US")
-		Thread.CurrentThread.CurrentUICulture = New CultureInfo("en-US")
+        'ALL Exceptions are shown in English
+        Thread.CurrentThread.CurrentCulture = New CultureInfo("en-US")
+        Thread.CurrentThread.CurrentUICulture = New CultureInfo("en-US")
 
-		FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement),
-		   New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
-	End Sub
+        FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement),
+           New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
+    End Sub
 End Class
 
 Public Class Data
 	Private m_settings As AppSettings
 	Private m_paths As AppPaths
 	Private m_log As AppLog
+    Private m_debug As Boolean = System.Diagnostics.Debugger.IsAttached
 
-	Public ReadOnly Property Settings As AppSettings
+    Public Property IsDebug As Boolean
+        Get
+            Return m_debug
+        End Get
+        Set(value As Boolean)
+            m_debug = value
+        End Set
+    End Property
+
+    Public ReadOnly Property Settings As AppSettings
 		Get
 			Return m_settings
 		End Get

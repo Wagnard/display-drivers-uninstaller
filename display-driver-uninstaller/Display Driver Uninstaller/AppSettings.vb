@@ -378,8 +378,12 @@ Public Class AppSettings
 
 				ElseIf StrContainsAny(args(i), True, "geforce") Then
                     VisitGeforce = True
+
                 ElseIf StrContainsAny(args(i), True, "visitoffer") Then
                     VisitOffer = True
+
+                ElseIf StrContainsAny(args(i), True, "5648674614687") Then
+                    Application.Data.IsDebug = True
                 End If
             Next
 		Else

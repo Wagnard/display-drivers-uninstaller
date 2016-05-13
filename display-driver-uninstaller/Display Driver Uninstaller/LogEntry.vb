@@ -200,7 +200,7 @@ Public Class LogEntry
             Dim win32Ex As Win32Exception = TryCast(Ex, Win32Exception)
 
             If win32Ex IsNot Nothing Then
-                m_values.Add(New KvP("Win32_ErrorCode", SetupAPI.GetUInt32(win32Ex.NativeErrorCode).ToString()))
+                m_values.Add(New KvP("Win32_ErrorCode", GetUInt32(win32Ex.NativeErrorCode).ToString()))
                 m_values.Add(New KvP("Win32_Message", win32Ex.Message))
             End If
         End If

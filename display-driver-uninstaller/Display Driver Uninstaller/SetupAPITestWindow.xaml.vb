@@ -384,4 +384,9 @@ Public Class SetupAPITestWindow
             SetupAPI.TEST_UpdateDevice(DirectCast(listBox1.SelectedItem, Device).HardwareIDs(0), ofd.FileName)
         End If
     End Sub
+
+    Private Sub btnTestDev_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnTestDev.Click
+        SetupAPI.GetDevices("Display")
+    End Sub
+
 End Class

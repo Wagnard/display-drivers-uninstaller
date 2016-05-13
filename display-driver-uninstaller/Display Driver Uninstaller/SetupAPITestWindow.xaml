@@ -284,10 +284,16 @@
         </ListBox>
 
         <StackPanel Name="stackPanel1" Orientation="Horizontal">
-            <Button Content="disable" Height="23" Name="btnDisable" Width="75" Click="btnDisable_Click" Margin="10,10,0,10" />
-            <Button Content="enable" Height="23" Name="btnEnable" Width="75" Click="btnEnable_Click" Margin="10,10,0,10" />
-            <Button Content="remove" Height="23" Name="btnRemove" Width="75" Click="btnRemove_Click" Margin="10,10,0,10" />
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="10,10,0,10" />
+                </Style>
+            </StackPanel.Resources>
+            <Button Content="disable" Height="23" Name="btnDisable" Width="75" Click="btnDisable_Click" />
+            <Button Content="enable" Height="23" Name="btnEnable" Width="75" Click="btnEnable_Click" />
+            <Button Content="remove" Height="23" Name="btnRemove" Width="75" Click="btnRemove_Click" />
             <Button Content="update" Height="23" Name="btnUpdate" Width="75" Margin="10,10,0,10" />
+            <Button Content="DevMltk Test area" Height="23" Name="btnTestDev" Width="115" />
         </StackPanel>
 
         <DockPanel Grid.Row="1">
