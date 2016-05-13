@@ -1734,15 +1734,17 @@ Namespace SetupAPI
             If force Then
                 If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.SUOI_FORCEDELETE), IntPtr.Zero) Then
                     logInfs.Add(oem.FileName, "Uninstalled!")
-                Else
-                    logInfs.Add(oem.FileName, "Uninstalling failed! See exceptions for details!")
+				Else
+					If New Win32Exception().ErrorCode = 0 Then
+						logInfs.Add(oem.FileName, "Uninstalling failed! OEM Still in use")
+					Else
+						Dim logInfEx As LogEntry = Application.Log.CreateEntry()
+						logInfEx.AddException(New Win32Exception())
+						logInfEx.Add("InfFile", oem.FileName)
 
-                    Dim logInfEx As LogEntry = Application.Log.CreateEntry()
-                    logInfEx.AddException(New Win32Exception())
-                    logInfEx.Add("InfFile", oem.FileName)
-
-                    Application.Log.Add(logInfEx)
-                End If
+						Application.Log.Add(logInfEx)
+					End If
+			End If
             Else
                 If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.NONE), IntPtr.Zero) Then
                     logInfs.Add(oem.FileName, "Uninstalled!")

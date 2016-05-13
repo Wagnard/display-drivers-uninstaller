@@ -5523,7 +5523,7 @@ Public Class frmMain
             End If
 
             If CBool(Application.Settings.VisitOffer) Then
-                webAddress = "https://www.driverdr.com/goto/affdownload.php?affid=620626"
+				webAddress = "https://www.driverdr.com/lp/update-display-drivers.html"
             End If
 
             If CBool(Application.Settings.VisitDonate) = True Or
@@ -6199,89 +6199,70 @@ Public Class frmMain
 			' First , get the ParentIdPrefix
 
 			If config.RemoveAMDAudioBus AndAlso config.SelectedGPU = GPUVendor.AMD Then
-				If config.UseSetupAPI Then
-					Try
-						'Need to be able to find the "Sibling" with SetupAPI before doing this section
-
-						Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "system")
-						If found.Count > 0 Then
-							For Each d As SetupAPI.Device In found
-								If StrContainsAny(d.DevStatus(0), True, vendidexpected) Then
-									'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
-									'SetupAPI.UninstallDevice(d)
+				Try
+					If config.SelectedGPU = GPUVendor.AMD Then
+						Dim removed As Boolean = False
+						Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
+						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetSubKeyNames()
+								If IsNullOrWhitespace(child) = False Then
+									If child.ToLower.Contains("ven_1002") Then
+										For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
+											subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+											If subregkey IsNot Nothing Then
+												For Each child2 As String In subregkey.GetSubKeyNames()
+													removed = False
+													If IsNullOrWhitespace(child2) = False Then
+														If child2.ToLower.Contains("ven_1002") Then
+															For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
+																If IsNullOrWhitespace(child3) = False Then
+																	array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
+																	If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+																		For i As Integer = 0 To array.Length - 1
+																			If Not IsNullOrWhitespace(array(i)) Then
+																				If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
+																					Application.Log.AddMessage("Found an AMD audio controller bus !")
+																					Try
+																						Application.Log.AddMessage("array result: " + array(i))
+																					Catch ex As Exception
+																					End Try
+																					processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+																					processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
+																					processinfo.UseShellExecute = False
+																					processinfo.CreateNoWindow = True
+																					processinfo.RedirectStandardOutput = True
+																					process.StartInfo = processinfo
+																					process.Start()
+																					reply2 = process.StandardOutput.ReadToEnd
+																					process.StandardOutput.Close()
+																					process.Close()
+																					Application.Log.AddMessage(reply2)
+																					Application.Log.AddMessage("AMD HD Audio Bus Removed !")
+																					removed = True
+																				End If
+																			End If
+																		Next
+																	End If
+																	If removed Then
+																		Exit For
+																	End If
+																End If
+															Next
+														End If
+													End If
+												Next
+											End If
+										Next
+									End If
 								End If
 							Next
 						End If
+					End If
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
 
-					Catch ex As Exception
-						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
-						Application.Log.AddException(ex)
-					End Try
-				Else
-					Try
-						If config.SelectedGPU = GPUVendor.AMD Then
-							Dim removed As Boolean = False
-							Application.Log.AddMessage("Trying to remove the AMD HD Audio BUS")
-							regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
-							If regkey IsNot Nothing Then
-								For Each child As String In regkey.GetSubKeyNames()
-									If IsNullOrWhitespace(child) = False Then
-										If child.ToLower.Contains("ven_1002") Then
-											For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
-												subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-												If subregkey IsNot Nothing Then
-													For Each child2 As String In subregkey.GetSubKeyNames()
-														removed = False
-														If IsNullOrWhitespace(child2) = False Then
-															If child2.ToLower.Contains("ven_1002") Then
-																For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-																	If IsNullOrWhitespace(child3) = False Then
-																		array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
-																		If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-																			For i As Integer = 0 To array.Length - 1
-																				If Not IsNullOrWhitespace(array(i)) Then
-																					If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
-																						Application.Log.AddMessage("Found an AMD audio controller bus !")
-																						Try
-																							Application.Log.AddMessage("array result: " + array(i))
-																						Catch ex As Exception
-																						End Try
-																						processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-																						processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
-																						processinfo.UseShellExecute = False
-																						processinfo.CreateNoWindow = True
-																						processinfo.RedirectStandardOutput = True
-																						process.StartInfo = processinfo
-																						process.Start()
-																						reply2 = process.StandardOutput.ReadToEnd
-																						process.StandardOutput.Close()
-																						process.Close()
-																						Application.Log.AddMessage(reply2)
-																						Application.Log.AddMessage("AMD HD Audio Bus Removed !")
-																						removed = True
-																					End If
-																				End If
-																			Next
-																		End If
-																		If removed Then
-																			Exit For
-																		End If
-																	End If
-																Next
-															End If
-														End If
-													Next
-												End If
-											Next
-										End If
-									End If
-								Next
-							End If
-						End If
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-				End If
 
 				'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
 				Try
@@ -6902,7 +6883,7 @@ Public Class frmMain
 			If config.RemoveMonitors Then
 				Application.Log.AddMessage("ddudr Remove Monitor started")
 				If config.UseSetupAPI Then
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("monitor", "monitor")
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices("Device_ClassName", "monitor")
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							'SetupAPI.TEST_RemoveDevice(d.HardwareIDs(0))
