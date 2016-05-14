@@ -1,4 +1,4 @@
-﻿Imports Display_Driver_Uninstaller.SetupAPI
+﻿Imports Display_Driver_Uninstaller.Win32
 
 Namespace Converters
 
@@ -131,11 +131,11 @@ Namespace Converters
 
         Public Function Convert(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
             If value IsNot Nothing Then
-                If TypeOf (value) Is List(Of DriverInfo) Then
-                    Return DirectCast(value, List(Of DriverInfo)).Count = 0
-                ElseIf TypeOf (value) Is List(Of Device) Then
-                    Return DirectCast(value, List(Of Device)).Count = 0
-                End If
+				If TypeOf (value) Is List(Of SetupAPI.DriverInfo) Then
+					Return DirectCast(value, List(Of SetupAPI.DriverInfo)).Count = 0
+				ElseIf TypeOf (value) Is List(Of SetupAPI.Device) Then
+					Return DirectCast(value, List(Of SetupAPI.Device)).Count = 0
+				End If
             End If
 
             Return True

@@ -8,13 +8,12 @@ Imports System.Windows.Controls
 Imports System.Windows.Data
 Imports System.Windows.Input
 Imports System.Windows.Media
-Imports Display_Driver_Uninstaller.SetupAPI
-
+Imports Display_Driver_Uninstaller.Win32
 
 Public Class SetupAPITestWindow
-    Private _devices As ObservableCollection(Of Device) = New ObservableCollection(Of Device)
+    Private _devices As ObservableCollection(Of SetupAPI.Device) = New ObservableCollection(Of SetupAPI.Device)
 
-    Public ReadOnly Property Devices As ObservableCollection(Of Device)
+    Public ReadOnly Property Devices As ObservableCollection(Of SetupAPI.Device)
         Get
             Return _devices
         End Get
@@ -49,14 +48,14 @@ Public Class SetupAPITestWindow
             MessageBox.Show("No selected device!")
             Return
         Else
-            Dim d As Device = TryCast(listBox1.SelectedItem, Device)
+            Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
             If d Is Nothing OrElse d.HardwareIDs Is Nothing OrElse d.HardwareIDs.Length <= 0 Then
                 MessageBox.Show("Selected device doesn't contain Hardware ID!")
                 Return
             End If
         End If
 
-        SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, Device).HardwareIDs(0), False)
+        SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device).HardwareIDs(0), False)
     End Sub
 
     Private Sub btnEnable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
@@ -64,14 +63,14 @@ Public Class SetupAPITestWindow
             MessageBox.Show("No selected device!")
             Return
         Else
-            Dim d As Device = TryCast(listBox1.SelectedItem, Device)
+            Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
             If d Is Nothing OrElse d.HardwareIDs Is Nothing OrElse d.HardwareIDs.Length <= 0 Then
                 MessageBox.Show("Selected device doesn't contain Hardware ID!")
                 Return
             End If
         End If
 
-        SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, Device).HardwareIDs(0), True)
+        SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device).HardwareIDs(0), True)
     End Sub
 
     Private Sub btnRemove_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
@@ -79,14 +78,14 @@ Public Class SetupAPITestWindow
             MessageBox.Show("No selected device!")
             Return
         Else
-            Dim d As Device = TryCast(listBox1.SelectedItem, Device)
+            Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
             If d Is Nothing OrElse d.HardwareIDs Is Nothing OrElse d.HardwareIDs.Length <= 0 Then
                 MessageBox.Show("Selected device doesn't contain Hardware ID!")
                 Return
             End If
         End If
 
-        SetupAPI.TEST_RemoveDevice(DirectCast(listBox1.SelectedItem, Device).HardwareIDs(0))
+        SetupAPI.TEST_RemoveDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device).HardwareIDs(0))
     End Sub
 
     Private Sub btnFindDevs_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
@@ -100,10 +99,10 @@ Public Class SetupAPITestWindow
             cbFilterDev.SelectedIndex = 0
         End If
 
-        Dim found As List(Of Device) = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text)
+        Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text)
 
         If found.Count > 0 Then
-            For Each d As Device In found
+            For Each d As SetupAPI.Device In found
                 Devices.Add(d)
             Next
 
@@ -124,7 +123,7 @@ Public Class SetupAPITestWindow
     End Sub
 
     Private Function Filter(ByVal obj As Object) As Boolean
-        Dim d As Device = TryCast(obj, Device)
+        Dim d As SetupAPI.Device = TryCast(obj, SetupAPI.Device)
 
         If d IsNot Nothing AndAlso cbFilter.SelectedItem IsNot Nothing Then
             If String.IsNullOrEmpty(tbFilter.Text) Then
@@ -161,16 +160,16 @@ Public Class SetupAPITestWindow
                     Return If(Not String.IsNullOrEmpty(d.ClassGuid), d.ClassGuid.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1, False)
                 Case "Driver_Manufacturer"
                     If d.DriverInfo IsNot Nothing Then
-                        For Each drvInfo As DriverInfo In d.DriverInfo
-                            If drvInfo.MfgName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-                                Return True
-                            End If
-                        Next
+						For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
+							If drvInfo.MfgName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+								Return True
+							End If
+						Next
                     End If
                     Return False
                 Case "Driver_Provider"
                     If d.DriverInfo IsNot Nothing Then
-                        For Each drvInfo As DriverInfo In d.DriverInfo
+                        For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
                             If drvInfo.ProviderName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
                                 Return True
                             End If
@@ -179,7 +178,7 @@ Public Class SetupAPITestWindow
                     Return False
                 Case "Driver_InfFileName"
                     If d.DriverInfo IsNot Nothing Then
-                        For Each drvInfo As DriverInfo In d.DriverInfo
+                        For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
                             If drvInfo.InfFileName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
                                 Return True
                             End If
@@ -188,7 +187,7 @@ Public Class SetupAPITestWindow
                     Return False
                 Case "Driver_HardwareID"
                     If d.DriverInfo IsNot Nothing Then
-                        For Each drvInfo As DriverInfo In d.DriverInfo
+                        For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
                             If drvInfo.HardwareID.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
                                 Return True
                             End If
@@ -208,7 +207,7 @@ Public Class SetupAPITestWindow
             Return
         End If
 
-        Dim device As Device = TryCast(lb.SelectedItem, Device)
+        Dim device As SetupAPI.Device = TryCast(lb.SelectedItem, SetupAPI.Device)
         If device Is Nothing Then
             Return
         End If
@@ -281,7 +280,7 @@ Public Class SetupAPITestWindow
         If device.DriverInfo IsNot Nothing AndAlso device.DriverInfo.Count > 0 Then
             sb.AppendLine("Driver(s) details:")
 
-            For Each drvInfo As DriverInfo In device.DriverInfo
+            For Each drvInfo As SetupAPI.DriverInfo In device.DriverInfo
                 sb.AppendLine(vbTab & "Description: " + drvInfo.Description)
                 sb.AppendLine(vbTab & "Manufacturer: " + drvInfo.MfgName)
                 sb.AppendLine(vbTab & "Provider: " + drvInfo.ProviderName)
@@ -378,15 +377,25 @@ Public Class SetupAPITestWindow
         Dim result As Boolean? = ofd.ShowDialog(Me)
 
         If result IsNot Nothing AndAlso result.Value Then
-            SetupAPI.TEST_UpdateDevice(DirectCast(listBox1.SelectedItem, Device).HardwareIDs(0), ofd.FileName)
+            SetupAPI.TEST_UpdateDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device).HardwareIDs(0), ofd.FileName)
         End If
     End Sub
 
     Private Sub btnTestDev_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnTestDev.Click
-        Dim found As List(Of Device) = SetupAPI.GetDevices("Display")
+        If Devices.Count > 0 Then
+            Devices.Clear()
+        End If
+
+        lblDevicesDev.Content = "Devices: 0"
+
+        If cbFilterDev.SelectedItem Is Nothing Then
+            cbFilterDev.SelectedIndex = 0
+        End If
+
+        Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("Display")
 
         If found.Count > 0 Then
-            For Each d As Device In found
+            For Each d As SetupAPI.Device In found
                 Devices.Add(d)
             Next
 

@@ -71,8 +71,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ACL.vb" />
-    <Compile Include="ACLv2.vb" />
+    <Compile Include="Win32\ACL.vb" />
+    <Compile Include="Win32\ACLv2.vb" />
     <Compile Include="AppLog.vb" />
     <Compile Include="AppPaths.vb" />
     <Compile Include="Converters.vb" />
@@ -87,13 +87,15 @@
     </Compile>
     <Compile Include="AppSettings.vb" />
     <Compile Include="LogEntry.vb" />
-    <Compile Include="RegistryPermission.vb" />
-    <Compile Include="SetupAPI.vb" />
+    <Compile Include="Win32\RegistryPermission.vb" />
+    <Compile Include="Win32\SetupAPI.vb" />
     <Compile Include="SetupAPITestWindow.xaml.vb">
       <DependentUpon>SetupAPITestWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ThreadSettings.vb" />
     <Compile Include="Tools.vb" />
+    <Compile Include="Win32\SetupAPI_Inf.vb" />
+    <Compile Include="Win32\WinAPI.vb" />
     <Page Include="frmAbout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
