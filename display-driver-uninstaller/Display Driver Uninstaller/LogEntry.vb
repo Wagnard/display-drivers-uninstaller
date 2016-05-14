@@ -9,6 +9,7 @@ Public Enum LogType
 End Enum
 
 Public Class KvP
+	Public Shared Empty As KvP = New KvP(vbTab)
 	Public ReadOnly Property HasKey As Boolean
 		Get
 			Return String.IsNullOrEmpty(Key) = False
@@ -166,7 +167,15 @@ Public Class LogEntry
 		End If
 	End Sub
 
-	Public Sub Add(ByRef value As String)
+	Public Sub Add(ByVal value As KvP)
+		Values.Add(value)
+		HasValues = True
+		HasAnyData = True
+
+		OnPropertyChanged("Values")
+	End Sub
+
+	Public Sub Add(ByVal value As String)
 		Values.Add(New KvP(value))
 		HasValues = True
 		HasAnyData = True
@@ -174,10 +183,44 @@ Public Class LogEntry
 		OnPropertyChanged("Values")
 	End Sub
 
-	Public Sub Add(ByRef key As String, ByRef value As String)
+	Public Sub Add(ByVal key As String, ByVal value As String)
 		Values.Add(New KvP(key, value))
 		HasValues = True
 		HasAnyData = True
+
+		OnPropertyChanged("Values")
+	End Sub
+
+	Public Sub AddDevices(ByVal devices As List(Of Win32.SetupAPI.Device))
+		For Each d As Win32.SetupAPI.Device In devices
+			Values.Add(New KvP("Description", d.Description))
+			Values.Add(New KvP("ClassName", d.ClassName))
+			Values.Add(New KvP("DeviceID", d.DeviceID))
+			Values.Add(New KvP("HardwareIDs", If(d.HardwareIDs IsNot Nothing, String.Join(Environment.NewLine, d.HardwareIDs), "<empty>")))
+
+			If d.DriverInfo IsNot Nothing Then
+				Values.Add(New KvP("Driver Details"))
+
+				For Each drvInfo As Win32.SetupAPI.DriverInfo In d.DriverInfo
+					Values.Add(New KvP("  Description", If(Not IsNullOrWhitespace(drvInfo.Description), drvInfo.Description, "-")))
+					Values.Add(New KvP("  Manufacturer", If(Not IsNullOrWhitespace(drvInfo.MfgName), drvInfo.MfgName, "-")))
+					Values.Add(New KvP("  Provider", If(Not IsNullOrWhitespace(drvInfo.ProviderName), drvInfo.ProviderName, "-")))
+					Values.Add(New KvP("  DriverDate", drvInfo.DriverDate.ToString()))
+					Values.Add(New KvP("  DriverVersion", If(Not IsNullOrWhitespace(drvInfo.DriverVersion), drvInfo.DriverVersion, "-")))
+
+					If drvInfo.InfFile IsNot Nothing Then
+						Values.Add(New KvP("  InfFile", If(Not IsNullOrWhitespace(drvInfo.InfFile.FileName), drvInfo.InfFile.FileName, "-")))
+						Values.Add(New KvP("     InstallDate", drvInfo.InfFile.InstallDate.ToShortDateString()))
+						Values.Add(New KvP("     Class", If(Not IsNullOrWhitespace(drvInfo.InfFile.Class), drvInfo.InfFile.Class, "-")))
+						Values.Add(New KvP("     Provider", If(Not IsNullOrWhitespace(drvInfo.InfFile.Provider), drvInfo.InfFile.Provider, "-")))
+					End If
+
+					Values.Add(New KvP("---"))
+				Next
+			End If
+
+			Values.Add(KvP.Empty)
+		Next
 
 		OnPropertyChanged("Values")
 	End Sub

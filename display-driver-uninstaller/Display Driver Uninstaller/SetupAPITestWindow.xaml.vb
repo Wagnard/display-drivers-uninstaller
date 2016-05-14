@@ -179,9 +179,9 @@ Public Class SetupAPITestWindow
                 Case "Driver_InfFileName"
                     If d.DriverInfo IsNot Nothing Then
                         For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
-                            If drvInfo.InfFileName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-                                Return True
-                            End If
+							If drvInfo.InfFile.FileName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+								Return True
+							End If
                         Next
                     End If
                     Return False
@@ -227,41 +227,44 @@ Public Class SetupAPITestWindow
 		End If
         sb.AppendLine("ClassGuid: " + device.ClassGuid)
 
-        If device.OemInfs IsNot Nothing AndAlso device.OemInfs.Length > 0 Then
-            sb.AppendLine("OemInfs:")
+		If device.OemInfs IsNot Nothing AndAlso device.OemInfs.Length > 0 Then
+			sb.AppendLine("OemInfs:")
 
-            For Each inf As String In device.OemInfs
-                sb.AppendLine(vbTab + inf)
-            Next
+			For Each inf As Inf In device.OemInfs
+				sb.AppendLine(vbTab + inf.FileName)
+				sb.AppendLine(vbTab + vbTab + String.Format("Install Date: '{0}'", inf.InstallDate.ToShortDateString()))
+				sb.AppendLine(vbTab + vbTab + String.Format("Class: '{0}'", inf.Class))
+				sb.AppendLine(vbTab + vbTab + String.Format("Provider: '{0}'", inf.Provider))
+			Next
 
-            sb.AppendLine(String.Empty)
-        Else
-            sb.AppendLine("OemInfs: <null>")
-        End If
+			sb.AppendLine(String.Empty)
+		Else
+			sb.AppendLine("OemInfs: <null>")
+		End If
 
 
-        If device.HardwareIDs IsNot Nothing AndAlso device.HardwareIDs.Length > 0 Then
-            sb.AppendLine("Hardware IDs:")
+		If device.HardwareIDs IsNot Nothing AndAlso device.HardwareIDs.Length > 0 Then
+			sb.AppendLine("Hardware IDs:")
 
-            For Each hwid As String In device.HardwareIDs
-                sb.AppendLine(vbTab + hwid)
-            Next
+			For Each hwid As String In device.HardwareIDs
+				sb.AppendLine(vbTab + hwid)
+			Next
 
-            sb.AppendLine(String.Empty)
-        Else
-            sb.AppendLine("Hardware IDs: <null>")
-        End If
+			sb.AppendLine(String.Empty)
+		Else
+			sb.AppendLine("Hardware IDs: <null>")
+		End If
 
-        If device.CompatibleIDs IsNot Nothing AndAlso device.CompatibleIDs.Length > 0 Then
-            sb.AppendLine("Compatible IDs:")
+		If device.CompatibleIDs IsNot Nothing AndAlso device.CompatibleIDs.Length > 0 Then
+			sb.AppendLine("Compatible IDs:")
 
-            For Each cid As String In device.CompatibleIDs
-                sb.AppendLine(vbTab + cid)
-            Next
+			For Each cid As String In device.CompatibleIDs
+				sb.AppendLine(vbTab + cid)
+			Next
 
-            sb.AppendLine(String.Empty)
-        Else
-            sb.AppendLine("Compatible IDs: <null>")
+			sb.AppendLine(String.Empty)
+		Else
+			sb.AppendLine("Compatible IDs: <null>")
 		End If
 
 		If device.LowerFilters IsNot Nothing AndAlso device.LowerFilters.Length > 0 Then
@@ -277,32 +280,34 @@ Public Class SetupAPITestWindow
 		End If
 
 
-        If device.DriverInfo IsNot Nothing AndAlso device.DriverInfo.Count > 0 Then
-            sb.AppendLine("Driver(s) details:")
+		If device.DriverInfo IsNot Nothing AndAlso device.DriverInfo.Count > 0 Then
+			sb.AppendLine("Driver(s) details:")
 
-            For Each drvInfo As SetupAPI.DriverInfo In device.DriverInfo
-                sb.AppendLine(vbTab & "Description: " + drvInfo.Description)
-                sb.AppendLine(vbTab & "Manufacturer: " + drvInfo.MfgName)
-                sb.AppendLine(vbTab & "Provider: " + drvInfo.ProviderName)
-                sb.AppendLine(vbTab & "Driver Version: " + drvInfo.DriverVersion)
-                sb.AppendLine(vbTab & "Driver Date: " + drvInfo.DriverDate.ToShortDateString)
-                sb.AppendLine(vbTab & "Inf FileName: " + drvInfo.InfFileName)
-                sb.AppendLine(vbTab & "Inf Date: " + drvInfo.InfDate.ToShortDateString)
-                sb.AppendLine(vbTab & "Hardware ID: " + drvInfo.HardwareID)
+			For Each drvInfo As SetupAPI.DriverInfo In device.DriverInfo
+				sb.AppendLine(vbTab & "Description: " & drvInfo.Description)
+				sb.AppendLine(vbTab & "Manufacturer: " & drvInfo.MfgName)
+				sb.AppendLine(vbTab & "Provider: " & drvInfo.ProviderName)
+				sb.AppendLine(vbTab & "Driver Version: " & drvInfo.DriverVersion)
+				sb.AppendLine(vbTab & "Driver Date: " & drvInfo.DriverDate.ToShortDateString)
+				sb.AppendLine(vbTab & "Inf FileName: " & drvInfo.InfFile.FileName)
+				sb.AppendLine(vbTab & vbTab & "Inf Install Date: " & drvInfo.InfFile.InstallDate.ToShortDateString)
+				sb.AppendLine(vbTab & vbTab & "Inf Class: '" & drvInfo.InfFile.Class & "'")
+				sb.AppendLine(vbTab & vbTab & "Inf Provider: '" & drvInfo.InfFile.Provider & "'")
+				sb.AppendLine(vbTab & "Hardware ID: " & drvInfo.HardwareID)
 
-                If drvInfo.CompatibleIDs IsNot Nothing AndAlso drvInfo.CompatibleIDs.Length > 0 Then
-                    sb.AppendLine(vbTab & "Compatible IDs:")
+				If drvInfo.CompatibleIDs IsNot Nothing AndAlso drvInfo.CompatibleIDs.Length > 0 Then
+					sb.AppendLine(vbTab & "Compatible IDs:")
 
-                    For Each cid As String In drvInfo.CompatibleIDs
-                        sb.AppendLine(vbTab & vbTab + cid)
-                    Next
-                End If
+					For Each cid As String In drvInfo.CompatibleIDs
+						sb.AppendLine(vbTab & vbTab + cid)
+					Next
+				End If
 
-                sb.AppendLine(String.Empty)
-            Next
-        Else
-            sb.AppendLine("Driver(s) details: <null>")
-        End If
+				sb.AppendLine(String.Empty)
+			Next
+		Else
+			sb.AppendLine("Driver(s) details: <null>")
+		End If
 
 
         Clipboard.SetText(sb.ToString())
@@ -377,7 +382,7 @@ Public Class SetupAPITestWindow
         Dim result As Boolean? = ofd.ShowDialog(Me)
 
         If result IsNot Nothing AndAlso result.Value Then
-            SetupAPI.TEST_UpdateDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device).HardwareIDs(0), ofd.FileName)
+			SetupAPI.TEST_UpdateDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device), ofd.FileName)
         End If
     End Sub
 
@@ -392,7 +397,7 @@ Public Class SetupAPITestWindow
             cbFilterDev.SelectedIndex = 0
         End If
 
-        Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("Display")
+		Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices(tbFilterDev.Text)
 
         If found.Count > 0 Then
             For Each d As SetupAPI.Device In found

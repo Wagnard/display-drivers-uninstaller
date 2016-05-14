@@ -110,7 +110,9 @@ Public Class frmMain
 	End Sub
 
 	Private Function HasUpdates() As Integer
-		'Return 3  'TODO: REMOVE THIS LINE!!!! Blocked updates for faster debugging
+		If Application.Data.IsDebug Then
+			Return 3
+		End If
 
 		Try
 			If Not My.Computer.Network.IsAvailable Then
@@ -179,8 +181,10 @@ Public Class frmMain
 			Case GPUVendor.Intel
 				CurrentProvider = "Intel"
 		End Select
+
+
 		If config.UseSetupAPI Then
-			For Each oem As OemINF In GetOemInfList(Application.Paths.WinDir & "inf\")
+			For Each oem As Inf In GetOemInfList(Application.Paths.WinDir & "inf\")
 				If Not oem.IsValid Then
 					Continue For
 				End If
@@ -210,14 +214,14 @@ Public Class frmMain
 				End If
 			Next
 		Else
-			For Each oem As OemINF In GetOemInfList(Application.Paths.WinDir & "inf\")
+			For Each oem As Inf In GetOemInfList(Application.Paths.WinDir & "inf\")
 
 				If Not oem.IsValid Then
 					Continue For
 				End If
 
 				If StrContainsAny(oem.Provider, True, CurrentProvider) Or
-				   oem.Provider.ToLower.StartsWith("atitech") Or
+				   oem.Provider.StartsWith("atitech", StringComparison.OrdinalIgnoreCase) Or
 				   StrContainsAny(oem.Provider, True, "amd") Then
 
 					deloem.Arguments = "dp_delete " + oem.FileName
@@ -264,6 +268,7 @@ Public Class frmMain
 				End If
 			Next
 		End If
+
 		UpdateTextMethod("-Driver Store cleanUP complete.")
 
 		Application.Log.AddMessage("Driver Store CleanUP Complete.")
@@ -6950,9 +6955,9 @@ Public Class frmMain
 								If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
 									If d.LowerFilters IsNot Nothing AndAlso StrContainsAny(d.LowerFilters(0), True, "amdkmpfd") Then
 										If win10 Then
-											SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\PCI.inf", True)
+											SetupAPI.TEST_UpdateDevice(d, config.Paths.WinDir + "inf\PCI.inf", True)
 										Else
-											SetupAPI.TEST_UpdateDevice(d.HardwareIDs(0), config.Paths.WinDir + "inf\machine.inf", True)
+											SetupAPI.TEST_UpdateDevice(d, config.Paths.WinDir + "inf\machine.inf", True)
 										End If
 									End If
 								End If
@@ -7273,10 +7278,11 @@ Public Class frmMain
 		info.Message = "The following third-party driver packages are installed on this computer"
 
 		Try
-			For Each oem As OemINF In GetOemInfList(Application.Paths.WinDir & "inf\")
+			For Each oem As Inf In GetOemInfList(Application.Paths.WinDir & "inf\")
 				info.Add(oem.FileName)
 				info.Add("Provider", oem.Provider)
 				info.Add("Class", oem.Class)
+				info.Add(KvP.Empty)
 
 				If Not oem.IsValid Then
 					info.Add("This inf entry is corrupted or invalid.")

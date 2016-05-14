@@ -71,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Inf.vb" />
     <Compile Include="Win32\ACL.vb" />
     <Compile Include="Win32\ACLv2.vb" />
     <Compile Include="AppLog.vb" />

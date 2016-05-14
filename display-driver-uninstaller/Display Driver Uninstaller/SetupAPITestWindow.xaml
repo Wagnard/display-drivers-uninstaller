@@ -124,7 +124,24 @@
                     <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding OemInfs}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding}"/>
+								<StackPanel>
+									<TextBlock>
+										<TextBlock Text="File: "/><TextBlock FontWeight="Bold" Text="{Binding FileName, Mode=OneWay}"/>
+									</TextBlock>
+									<TextBlock>
+										<TextBlock Text="Install Date: "/><TextBlock Text="{Binding InstallDate, Mode=OneWay}"/>
+									</TextBlock>
+									<TextBlock>
+										<TextBlock Text="Class: "/><TextBlock Text="{Binding Class, Mode=OneWay}"/>
+									</TextBlock>
+									<TextBlock>
+										<TextBlock Text="Provider: "/><TextBlock Text="{Binding Provider, Mode=OneWay}"/>
+									</TextBlock>
+									<TextBlock>
+										<TextBlock Text="Is Valid: "/><TextBlock Text="{Binding IsValid, Mode=OneWay}"/>
+									</TextBlock>
+									<TextBlock/>
+								</StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -192,7 +209,8 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
@@ -217,17 +235,26 @@
                                     <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Path=DriverDate, Mode=OneWay}" />
 
                                     <TextBlock Grid.Row="5" Grid.Column="0" Text="Inf FileName:" HorizontalAlignment="Right"/>
-                                    <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding Path=InfFileName, Mode=OneWay}" />
+                                    <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding Path=InfFile.FileName, Mode=OneWay}" />
 
-                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Inf Date:" HorizontalAlignment="Right"/>
-                                    <TextBlock Grid.Row="6" Grid.Column="2" Text="{Binding Path=InfDate, Mode=OneWay}" />
+									<TextBlock Grid.Row="6" Grid.Column="0" Text="Inf Install Date:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="6" Grid.Column="2" Text="{Binding Path=InfFile.InstallDate, Mode=OneWay}" />
 
-                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Hardware ID:" HorizontalAlignment="Right"/>
-                                    <TextBlock Grid.Row="7" Grid.Column="2" Text="{Binding Path=HardwareID, Mode=OneWay}" />
+                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Inf Details:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="7" Grid.Column="2" >
+										<TextBlock Text="{Binding Path=InfFile.Class, Mode=OneWay, StringFormat='{}Class: {0}'}" />
+										<TextBlock Text="   /   " />
+										<TextBlock Text="{Binding Path=InfFile.Provider, Mode=OneWay, StringFormat='{}Provider: {0}'}" />
+										<TextBlock Text="   /   " />
+										<TextBlock Text="{Binding Path=InfFile.IsValid, Mode=OneWay, StringFormat='{}Valid: {0}'}" />
+									</TextBlock>
 
-                                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Compatible IDs:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="8" Grid.Column="0" Text="Hardware ID:" HorizontalAlignment="Right"/>
+                                    <TextBlock Grid.Row="8" Grid.Column="2" Text="{Binding Path=HardwareID, Mode=OneWay}" />
 
-                                    <ItemsControl Grid.Row="8" Grid.Column="2" ItemsSource="{Binding CompatibleIDs}">
+                                    <TextBlock Grid.Row="9" Grid.Column="0" Text="Compatible IDs:" HorizontalAlignment="Right"/>
+
+                                    <ItemsControl Grid.Row="9" Grid.Column="2" ItemsSource="{Binding CompatibleIDs}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding}"/>
@@ -235,7 +262,7 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
 
-                                    <Separator Margin="0,5,0,5" Grid.Row="9" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="2" />
+                                    <Separator Margin="0,5,0,5" Grid.Row="10" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="2" />
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -246,7 +273,7 @@
 
                 <StackPanel Visibility="{Binding Path=SiblingDevices, Mode=OneWay, Converter={StaticResource NullToVis}}">
                     <TextBlock FontWeight="Bold" 
-                               Text="{Binding Path=SiblingDevices.Count, FallbackValue=0, StringFormat='{}Sibling(s): ( Count: {0} )'}"/>
+                               Text="{Binding Path=SiblingDevices.Length, FallbackValue=0, StringFormat='{}Sibling(s): ( Count: {0} )'}"/>
 
                     <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding SiblingDevices}">
                         <ItemsControl.ItemTemplate>

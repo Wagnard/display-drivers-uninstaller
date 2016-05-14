@@ -4,6 +4,9 @@ Imports System.Runtime.InteropServices
 Namespace Win32
 	Partial Public Class SetupAPI
 		Friend Class InfError
+			Private Const APPLICATION_ERROR_MASK = &H20000000UI
+			Private Const ERROR_SEVERITY_ERROR = &HC0000000UI
+
 			Private Const ERROR_LINE_NOT_FOUND As UInt32 = &H800F0102UI
 			Private Const ERROR_NO_MORE_ITEMS As UInt32 = &H80070103UI
 			Private Const ERROR_INVALID_PARAMETER As UInt32 = &H80070057UI

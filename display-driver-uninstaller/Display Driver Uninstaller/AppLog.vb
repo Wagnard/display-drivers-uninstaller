@@ -184,7 +184,7 @@ Public Class AppLog
 							.WriteEndElement()
 
 							.WriteStartElement("Message")
-							.WriteValue(log.Message)
+							.WriteValue(If(log.Message, String.Empty))
 							.WriteEndElement()
 
 							If log.HasValues Then

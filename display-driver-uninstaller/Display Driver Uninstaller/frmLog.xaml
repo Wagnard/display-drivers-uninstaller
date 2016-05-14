@@ -117,21 +117,27 @@
 		</DataTemplate>
 
 		<DataTemplate x:Key="logValues" DataType="{x:Type local:LogEntry}">
-			<TextBlock Visibility="{Binding HasAnyValue, Mode=OneWay, Converter={StaticResource NullToVis}, UpdateSourceTrigger=PropertyChanged}">
-							
-				<TextBlock Visibility="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
-						   Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToStyle},UpdateSourceTrigger=PropertyChanged}" >
+			<Grid Visibility="{Binding HasAnyValue, Mode=OneWay, Converter={StaticResource NullToVis}, UpdateSourceTrigger=PropertyChanged}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Grid.Column="0" Visibility="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
+						   Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToStyle},UpdateSourceTrigger=PropertyChanged}">
 					<TextBlock.Text>
 						<MultiBinding StringFormat="{}{0}{1}" Mode="OneWay">
 							<Binding Path="Key" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
 							<Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" Path="DataContext.Separator" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
 						</MultiBinding>
 					</TextBlock.Text>
-				</TextBlock><TextBlock 
+				</TextBlock>
+				
+				<TextBlock Grid.Column="1" 
 					Visibility="{Binding HasValue, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
 					Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource NotBoolToStyle},UpdateSourceTrigger=PropertyChanged}" 
 					Text="{Binding Value, Mode=OneWay}" TextWrapping="Wrap" />
-			</TextBlock>
+			</Grid>
 		</DataTemplate>
 
 		<DataTemplate x:Key="logItem" >
