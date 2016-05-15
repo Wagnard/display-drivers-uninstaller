@@ -16,27 +16,27 @@
 
 	-->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<btnCleanRestart>
 			<Text>تنظيف وإعادة تشغيـــل النظام|(ينصــح بـه بشـدة)</Text>
 			<Tooltip>Uninstall the current and previous drivers, then restart the computer.|(Highly Recommended)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>تنظيف لكن بدون إعادة تشغيل|(قد يسبب المشاكل مثل ظهور شاشة سوداء)</Text>
 			<Tooltip>Uninstall the current and previous drivers, but don't restart the computer.|(May cause issues like blackscreen)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>تنظيف وإطفاء الجهاز |(لـتركيب كــرت جديــد)</Text>
 			<Tooltip>Uninstall the current and previous drivers and Shutdown the computer with no rescan|(For installing a new graphic card)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>ارجاع نظام التثبيت التلقائي للتعريفات إلى الوضع الافتراضي</Text>
-		</Button4>
-		<Button5>
+		</btnWuRestore>
+		<btnExtendedLog>
 			<Text>عرض تقريـر مفصل</Text>
-		</Button5>
-		<Label1>
+		</btnExtendedLog>
+		<lblWinVersion>
 			<Text>نـظام التشغيــل الحالـــي :</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label4>
 			<Text>** هـل تحب هذا الأداة ؟ ؛ اذا ما رأيك بالتبـرع لنا. التبرعات تساهم في عملية التطويـر **</Text>
 		</Label4>

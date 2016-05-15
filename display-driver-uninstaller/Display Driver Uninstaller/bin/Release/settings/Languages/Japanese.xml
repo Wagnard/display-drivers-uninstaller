@@ -16,27 +16,27 @@
 
 	-->
   <frmMain Text="Display Driver Uninstaller (DDU)">
-    <Button1>
+    <btnCleanRestart>
       <Text>削除して再起動|(強く推奨します)</Text>
       <Tooltip>全てのドライバーをアンインストールして、コンピューターを再起動します。|(強く推奨します)</Tooltip>
-    </Button1>
-    <Button2>
-      <Text>削除後に再起動しない|(黒画面のような問題を引き起こす可能性があります)</Text>
+    </btnCleanRestart>
+    <btnClean>
+      <Text>削除後に再起動しない (黒画面のような|問題を引き起こす可能性があります)</Text>
       <Tooltip>全てのドライバーをアンインストールしますが、その後再起動しません。|(黒画面のような問題を引き起こす可能性があります)</Tooltip>
-    </Button2>
-    <Button3>
-      <Text>削除してシャットダウン|(新しいグラフィックカードをインストールする場合)</Text>
+    </btnClean>
+    <btnCleanShutdown>
+      <Text>削除してシャットダウン (新しいグラフィック|カードをインストールする場合)</Text>
       <Tooltip>全てのドライバーをアンインストールして、再スキャンさせないようコンピューターをシャットダウンします。|(新しいグラフィックカードをインストールする場合)</Tooltip>
-    </Button3>
-    <Button4>
-      <Text>Windowsの標準ドライバー自動インストールを既定にセット。</Text>
-    </Button4>
-    <Button5>
+    </btnCleanShutdown>
+    <btnWuRestore>
+      <Text>Windowsの標準ドライバー|自動インストールを既定にセット。</Text>
+    </btnWuRestore>
+    <btnExtendedLog>
       <Text>拡張ログを表示する</Text>
-    </Button5>
-    <Label1>
+    </btnExtendedLog>
+    <lblWinVersion>
       <Text>検出された Windows バージョン：</Text>
-    </Label1>
+    </lblWinVersion>
     <Label4>
       <Text>*** DDUはお気に召しましたか？ よろしければ更なる開発を支援する寄付をご検討ください。***</Text>
     </Label4>
@@ -58,33 +58,40 @@
       <Text3>アップデートが見つかりました！最新版ではより多くのサポートが期待できます。</Text3>
       <Text4>アップデート版を入手することができません！</Text4>
     </Label11>
-    <OptionsToolStripMenuItem>
+    <lblOffer>
+      <Text>       パートナーからのお勧め</Text>
+      <Tooltip>オプションメニューから無効にできます。</Tooltip>
+    </lblOffer>
+    <imgOffer>
+      <Tooltip>オプションメニューから無効にできます。</Tooltip>
+    </imgOffer>
+    <OptionsMenuItem>
       <Text>オプション</Text>
-    </OptionsToolStripMenuItem>
-    <ToolStripMenuItem1>
-      <Text>?</Text>
-    </ToolStripMenuItem1>
-    <ToSToolStripMenuItem>
-      <Text>利用規約</Text>
-    </ToSToolStripMenuItem>
-    <VisitDDUHomepageToolStripMenuItem>
-      <Text>DDUの公式ウェブサイトに行く</Text>
-    </VisitDDUHomepageToolStripMenuItem>
-    <SVNToolStripMenuItem>
-      <Text>SVNのウェブサイトに行く</Text>
-    </SVNToolStripMenuItem>
-    <VisitGuru3dNVIDIAThreadToolStripMenuItem>
-      <Text>Guru3d NVIDIA スレッドに行く</Text>
-    </VisitGuru3dNVIDIAThreadToolStripMenuItem>
-    <VisitGuru3dAMDThreadToolStripMenuItem>
-      <Text>Guru3d AMD スレッドに行く</Text>
-    </VisitGuru3dAMDThreadToolStripMenuItem>
-    <VisitGeforceThreadToolStripMenuItem>
-      <Text>Geforce スレッドに行く</Text>
-    </VisitGeforceThreadToolStripMenuItem>
-    <AboutToolStripMenuItem>
+    </OptionsMenuItem>
+    <InfoMenuItem>
+      <Text>情報</Text>
+    </InfoMenuItem>
+    <ToSMenuItem>
+      <Text>利用規約 (ToS)</Text>
+    </ToSMenuItem>
+    <AboutMenuItem>
       <Text>DDUについて</Text>
-    </AboutToolStripMenuItem>
+    </AboutMenuItem>
+    <VisitDDUHomeMenuItem>
+      <Text>DDUの公式ウェブサイトに行く</Text>
+    </VisitDDUHomeMenuItem>
+    <VisitSVNMenuItem>
+      <Text>SVNのウェブサイトに行く</Text>
+    </VisitSVNMenuItem>
+    <VisitGuru3DNvidiaMenuItem>
+      <Text>Guru3d NVIDIA スレッドに行く</Text>
+    </VisitGuru3DNvidiaMenuItem>
+    <VisitGuru3DAMDMenuItem>
+      <Text>Guru3d AMD スレッドに行く</Text>
+    </VisitGuru3DAMDMenuItem>
+    <VisitGeforceMenuItem>
+      <Text>Geforce スレッドに行く</Text>
+    </VisitGeforceMenuItem>
     <Messages>
       <Text1>最新版があります！ DDUのウェブサイトに行きますか？</Text1>
       <Text2>最新版ではより多くのサポートが期待できます。バグ報告の前に最新版を試してください。</Text2>
@@ -147,65 +154,78 @@
     </UpdateLog>
   </frmMain>
   <frmOptions Text="オプション">
-    <Label1>
-      <Text>GPUの詳細オプション</Text>
-    </Label1>
-    <Label2>
+    <lblOffer>
+      <Text>パートナーからのお勧めを表示する</Text>
+      <Tooltip>オプションメニューから無効にできます。</Tooltip>
+    </lblOffer>
+    <btnClose>
+      <Text>閉じる</Text>
+    </btnClose>
+    <lblNvidiaspecific>
+      <Text>NVIDIA 固有オプション</Text>
+    </lblNvidiaspecific>
+    <lblAmdspecific>
+      <Text>AMD 固有オプション</Text>
+    </lblAmdspecific>
+    <lblGeneral>
       <Text>全般オプション</Text>
-    </Label2>
-    <CheckBox1>
-      <Text>"C:\nVidia" ドライバーフォルダーを削除（非推奨）</Text>
-    </CheckBox1>
-    <CheckBox2>
-      <Text>ログファイルをDDUのフォルダー内に保存 (推奨)</Text>
-    </CheckBox2>
-    <CheckBox3>
+    </lblGeneral>
+    <lblRemNvidiaDirs>
+      <Text>"C:\nVidia" ドライバーフォルダーを削除 (非推奨)</Text>
+    </lblRemNvidiaDirs>
+    <lblsaveLogs>
+      <Text>ログファイルをDDUのフォルダー内に保存 (強く推奨)</Text>
+    </lblsaveLogs>
+    <lblRemPhysX>
       <Text>PhysX を削除</Text>
-    </CheckBox3>
-    <CheckBox4>
+    </lblRemPhysX>
+    <lblRem3DtvPlay>
       <Text>3DTV Play を削除</Text>
-    </CheckBox4>
-    <CheckBox5>
+    </lblRem3DtvPlay>
+    <lblcreateRestorePoint>
       <Text>システムの復元ポイントを作成する (可能な場合)</Text>
-    </CheckBox5>
-    <CheckBox6>
-      <Text>現在のモニターと非表示（未接続）のモニターを削除（推奨）</Text>
-    </CheckBox6>
-    <CheckBox7>
+    </lblcreateRestorePoint>
+    <lblRemMonitors>
+      <Text>現在のモニターと非表示（未接続）のモニターを削除 (推奨)</Text>
+    </lblRemMonitors>
+    <lblRemAMDAudioBus>
       <Text>AMD Audio Bus を削除</Text>
-    </CheckBox7>
-    <CheckBox8>
-      <Text>"C:\AMD" ドライバーフォルダーを削除（非推奨）</Text>
-    </CheckBox8>
-    <CheckBox9>
-      <Text>AMDKMPFD ドライバー / フィルターを削除（AMD チップセットの場合バックアップを推奨）</Text>
-    </CheckBox9>
-    <CheckBox10>
+    </lblRemAMDAudioBus>
+    <lblRemAMDDirs>
+      <Text>"C:\AMD" ドライバーフォルダーを削除 (非推奨)</Text>
+    </lblRemAMDDirs>
+    <lblRemAMDKMPFD>
+      <Text>AMDKMPFD ドライバー / フィルターを削除 (AMD チップセットの場合バックアップを推奨)</Text>
+    </lblRemAMDKMPFD>
+    <lblshowSafeModeMsg>
       <Text>起動時にセーフモードのメッセージボックスを表示</Text>
-    </CheckBox10>
-    <CheckBox11>
+    </lblshowSafeModeMsg>
+    <lblUseRoamingCfg>
       <Text>roaming フォルダーに設定ファイルを保存</Text>
-    </CheckBox11>
-    <CheckBox12>
-      <Text>起動時にDDUのアップデートを確認しない (非推奨)</Text>
-    </CheckBox12>
-    <CheckBox13>
+    </lblUseRoamingCfg>
+    <lblCheckUpdates>
+      <Text>起動時にDDUのアップデートを確認する (推奨)</Text>
+    </lblCheckUpdates>
+    <lblRemGFE>
       <Text>Geforce Experience (GFE)を削除</Text>
-    </CheckBox13>
-    <CheckBox14>
+    </lblRemGFE>
+    <lblRemCrimsonCache>
       <Text>AMD Crimson Shader Cache フォルダーを削除</Text>
       <Tooltip>破損したシェーダー キャッシュ データによるグラフィックの異常 (速度または視覚的な破損) がある場合に推奨します。|また、nVidia のような別のブランドに換装している場合にも推奨します。</Tooltip>
-    </CheckBox14>
-    <cbxVulkan>
+    </lblRemCrimsonCache>
+    <lblVulkan>
       <Text>Vulkan ランタイムを削除</Text>
       <Tooltip>Vulkan APIを利用できる2つの異なるGPUを持っている場合非推奨。</Tooltip>
-    </cbxVulkan>
+    </lblVulkan>
+    <lblUseSetupAPI>
+      <Text>SetupAPI を使用する *実験段階* </Text>
+      <Tooltip>外部ツール DDUDR (DEVCON) ではなく SetupAPI を使用する</Tooltip>
+    </lblUseSetupAPI>
   </frmOptions>
   <frmLaunch Text="起動オプション">
     <btnAccept>
       <Text>起動</Text>
-      <Text2>セーフモードで
-再起動</Text2>
+      <Text2>セーフモードで|再起動</Text2>
     </btnAccept>
     <btnClose>
       <Text>閉じる</Text>
@@ -214,8 +234,7 @@
       <Text>起動オプション</Text>
     </lblLaunchOption>
     <lblNotSafeMode>
-      <Text>現在セーフモードではありません。
-不具合を回避するためにセーフモードで再起動することを強く推奨します。</Text>
+      <Text>現在セーフモードではありません。|不具合を回避するためにセーフモードで再起動することを強く推奨します。</Text>
     </lblNotSafeMode>
     <cbBootOption>
       <Item1>通常モード</Item1>
@@ -223,25 +242,25 @@
       <Item3>セーフモード(ネットワーク有効)</Item3>
     </cbBootOption>
   </frmLaunch>
-  <frmLog Text="Extended log">
+  <frmLog Text="拡張ログ">
     <btnClose>
       <Text>閉じる</Text>
     </btnClose>
   </frmLog>
-  <frmAbout>
+  <frmAbout Text="DDUについて">
     <Label1>
       <Text>
-Display Driver Uninstaller (DDU) / ディスプレイ（ GPU ）ドライバー（ NVIDIA / AMD）のために作られたクリーナー
+Display Driver Uninstaller (DDU) / ディスプレイ（ GPU ）ドライバー（ NVIDIA/AMD）のために作られたクリーナー
 
-このツールはディスプレイ/GPUドライバーをデバイスマネージャから削除し、NVIDIA / AMDのサービスを削除するとともに、
+このツールはディスプレイ/GPUドライバーをデバイスマネージャから削除し、NVIDIA/AMDのサービスを削除するとともに、
 Windows Driver store から現在そして過去の全てのドライバーを削除します。
 
 このツールを使用した後、現在の効果は、Windowsが「新規インストール」された時に近い状態になります。
 
-このツールは "Driver Sweeper"*のように動作し、さらに前述の特長があります。
+このツールは "Driver Sweeper"*のように動作し、さらに前述したような特長があります。
 
-古いドライバー、または新しいものをインストールする際に問題が発生した場合、
-それらの問題が解消したといういくつかの報告があるので試してみてください。
+古いドライバー、または新ドライバーをインストールする際に問題が発生した場合、
+それらの問題が解消したといういくつかの報告があるので、試してみてください。
 
 推奨される使用法：
 
@@ -289,7 +308,7 @@ nedooo` (デバッグへの協力)、Extraordinary (バグ修正のテスト) �
 Display Driver Uninstaller ("DDU") ユーザー使用許諾契約
 
 あなたがDDUソフトウェアを使用すると、DDUの利用者（以下「ユーザー」）になります。
-本契約は、ドライバーをアンインストールするソフトウェアの使用を開始した時点で有効になります。
+本契約は、ドライバーをアンインストールする為に本ソフトウェアの使用を開始した時点で有効になります。
 
 DDUを使用することであなたのPCに損害や悪影響を及ぼしても、DDUとそのクリエイターを
 非難しないことに同意するものとみなします。
