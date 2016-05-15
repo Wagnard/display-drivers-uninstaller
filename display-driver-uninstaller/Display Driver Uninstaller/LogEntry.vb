@@ -49,6 +49,7 @@ Public Class LogEntry
 
 	Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
+	Private _disposed As Boolean
 	Private m_exData As Dictionary(Of String, String)
 	Private m_values As List(Of KvP)
 	Private m_separator As String
@@ -196,7 +197,34 @@ Public Class LogEntry
 			Values.Add(New KvP("Description", d.Description))
 			Values.Add(New KvP("ClassName", d.ClassName))
 			Values.Add(New KvP("DeviceID", d.DeviceID))
-			Values.Add(New KvP("HardwareIDs", If(d.HardwareIDs IsNot Nothing, String.Join(Environment.NewLine, d.HardwareIDs), "<empty>")))
+
+			If d.HardwareIDs IsNot Nothing Then
+				Values.Add(New KvP("HardwareIDs", String.Join(Environment.NewLine, d.HardwareIDs)))
+
+				If d.HardwareIDs.Length > 1 Then Values.Add(KvP.Empty)
+			Else : Values.Add(New KvP("HardwareIDs", "<empty>"))
+			End If
+
+			If d.ConfigFlags IsNot Nothing Then
+				Values.Add(New KvP("ConfigFlags", String.Join(Environment.NewLine, d.ConfigFlags)))
+
+				If d.ConfigFlags.Length > 1 Then Values.Add(KvP.Empty)
+			Else : Values.Add(New KvP("ConfigFlags", "<empty>"))
+			End If
+
+			If d.DevStatus IsNot Nothing Then
+				Values.Add(New KvP("DevStatus", String.Join(Environment.NewLine, d.DevStatus)))
+
+				If d.DevStatus.Length > 1 Then Values.Add(KvP.Empty)
+			Else : Values.Add(New KvP("DevStatus", "<empty>"))
+			End If
+
+			If d.DevProblems IsNot Nothing Then
+				Values.Add(New KvP("DevProblems", String.Join(Environment.NewLine, d.DevProblems)))
+
+				If d.DevProblems.Length > 1 Then Values.Add(KvP.Empty)
+			Else : Values.Add(New KvP("DevProblems", "<empty>"))
+			End If
 
 			If d.DriverInfo IsNot Nothing Then
 				Values.Add(New KvP("Driver Details"))
@@ -225,8 +253,10 @@ Public Class LogEntry
 		OnPropertyChanged("Values")
 	End Sub
 
-	Public Sub AddException(ByRef Ex As Exception)
-		Message = Ex.Message.Trim()
+	Public Sub AddException(ByRef Ex As Exception, Optional ByVal overrideMessage As Boolean = True)
+		If Ex IsNot Nothing AndAlso (overrideMessage OrElse IsNullOrWhitespace(Message)) Then
+			Message = Ex.Message.Trim()
+		End If
 
 		HasAnyData = True
 
@@ -239,14 +269,14 @@ Public Class LogEntry
 		m_exData.Add("Source", If(String.IsNullOrEmpty(Ex.Source), "Unknown", Ex.Source))
 		m_exData.Add("StackTrace", If(String.IsNullOrEmpty(Ex.StackTrace), "Unknown", Ex.StackTrace))
 
-        If TypeOf (Ex) Is Win32Exception Then
-            Dim win32Ex As Win32Exception = TryCast(Ex, Win32Exception)
+		If TypeOf (Ex) Is Win32Exception Then
+			Dim win32Ex As Win32Exception = TryCast(Ex, Win32Exception)
 
-            If win32Ex IsNot Nothing Then
-                m_values.Add(New KvP("Win32_ErrorCode", Win32.GetUInt32(win32Ex.NativeErrorCode).ToString()))
-                m_values.Add(New KvP("Win32_Message", win32Ex.Message))
-            End If
-        End If
+			If win32Ex IsNot Nothing Then
+				m_values.Add(New KvP("Win32_ErrorCode", Win32.GetUInt32(win32Ex.NativeErrorCode).ToString()))
+				m_values.Add(New KvP("Win32_Message", win32Ex.Message))
+			End If
+		End If
 
 		HasException = True
 	End Sub
@@ -255,11 +285,8 @@ Public Class LogEntry
 		RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(name))
 	End Sub
 
-#Region "IDisposable Support"
-	Private disposedValue As Boolean
-
 	Protected Overridable Sub Dispose(disposing As Boolean)
-		If Not Me.disposedValue Then
+		If Not Me._disposed Then
 			If disposing Then
 				If m_exData IsNot Nothing Then
 					m_exData.Clear()
@@ -272,14 +299,13 @@ Public Class LogEntry
 				End If
 			End If
 		End If
-		Me.disposedValue = True
-	End Sub
 
+		Me._disposed = True
+	End Sub
 
 	Public Sub Dispose() Implements IDisposable.Dispose
 		Dispose(True)
 		GC.SuppressFinalize(Me)
 	End Sub
-#End Region
 
 End Class

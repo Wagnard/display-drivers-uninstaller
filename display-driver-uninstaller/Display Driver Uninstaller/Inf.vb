@@ -5,7 +5,8 @@ Public Class Inf
 	Private ReadOnly _fileName As String = Nothing
 	Private ReadOnly _provider As String = Nothing
 	Private ReadOnly _class As String = Nothing
-	Private ReadOnly _isValid As Boolean = Nothing
+	Private ReadOnly _fileExists As Boolean = False
+	Private ReadOnly _isValid As Boolean = False
 	Private _installDate As DateTime
 
 	Public ReadOnly Property FileName As String
@@ -21,6 +22,11 @@ Public Class Inf
 	Public ReadOnly Property [Class] As String
 		Get
 			Return _class
+		End Get
+	End Property
+	Public ReadOnly Property FileExists As Boolean
+		Get
+			Return Not IsNullOrWhitespace(_fileName) AndAlso File.Exists(_fileName)
 		End Get
 	End Property
 	Public ReadOnly Property IsValid As Boolean

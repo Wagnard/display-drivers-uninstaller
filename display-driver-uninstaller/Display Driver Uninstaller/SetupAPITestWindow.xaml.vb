@@ -390,7 +390,7 @@ Public Class SetupAPITestWindow
         If Devices.Count > 0 Then
             Devices.Clear()
         End If
-
+	
         lblDevicesDev.Content = "Devices: 0"
 
         If cbFilterDev.SelectedItem Is Nothing Then
@@ -413,4 +413,7 @@ Public Class SetupAPITestWindow
         End If
     End Sub
 
+	Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
+		SetupAPI.ReScanDevices()
+	End Sub
 End Class

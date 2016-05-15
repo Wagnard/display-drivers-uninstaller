@@ -362,7 +362,8 @@
             <Button Content="remove" Height="23" Name="btnRemove" Width="75" Click="btnRemove_Click" />
             <Button Content="update" Height="23" Name="btnUpdate" Width="75" Margin="10,10,0,10" />
             <Button Content="DevMltk Test area" Height="23" Name="btnTestDev" Width="115" />
-        </StackPanel>
+			<Button Content="ReScan devices" Height="23" Name="Button1" Width="113" />
+		</StackPanel>
 
         <DockPanel Grid.Row="1">
             <StackPanel Orientation="Horizontal">

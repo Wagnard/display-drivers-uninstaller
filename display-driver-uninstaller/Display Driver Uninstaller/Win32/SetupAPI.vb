@@ -291,35 +291,47 @@ Namespace Win32
 			IsAdmin = WinAPI.IsAdmin
 		End Sub
 
+
 #Region "Enums"
 		<Flags()>
 		Private Enum INSTALLFLAG As UInteger
+			''' <summary>Not used.</summary>
 			NULL = &H0UI
-			FORCE = &H1UI
-			[READONLY] = &H2UI
-			NONINTERACTIVE = &H4UI
-			BITS = &H7UI
-		End Enum
 
-		<Flags()>
-		Private Enum CM_DEVCAP As UInteger
-			LOCKSUPPORTED = &H1UI
-			EJECTSUPPORTED = &H2UI
-			REMOVABLE = &H4UI
-			DOCKDEVICE = &H8UI
-			UNIQUEID = &H10UI
-			SILENTINSTALL = &H20UI
-			RAWDEVICEOK = &H40UI
-			SURPRISEREMOVALOK = &H80UI
-			HARDWAREDISABLED = &H100UI
-			NONDYNAMIC = &H200UI
+			''' <summary>If this flag is set and the function finds a device that matches the HardwareId value, 
+			''' the function installs new drivers for the device whether better drivers already exist on the computer.
+			''' 
+			''' Important  Use this flag only with extreme caution. Setting this flag can cause an older driver to be installed over a newer driver,
+			''' if a user runs the vendor's application after newer drivers are available.</summary>
+			FORCE = &H1UI
+
+			''' <summary>
+			''' If this flag is set, the function will not copy, rename, or delete any installation files.
+			''' Use of this flag should be limited to environments in which file access is restricted or impossible, such as an "embedded" operating system.
+			''' </summary>
+			[READONLY] = &H2UI
+
+			''' <summary>
+			''' If this flag is set, the function will return FALSE when any attempt to display UI is detected.
+			''' Set this flag only if the function will be called from a component (such as a service) that cannot display UI. 
+			''' 
+			''' If this flag is set and a UI display is attempted, the device can be left in an indeterminate state.
+			''' </summary>
+			NONINTERACTIVE = &H4UI
 		End Enum
 
 		<Flags()>
 		Private Enum DEVICE_INSTALL_STATE As UInteger
+			''' <summary>The device is installed.</summary>
 			Installed = &H0UI
+
+			''' <summary>The system will try to reinstall the device on a later enumeration.</summary>
 			NeedsReinstall = &H1UI
+
+			''' <summary>The device did not install properly.</summary>
 			FailedInstall = &H2UI
+
+			''' <summary>The installation of this device is not yet complete.</summary>
 			FinishInstall = &H3UI
 		End Enum
 
@@ -339,41 +351,67 @@ Namespace Win32
 
 		<Flags()>
 		Private Enum SPDIT As UInteger
-			SPDIT_NODRIVER = &H0UI
+			''' <summary>Not used.</summary>
+			NODRIVER = &H0UI
+
+			''' <summary>Enumerate a class driver list. 
+			''' This driver list type must be specified if DeviceInfoData is not specified.</summary>
 			CLASSDRIVER = &H1UI
+
+			''' <summary>Enumerate a list of compatible drivers for the specified device. 
+			''' This driver list type can be specified only if DeviceInfoData is also specified.</summary>
 			COMPATDRIVER = &H2UI
 		End Enum
 
+		''' <summary>The SetupUninstallOEMInf function first checks whether there are any devices installed using the .inf file.
+		''' A device does not need to be present to be detected as using the .inf file.</summary>
 		<Flags()>
 		Private Enum SetupUOInfFlags As UInteger
+			''' <summary>If this flag is set and the function finds a currently installed device that was installed 
+			''' using this .inf file, the .inf file is not removed.</summary>
 			NONE = &H0UI
+
+			''' <summary>If this flag is set, the .inf file is removed whether the function finds a device that was installed with this .inf file.</summary>
 			SUOI_FORCEDELETE = &H1UI
 		End Enum
 
 		<Flags()>
 		Private Enum DIGCF As UInteger
+			''' <summary>Return only the device that is associated with the system default device interface,
+			''' if one is set, for the specified device interface classes.</summary>
 			[DEFAULT] = &H1UI
+
+			''' <summary>Return only devices that are currently present in a system.</summary>
 			PRESENT = &H2UI
+
+			''' <summary>Return a list of installed devices for all device setup classes or all device interface classes.</summary>
 			ALLCLASSES = &H4UI
+
+			''' <summary>Return only devices that are a part of the current hardware profile.</summary>
 			PROFILE = &H8UI
+
+			''' <summary>Return devices that support device interfaces for the specified device interface classes.
+			''' This flag must be set in the Flags parameter if the Enumerator parameter specifies a device instance ID.</summary>
 			DEVICEINTERFACE = &H10UI
 		End Enum
 
 		<Flags()>
 		Private Enum SPDRP As UInteger
-			''' <summary>DeviceDesc (R/W)</summary>
+			''' <summary>The function retrieves a REG_SZ string that contains the description of a device. </summary>
 			DEVICEDESC = &H0UI
 
-			''' <summary>HardwareID (R/W)</summary>
+			''' <summary>The function retrieves a REG_MULTI_SZ string that contains the list of hardware IDs for a device.
+			''' For information about hardware IDs, see Device Identification Strings.</summary>
 			HARDWAREID = &H1UI
 
-			''' <summary>CompatibleIDs (R/W)</summary>
+			''' <summary>The function retrieves a REG_MULTI_SZ string that contains the list of compatible IDs for a device.
+			''' For information about compatible IDs, see Device Identification Strings.</summary>
 			COMPATIBLEIDS = &H2UI
 
 			''' <summary>unused</summary>
 			UNUSED0 = &H3UI
 
-			''' <summary>Service (R/W)</summary>
+			''' <summary>The function retrieves a REG_SZ string that contains the service name for a device.</summary>
 			SERVICE = &H4UI
 
 			''' <summary>unused</summary>
@@ -382,146 +420,305 @@ Namespace Win32
 			''' <summary>unused</summary>
 			UNUSED2 = &H6UI
 
-			''' <summary>Class (R--tied to ClassGUID)</summary>
+			''' <summary>The function retrieves a REG_SZ string that contains the device setup class of a device.</summary>
 			[CLASS] = &H7UI
 
-			''' <summary>ClassGUID (R/W)</summary>
+			''' <summary>The function retrieves a REG_SZ string that contains the GUID that represents the device setup class of a device.</summary>
 			CLASSGUID = &H8UI
 
-			''' <summary>Driver (R/W)</summary>
+			''' <summary>The function retrieves a string that identifies the device's software key (sometimes called the driver key).
+			''' For more information about driver keys, see Registry Trees and Keys for Devices and Drivers.</summary>
 			DRIVER = &H9UI
 
-			''' <summary>ConfigFlags (R/W)</summary>
+			''' <summary>The function retrieves a bitwise OR of a device's configuration flags in a DWORD value.
+			''' The configuration flags are represented by the CONFIGFLAG_Xxx bitmasks that are defined in Regstr.h.</summary>
 			CONFIGFLAGS = &HAUI
 
-			''' <summary>Mfg (R/W)</summary>
+			''' <summary>The function retrieves a REG_SZ string that contains the name of the device manufacturer.</summary>
 			MFG = &HBUI
 
-			''' <summary>FriendlyName (R/W)</summary>
+			''' <summary>The function retrieves a REG_SZ string that contains the friendly name of a device.</summary>
 			FRIENDLYNAME = &HCUI
 
-			''' <summary>LocationInformation (R/W)</summary>
+			''' <summary>The function retrieves a REG_SZ string that contains the hardware location of a device.</summary>
 			LOCATION_INFORMATION = &HDUI
 
-			''' <summary>PhysicalDeviceObjectName (R)</summary>
+			''' <summary>The function retrieves a REG_SZ string that contains the name that is associated with the device's PDO. 
+			''' For more information, see IoCreateDevice.</summary>
 			PHYSICAL_DEVICE_OBJECT_NAME = &HEUI
 
-			''' <summary>Capabilities (R)</summary>
+			''' <summary>The function retrieves a bitwise OR of the following CM_DEVCAP_Xxx flags in a DWORD.
+			''' The device capabilities that are represented by these flags correspond to the device capabilities 
+			''' that are represented by the members of the DEVICE_CAPABILITIES structure. 
+			''' 
+			''' The CM_DEVCAP_Xxx constants are defined in Cfgmgr32.h.</summary>
 			CAPABILITIES = &HFUI
 
-			''' <summary>UiNumber (R)</summary>
+			''' <summary>The function retrieves a DWORD value set to the value of the UINumber member of the device's DEVICE_CAPABILITIES structure.</summary>
 			UI_NUMBER = &H10UI
 
-			''' <summary>UpperFilters (R/W)</summary>
+			''' <summary>The function retrieves a REG_MULTI_SZ string that contains the names of a device's upper filter drivers.</summary>
 			UPPERFILTERS = &H11UI
 
-			''' <summary>LowerFilters (R/W)</summary>
+			''' <summary>The function retrieves a REG_MULTI_SZ string that contains the names of a device's lower-filter drivers.</summary>
 			LOWERFILTERS = &H12UI
 
-			''' <summary>BusTypeGUID (R)</summary>
+			''' <summary>The function retrieves the GUID for the device's bus type.</summary>
 			BUSTYPEGUID = &H13UI
 
-			''' <summary>LegacyBusType (R)</summary>
+			''' <summary>The function retrieves the device's legacy bus type as an INTERFACE_TYPE value (defined in Wdm.h and Ntddk.h).</summary>
 			LEGACYBUSTYPE = &H14UI
 
-			''' <summary>BusNumber (R)</summary>
+			''' <summary>The function retrieves the device's bus number.</summary>
 			BUSNUMBER = &H15UI
 
-			''' <summary>Enumerator Name (R)</summary>
+			''' <summary>The function retrieves a REG_SZ string that contains the name of the device's enumerator.</summary>
 			ENUMERATOR_NAME = &H16UI
 
-			''' <summary>Security (R/W binary form)</summary>
+			''' <summary>The function retrieves a SECURITY_DESCRIPTOR structure for a device.</summary>
 			SECURITY = &H17UI
 
-			''' <summary>Security (W SDS form)</summary>
+			''' <summary>The function retrieves a REG_SZ string that contains the device's security descriptor.
+			''' For information about security descriptor strings, see Security Descriptor Definition Language (Windows).
+			''' For information about the format of security descriptor strings, see Security Descriptor Definition Language (Windows).</summary>
 			SECURITY_SDS = &H18UI
 
-			''' <summary>Device Type (R/W)</summary>
+			''' <summary>The function retrieves a DWORD value that represents the device's type. 
+			''' For more information, see Specifying Device Types.</summary>
 			DEVTYPE = &H19UI
 
-			''' <summary>Device is exclusive-access (R/W)</summary>
+			''' <summary>The function retrieves a DWORD value that indicates whether a user can obtain exclusive use of the device.
+			''' The returned value is one if exclusive use is allowed, or zero otherwise. For more information, see IoCreateDevice.</summary>
 			EXCLUSIVE = &H1AUI
 
-			''' <summary>Device Characteristics (R/W)</summary>
+			''' <summary>The function retrieves a bitwise OR of a device's characteristics flags in a DWORD.
+			''' For a description of these flags, which are defined in Wdm.h and Ntddk.h,
+			''' see the DeviceCharacteristics parameter of the IoCreateDevice function.</summary>
 			CHARACTERISTICS = &H1BUI
 
-			''' <summary>Device Address (R)</summary>
+			''' <summary>The function retrieves the device's address.</summary>
 			ADDRESS = &H1CUI
 
-			''' <summary>UiNumberDescFormat (R/W)</summary>
+			''' <summary>The function retrieves a format string (REG_SZ) used to display the UINumber value.</summary>
 			UI_NUMBER_DESC_FORMAT = &H1DUI
 
-			''' <summary>Device Power Data (R)</summary>
+			''' <summary>(Windows XP and later) The function retrieves a CM_POWER_DATA structure that contains the device's power management information.</summary>
 			DEVICE_POWER_DATA = &H1EUI
 
-			''' <summary>Removal Policy (R)</summary>
+			''' <summary>(Windows XP and later) The function retrieves the device's current removal policy as a DWORD
+			''' that contains one of the CM_REMOVAL_POLICY_Xxx values that are defined in Cfgmgr32.h.</summary>
 			REMOVAL_POLICY = &H1FUI
 
-			''' <summary>Hardware Removal Policy (R)</summary>
+			''' <summary>(Windows XP and later) The function retrieves the device's hardware-specified default removal policy as a DWORD
+			''' that contains one of the CM_REMOVAL_POLICY_Xxx values that are defined in Cfgmgr32.h.</summary>
 			REMOVAL_POLICY_HW_DEFAULT = &H20UI
 
-			''' <summary>Removal Policy Override (RW)</summary>
+			''' <summary>(Windows XP and later) The function retrieves the device's override removal policy (if it exists) from the registry,
+			''' as a DWORD that contains one of the CM_REMOVAL_POLICY_Xxx values that are defined in Cfgmgr32.h.</summary>
 			REMOVAL_POLICY_OVERRIDE = &H21UI
 
-			''' <summary>Device Install State (R)</summary>
+			''' <summary>(Windows XP and later) The function retrieves a DWORD value that indicates the installation state of a device.
+			''' The installation state is represented by one of the CM_INSTALL_STATE_Xxx values that are defined in Cfgmgr32.h.
+			''' The CM_INSTALL_STATE_Xxx values correspond to the DEVICE_INSTALL_STATE enumeration values. </summary>
 			INSTALL_STATE = &H22UI
 
-			''' <summary>Device Location Paths (R)</summary>
+			''' <summary>(Windows Server 2003 and later) The function retrieves a REG_MULTI_SZ string that represents the location of the device in the device tree.</summary>
 			LOCATION_PATHS = &H23UI
 		End Enum
 
 		<Flags()>
 		Private Enum DIF As UInteger
+			''' <summary>A DIF_SELECTDEVICE request allows an installer to participate in selecting the driver for a device.</summary>
 			SELECTDEVICE = &H1UI
+
+			''' <summary>A DIF_INSTALLDEVICE request allows an installer to perform tasks before and/or after the device is installed.</summary>
 			INSTALLDEVICE = &H2UI
+
+			''' <summary>This DIF code is reserved for system use. Vendor-supplied installers must not handle this request. </summary>
 			ASSIGNRESOURCES = &H3UI
+
+			''' <summary>This DIF code is obsolete and no longer supported in Microsoft Windows 2000 and later versions of Windows.
+			''' To supply custom property pages for a device, an installer handles the DIF_ADDPROPERTYPAGE_ADVANCED request.</summary>
 			PROPERTIES = &H4UI
+
+			''' <summary>A DIF_REMOVE request notifies an installer that Windows is about to remove a device and gives the installer an opportunity to prepare for the removal.</summary>
 			REMOVE = &H5UI
+
+			''' <summary>This DIF code is reserved for system use. Vendor-supplied installers must not handle this request.</summary>
 			FIRSTTIMESETUP = &H6UI
+
+			''' <summary>Not used.</summary>
 			FOUNDDEVICE = &H7UI
+
+			''' <summary>This DIF code is obsolete and no longer supported in Microsoft Windows 2000 and later versions of Windows.</summary>
 			SELECTCLASSDRIVERS = &H8UI
+
+			''' <summary>This DIF code is obsolete and no longer supported in Microsoft Windows 2000 and later versions of Windows.</summary>
 			VALIDATECLASSDRIVERS = &H9UI
+
+			''' <summary>This DIF code is reserved for system use. Vendor-supplied installers must not handle this request.</summary>
 			INSTALLCLASSDRIVERS = &HAUI
+
+			''' <summary>This DIF code is reserved for system use. Vendor-supplied installers must not handle this request.</summary>
 			CALCDISKSPACE = &HBUI
+
+			''' <summary>A DIF_DESTROYPRIVATEDATA request directs a class installer to free any memory or resources it allocated and
+			''' stored in the ClassInstallReserved field of the SP_DEVINSTALL_PARAMS structure.</summary>
 			DESTROYPRIVATEDATA = &HCUI
+
+			''' <summary>his DIF code is obsolete and no longer supported in Microsoft Windows 2000 and later versions of Windows.</summary>
 			VALIDATEDRIVER = &HDUI
+
+			''' <summary>A DIF_DETECT request directs an installer to detect non-PnP devices of a particular class
+			''' and add the devices to the device information set. This request is used for non-PnP devices.</summary>
 			DETECT = &HFUI
+
+			''' <summary>This DIF code is obsolete and no longer supported in Microsoft Windows 2000 and later versions of Windows.
+			''' For PnP devices, Windows uses the DIF_NEWDEVICEWIZARD_XXX requests instead, such as DIF_NEWDEVICEWIZARD_FINISHINSTALL.</summary>
 			INSTALLWIZARD = &H10UI
+
+			''' <summary>This DIF code is obsolete and no longer supported in Microsoft Windows 2000 and later versions of Windows.
+			''' Windows uses the DIF_NEWDEVICEWIZARD_XXX requests instead, such as DIF_NEWDEVICEWIZARD_FINISHINSTALL.</summary>
 			DESTROYWIZARDDATA = &H11UI
+
+			''' <summary>A DIF_PROPERTYCHANGE request notifies the installer that the device's properties are changing.
+			''' The device is being enabled, disabled, started, stopped, or some item on a property page has changed.
+			''' This DIF request gives the installer an opportunity to participate in the change.</summary>
 			PROPERTYCHANGE = &H12UI
+
+			''' <summary>This DIF code is reserved for system use. Vendor-supplied installers must not handle this request.</summary>
 			ENABLECLASS = &H13UI
+
+			''' <summary>This DIF code is reserved for system use. Vendor-supplied installers must not handle this request.</summary>
 			DETECTVERIFY = &H14UI
+
+			''' <summary>A DIF_INSTALLDEVICEFILES request allows an installer to participate in copying the files to support a device
+			''' or to make a list of the files for a device. The device files include files for the selected driver,
+			''' any device interfaces, and any co-installers.</summary>
 			INSTALLDEVICEFILES = &H15UI
+
+			''' <summary>A DIF_UNREMOVE request notifies the installer that Windows is about to reinstate a device in a given hardware profile
+			''' and gives the installer an opportunity to participate in the operation. Windows only sends this request for non-PnP devices.</summary>
 			UNREMOVE = &H16UI
+
+			''' <summary>A DIF_SELECTBESTCOMPATDRV request allows an installer to select the best driver from the device information element's compatible driver list.</summary>
 			SELECTBESTCOMPATDRV = &H17UI
+
+			''' <summary>A DIF_ALLOW_INSTALL request asks the installers for a device whether Windows can proceed to install the device.</summary>
 			ALLOW_INSTALL = &H18UI
+
+			''' <summary>The DIF_REGISTERDEVICE request allows an installer to participate in registering a newly created device instance with the PnP manager.
+			''' Windows sends this DIF request for non-PnP devices.</summary>
 			REGISTERDEVICE = &H19UI
+
+			''' <summary>A DIF_NEWDEVICEWIZARD_PRESELECT request allows an installer to supply wizard pages that Windows displays to the user before it
+			''' displays the select-driver page. This request is only used during manual installation of non-PnP devices.</summary>
 			NEWDEVICEWIZARD_PRESELECT = &H1AUI
+
+			''' <summary>A DIF_NEWDEVICEWIZARD_SELECT request allows an installer to supply custom wizard page(s) that replace the standard select-driver page.
+			''' This request is only used during manual installation of non-PnP devices.</summary>
 			NEWDEVICEWIZARD_SELECT = &H1BUI
+
+			''' <summary>A DIF_NEWDEVICEWIZARD_PREANALYZE request allows an installer to supply wizard pages that Windows displays to the user before it
+			''' displays the analyze page. This request is only used during manual installation of non-PnP devices.</summary>
 			NEWDEVICEWIZARD_PREANALYZE = &H1CUI
+
+			''' <summary>A DIF_NEWDEVICEWIZARD_POSTANALYZE request allows an installer to supply wizard pages that Windows displays to
+			''' the user after the device node (devnode) is registered but before Windows installs the drivers for the device. 
+			''' This request is only used during manual installation of non-PnP devices.</summary>
 			NEWDEVICEWIZARD_POSTANALYZE = &H1DUI
+
+			''' <summary>A DIF_NEWDEVICEWIZARD_FINISHINSTALL request allows an installer to supply finish-install wizard pages that Windows displays
+			''' to the user after a device is installed but before Windows displays the standard finish page. Windows sends this request when it 
+			''' installs Plug and Play (PnP) devices and when an administrator uses the Add Hardware Wizard to install non-PnP devices.</summary>
 			NEWDEVICEWIZARD_FINISHINSTALL = &H1EUI
+
+			''' <summary>Not used.</summary>
 			UNUSED1 = &H1FUI
+
+			''' <summary>A DIF_INSTALLINTERFACES request allows an installer to participate in the registration of the device interfaces for a device.</summary>
 			INSTALLINTERFACES = &H20UI
+
+			''' <summary>This DIF code is reserved for system use. Vendor-supplied installers must not handle this request.</summary>
 			DETECTCANCEL = &H21UI
+
+			''' <summary>A DIF_REGISTER_COINSTALLERS request allows an installer to participate in the registration of device co-installers.</summary>
 			REGISTER_COINSTALLERS = &H22UI
+
+			''' <summary>A DIF_ADDPROPERTYPAGE_ADVANCED request allows an installer to supply one or more custom property pages for a device.</summary>
 			ADDPROPERTYPAGE_ADVANCED = &H23UI
+
+			''' <summary>This DIF code is reserved for system use. Vendor-supplied installers must not handle this request.</summary>
 			ADDPROPERTYPAGE_BASIC = &H24UI
+
+			''' <summary>Not used.</summary>
 			RESERVED1 = &H25UI
+
+			''' <summary>The DIF_TROUBLESHOOTER request allows an installer to start a troubleshooter for a device
+			''' or to return CHM and HTM troubleshooter files for Windows to start.</summary>
 			TROUBLESHOOTER = &H26UI
+
+			''' <summary>A DIF_POWERMESSAGEWAKE request allows an installer to supply custom text that
+			''' Windows displays on the power management properties page of the device properties.</summary>
 			POWERMESSAGEWAKE = &H27UI
+
+			''' <summary>A DIF_ADDPROPERTYPAGE_ADVANCED request allows an installer to supply one or more custom property pages for a device.</summary>
 			ADDREMOTEPROPERTYPAGE_ADVANCED = &H28UI
+
+			''' <summary>This DIF code is reserved for system use. Vendor-supplied installers must not handle this request. </summary>
 			UPDATEDRIVER_UI = &H29UI
+
+			''' <summary>A DIF_FINISHINSTALL_ACTION request allows an installer to run finish-install actions in an
+			''' interactive administrator context after all other device installation operations have completed.</summary>
 			FINISHINSTALL_ACTION = &H2AUI
+
+			''' <summary>Not used.</summary>
 			RESERVED2 = &H30UI
 		End Enum
 
 		<Flags()>
 		Private Enum DICS As UInteger
+			''' <summary>The device is being enabled.
+			''' 
+			''' For this state change, Windows enables the device if the DICS_FLAG_GLOBAL flag is specified.
+			''' 
+			''' If the DICS_FLAG_CONFIGSPECIFIC flag is specified and the current hardware profile is specified then Windows enables the device.
+			''' If the DICS_FLAG_CONFIGSPECIFIC is specified and not the current hardware profile then Windows sets some flags in the registry
+			''' and does not change the device's state. Windows will change the device state when the specified profile becomes the current profile.
+			''' </summary>
 			ENABLE = &H1UI
+
+			''' <summary>The device is being disabled.
+			''' 
+			''' For this state change, Windows disables the device if the DICS_FLAG_GLOBAL flag is specified.
+			''' 
+			''' If the DICS_FLAG_CONFIGSPECIFIC flag is specified and the current hardware profile is specified then Windows disables the device.
+			''' If the DICS_FLAG_CONFIGSPECIFIC is specified and not the current hardware profile then Windows sets some flags in the registry
+			''' and does not change the device's state.</summary>
 			DISABLE = &H2UI
+
+			''' <summary>The properties of the device have changed.
+			''' 
+			''' For this state change, Windows ignores the Scope information as long it is a valid value, and stops and restarts the device.</summary>
 			PROPCHANGE = &H3UI
+
+			''' <summary>
+			''' 
+			''' The device is being started (if the request is for the currently active hardware profile).
+			''' 
+			''' DICS_START must be DICS_FLAG_CONFIGSPECIFIC. You cannot perform that change globally.
+			''' 
+			''' Windows only starts the device if the current hardware profile is specified. Otherwise,
+			''' Windows sets a registry flag and does not change the state of the device.</summary>
 			START = &H4UI
+
+			''' <summary>The device is being stopped. 
+			''' The driver stack will be unloaded and the CSCONFIGFLAG_DO_NOT_START flag will be set for the device.
+			'''
+			''' DICS_STOP must be DICS_FLAG_CONFIGSPECIFIC. You cannot perform that change globally.
+			'''
+			''' Windows only stops the device if the current hardware profile is specified. 
+			''' Otherwise, Windows sets a registry flag and does not change the state of the device.</summary>
 			[STOP] = &H5UI
 		End Enum
 
@@ -530,69 +727,258 @@ Namespace Win32
 			REMOVEDEVICE_GLOBAL = &H1UI
 			REMOVEDEVICE_CONFIGSPECIFIC = &H2UI
 			UNREMOVEDEVICE_CONFIGSPECIFIC = &H2UI
+
+			''' <summary>Set to allow support for OEM disks. If this flag is set, the operating system presents a "Have Disk"
+			''' button on the Select Device page. This flag is set, by default, in system-supplied wizards.</summary>
 			SHOWOEM = &H1UI
+
+			''' <summary>Reserved.</summary>
 			SHOWCOMPAT = &H2UI
+
+			''' <summary>Reserved.</summary>
 			SHOWCLASS = &H4UI
+
+			''' <summary>Reserved.</summary>
 			SHOWALL = &H7UI
+
+			''' <summary>Set to disable creation of a new copy queue. 
+			''' Use the caller-supplied copy queue in SP_DEVINSTALL_PARAMS.FileQueue.</summary>
 			NOVCP = &H8UI
+
+			''' <summary>Set if SetupDiBuildDriverInfoList has already built a list of compatible drivers for this device.
+			''' If this list has already been built, it contains all the driver information and this flag is always set.
+			''' SetupDiDestroyDriverInfoList clears this flag when it deletes a compatible driver list.
+			''' 
+			''' This flag is only set in device installation parameters that are associated with a particular device information element,
+			''' not in parameters for a device information set as a whole.
+			''' 
+			''' This flag is read-only. Only the operating system sets this flag.</summary>
 			DIDCOMPAT = &H10UI
+
+			''' <summary>Set if SetupDiBuildDriverInfoList has already built a list of the drivers for this class of device.
+			''' If this list has already been built, it contains all the driver information and this flag is always set.
+			''' SetupDiDestroyDriverInfoList clears this flag when it deletes a list of drivers for a class.
+			''' 
+			''' This flag is read-only. Only the operating system sets this flag.</summary>
 			DIDCLASS = &H20UI
+
+			''' <summary>Reserved.</summary>
 			AUTOASSIGNRES = &H40UI
+
+			''' <summary>The same as DI_NEEDREBOOT.</summary>
 			NEEDRESTART = &H80UI
+
+			''' <summary>For NT-based operating systems, this flag is set if the device requires that the computer be restarted after
+			''' device installation or a device state change. A class installer or co-installer can set this flag at any time during
+			''' device installation, if the installer determines that a restart is necessary.</summary>
 			NEEDREBOOT = &H100UI
+
+			''' <summary>Set to disable browsing when the user is selecting an OEM disk path. 
+			''' A device installation application sets this flag to constrain a user to only installing from the installation media location.</summary>
 			NOBROWSE = &H200UI
+
+			''' <summary> Set by SetupDiBuildDriverInfoList if a list of drivers for a device setup class contains drivers that are provided by multiple manufacturers.
+			'''
+			''' This flag is read-only. Only the operating system sets this flag.</summary>
 			MULTMFGS = &H400UI
+
+			''' <summary>Reserved.</summary>
 			DISABLED = &H800UI
+
+			''' <summary>Reserved.</summary>
 			GENERALPAGE_ADDED = &H1000UI
+
+			''' <summary>Set by a class installer or co-installer if the installer supplies a page that replaces the system-supplied resource properties page. 
+			''' If this flag is set, the operating system does not display the system-supplied resource page.</summary>
 			RESOURCEPAGE_ADDED = &H2000UI
+
+			''' <summary>Set by Device Manager if a device's properties were changed, which requires an update of the installer's user interface.</summary>
 			PROPERTIES_CHANGE = &H4000UI
+
+			''' <summary>Set to indicate that the Select Device page should list drivers in the order in which 
+			''' they appear in the INF file, instead of sorting them alphabetically. </summary>
 			INF_IS_SORTED = &H8000UI
+
+			''' <summary>Set if installers and other device installation components should only search the INF file specified by SP_DEVINSTALL_PARAMS.DriverPath.
+			''' If this flag is set, DriverPath contains the path of a single INF file instead of a path of a directory.</summary>
 			ENUMSINGLEINF = &H10000UI
+
+			''' <summary>Set if the configuration manager should not be called to remove or reenumerate devices during the execution of certain device
+			''' installation functions (for example, SetupDiInstallDevice).
+			''' 
+			''' If this flag is set, device installation applications, class installers, and co-installers must not call the following functions:
+			''' CM_Reenumerate_DevNode(_Ex)
+			''' CM_Query_And_Remove_SubTree(_Ex)
+			''' CM_Setup_DevNode(_Ex)
+			''' CM_Set_HW_Prof_Flags(_Ex)
+			''' CM_Enable_DevNode(_Ex)
+			''' CM_Disable_DevNode(_Ex)</summary>
 			DONOTCALLCONFIGMG = &H20000UI
+
+			''' <summary>Set if the device should be installed in a disabled state by default. 
+			''' To be recognized, this flag must be set before Windows calls the default handler for the DIF_INSTALLDEVICE request.</summary>
 			INSTALLDISABLED = &H40000UI
+
+			''' <summary>Set to force SetupDiBuildDriverInfoList to build a device's list of compatible drivers
+			''' from its class driver list instead of the INF file.</summary>
 			COMPAT_FROM_CLASS = &H80000UI
+
+			''' <summary>Set to use the Class Install parameters. SetupDiSetClassInstallParams sets this flag when the caller
+			''' specifies parameters and clears the flag when the caller specifies a NULL parameters pointer. </summary>
 			CLASSINSTALLPARAMS = &H100000UI
+
 			NODEFAULTACTION = &H200000UI
+
+			''' <summary>Set if the device installer functions must be silent and use default choices wherever possible.
+			''' Class installers and co-installers must not display any UI if this flag is set.</summary>
 			QUIETINSTALL = &H800000UI
+
+			''' <summary>Set if device installation applications and components, such as SetupDiInstallDevice, should skip file copying.</summary>
 			NOFILECOPY = &H1000000UI
+
 			FORCECOPY = &H2000000UI
+
+			''' <summary>Set by a class installer or co-installer if the installer supplies a page that replaces the system-supplied driver properties page.
+			''' If this flag is set, the operating system does not display the system-supplied driver page.</summary>
 			DRIVERPAGE_ADDED = &H4000000UI
+
+			''' <summary>Set if a class installer or co-installer supplied strings that should be used during SetupDiSelectDevice.</summary>
 			USECI_SELECTSTRINGS = &H8000000UI
+
+			''' <summary>Reserved.</summary>
 			OVERRIDE_INFFLAGS = &H10000000UI
+
+			''' <summary>Obsolete.</summary>
 			PROPS_NOCHANGEUSAGE = &H20000000UI
+
+			''' <summary>Obsolete.</summary>
 			NOSELECTICONS = &H40000000UI
+
+			''' <summary>Set to prevent SetupDiInstallDevice from writing the INF-specified hardware IDs and compatible IDs to the device
+			''' properties for the device node (devnode). This flag should only be set for root-enumerated devices.
+			'''
+			''' This flag overrides the DI_FLAGSEX_ALWAYSWRITEIDS flag.</summary>
 			NOWRITE_IDS = &H80000000UI
 		End Enum
 
 		<Flags()>
 		Private Enum DI_FLAGSEX As UInteger
+			''' <summary>Reserved.</summary>
 			RESERVED2 = &H1UI
+
+			''' <summary>Reserved.</summary>
 			RESERVED3 = &H2UI
+
+			''' <summary>Set by the operating system if a class installer failed to load or start. This flag is read-only.</summary>
 			CI_FAILED = &H4UI
+
 			FINISHINSTALL_ACTION = &H8UI
+
+			''' <summary>Windows has built a list of driver nodes that includes all the drivers that are listed in the INF files of the specified setup class. 
+			''' If the specified setup class is NULL because the HDEVINFO set or device has no associated class,
+			''' the list includes all driver nodes from all available INF files. This flag is read-only.</summary>
 			DIDINFOLIST = &H10UI
+
+			''' <summary>Windows has built a list of driver nodes that are compatible with the device. This flag is read-only.</summary>
 			DIDCOMPATINFO = &H20UI
+
+			''' <summary>If set, SetupDiBuildClassInfoList will check for class inclusion filters.
+			''' This means that a device will not be included in the class list if its class is marked as NoInstallClass.</summary>
 			FILTERCLASSES = &H40UI
+
+			''' <summary>Set if the installation failed. If this flag is set, the SetupDiInstallDevice function just sets the FAILEDINSTALL flag
+			''' in the device's ConfigFlags registry value. If DI_FLAGSEX_SETFAILEDINSTALL is set, co-installers must return NO_ERROR in
+			''' response to DIF_INSTALLDEVICE, while class installers must return NO_ERROR or ERROR_DI_DO_DEFAULT.</summary>
 			SETFAILEDINSTALL = &H80UI
+
 			DEVICECHANGE = &H100UI
+
+			''' <summary>If set and the DI_NOWRITE_IDS flag is clear, always write hardware and compatible IDs to the device properties for the devnode.
+			''' This flag should only be set for root-enumerated devices.</summary>
 			ALWAYSWRITEIDS = &H200UI
+
+			''' <summary>If set, the user made changes to one or more device property sheets. The property-page provider typically sets this flag.
+			'''
+			''' When the user closes the device property sheet, Device Manager checks the DI_FLAGSEX_PROPCHANGE_PENDING flag. 
+			''' If it is set, Device Manager clears this flag, sets the DI_PROPERTIES_CHANGE flag, and sends a DIF_PROPERTYCHANGE request
+			''' to the installers to notify them that something has changed.</summary>
 			PROPCHANGE_PENDING = &H400UI
+
+			''' <summary>If set, include drivers that were marked "Exclude From Select."
+			'''
+			''' For example, if this flag is set, SetupDiSelectDevice displays drivers that have the Exclude From Select state
+			''' and SetupDiBuildDriverInfoList includes Exclude From Select drivers in the requested driver list.
+			'''
+			''' A driver is "Exclude From Select" if either it is marked ExcludeFromSelect in the INF file or it is a driver for a device whose 
+			''' whole setup class is marked NoInstallClass or NoUseClass in the class installer INF. Drivers for PnP devices are typically "Exclude From Select";
+			''' PnP devices should not be manually installed. To build a list of driver files for a PnP device a caller of SetupDiBuildDriverInfoList must set this flag.</summary>
 			ALLOWEXCLUDEDDRVS = &H800UI
+
+			''' <summary>Obsolete.</summary>
 			NOUIONQUERYREMOVE = &H1000UI
+
+			''' <summary>Filter INF files on the device's setup class when building a list of compatible drivers. 
+			''' If a device's setup class is known, setting this flag reduces the time that is required to build a
+			''' list of compatible drivers when searching INF files that are not precompiled. 
+			''' 
+			''' This flag is ignored if DI_COMPAT_FROM_CLASS is set.</summary>
 			USECLASSFORCOMPAT = &H2000UI
+
+			''' <summary>Reserved.</summary>
 			RESERVED4 = &H4000UI
+
+			''' <summary>Do not process the AddReg and DelReg entries for the device's hardware and software (driver) keys. 
+			''' That is, the AddReg and DelReg entries in the INF file DDInstall and DDInstall.HW sections.</summary>
 			NO_DRVREG_MODIFY = &H8000UI
+
+			''' <summary>If set, installation is occurring during initial system setup. This flag is read-only.</summary>
 			IN_SYSTEM_SETUP = &H10000UI
+
+			''' <summary>If set, the driver was obtained from the Internet. Windows will not use the device's INF to install future devices
+			''' because Windows cannot guarantee that it can retrieve the driver files again from the Internet.</summary>
 			INET_DRIVER = &H20000UI
+
+			''' <summary>If set, SetupDiBuildDriverInfoList appends a new driver list to an existing list.
+			''' This flag is relevant when searching multiple locations.</summary>
 			APPENDDRIVERLIST = &H40000UI
+
+			''' <summary>Reserved.</summary>
 			PREINSTALLBACKUP = &H80000UI
+
+			''' <summary>Reserved.</summary>
 			BACKUPONREPLACE = &H100000UI
+
+			''' <summary>If set, build the driver list from INF(s) retrieved from the URL that is specified in SP_DEVINSTALL_PARAMS.DriverPath.
+			''' If the DriverPath is an empty string, use the Windows Update website.
+			''' 
+			''' Currently, the operating system does not support URLs. 
+			''' Use this flag to direct SetupDiBuildDriverInfoList to search the Windows Update website.
+			''' 
+			''' Do not set this flag if DI_QUIETINSTALL is set.</summary>
 			DRIVERLIST_FROM_URL = &H200000UI
+
+			''' <summary>Reserved.</summary>
 			RESERVED1 = &H400000UI
+
+			''' <summary>If set, do not include old Internet drivers when building a driver list.
+			''' This flag should be set any time that you are building a list of potential drivers for a device.
+			''' You can clear this flag if you are just getting a list of drivers currently installed for a device.</summary>
 			EXCLUDE_OLD_INET_DRIVERS = &H800000UI
+
+			''' <summary>If set, an installer added their own page for the power properties dialog.
+			''' The operating system will not display the system-supplied power properties page.
+			''' This flag is only relevant if the device supports power management.</summary>
 			POWERPAGE_ADDED = &H1000000UI
+
+			''' <summary>(Windows XP and later.) If set, SetupDiBuildDriverInfoList includes "similar" drivers when building a class driver list.
+			''' A "similar" driver is one for which one of the hardware IDs or compatible IDs in the INF file partially (or completely) matches
+			''' one of the hardware IDs or compatible IDs of the hardware.</summary>
 			FILTERSIMILARDRIVERS = &H2000000UI
+
+			''' <summary>(Windows XP and later.) If set, SetupDiBuildDriverInfoList includes only the currently installed driver
+			''' when creating a list of class drivers or device-compatible drivers.</summary>
 			INSTALLEDDRIVER = &H4000000UI
+
 			NO_CLASSLIST_NODE_MERGE = &H8000000UI
 			ALTPLATFORM_DRVSEARCH = &H10000000UI
 			RESTART_DEVICE_ONLY = &H20000000UI
@@ -602,12 +988,112 @@ Namespace Win32
 
 		<Flags()>
 		Private Enum DICS_FLAG As UInteger
+			''' <summary>Make the change in all hardware profiles.</summary>
 			[GLOBAL] = &H1UI
+
+			''' <summary>Make the change in the specified profile only.</summary>
 			CONFIGSPECIFIC = &H2UI
+
+			''' <summary>Obsolete. Not used.</summary>
 			CONFIGGENERAL = &H4UI
 		End Enum
 
+		<Flags()>
+		Private Enum CM_REENUMERATE As UInteger
+			''' <summary>Reenumeration should occur asynchronously. 
+			''' The call to this function returns immediately after the PnP manager receives the reenumeration request. 
+			''' If this flag is set, the CM_REENUMERATE_SYNCHRONOUS flag should not also be set.</summary>
+			ASYNCHRONOUS = &H0UI
+
+			''' <summary>pecifies default reenumeration behavior, in which reenumeration occurs synchronously. 
+			''' This flag is functionally equivalent to CM_REENUMERATE_SYNCHRONOUS.</summary>
+			NORMAL = &H1UI
+
+			''' <summary>Specifies that Plug and Play should make another attempt to install any devices in the specified subtree 
+			''' that have been detected but are not yet configured, or are marked as needing reinstallation, or for which installation 
+			''' must be completed. This flag can be set along with either the CM_REENUMERATE_SYNCHRONOUS flag or the CM_REENUMERATE_ASYNCHRONOUS flag. 
+			''' This flag must be used with extreme caution, because it can cause the PnP manager to prompt the user to perform installation of any such devices. 
+			''' Currently, only components such as Device Manager and Hardware Wizard use this flag, to allow the user to retry installation of devices that 
+			''' might already have been detected but are not currently installed.</summary>
+			RETRY_INSTALLATION = &H2UI
+
+			''' <summary>Reenumeration should occur synchronously. 
+			''' The call to this function returns when all devices in the specified subtree have been reenumerated. 
+			''' If this flag is set, the CM_REENUMERATE_ASYNCHRONOUS flag should not also be set. This flag is functionally equivalent to CM_REENUMERATE_NORMAL.</summary>
+			SYNCHRONOUS = &H4UI
+		End Enum
+
+		<Flags()>
+		Private Enum CM_LOCATE As UInteger
+			''' <summary>The function retrieves the device instance handle for the specified device only if the device is currently configured in the device tree.</summary>
+			DEVNODE_NORMAL = &H0UI
+
+			''' <summary>The function retrieves a device instance handle for the specified device if the device is currently configured in the device tree 
+			''' or the device is a nonpresent device that is not currently configured in the device tree.</summary>
+			DEVNODE_PHANTOM = &H1UI
+
+			''' <summary>The function retrieves a device instance handle for the specified device if the device is currently configured in the device tree 
+			''' or in the process of being removed from the device tree. If the device is in the process of being removed, the function cancels the removal of the device.</summary>
+			DEVNODE_CANCELREMOVE = &H2UI
+
+			''' <summary>Not used.</summary>
+			DEVNODE_NOVALIDATION = &H4UI
+		End Enum
+
+		<Flags()>
+		Private Enum CM_DEVCAP As UInteger
+			''' <summary>Specifies whether the device supports physical-device locking that prevents device ejection.
+			''' This member pertains to ejecting the device from its slot, rather than ejecting a piece of removable media from the device.</summary>
+			LOCKSUPPORTED = &H1UI
+
+			''' <summary>Specifies whether the device supports software-controlled device ejection while the system is in the PowerSystemWorking state.
+			''' This member pertains to ejecting the device from its slot, rather than ejecting a piece of removable media from the device.</summary>
+			EJECTSUPPORTED = &H2UI
+
+			''' <summary>Specifies whether the device can be dynamically removed from its immediate parent.
+			''' If Removable is set to TRUE, the device does not belong to the same physical object as its parent.
+			''' 
+			''' If Removable is set to TRUE, the device is displayed in the Unplug or Eject Hardware program,
+			''' unless SurpriseRemovalOK is also set to TRUE.</summary>
+			REMOVABLE = &H4UI
+
+			''' <summary>Specifies whether the device is a docking peripheral.</summary>
+			DOCKDEVICE = &H8UI
+
+			''' <summary>Specifies whether the device's instance ID is unique system-wide.
+			''' This bit is clear if the instance ID is unique only within the scope of the bus. For more information, see Device Identification Strings.</summary>
+			UNIQUEID = &H10UI
+
+			''' <summary>Specifies whether Device Manager should suppress all installation dialog boxes;
+			''' except required dialog boxes such as "no compatible drivers found."</summary>
+			SILENTINSTALL = &H20UI
+
+			''' <summary>Specifies whether the driver for the underlying bus can drive the device if there is no function driver
+			''' (for example, SCSI devices in pass-through mode). This mode of operation is called raw mode.</summary>
+			RAWDEVICEOK = &H40UI
+
+			''' <summary>Specifies whether the function driver for the device can handle the case where the device is removed before Windows
+			''' can send IRP_MN_QUERY_REMOVE_DEVICE to it. If SurpriseRemovalOK is set to TRUE, the device can be safely removed from its
+			''' immediate parent regardless of the state that its driver is in.
+			'''
+			''' For example, a standard USB mouse does not maintain any state in its hardware and thus can be safely removed at any time.
+			''' However, an external hard disk whose driver caches writes in memory cannot be safely removed without first letting the driver
+			''' flush its cache to the hardware</summary>
+			SURPRISEREMOVALOK = &H80UI
+
+			''' <summary>When set, this flag specifies that the device's hardware is disabled.
+			''' 
+			''' A device's parent bus driver or a bus filter driver sets this flag when such a driver determines that the device hardware is disabled.
+			''' The PnP manager sends one IRP_MN_QUERY_CAPABILITIES IRP right after a device is enumerated and sends another after the device has been started.
+			''' The PnP manager only checks this bit right after the device is enumerated. Once the device is started, this bit is ignored.</summary>
+			HARDWAREDISABLED = &H100UI
+
+			''' <summary>Reserved for future use.</summary>
+			NONDYNAMIC = &H200UI
+		End Enum
+
 		Private Enum CR As UInteger
+			''' <summary>Success.</summary>
 			SUCCESS = &H0UI
 			[DEFAULT] = &H1UI
 			OUT_OF_MEMORY = &H2UI
@@ -698,55 +1184,143 @@ Namespace Win32
 		End Enum
 
 		Private Enum CM_PROB As UInteger
+			''' <summary>There is a device on the system for which there is no ConfigFlags registry entry.
+			''' This means no driver is installed. Typically this means an INF file could not be found.</summary>
 			NOT_CONFIGURED = &H1UI
+
 			DEVLOADER_FAILED = &H2UI
+
+			''' <summary>Running out of memory − the system is probably running low on system memory. </summary>
 			OUT_OF_MEMORY = &H3UI
+
 			ENTRY_IS_WRONG_TYPE = &H4UI
 			LACKED_ARBITRATOR = &H5UI
 			BOOT_CONFIG_CONFLICT = &H6UI
 			FAILED_FILTER = &H7UI
 			DEVLOADER_NOT_FOUND = &H8UI
+
+			''' <summary>Invalid device IDs have been detected.</summary>
 			INVALID_DATA = &H9UI
+
+			''' <summary>The device failed to start.</summary>
 			FAILED_START = &HAUI
+
 			LIAR = &HBUI
+
+			''' <summary>Two devices have been assigned the same I/O ports, the same interrupt,
+			''' or the same DMA channel (either by the BIOS, the operating system, or a combination of the two).</summary>
 			NORMAL_CONFLICT = &HCUI
+
 			NOT_VERIFIED = &HDUI
+
+			''' <summary>The system must be restarted.</summary>
 			NEED_RESTART = &HEUI
+
 			REENUMERATION = &HFUI
+
+			''' <summary>The device is only partially configured.</summary>
 			PARTIAL_LOG_CONF = &H10UI
+
 			UNKNOWN_RESOURCE = &H11UI
+
+			''' <summary>Drivers must be reinstalled.</summary>
 			REINSTALL = &H12UI
+
+			''' <summary>A registry problem was detected.</summary>
 			REGISTRY = &H13UI
+
 			VXDLDR = &H14UI
+
+			''' <summary>The system will remove the device.</summary>
 			WILL_BE_REMOVED = &H15UI
+
+			''' <summary>The device is disabled.</summary>
 			DISABLED = &H16UI
+
+
 			DEVLOADER_NOT_READY = &H17UI
+
+			''' <summary>The device does not seem to be present.</summary>
 			DEVICE_NOT_THERE = &H18UI
+
 			MOVED = &H19UI
 			TOO_EARLY = &H1AUI
 			NO_VALID_LOG_CONF = &H1BUI
+
+			''' <summary>The device's drivers are not installed.</summary>
 			FAILED_INSTALL = &H1CUI
+
+			''' <summary>The device is disabled.</summary>
 			HARDWARE_DISABLED = &H1DUI
+
 			CANT_SHARE_IRQ = &H1EUI
+
+			''' <summary>A driver's attempt to add a device failed.</summary>
 			FAILED_ADD = &H1FUI
+
+			''' <summary>The driver has been disabled.</summary>
 			DISABLED_SERVICE = &H20UI
+
+			''' <summary>Resource translation failed for the device.</summary>
 			TRANSLATION_FAILED = &H21UI
+
+			''' <summary>The device requires a forced configuration.</summary>
 			NO_SOFTCONFIG = &H22UI
+
+			''' <summary>The MPS table is bad and has to be updated.</summary>
 			BIOS_TABLE = &H23UI
+
+			''' <summary>The IRQ translation failed for the device.</summary>
 			IRQ_TRANSLATION_FAILED = &H24UI
+
+			''' <summary>The driver returned failure from its DriverEntry routine.</summary>
 			FAILED_DRIVER_ENTRY = &H25UI
+
+			''' <summary>The driver could not be loaded because a previous instance is still loaded.</summary>
 			DRIVER_FAILED_PRIOR_UNLOAD = &H26UI
+
+			''' <summary>The driver could not be loaded.</summary>
 			DRIVER_FAILED_LOAD = &H27UI
+
+			''' <summary>Information in the registry's service key for the driver is invalid.</summary>
 			DRIVER_SERVICE_KEY_INVALID = &H28UI
+
+			''' <summary>A driver was loaded but Windows cannot find the device.</summary>
 			LEGACY_SERVICE_NO_DEVICES = &H29UI
+
+			''' <summary>A duplicate device was detected.</summary>
 			DUPLICATE_DEVICE = &H2AUI
+
+			''' <summary>A driver has reported a device failure.</summary>
 			FAILED_POST_START = &H2BUI
+
+			''' <summary>The device has been stopped.</summary>
 			HALTED = &H2CUI
+
+			''' <summary>The device is not present.</summary>
 			PHANTOM = &H2DUI
+
+			''' <summary>The device is not available because the system is shutting down.</summary>
 			SYSTEM_SHUTDOWN = &H2EUI
+
+			''' <summary>The device has been prepared for ejection.</summary>
 			HELD_FOR_EJECT = &H2FUI
+
+			''' <summary>The system will not load the driver because it is listed in the Windows Driver Protection database supplied by Windows Update.</summary>
 			DRIVER_BLOCKED = &H30UI
+
+			''' <summary>The registry is too large.</summary>
 			REGISTRY_TOO_LARGE = &H31
+
+			''' <summary>Device properties cannot be set.</summary>
+			SETPROPERTIES_FAILED = &H32
+
+			''' <summary>The device did not start because it has a dependency on another device that has not started.</summary>
+			WAITING_ON_DEPENDENCY = &H33
+
+			''' <summary>The device did not start on a 64-bit version of Windows because it has a driver that is not digitally signed.
+			''' For more information about how to sign drivers, see Driver Signing.</summary>
+			UNSIGNED_DRIVER = &H34
 		End Enum
 
 #End Region
@@ -934,6 +1508,21 @@ Namespace Win32
   <[In]()> ByVal dnDevInst As UInt32,
   <[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
+
+		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+		Private Shared Function CM_Reenumerate_DevNode(
+  <[In]()> ByVal dnDevInst As UInt32,
+  <[In]()> ByVal ulFlags As UInt32) As UInt32
+		End Function
+
+		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+		Private Shared Function CM_Locate_DevNode(
+   <[Out]()> ByRef dnDevInst As UInt32,
+   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal pDeviceID As String,
+   <[In]()> ByVal ulFlags As UInt32) As UInt32
+		End Function
+
+
 
 		<DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function SetupDiClassGuidsFromName(
@@ -1708,14 +2297,14 @@ Namespace Win32
 						If ptrDevInfo IsNot Nothing Then
 							ptrDevInfo.Dispose()
 						End If
-
-						If SiblingDevicesToFind.Count > 0 Then
-							UpdateDevicesByID(SiblingDevicesToFind)
-						End If
 					End Try
 				End Using
+
+				If SiblingDevicesToFind.Count > 0 Then
+					UpdateDevicesByID(SiblingDevicesToFind)
+				End If
 			Catch ex As Exception
-				Application.Log.AddException(ex)
+				Application.Log.AddException(ex, "GetDevices failed!")
 				Return New List(Of Device)(0)
 			Finally
 
@@ -1872,27 +2461,30 @@ Namespace Win32
 
 		' RESERVED FOR CLEANING FROM CODE
 		Public Shared Sub RemoveInf(ByVal oem As Inf, ByVal force As Boolean)
-			If oem Is Nothing Then
-				Application.Log.AddWarningMessage("Cancelling! Oem is nothing.")
-				Return
-			End If
-
-			If oem.FileName Is Nothing OrElse File.Exists(oem.FileName) Then
-				Application.Log.AddWarningMessage("Cancelling! Empty filename or file doesn't exists.")
-				Return
-			End If
-
-			Dim logEntry As LogEntry = Application.Log.CreateEntry()
-			logEntry.Message = "InfFile: " & oem.FileName
-			logEntry.Add("Provider", oem.Provider)
-			logEntry.Add("Class", oem.Class)
-			Application.Log.Add(logEntry)
-
-			Dim infName As String = Path.GetFileName(oem.FileName)
-			Dim logInfs As LogEntry = Application.Log.CreateEntry()
-			logInfs.Message = "Uninstalling OEM Inf(s). " + infName
-
 			Try
+				If oem Is Nothing Then
+					Throw New ArgumentNullException("oem", "Cancelling removal of Inf file. Oem is nothing!")
+				End If
+
+				If Not oem.FileExists Then
+					Throw New ArgumentException("Cancelling removal of Inf file. Inf has empty filename, file doesn't exists!", "oem")
+				End If
+
+				If Not oem.IsValid Then
+					Throw New ArgumentException("Cancelling removal of Inf file. Inf is corrupted!", "oem")
+				End If
+
+				Dim logEntry As LogEntry = Application.Log.CreateEntry()
+				logEntry.Message = "InfFile: " & oem.FileName
+				logEntry.Add("Provider", oem.Provider)
+				logEntry.Add("Class", oem.Class)
+				Application.Log.Add(logEntry)
+
+				Dim infName As String = Path.GetFileName(oem.FileName)
+				Dim logInfs As LogEntry = Application.Log.CreateEntry()
+				logInfs.Message = "Uninstalling OEM Inf(s). " + infName
+
+
 				Dim attrs As FileAttributes = File.GetAttributes(oem.FileName)
 
 				If (attrs And FileAttributes.ReadOnly) = FileAttributes.ReadOnly Then
@@ -1903,12 +2495,8 @@ Namespace Win32
 					If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.SUOI_FORCEDELETE), IntPtr.Zero) Then
 						logInfs.Add(oem.FileName, "Uninstalled!")
 					Else
-						Dim logInfEx As LogEntry = Application.Log.CreateEntry()
-						logInfEx.AddException(New Win32Exception())
-						logInfEx.Add("InfFile", oem.FileName)
-
-						Application.Log.Add(logInfEx)
-
+						logInfs.Add(oem.FileName, "Uninstalling failed!")
+						logInfs.AddException(New Win32Exception(GetLastWin32Error()), False)
 					End If
 				Else
 					If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.NONE), IntPtr.Zero) Then
@@ -1917,24 +2505,17 @@ Namespace Win32
 						Dim errcode As Int32 = GetLastWin32Error()
 
 						If errcode = 0 Then
-							logInfs.Add(oem.FileName, "Uninstalling failed! OEM Still in use")
+							logInfs.Add(oem.FileName, "Uninstalling failed! OEM still in use")
 						Else
 							logInfs.Add(oem.FileName, "Uninstalling failed! See exceptions for details!")
-
-							Dim logInfEx As LogEntry = Application.Log.CreateEntry()
-							logInfEx.AddException(New Win32Exception(errcode))
-							logInfEx.Add("InfFile", oem.FileName)
-
-							Application.Log.Add(logInfEx)
+							logInfs.AddException(New Win32Exception(errcode), False)
 						End If
 					End If
 				End If
 
 				Application.Log.Add(logInfs)
 			Catch ex As Exception
-				Application.Log.AddException(ex)
-			Finally
-				Application.Log.AddMessage("End of UninstallDevice")
+				Application.Log.AddWarning(ex)
 			End Try
 		End Sub
 
@@ -1948,12 +2529,10 @@ Namespace Win32
 
 				If Not inf.IsValid Then
 					Throw New ArgumentException("Empty infFile or infFile doesn't exists!", "infFile")
-					Return
 				End If
 
 				If device.HardwareIDs Is Nothing OrElse device.HardwareIDs.Length = 0 OrElse String.IsNullOrEmpty(device.HardwareIDs(0)) Then
 					Throw New ArgumentException("Empty Hardware ID Filter!", "hardwareIDFilter")
-					Return
 				End If
 
 				Dim nullGuid As Guid = Guid.Empty
@@ -2044,6 +2623,30 @@ Namespace Win32
 			End Try
 		End Sub
 
+		' REVERSED FOR CLEANING FROM CODE
+		Public Shared Sub ReScanDevices()
+			Dim result As UInt32
+			Dim devInstRoot As UInt32
+
+			Try
+				ACL.AdjustToken(ACL.SE_LOAD_DRIVER_NAME)
+
+				result = CM_Locate_DevNode(devInstRoot, Nothing, CM_LOCATE.DEVNODE_NOVALIDATION)
+
+				If result = CR.SUCCESS Then
+					result = CM_Reenumerate_DevNode(devInstRoot, 0UI)
+
+					If result = CR.SUCCESS Then
+						Application.Log.AddMessage("ReScan of devices successfully completed!")
+					Else : Throw New Win32Exception(GetLastWin32Error())
+					End If
+				Else : Throw New Win32Exception(GetLastWin32Error())
+				End If
+			Catch ex As Exception
+				Application.Log.AddException(ex, "ReScan of devices failed!")
+			End Try
+		End Sub
+
 
 
 		Private Shared Sub UpdateDevicesByID(ByVal devList As List(Of Device))
@@ -2103,7 +2706,7 @@ Namespace Win32
 					End Try
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex)
+				Application.Log.AddException(ex, "Updating devices details by ID has failed!")
 			End Try
 		End Sub
 
@@ -2250,7 +2853,13 @@ Namespace Win32
 
 			If result2 = CR.SUCCESS Then
 				device.DevStatus = ToStringArray(Of DN)(DirectCast(pulStatus, DN))
-				device.DevProblems = ToStringArray(Of CM_PROB)(DirectCast(pulProblemNumber, CM_PROB))
+
+				If (pulStatus And DN.HAS_PROBLEM) = DN.HAS_PROBLEM Then
+					device.DevProblems = ToStringArray(Of CM_PROB)(DirectCast(pulProblemNumber, CM_PROB))
+				Else
+					device.DevProblems = Nothing
+				End If
+
 			ElseIf result2 = CR.NO_SUCH_DEVINST Then
 			Else
 				CheckWin32Error(False)
@@ -2445,35 +3054,52 @@ Namespace Win32
 		End Function
 
 		Private Shared Sub GetSiblings(ByVal device As Device)
-			Dim result As UInt32
-			Dim devInstParent As UInt32 = 0UI
-			Dim devInstChild As UInt32 = 0UI
-			Dim devInstSibling As UInt32 = 0UI
-			Dim siblingDevices As New List(Of Device)(5)
+			Try
+				Dim result As UInt32
+				Dim devInstParent As UInt32 = 0UI
+				Dim devInstChild As UInt32 = 0UI
+				Dim devInstSibling As UInt32 = 0UI
+				Dim siblingDevices As New List(Of Device)(5)
 
-			result = CM_Get_Parent(devInstParent, device.devInst, 0UI)
+				result = CM_Get_Parent(devInstParent, device.devInst, 0UI)
 
-			If result = CR.SUCCESS Then
-				result = CM_Get_Child(devInstChild, devInstParent, 0UI)
+				If result = CR.SUCCESS Then
+					result = CM_Get_Child(devInstChild, devInstParent, 0UI)
 
-				While True
-					result = CM_Get_Sibling(devInstSibling, devInstChild, 0UI)
-
-					If result = CR.SUCCESS Then
-						siblingDevices.Add(New Device() With {.devInst = devInstSibling, .DeviceID = GetDeviceID(devInstSibling)})
-
-						devInstChild = devInstSibling
-					ElseIf result = CR.NO_SUCH_DEVINST Then
-						Exit While
+					If result <> CR.SUCCESS Then
+						If result = CR.NO_SUCH_DEVINST Then
+							Return
+						Else : Throw New Win32Exception(GetLastWin32Error())
+						End If
 					End If
-				End While
 
-			ElseIf result = CR.NO_SUCH_DEVINST Then
-			Else
-				CheckWin32Error(False)
-			End If
+					While True
+						result = CM_Get_Sibling(devInstSibling, devInstChild, 0UI)
 
-			device.SiblingDevices = siblingDevices.ToArray()
+						If result = CR.SUCCESS Then
+							siblingDevices.Add(
+							 New Device() With {
+							  .devInst = devInstSibling,
+							  .DeviceID = GetDeviceID(devInstSibling)
+							 })
+
+							devInstChild = devInstSibling
+						ElseIf result = CR.NO_SUCH_DEVINST Then
+							Exit While
+						Else
+							Throw New Win32Exception(GetLastWin32Error())
+						End If
+					End While
+
+					If siblingDevices.Count > 0 Then
+						device.SiblingDevices = siblingDevices.ToArray()
+					End If
+				ElseIf result = CR.NO_SUCH_DEVINST Then
+					Return
+				End If
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Getting device's siblings has failed!")
+			End Try
 		End Sub
 
 		Private Shared Function RebootRequired(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr) As Boolean
@@ -2481,8 +3107,8 @@ Namespace Win32
 		End Function
 
 		Private Shared Function RebootRequired(ByVal installParamsFlags As UInt32) As Boolean
-			If ((installParamsFlags And CUInt(DI.NEEDREBOOT)) = CUInt(DI.NEEDREBOOT) Or
-			   (installParamsFlags And CUInt(DI.NEEDRESTART)) = CUInt(DI.NEEDRESTART)) Then
+			If ((installParamsFlags And DI.NEEDREBOOT) = DI.NEEDREBOOT Or
+			(installParamsFlags And DI.NEEDRESTART) = DI.NEEDRESTART) Then
 				Return True
 			Else
 				Return False
@@ -2563,7 +3189,6 @@ Namespace Win32
 			Private _lowerfilters As String()
 			Private _friendlyname As String
 			Private _compatibleIDs As String()
-			Private _RregInf As String
 			Private _description As String
 			Private _classGuid As String
 			Private _className As String
@@ -2608,14 +3233,6 @@ Namespace Win32
 				End Get
 				Friend Set(value As String())
 					_compatibleIDs = value
-				End Set
-			End Property
-			Public Property RegInf As String
-				Get
-					Return _RregInf
-				End Get
-				Friend Set(value As String)
-					_RregInf = value
 				End Set
 			End Property
 			Public Property Description As String
