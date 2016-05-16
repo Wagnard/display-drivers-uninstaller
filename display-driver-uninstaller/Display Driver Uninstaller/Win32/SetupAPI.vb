@@ -2297,12 +2297,12 @@ Namespace Win32
 						If ptrDevInfo IsNot Nothing Then
 							ptrDevInfo.Dispose()
 						End If
+
+						If SiblingDevicesToFind.Count > 0 Then
+							UpdateDevicesByID(SiblingDevicesToFind)
+						End If
 					End Try
 				End Using
-
-				If SiblingDevicesToFind.Count > 0 Then
-					UpdateDevicesByID(SiblingDevicesToFind)
-				End If
 			Catch ex As Exception
 				Application.Log.AddException(ex, "GetDevices failed!")
 				Return New List(Of Device)(0)

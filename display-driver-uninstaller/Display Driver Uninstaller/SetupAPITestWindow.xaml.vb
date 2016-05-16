@@ -416,4 +416,24 @@ Public Class SetupAPITestWindow
 	Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
 		SetupAPI.ReScanDevices()
 	End Sub
+
+	Private Sub btnTest_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnTest.Click
+		'Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "VEN_10DE")
+
+		'Dim found2 As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", "VEN_10DE")
+
+		'If found.Count > 0 AndAlso found2.Count > 0 Then
+		'	For Each SystemDevice As SetupAPI.Device In found
+		'		For Each Sibling In SystemDevice.SiblingDevices
+		'			For Each DisplayD As SetupAPI.Device In found2
+		'				If SystemDevice.LowerFilters IsNot Nothing AndAlso StrContainsAny(SystemDevice.LowerFilters(0), True, "amdkmafd") Then
+		'					If StrContainsAny(Sibling.DeviceID, True, DisplayD.DeviceID) Then
+		'						MsgBox("Device to remove: " + SystemDevice.Description + " from sibling " + Sibling.Description + Sibling.DeviceID)
+		'					End If
+		'				End If
+		'			Next
+		'		Next
+		'	Next
+		'End If
+	End Sub
 End Class
