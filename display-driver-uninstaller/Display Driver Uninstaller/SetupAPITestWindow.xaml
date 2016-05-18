@@ -193,7 +193,7 @@
 
                 <StackPanel Visibility="{Binding Path=DriverInfo, Mode=OneWay, Converter={StaticResource NullToVis}}">
                     <TextBlock FontWeight="Bold" 
-                               Text="{Binding Path=DriverInfo.Count, FallbackValue=0, StringFormat='{}Driver(s) Details: ( Count: {0} )'}"/>
+                               Text="{Binding Path=DriverInfo.Length, FallbackValue=0, StringFormat='{}Driver(s) Details: ( Count: {0} )'}"/>
 
                     <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding DriverInfo}">
                         <ItemsControl.ItemTemplate>
@@ -281,8 +281,11 @@
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition MinWidth="100" Width="Auto" />
@@ -290,13 +293,28 @@
                                         <ColumnDefinition MinWidth="100" Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Description" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Description:" HorizontalAlignment="Right" />
                                     <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Path=Description, Mode=OneWay}" />
 
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Device ID" HorizontalAlignment="Right" />
-                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=DeviceID, Mode=OneWay}" />
+									<TextBlock Grid.Row="1" Grid.Column="0" Text="FriendlyName:" HorizontalAlignment="Right" />
+									<TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=FriendlyName, TargetNullValue=&lt;null&gt;, Mode=OneWay}" />
 
-                                    <Separator Margin="0,5,0,5" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="2" />
+									<TextBlock Grid.Row="2" Grid.Column="0" Text="ClassName:" HorizontalAlignment="Right" />
+									<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=ClassName, Mode=OneWay}" />
+									
+									<TextBlock Grid.Row="3" Grid.Column="0" Text="Device ID:" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Path=DeviceID, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="4" Grid.Column="0" Text="LowerFilters:" HorizontalAlignment="Right" />
+									<ItemsControl Grid.Row="4" Grid.Column="2" ItemsSource="{Binding LowerFilters}">
+										<ItemsControl.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding}"/>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+
+									<Separator Margin="0,5,0,5" Grid.Row="5" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="2" />
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

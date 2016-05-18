@@ -137,6 +137,8 @@ Namespace Converters
 					Return DirectCast(value, List(Of SetupAPI.Device)).Count = 0
 				ElseIf TypeOf (value) Is SetupAPI.Device() Then
 					Return DirectCast(value, SetupAPI.Device()).Length = 0
+				ElseIf TypeOf (value) Is SetupAPI.DriverInfo() Then
+					Return DirectCast(value, SetupAPI.DriverInfo()).Length = 0
 				End If
 			End If
 

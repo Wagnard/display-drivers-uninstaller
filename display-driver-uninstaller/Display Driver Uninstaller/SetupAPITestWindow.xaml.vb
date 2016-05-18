@@ -280,7 +280,7 @@ Public Class SetupAPITestWindow
 		End If
 
 
-		If device.DriverInfo IsNot Nothing AndAlso device.DriverInfo.Count > 0 Then
+		If device.DriverInfo IsNot Nothing AndAlso device.DriverInfo.Length > 0 Then
 			sb.AppendLine("Driver(s) details:")
 
 			For Each drvInfo As SetupAPI.DriverInfo In device.DriverInfo
@@ -418,9 +418,8 @@ Public Class SetupAPITestWindow
 	End Sub
 
 	Private Sub btnTest_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnTest.Click
-		'Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "VEN_10DE")
-
-		'Dim found2 As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", "VEN_10DE")
+		'Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", vendidexpected)
+		'Dim found2 As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected)
 
 		'If found.Count > 0 AndAlso found2.Count > 0 Then
 		'	For Each SystemDevice As SetupAPI.Device In found
@@ -429,11 +428,33 @@ Public Class SetupAPITestWindow
 		'				If SystemDevice.LowerFilters IsNot Nothing AndAlso StrContainsAny(SystemDevice.LowerFilters(0), True, "amdkmafd") Then
 		'					If StrContainsAny(Sibling.DeviceID, True, DisplayD.DeviceID) Then
 		'						MsgBox("Device to remove: " + SystemDevice.Description + " from sibling " + Sibling.Description + Sibling.DeviceID)
+		'						Win32.SetupAPI.UninstallDevice(SystemDevice)
 		'					End If
 		'				End If
 		'			Next
 		'		Next
 		'	Next
 		'End If
+
+		'Dim vendidexpected As String = "VEN_10DE"
+		Dim vendidexpected As String = "VEN_1002"
+		Dim displays As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected)
+
+		For Each sysDevice As SetupAPI.Device In SetupAPI.GetDevices("system", vendidexpected)
+			If sysDevice.LowerFilters Is Nothing Then
+				Continue For
+			End If
+
+			If StrContainsAny(sysDevice.LowerFilters(0), True, "amdkmafd") Then
+				For Each display As SetupAPI.Device In displays
+					For Each sysSibling As SetupAPI.Device In sysDevice.SiblingDevices
+						If StrContainsAny(sysSibling.DeviceID, True, display.DeviceID) Then
+							MsgBox("Device to remove: " + sysSibling.Description + " from " + Environment.NewLine & sysDevice.Description & Environment.NewLine & sysDevice.DeviceID)
+						End If
+					Next
+				Next
+			End If
+		Next
+
 	End Sub
 End Class
