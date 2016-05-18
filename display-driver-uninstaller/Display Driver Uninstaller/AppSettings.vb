@@ -26,7 +26,7 @@ Public Class AppSettings
     Private m_remCrimsonCache As DependencyProperty = Reg("RemoveCrimsonCache", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remAMDDirs As DependencyProperty = Reg("RemoveAMDDirs", GetType(Boolean), GetType(AppSettings), False)
     Private m_remAMDAudioBus As DependencyProperty = Reg("RemoveAMDAudioBus", GetType(Boolean), GetType(AppSettings), True)
-	Private m_remAMDKMPFD As DependencyProperty = Reg("RemoveAMDKMPFD", GetType(Boolean), GetType(AppSettings), False)
+	Private m_remAMDKMPFD As DependencyProperty = Reg("RemoveAMDKMPFD", GetType(Boolean), GetType(AppSettings), True)
 
 	Private m_remNvidiaDirs As DependencyProperty = Reg("RemoveNvidiaDirs", GetType(Boolean), GetType(AppSettings), False)
     Private m_remPhysX As DependencyProperty = Reg("RemovePhysX", GetType(Boolean), GetType(AppSettings), True)
@@ -39,7 +39,7 @@ Public Class AppSettings
     Private m_CheckUpdates As DependencyProperty = Reg("CheckUpdates", GetType(Boolean), GetType(AppSettings), True)
 	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
 	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
-	Private m_removevulkan As DependencyProperty = Reg("RemoveVulkan", GetType(Boolean), GetType(AppSettings), False)
+	Private m_removevulkan As DependencyProperty = Reg("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
 	Private m_UseSetupAPI As DependencyProperty = Reg("UseSetupAPI", GetType(Boolean), GetType(AppSettings), True)
     Private m_showoffer As DependencyProperty = Reg("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
 

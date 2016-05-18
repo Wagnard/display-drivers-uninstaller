@@ -6510,7 +6510,7 @@ Public Class frmMain
 						  "USB\VID_0955&PID_700E&MI_00"}
 
 						'3dVision Removal
-						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", "VID_0955")
+						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media")
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
@@ -6523,12 +6523,12 @@ Public Class frmMain
 
 
 						'NVIDIA SHIELD Wireless Controller Trackpad
-						found = SetupAPI.GetDevices("mouse", "hid\vid_0955&pid_7210")
+						found = SetupAPI.GetDevices("mouse")
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
-								'If StrContainsAny(d.HardwareIDs(0), True, "hid\vid_0955&pid_7210") Then
-								SetupAPI.UninstallDevice(d)
-								'End If
+								If StrContainsAny(d.HardwareIDs(0), True, "hid\vid_0955&pid_7210") Then
+									SetupAPI.UninstallDevice(d)
+								End If
 							Next
 							found.Clear()
 						End If
@@ -6536,15 +6536,15 @@ Public Class frmMain
 						If config.RemoveGFE Then
 							' NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removal
 
-							found = SetupAPI.GetDevices("media", "USB\VID_0955&PID_9000")
+							found = SetupAPI.GetDevices("media")
 							If found.Count > 0 Then
 								For Each d As SetupAPI.Device In found
-									'If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0955&PID_9000") Then
-									SetupAPI.UninstallDevice(d)
-									'End If
+									If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0955&PID_9000") Then
+										SetupAPI.UninstallDevice(d)
+									End If
 								Next
-								found.Clear()
-							End If
+							found.Clear()
+						End If
 						End If
 
 						'nVidia AudioEndpoints Removal
