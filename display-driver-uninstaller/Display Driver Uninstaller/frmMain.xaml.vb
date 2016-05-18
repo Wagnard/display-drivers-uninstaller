@@ -5037,29 +5037,33 @@ Public Class frmMain
 	Private Sub rescan()
 
 		'Scan for new devices...
-		Dim scan As New ProcessStartInfo
-		scan.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-		scan.Arguments = "rescan"
-		scan.UseShellExecute = False
-		scan.CreateNoWindow = True
-		scan.RedirectStandardOutput = False
+		If Application.Settings.UseSetupAPI Then
+			Application.Log.AddMessage("Scanning for new device...")
+			SetupAPI.ReScanDevices()
+		Else
+			Dim scan As New ProcessStartInfo
+			scan.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+			scan.Arguments = "rescan"
+			scan.UseShellExecute = False
+			scan.CreateNoWindow = True
+			scan.RedirectStandardOutput = False
 
 
-		UpdateTextMethod(UpdateTextMethodmessagefn(8))
-		Application.Log.AddMessage("Scanning for new device...")
-		Dim proc4 As New Process
-		proc4.StartInfo = scan
-		proc4.Start()
-		proc4.WaitForExit()
-		proc4.Close()
-		System.Threading.Thread.Sleep(2000)
-		If Not safemode Then
-			Dim appproc = process.GetProcessesByName("explorer")
-			For i As Integer = 0 To appproc.Length - 1
-				appproc(i).Kill()
-			Next i
+			UpdateTextMethod(UpdateTextMethodmessagefn(8))
+			Application.Log.AddMessage("Scanning for new device...")
+			Dim proc4 As New Process
+			proc4.StartInfo = scan
+			proc4.Start()
+			proc4.WaitForExit()
+			proc4.Close()
+			System.Threading.Thread.Sleep(2000)
+			If Not safemode Then
+				Dim appproc = process.GetProcessesByName("explorer")
+				For i As Integer = 0 To appproc.Length - 1
+					appproc(i).Kill()
+				Next i
+			End If
 		End If
-
 
 	End Sub
 
@@ -6203,18 +6207,16 @@ Public Class frmMain
 			If config.UseSetupAPI AndAlso config.SelectedGPU = GPUVendor.AMD Then
 				Try
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", vendidexpected)
-					Dim found2 As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected)
-					If found.Count > 0 AndAlso found2.Count > 0 Then
+					If found.Count > 0 Then
 						For Each SystemDevice As SetupAPI.Device In found
 							For Each Sibling In SystemDevice.SiblingDevices
-								For Each DisplayD As SetupAPI.Device In found2
-									If SystemDevice.LowerFilters IsNot Nothing AndAlso StrContainsAny(SystemDevice.LowerFilters(0), True, "amdkmafd") Then
-										If StrContainsAny(Sibling.DeviceID, True, DisplayD.DeviceID) Then
-											MsgBox("Device to remove: " + SystemDevice.Description + " from sibling " + Sibling.Description + Sibling.DeviceID)
-											Win32.SetupAPI.UninstallDevice(SystemDevice)
-										End If
+								If SystemDevice.LowerFilters IsNot Nothing AndAlso StrContainsAny(SystemDevice.LowerFilters(0), True, "amdkmafd") Then
+									If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
+										'Remove msgbox before release.
+										MsgBox("Device to remove: " + SystemDevice.Description + " from sibling " + Sibling.Description + Sibling.DeviceID)
+										Win32.SetupAPI.UninstallDevice(SystemDevice)
 									End If
-								Next
+								End If
 							Next
 						Next
 					End If
@@ -7118,25 +7120,30 @@ Public Class frmMain
 	End Sub
 
 	Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorker1.RunWorkerCompleted
+		'Scan for new hardware to not let users into a non working state.
 		Try
 
 			If stopme = True Then
-				'Scan for new hardware to not let users into a non working state.
-
-				Dim scan As New ProcessStartInfo
-				scan.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-				scan.Arguments = "rescan"
-				scan.UseShellExecute = False
-				scan.CreateNoWindow = True
-				scan.RedirectStandardOutput = False
-				Dim proc4 As New Process
-				proc4.StartInfo = scan
-				proc4.Start()
-				proc4.WaitForExit()
-				proc4.Close()
-				'then quit
-				closeddu()
-				Exit Sub
+				If Application.Settings.UseSetupAPI Then
+					SetupAPI.ReScanDevices()
+					closeddu()
+					Exit Sub
+				Else
+					Dim scan As New ProcessStartInfo
+					scan.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+					scan.Arguments = "rescan"
+					scan.UseShellExecute = False
+					scan.CreateNoWindow = True
+					scan.RedirectStandardOutput = False
+					Dim proc4 As New Process
+					proc4.StartInfo = scan
+					proc4.Start()
+					proc4.WaitForExit()
+					proc4.Close()
+					'then quit
+					closeddu()
+					Exit Sub
+				End If
 			End If
 
 
@@ -7160,7 +7167,7 @@ Public Class frmMain
 			MenuStrip1.IsEnabled = True
 
 			If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
-				If MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text10"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.OK Then
+				If MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text10"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
 					closeddu()
 					Exit Sub
 				End If
