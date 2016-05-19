@@ -2211,7 +2211,7 @@ Namespace Win32
 
 
 		' REVERSED FOR CLEANING FROM CODE
-		Public Shared Function GetDevices(ByVal className As String, Optional ByVal vendorID As String = Nothing) As List(Of Device)
+		Public Shared Function GetDevices(ByVal className As String, Optional ByVal vendorID As String = Nothing, Optional ByVal getDetails As Boolean = True) As List(Of Device)
 			Try
 				If IsNullOrWhitespace(className) Then
 					Throw New ArgumentNullException("className")
@@ -2272,26 +2272,28 @@ Namespace Win32
 							End If
 						End While
 
-						If Devices IsNot Nothing AndAlso Devices.Count > 0 Then
-							For Each dev As Device In Devices
-								GetSiblings(dev)
+						If getDetails Then
+							If Devices IsNot Nothing AndAlso Devices.Count > 0 Then
+								For Each dev As Device In Devices
+									GetSiblings(dev)
 
-								If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
-									UpdateDevicesByID(dev.SiblingDevices)
-								End If
-							Next
+									If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
+										UpdateDevicesByID(dev.SiblingDevices)
+									End If
+								Next
 
-							UpdateDevicesByID(Devices)
+								UpdateDevicesByID(Devices)
+							End If
+
+							Dim logEntry As LogEntry = Application.Log.CreateEntry()
+							logEntry.Message = String.Format("Devices found: {0}", Devices.Count.ToString())
+							logEntry.Add("-> ClassName", className)
+							logEntry.Add(KvP.Empty)
+
+							logEntry.AddDevices(Devices)
+
+							Application.Log.Add(logEntry)
 						End If
-
-						Dim logEntry As LogEntry = Application.Log.CreateEntry()
-						logEntry.Message = String.Format("Devices found: {0}", Devices.Count.ToString())
-						logEntry.Add("-> ClassName", className)
-						logEntry.Add(KvP.Empty)
-
-						logEntry.AddDevices(Devices)
-
-						Application.Log.Add(logEntry)
 
 						Return Devices
 					Finally
@@ -2779,20 +2781,6 @@ Namespace Win32
 
 
 
-		'Private Shared Function GetClassGUIDsFromClassName(ByVal className As String) As Guid()
-		'	Dim requiredSize As UInt32 = 0
-		'	Dim guidArray(0) As Guid
-
-		'	CheckWin32Error(SetupDiClassGuidsFromName(className, guidArray(0), GetUInt32(guidArray.Length), requiredSize))
-
-		'	If requiredSize > 1 Then
-		'		ReDim guidArray(GetInt32(requiredSize))
-
-		'		CheckWin32Error(SetupDiClassGuidsFromName(className, guidArray(0), GetUInt32(guidArray.Length), requiredSize))
-		'	End If
-
-		'	Return guidArray
-		'End Function
 
 		Private Shared Function GetInstallParamsFlags(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr) As UInt32
 			Dim ptrGetParams As StructPtr = Nothing

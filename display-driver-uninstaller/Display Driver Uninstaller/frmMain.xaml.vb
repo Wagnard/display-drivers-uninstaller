@@ -293,71 +293,21 @@ Public Class frmMain
 		processkillpid.WaitForExit()
 		processkillpid.Close()
 
-		Dim appproc = process.GetProcessesByName("MOM")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("CLIStart")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("CLI")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("CCC")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("Cnext")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("HydraDM")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("HydraDM64")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("HydraGrd")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("Grid64")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("HydraMD64")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("HydraMD")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("ThumbnailExtractionHost")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
-		appproc = process.GetProcessesByName("jusched")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
+		KillProcess(
+		 "MOM",
+		 "CLIStart",
+		 "CLI",
+		 "CCC",
+		 "Cnext",
+		 "HydraDM",
+		 "HydraDM64",
+		 "HydraGrd",
+		 "Grid64",
+		 "HydraMD64",
+		 "HydraMD",
+		 "ThumbnailExtractionHost",
+		 "jusched")
+		
 		System.Threading.Thread.Sleep(10)
 	End Sub
 
@@ -5078,54 +5028,43 @@ Public Class frmMain
 	End Function
 
 	Private Sub gpuidentify(ByVal gpu As String)
-
-		Dim regkey As RegistryKey = Nothing
-		Dim subregkey As RegistryKey = Nothing
 		Dim array() As String
 
 		Try
-			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+				For Each child As String In regkey.GetSubKeyNames
+					If IsNullOrWhitespace(child) OrElse Not StrContainsAny(child, True, gpu) Then Continue For
 
-			For Each child As String In regkey.GetSubKeyNames
-				If Not IsNullOrWhitespace(child) Then
-					If child.ToLower.Contains(gpu) Then
-
-						subregkey = regkey.OpenSubKey(child)
+					Using subregkey As RegistryKey = regkey.OpenSubKey(child)
 						For Each child2 As String In subregkey.GetSubKeyNames
 							array = CType(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
-							If (array IsNot Nothing) AndAlso (Not (array.Length < 1)) Then
+
+							If array IsNot Nothing AndAlso array.Length > 0 Then
+
 								For i As Integer = 0 To array.Length - 1
 									If array(i).ToLower.Contains("pci\cc_03") Then
+
 										For j As Integer = 0 To array.Length - 1
 											If array(j).ToLower.Contains("ven_8086") Then
 												Application.Settings.SelectedGPU = GPUVendor.Intel
 												Return
-												'ComboBox1.SelectedIndex = 2
-												'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-												'PictureBox2.Size = New Size(158, 126)
 											End If
 											If array(j).ToLower.Contains("ven_1002") Then
 												Application.Settings.SelectedGPU = GPUVendor.AMD
 												Return
-												'ComboBox1.SelectedIndex = 1
-												'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-												'PictureBox2.Size = New Size(158, 126)
 											End If
 											If array(j).ToLower.Contains("ven_10de") Then
 												Application.Settings.SelectedGPU = GPUVendor.Nvidia
 												Return
-												'ComboBox1.SelectedIndex = 0
-												'PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
-												'PictureBox2.Size = New Size(252, 123)
 											End If
 										Next
 									End If
 								Next
 							End If
 						Next
-					End If
-				End If
-			Next
+					End Using
+				Next
+			End Using
 		Catch ex As Exception
 			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 			Application.log.AddException(ex)
@@ -5134,10 +5073,8 @@ Public Class frmMain
 
 	Private Sub restartinsafemode(Optional ByVal withNetwork As Boolean = False)
 
-		Dim regkey As RegistryKey = Nothing
-
 		systemrestore()	'we try to do a system restore if allowed before going into safemode.
-		Application.Log.AddMessage("restarting in safemode")
+		Application.Log.AddMessage("Restarting in safemode")
 
 
 		Me.Topmost = False
@@ -5161,12 +5098,12 @@ Public Class frmMain
 		processstopservice.Close()
 
 		Try
-			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-
-			If regkey IsNot Nothing Then
-				regkey.SetValue("*" + Application.Current.MainWindow.GetType().Assembly.GetName().Name, System.Reflection.Assembly.GetExecutingAssembly().Location)
-				regkey.SetValue("*UndoSM", "BCDEDIT /deletevalue safeboot")
-			End If
+			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+				If regkey IsNot Nothing Then
+					regkey.SetValue("*" + Application.Current.MainWindow.GetType().Assembly.GetName().Name, System.Reflection.Assembly.GetExecutingAssembly().Location)
+					regkey.SetValue("*UndoSM", "BCDEDIT /deletevalue safeboot")
+				End If
+			End Using
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
@@ -7436,7 +7373,7 @@ Public Class frmMain
 				Try
 					process.Kill()
 				Catch ex As Exception
-					Application.Log.AddExceptionWithValues(ex, "@KillProcesses()", String.Concat("ProcessName: ", processName))
+					Application.Log.AddExceptionWithValues(ex, "@KillProcess()", String.Concat("ProcessName: ", processName))
 				End Try
 			Next
 		Next
@@ -7474,17 +7411,18 @@ Public Class frmMain
 	End Sub
 
 	Private Sub disabledriversearch()
-		Dim regkey As RegistryKey = Nothing
 		Application.Log.AddMessage("Trying to disable search for Windows Updates :")
 		Application.Log.AddMessage("Version " + version + " detected")
 
 		If version >= "6.1" Then
 			Try
-				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
-				If CInt(regkey.GetValue("SearchOrderConfig").ToString) <> 0 Then
-					regkey.SetValue("SearchOrderConfig", 0)
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Information)
-				End If
+				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
+
+					If regkey IsNot Nothing AndAlso CInt(regkey.GetValue("SearchOrderConfig").ToString) <> 0 Then
+						regkey.SetValue("SearchOrderConfig", 0)
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Information)
+					End If
+				End Using
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
@@ -7492,11 +7430,14 @@ Public Class frmMain
 
 		If version >= "6.0" And version < "6.1" Then
 			Try
-				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-				If CInt(regkey.GetValue("DontSearchWindowsUpdate").ToString) <> 1 Then
-					regkey.SetValue("DontSearchWindowsUpdate", 1)
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Information)
-				End If
+				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
+
+					If regkey IsNot Nothing AndAlso CInt(regkey.GetValue("DontSearchWindowsUpdate").ToString) <> 1 Then
+						regkey.SetValue("DontSearchWindowsUpdate", 1)
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Information)
+					End If
+				End Using
+
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
@@ -7504,53 +7445,48 @@ Public Class frmMain
 	End Sub
 
 	Private Function checkamdkmpfd() As Boolean
-
-		Dim regkey As RegistryKey = Nothing
-		Dim subregkey As RegistryKey = Nothing
 		Dim array As String() = Nothing
-		Dim iskmpfdpresent As Boolean = False
 
 		Try
 			Application.Log.AddMessage("Checking if AMDKMPFD is present before Service removal")
-			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
-			If regkey IsNot Nothing Then
-				For Each child As String In regkey.GetSubKeyNames()
-					If IsNullOrWhitespace(child) = False Then
-						If child.ToLower.Contains("pnp0a08") Or
-						   child.ToLower.Contains("pnp0a03") Then
-							subregkey = regkey.OpenSubKey(child)
-							If subregkey IsNot Nothing Then
-								For Each child2 As String In subregkey.GetSubKeyNames()
-									If Not IsNullOrWhitespace(child2) Then
+
+			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\ACPI")
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(child) Then Continue For
+
+						If StrContainsAny(child, True, "pnp0a08", "pnp0a03") Then
+							Using subregkey As RegistryKey = regkey.OpenSubKey(child)
+								If subregkey IsNot Nothing Then
+									For Each child2 As String In subregkey.GetSubKeyNames()
+										If IsNullOrWhitespace(child2) Then Continue For
+
 										array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
-										If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-											For i As Integer = 0 To array.Length - 1
-												If Not IsNullOrWhitespace(array(i)) Then
-													If array(i).ToLower.Contains("amdkmpfd") Then
+
+										If array IsNot Nothing AndAlso array.Length > 0 Then
+											For Each value As String In array
+												If Not IsNullOrWhitespace(value) Then
+													If StrContainsAny(value, True, "amdkmpfd") Then
 														Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
 														Application.Log.AddMessage("We do not remove the AMDKMPFP service yet")
-														iskmpfdpresent = True
 
+														Return True
 													End If
 												End If
 											Next
 										End If
-									End If
-								Next
-							End If
+									Next
+								End If
+							End Using
 						End If
-					End If
-				Next
-			End If
+					Next
+				End If
+			End Using
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
-		If iskmpfdpresent Then
-			Return True
-		Else
-			Return False
-		End If
 
+		Return False
 	End Function
 
 	Private Sub InitLanguage(ByVal firstLaunch As Boolean, Optional ByVal changeTo As Languages.LanguageOption = Nothing)
@@ -7595,7 +7531,6 @@ Public Class frmMain
 			If changeTo IsNot Nothing AndAlso Not changeTo.Equals(Languages.Current) Then
 				Languages.Load(changeTo)
 				Languages.TranslateForm(Me)
-
 			End If
 		End If
 	End Sub
@@ -7611,6 +7546,7 @@ Public Class frmMain
 			End If
 
 			stream.Position = 0L
+
 			Using sr As New StreamReader(stream, Encoding.UTF8, True)
 				Using sw As New StreamWriter(langEng.Filename, False, Encoding.UTF8)
 					While (sr.Peek() <> -1)
@@ -7626,7 +7562,7 @@ Public Class frmMain
 		End Using
 	End Sub
 
-	Public Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
+	Public Function UpdateTextMethodmessagefn(ByVal number As Integer) As String
 		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1))
 	End Function
 
@@ -7697,36 +7633,27 @@ Public Class frmMain
 
 	End Sub
 
-	Public Sub UpdateTextMethod2(ByVal strMessage As String)
-		'Dim frmLog As New frmLog
-		'
-		'If Not frmLog.tbLog.Dispatcher.CheckAccess() Then
-		'Dispatcher.Invoke(Sub() frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine)
-		'Dispatcher.Invoke(Sub() frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0))
-		'Dispatcher.Invoke(Sub() frmLog.tbLog.ScrollToEnd())
-		'Else
-		'frmLog.tbLog.Text = frmLog.tbLog.Text + strMessage + vbNewLine
-		'frmLog.tbLog.Select(frmLog.tbLog.Text.Length, 0)
-		'frmLog.tbLog.ScrollToEnd()
-		'End If
-
-	End Sub
-
 	Public Function GetREG_BINARY(ByVal Path As String, ByVal Value As String) As String
 		Dim Data() As Byte = CType(Microsoft.Win32.Registry.GetValue(Path, Value, Nothing), Byte())
+
 		If Data Is Nothing Then Return "N/A"
+
 		Dim Result As String = String.Empty
+
 		For j As Integer = 0 To Data.Length - 1
 			Result &= Hex(Data(j)).PadLeft(2, "0"c) & ""
 		Next
+
 		Return Result
 	End Function
 
 	Public Function HexToString(ByVal Data As String) As String
 		Dim com As String = ""
+
 		For x = 0 To Data.Length - 1 Step 2
 			com &= ChrW(CInt("&H" & Data.Substring(x, 2)))
 		Next
+
 		Return com
 	End Function
 
@@ -7751,9 +7678,6 @@ Public Class frmMain
 	End Sub
 
 	Private Sub amdenvironementpath(ByVal filepath As String)
-
-		Dim regkey As RegistryKey
-		Dim subregkey As RegistryKey
 		Dim wantedvalue As String = Nothing
 
 		'--------------------------------
@@ -7763,63 +7687,65 @@ Public Class frmMain
 		Application.Log.AddMessage("System environement cleanUP")
 		filepath = filepath.ToLower
 		Try
-			subregkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
-			If subregkey IsNot Nothing Then
-				For Each child2 As String In subregkey.GetSubKeyNames()
-					If child2.ToLower.Contains("controlset") Then
-						regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
-						If regkey IsNot Nothing Then
-							For Each child As String In regkey.GetValueNames()
-								If IsNullOrWhitespace(child) = False Then
-									If child.Contains("Path") Then
-										If IsNullOrWhitespace(CStr(regkey.GetValue(child))) = False Then
-											wantedvalue = regkey.GetValue(child).ToString.ToLower
-											Try
-												Select Case True
-													Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86_64")
-														wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86_64", "")
-														regkey.SetValue(child, wantedvalue)
+			Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+				If subregkey IsNot Nothing Then
+					For Each child2 As String In subregkey.GetSubKeyNames()
+						If child2.ToLower.Contains("controlset") Then
 
-													Case wantedvalue.Contains(filepath & "\amd app\bin\x86_64;")
-														wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86_64;", "")
-														regkey.SetValue(child, wantedvalue)
+							Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
+								If regkey IsNot Nothing Then
+									For Each child As String In regkey.GetValueNames()
+										If IsNullOrWhitespace(child) = False Then
+											If child.Contains("Path") Then
+												If IsNullOrWhitespace(CStr(regkey.GetValue(child))) = False Then
+													wantedvalue = regkey.GetValue(child).ToString.ToLower
+													Try
+														Select Case True
+															Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86_64")
+																wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86_64", "")
+																regkey.SetValue(child, wantedvalue)
 
-													Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86")
-														wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86", "")
-														regkey.SetValue(child, wantedvalue)
+															Case wantedvalue.Contains(filepath & "\amd app\bin\x86_64;")
+																wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86_64;", "")
+																regkey.SetValue(child, wantedvalue)
 
-													Case wantedvalue.Contains(filepath & "\amd app\bin\x86;")
-														wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86;", "")
-														regkey.SetValue(child, wantedvalue)
+															Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86")
+																wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86", "")
+																regkey.SetValue(child, wantedvalue)
 
-													Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
-														wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
-														regkey.SetValue(child, wantedvalue)
+															Case wantedvalue.Contains(filepath & "\amd app\bin\x86;")
+																wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86;", "")
+																regkey.SetValue(child, wantedvalue)
 
-													Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
-														wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
-														regkey.SetValue(child, wantedvalue)
+															Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
+																wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
+																regkey.SetValue(child, wantedvalue)
 
-													Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
-														wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
-														regkey.SetValue(child, wantedvalue)
+															Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
+																wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
+																regkey.SetValue(child, wantedvalue)
 
-													Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
-														wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
-														regkey.SetValue(child, wantedvalue)
+															Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
+																wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
+																regkey.SetValue(child, wantedvalue)
 
-												End Select
-											Catch ex As Exception
-											End Try
+															Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
+																wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
+																regkey.SetValue(child, wantedvalue)
+
+														End Select
+													Catch ex As Exception
+													End Try
+												End If
+											End If
 										End If
-									End If
+									Next
 								End If
-							Next
+							End Using
 						End If
-					End If
-				Next
-			End If
-
+					Next
+				End If
+			End Using
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
@@ -7960,7 +7886,8 @@ Public Class CleanupEngine
 
 	Public Sub deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String)
 		Dim fixregacls As Boolean = False
-		If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
+
+		If regkeypath IsNot Nothing AndAlso Not IsNullOrWhitespace(child) Then
 			Try
 				regkeypath.DeleteSubKeyTree(child)
 				Application.Log.AddMessage(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn(39))
@@ -7976,25 +7903,33 @@ Public Class CleanupEngine
 			End If
 		End If
 	End Sub
-	Public Function openregkey(ByVal location As RegistryKey, key As String, write As Boolean) As RegistryKey
+
+	Public Function openregkey(ByVal location As RegistryKey, ByVal key As String, ByVal write As Boolean) As RegistryKey
 		Dim regkey As RegistryKey = Nothing
 
 		Try
 			regkey = location.OpenSubKey(key, write)
+
 		Catch ex As UnauthorizedAccessException
 			Addregistrysecurity(location, key, RegistryRights.FullControl, AccessControlType.Allow)
 
+			' TODO: Not sure if this works.
+			' on exception OpenSubKey returns Nothing ( regkey = Nothing ) => Return nothing
+			' Thought not used anywhere.. yet
+
 			Return regkey
 		End Try
-		Return regkey
 
+		Return regkey
 	End Function
+
 	Public Sub deletedirectory(ByVal directorypath As String)
 		Dim fixacls As Boolean = False
+
 		If Not IsNullOrWhitespace(directorypath) AndAlso Directory.Exists(directorypath) Then
 			Try
-				My.Computer.FileSystem.DeleteDirectory _
-				  (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+				My.Computer.FileSystem.DeleteDirectory(directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
 				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
 			Catch ex As UnauthorizedAccessException
 				Application.Log.AddWarningMessage("Failed to remove " + directorypath + " Will try to set ACLs permission and try again.")
@@ -8004,77 +7939,79 @@ Public Class CleanupEngine
 			'If exists, it means we need to modify it's ACls.
 			If fixacls AndAlso Directory.Exists(directorypath) Then
 				FixACL.AddDirectorySecurity(directorypath, FileSystemRights.FullControl, AccessControlType.Allow)
-				My.Computer.FileSystem.DeleteDirectory _
-  (directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
+				My.Computer.FileSystem.DeleteDirectory(directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+
 				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
 			End If
 		End If
 
 		If Not Directory.Exists(directorypath) Then
-			If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
-				For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False).GetValueNames
-					If Not IsNullOrWhitespace(child) Then
-						If child.ToLower.Contains(directorypath.ToLower + "\") Then
+			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False)
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetValueNames
+						If IsNullOrWhitespace(child) Then Continue For
+
+						If StrContainsAny(child, True, directorypath & "\") Then
 							Try
 								deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
 							Catch ex As Exception
 							End Try
 						End If
-					End If
-				Next
-			End If
-			If My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False) IsNot Nothing Then
-				For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False).GetValueNames
-					If Not IsNullOrWhitespace(child) Then
-						If child.ToLower.Contains(directorypath.ToLower + "\") Then
+					Next
+				End If
+			End Using
+
+			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False)
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetValueNames
+						If IsNullOrWhitespace(child) Then Continue For
+
+						If StrContainsAny(child, True, directorypath & "\") Then
 							Try
 								deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
 							Catch ex As Exception
 							End Try
 						End If
-					End If
-				Next
-			End If
+					Next
+				End If
+			End Using
+
 			If IntPtr.Size = 8 Then
-				If My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", False) IsNot Nothing Then
-					For Each child As String In My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", False).GetValueNames
-						If Not IsNullOrWhitespace(child) Then
-							If child.ToLower.Contains(directorypath.ToLower + "\") Then
+				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", False)
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetValueNames
+							If IsNullOrWhitespace(child) Then Continue For
+
+							If child.ToLower.Contains(directorypath & "\") Then
 								Try
 									deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
 								Catch ex As Exception
 								End Try
 							End If
-						End If
-					Next
-				End If
+						Next
+					End If
+				End Using
 			End If
 		End If
 	End Sub
 
 	Public Sub deletefile(ByVal filepath As String)
-
-
 		If Not IsNullOrWhitespace(filepath) Then
 
 			My.Computer.FileSystem.DeleteFile(filepath)	'filepath here include the file too.
 
-			application.log.addmessage(filepath + " - " + UpdateTextMethodmessagefn(41))
+			Application.Log.AddMessage(filepath & " - " & UpdateTextMethodmessagefn(41))
 		End If
 
 	End Sub
 
 	Public Sub deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String)
-
-
-		If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
-
+		If regkeypath IsNot Nothing AndAlso Not IsNullOrWhitespace(child) Then
 			regkeypath.DeleteValue(child)
-			application.log.addmessage(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn(40))
 
-
+			Application.Log.AddMessage(regkeypath.ToString & "\" & child & " - " & UpdateTextMethodmessagefn(40))
 		End If
-
 	End Sub
 
 	Public Sub classroot(ByVal classroot As String())
@@ -8249,8 +8186,8 @@ Public Class CleanupEngine
 									If IsNullOrWhitespace(child) = False Then
 
 										subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-									 ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
-									 "\InstallProperties", False)
+										("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
+										"\InstallProperties", False)
 
 										If subregkey IsNot Nothing Then
 											If IsNullOrWhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
@@ -8281,11 +8218,11 @@ Public Class CleanupEngine
 																		TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
 																		If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
 																			For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
-																("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
+																		 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
 																				If Not IsNullOrWhitespace(subkeyname) Then
 																					If subkeyname.ToLower.Contains(folder.ToLower) Then
 																						deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey _
-																		 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True), subkeyname)
+																					 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True), subkeyname)
 																					End If
 																				End If
 																			Next
@@ -8301,13 +8238,13 @@ Public Class CleanupEngine
 																End Try
 
 																superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-												 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
+															 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
 																If superregkey IsNot Nothing Then
 																	For Each child2 As String In superregkey.GetSubKeyNames()
 																		If IsNullOrWhitespace(child2) = False Then
 
 																			subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-														 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, False)
+																		("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, False)
 
 																			If subsuperregkey IsNot Nothing Then
 																				For Each wantedstring As String In subsuperregkey.GetValueNames()
@@ -8325,13 +8262,13 @@ Public Class CleanupEngine
 																	Next
 																End If
 																superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-												 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
+															 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
 																If superregkey IsNot Nothing Then
 																	For Each child2 As String In superregkey.GetSubKeyNames()
 																		If IsNullOrWhitespace(child2) = False Then
 
 																			subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-														 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
+																		("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
 
 
 																			If subsuperregkey IsNot Nothing Then
@@ -8378,7 +8315,7 @@ Public Class CleanupEngine
 					If IsNullOrWhitespace(child) = False Then
 
 						subregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-				  ("Installer\Products\" & child, False)
+						("Installer\Products\" & child, False)
 
 						If subregkey IsNot Nothing Then
 							If IsNullOrWhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
@@ -8397,11 +8334,11 @@ Public Class CleanupEngine
 														TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
 														If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
 															For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
-											  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
+														  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
 																If Not IsNullOrWhitespace(subkeyname) Then
 																	If subkeyname.ToLower.Contains(folder.ToLower) Then
 																		deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey _
-														 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True), subkeyname)
+																	 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True), subkeyname)
 																	End If
 																End If
 															Next
@@ -8420,13 +8357,13 @@ Public Class CleanupEngine
 												Catch ex As Exception
 												End Try
 												superregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-										  ("Installer\UpgradeCodes", True)
+												("Installer\UpgradeCodes", True)
 												If superregkey IsNot Nothing Then
 													For Each child2 As String In superregkey.GetSubKeyNames()
 														If IsNullOrWhitespace(child2) = False Then
 
 															subsuperregkey = My.Computer.Registry.ClassesRoot.OpenSubKey _
-														   ("Installer\UpgradeCodes\" & child2, False)
+															  ("Installer\UpgradeCodes\" & child2, False)
 
 															If subsuperregkey IsNot Nothing Then
 																For Each wantedstring As String In subsuperregkey.GetValueNames()
@@ -8469,7 +8406,7 @@ Public Class CleanupEngine
 					If IsNullOrWhitespace(child) = False Then
 
 						subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-				  ("Software\Classes\Installer\Products\" & child, False)
+						("Software\Classes\Installer\Products\" & child, False)
 
 						If subregkey IsNot Nothing Then
 							If IsNullOrWhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
@@ -8489,13 +8426,13 @@ Public Class CleanupEngine
 												End Try
 
 												superregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-										  ("Software\Classes\Installer\UpgradeCodes", True)
+												("Software\Classes\Installer\UpgradeCodes", True)
 												If superregkey IsNot Nothing Then
 													For Each child2 As String In superregkey.GetSubKeyNames()
 														If IsNullOrWhitespace(child2) = False Then
 
 															subsuperregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
-														   ("Software\Classes\Installer\UpgradeCodes\" & child2, False)
+															  ("Software\Classes\Installer\UpgradeCodes\" & child2, False)
 
 															If subsuperregkey IsNot Nothing Then
 																For Each wantedstring As String In subsuperregkey.GetValueNames()
@@ -8540,7 +8477,7 @@ Public Class CleanupEngine
 							If IsNullOrWhitespace(child) = False Then
 
 								subregkey = My.Computer.Registry.Users.OpenSubKey _
-						 (users & "\Software\Microsoft\Installer\Products\" & child, False)
+							   (users & "\Software\Microsoft\Installer\Products\" & child, False)
 
 								If subregkey IsNot Nothing Then
 									If IsNullOrWhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
@@ -8560,13 +8497,13 @@ Public Class CleanupEngine
 														End Try
 
 														superregkey = My.Computer.Registry.Users.OpenSubKey _
-												  (users & "\Software\Microsoft\Installer\UpgradeCodes", True)
+														(users & "\Software\Microsoft\Installer\UpgradeCodes", True)
 														If superregkey IsNot Nothing Then
 															For Each child2 As String In superregkey.GetSubKeyNames()
 																If IsNullOrWhitespace(child2) = False Then
 
 																	subsuperregkey = My.Computer.Registry.Users.OpenSubKey _
-																   (users & "\Software\Microsoft\Installer\UpgradeCodes" & child2, False)
+																	  (users & "\Software\Microsoft\Installer\UpgradeCodes" & child2, False)
 
 																	If subsuperregkey IsNot Nothing Then
 																		For Each wantedstring As String In subsuperregkey.GetValueNames()
@@ -8603,26 +8540,22 @@ Public Class CleanupEngine
 	End Sub
 
 	Public Sub cleanserviceprocess(ByVal services As String())
-
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
-		Dim regkey As RegistryKey
-		Dim subregkey As RegistryKey
 
 		updatetextmethod(UpdateTextMethodmessagefn(37))
 		application.log.addmessage("Cleaning Process/Services...")
 
+		Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Services", False)
+			If regkey IsNot Nothing Then
+				For Each service As String In services
+					If IsNullOrWhitespace(service) Then Continue For
 
-		regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Services", False)
-		If regkey IsNot Nothing Then
-			For i As Integer = 0 To services.Length - 1
-				If Not IsNullOrWhitespace(services(i)) Then
-					If regkey.OpenSubKey(services(i), False) IsNot Nothing Then
-
-						If Not (donotremoveamdhdaudiobusfiles AndAlso services(i).ToLower.Contains("amdkmafd")) Then
+					If regkey.OpenSubKey(service, False) IsNot Nothing Then
+						If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(service, True, "amdkmafd")) Then
 
 							Dim stopservice As New ProcessStartInfo
 							stopservice.FileName = "cmd.exe"
-							stopservice.Arguments = " /Cnet stop " & Chr(34) & services(i) & Chr(34)
+							stopservice.Arguments = " /Cnet stop " & Chr(34) & service & Chr(34)
 							stopservice.UseShellExecute = False
 							stopservice.CreateNoWindow = True
 							stopservice.RedirectStandardOutput = False
@@ -8630,61 +8563,71 @@ Public Class CleanupEngine
 
 							Dim processstopservice As New Process
 							processstopservice.StartInfo = stopservice
-							updatetextmethod("Stopping service : " & services(i))
-							application.log.addmessage("Stopping service : " & services(i))
+							updatetextmethod("Stopping service : " & service)
+							Application.Log.AddMessage("Stopping service : " & service)
 							processstopservice.Start()
 							processstopservice.WaitForExit()
 							processstopservice.Close()
 
-							stopservice.Arguments = " /Csc delete " & Chr(34) & services(i) & Chr(34)
+							stopservice.Arguments = " /Csc delete " & Chr(34) & service & Chr(34)
 
 							processstopservice.StartInfo = stopservice
-							updatetextmethod("Trying to Deleting service : " & services(i))
-							application.log.addmessage("Trying to Deleting service : " & services(i))
+							updatetextmethod("Trying to Deleting service : " & service)
+							Application.Log.AddMessage("Trying to Deleting service : " & service)
 							processstopservice.Start()
 							processstopservice.WaitForExit()
 							processstopservice.Close()
 
-							stopservice.Arguments = " /Csc interrogate " & Chr(34) & services(i) & Chr(34)
+							stopservice.Arguments = " /Csc interrogate " & Chr(34) & service & Chr(34)
 							processstopservice.StartInfo = stopservice
 							processstopservice.Start()
 							processstopservice.WaitForExit()
 							processstopservice.Close()
 
 							'Verify that the service was indeed removed.
-							If regkey.OpenSubKey(services(i), False) IsNot Nothing Then
+							If regkey.OpenSubKey(service, False) IsNot Nothing Then
 								updatetextmethod("Failed to remove the service.")
-								application.log.addmessage("Failed to remove the service.")
+								Application.Log.AddMessage("Failed to remove the service.")
 							Else
 								updatetextmethod("Service removed.")
-								application.log.addmessage("Service removed.")
+								Application.Log.AddMessage("Service removed.")
 							End If
 
 						End If
 					End If
-				End If
 
-				System.Threading.Thread.Sleep(10)
-			Next
-		End If
+
+					System.Threading.Thread.Sleep(10)
+				Next
+			End If
+		End Using
+
 		updatetextmethod(UpdateTextMethodmessagefn(38))
-		application.log.addmessage("Process/Services CleanUP Complete")
+		Application.Log.AddMessage("Process/Services CleanUP Complete")
 
 		'-------------
 		'control/video
 		'-------------
 		'Reason I put this in service is that the removal of this is based from its service.
-		application.log.addmessage("Control/Video CleanUP")
+
+		Application.Log.AddMessage("Control/Video CleanUP")
+
 		Try
-			regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", True)
-			If regkey IsNot Nothing Then
-				For Each child As String In regkey.GetSubKeyNames
-					If IsNullOrWhitespace(child) = False Then
-						subregkey = regkey.OpenSubKey(child & "\Video", False)
-						If subregkey IsNot Nothing Then
-							For i As Integer = 0 To services.Length - 1
-								If IsNullOrWhitespace(CStr(subregkey.GetValue("Service"))) = False Then
-									If subregkey.GetValue("Service").ToString.ToLower = services(i).ToLower Then
+			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Video", True)
+				If regkey IsNot Nothing Then
+					Dim serviceValue As String
+
+					For Each child As String In regkey.GetSubKeyNames
+						If IsNullOrWhitespace(child) Then Continue For
+
+						Using subregkey As RegistryKey = regkey.OpenSubKey(child & "\Video", False)
+							If subregkey IsNot Nothing Then
+								serviceValue = CStr(subregkey.GetValue("Service"))
+
+								If IsNullOrWhitespace(serviceValue) Then Continue For
+
+								For Each service As String In services
+									If serviceValue.Equals(service, StringComparison.OrdinalIgnoreCase) Then
 										Try
 											deletesubregkey(regkey, child)
 											deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
@@ -8692,55 +8635,58 @@ Public Class CleanupEngine
 										Catch ex As Exception
 										End Try
 									End If
+
+								Next
+							Else
+								'Here, if subregkey is nothing, it mean \video doesnt exist and is no \0000, we can delete it.
+								'this is a general cleanUP we could say.
+								If regkey.OpenSubKey(child & "\0000") Is Nothing Then
+									Try
+										deletesubregkey(regkey, child)
+										deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+									Catch ex As Exception
+									End Try
 								End If
-							Next
-						Else
-							'Here, if subregkey is nothing, it mean \video doesnt exist and is no \0000, we can delete it.
-							'this is a general cleanUP we could say.
-							If regkey.OpenSubKey(child + "\0000") Is Nothing Then
-								Try
-									deletesubregkey(regkey, child)
-									deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-								Catch ex As Exception
-								End Try
 							End If
-						End If
-					End If
-				Next
-			End If
+						End Using
+					Next
+				End If
+			End Using
 		Catch ex As Exception
-			application.log.AddException(ex)
+			Application.Log.AddException(ex)
 		End Try
 	End Sub
 
 	Public Sub prePnplockdownfiles(ByVal oeminf As String)
-
-		Dim regkey As RegistryKey
 		Dim win8higher = frmMain.win8higher
 		Dim processinfo As New ProcessStartInfo
 		Dim process As New Process
+		Dim sourceValue As String
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 
 		Try
-			If CBool(win8higher) Then
-				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
-				If regkey IsNot Nothing Then
-					If Not IsNullOrWhitespace(oeminf) Then
-						If Not (donotremoveamdhdaudiobusfiles AndAlso oeminf.ToLower.Contains("amdkmafd.sys")) Then
-							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) = False Then
-									If (Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("Source")))) AndAlso regkey.OpenSubKey(child).GetValue("Source").ToString.ToLower.Contains(oeminf.ToLower) Then
+			If win8higher Then
+				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
+					If regkey IsNot Nothing Then
+						If Not IsNullOrWhitespace(oeminf) Then
+							If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(oeminf, True, "amdkmafd.sys")) Then
+								For Each child As String In regkey.GetSubKeyNames()
+									If IsNullOrWhitespace(child) Then Continue For
+
+									sourceValue = CStr(regkey.OpenSubKey(child).GetValue("Source"))
+
+									If Not IsNullOrWhitespace(sourceValue) AndAlso StrContainsAny(sourceValue, True, oeminf) Then
 										Try
 											deletesubregkey(regkey, child)
 										Catch ex As Exception
 											Application.Log.AddException(ex)
 										End Try
 									End If
-								End If
-							Next
+								Next
+							End If
 						End If
 					End If
-				End If
+				End Using
 			End If
 		Catch ex As Exception
 			application.log.AddException(ex)
