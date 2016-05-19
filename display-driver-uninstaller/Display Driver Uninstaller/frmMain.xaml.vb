@@ -5425,7 +5425,7 @@ Public Class frmMain
 				End If
 			End If
 
-			Dim regkey As RegistryKey = Nothing
+
 			Dim subregkey As RegistryKey = Nothing
 			Dim webAddress As String = ""
 
@@ -5581,15 +5581,21 @@ Public Class frmMain
 
 				'  If BootMode.FailSafe Or BootMode.FailSafeWithNetwork Then ' we do this in safemode because of some Antivirus....(Kaspersky)
 				Try
-					My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).CreateSubKey("PAexec")
-					My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\PAexec", True).SetValue("", "Service")
+					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+						regkey.CreateSubKey("PAexec")
+						regkey.OpenSubKey("Paexec", True).SetValue("", "Service")
+					End Using
 				Catch ex As Exception
+					Application.Log.AddException(ex)
 				End Try
 
 				Try
-					My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True).CreateSubKey("PAexec")
-					My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network\PAexec", True).SetValue("", "Service")
+					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+						regkey.CreateSubKey("PAexec")
+						regkey.OpenSubKey("Paexec", True).SetValue("", "Service")
+					End Using
 				Catch ex As Exception
+					Application.Log.AddException(ex)
 				End Try
 				'End If
 
@@ -5878,6 +5884,14 @@ Public Class frmMain
 						Me.WindowState = Windows.WindowState.Normal
 					End If
 				Else
+					Select Case System.Windows.Forms.SystemInformation.BootMode
+						Case Forms.BootMode.FailSafe
+							safemode = True
+						Case Forms.BootMode.FailSafeWithNetwork
+							safemode = True
+						Case Forms.BootMode.Normal
+							safemode = False
+					End Select
 					Me.WindowState = Windows.WindowState.Normal
 				End If
 
@@ -5890,80 +5904,81 @@ Public Class frmMain
 				info.Add("Architecture", CStr(lblArch.Content))
 
 				Try
-					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetSubKeyNames
-							If Not IsNullOrWhitespace(child) Then
+					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetSubKeyNames
+								If Not IsNullOrWhitespace(child) Then
 
-								If Not child.ToLower.Contains("properties") Then
+									If Not child.ToLower.Contains("properties") Then
 
-									subregkey = regkey.OpenSubKey(child)
-									If subregkey IsNot Nothing Then
+										subregkey = regkey.OpenSubKey(child)
+										If subregkey IsNot Nothing Then
 
-										If Not IsNullOrWhitespace(CStr(subregkey.GetValue("Device Description"))) Then
-											currentdriverversion = subregkey.GetValue("Device Description").ToString
-											UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
-											info.Add("GPU #" + child, currentdriverversion)
-										Else
-											If (subregkey.GetValue("DriverDesc") IsNot Nothing) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
-												UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
-												info.Add("GPU #" + child, HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
+											If Not IsNullOrWhitespace(CStr(subregkey.GetValue("Device Description"))) Then
+												currentdriverversion = subregkey.GetValue("Device Description").ToString
+												UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
+												info.Add("GPU #" + child, currentdriverversion)
 											Else
-												If Not IsNullOrWhitespace(CStr(subregkey.GetValue("DriverDesc"))) Then
-													currentdriverversion = subregkey.GetValue("DriverDesc").ToString
-													UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
-													info.Add("GPU #" + child, currentdriverversion)
+												If (subregkey.GetValue("DriverDesc") IsNot Nothing) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
+													UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
+													info.Add("GPU #" + child, HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
+												Else
+													If Not IsNullOrWhitespace(CStr(subregkey.GetValue("DriverDesc"))) Then
+														currentdriverversion = subregkey.GetValue("DriverDesc").ToString
+														UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
+														info.Add("GPU #" + child, currentdriverversion)
+													End If
 												End If
+
+											End If
+											If Not IsNullOrWhitespace(CStr(subregkey.GetValue("MatchingDeviceId"))) Then
+												currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
+												UpdateTextMethod(UpdateTextMethodmessagefn(13) + " " + currentdriverversion)
+												info.Add("GPU DeviceId", currentdriverversion)
 											End If
 
-										End If
-										If Not IsNullOrWhitespace(CStr(subregkey.GetValue("MatchingDeviceId"))) Then
-											currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
-											UpdateTextMethod(UpdateTextMethodmessagefn(13) + " " + currentdriverversion)
-											info.Add("GPU DeviceId", currentdriverversion)
-										End If
-
-										Try
-											If (Not IsNullOrWhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString")))) AndAlso (subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary) Then
-												UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
-												info.Add("Vbios", HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
-											Else
-												If Not IsNullOrWhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString"))) Then
-													currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
-													For i As Integer = 0 To 9
-														'this is a little fix to correctly show the vbios version info
-														currentdriverversion = currentdriverversion.Replace("." + i.ToString + ".", ".0" + i.ToString + ".")
-													Next
-													UpdateTextMethod("Vbios :" + " " + currentdriverversion)
-													info.Add("Vbios", currentdriverversion)
+											Try
+												If (Not IsNullOrWhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString")))) AndAlso (subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary) Then
+													UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
+													info.Add("Vbios", HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
+												Else
+													If Not IsNullOrWhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString"))) Then
+														currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
+														For i As Integer = 0 To 9
+															'this is a little fix to correctly show the vbios version info
+															currentdriverversion = currentdriverversion.Replace("." + i.ToString + ".", ".0" + i.ToString + ".")
+														Next
+														UpdateTextMethod("Vbios :" + " " + currentdriverversion)
+														info.Add("Vbios", currentdriverversion)
+													End If
 												End If
+											Catch ex As Exception
+											End Try
+
+
+											If Not IsNullOrWhitespace(CStr(subregkey.GetValue("DriverVersion"))) Then
+												currentdriverversion = subregkey.GetValue("DriverVersion").ToString
+												UpdateTextMethod(UpdateTextMethodmessagefn(14) + " " + currentdriverversion)
+												info.Add("Detected Driver(s) Version(s)", currentdriverversion)
 											End If
-										Catch ex As Exception
-										End Try
+											If Not IsNullOrWhitespace(CStr(subregkey.GetValue("InfPath"))) Then
+												currentdriverversion = subregkey.GetValue("InfPath").ToString
+												UpdateTextMethod(UpdateTextMethodmessagefn(15) + " " + currentdriverversion)
+												info.Add("INF", currentdriverversion)
+											End If
+											If Not IsNullOrWhitespace(CStr(subregkey.GetValue("InfSection"))) Then
+												currentdriverversion = subregkey.GetValue("InfSection").ToString
+												UpdateTextMethod(UpdateTextMethodmessagefn(16) + " " + currentdriverversion)
+												info.Add("INF", currentdriverversion)
+											End If
+										End If
+										UpdateTextMethod("--------------")
 
-
-										If Not IsNullOrWhitespace(CStr(subregkey.GetValue("DriverVersion"))) Then
-											currentdriverversion = subregkey.GetValue("DriverVersion").ToString
-											UpdateTextMethod(UpdateTextMethodmessagefn(14) + " " + currentdriverversion)
-											info.Add("Detected Driver(s) Version(s)", currentdriverversion)
-										End If
-										If Not IsNullOrWhitespace(CStr(subregkey.GetValue("InfPath"))) Then
-											currentdriverversion = subregkey.GetValue("InfPath").ToString
-											UpdateTextMethod(UpdateTextMethodmessagefn(15) + " " + currentdriverversion)
-											info.Add("INF", currentdriverversion)
-										End If
-										If Not IsNullOrWhitespace(CStr(subregkey.GetValue("InfSection"))) Then
-											currentdriverversion = subregkey.GetValue("InfSection").ToString
-											UpdateTextMethod(UpdateTextMethodmessagefn(16) + " " + currentdriverversion)
-											info.Add("INF", currentdriverversion)
-										End If
 									End If
-									UpdateTextMethod("--------------")
-
 								End If
-							End If
-						Next
-					End If
+							Next
+						End If
+					End Using
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
@@ -5982,31 +5997,32 @@ Public Class frmMain
 				' Check if this is an AMD Enduro system
 				' -------------------------------------
 				Try
-					regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
 
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) = False Then
-								If child.ToLower.Contains("ven_8086") Then
-									Try
-										subregkey = regkey.OpenSubKey(child)
-									Catch ex As Exception
-										Continue For
-									End Try
-									For Each childs As String In subregkey.GetSubKeyNames()
-										If IsNullOrWhitespace(childs) = False Then
-											If Not IsNullOrWhitespace(CStr(subregkey.OpenSubKey(childs).GetValue("Service"))) Then
-												If subregkey.OpenSubKey(childs).GetValue("Service").ToString.ToLower.Contains("amdkmdap") Then
-													enduro = True
-													UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetSubKeyNames()
+								If IsNullOrWhitespace(child) = False Then
+									If child.ToLower.Contains("ven_8086") Then
+										Try
+											subregkey = regkey.OpenSubKey(child)
+										Catch ex As Exception
+											Continue For
+										End Try
+										For Each childs As String In subregkey.GetSubKeyNames()
+											If IsNullOrWhitespace(childs) = False Then
+												If Not IsNullOrWhitespace(CStr(subregkey.OpenSubKey(childs).GetValue("Service"))) Then
+													If subregkey.OpenSubKey(childs).GetValue("Service").ToString.ToLower.Contains("amdkmdap") Then
+														enduro = True
+														UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
+													End If
 												End If
 											End If
-										End If
-									Next
+										Next
+									End If
 								End If
-							End If
-						Next
-					End If
+							Next
+						End If
+					End Using
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
@@ -6076,12 +6092,18 @@ Public Class frmMain
 
 		If MyIdentity.IsSystem AndAlso safemode Then
 			Try
-				My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True).DeleteSubKeyTree("PAexec")
+				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+					regkey.DeleteSubKeyTree("PAexec")
+				End Using
 			Catch ex As Exception
+				Application.Log.AddException(ex)
 			End Try
 			Try
-				My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True).DeleteSubKeyTree("PAexec")
+				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+					regkey.DeleteSubKeyTree("PAexec")
+				End Using
 			Catch ex As Exception
+				Application.Log.AddException(ex)
 			End Try
 		End If
 
