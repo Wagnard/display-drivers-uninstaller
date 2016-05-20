@@ -250,12 +250,17 @@ Public Class LogEntry
 			Values.Add(KvP.Empty)
 		Next
 
+		If Values.Count > 0 Then
+			HasValues = True
+			HasAnyData = True
+		End If
+
 		OnPropertyChanged("Values")
 	End Sub
 
-	Public Sub AddException(ByRef Ex As Exception, Optional ByVal overrideMessage As Boolean = True)
-		If Ex IsNot Nothing AndAlso (overrideMessage OrElse IsNullOrWhitespace(Message)) Then
-			Message = Ex.Message.Trim()
+	Public Sub AddException(ByRef ex As Exception, Optional ByVal overrideMessage As Boolean = True)
+		If ex IsNot Nothing AndAlso (overrideMessage OrElse IsNullOrWhitespace(Message)) Then
+			Message = ex.Message.Trim()
 		End If
 
 		HasAnyData = True
@@ -264,17 +269,30 @@ Public Class LogEntry
 		Time = DateTime.Now
 
 		m_exData.Clear()
-		m_exData.Add("Message", If(String.IsNullOrEmpty(Ex.Message), "Unknown", Ex.Message))
-		m_exData.Add("TargetSite", If(Ex.TargetSite IsNot Nothing AndAlso Not String.IsNullOrEmpty(Ex.TargetSite.Name), Ex.TargetSite.Name, "Unknown"))
-		m_exData.Add("Source", If(String.IsNullOrEmpty(Ex.Source), "Unknown", Ex.Source))
-		m_exData.Add("StackTrace", If(String.IsNullOrEmpty(Ex.StackTrace), "Unknown", Ex.StackTrace))
+		m_exData.Add("Message", If(String.IsNullOrEmpty(ex.Message), "Unknown", ex.Message))
+		m_exData.Add("TargetSite", If(ex.TargetSite IsNot Nothing AndAlso Not String.IsNullOrEmpty(ex.TargetSite.Name), ex.TargetSite.Name, "Unknown"))
+		m_exData.Add("Source", If(String.IsNullOrEmpty(ex.Source), "Unknown", ex.Source))
+		m_exData.Add("StackTrace", If(String.IsNullOrEmpty(ex.StackTrace), "Unknown", ex.StackTrace))
 
-		If TypeOf (Ex) Is Win32Exception Then
-			Dim win32Ex As Win32Exception = TryCast(Ex, Win32Exception)
+		If TypeOf (ex) Is Win32Exception Then
+			Dim win32Ex As Win32Exception = TryCast(ex, Win32Exception)
 
 			If win32Ex IsNot Nothing Then
 				m_values.Add(New KvP("Win32_ErrorCode", Win32.GetUInt32(win32Ex.NativeErrorCode).ToString()))
 				m_values.Add(New KvP("Win32_Message", win32Ex.Message))
+
+				HasValues = True
+				HasAnyData = True
+			End If
+		ElseIf TypeOf (ex) Is Runtime.InteropServices.COMException Then
+			Dim comEx As Runtime.InteropServices.COMException = TryCast(ex, Runtime.InteropServices.COMException)
+
+			If comEx IsNot Nothing Then
+				m_values.Add(New KvP("com_ErrorCode", Win32.GetUInt32(comEx.ErrorCode).ToString()))
+				m_values.Add(New KvP("com_Message", comEx.Message))
+
+				HasValues = True
+				HasAnyData = True
 			End If
 		End If
 

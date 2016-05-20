@@ -31,7 +31,6 @@ Imports Display_Driver_Uninstaller.Win32
 
 Public Class frmMain
 	Private WithEvents BackgroundWorker1 As New System.ComponentModel.BackgroundWorker
-	Dim arg As String
 
 	Dim backgroundworkcomplete As Boolean = True
 
@@ -61,7 +60,6 @@ Public Class frmMain
 	Dim reply As String = Nothing
 	Dim reply2 As String = Nothing
 	Dim version As String = Nothing
-	Dim position2 As Integer = Nothing
 	Dim currentdriverversion As String = Nothing
 	Dim safemode As Boolean = False
 	Dim CleanupEngine As New CleanupEngine
@@ -122,40 +120,54 @@ Public Class frmMain
 		End Try
 
 		Try
-			Dim request2 As System.Net.HttpWebRequest = CType(System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt"), Net.HttpWebRequest)
-			Dim response2 As System.Net.HttpWebResponse = Nothing
-			request2.Timeout = 2500
+			Dim response As System.Net.WebResponse = Nothing
+			Dim request As System.Net.WebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt")
+			request.Timeout = 2500
 
 			Try
-				response2 = CType(request2.GetResponse(), Net.HttpWebResponse)
+				response = request.GetResponse()
 			Catch ex As Exception
-				request2 = CType(System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion2.txt"), Net.HttpWebRequest)
+				Return 3
+
+				' >>> Link seems to be dead <<<
+				' request = System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion2.txt")
+				' request.Timeout = 2500
+				' response = request.GetResponse()
 			End Try
 
-			request2.Timeout = 2500
-			response2 = CType(request2.GetResponse(), Net.HttpWebResponse)
 
-			Dim newestversion2 As String = ""
 
-			Using sr As System.IO.StreamReader = New System.IO.StreamReader(response2.GetResponseStream())
-				newestversion2 = sr.ReadToEnd()
+			Try
+				response = request.GetResponse()
+			Catch ex As Exception
+				Return 3
+			End Try
+
+			Dim newestVersionStr As String = Nothing
+			Using sr As StreamReader = New StreamReader(response.GetResponseStream())
+				newestVersionStr = sr.ReadToEnd()
 
 				sr.Close()
 			End Using
 
+			Dim newestVersion As Integer
+			Dim applicationversion As Integer
 
-			Dim newestversion2int As Integer = CInt(newestversion2.Replace(".", ""))
-			Dim exeversion As String = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString().Replace(".", "")
-			Dim applicationversion As Integer = CInt(exeversion)
+			If IsNullOrWhitespace(newestVersionStr) OrElse
+			   Not Int32.TryParse(newestVersionStr.Replace(".", ""), newestVersion) OrElse
+			   Not Int32.TryParse(Application.Settings.AppVersion.ToString().Replace(".", ""), applicationversion) Then
 
-			If newestversion2int <= applicationversion Then
+				Return 3
+			End If
+
+			If newestVersion <= applicationversion Then
 				Return 1
 			Else
 				Return 2
 			End If
 
 		Catch ex As Exception
-			MsgBox(ex)
+			Application.Log.AddWarning(ex, "Checking updates failed!")
 			Return 3
 		End Try
 	End Function
@@ -5073,7 +5085,7 @@ Public Class frmMain
 
 	Private Sub restartinsafemode(Optional ByVal withNetwork As Boolean = False)
 
-		systemrestore()	'we try to do a system restore if allowed before going into safemode.
+		SystemRestore()	'we try to do a system restore if allowed before going into safemode.
 		Application.Log.AddMessage("Restarting in safemode")
 
 
@@ -5160,7 +5172,7 @@ Public Class frmMain
 		'this shouldn't be slow, so it isn't on a thread/background worker
 
 		reboot = True
-		systemrestore()
+		SystemRestore()
 		BackgroundWorker1.RunWorkerAsync(
 		 New ThreadSettings() With {
 		   .DoShutdown = False,
@@ -5186,7 +5198,7 @@ Public Class frmMain
 
 		reboot = False
 		shutdown = False
-		systemrestore()
+		SystemRestore()
 		BackgroundWorker1.RunWorkerAsync(
 		 New ThreadSettings() With {
 		   .DoShutdown = False,
@@ -5212,7 +5224,7 @@ Public Class frmMain
 
 		reboot = False
 		shutdown = True
-		systemrestore()
+		SystemRestore()
 		BackgroundWorker1.RunWorkerAsync(
 		 New ThreadSettings() With {
 		   .DoShutdown = True,
@@ -5306,40 +5318,11 @@ Public Class frmMain
 	End Sub
 
 	Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomeMenuItem.Click
-
-		Dim commandline As StringBuilder = StrAppend(" -visitdduhome")
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
+		WinAPI.Visit(" -visitdduhome")
 	End Sub
+
 	Private Sub imgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
-
-		Dim commandline As StringBuilder = StrAppend(" -visitdonate")
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
+		WinAPI.Visit(" -visitdonate")
 	End Sub
 
 	Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
@@ -5364,6 +5347,7 @@ Public Class frmMain
 			imgOffer.IsEnabled = True
 		End If
 	End Sub
+
 	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click
 		Dim frmAbout As New frmAbout
 
@@ -5377,23 +5361,29 @@ Public Class frmMain
 		frmAbout.ShowDialog()
 	End Sub
 
-	Private Sub LinksMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles LinksMenuItem.Click
-
+	Private Sub VisitSVNMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitSVNMenuItem.Click
+		WinAPI.Visit(" -visitsvn")
 	End Sub
 
-	Private Sub InfoMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles InfoMenuItem.Click
-
+	Private Sub VisitGuru3DNvidiaMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DNvidiaMenuItem.Click
+		WinAPI.Visit(" -visitguru3dnvidia")
 	End Sub
 
-	Private Sub ToSMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles ToSMenuItem.Click
-
+	Private Sub VisitGuru3DAMDMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DAMDMenuItem.Click
+		WinAPI.Visit(" -visitguru3damd")
 	End Sub
 
-	Private Sub AboutMenuItem_Click_1(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click
-
+	Private Sub VisitGeforceMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGeforceMenuItem.Click
+		WinAPI.Visit(" -visitgeforce")
 	End Sub
 
+	Private Sub imgOffer_Click(sender As Object, e As RoutedEventArgs) Handles imgOffer.Click
+		WinAPI.Visit(" -visitoffer")
+	End Sub
 
+	Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
+		Me.WindowState = Windows.WindowState.Minimized
+	End Sub
 
 	Private Sub frmMain_Loaded(sender As Object, e As RoutedEventArgs)
 		If Me.DataContext Is Nothing Then
@@ -5759,9 +5749,6 @@ Public Class frmMain
 				Me.Topmost = True
 
 
-
-
-
 				'here I check if the process is running on system user account. if not, make it so.
 				If Not MyIdentity.IsSystem Then
 					'This code checks to see which mode Windows has booted up in.
@@ -5868,7 +5855,7 @@ Public Class frmMain
 						processstopservice.Close()
 
 						processinfo.FileName = baseDir & "\" & ddudrfolder & "\paexec.exe"
-						processinfo.Arguments = "-noname -i -s " & Chr(34) & baseDir & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + arg
+						processinfo.Arguments = "-noname -i -s " & Chr(34) & baseDir & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + Application.Settings.Arguments
 						processinfo.UseShellExecute = False
 						processinfo.CreateNoWindow = True
 						processinfo.RedirectStandardOutput = False
@@ -6053,30 +6040,20 @@ Public Class frmMain
 			Topmost = False
 
 			If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
-				Dim trd As Thread = New Thread(AddressOf ThreadTask)
-				trd.CurrentCulture = New Globalization.CultureInfo("en-US")
-				trd.CurrentUICulture = New Globalization.CultureInfo("en-US")
+				Dim trd As Thread = New Thread(AddressOf ThreadTask) With
+				{
+				 .CurrentCulture = New Globalization.CultureInfo("en-US"),
+				 .CurrentUICulture = New Globalization.CultureInfo("en-US"),
+				 .IsBackground = True
+				}
 
-				trd.IsBackground = True
 				trd.Start()
 			End If
 		Catch ex As Exception
+			Application.Log.AddException(ex, "frmMain loading caused error!")
 			MsgBox(ex)
 		End Try
-
-		If Not Application.Settings.ShowOffer Then
-			lblOffer.Visibility = Windows.Visibility.Hidden
-			imgOffer.Visibility = Windows.Visibility.Hidden
-			imgOffer.IsEnabled = False
-		Else
-			lblOffer.Visibility = Windows.Visibility.Visible
-			imgOffer.Visibility = Windows.Visibility.Visible
-			imgOffer.IsEnabled = True
-		End If
-
-		'RegistryPermissions.test2()
 	End Sub
-
 
 	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
 		If silent Then
@@ -6450,9 +6427,11 @@ Public Class frmMain
 				cleandriverstore(config)
 			End If
 
+
+			Dim position2 As Integer = Nothing
+
 			'Here I remove 3dVision USB Adapter.
 			If config.SelectedGPU = GPUVendor.Nvidia Then
-
 				If config.UseSetupAPI Then
 					Try
 						Dim HWID3dvision As String() =
@@ -6502,8 +6481,8 @@ Public Class frmMain
 										SetupAPI.UninstallDevice(d)
 									End If
 								Next
-							found.Clear()
-						End If
+								found.Clear()
+							End If
 						End If
 
 						'nVidia AudioEndpoints Removal
@@ -7146,6 +7125,8 @@ Public Class frmMain
 		End Try
 	End Sub
 
+
+
 #End Region
 
 	Private Sub ThreadTask()
@@ -7204,9 +7185,7 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Private Sub systemrestore()
-		'THIS NEEDS TO BE FIXED!!! DOES NOT WORK WITH OPTION STRICT ON. I WAS UNABLE TO FIGURE OUT MY SELF. BE SURE TO FIX BEFORE RELEASE.
-
+	Private Sub SystemRestore()
 		If Application.Settings.CreateRestorePoint Then
 			Try
 				UpdateTextMethod("Creating System Restore point (If allowed by the system)")
@@ -7218,18 +7197,23 @@ Public Class frmMain
 
 				Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
 				oInParams("Description") = "DDU System Restored Point"
-				oInParams("RestorePointType") = 12 ' MODIFY_SETTINGS
-				oInParams("EventType") = 100
+				oInParams("RestorePointType") = 12UI ' MODIFY_SETTINGS
+				oInParams("EventType") = 100UI
 
-				Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
+				Dim oOutParams As ManagementBaseObject= oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
 
-				Application.Log.AddMessage("System Restored Point Created. code: " + CStr(oOutParams("ReturnValue")))
+				Dim errCode As UInt32 = CUInt(oOutParams("ReturnValue"))
+
+				If errCode <> 0UI Then
+					Throw New COMException("System Restored Point Could not be Created!", Win32.GetInt32(errCode))
+				End If
+
+				Application.Log.AddMessage("System Restored Point Created. Code: " + errCode.ToString())
+
 			Catch ex As Exception
-				Application.Log.AddMessage("System Restored Point Could not be Created! Err Code: 0x" & Hex(Err.Number))
+				Application.Log.AddWarning(ex, "System Restored Point Could not be Created!")
 			End Try
-
 		End If
-
 	End Sub
 
 	Private Sub GetOemInfo()
@@ -7775,111 +7759,6 @@ Public Class frmMain
 		'end system environement patch cleanup
 	End Sub
 
-	Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
-		Me.WindowState = Windows.WindowState.Minimized
-	End Sub
-
-	Private Sub VisitSVNMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitSVNMenuItem.Click
-
-		Dim commandline As StringBuilder = StrAppend(" -visitsvn")
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
-	Private Sub VisitGuru3DNvidiaMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DNvidiaMenuItem.Click
-
-		Dim commandline As StringBuilder = StrAppend(" -visitguru3dnvidia")
-
-
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
-	Private Sub VisitGuru3DAMDMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DAMDMenuItem.Click
-
-		Dim commandline As StringBuilder = StrAppend(" -visitguru3damd")
-
-
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
-	Private Sub VisitGeforceMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGeforceMenuItem.Click
-
-
-		Dim commandline As StringBuilder = StrAppend(" -visitgeforce")
-
-
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
-	Private Sub imgOffer_Click(sender As Object, e As RoutedEventArgs) Handles imgOffer.Click
-		Dim commandline As StringBuilder = StrAppend(" -visitoffer")
-		Dim UserTokenHandle As IntPtr = IntPtr.Zero
-		WindowsApi.WTSQueryUserToken(WindowsApi.WTSGetActiveConsoleSessionId, UserTokenHandle)
-		Dim ProcInfo As New WindowsApi.PROCESS_INFORMATION
-		Dim StartInfo As New WindowsApi.STARTUPINFOW
-		StartInfo.cb = CUInt(Runtime.InteropServices.Marshal.SizeOf(StartInfo))
-
-		If WindowsApi.CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, commandline, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, StartInfo, ProcInfo) Then
-		Else
-			MsgBox("Error ---" & System.Runtime.InteropServices.Marshal.GetLastWin32Error())
-		End If
-
-		If Not UserTokenHandle = IntPtr.Zero Then
-			WindowsApi.CloseHandle(UserTokenHandle)
-		End If
-	End Sub
-
 	Private Sub RegMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Reg1MenuItem.Click, Reg2MenuItem.Click, Reg3MenuItem.Click
 		ACL.test3(Int32.Parse(DirectCast(sender, Control).Tag.ToString()))
 	End Sub
@@ -7919,7 +7798,7 @@ Public Class CleanupEngine
 			End Try
 			'If exists, it means we need to modify it's ACls.
 			If fixregacls AndAlso regkeypath IsNot Nothing Then
-				FixACL.Addregistrysecurity(regkeypath, child, RegistryRights.FullControl, AccessControlType.Allow)
+				ACL.Addregistrysecurity(regkeypath, child, RegistryRights.FullControl, AccessControlType.Allow)
 				regkeypath.DeleteSubKeyTree(child)
 				Application.Log.AddMessage(child + " - " + UpdateTextMethodmessagefn(39))
 			End If
@@ -7933,7 +7812,7 @@ Public Class CleanupEngine
 			regkey = location.OpenSubKey(key, write)
 
 		Catch ex As UnauthorizedAccessException
-			Addregistrysecurity(location, key, RegistryRights.FullControl, AccessControlType.Allow)
+			ACL.Addregistrysecurity(location, key, RegistryRights.FullControl, AccessControlType.Allow)
 
 			' TODO: Not sure if this works.
 			' on exception OpenSubKey returns Nothing ( regkey = Nothing ) => Return nothing
@@ -7960,7 +7839,7 @@ Public Class CleanupEngine
 
 			'If exists, it means we need to modify it's ACls.
 			If fixacls AndAlso Directory.Exists(directorypath) Then
-				FixACL.AddDirectorySecurity(directorypath, FileSystemRights.FullControl, AccessControlType.Allow)
+				ACL.AddDirectorySecurity(directorypath, FileSystemRights.FullControl, AccessControlType.Allow)
 
 				My.Computer.FileSystem.DeleteDirectory(directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
 
@@ -9420,165 +9299,102 @@ Public Class CleanupEngine
 		Dim filePath As String
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 
-		For i As Integer = 0 To driverfiles.Length - 1
-			If Not IsNullOrWhitespace(driverfiles(i)) Then
-				If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
+		For Each driverFile As String In driverfiles
+			If IsNullOrWhitespace(driverFile) Then Continue For
 
-					filePath = System.Environment.SystemDirectory
+			If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(driverFile, True, "amdkmafd")) Then
 
+				filePath = System.Environment.SystemDirectory
+
+				Try
+					deletefile(filePath & "\" & driverFile)
+				Catch ex As Exception
+				End Try
+
+				Try
+					deletefile(filePath & "\Drivers\" & driverFile)
+				Catch ex As Exception
+				End Try
+
+				If winxp Then
 					Try
-						deletefile(filePath & "\" & driverfiles(i))
+						deletefile(filePath & "\Drivers\dllcache\" & driverFile)
 					Catch ex As Exception
 					End Try
-
-					Try
-						deletefile(filePath + "\Drivers\" + driverfiles(i))
-					Catch ex As Exception
-					End Try
-
-					If winxp Then
-						Try
-							deletefile(filePath + "\Drivers\dllcache\" + driverfiles(i))
-						Catch ex As Exception
-						End Try
-					End If
 				End If
 			End If
 		Next
 
 		Try
-			For i As Integer = 0 To driverfiles.Length - 1
-				If Not IsNullOrWhitespace(driverfiles(i)) Then
-					filePath = Environment.GetEnvironmentVariable("windir")
-					For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
-						If IsNullOrWhitespace(child) = False Then
-							If child.ToLower.Contains(driverfiles(i).ToLower) Then
-								Try
-									deletefile(child)
-								Catch ex As Exception
-								End Try
-							End If
-						End If
-					Next
-				End If
+			For Each driverFile As String In driverfiles
+				If IsNullOrWhitespace(driverFile) Then Continue For
+
+				filePath = Environment.GetEnvironmentVariable("windir")
+
+				For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
+					If IsNullOrWhitespace(child) Then Continue For
+
+					If StrContainsAny(child, True, driverFile) Then
+						Try
+							deletefile(child)
+						Catch ex As Exception
+						End Try
+					End If
+				Next
+
 			Next
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
 
-		Const CSIDL_WINDOWS As Integer = &H29
-		Dim winPath As New StringBuilder(300)
-		If WindowsApi.SHGetFolderPath(Nothing, CSIDL_WINDOWS, Nothing, 0, winPath) <> 0 Then
-			Throw New ApplicationException("Can't get window's sysWOW64 directory")
-			Application.Log.AddMessage("Can't get window's sysWOW64 directory")
-		End If
+
+		Dim winPath As String = Nothing
+
+		Try
+			'	Note  As of Windows Vista, these values have been replaced by KNOWNFOLDERID values. 
+			'	See that topic for a list of the new constants and their corresponding CSIDL values. 
+			'	For convenience, corresponding KNOWNFOLDERID values are also noted here for each CSIDL value.
+
+			'	The CSIDL system is supported under Windows Vista for compatibility reasons.
+			'	However, new development should use KNOWNFOLDERID values rather than CSIDL values.
+
+			If Not WinAPI.GetFolderPath(WinAPI.CLSID.SYSTEMX86, winPath) Then
+				Throw New ArgumentException("Can't get window's sysWOW64 directory")
+			End If
+		Catch ex As Exception
+			Application.Log.AddException(ex, "Can't get window's sysWOW64 directory")
+		End Try
 
 
 		If IntPtr.Size = 8 Then
-			For i As Integer = 0 To driverfiles.Length - 1
-				If Not IsNullOrWhitespace(driverfiles(i)) Then
-					If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
+			For Each driverFile As String In driverfiles
+				If IsNullOrWhitespace(driverFile) Then Continue For
 
-						For Each child As String In My.Computer.FileSystem.GetFiles(winPath.ToString, FileIO.SearchOption.SearchTopLevelOnly, "*.log")
-							If IsNullOrWhitespace(child) = False Then
-								If child.ToLower.Contains(driverfiles(i).ToLower) Then
-									Try
-										deletefile(child)
-									Catch ex As Exception
-									End Try
-								End If
-							End If
-						Next
+				If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(driverFile, True, "amdkmafd")) Then
 
-						Try
-							deletefile(winPath.ToString + "\Drivers\" + driverfiles(i))
-						Catch ex As Exception
-						End Try
+					For Each child As String In My.Computer.FileSystem.GetFiles(winPath, FileIO.SearchOption.SearchTopLevelOnly, "*.log")
+						If IsNullOrWhitespace(child) Then Continue For
 
-						Try
-							deletefile(winPath.ToString + "\" + driverfiles(i))
-						Catch ex As Exception
-						End Try
-					End If
+						If StrContainsAny(child, True, driverFile) Then
+							Try
+								deletefile(child)
+							Catch ex As Exception
+							End Try
+						End If
+					Next
+
+					Try
+						deletefile(winPath & "\Drivers\" & driverFile)
+					Catch ex As Exception
+					End Try
+
+					Try
+						deletefile(winPath & "\" & driverFile)
+					Catch ex As Exception
+					End Try
 				End If
 			Next
 		End If
 	End Sub
-
-End Class
-
-Public Class WindowsApi
-
-    <DllImport("shell32.dll")> _
-    Public Shared Function SHGetFolderPath(ByVal hwndOwner As IntPtr, ByVal nFolder As Int32, ByVal hToken As IntPtr, ByVal dwFlags As Int32, ByVal pszPath As StringBuilder) As Int32
-    End Function
-
-    <DllImport("kernel32.dll", EntryPoint:="WTSGetActiveConsoleSessionId", SetLastError:=True)> _
-    Public Shared Function WTSGetActiveConsoleSessionId() As UInteger
-    End Function
-
-    <DllImport("Wtsapi32.dll", EntryPoint:="WTSQueryUserToken", SetLastError:=True)> _
-    Public Shared Function WTSQueryUserToken(ByVal SessionId As UInteger, ByRef phToken As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
-    End Function
-
-    <DllImport("kernel32.dll", EntryPoint:="CloseHandle", SetLastError:=True)> _
-    Public Shared Function CloseHandle(<InAttribute()> ByVal hObject As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
-    End Function
-
-	<DllImport("Advapi32.dll", ExactSpelling:=False, SetLastError:=True, CharSet:=CharSet.Unicode)> _
-	Public Shared Function CreateProcessAsUser( _
-						   ByVal hToken As IntPtr, _
-						   ByVal lpApplicationName As String, _
-						   <[In](), Out(), [Optional]()> ByVal lpCommandLine As StringBuilder, _
-						   ByVal lpProcessAttributes As IntPtr, _
-						   ByVal lpThreadAttributes As IntPtr, _
-						   <MarshalAs(UnmanagedType.Bool)> ByVal bInheritHandles As Boolean, _
-						   ByVal dwCreationFlags As Integer, _
-						   ByVal lpEnvironment As IntPtr, _
-						   ByVal lpCurrentDirectory As String, _
-						   <[In]()> ByRef lpStartupInfo As STARTUPINFOW, _
-						   <Out()> ByRef lpProcessInformation As PROCESS_INFORMATION) As <MarshalAs(UnmanagedType.Bool)> Boolean
-	End Function
-
-	<StructLayout(LayoutKind.Sequential)> _
-	Public Structure SECURITY_ATTRIBUTES
-		Public nLength As UInteger
-		Public lpSecurityDescriptor As IntPtr
-		<MarshalAs(UnmanagedType.Bool)> _
-		Public bInheritHandle As Boolean
-	End Structure
-
-	<StructLayout(LayoutKind.Sequential)> _
-	Public Structure STARTUPINFOW
-		Public cb As UInteger
-		<MarshalAs(UnmanagedType.LPWStr)> _
-		Public lpReserved As String
-		<MarshalAs(UnmanagedType.LPWStr)> _
-		Public lpDesktop As String
-		<MarshalAs(UnmanagedType.LPWStr)> _
-		Public lpTitle As String
-		Public dwX As UInteger
-		Public dwY As UInteger
-		Public dwXSize As UInteger
-		Public dwYSize As UInteger
-		Public dwXCountChars As UInteger
-		Public dwYCountChars As UInteger
-		Public dwFillAttribute As UInteger
-		Public dwFlags As UInteger
-		Public wShowWindow As UShort
-		Public cbReserved2 As UShort
-		Public lpReserved2 As IntPtr
-		Public hStdInput As IntPtr
-		Public hStdOutput As IntPtr
-		Public hStdError As IntPtr
-	End Structure
-
-	<StructLayout(LayoutKind.Sequential)> _
-	Public Structure PROCESS_INFORMATION
-		Public hProcess As IntPtr
-		Public hThread As IntPtr
-		Public dwProcessId As UInteger
-		Public dwThreadId As UInteger
-	End Structure
 
 End Class

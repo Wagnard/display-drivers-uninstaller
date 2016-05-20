@@ -16,8 +16,8 @@
     <Window.Resources>
         <conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" TrueValue="Visible" FalseValue="Collapsed" />
     </Window.Resources>
-    
-        <Grid>
+         
+	<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="528*" />
             <RowDefinition Height="Auto" />
@@ -70,13 +70,17 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <Button x:Name="imgOffer" Margin="408,450,12,0" Height="48" VerticalAlignment="Top" Visibility="Hidden" IsEnabled="False">
-            <Button.Template>
-                <ControlTemplate>
-                    <Image Source="Resources/btn (2).png" Margin="0,0,0,0"/>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
-        <Label x:Name="lblOffer" Content="lblOffer" HorizontalAlignment="Right" Margin="0,419,12,0" VerticalAlignment="Top" RenderTransformOrigin="0.495,0.5" Width="182" Visibility="Hidden"/>
-    </Grid>
+
+		<StackPanel Margin="407,412,12,38" Visibility="{Binding Settings.ShowOffer, Converter={StaticResource BoolToVisibility}}">
+			<Label x:Name="lblOffer" Content="lblOffer"/>
+	
+			<Button x:Name="imgOffer">
+				<Button.Template>
+					<ControlTemplate>
+						<Image Source="Resources/btn (2).png"/>
+					</ControlTemplate>
+				</Button.Template>
+			</Button>
+		</StackPanel>
+	</Grid>
 </Window>

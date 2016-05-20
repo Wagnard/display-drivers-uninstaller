@@ -336,8 +336,8 @@ notFound:
 					' Name = DisplayDriverUninstaller
 					' Attributes = ISO="en" , Text="English"
 
-					If reader.NodeType <> XmlNodeType.Element Or Not reader.Name.Equals(Application.Current.MainWindow.GetType().Assembly.GetName().Name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) Or Not reader.HasAttributes Then
-						Throw New InvalidDataException("Language file's format is invalid!" & vbCrLf & String.Format("Root node doesn't match '{0}'", Application.Current.MainWindow.GetType().Assembly.GetName().Name.Replace(" ", "")) & vbCrLf & "Or missing attributes 'ISO' and 'Text'")
+					If reader.NodeType <> XmlNodeType.Element Or Not reader.Name.Equals(Application.Settings.AppName.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) Or Not reader.HasAttributes Then
+						Throw New InvalidDataException("Language file's format is invalid!" & vbCrLf & String.Format("Root node doesn't match '{0}'", Application.Settings.AppName.Replace(" ", "")) & vbCrLf & "Or missing attributes 'ISO' and 'Text'")
 					End If
 
 					Dim lang_iso As String = ""

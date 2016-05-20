@@ -52,57 +52,53 @@ Module RegistryAccess
 
             Dim returnValue As Integer = 0
             Dim success As Boolean = False
-            TokenManipulator.AddPrivilege("SeSecurityPrivilege")
-            TokenManipulator.AddPrivilege("SeBackupPrivilege")
-            TokenManipulator.AddPrivilege("SeRestorePrivilege")
-            TokenManipulator.AddPrivilege("SeTakeOwnershipPrivilege")
-            registrykey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\ATI", RegistryKeyPermissionCheck.ReadWriteSubTree, Security.AccessControl.RegistryRights.TakeOwnership)
 
-            Try
-                'fileStream = File.Open("C:\Test\Test.txt", FileMode.Open)
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
+			registrykey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\ATI", RegistryKeyPermissionCheck.ReadWriteSubTree, Security.AccessControl.RegistryRights.TakeOwnership)
 
-                returnValue = GetSecurityInfo(getRegistryKeyHandle(registrykey), SE_OBJECT_TYPE.SE_REGISTRY_KEY, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION, ownerSid, groupSid, dacl, sacl, securityDescriptor)
+			Try
+				'fileStream = File.Open("C:\Test\Test.txt", FileMode.Open)
 
-                'returnValue = GetSecurityInfo(fileStream.Handle, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION Or SECURITY_INFORMATION.DACL_SECURITY_INFORMATION, ownerSid, groupSid, dacl, _
-                '	sacl, securityDescriptor)
+				returnValue = GetSecurityInfo(getRegistryKeyHandle(registrykey), SE_OBJECT_TYPE.SE_REGISTRY_KEY, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION, ownerSid, groupSid, dacl, sacl, securityDescriptor)
 
-                Dim sidString As IntPtr = IntPtr.Zero
-                success = ConvertSidToStringSid(ownerSid, sidString)
-                MsgBox(Marshal.PtrToStringAuto(sidString))
-                Marshal.FreeHGlobal(sidString)
-            Finally
-                LocalFree(securityDescriptor)
-                'fileStream.Close()
-            End Try
-        End Sub
+				'returnValue = GetSecurityInfo(fileStream.Handle, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION Or SECURITY_INFORMATION.DACL_SECURITY_INFORMATION, ownerSid, groupSid, dacl, _
+				'	sacl, securityDescriptor)
 
-        Public Shared Function Enumeratesubkeys(regions As RegistryKey, subkey As String) As Integer
+				Dim sidString As IntPtr = IntPtr.Zero
+				success = ConvertSidToStringSid(ownerSid, sidString)
+				MsgBox(Marshal.PtrToStringAuto(sidString))
+				Marshal.FreeHGlobal(sidString)
+			Finally
+				LocalFree(securityDescriptor)
+				'fileStream.Close()
+			End Try
+		End Sub
 
-            'Dim fileStream As FileStream = Nothing
-            Dim registrykey As RegistryKey
-            Dim securityDescriptor As IntPtr = IntPtr.Zero
+		Public Shared Function Enumeratesubkeys(regions As RegistryKey, subkey As String) As Integer
 
-            Dim returnValue As Integer = 0
-            Dim success As Boolean = False
-            TokenManipulator.AddPrivilege("SeSecurityPrivilege")
-            TokenManipulator.AddPrivilege("SeBackupPrivilege")
-            TokenManipulator.AddPrivilege("SeRestorePrivilege")
-            TokenManipulator.AddPrivilege("SeTakeOwnershipPrivilege")
+			'Dim fileStream As FileStream = Nothing
+			Dim registrykey As RegistryKey
+			Dim securityDescriptor As IntPtr = IntPtr.Zero
 
-            registrykey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\ATI", RegistryKeyPermissionCheck.ReadWriteSubTree, Security.AccessControl.RegistryRights.EnumerateSubKeys)
+			Dim returnValue As Integer = 0
+			Dim success As Boolean = False
 
-            Try
-                'fileStream = File.Open("C:\Test\Test.txt", FileMode.Open)
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
 
-                Return MsgBox(registrykey.SubKeyCount())
+			registrykey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\ATI", RegistryKeyPermissionCheck.ReadWriteSubTree, Security.AccessControl.RegistryRights.EnumerateSubKeys)
 
-                'returnValue = GetSecurityInfo(fileStream.Handle, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION Or SECURITY_INFORMATION.DACL_SECURITY_INFORMATION, ownerSid, groupSid, dacl, _
-                '	sacl, securityDescriptor)
-            Catch ex As Exception
-                Return 0
-            End Try
+			Try
+				'fileStream = File.Open("C:\Test\Test.txt", FileMode.Open)
 
-        End Function
+				Return MsgBox(registrykey.SubKeyCount())
+
+				'returnValue = GetSecurityInfo(fileStream.Handle, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION Or SECURITY_INFORMATION.DACL_SECURITY_INFORMATION, ownerSid, groupSid, dacl, _
+				'	sacl, securityDescriptor)
+			Catch ex As Exception
+				Return 0
+			End Try
+
+		End Function
     End Class
 
     <DllImport("advapi32.dll", CharSet:=CharSet.Auto)> _

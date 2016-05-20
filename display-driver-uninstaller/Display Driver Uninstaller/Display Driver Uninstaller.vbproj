@@ -73,7 +73,6 @@
     </ApplicationDefinition>
     <Compile Include="Inf.vb" />
     <Compile Include="Win32\ACL.vb" />
-    <Compile Include="Win32\ACLv2.vb" />
     <Compile Include="AppLog.vb" />
     <Compile Include="AppPaths.vb" />
     <Compile Include="Converters.vb" />

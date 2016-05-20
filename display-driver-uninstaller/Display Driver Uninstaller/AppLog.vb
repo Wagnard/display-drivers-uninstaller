@@ -436,9 +436,10 @@ Public Class AppLog
 	Private Delegate Sub AddWarningEntryDelegate(ByRef Ex As Exception, ByVal message As String)
 	Private Sub AddWarningEntry(ByRef Ex As Exception, ByVal message As String)
 		Dim logEntry As LogEntry = logEntry.Create()
-		logEntry.AddException(Ex)
-		logEntry.Type = LogType.Warning
+
 		logEntry.Message = message
+		logEntry.AddException(Ex, False)
+		logEntry.Type = LogType.Warning
 
 		AddEntry(logEntry)
 	End Sub
