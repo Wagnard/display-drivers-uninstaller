@@ -20,6 +20,10 @@ Public Class AppSettings
 	Private m_gpuSelected As DependencyProperty = Reg("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
 	Private m_langSelected As DependencyProperty = Reg("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
 
+	Private m_winVersion As DependencyProperty = Reg("WinVersion", GetType(String), GetType(AppSettings), "0.0")
+	Private m_winVersionText As DependencyProperty = Reg("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
+	Private m_winIs64 As DependencyProperty = Reg("WinIs64", GetType(Boolean), GetType(AppSettings), False)
+
 	' Removals
     Private m_remMonitors As DependencyProperty = Reg("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
 
@@ -72,6 +76,31 @@ Public Class AppSettings
 		End Get
 		Private Set(value As Version)
 			SetValue(m_appversion, value)
+		End Set
+	End Property
+
+	Public Property WinVersion As String
+		Get
+			Return CStr(GetValue(m_winVersion))
+		End Get
+		Set(value As String)
+			SetValue(m_winVersion, value)
+		End Set
+	End Property
+	Public Property WinVersionText As String
+		Get
+			Return CStr(GetValue(m_winVersionText))
+		End Get
+		Set(value As String)
+			SetValue(m_winVersionText, value)
+		End Set
+	End Property
+	Public Property WinIs64 As Boolean
+		Get
+			Return CBool(GetValue(m_winIs64))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_winIs64, value)
 		End Set
 	End Property
 
@@ -517,6 +546,7 @@ Public Class AppSettings
 					Int32.TryParse(verStr(2), vBuild)
 					Int32.TryParse(verStr(3), vRevision)
 					Dim ver As Version = New Version(vMajor, vMinor, vBuild, vRevision)
+
 					Dim name As String = ""
 					Dim props As New Dictionary(Of String, String)
 
@@ -603,8 +633,6 @@ Public Class AppSettings
 								GoodSite = Boolean.Parse(KvP.Value)
 						End Select
 					Next
-
-
 
 					reader.Close()
 					sr.Close()

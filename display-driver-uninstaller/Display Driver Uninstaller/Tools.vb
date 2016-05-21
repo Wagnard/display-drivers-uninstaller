@@ -1,8 +1,10 @@
 ﻿Imports System.IO
 Imports System.Text
 Imports System.Security.Cryptography
-Imports Display_Driver_Uninstaller.Win32
 Imports System.Runtime.InteropServices
+
+Imports Microsoft.Win32
+Imports Display_Driver_Uninstaller.Win32
 
 Public Module Tools
 	' 9 = vbTAB --- 10 = vbLF --- 11 = vbVerticalTab --- 12 = vbFormFeed --- 13 = vbCR --- 32 = SPACE
@@ -32,24 +34,38 @@ Public Module Tools
 	End Function
 
 	Public Function PreferredUILanguages() As String
-		Dim regkey As Microsoft.Win32.RegistryKey
-		regkey = My.Computer.Registry.CurrentUser.OpenSubKey("Control Panel\Desktop", False)
-		If regkey IsNot Nothing Then
-			Dim wantedvalue As String() = CType(regkey.GetValue("PreferredUILanguages"), String())
-			If wantedvalue IsNot Nothing Then
-				If StrContainsAny(wantedvalue(0), True, "zh-tw") Then
-					Return "zh"	 'Chinese Traditional
-				ElseIf StrContainsAny(wantedvalue(0), True, "zh-cn") Then
-					Return "zh2"	 'Chinese Simplified
-				End If
-				wantedvalue(0) = wantedvalue(0).Substring(0, If(wantedvalue(0).Length >= 2, 2, wantedvalue(0).Length))
-				Return wantedvalue(0) 'Mutistring here, but only need the first value.
-			Else
-				Return Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName	'Return en, fr, sv etc. if preferedUILanguages is null (usually old OS)
-			End If
-		End If
+		Try
+			Using regkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey("Control Panel\Desktop", False)
+				If regkey IsNot Nothing Then
+					Dim wantedValue As String() = CType(regkey.GetValue("PreferredUILanguages"), String())
 
-		Return "en"	  'Return en (English) by default if nothing found.
+					If wantedValue IsNot Nothing AndAlso wantedValue.Length > 0 AndAlso Not IsNullOrWhitespace(wantedValue(0)) Then
+						Return wantedValue(0)
+					Else
+						Return Globalization.CultureInfo.InstalledUICulture.Name	'Return en-US, en-GB, fr-FR etc.
+					End If
+				Else
+					' DevMltk: Don't have PreferredUILanguages.. but have:
+					' HKEY_CURRENT_USER\Control Panel\Desktop\MuiCached => MachinePreferredUILanguages (REG_MULTI_SZ)
+
+					Using regkey2 As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey("Control Panel\Desktop\MuiCached", False)
+						If regkey2 IsNot Nothing Then
+							Dim wantedValue As String() = CType(regkey.GetValue("MachinePreferredUILanguages"), String())
+
+							If wantedValue IsNot Nothing AndAlso wantedValue.Length > 0 AndAlso Not IsNullOrWhitespace(wantedValue(0)) Then
+								Return wantedValue(0)
+							Else
+								Return Globalization.CultureInfo.InstalledUICulture.Name	'Return en-US, en-GB, fr-FR etc.
+							End If
+						End If
+					End Using
+				End If
+			End Using
+
+			Return "en-US"	  'Return en-US (English) by default if nothing found.
+		Catch ex As Exception
+			Return "en-US"	  'Return en-US (English) by default if error
+		End Try
 	End Function
 
 	Public Function IsNullOrWhitespace(ByVal str As String) As Boolean

@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="zh2" Text="简体中文">
+<DisplayDriverUninstaller ISO="zh-CHS" Text="Chinese (Simplified)" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
-	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
 	Text = Shown to user (as written in english, found on language selection box)
 
 	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
 	[char = replaces]  xml doesn't allow some special chars like <>&"
-	\n = newline
+	| = newline
 	&amp; = &
 	&quot; = "
 	&gt; = >
 	&lt; = <
-
 	-->
+	
 	<frmMain Text="显卡驱动卸载工具（DDU）">
 		<Button1>
 			<Text>清理显卡驱动并重启|（强烈推荐）</Text>

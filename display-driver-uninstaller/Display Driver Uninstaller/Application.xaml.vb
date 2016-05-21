@@ -48,22 +48,36 @@ Class Application
     End Sub
 End Class
 
+Public Module Generic
+
+	''' <summary>Alias for MessageBox.Show(message) as defaults settings: only 'OK' button + 'Information' image</summary>
+	Public Function MsgBox(ByVal message As String, Optional ByVal buttons As MessageBoxButton = MessageBoxButton.OK, Optional ByVal image As MessageBoxImage = MessageBoxImage.Information) As MessageBoxResult
+		Return MessageBox.Show(message, Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+	End Function
+
+	''' <summary>Alias for MessageBox.Show(message, title) as defaults settings: only 'OK' button + 'Information' image</summary>
+	Public Function MsgBox(ByVal message As String, ByVal title As String, Optional ByVal buttons As MessageBoxButton = MessageBoxButton.OK, Optional ByVal image As MessageBoxImage = MessageBoxImage.Information) As MessageBoxResult
+		Return MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information)
+	End Function
+
+End Module
+
 Public Class Data
 	Private m_settings As AppSettings
 	Private m_paths As AppPaths
 	Private m_log As AppLog
-    Private m_debug As Boolean = System.Diagnostics.Debugger.IsAttached
+	Private m_debug As Boolean = System.Diagnostics.Debugger.IsAttached
 
-    Public Property IsDebug As Boolean
-        Get
-            Return m_debug
-        End Get
-        Set(value As Boolean)
-            m_debug = value
-        End Set
-    End Property
+	Public Property IsDebug As Boolean
+		Get
+			Return m_debug
+		End Get
+		Set(value As Boolean)
+			m_debug = value
+		End Set
+	End Property
 
-    Public ReadOnly Property Settings As AppSettings
+	Public ReadOnly Property Settings As AppSettings
 		Get
 			Return m_settings
 		End Get

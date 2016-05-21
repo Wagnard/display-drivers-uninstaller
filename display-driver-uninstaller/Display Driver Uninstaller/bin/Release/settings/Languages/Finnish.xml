@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="fi" Text="Finnish">
+<DisplayDriverUninstaller ISO="fi-FI" Text="Finnish" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
-	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
 	Text = Shown to user (as written in english, found on language selection box)
 
@@ -13,8 +13,8 @@
 	&quot; = "
 	&gt; = >
 	&lt; = <
-
 	-->
+	
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
 			<Text>Puhdista ja käynnistä uudelleen|(Erittäin suositeltavaa)</Text>

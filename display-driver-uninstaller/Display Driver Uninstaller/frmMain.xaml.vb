@@ -59,8 +59,7 @@ Public Class frmMain
 	Dim userpth As String = CStr(My.Computer.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist").GetValue("ProfilesDirectory")) & "\"
 	Dim reply As String = Nothing
 	Dim reply2 As String = Nothing
-	Dim version As String = Nothing
-	Dim currentdriverversion As String = Nothing
+
 	Dim safemode As Boolean = False
 	Dim CleanupEngine As New CleanupEngine
 	Dim enduro As Boolean = False
@@ -183,7 +182,7 @@ Public Class frmMain
 		deloem.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
 		Dim proc3 As New Diagnostics.Process
 
-		UpdateTextMethod(UpdateTextMethodmessagefn(0))
+		UpdateTextMethod(UpdateTextTranslated(0))
 
 		Select Case config.SelectedGPU
 			Case GPUVendor.Nvidia
@@ -319,7 +318,7 @@ Public Class frmMain
 		 "HydraMD",
 		 "ThumbnailExtractionHost",
 		 "jusched")
-		
+
 		System.Threading.Thread.Sleep(10)
 	End Sub
 
@@ -327,7 +326,7 @@ Public Class frmMain
 		Dim filePath As String = Nothing
 		Dim removedxcache As Boolean = config.RemoveCrimsonCache
 		'Delete AMD data Folders
-		UpdateTextMethod(UpdateTextMethodmessagefn(1))
+		UpdateTextMethod(UpdateTextTranslated(1))
 
 		Application.Log.AddMessage("Cleaning Directory (Please Wait...)")
 
@@ -958,7 +957,6 @@ Public Class frmMain
 	End Sub
 
 	Private Sub cleanamd(ByVal config As ThreadSettings)
-
 		Dim regkey As RegistryKey = Nothing
 		Dim subregkey As RegistryKey = Nothing
 		Dim subregkey2 As RegistryKey = Nothing
@@ -968,7 +966,7 @@ Public Class frmMain
 		Dim filePath As String = Nothing
 		Dim packages As String()
 
-		UpdateTextMethod(UpdateTextMethodmessagefn(2))
+		UpdateTextMethod(UpdateTextTranslated(2))
 		Application.Log.AddMessage("Cleaning known Regkeys")
 
 
@@ -1369,68 +1367,58 @@ Public Class frmMain
 		End Try
 
 		Try
-
 			deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
 		Catch ex As Exception
 		End Try
 
 		Try
-
 			deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
 		Catch ex As Exception
 		End Try
 
 		Try
-
 			deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
 		Catch ex As Exception
 		End Try
 
 		Try
-
 			deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\amdkmdap")
 		Catch ex As Exception
 		End Try
 
 		If IntPtr.Size = 8 Then
 			Try
-
 				deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
 			Catch ex As Exception
 			End Try
 
 			Try
-
 				deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
 			Catch ex As Exception
 			End Try
 		End If
 
 		Try
-
 			deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
 		Catch ex As Exception
 		End Try
 
 		Try
-
 			deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
 		Catch ex As Exception
 		End Try
 
 		Try
-
 			deletesubregkey(My.Computer.Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
 		Catch ex As Exception
 		End Try
-
 
 		'---------------------------------------------
 		'Cleaning of Legacy_AMDKMDAG+ on win7 and lower
 		'---------------------------------------------
 
 		Try
-			If version < "6.2" And System.Windows.Forms.SystemInformation.BootMode <> WinForm.BootMode.Normal Then 'win 7 and lower + safemode only
+			If config.WinVersion < "6.2" And WinForm.SystemInformation.BootMode <> WinForm.BootMode.Normal Then	'win 7 and lower + safemode only
 				Application.Log.AddMessage("Cleaning LEGACY_AMDKMDAG")
 				subregkey = My.Computer.Registry.LocalMachine.OpenSubKey _
 				 ("SYSTEM")
@@ -2410,8 +2398,7 @@ Public Class frmMain
 		'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
 		'holding files in the NVIDIA folders sometimes.
 		Try
-			Dim processes As String() =
-			 New String() {
+			KillProcess(
 			 "Lcore",
 			 "nvgamemonitor",
 			 "nvstreamsvc",
@@ -2421,20 +2408,10 @@ Public Class frmMain
 			 "WWAHost",
 			 "nvspcaps64",
 			 "nvspcaps",
-			 "NvBackend"}
-
-			For Each pname As String In processes
-				For Each p As Process In process.GetProcessesByName(pname)
-					p.Kill()
-				Next
-			Next
+			 "NvBackend")
 
 			If config.RemoveGFE Then
-				Dim appproc = process.GetProcessesByName("nvtray")
-
-				For i As Integer = 0 To appproc.Length - 1
-					appproc(i).Kill()
-				Next i
+				KillProcess("nvtray")
 			End If
 
 		Catch ex As Exception
@@ -2449,7 +2426,7 @@ Public Class frmMain
 		'Delete NVIDIA data Folders
 		'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
 
-		UpdateTextMethod(UpdateTextMethodmessagefn(3))
+		UpdateTextMethod(UpdateTextTranslated(3))
 		Application.Log.AddMessage("Cleaning UpdatusUser users ac if present")
 
 		Dim AD As DirectoryEntry = New DirectoryEntry("WinNT://" + Environment.MachineName.ToString())
@@ -2462,7 +2439,7 @@ Public Class frmMain
 		Catch ex As Exception
 		End Try
 
-		UpdateTextMethod(UpdateTextMethodmessagefn(4))
+		UpdateTextMethod(UpdateTextTranslated(4))
 
 		Application.Log.AddMessage("Cleaning Directory")
 
@@ -3278,7 +3255,7 @@ Public Class frmMain
 		'-----------------
 		'Registry Cleaning
 		'-----------------
-		UpdateTextMethod(UpdateTextMethodmessagefn(5))
+		UpdateTextMethod(UpdateTextTranslated(5))
 		Application.Log.AddMessage("Starting reg cleanUP... May take a minute or two.")
 
 
@@ -4605,7 +4582,7 @@ Public Class frmMain
 
 		Dim filePath As String = Nothing
 
-		UpdateTextMethod(UpdateTextMethodmessagefn(4))
+		UpdateTextMethod(UpdateTextTranslated(4))
 
 		Application.Log.AddMessage("Cleaning Directory")
 
@@ -4628,11 +4605,7 @@ Public Class frmMain
 
 		CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\INTEL\services.cfg")) '// add each line as String Array.
 
-		Dim appproc = process.GetProcessesByName("IGFXEM")
-		For i As Integer = 0 To appproc.Length - 1
-			appproc(i).Kill()
-		Next i
-
+		KillProcess("IGFXEM")
 	End Sub
 
 	Private Sub cleanintel(ByVal config As ThreadSettings)
@@ -4642,7 +4615,7 @@ Public Class frmMain
 		Dim wantedvalue As String = Nothing
 		Dim packages As String()
 
-		UpdateTextMethod(UpdateTextMethodmessagefn(5))
+		UpdateTextMethod(UpdateTextTranslated(5))
 
 		Application.Log.AddMessage("Cleaning registry")
 
@@ -4896,7 +4869,7 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		UpdateTextMethod(UpdateTextMethodmessagefn(6))
+		UpdateTextMethod(UpdateTextTranslated(6))
 	End Sub
 
 	Private Sub checkpcieroot()	 'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
@@ -4905,7 +4878,7 @@ Public Class frmMain
 		Dim subregkey As RegistryKey = Nothing
 		Dim array() As String
 
-		UpdateTextMethod(UpdateTextMethodmessagefn(7))
+		UpdateTextMethod(UpdateTextTranslated(7))
 
 		Application.Log.AddMessage("Starting the removal of nVidia Optimus UpperFilter if present.")
 
@@ -5011,7 +4984,7 @@ Public Class frmMain
 			scan.RedirectStandardOutput = False
 
 
-			UpdateTextMethod(UpdateTextMethodmessagefn(8))
+			UpdateTextMethod(UpdateTextTranslated(8))
 			Application.Log.AddMessage("Scanning for new device...")
 			Dim proc4 As New Process
 			proc4.StartInfo = scan
@@ -5161,12 +5134,9 @@ Public Class frmMain
 			Application.Settings.GoodSite = True
 		End If
 
-		btnCleanRestart.IsEnabled = False
-		btnClean.IsEnabled = False
-		btnCleanShutdown.IsEnabled = False
-		MenuStrip1.IsEnabled = False
+		EnableControls(False)
 
-		disabledriversearch()
+		disabledriversearch(Application.Settings.WinVersion)
 		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
 		KillGPUStatsProcesses()
 		'this shouldn't be slow, so it isn't on a thread/background worker
@@ -5186,12 +5156,9 @@ Public Class frmMain
 			Application.Settings.GoodSite = True
 		End If
 
-		btnCleanRestart.IsEnabled = False
-		btnClean.IsEnabled = False
-		btnCleanShutdown.IsEnabled = False
-		MenuStrip1.IsEnabled = False
+		EnableControls(False)
 
-		disabledriversearch()
+		disabledriversearch(Application.Settings.WinVersion)
 		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
 		KillGPUStatsProcesses()
 		'this shouldn't be slow, so it isn't on a thread/background worker
@@ -5212,12 +5179,9 @@ Public Class frmMain
 			Application.Settings.GoodSite = True
 		End If
 
-		btnCleanRestart.IsEnabled = False
-		btnClean.IsEnabled = False
-		btnCleanShutdown.IsEnabled = False
-		MenuStrip1.IsEnabled = False
+		EnableControls(False)
 
-		disabledriversearch()
+		disabledriversearch(Application.Settings.WinVersion)
 		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
 		KillGPUStatsProcesses()
 		'this shouldn't be slow, so it isn't on a thread/background worker
@@ -5235,19 +5199,21 @@ Public Class frmMain
 
 		Dim regkey As RegistryKey = Nothing
 
-		If version >= "6.1" Then
+		If Application.Settings.WinVersion >= "6.1" Then
 			Try
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
 				regkey.SetValue("SearchOrderConfig", 1)
+
 				MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
 		End If
-		If version >= "6.0" And version < "6.1" Then
+		If Application.Settings.WinVersion >= "6.0" And Application.Settings.WinVersion < "6.1" Then
 			Try
 				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
 				regkey.SetValue("DontSearchWindowsUpdate", 0)
+
 				MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
 			Catch ex As Exception
 				Application.Log.AddException(ex)
@@ -5256,7 +5222,90 @@ Public Class frmMain
 
 	End Sub
 
-	Private Sub btnExtendedLog_Click(sender As Object, e As EventArgs) Handles btnExtendedLog.Click
+
+	Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
+		If cbLanguage.SelectedItem IsNot Nothing Then
+			InitLanguage(False, CType(cbLanguage.SelectedItem, Languages.LanguageOption))
+		End If
+	End Sub
+
+
+
+	Private Sub imgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
+		WinAPI.OpenVisitLink(" -visitdonate")
+	End Sub
+
+	Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomeMenuItem.Click
+		WinAPI.OpenVisitLink(" -visitdduhome")
+	End Sub
+
+	Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
+		Dim frmOptions As New frmOptions
+
+		With frmOptions
+			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+			.Background = Me.Background
+			.Owner = Me
+			.DataContext = Me.DataContext
+			.ResizeMode = Windows.ResizeMode.NoResize
+			.WindowStyle = Windows.WindowStyle.ToolWindow
+		End With
+
+		frmOptions.ShowDialog()
+	End Sub
+
+	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click
+		Dim frmAbout As New frmAbout
+
+		With frmAbout
+			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+			.Owner = Me
+			.DataContext = Me.DataContext
+			.ResizeMode = Windows.ResizeMode.NoResize
+			.WindowStyle = Windows.WindowStyle.ToolWindow
+
+			.Text = Languages.GetTranslation("frmAbout", "Label1", "Text")
+			.Title = Languages.GetTranslation("frmMain", "AboutMenuItem", "Text")
+		End With
+
+		frmAbout.ShowDialog()
+	End Sub
+
+
+	Private Sub TosMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles ToSMenuItem.Click
+		Dim frmAbout As New frmAbout
+
+		With frmAbout
+			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+			.Owner = Me
+			.DataContext = Me.DataContext
+			.ResizeMode = Windows.ResizeMode.NoResize
+			.WindowStyle = Windows.WindowStyle.ToolWindow
+
+			.Text = Languages.GetTranslation("Misc", "ToS", "Text")
+			.Title = Languages.GetTranslation("frmMain", "ToSMenuItem", "Text")
+		End With
+
+		frmAbout.ShowDialog()
+	End Sub
+
+	Private Sub VisitSVNMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitSVNMenuItem.Click
+		WinAPI.OpenVisitLink(" -visitsvn")
+	End Sub
+
+	Private Sub VisitGuru3DNvidiaMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DNvidiaMenuItem.Click
+		WinAPI.OpenVisitLink(" -visitguru3dnvidia")
+	End Sub
+
+	Private Sub VisitGuru3DAMDMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DAMDMenuItem.Click
+		WinAPI.OpenVisitLink(" -visitguru3damd")
+	End Sub
+
+	Private Sub VisitGeforceMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGeforceMenuItem.Click
+		WinAPI.OpenVisitLink(" -visitgeforce")
+	End Sub
+
+	Private Sub ExtendedLogMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles ExtendedLogMenuItem.Click
 		Dim frmLog As New frmLog
 
 		With frmLog
@@ -5271,115 +5320,11 @@ Public Class frmMain
 		Me.Activate()
 	End Sub
 
-
-
-	Private Sub cbSelectedGPU_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedGPU.SelectionChanged
-		Dim bi3 As New BitmapImage
-
-		If Application.Settings.SelectedGPU = GPUVendor.Nvidia Then
-
-			'PictureBox2.Location = New Point(CInt(286 * (picturebox2originalx / 333)), CInt(92 * (picturebox2originaly / 92)))
-			'PictureBox2.Size = New Size(252, 123)
-			'         PictureBox2.Source = My.Resources.NV_GF_GTX_preferred_badge_FOR_WEB_ONLY
-			bi3.BeginInit()
-			bi3.UriSource = New Uri("/Resources/NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg", UriKind.Relative)
-			bi3.EndInit()
-			imgLogo.Source = bi3
-		End If
-
-		If Application.Settings.SelectedGPU = GPUVendor.AMD Then
-
-
-			bi3.BeginInit()
-			bi3.UriSource = New Uri("/Resources/RadeonLogo1.png", UriKind.Relative)
-			bi3.EndInit()
-			imgLogo.Source = bi3
-			'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-			'PictureBox2.Size = New Size(158, 126)
-			'           PictureBox2.Source = My.Resources.RadeonLogo1
-		End If
-
-		If Application.Settings.SelectedGPU = GPUVendor.Intel Then
-			bi3.BeginInit()
-			bi3.UriSource = New Uri("/Resources/intel_logo.png", UriKind.Relative)
-			bi3.EndInit()
-			imgLogo.Source = bi3
-			'PictureBox2.Location = New Point(picturebox2originalx, picturebox2originaly)
-			'PictureBox2.Size = New Size(158, 126)
-			'         PictureBox2.Source = My.Resources.intel_logo
-		End If
-
-	End Sub
-
-	Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
-		If cbLanguage.SelectedItem IsNot Nothing Then
-			InitLanguage(False, CType(cbLanguage.SelectedItem, Languages.LanguageOption))
-		End If
-	End Sub
-
-	Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomeMenuItem.Click
-		WinAPI.Visit(" -visitdduhome")
-	End Sub
-
-	Private Sub imgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
-		WinAPI.Visit(" -visitdonate")
-	End Sub
-
-	Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
-		Dim frmOptions As New frmOptions
-
-		With frmOptions
-			.Owner = Me
-			.DataContext = Me.DataContext
-			.ResizeMode = Windows.ResizeMode.NoResize
-			.WindowStyle = Windows.WindowStyle.ToolWindow
-		End With
-
-		frmOptions.ShowDialog()
-
-		If Not Application.Settings.ShowOffer Then
-			lblOffer.Visibility = Windows.Visibility.Hidden
-			imgOffer.Visibility = Windows.Visibility.Hidden
-			imgOffer.IsEnabled = False
-		Else
-			lblOffer.Visibility = Windows.Visibility.Visible
-			imgOffer.Visibility = Windows.Visibility.Visible
-			imgOffer.IsEnabled = True
-		End If
-	End Sub
-
-	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click
-		Dim frmAbout As New frmAbout
-
-		With frmAbout
-			.Owner = Me
-			.DataContext = Me.DataContext
-			.ResizeMode = Windows.ResizeMode.NoResize
-			.WindowStyle = Windows.WindowStyle.ToolWindow
-		End With
-
-		frmAbout.ShowDialog()
-	End Sub
-
-	Private Sub VisitSVNMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitSVNMenuItem.Click
-		WinAPI.Visit(" -visitsvn")
-	End Sub
-
-	Private Sub VisitGuru3DNvidiaMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DNvidiaMenuItem.Click
-		WinAPI.Visit(" -visitguru3dnvidia")
-	End Sub
-
-	Private Sub VisitGuru3DAMDMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGuru3DAMDMenuItem.Click
-		WinAPI.Visit(" -visitguru3damd")
-	End Sub
-
-	Private Sub VisitGeforceMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGeforceMenuItem.Click
-		WinAPI.Visit(" -visitgeforce")
-	End Sub
-
 	Private Sub imgOffer_Click(sender As Object, e As RoutedEventArgs) Handles imgOffer.Click
-		WinAPI.Visit(" -visitoffer")
+		WinAPI.OpenVisitLink(" -visitoffer")
 	End Sub
+
+
 
 	Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
 		Me.WindowState = Windows.WindowState.Minimized
@@ -5391,7 +5336,7 @@ Public Class frmMain
 		End If
 
 		Try
-			Dim defaultLang As New Languages.LanguageOption("en", "English", Application.Paths.Language & "English.xml")
+			Dim defaultLang As New Languages.LanguageOption("en-US", "English", Application.Paths.Language & "English.xml")
 			Dim foundLangs As List(Of Languages.LanguageOption) = Languages.ScanFolderForLang(Application.Paths.Language)
 
 			foundLangs.Add(defaultLang)
@@ -5402,6 +5347,8 @@ Public Class frmMain
 			Next
 
 			Application.Settings.Load()
+			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
+
 			InitLanguage(True)
 
 			If Application.Settings.CheckUpdates AndAlso isElevated Then
@@ -5416,67 +5363,44 @@ Public Class frmMain
 			End If
 
 
-			Dim subregkey As RegistryKey = Nothing
-			Dim webAddress As String = ""
-
-			' used arguments: -dduhome -svn -donate -guru3dnvidia -guru3damd -geforce
-			' NOTE: Application.Settings & Paths creates needed folders (-> moved to beginning of Sub)
-
-#If 1 + 1 = 3 Then ' TODO: REMOVE (msgboxes gets annoying...)
-			MessageBox.Show(
-			 "Arguments: " & Application.Settings.Arguments & vbCrLf & vbCrLf & vbCrLf &
-			 "VisitDDUHome: " & Application.Settings.VisitDDUHome.ToString() & vbCrLf &
-			 "VisitDonate: " & Application.Settings.VisitDonate.ToString() & vbCrLf &
-			 "VisitGeforce: " & Application.Settings.VisitGeforce.ToString() & vbCrLf &
-			 "VisitGuru3DAMD: " & Application.Settings.VisitGuru3DAMD.ToString() & vbCrLf &
-			 "VisitGuru3DNvidia: " & Application.Settings.VisitGuru3DNvidia.ToString() & vbCrLf &
-			 "VisitSVN: " & Application.Settings.VisitSVN.ToString()
-			 )
-#End If
 			'we check if the donate/guru3dnvidia/gugu3damd/geforce/dduhome is trigger here directly.
+
+			Dim webAddress As String = Nothing
+
 			If Application.Settings.VisitDonate Then
 				webAddress = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-			End If
 
-			If Application.Settings.VisitGuru3DNvidia Then
+			ElseIf Application.Settings.VisitGuru3DNvidia Then
 				webAddress = "http://forums.guru3d.com/showthread.php?t=379506"
-			End If
 
-			If Application.Settings.VisitGuru3DAMD Then
+			ElseIf Application.Settings.VisitGuru3DAMD Then
 				webAddress = "http://forums.guru3d.com/showthread.php?t=379505"
-			End If
 
-			If Application.Settings.VisitGeforce Then
+			ElseIf Application.Settings.VisitGeforce Then
 				webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
-			End If
 
-			If Application.Settings.VisitDDUHome Then
+			ElseIf Application.Settings.VisitDDUHome Then
 				webAddress = "http://www.wagnardmobile.com"
-			End If
 
-			If Application.Settings.VisitSVN Then
+			ElseIf Application.Settings.VisitSVN Then
 				webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
-			End If
 
-			If Application.Settings.VisitOffer Then
+			ElseIf Application.Settings.VisitOffer Then
 				webAddress = "https://www.driverdr.com/lp/update-display-drivers.html"
 			End If
 
-			If Application.Settings.VisitDonate Or
-			   Application.Settings.VisitGuru3DNvidia Or
-			   Application.Settings.VisitGuru3DAMD Or
-			   Application.Settings.VisitGeforce Or
-			   Application.Settings.VisitSVN Or
-			   Application.Settings.VisitDDUHome Or
-			   Application.Settings.VisitOffer Then
+			If Not IsNullOrWhitespace(webAddress) Then
 
-				processinfo.FileName = webAddress
-				processinfo.Arguments = Nothing
-				processinfo.UseShellExecute = True
-				processinfo.CreateNoWindow = True
-				processinfo.RedirectStandardOutput = False
+				Dim process As Process = New Process() With
+				 {
+				  .StartInfo = New ProcessStartInfo(webAddress, Nothing) With
+				  {
+				   .UseShellExecute = True,
+				   .CreateNoWindow = True,
+				   .RedirectStandardOutput = False
+				  }
+				 }
 
-				process.StartInfo = processinfo
 				process.Start()
 				'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
 				process.Close()
@@ -5502,13 +5426,20 @@ Public Class frmMain
 					Exit Sub
 				End If
 			End If
-			'second, we check on what we are running and set variables accordingly (os, architecture)
-			If Not IsNullOrWhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion"))) Then
-				version = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentVersion").ToString
-			Else
-				version = "5.0"
-			End If
 
+			'second, we check on what we are running and set variables accordingly (os, architecture)
+			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
+				If regkey IsNot Nothing Then
+					Dim regValue As String = CStr(regkey.GetValue("CurrentVersion"))
+
+					If Not IsNullOrWhitespace(regValue) Then
+						Application.Settings.WinVersion = regValue
+					Else
+						Application.Settings.WinVersion = "5.0"
+					End If
+				Else : Application.Settings.WinVersion = "5.0"
+				End If
+			End Using
 
 #If 1 + 1 = 3 Then ' TODO: REMOVE (msgboxes gets annoying...)
 			MessageBox.Show("version (regkey): " & version & vbCrLf & vbCrLf &
@@ -5522,47 +5453,50 @@ Public Class frmMain
 			btnCleanShutdown.IsEnabled = True
 			btnWuRestore.IsEnabled = True
 
-			Select Case version
+			Select Case Application.Settings.WinVersion
 				Case "5.1"
-					lblWinVersionValue.Content = "Windows XP"
+					Application.Settings.WinVersionText = "Windows XP"
 					winxp = True
 
 				Case "5.2"
-					lblWinVersionValue.Content = "Windows XP (x64) or Server 2003"
+					Application.Settings.WinVersionText = "Windows XP (x64) or Server 2003"
 					winxp = True
 
 				Case "6.0"
-					lblWinVersionValue.Content = "Windows Vista or Server 2008"
+					Application.Settings.WinVersionText = "Windows Vista or Server 2008"
 
 				Case "6.1"
-					lblWinVersionValue.Content = "Windows 7 or Server 2008R2"
+					Application.Settings.WinVersionText = "Windows 7 or Server 2008R2"
 
 				Case "6.2"
-					lblWinVersionValue.Content = "Windows 8 or Server 2012"
+					Application.Settings.WinVersionText = "Windows 8 or Server 2012"
 					win8higher = True
 
 				Case "6.3"
-					lblWinVersionValue.Content = "Windows 8.1"
-					If Not IsNullOrWhitespace(CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber"))) Then
-						If CStr(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False).GetValue("CurrentMajorVersionNumber")) = "10" Then
-							lblWinVersionValue.Content = "Windows 10"
-							win10 = True
-						End If
-					End If
+					Application.Settings.WinVersionText = "Windows 8.1"
 					win8higher = True
 
+					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
+						If regkey IsNot Nothing Then
+							Dim regValue As String = CStr(regkey.GetValue("CurrentMajorVersionNumber"))
+
+							If Not IsNullOrWhitespace(regValue) AndAlso regValue.Equals("10") Then
+								Application.Settings.WinVersionText = "Windows 10"
+								win10 = True
+							End If
+						End If
+					End Using
+
 				Case "6.4", "10.0"
-					lblWinVersionValue.Content = "Windows 10"
+					Application.Settings.WinVersionText = "Windows 10"
 					win8higher = True
 					win10 = True
 
 				Case Else
-					lblWinVersionValue.Content = "Unsupported OS"
+					Application.Settings.WinVersionText = "Unsupported OS"
 					Application.Log.AddMessage("Unsupported OS.")
-					btnCleanRestart.IsEnabled = False
-					btnClean.IsEnabled = False
-					btnCleanShutdown.IsEnabled = False
-					btnWuRestore.IsEnabled = False
+
+					EnableControls(False)
 			End Select
 
 
@@ -5572,20 +5506,28 @@ Public Class frmMain
 				'  If BootMode.FailSafe Or BootMode.FailSafeWithNetwork Then ' we do this in safemode because of some Antivirus....(Kaspersky)
 				Try
 					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-						regkey.CreateSubKey("PAexec")
-						regkey.OpenSubKey("Paexec", True).SetValue("", "Service")
+						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
+							regSubKey.SetValue("", "Service")
+						End Using
+
+						'regkey.CreateSubKey("PAexec")
+						'regkey.OpenSubKey("Paexec", True).SetValue("", "Service")
 					End Using
 				Catch ex As Exception
-					Application.Log.AddException(ex)
+					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAexec!")
 				End Try
 
 				Try
 					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-						regkey.CreateSubKey("PAexec")
-						regkey.OpenSubKey("Paexec", True).SetValue("", "Service")
+						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
+							regSubKey.SetValue("", "Service")
+						End Using
+
+						'regkey.CreateSubKey("PAexec")
+						'regkey.OpenSubKey("Paexec", True).SetValue("", "Service")
 					End Using
 				Catch ex As Exception
-					Application.Log.AddException(ex)
+					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for PAexec!")
 				End Try
 				'End If
 
@@ -5607,18 +5549,18 @@ Public Class frmMain
 
 				If IntPtr.Size = 8 Then
 					archIs64 = True
-					lblArch.Content = "x64"
-
 					Application.Paths.CreateDirectories(Application.Paths.AppBase & "\x64")
 
 				ElseIf IntPtr.Size = 4 Then
 					archIs64 = False
-					lblArch.Content = "x86"
-
 					Application.Paths.CreateDirectories(Application.Paths.AppBase & "\x86")
 				End If
 
-				ddudrfolder = CStr(lblArch.Content)
+
+				Application.Settings.WinIs64 = archIs64
+
+
+				ddudrfolder = If(archIs64, "x64", "x86")
 
 				If Not identity.IsSystem Then
 					If archIs64 Then
@@ -5649,7 +5591,7 @@ Public Class frmMain
 
 					If archIs64 = True Then
 						If Not File.Exists(Application.Paths.AppBase & "x64\ddudr.exe") Then
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
+							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 
 							btnCleanRestart.IsEnabled = False
 							btnClean.IsEnabled = False
@@ -5883,85 +5825,102 @@ Public Class frmMain
 				End If
 
 				Dim info As LogEntry = LogEntry.Create()
-				UpdateTextMethod(UpdateTextMethodmessagefn(10) + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
+				UpdateTextMethod(UpdateTextTranslated(10) + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
 
 				info.Message = "System Information"
-				info.Add("DDU Version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())
-				info.Add("OS", CStr(lblWinVersionValue.Content))
-				info.Add("Architecture", CStr(lblArch.Content))
+				info.Add("DDU Version", Application.Settings.AppVersion.ToString())
+				info.Add("OS", Application.Settings.WinVersionText)
+				info.Add("Architecture", If(Application.Settings.WinIs64, "x64", "x86"))
+				info.Add(KvP.Empty)
+
 
 				Try
 					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames
-								If Not IsNullOrWhitespace(child) Then
+								If IsNullOrWhitespace(child) Then Continue For
 
-									If Not child.ToLower.Contains("properties") Then
+								If Not StrContainsAny(child, True, "properties") Then
 
-										subregkey = regkey.OpenSubKey(child)
-										If subregkey IsNot Nothing Then
+									Using subRegkey As RegistryKey = regkey.OpenSubKey(child)
+										If subRegkey IsNot Nothing Then
+											Dim regValue As String = CStr(subRegkey.GetValue("Device Description"))
+											Dim hexStr As String = Nothing
 
-											If Not IsNullOrWhitespace(CStr(subregkey.GetValue("Device Description"))) Then
-												currentdriverversion = subregkey.GetValue("Device Description").ToString
-												UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
-												info.Add("GPU #" + child, currentdriverversion)
+											If Not IsNullOrWhitespace(regValue) Then
+												UpdateTextMethod(UpdateTextTranslated(11) & " " + child & " " & UpdateTextTranslated(12) & " " & regValue)
+												info.Add("GPU # " & child, regValue)
 											Else
-												If (subregkey.GetValue("DriverDesc") IsNot Nothing) AndAlso (subregkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary) Then
-													UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
-													info.Add("GPU #" + child, HexToString(GetREG_BINARY(subregkey.ToString, "DriverDesc").Replace("00", "")))
-												Else
-													If Not IsNullOrWhitespace(CStr(subregkey.GetValue("DriverDesc"))) Then
-														currentdriverversion = subregkey.GetValue("DriverDesc").ToString
-														UpdateTextMethod(UpdateTextMethodmessagefn(11) + " " + child + " " + UpdateTextMethodmessagefn(12) + " " + currentdriverversion)
-														info.Add("GPU #" + child, currentdriverversion)
+												regValue = CStr(subRegkey.GetValue("DriverDesc"))
+
+												If Not IsNullOrWhitespace(regValue) Then
+													If subRegkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
+														hexStr = HexToString(GetREG_BINARY(regValue, "DriverDesc").Replace("00", ""))
+
+														UpdateTextMethod(UpdateTextTranslated(11) & " " & child & " " & UpdateTextTranslated(12) & " " & hexStr)
+														info.Add("GPU #" + child, hexStr)
+													Else
+														UpdateTextMethod(UpdateTextTranslated(11) & " " & child & " " & UpdateTextTranslated(12) & " " & regValue)
+														info.Add("GPU #" + child, regValue)
 													End If
 												End If
-
 											End If
-											If Not IsNullOrWhitespace(CStr(subregkey.GetValue("MatchingDeviceId"))) Then
-												currentdriverversion = subregkey.GetValue("MatchingDeviceId").ToString
-												UpdateTextMethod(UpdateTextMethodmessagefn(13) + " " + currentdriverversion)
-												info.Add("GPU DeviceId", currentdriverversion)
+
+											regValue = CStr(subRegkey.GetValue("MatchingDeviceId"))
+
+											If Not IsNullOrWhitespace(regValue) Then
+												UpdateTextMethod(UpdateTextTranslated(13) & " " & regValue)
+												info.Add("GPU DeviceId", regValue)
 											End If
 
 											Try
-												If (Not IsNullOrWhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString")))) AndAlso (subregkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary) Then
-													UpdateTextMethod("Vbios :" + " " + HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
-													info.Add("Vbios", HexToString(GetREG_BINARY(subregkey.ToString, "HardwareInformation.BiosString").Replace("00", "")))
-												Else
-													If Not IsNullOrWhitespace(CStr(subregkey.GetValue("HardwareInformation.BiosString"))) Then
-														currentdriverversion = subregkey.GetValue("HardwareInformation.BiosString").ToString
+												regValue = CStr(subRegkey.GetValue("HardwareInformation.BiosString"))
+
+												If Not IsNullOrWhitespace(regValue) Then
+													If subRegkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
+														hexStr = HexToString(GetREG_BINARY(subRegkey.ToString, "HardwareInformation.BiosString").Replace("00", ""))
+
+														UpdateTextMethod("Vbios :" & " " & hexStr)
+														info.Add("Vbios", hexStr)
+													Else
+														regValue = CStr(subRegkey.GetValue("HardwareInformation.BiosString"))
+
 														For i As Integer = 0 To 9
 															'this is a little fix to correctly show the vbios version info
-															currentdriverversion = currentdriverversion.Replace("." + i.ToString + ".", ".0" + i.ToString + ".")
+															regValue = regValue.Replace("." & i.ToString & ".", ".0" & i.ToString & ".")
 														Next
-														UpdateTextMethod("Vbios :" + " " + currentdriverversion)
-														info.Add("Vbios", currentdriverversion)
+
+														UpdateTextMethod("Vbios :" & " " & regValue)
+														info.Add("Vbios", regValue)
 													End If
 												End If
 											Catch ex As Exception
 											End Try
 
+											regValue = CStr(subRegkey.GetValue("DriverVersion"))
 
-											If Not IsNullOrWhitespace(CStr(subregkey.GetValue("DriverVersion"))) Then
-												currentdriverversion = subregkey.GetValue("DriverVersion").ToString
-												UpdateTextMethod(UpdateTextMethodmessagefn(14) + " " + currentdriverversion)
-												info.Add("Detected Driver(s) Version(s)", currentdriverversion)
+											If Not IsNullOrWhitespace(regValue) Then
+												UpdateTextMethod(UpdateTextTranslated(14) & " " & regValue)
+												info.Add("Detected Driver(s) Version(s)", regValue)
 											End If
-											If Not IsNullOrWhitespace(CStr(subregkey.GetValue("InfPath"))) Then
-												currentdriverversion = subregkey.GetValue("InfPath").ToString
-												UpdateTextMethod(UpdateTextMethodmessagefn(15) + " " + currentdriverversion)
-												info.Add("INF", currentdriverversion)
+
+											regValue = CStr(subRegkey.GetValue("InfPath"))
+
+											If Not IsNullOrWhitespace(regValue) Then
+												UpdateTextMethod(UpdateTextTranslated(15) & " " & regValue)
+												info.Add("INF name", regValue)
 											End If
-											If Not IsNullOrWhitespace(CStr(subregkey.GetValue("InfSection"))) Then
-												currentdriverversion = subregkey.GetValue("InfSection").ToString
-												UpdateTextMethod(UpdateTextMethodmessagefn(16) + " " + currentdriverversion)
-												info.Add("INF", currentdriverversion)
+
+											regValue = CStr(subRegkey.GetValue("InfSection"))
+
+											If Not IsNullOrWhitespace(regValue) Then
+												UpdateTextMethod(UpdateTextTranslated(16) & " " & regValue)
+												info.Add("INF section", regValue)
 											End If
 										End If
 										UpdateTextMethod("--------------")
-
-									End If
+										info.Add(KvP.Empty)
+									End Using
 								End If
 							Next
 						End If
@@ -5985,27 +5944,29 @@ Public Class frmMain
 				' -------------------------------------
 				Try
 					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) = False Then
-									If child.ToLower.Contains("ven_8086") Then
-										Try
-											subregkey = regkey.OpenSubKey(child)
-										Catch ex As Exception
-											Continue For
-										End Try
-										For Each childs As String In subregkey.GetSubKeyNames()
-											If IsNullOrWhitespace(childs) = False Then
-												If Not IsNullOrWhitespace(CStr(subregkey.OpenSubKey(childs).GetValue("Service"))) Then
-													If subregkey.OpenSubKey(childs).GetValue("Service").ToString.ToLower.Contains("amdkmdap") Then
+								If IsNullOrWhitespace(child) Then Continue For
+
+								If StrContainsAny(child, True, "ven_8086") Then
+									Try
+										Using subRegKey As RegistryKey = regkey.OpenSubKey(child)
+											For Each childs As String In subRegKey.GetSubKeyNames()
+												If IsNullOrWhitespace(childs) Then Continue For
+
+												Using childRegKey As RegistryKey = subRegKey.OpenSubKey(childs)
+													Dim regValue As String = CStr(childRegKey.GetValue("Service"))
+
+													If Not IsNullOrWhitespace(regValue) AndAlso StrContainsAny(regValue, True, "amdkmdap") Then
 														enduro = True
 														UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
 													End If
-												End If
-											End If
-										Next
-									End If
+												End Using
+											Next
+										End Using
+									Catch ex As Exception
+										Continue For
+									End Try
 								End If
 							Next
 						End If
@@ -6030,7 +5991,6 @@ Public Class frmMain
 				GetOemInfo()
 
 			Catch ex As Exception
-				MsgBox(ex)
 				Application.Log.AddException(ex)
 				closeddu()
 				Exit Sub
@@ -6051,7 +6011,6 @@ Public Class frmMain
 			End If
 		Catch ex As Exception
 			Application.Log.AddException(ex, "frmMain loading caused error!")
-			MsgBox(ex)
 		End Try
 	End Sub
 
@@ -6101,7 +6060,7 @@ Public Class frmMain
 		Dim array() As String
 
 
-		UpdateTextMethod(UpdateTextMethodmessagefn(19))
+		UpdateTextMethod(UpdateTextTranslated(19))
 
 		preventclose = True
 
@@ -6125,9 +6084,9 @@ Public Class frmMain
 			End Select
 
 
-			UpdateTextMethod(UpdateTextMethodmessagefn(20) + " " & config.SelectedGPU.ToString() & " " + UpdateTextMethodmessagefn(21))
+			UpdateTextMethod(UpdateTextTranslated(20) + " " & config.SelectedGPU.ToString() & " " + UpdateTextTranslated(21))
 			Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
-			UpdateTextMethod(UpdateTextMethodmessagefn(22))
+			UpdateTextMethod(UpdateTextTranslated(22))
 
 
 			'SpeedUP the removal of the NVIDIA adapter due to how the NVIDIA installer work.
@@ -6150,6 +6109,12 @@ Public Class frmMain
 									If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
 										'Remove msgbox before release.
 										MsgBox("Device to remove: " + SystemDevice.Description + " from sibling " + Sibling.Description + Sibling.DeviceID)
+
+										Dim logEntry As LogEntry = Application.Log.CreateEntry()
+										logEntry.Message = "Removing AMD HD Audio Bus (amdkmafd)"
+										logEntry.AddDevices(SystemDevice)
+										Application.Log.Add(logEntry)
+
 										Win32.SetupAPI.UninstallDevice(SystemDevice)
 									End If
 								End If
@@ -6345,13 +6310,13 @@ Public Class frmMain
 				Next
 			End If
 
-			UpdateTextMethod(UpdateTextMethodmessagefn(23))
+			UpdateTextMethod(UpdateTextTranslated(23))
 			Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
 
 
 			cleandriverstore(config)
 
-			UpdateTextMethod(UpdateTextMethodmessagefn(24))
+			UpdateTextMethod(UpdateTextTranslated(24))
 			Application.Log.AddMessage("Executing DDUDR Remove Audio controler.")
 
 			If config.UseSetupAPI Then
@@ -6417,7 +6382,7 @@ Public Class frmMain
 					Application.Log.AddException(ex)
 				End Try
 			End If
-			UpdateTextMethod(UpdateTextMethodmessagefn(25))
+			UpdateTextMethod(UpdateTextTranslated(25))
 
 
 			Application.Log.AddMessage("DDUDR Remove Audio controler Complete.")
@@ -6567,7 +6532,7 @@ Public Class frmMain
 						Application.Log.AddException(ex)
 					End Try
 
-					UpdateTextMethod(UpdateTextMethodmessagefn(26))
+					UpdateTextMethod(UpdateTextTranslated(26))
 
 					Try
 						'removing NVIDIA SHIELD Wireless Controller Trackpad
@@ -6898,9 +6863,9 @@ Public Class frmMain
 						Application.Log.AddException(ex)
 					End Try
 				End If
-				UpdateTextMethod(UpdateTextMethodmessagefn(27))
+				UpdateTextMethod(UpdateTextTranslated(27))
 			End If
-			UpdateTextMethod(UpdateTextMethodmessagefn(28))
+			UpdateTextMethod(UpdateTextTranslated(28))
 
 			'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont what that
 			'espcially if we are not using an AMD GPU
@@ -7090,7 +7055,7 @@ Public Class frmMain
 			preventclose = False
 			backgroundworkcomplete = True
 
-			UpdateTextMethod(UpdateTextMethodmessagefn(9))
+			UpdateTextMethod(UpdateTextTranslated(9))
 
 			Application.Log.AddMessage("Clean uninstall completed!")
 
@@ -7099,10 +7064,7 @@ Public Class frmMain
 				rescan()
 			End If
 
-			btnCleanRestart.IsEnabled = True
-			btnClean.IsEnabled = True
-			btnCleanShutdown.IsEnabled = True
-			MenuStrip1.IsEnabled = True
+			EnableControls(True)
 
 			If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
 				If MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text10"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
@@ -7125,9 +7087,15 @@ Public Class frmMain
 		End Try
 	End Sub
 
-
-
 #End Region
+
+	Private Sub EnableControls(ByVal enabled As Boolean)
+		'	Me.IsEnabled = enabled
+
+		ButtonsPanel.IsEnabled = enabled
+		btnWuRestore.IsEnabled = enabled
+		MenuStrip1.IsEnabled = enabled
+	End Sub
 
 	Private Sub ThreadTask()
 
@@ -7200,7 +7168,7 @@ Public Class frmMain
 				oInParams("RestorePointType") = 12UI ' MODIFY_SETTINGS
 				oInParams("EventType") = 100UI
 
-				Dim oOutParams As ManagementBaseObject= oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
+				Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
 
 				Dim errCode As UInt32 = CUInt(oOutParams("ReturnValue"))
 
@@ -7416,17 +7384,16 @@ Public Class frmMain
 
 	End Sub
 
-	Private Sub disabledriversearch()
-		Application.Log.AddMessage("Trying to disable search for Windows Updates :")
-		Application.Log.AddMessage("Version " + version + " detected")
+	Private Sub disabledriversearch(ByVal version As String)
+		Application.Log.AddMessage("Trying to disable search for Windows Updates", "Version", Version)
 
-		If version >= "6.1" Then
+		If Version >= "6.1" Then
 			Try
 				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
 
 					If regkey IsNot Nothing AndAlso CInt(regkey.GetValue("SearchOrderConfig").ToString) <> 0 Then
 						regkey.SetValue("SearchOrderConfig", 0)
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Information)
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
 					End If
 				End Using
 			Catch ex As Exception
@@ -7434,13 +7401,13 @@ Public Class frmMain
 			End Try
 		End If
 
-		If version >= "6.0" And version < "6.1" Then
+		If Version >= "6.0" And Version < "6.1" Then
 			Try
 				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
 
 					If regkey IsNot Nothing AndAlso CInt(regkey.GetValue("DontSearchWindowsUpdate").ToString) <> 1 Then
 						regkey.SetValue("DontSearchWindowsUpdate", 1)
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Information)
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
 					End If
 				End Using
 
@@ -7451,8 +7418,6 @@ Public Class frmMain
 	End Sub
 
 	Private Function checkamdkmpfd() As Boolean
-		Dim array As String() = Nothing
-
 		Try
 			Application.Log.AddMessage("Checking if AMDKMPFD is present before Service removal")
 
@@ -7467,7 +7432,7 @@ Public Class frmMain
 									For Each child2 As String In subregkey.GetSubKeyNames()
 										If IsNullOrWhitespace(child2) Then Continue For
 
-										array = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
+										Dim array As String() = CType(subregkey.OpenSubKey(child2).GetValue("LowerFilters"), String())
 
 										If array IsNot Nothing AndAlso array.Length > 0 Then
 											For Each value As String In array
@@ -7499,14 +7464,12 @@ Public Class frmMain
 		'TODO: InitLanguage (just comment for quick find)
 
 		If firstLaunch Then
-			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
-
-			Dim defaultLang As New Languages.LanguageOption("en", "English", Application.Paths.Language & "English.xml")
+			Dim defaultLang As New Languages.LanguageOption("en-US", "English", Application.Paths.Language & "English.xml")
 
 			ExtractEnglishLangFile(defaultLang)
 			Languages.Load() 'default = english
 
-			'Dim systemLang As String = Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName	'en, fr, sv etc.
+			'Dim systemLang As String = Globalization.CultureInfo.InstalledUICulture.Name	'en-US, en-GB, fr-FR
 			Dim systemlang = PreferredUILanguages()
 			Dim lastUsedLang As Languages.LanguageOption = Nothing
 			Dim nativeLang As Languages.LanguageOption = Nothing
@@ -7516,7 +7479,7 @@ Public Class frmMain
 					lastUsedLang = item
 				End If
 
-				If nativeLang Is Nothing AndAlso systemLang.Equals(item.ISOLanguage, StringComparison.OrdinalIgnoreCase) Then
+				If nativeLang Is Nothing AndAlso systemlang.Equals(item.ISOLanguage, StringComparison.OrdinalIgnoreCase) Then
 					nativeLang = item 'take native on hold incase last used language not found (avoid multiple loops)
 				End If
 			Next
@@ -7568,7 +7531,7 @@ Public Class frmMain
 		End Using
 	End Sub
 
-	Public Function UpdateTextMethodmessagefn(ByVal number As Integer) As String
+	Public Function UpdateTextTranslated(ByVal number As Integer) As String
 		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1))
 	End Function
 
@@ -7627,16 +7590,13 @@ Public Class frmMain
 	End Sub
 
 	Public Sub UpdateTextMethod(ByVal strMessage As String)
-		If Not tbLog.Dispatcher.CheckAccess() Then
-			Dispatcher.Invoke(Sub() tbLog.Text = tbLog.Text & strMessage & vbNewLine)
-			Dispatcher.Invoke(Sub() tbLog.Select(tbLog.Text.Length, 0))
-			Dispatcher.Invoke(Sub() tbLog.ScrollToEnd())
+		If Not lbLog.Dispatcher.CheckAccess() Then
+			Dispatcher.Invoke(Sub() UpdateTextMethod(strMessage))
 		Else
-			tbLog.Text = tbLog.Text & strMessage & vbNewLine
-			tbLog.Select(tbLog.Text.Length, 0)
-			tbLog.ScrollToEnd()
+			lbLog.Items.Add(strMessage)
+			lbLog.Items.MoveCurrentToLast()
+			lbLog.ScrollIntoView(lbLog.Items.CurrentItem)
 		End If
-
 	End Sub
 
 	Public Function GetREG_BINARY(ByVal Path As String, ByVal Value As String) As String
@@ -7768,6 +7728,7 @@ Public Class frmMain
 
 		testWindow.ShowDialog()
 	End Sub
+
 End Class
 
 Public Class CleanupEngine

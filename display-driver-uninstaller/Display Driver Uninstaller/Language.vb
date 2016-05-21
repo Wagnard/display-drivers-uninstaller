@@ -4,7 +4,7 @@ Imports System.Reflection
 Imports System.Text
 
 Public Class Languages
-	Private Const newlineStr As String = "|"
+	Private Shared newLineStr As String = "|"
 	Private Shared ReadOnly threadLock As String = "You shall not pass!" 'lock access for one thread at time
 
 	Private Shared isEngLoaded As Boolean = False
@@ -26,9 +26,9 @@ Public Class Languages
 	''' <param name="langOption">Which language to load for use. Use 'Nothing' for defaul (English)</param>
 	Public Shared Sub Load(Optional ByVal langOption As LanguageOption = Nothing)
 		SyncLock (threadLock)
-			If langOption Is Nothing OrElse langOption.ISOLanguage.Equals("en", StringComparison.OrdinalIgnoreCase) Then
+			If langOption Is Nothing OrElse langOption.ISOLanguage.Equals("en-US", StringComparison.OrdinalIgnoreCase) Then
 				If Not isEngLoaded Or englishDictionary Is Nothing Then
-					isEngLoaded = ReadFile("en", False, englishDictionary)
+					isEngLoaded = ReadFile("en-US", False, englishDictionary)
 				End If
 
 				useTranslated = False
@@ -46,7 +46,7 @@ Public Class Languages
 	End Sub
 
 	Private Shared Sub LoadDefault()
-		isEngLoaded = ReadFile("en", False, englishDictionary)
+		isEngLoaded = ReadFile("en-US", False, englishDictionary)
 		useTranslated = False
 		currentLang = englishDictionary.Details
 	End Sub
@@ -127,7 +127,7 @@ notFound:
 			For Each kvp As KeyValuePair(Of String, String) In tc.Values
 				If (kvp.Key.Equals(type, StringComparison.OrdinalIgnoreCase)) Then
 					If Not String.IsNullOrEmpty(kvp.Value) Then
-						Return kvp.Value.Trim(vbCrLf.ToCharArray()).Replace(newlineStr, vbCrLf)
+						Return kvp.Value.Trim(vbCrLf.ToCharArray()).Replace(newLineStr, vbCrLf)
 					Else
 						Exit For
 					End If
@@ -191,10 +191,10 @@ notFound:
 				window.Title = text
 			End If
 
-			Dim controls As New List(Of Control)
+			Dim controls As New List(Of DependencyObject)
 			GetChildren(window, controls)
 
-			For Each c As Control In controls
+			For Each c As DependencyObject In controls
 				TranslateControl(window.Name, c)
 			Next
 		End SyncLock
@@ -210,7 +210,7 @@ notFound:
 					Continue For 'Skip english file
 				End If
 
-				If ReadFile(file, True, tf) AndAlso Not tf.Details.ISOLanguage.Equals("en") Then
+				If ReadFile(file, True, tf) AndAlso Not tf.Details.ISOLanguage.Equals("en-US") Then
 					ValidLangFiles.Add(tf.Details)
 				End If
 			Next
@@ -219,19 +219,19 @@ notFound:
 		End SyncLock
 	End Function
 
-	Private Shared Sub GetChildren(ByVal parent As DependencyObject, ByRef controls As List(Of Control))
+	Private Shared Sub GetChildren(ByVal parent As DependencyObject, ByRef controls As List(Of DependencyObject))
 		If parent IsNot Nothing Then
 			For i As Int32 = 0 To VisualTreeHelper.GetChildrenCount(parent) - 1
 				Dim child As DependencyObject = VisualTreeHelper.GetChild(parent, i)
 
-				If TypeOf (child) Is Control Then
-					controls.Add(CType(child, Control))
+				If TypeOf (child) Is Control OrElse TypeOf (child) Is TextBlock Then
+					controls.Add(child)
 				End If
 
 				If TypeOf (child) Is MenuItem Then
 					Dim menuitem As MenuItem = CType(child, MenuItem)
 
-					controls.Add(CType(menuitem, Control))
+					controls.Add(menuitem)
 					GetMenuItems(menuitem, controls)
 				Else
 					If VisualTreeHelper.GetChildrenCount(child) > 0 Then
@@ -242,10 +242,10 @@ notFound:
 		End If
 	End Sub
 
-	Private Shared Sub GetMenuItems(ByVal parent As MenuItem, ByRef controls As List(Of Control))
+	Private Shared Sub GetMenuItems(ByVal parent As MenuItem, ByRef controls As List(Of DependencyObject))
 		If parent.HasItems Then
 			For Each menuitem As MenuItem In parent.Items
-				controls.Add(CType(menuitem, Control))
+				controls.Add(menuitem)
 
 				If menuitem.HasItems Then
 					GetMenuItems(menuitem, controls)
@@ -254,19 +254,19 @@ notFound:
 		End If
 	End Sub
 
-	Private Shared Sub TranslateControl(ByVal window As String, ByVal ctrl As Control)
+	Private Shared Sub TranslateControl(ByVal window As String, ByVal ctrl As DependencyObject)
 		If TypeOf (ctrl) Is ComboBox Then				'ComboBox
-			Dim cb As ComboBox = CType(ctrl, ComboBox)
-			Dim items As List(Of String) = GetTranslationList(window, ctrl.Name, "Item")
+			Dim cb As ComboBox = DirectCast(ctrl, ComboBox)
+			Dim items As List(Of String) = GetTranslationList(window, cb.Name, "Item")
 
 			If items IsNot Nothing AndAlso items.Count > 0 Then
 				cb.Items.Clear()
-				cb.ItemsSource = (GetTranslationList(window, ctrl.Name, "Item").ToArray())
+				cb.ItemsSource = (GetTranslationList(window, cb.Name, "Item").ToArray())
 				cb.SelectedIndex = 0
 			End If
 
 		ElseIf TypeOf (ctrl) Is ContentControl Then		'control has '.Content' property
-			Dim contentCtrl As ContentControl = CType(ctrl, ContentControl)
+			Dim contentCtrl As ContentControl = DirectCast(ctrl, ContentControl)
 			Dim text = GetTranslation(window, contentCtrl.Name, "Text")
 
 			If Not String.IsNullOrEmpty(text) Then
@@ -280,7 +280,7 @@ notFound:
 			End If
 
 		ElseIf TypeOf (ctrl) Is MenuItem Then			'MenuItem
-			Dim menuCtrl As MenuItem = CType(ctrl, MenuItem)
+			Dim menuCtrl As MenuItem = DirectCast(ctrl, MenuItem)
 
 			Dim text = GetTranslation(window, menuCtrl.Name, "Text")
 
@@ -293,11 +293,26 @@ notFound:
 			If Not String.IsNullOrEmpty(tooltipText) Then
 				menuCtrl.ToolTip = tooltipText
 			End If
+		ElseIf TypeOf (ctrl) Is TextBlock Then			'TextBlock
+			Dim tb As TextBlock = DirectCast(ctrl, TextBlock)
+
+			Dim text = GetTranslation(window, tb.Name, "Text")
+
+			If Not String.IsNullOrEmpty(text) Then
+				tb.Text = text
+			End If
+
+			Dim tooltipText As String = GetTranslation(window, tb.Name, "Tooltip")
+
+			If Not String.IsNullOrEmpty(tooltipText) Then
+				tb.ToolTip = tooltipText
+			End If
 		End If
+
 	End Sub
 
 	Private Shared Function LoadFile(ByVal langFile As String) As Stream
-		If (langFile.Equals("en", StringComparison.OrdinalIgnoreCase)) Then
+		If (langFile.Equals("en-US", StringComparison.OrdinalIgnoreCase)) Then
 			Return Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml"))
 		Else
 			If (File.Exists(langFile)) Then
@@ -321,7 +336,7 @@ notFound:
 					Dim reader As XmlReader = XmlReader.Create(sr, settings)
 
 					' Read until reach first line which should be
-					' <DisplayDriverUninstaller ISO="en" Text="English">
+					' <DisplayDriverUninstaller ISO="en-US" Text="English">
 					Do While reader.Read()
 						If reader.NodeType = XmlNodeType.Element Then
 							Exit Do
@@ -334,29 +349,36 @@ notFound:
 
 					' Check reader nodetype (Element), element name (DDU), has attributes (ISO & Text)
 					' Name = DisplayDriverUninstaller
-					' Attributes = ISO="en" , Text="English"
+					' Attributes = ISO="en-US" , Text="English"
 
 					If reader.NodeType <> XmlNodeType.Element Or Not reader.Name.Equals(Application.Settings.AppName.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) Or Not reader.HasAttributes Then
 						Throw New InvalidDataException("Language file's format is invalid!" & vbCrLf & String.Format("Root node doesn't match '{0}'", Application.Settings.AppName.Replace(" ", "")) & vbCrLf & "Or missing attributes 'ISO' and 'Text'")
 					End If
 
-					Dim lang_iso As String = ""
-					Dim lang_text As String = ""
+					Dim lang_iso As String = Nothing
+					Dim lang_text As String = Nothing
+					Dim newLineChr As String = "|"
 
-					' <DisplayDriverUninstaller ISO="en" Text="English"> <-- read ISO & Text attribute's values
+					' <DisplayDriverUninstaller ISO="en-US" Text="English"> <-- read ISO & Text attribute's values
 					Do While reader.MoveToNextAttribute()
 						If Not String.IsNullOrEmpty(reader.Name) Then
 							If reader.Name.Equals("ISO", StringComparison.OrdinalIgnoreCase) Then
 								lang_iso = reader.Value
 							ElseIf reader.Name.Equals("Text", StringComparison.OrdinalIgnoreCase) Then
 								lang_text = reader.Value
+							ElseIf reader.Name.Equals("NewLineChar", StringComparison.OrdinalIgnoreCase) Then
+								newLineChr = reader.Value
 							End If
 						End If
 					Loop
 
-					' ISO="en" and/or Text="English" attribute(s) not found 
+					' ISO="en-US" and/or Text="English" attribute(s) not found 
 					If String.IsNullOrEmpty(lang_iso) Or String.IsNullOrEmpty(lang_text) Then
-						Throw New InvalidDataException("Language file's format is invalid!" & vbCrLf & "Missing required attributes 'ISO' and 'Text'" & vbCrLf & "(eg. 'ISO=""en""' and 'Text=""English""' )")
+						Throw New InvalidDataException("Language file's format is invalid!" & vbCrLf & "Missing required attributes 'ISO' and 'Text'" & vbCrLf & "(eg. 'ISO=""en-US""' and 'Text=""English""' )")
+					End If
+
+					If Not IsNullOrWhitespace(newLineChr) Then
+						newLineStr = newLineChr
 					End If
 
 					Dim file As TranslatedFile = New TranslatedFile(lang_iso, lang_text, langFile)
@@ -372,7 +394,7 @@ notFound:
 
 							If reader.HasAttributes Then 'parent has attributes. <frmMain Text="..."> <-- 'Text' attribute
 								Do While reader.MoveToNextAttribute()
-									parent.Attributes.Add(reader.Name, reader.Value.Replace(newlineStr, vbCrLf))
+									parent.Attributes.Add(reader.Name, reader.Value.Replace(newLineStr, vbCrLf))
 								Loop
 							End If
 
@@ -384,7 +406,7 @@ notFound:
 
 									If reader.HasAttributes Then  ' has attributes? Shouldn't, but may used in future if needed
 										Do While reader.MoveToNextAttribute()
-											ctrl.Attributes.Add(reader.Name, reader.Value.Replace(newlineStr, vbCrLf))
+											ctrl.Attributes.Add(reader.Name, reader.Value.Replace(newLineStr, vbCrLf))
 										Loop
 									End If
 
@@ -416,7 +438,7 @@ notFound:
 			End Using
 		Catch ex As Exception
 			'if English translation is badly formatted/not readable (should never be)
-			If langFile.Equals("en", StringComparison.OrdinalIgnoreCase) Or Not onlyCheckValid Then
+			If langFile.Equals("en-US", StringComparison.OrdinalIgnoreCase) Or Not onlyCheckValid Then
 				MsgBox(ex.Message + ex.StackTrace)
 			End If
 
@@ -566,8 +588,8 @@ notFound:
 		End Function
 
 		Public Overloads Function Equals(other As LanguageOption) As Boolean Implements System.IEquatable(Of LanguageOption).Equals
-			If other IsNot Nothing AndAlso TypeOf (other) Is LanguageOption Then
-				Return Me.ISOLanguage.Equals(CType(other, LanguageOption).ISOLanguage, StringComparison.OrdinalIgnoreCase)
+			If other IsNot Nothing Then
+				Return Me.ISOLanguage.Equals(other.ISOLanguage, StringComparison.OrdinalIgnoreCase)
 			End If
 
 			Return False

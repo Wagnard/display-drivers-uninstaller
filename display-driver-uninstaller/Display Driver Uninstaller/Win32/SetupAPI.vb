@@ -2291,7 +2291,7 @@ Namespace Win32
 							logEntry.Add("-> ClassName", className)
 							logEntry.Add(KvP.Empty)
 
-							logEntry.AddDevices(Devices)
+							logEntry.AddDevices(Devices.ToArray())
 
 							Application.Log.Add(logEntry)
 						End If

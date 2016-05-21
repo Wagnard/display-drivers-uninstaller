@@ -192,7 +192,7 @@ Public Class LogEntry
 		OnPropertyChanged("Values")
 	End Sub
 
-	Public Sub AddDevices(ByVal devices As List(Of Win32.SetupAPI.Device))
+	Public Sub AddDevices(ByVal ParamArray devices As Win32.SetupAPI.Device())
 		For Each d As Win32.SetupAPI.Device In devices
 			Values.Add(New KvP("Description", d.Description))
 			Values.Add(New KvP("ClassName", d.ClassName))

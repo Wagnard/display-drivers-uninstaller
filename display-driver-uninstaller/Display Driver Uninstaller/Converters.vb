@@ -169,7 +169,12 @@ Namespace Converters
     Public Class BooleanToFontWeight
         Inherits BooleanConverter(Of FontWeight)
         Implements IValueConverter
-    End Class
+	End Class
+
+	Public Class BooleanToString
+		Inherits BooleanConverter(Of String)
+		Implements IValueConverter
+	End Class
 
     Public Class BooleanConverter(Of T)
         Implements IValueConverter

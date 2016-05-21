@@ -318,7 +318,7 @@ Namespace Win32
 			Return True
 		End Function
 
-		Public Shared Sub Visit(ByVal arg As String)
+		Public Shared Sub OpenVisitLink(ByVal arg As String)
 			Dim UserTokenHandle As IntPtr = IntPtr.Zero
 
 			Try

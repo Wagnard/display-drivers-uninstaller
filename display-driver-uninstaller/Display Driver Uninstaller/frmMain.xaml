@@ -7,63 +7,147 @@
 	xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
 	mc:Ignorable="d" 
 	
-    Title="{Binding Settings.AppName}" 
-    Height="600" Width="608" ResizeMode="noresize" 
+    Title="{Binding Settings.AppName, Mode=OneWay}" 
+    MinHeight="550" MinWidth="640" ResizeMode="CanResize"
+	Height="673" Width="810"
     Loaded="frmMain_Loaded" 
     Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" 
-    Visibility="Visible" WindowStartupLocation="CenterScreen">
-    
-    <Window.Resources>
+    Visibility="Visible" WindowStartupLocation="CenterScreen" d:DesignHeight="545" d:DesignWidth="680">
+	
+	<Window.Resources>
         <conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" TrueValue="Visible" FalseValue="Collapsed" />
-    </Window.Resources>
-         
+		<conv:BooleanToString x:Key="BoolToStr" TrueValue="x64" FalseValue="x86" />
+
+		<ImageBrush x:Key="logoAMD" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/RadeonLogo1.png" Stretch="Uniform" AlignmentY="Bottom" />
+		<ImageBrush x:Key="logoNvidia" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg" Stretch="Uniform" AlignmentY="Bottom" />
+		<ImageBrush x:Key="logoIntel" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/intel_logo.png" Stretch="Uniform" AlignmentY="Bottom" />
+
+		<LinearGradientBrush x:Key="brushNvidia" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FFDCFFDC" Offset="0" />
+			<GradientStop Color="White" Offset="1" />
+		</LinearGradientBrush>
+		<LinearGradientBrush x:Key="brushIntel" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FFDCDCFF" Offset="0" />
+			<GradientStop Color="White" Offset="1" />
+		</LinearGradientBrush>
+		<LinearGradientBrush x:Key="brushAmd" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FFFFE6E6" Offset="0" />
+			<GradientStop Color="White" Offset="1" />
+		</LinearGradientBrush>
+	</Window.Resources>
+
+	<Window.Style>
+		<Style TargetType="{x:Type Window}">
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.AMD}">
+					<Setter Property="Background" Value="{StaticResource brushAmd}"/>
+				</DataTrigger>
+				<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Nvidia}">
+					<Setter Property="Background" Value="{StaticResource brushNvidia}"/>
+				</DataTrigger>
+				<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Intel}">
+					<Setter Property="Background" Value="{StaticResource brushIntel}"/>
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+	</Window.Style>
+	
 	<Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="528*" />
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" MinWidth="250" />
+			<ColumnDefinition Width="*" />	
+			<ColumnDefinition Width="20" />		<!-- Space ( 30px ) -->
+			<ColumnDefinition Width="220" MaxWidth="300" />
+		</Grid.ColumnDefinitions>
+		
+		<Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="30" />		<!-- Space ( 30px ) -->
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		
+		<Menu Name="MenuStrip1" FontSize="13" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="4" Background="#2F000000">
+			<MenuItem x:Name="OptionsMenuItem" Header="Options"/>
+			
+			<MenuItem x:Name="LinksMenuItem" Header="Links">
+				<MenuItem x:Name="VisitDDUHomeMenuItem" Header="ddu_home" />
+				<MenuItem x:Name="VisitSVNMenuItem" Header="svn" />
+				<MenuItem x:Name="VisitGuru3DNvidiaMenuItem" Header="g3d_nv" />
+				<MenuItem x:Name="VisitGuru3DAMDMenuItem" Header="g3d_amd" />
+				<MenuItem x:Name="VisitGeforceMenuItem" Header="geforce" />
+			</MenuItem>
+			
+			<MenuItem x:Name="ExtendedLogMenuItem" Header="Ex Log"/>
+			
+			<MenuItem x:Name="InfoMenuItem" Header="Info">
+				<MenuItem x:Name="ToSMenuItem" Header="Terms of Service (ToS)" />
+				<MenuItem x:Name="AboutMenuItem" Header="About" />
+			</MenuItem>
 
-        <Button x:Name="btnCleanRestart" Content="BtnRestart" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="200" Height="53" />
-        <Button x:Name="btnClean" Content="btnCleanonly" HorizontalAlignment="Left" Margin="10,175,0,0" VerticalAlignment="Top" Width="200" Height="53" />
-        <Button x:Name="btnCleanShutdown" Content="btnCleanShutdown" HorizontalAlignment="Left" Margin="10,253,0,0" VerticalAlignment="Top" Width="200" Height="53" RenderTransformOrigin="0.518,1.792" />
-        <Button x:Name="btnWuRestore" Content="Button" Margin="407,365,12,0" VerticalAlignment="Top" Height="39"  />
-        <Button x:Name="btnExtendedLog" Content="btnExtendedLog" Margin="407,335,12,0" VerticalAlignment="Top" Height="25" />
+			<MenuItem x:Name="TestMenuItem" Header="TESTING" Visibility="{Binding IsDebug, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+				<MenuItem x:Name="Reg1MenuItem" Header="Reg (test3 = 0)" Tag="0" />
+				<MenuItem x:Name="Reg2MenuItem" Header="Reg (test3 = 1)" Tag="1" />
+				<MenuItem x:Name="Reg3MenuItem" Header="Reg (test3 = 2)" Tag="2" />
+				<MenuItem x:Name="SetupAPIMenuItem" Header="SetupAPI" />
+			</MenuItem>
+		</Menu>
 
-        <ComboBox Name="cbSelectedGPU" HorizontalAlignment="Left" Margin="425,43,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectedItem="{Binding Settings.SelectedGPU, Mode=TwoWay}" />
-        <ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" SelectedItem="{Binding Settings.SelectedLanguage,Mode=TwoWay}" DisplayMemberPath="DisplayText" Margin="407,503,12,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" />
+		<StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" Margin="10,5,10,5">
+			<TextBlock x:Name="lblWinVersion" Text="lblWinVersionText" VerticalAlignment="Center" />
+			<TextBlock x:Name="lblWinVersionValue" FontWeight="Bold" Margin="3,0,0,0" VerticalAlignment="Center">
+				<TextBlock.Text>
+					<MultiBinding StringFormat="{}{0} ({1})">
+						<Binding Path="Settings.WinVersionText" />
+						<Binding Path="Settings.WinIs64" Converter="{StaticResource BoolToStr}" />
+					</MultiBinding>
+				</TextBlock.Text>
+			</TextBlock>
+		</StackPanel>
+	
+		<DockPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="3" Margin="10,0">	
+			<DockPanel DockPanel.Dock="Bottom" Grid.Row="1" Grid.Column="3" >
+				<Label Content="Selected GPU: " DockPanel.Dock="Top" FontWeight="Bold" VerticalAlignment="Center" />
+				<ComboBox Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedItem="{Binding Settings.SelectedGPU, Mode=TwoWay}" DockPanel.Dock="Right" />
+			</DockPanel>	
+				
+			<Border DockPanel.Dock="Bottom">
+				<Border.Style>
+					<Style TargetType="{x:Type Border}">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.AMD}">
+								<Setter Property="Background" Value="{StaticResource logoAMD}"/>
+							</DataTrigger>
+							<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Nvidia}">
+								<Setter Property="Background" Value="{StaticResource logoNvidia}"/>
+							</DataTrigger>
+							<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Intel}">
+								<Setter Property="Background" Value="{StaticResource logoIntel}"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Border.Style>
+			</Border>
+		</DockPanel>
 
-        <Label x:Name="lblUpdate" Content="lblUpdate" Height="26" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" />
-        <TextBox x:Name="tbLog" HorizontalAlignment="Left" Height="172" Margin="10,335,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="366" />
-
-        <Menu x:Name="MenuStrip1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="{x:Null}" >
-            <MenuItem x:Name="OptionsMenuItem" Header="Options"/>
-            <MenuItem x:Name="LinksMenuItem" Header="Links">
-                <MenuItem x:Name="VisitDDUHomeMenuItem" Header="ddu_home" />
-                <MenuItem x:Name="VisitSVNMenuItem" Header="svn" />
-                <MenuItem x:Name="VisitGuru3DNvidiaMenuItem" Header="g3d_nv" />
-                <MenuItem x:Name="VisitGuru3DAMDMenuItem" Header="g3d_amd" />
-                <MenuItem x:Name="VisitGeforceMenuItem" Header="geforce" />
-            </MenuItem>
-            <MenuItem x:Name="InfoMenuItem" Header="Info">
-                <MenuItem x:Name="ToSMenuItem" Header="Terms of Service (ToS)" />
-                <MenuItem x:Name="AboutMenuItem" Header="About" />
-            </MenuItem>
-
-            <MenuItem x:Name="TestMenuItem" Header="TESTING" Visibility="{Binding IsDebug, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
-                <MenuItem x:Name="Reg1MenuItem" Header="Reg (test3 = 0)" Tag="0" />
-                <MenuItem x:Name="Reg2MenuItem" Header="Reg (test3 = 1)" Tag="1" />
-                <MenuItem x:Name="Reg3MenuItem" Header="Reg (test3 = 2)" Tag="2" />
-                <MenuItem x:Name="SetupAPIMenuItem" Header="SetupAPI" />
-            </MenuItem>
-        </Menu>
-        <Image x:Name="imgLogo" HorizontalAlignment="Left" Height="141" Margin="359,103,0,0" VerticalAlignment="Top" Width="200" Source="Resources/RadeonLogo1.png"/>
-        <StackPanel Height="27" HorizontalAlignment="Left" Margin="0,26,0,0" Name="StackPanel1" VerticalAlignment="Top" Orientation="Horizontal">
-            <Label x:Name="lblWinVersion" Content="lblWinVersionText" />
-            <Label x:Name="lblWinVersionValue" Content="W7" />
-            <Label x:Name="lblArch" Content="x00" Height="26" Width="38" FontWeight="Bold" />
-        </StackPanel>
-       
-        <Button x:Name="imgDonate" Margin="500,530,12,0" Height="25" VerticalAlignment="Top" Grid.RowSpan="2">
+		<StackPanel Grid.Row="2" Orientation="Vertical" x:Name="ButtonsPanel">
+			<Button Margin="10,10,10,0" x:Name="btnCleanRestart" Content="BtnRestart" HorizontalAlignment="Stretch" Height="50" />
+			<Button Margin="10,10,10,0" x:Name="btnClean" Content="btnCleanonly" HorizontalAlignment="Stretch" Height="50" />
+			<Button Margin="10,10,10,0" x:Name="btnCleanShutdown" Content="btnCleanShutdown" HorizontalAlignment="Stretch" Height="50" /> 
+		</StackPanel>
+		
+		<StackPanel Grid.Row="4" Grid.Column="3" Orientation="Vertical" >
+			<Button Margin="10,0" x:Name="btnWuRestore" Height="50">
+				<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center"/>
+			</Button>
+		</StackPanel>
+		    
+        <Label x:Name="lblUpdate" Content="lblUpdate" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="6" />
+   
+        <Button x:Name="imgDonate" Grid.Row="6" Grid.Column="3" HorizontalAlignment="Right" Width="96" Margin="6">
             <Button.Template>
                 <ControlTemplate>
                     <Image Source="Resources/btn_donate_LG.gif"/>
@@ -71,16 +155,32 @@
             </Button.Template>
         </Button>
 
-		<StackPanel Margin="407,412,12,38" Visibility="{Binding Settings.ShowOffer, Converter={StaticResource BoolToVisibility}}">
-			<Label x:Name="lblOffer" Content="lblOffer"/>
-	
-			<Button x:Name="imgOffer">
-				<Button.Template>
-					<ControlTemplate>
-						<Image Source="Resources/btn (2).png"/>
-					</ControlTemplate>
-				</Button.Template>
-			</Button>
-		</StackPanel>
+		<DockPanel LastChildFill="True" Margin="10" Grid.Row="5" Grid.Column="3">
+			<StackPanel DockPanel.Dock="Bottom">
+				<Label x:Name="lblLanguage" Content="Selected language" FontWeight="Bold" />
+				<ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" SelectedItem="{Binding Settings.SelectedLanguage, Mode=TwoWay}" DisplayMemberPath="DisplayText" VerticalAlignment="Top" Height="22" IsReadOnly="True" />
+			</StackPanel>
+			
+			<StackPanel Visibility="{Binding Settings.ShowOffer, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" DockPanel.Dock="Top" VerticalAlignment="Center">
+				<Label x:Name="lblOffer" FontWeight="Bold" Content="lblOffer" HorizontalContentAlignment="Center" />
+				
+				<Button x:Name="imgOffer">
+					<Button.Template>
+						<ControlTemplate>
+							<Image Source="Resources/btn (2).png"/>
+						</ControlTemplate>
+					</Button.Template>
+				</Button>
+			</StackPanel>		
+		</DockPanel>
+
+			
+		<ListBox Name="lbLog" Focusable="False" Grid.Row="4" Grid.ColumnSpan="2" Grid.RowSpan="2">
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="{x:Type Control}" >
+					<Setter Property="Focusable" Value="False" />
+				</Style>
+			</ListBox.ItemContainerStyle>
+		</ListBox>
 	</Grid>
 </Window>

@@ -90,7 +90,7 @@ Module RegistryAccess
 			Try
 				'fileStream = File.Open("C:\Test\Test.txt", FileMode.Open)
 
-				Return MsgBox(registrykey.SubKeyCount())
+				Return registrykey.SubKeyCount()
 
 				'returnValue = GetSecurityInfo(fileStream.Handle, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION Or SECURITY_INFORMATION.DACL_SECURITY_INFORMATION, ownerSid, groupSid, dacl, _
 				'	sacl, securityDescriptor)

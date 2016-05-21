@@ -28,6 +28,9 @@ Public Class ThreadSettings
 	Public Property RemoveVulkan As Boolean
 	Public Property UseSetupAPI As Boolean
 
+	Public Property WinVersion As String
+	Public Property WinIs64 As Boolean
+
 	Public Sub New()
 		PropertyCopy(Application.Paths, Me.Paths)
 		PropertyCopy(Application.Settings, Me)
