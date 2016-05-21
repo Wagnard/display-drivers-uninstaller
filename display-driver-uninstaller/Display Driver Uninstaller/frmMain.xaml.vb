@@ -3100,46 +3100,47 @@ Public Class frmMain
 			End Try
 
 			'windows 8+ only (store apps nv_cache cleanup)
-			Try
-				If win8higher Then
-					Dim prefilePath As String = filepaths + "\AppData\Local\Packages"
-					For Each childs As String In My.Computer.FileSystem.GetDirectories(prefilePath)
-						If Not IsNullOrWhitespace(childs) Then
-							filePath = childs + "\AC\Temp\NVIDIA Corporation"
+			'COmmenting this out as it is suspected to cause issue on some coputer with Tiles. (need to be tested/ confirmed etc...)
+			'Try
+			'	If win8higher Then
+			'		Dim prefilePath As String = filepaths + "\AppData\Local\Packages"
+			'		For Each childs As String In My.Computer.FileSystem.GetDirectories(prefilePath)
+			'			If Not IsNullOrWhitespace(childs) Then
+			'				filePath = childs + "\AC\Temp\NVIDIA Corporation"
 
-							If Directory.Exists(filePath) Then
-								For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-									If IsNullOrWhitespace(child) = False Then
-										If child.ToLower.Contains("nv_cache") Then
-											Try
-												deletedirectory(child)
-											Catch ex As Exception
-												Application.Log.AddException(ex)
-												TestDelete(child)
-											End Try
-										End If
-									End If
-								Next
+			'				If Directory.Exists(filePath) Then
+			'					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+			'						If IsNullOrWhitespace(child) = False Then
+			'							If child.ToLower.Contains("nv_cache") Then
+			'								Try
+			'									deletedirectory(child)
+			'								Catch ex As Exception
+			'									Application.Log.AddException(ex)
+			'									TestDelete(child)
+			'								End Try
+			'							End If
+			'						End If
+			'					Next
 
-								If Directory.GetDirectories(filePath).Length = 0 Then
-									Try
-										deletedirectory(filePath)
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-										TestDelete(filePath)
-									End Try
-								Else
-									For Each data As String In Directory.GetDirectories(filePath)
-										Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
-									Next
+			'					If Directory.GetDirectories(filePath).Length = 0 Then
+			'						Try
+			'							deletedirectory(filePath)
+			'						Catch ex As Exception
+			'							Application.Log.AddException(ex)
+			'							TestDelete(filePath)
+			'						End Try
+			'					Else
+			'						For Each data As String In Directory.GetDirectories(filePath)
+			'							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+			'						Next
 
-								End If
-							End If
-						End If
-					Next
-				End If
-			Catch ex As Exception
-			End Try
+			'					End If
+			'				End If
+			'			End If
+			'		Next
+			'	End If
+			'Catch ex As Exception
+			'End Try
 
 		Next
 
