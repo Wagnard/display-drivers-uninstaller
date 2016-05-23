@@ -1,7 +1,7 @@
 ﻿<Window x:Name="frmLaunch" x:Class="frmLaunch"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="frmLaunch" Height="360" Width="480" ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
+    Title="frmLaunch" Height="376.418" Width="488.955" ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
 	
 	<Grid>
 		<Grid.RowDefinitions>
@@ -20,7 +20,7 @@
 
 		<ComboBox x:Name="cbBootOption" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" SelectedIndex="0" Grid.Row="2" Margin="6"/>
 
-		<Label Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="3" Margin="6" Foreground="#FFEB0000" FontSize="14" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center" />
+		<Label Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="3" Margin="6" Foreground="#FFEB0000" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center" />
 
 		<Border Grid.Row="4" BorderBrush="Black" BorderThickness="1" Margin="-1,0,-1,-1">
 			<DockPanel Margin="6">

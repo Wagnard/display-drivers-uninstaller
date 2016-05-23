@@ -236,7 +236,7 @@
 			<Text>Launch option</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>You are not in safe mode. It is highly recommended to|reboot into Safe Mode to avoid possible issues.| |Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
 		</lblNotSafeMode>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -284,7 +284,7 @@ to you or your computer and are in no way affiliates of DDU, or it's creators.
 
 Created By Wagnard.
 
-Co-owner: Shady757
+Coders:Wagnard, Devmltk, Shady757
 
 Tester : Dellon132
 
