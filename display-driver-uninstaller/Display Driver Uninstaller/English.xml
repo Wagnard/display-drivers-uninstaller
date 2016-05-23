@@ -250,7 +250,13 @@
 		  <Text>Close</Text>
 		</btnClose>
 	</frmLog>
-	
+  
+  <frmSystemRestore Text="Creating System Restore Point">
+    <lblSystemRestore>
+      <Text>Trying to create a System Restore point.</Text>
+    </lblSystemRestore>
+  </frmSystemRestore>
+  
 	<frmAbout Text="About">
 		<Label1>
 			<Text>

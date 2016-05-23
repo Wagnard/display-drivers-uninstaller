@@ -7266,33 +7266,20 @@ Public Class frmMain
 	End Sub
 
 	Private Sub SystemRestore()
-		If Application.Settings.CreateRestorePoint Then
-			Try
-				UpdateTextMethod("Creating System Restore point (If allowed by the system)")
-				Application.Log.AddMessage("Trying to Create a System Restored Point")
-				Dim oScope As New ManagementScope("\\localhost\root\default")
-				Dim oPath As New ManagementPath("SystemRestore")
-				Dim oGetOp As New ObjectGetOptions()
-				Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
+		If Application.Settings.CreateRestorePoint AndAlso System.Windows.Forms.SystemInformation.BootMode = Forms.BootMode.Normal Then
+			Dim frmSystemRestore As New frmSystemRestore
 
-				Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
-				oInParams("Description") = "DDU System Restored Point"
-				oInParams("RestorePointType") = 12UI ' MODIFY_SETTINGS
-				oInParams("EventType") = 100UI
+			With frmSystemRestore
+				.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+				.Background = Me.Background
+				.Owner = Me
+				.DataContext = Me.DataContext
+				.ResizeMode = Windows.ResizeMode.NoResize
+				.WindowStyle = Windows.WindowStyle.ToolWindow
+			End With
 
-				Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
-
-				Dim errCode As UInt32 = CUInt(oOutParams("ReturnValue"))
-
-				If errCode <> 0UI Then
-					Throw New COMException("System Restored Point Could not be Created!", Win32.GetInt32(errCode))
-				End If
-
-				Application.Log.AddMessage("System Restored Point Created. Code: " + errCode.ToString())
-
-			Catch ex As Exception
-				Application.Log.AddWarning(ex, "System Restored Point Could not be Created!")
-			End Try
+			frmSystemRestore.ShowDialog()
+			
 		End If
 	End Sub
 
