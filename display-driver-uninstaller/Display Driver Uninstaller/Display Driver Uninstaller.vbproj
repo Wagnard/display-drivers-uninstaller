@@ -98,6 +98,7 @@
     <Compile Include="ThreadSettings.vb" />
     <Compile Include="Tools.vb" />
     <Compile Include="Win32\SetupAPI_Inf.vb" />
+    <Compile Include="Win32\SystemRestore.vb" />
     <Compile Include="Win32\WinAPI.vb" />
     <Page Include="frmAbout.xaml">
       <SubType>Designer</SubType>

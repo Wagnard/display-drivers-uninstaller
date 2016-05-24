@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="nl-NL" Text="Dutch" NewLineChar="|">
+<DisplayDriverUninstaller ISO="nl" Text="Dutch">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
+	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 
 	Text = Shown to user (as written in english, found on language selection box)
 
@@ -13,8 +13,8 @@
 	&quot; = "
 	&gt; = >
 	&lt; = <
+
 	-->
-	
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<Button1>
 			<Text>Verwijder drivers en herstart de computer.|(Sterk aanbevolen)</Text>
@@ -58,33 +58,40 @@
 			<Text3>Updates gevonden! Verwacht beperkte ondersteuning op oudere versies dan de meest recente versie.</Text3>
 			<Text4>Kan geen updates halen!</Text4>
 		</Label11>
-		<OptionsToolStripMenuItem>
-			<Text>Options</Text>
-		</OptionsToolStripMenuItem>
-		<ToolStripMenuItem1>
-			<Text>?</Text>
-		</ToolStripMenuItem1>
-		<ToSToolStripMenuItem>
-			<Text>ToS</Text>
-		</ToSToolStripMenuItem>
-		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
-		</VisitDDUHomepageToolStripMenuItem>
-		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
-		</SVNToolStripMenuItem>
-		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
-		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
-		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
-		</VisitGuru3dAMDThreadToolStripMenuItem>
-		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
-		</VisitGeforceThreadToolStripMenuItem>
-		<AboutToolStripMenuItem>
-			<Text>About</Text>
-		</AboutToolStripMenuItem>
+    <lblOffer>
+      <Text>       Offers from our partners</Text>
+      <Tooltip>You can disable this from the option menu.</Tooltip>
+    </lblOffer>
+    <imgOffer>
+      <Tooltip>You can disable this from the option menu.</Tooltip>
+    </imgOffer>
+		<OptionsMenuItem>
+			<Text>Opties</Text>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ToSMenuItem>
+			<Text>Algemene Voorwaarden (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
+			<Text>Over DDU</Text>
+		</AboutMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Bezoek de officiële DDU Website</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Bezoek de SVN Website</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Bezoek de Guru3d NVIDIA Thread</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Bezoek de Guru3d AMD Thread</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Bezoek de Geforce Thread</Text>
+		</VisitGeforceMenuItem>
 		<Messages>
 			<Text1>Updates gevonden! Nu de DDU website bezoeken?</Text1>
 			<Text2>Verwacht beperkte ondersteuning op oudere versies dan de meest recente versie. Alstublieft alleen fouten rapporteren van de nieuwste versie van DDU.</Text2>
@@ -145,84 +152,104 @@
 			<Text41>Waarde verwijdert.</Text41>
 			<Text42>Bestand verwijdert.</Text42>
 		</UpdateLog>
-	</frmMain>
-	<frmOptions Text="Instellingen">
-		<Label1>
-			<Text>GPU Specifieke Instellingen</Text>
-		</Label1>
-		<Label2>
-			<Text>Algemene Instellingen</Text>
-		</Label2>
+
+
+</frmMain>
+	<frmOptions Text="Opties">
+    <lblOffer>
+      <Text>Show Offers from our partners</Text>
+      <Tooltip>You can disable this from the option menu.</Tooltip>
+    </lblOffer>
+    <btnClose>
+      <Text>Close</Text>
+    </btnClose>
+		<lblNvidiaspecific>
+			<Text>Specifieke NVIDIA Opties</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>Specifieke AMD Opties</Text>
+		</lblAmdspecific>
+		<lblGeneral>
+			<Text>Algemene Opties</Text>
+		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Verwijder "C:\nVidia" Driver mappen (NIET aanbevolen) </Text>
+			<Text>Verwijder "C:\nVidia" Driver map (NIET aanbevolen) </Text>
 		</lblRemNvidiaDirs>
 		<lblsaveLogs>
-			<Text>Sla logbestanden op in het opstartpad (aanbeloven).</Text>
+			<Text>Bewaar log bestanden in het opstartpad (Sterk aanbevolen)</Text>
 		</lblsaveLogs>
 		<lblRemPhysX>
-			<Text>Verwijder PhysX.</Text>
+			<Text>Verwijder PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Verwijder 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblcreateRestorePoint>
-			<Text>Maak een systeem herstel punt (indien toegestaan)</Text>
+			<Text>Creëer een Systeem Herstel Punt (indien mogelijk)</Text>
 		</lblcreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Verwijder aanwezige en niet- aanwezige monitors (aanbevolen )</Text>
+			<Text>Verwijder gedecteerde en niet gedecteerde monitors(Aanbevolen)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Verwijder AMD Geluids Bus</Text>
+			<Text>Verwijder AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Verwijder "C:\AMD" Driver mappen (NIET aanbevolen) </Text>
+			<Text>Verwijder "C:\AMD" Driver map (NIET aanbevolen) </Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Activeer Windows 8+ Direct naar Veilige Modus.</Text>
+			<Text>Verwijder de driver/filter AMDKMPFD (Een backup is aanbevolen voor AMD chipsets)</Text>
 		</lblRemAMDKMPFD>
 		<lblshowSafeModeMsg>
-			<Text>Laat Veilige Modus notificatie zien bij het opstarten</Text>
+			<Text>Toon de Veilige Modus berichten box bij het opstarten van DDU</Text>
 		</lblshowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Store config file in roaming folder</Text>
+			<Text>Bewaar de config file in de roaming map</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>Do not check for DDU updates on startup (NOT Recommended)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automatisch controleren voor DDU updates bij het opstarten. (Aanbevolen)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Remove Geforce Experience (GFE)</Text>
+			<Text>Verwijder Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>Remove AMD Crimson Shader Cache folder</Text>
-			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+			<Text>Verwijder AMD Crimson Shader Cache map</Text>
+			<Tooltip>Aanbevolen als er graphische abnormaliteiten voordoen(Snelheid of visueele corruptie) veroorzaakt door een corrupte shader chache data|Ook aanbevolen als je wisselt van een GPU merk als nVidia.</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Verwijder Vulkan Runtime</Text>
+			<Tooltip>Niet Aanbevolen Als Je 2 Verschillende GPU's Hebt Die Gebruik Van De Vulkan API Kunnen Maken.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Gebruik SetupAPI *Experimenteel* </Text>
+			<Tooltip>Gebruik SetupAPI inplaats van de externe tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
-	<frmLaunch Text="Launch option">
+	<frmLaunch Text="Opstart Opties">
 		<btnAccept>
-			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text>Starten</Text>
+			<Text2>Opnieuw Opstarten naar|Veilige Modus</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Sluiten</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>Opstart Optie</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>Je bent niet in Veilige Modus. Het is sterk aanbevolen|Herstart naar Veilige Modus om problemen te voorkomen.</Text>
 		</lblNotSafeMode>
 		<cbBootOption>
-			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
-			<Item3>Safe Mode With Networking</Item3>
+			<Item1>Normaal</Item1>
+			<Item2>Veilige Modus (Aanbevolen)</Item2>
+			<Item3>Veilige Modus Met Netwerk Mogelijkheden</Item3>
 		</cbBootOption>
 	</frmLaunch>
-	<frmLog Text="Extended log">
-		<btnClose>
-			<Text>Close</Text>
-		</btnClose>	
+	<frmLog Text="Uitgebreide log">
+    <btnClose>
+      <Text>Close</Text>
+    </btnClose>
 	</frmLog>
-	<frmAbout>
+	<frmAbout Text="Over DDU">
 		<Label1>
 			<Text>
 Driver Uninstaller (DDU) / Schoonmaker gemaakt voor Display Drivers.(NVIDIA/AMD/Intel)

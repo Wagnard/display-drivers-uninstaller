@@ -12,27 +12,30 @@ Public Class frmSystemRestore
 	Private Sub createsystemrestore()
 		CanClose = False
 		Try
+			Dim num As Long = 0
+			Win32.SystemRestore.StartRestore("DDU Restore Point", Win32.SystemRestore.RestoreType.Checkpoint, num)
+			Win32.SystemRestore.EndRestore(num)
+			Application.Log.AddMessage("Restore Point Created")
+			'Application.Log.AddMessage("Trying to Create a System Restored Point")
+			'Dim oScope As New ManagementScope("\\localhost\root\default")
+			'Dim oPath As New ManagementPath("SystemRestore")
+			'Dim oGetOp As New ObjectGetOptions()
+			'Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
 
-			Application.Log.AddMessage("Trying to Create a System Restored Point")
-			Dim oScope As New ManagementScope("\\localhost\root\default")
-			Dim oPath As New ManagementPath("SystemRestore")
-			Dim oGetOp As New ObjectGetOptions()
-			Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
+			'Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
+			'oInParams("Description") = "DDU System Restored Point"
+			'oInParams("RestorePointType") = 12UI ' MODIFY_SETTINGS
+			'oInParams("EventType") = 100UI
 
-			Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
-			oInParams("Description") = "DDU System Restored Point"
-			oInParams("RestorePointType") = 12UI ' MODIFY_SETTINGS
-			oInParams("EventType") = 100UI
+			'Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
 
-			Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
+			'Dim errCode As UInt32 = CUInt(oOutParams("ReturnValue"))
 
-			Dim errCode As UInt32 = CUInt(oOutParams("ReturnValue"))
+			'If errCode <> 0UI Then
+			'	Throw New COMException("System Restored Point Could not be Created!", Win32.GetInt32(errCode))
+			'End If
 
-			If errCode <> 0UI Then
-				Throw New COMException("System Restored Point Could not be Created!", Win32.GetInt32(errCode))
-			End If
-
-			Application.Log.AddMessage("System Restored Point Created. Code: " + errCode.ToString())
+			'Application.Log.AddMessage("System Restored Point Created. Code: " + errCode.ToString())
 
 		Catch ex As Exception
 			Application.Log.AddWarning(ex, "System Restored Point Could not be Created!")
