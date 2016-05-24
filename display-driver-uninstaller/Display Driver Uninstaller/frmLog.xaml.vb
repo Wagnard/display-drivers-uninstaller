@@ -101,7 +101,7 @@ Public Class frmLog
 		End If
 	End Sub
 
-	Private Sub btnLoadLog_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnLoadLog.Click
+	Private Sub btnOpenLog_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnOpenLog.Click
 		Using ofd As System.Windows.Forms.OpenFileDialog = New System.Windows.Forms.OpenFileDialog
 			ofd.Filter = "DDU Log (*.xml)|*.xml"
 			ofd.FilterIndex = 0
@@ -121,7 +121,7 @@ Public Class frmLog
 				   .WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
 				  }
 
-				newLogWindow.btnLoadLog.Visibility = Windows.Visibility.Collapsed
+				newLogWindow.btnOpenLog.Visibility = Windows.Visibility.Collapsed
 				newLogWindow.lbLog.DataContext = newLog.LogEntries
 				newLogWindow.tbOpenedLog.Visibility = Windows.Visibility.Visible
 				newLogWindow.tbOpenedLog.Text = ofd.FileName
@@ -330,5 +330,4 @@ Public Class frmLog
 			CopyMessage()
 		End If
 	End Sub
-
 End Class

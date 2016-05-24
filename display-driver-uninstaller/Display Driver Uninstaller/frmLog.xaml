@@ -209,14 +209,14 @@
 		</Grid.RowDefinitions>
 		
 		<Menu Grid.Row="0" FontSize="14" >
-			<MenuItem x:Name="showEvents" Header="Filters">
-				<MenuItem x:Name="menuEvents" Header="Show Events" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListEvents, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-				<MenuItem x:Name="menuWarnings" Header="Show Warnings" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListWarnings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-				<MenuItem x:Name="menuErrors" Header="Show Errors" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListErrors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+			<MenuItem x:Name="filtersMenuItem" Header="Filters">
+				<MenuItem x:Name="eventsMenuItem" Header="Show Events" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListEvents, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				<MenuItem x:Name="warningsMenuItem" Header="Show Warnings" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListWarnings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				<MenuItem x:Name="errorsMenuItem" Header="Show Errors" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListErrors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 			</MenuItem>
 			
-			<MenuItem x:Name="showOptions" Header="Options">
-				<MenuItem x:Name="menuCopy" Header="Copy Enabled" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=EnableCopy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+			<MenuItem x:Name="optionsMenuItem" Header="Options">
+				<MenuItem x:Name="copyMenuItem" Header="Copy Enabled" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=EnableCopy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 			</MenuItem>	
 		</Menu>
 		
@@ -263,6 +263,7 @@
 						Grid.Row="1"
 						Name="tabControl">	
 				<TabItem Header="[ Exception ]" 
+						 x:Name="tabEx"
 						 Visibility="{Binding Path=HasException, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" 
 						 Background="{x:Null}">
 				
@@ -294,6 +295,7 @@
 				</TabItem>
 				
 				<TabItem Header="[ Values ]" 
+						x:Name="tabValues"
 						Visibility="{Binding Path=HasValues, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" 
 						Background="{x:Null}">
 
@@ -325,6 +327,7 @@
 				</TabItem>
 				
 				<TabItem Header="[ No data ]" 
+						 x:Name="tabNoData"
 						 Visibility="{Binding HasAnyData, Mode=OneWay, Converter={StaticResource NotBoolToVisibility},ConverterParameter=True, UpdateSourceTrigger=PropertyChanged}" 
 						 Background="{x:Null}">
 					<TextBlock Text="&lt; No Data &gt;" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -340,7 +343,7 @@
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
 
-				<Button Grid.Column="0" Grid.ColumnSpan="1" Margin="10" Content="Open Log" Grid.Row="1" Height="30" Name="btnLoadLog" VerticalAlignment="Top" Width="75" />
+				<Button Grid.Column="0" Grid.ColumnSpan="1" Margin="10" Content="Open Log" Grid.Row="1" Height="30" Name="btnOpenLog" VerticalAlignment="Top" Width="75" />
 				<TextBlock Grid.Column="1" Grid.ColumnSpan="1" TextWrapping="Wrap" Name="tbOpenedLog" Visibility="Visible" VerticalAlignment="Center" FontWeight="Bold" Margin="10" />
 		
 				<StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Column="2" Grid.ColumnSpan="1">

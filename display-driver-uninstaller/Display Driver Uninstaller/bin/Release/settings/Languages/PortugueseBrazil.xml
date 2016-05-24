@@ -21,15 +21,15 @@
 			<Tooltip>Desinstalar o driver atual e o anterior e reiniciar o computador|(Altamente Recomendado)</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Limpar e NÃO reiniciar|(Pode causar problemas como | Tela Preta)</Text>
+			<Text>Limpar e NÃO reiniciar|(Pode causar problemas como Tela Preta)</Text>
 			<Tooltip>Desinstalar o driver atual e os anteriores e NÃO reiniciar o computador.|(Pode causar Tela Preta)</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Limpar e Desligar|(Para instalação de nova Placa | de Video)</Text>
+			<Text>Limpar e Desligar|(Para instalação de nova Placa de Video)</Text>
 			<Tooltip>Desinstalar o driver atual e os anteriores e Desligar o computador sem reescan|(Instalação de nova placa de video)</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Definir instalação de driver no | Windows Update para padrão.</Text>
+			<Text>Definir instalação de driver no|Windows Update para padrão.</Text>
 		</btnWuRestore>
 		<btnExtendedLog>
 			<Text>Mostrar log estendido.</Text>

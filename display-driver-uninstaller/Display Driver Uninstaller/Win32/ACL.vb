@@ -780,12 +780,10 @@ Namespace Win32
 			End Sub
 
 
-			Public Sub test3(ByVal debugOpt As Int32, Optional ByVal regKey As String = "SOFTWARE\ATI")
+			Public Sub test3(Optional ByVal regKey As String = "SOFTWARE\ATI")
 				'  Throw New Win32Exception(5)
 
-				If debugOpt <> 0 Then
-					AddPriviliges(SE.BACKUP_NAME, SE.RESTORE_NAME, SE.SECURITY_NAME, SE.TAKE_OWNERSHIP_NAME)
-				End If
+				AddPriviliges(SE.BACKUP_NAME, SE.RESTORE_NAME, SE.SECURITY_NAME, SE.TAKE_OWNERSHIP_NAME)
 
 				Dim ptrRegKey As IntPtr = IntPtr.Zero
 				Dim returnValue As UInt32

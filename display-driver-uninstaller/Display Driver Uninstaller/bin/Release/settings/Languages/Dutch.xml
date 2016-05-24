@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="nl" Text="Dutch">
+<DisplayDriverUninstaller ISO="nl-NL" Text="Dutch" NewLineChar="|">
 	<!--
 	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
 	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes

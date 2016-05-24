@@ -8,11 +8,10 @@
 	mc:Ignorable="d" 
 	
     Title="{Binding Settings.AppName, Mode=OneWay}" 
-    MinHeight="550" MinWidth="640" ResizeMode="CanResize"
-	Height="673" Width="810"
-    Loaded="frmMain_Loaded" 
+	Height="550" Width="640"
+    MinHeight="550" MinWidth="640" ResizeMode="CanResize" Loaded="frmMain_Loaded" 
     Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" 
-    Visibility="Visible" WindowStartupLocation="CenterScreen" d:DesignHeight="545" d:DesignWidth="680">
+    Visibility="Visible" WindowStartupLocation="CenterScreen" d:DesignHeight="550" d:DesignWidth="640">
 	
 	<Window.Resources>
         <conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" TrueValue="Visible" FalseValue="Collapsed" />
@@ -54,10 +53,10 @@
 	
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto" MinWidth="250" />
+			<ColumnDefinition Width="Auto" MinWidth="200" MaxWidth="350" />
 			<ColumnDefinition Width="*" />	
 			<ColumnDefinition Width="20" />		<!-- Space ( 30px ) -->
-			<ColumnDefinition Width="220" MaxWidth="300" />
+			<ColumnDefinition Width="Auto" MaxWidth="300" />
 		</Grid.ColumnDefinitions>
 		
 		<Grid.RowDefinitions>
@@ -70,28 +69,27 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 		
-		<Menu Name="MenuStrip1" FontSize="13" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="4" Background="#2F000000">
-			<MenuItem x:Name="OptionsMenuItem" Header="Options"/>
-			
-			<MenuItem x:Name="LinksMenuItem" Header="Links">
-				<MenuItem x:Name="VisitDDUHomeMenuItem" Header="ddu_home" />
-				<MenuItem x:Name="VisitSVNMenuItem" Header="svn" />
-				<MenuItem x:Name="VisitGuru3DNvidiaMenuItem" Header="g3d_nv" />
-				<MenuItem x:Name="VisitGuru3DAMDMenuItem" Header="g3d_amd" />
-				<MenuItem x:Name="VisitGeforceMenuItem" Header="geforce" />
+		<Menu Name="MenuStrip1" FontSize="13" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="4" Background="#28000000">
+			<MenuItem x:Name="OptionsMenuItem" Header="OptionsMenuItem"/>
+
+			<MenuItem x:Name="LinksMenuItem" Header="LinksMenuItem">
+				<MenuItem x:Name="VisitDDUHomeMenuItem" Header="VisitDDUHomeMenuItem" />
+				<MenuItem x:Name="VisitSVNMenuItem" Header="VisitSVNMenuItem" />
+				<MenuItem x:Name="VisitGuru3DNvidiaMenuItem" Header="VisitGuru3DNvidiaMenuItem" />
+				<MenuItem x:Name="VisitGuru3DAMDMenuItem" Header="VisitGuru3DAMDMenuItem" />
+				<MenuItem x:Name="VisitGeforceMenuItem" Header="VisitGeforceMenuItem" />
 			</MenuItem>
-			
-			<MenuItem x:Name="ExtendedLogMenuItem" Header="Ex Log"/>
-			
-			<MenuItem x:Name="InfoMenuItem" Header="Info">
-				<MenuItem x:Name="ToSMenuItem" Header="Terms of Service (ToS)" />
-				<MenuItem x:Name="AboutMenuItem" Header="About" />
+
+			<MenuItem x:Name="ExtendedLogMenuItem" Header="ExtendedLogMenuItem"/>
+
+			<MenuItem x:Name="InfoMenuItem" Header="InfoMenuItem">
+				<MenuItem x:Name="ToSMenuItem" Header="ToSMenuItem" />
+				<MenuItem x:Name="AboutMenuItem" Header="AboutMenuItem" />
 			</MenuItem>
 
 			<MenuItem x:Name="TestMenuItem" Header="TESTING" Visibility="{Binding IsDebug, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
-				<MenuItem x:Name="Reg1MenuItem" Header="Reg (test3 = 0)" Tag="0" />
-				<MenuItem x:Name="Reg2MenuItem" Header="Reg (test3 = 1)" Tag="1" />
-				<MenuItem x:Name="Reg3MenuItem" Header="Reg (test3 = 2)" Tag="2" />
+				<MenuItem x:Name="RegMenuItem" Header="Reg (test3)" />
+				<MenuItem x:Name="createXMLMenuItem" Header="Create XMLs" />
 				<MenuItem x:Name="SetupAPIMenuItem" Header="SetupAPI" />
 			</MenuItem>
 		</Menu>
@@ -110,11 +108,11 @@
 	
 		<DockPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="3" Margin="10,0">	
 			<DockPanel DockPanel.Dock="Bottom" Grid.Row="1" Grid.Column="3" >
-				<Label Content="Selected GPU: " DockPanel.Dock="Top" FontWeight="Bold" VerticalAlignment="Center" />
-				<ComboBox Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedItem="{Binding Settings.SelectedGPU, Mode=TwoWay}" DockPanel.Dock="Right" />
+				<ComboBox Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedItem="{Binding Settings.SelectedGPU, Mode=TwoWay}" DockPanel.Dock="Top" />
+				<Label Name="lblSelectedGPU" Content="Selected GPU: " DockPanel.Dock="Top" FontWeight="Bold" VerticalAlignment="Center" />
 			</DockPanel>	
 				
-			<Border DockPanel.Dock="Bottom">
+			<Border DockPanel.Dock="Bottom" Margin="0,0,0,10">
 				<Border.Style>
 					<Style TargetType="{x:Type Border}">
 						<Style.Triggers>
@@ -133,17 +131,13 @@
 			</Border>
 		</DockPanel>
 
-		<StackPanel Grid.Row="2" Orientation="Vertical" x:Name="ButtonsPanel">
-			<Button Margin="10,10,10,0" x:Name="btnCleanRestart" Content="BtnRestart" HorizontalAlignment="Stretch" Height="50" />
-			<Button Margin="10,10,10,0" x:Name="btnClean" Content="btnCleanonly" HorizontalAlignment="Stretch" Height="50" />
-			<Button Margin="10,10,10,0" x:Name="btnCleanShutdown" Content="btnCleanShutdown" HorizontalAlignment="Stretch" Height="50" /> 
-		</StackPanel>
-		
-		<StackPanel Grid.Row="4" Grid.Column="3" Orientation="Vertical" >
-			<Button Margin="10,0" x:Name="btnWuRestore" Height="50">
-				<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center"/>
-			</Button>
-		</StackPanel>
+		<UniformGrid Grid.Row="2" x:Name="ButtonsPanel" Rows="3">
+			<Button DockPanel.Dock="Top" Margin="10,10,10,0" x:Name="btnCleanRestart" Content="btnRestart" HorizontalAlignment="Stretch" Height="50" />
+			<Button DockPanel.Dock="Top" Margin="10,10,10,0" x:Name="btnClean" Content="btnClean" HorizontalAlignment="Stretch" Height="50" />
+			<Button DockPanel.Dock="Top" Margin="10,10,10,0" x:Name="btnCleanShutdown" Content="btnCleanShutdown" HorizontalAlignment="Stretch" Height="50" />
+		</UniformGrid >
+
+		<Button Grid.Row="4" Grid.Column="3" Margin="10,0" x:Name="btnWuRestore" Content="btnWuRestore" Height="50"/>
 		    
         <Label x:Name="lblUpdate" Content="lblUpdate" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="6" />
    
@@ -174,7 +168,8 @@
 			</StackPanel>		
 		</DockPanel>
 
-			
+		<Label Content="lblLog" Grid.Row="3" Name="lblLog" VerticalAlignment="Bottom" VerticalContentAlignment="Center" FontWeight="Bold" />
+
 		<ListBox Name="lbLog" Focusable="False" Grid.Row="4" Grid.ColumnSpan="2" Grid.RowSpan="2">
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="{x:Type Control}" >
@@ -182,5 +177,5 @@
 				</Style>
 			</ListBox.ItemContainerStyle>
 		</ListBox>
-	</Grid>
+		</Grid>
 </Window>

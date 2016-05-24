@@ -19,6 +19,14 @@ Public Class Languages
 			End SyncLock
 		End Get
 	End Property
+	Public Shared ReadOnly Property DefaultEng As LanguageOption
+		Get
+			SyncLock threadLock
+				If Not isEngLoaded Then LoadDefault()
+				Return englishDictionary.Details
+			End SyncLock
+		End Get
+	End Property
 
 	Private Shared englishDictionary As TranslatedFile = Nothing
 	Private Shared translatedDictionary As TranslatedFile = Nothing
@@ -270,7 +278,13 @@ notFound:
 			Dim text = GetTranslation(window, contentCtrl.Name, "Text")
 
 			If Not String.IsNullOrEmpty(text) Then
-				contentCtrl.Content = text
+				If TypeOf (contentCtrl.Content) Is TextBlock Then
+					Dim tbControl As TextBlock = DirectCast(contentCtrl.Content, TextBlock)
+
+					tbControl.Text = text
+				Else
+					contentCtrl.Content = text
+				End If
 			End If
 
 			Dim tooltipText As String = GetTranslation(window, contentCtrl.Name, "Tooltip")
@@ -389,6 +403,49 @@ notFound:
 					' File should be in correct format at this point
 					Do While reader.Read() ' loop parents
 						If reader.NodeType = XmlNodeType.Element Then ' found parent, <frmMain Text="...">, <frmLaunch Text="..."> etc.
+							If reader.Name.Equals("LanguageCredits", StringComparison.OrdinalIgnoreCase) Then
+								Dim credits As LanguageCredits
+
+								Do
+									reader.Read()
+
+									If reader.NodeType = XmlNodeType.Element AndAlso reader.Name.StartsWith("Credits", StringComparison.OrdinalIgnoreCase) Then
+										reader.Read()
+										credits = New LanguageCredits()
+
+										Do
+											If reader.NodeType = XmlNodeType.Element Then ' child elements found  <User>, <LastUpdate> etc.
+												If reader.Name.Equals("User", StringComparison.OrdinalIgnoreCase) Then
+													credits.User = reader.ReadElementContentAsString().Replace(vbTab, "")
+												ElseIf reader.Name.Equals("Details", StringComparison.OrdinalIgnoreCase) Then
+													credits.Details = reader.ReadElementContentAsString().Replace(vbTab, "")
+												ElseIf reader.Name.Equals("LastUpdate", StringComparison.OrdinalIgnoreCase) Then
+													Dim dt As DateTime
+													Dim dateStr As String = reader.ReadElementContentAsString().Replace(vbTab, "")
+
+													If DateTime.TryParseExact(dateStr, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.None, dt) Then
+														credits.LastUpdate = dt
+													Else
+														credits.LastUpdate = System.IO.File.GetLastWriteTime(langFile)
+													End If
+												End If
+
+											Else
+												reader.Read()
+											End If
+										Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.StartsWith("Credits", StringComparison.OrdinalIgnoreCase))
+
+										If Not IsNullOrWhitespace(credits.User) Then
+											file.Details.Credits.Insert(New Random().Next(0, file.Details.Credits.Count + 1), credits)
+
+											'file.Details.Credits.Add(credits)
+										End If
+									End If
+								Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals("LanguageCredits", StringComparison.OrdinalIgnoreCase))
+
+								Continue Do
+							End If
+
 							parent = New TranslatedControl(reader.Name)
 							controls = New List(Of TranslatedControl)
 
@@ -559,6 +616,7 @@ notFound:
 		Private m_isolang As String
 		Private m_displaytext As String
 		Private m_filename As String
+		Private m_credits As List(Of LanguageCredits)
 
 		Public ReadOnly Property ISOLanguage As String
 			Get
@@ -575,11 +633,17 @@ notFound:
 				Return m_filename
 			End Get
 		End Property
+		Public ReadOnly Property Credits As List(Of LanguageCredits)
+			Get
+				Return m_credits
+			End Get
+		End Property
 
 		Public Sub New(ByVal langISO As String, ByVal langText As String, ByVal langFile As String)
 			m_isolang = langISO
 			m_displaytext = langText
 			m_filename = langFile
+			m_credits = New List(Of LanguageCredits)(5)
 		End Sub
 
 		Public Overrides Function ToString() As String
@@ -598,6 +662,12 @@ notFound:
 		Public Function CompareTo(other As LanguageOption) As Integer Implements System.IComparable(Of LanguageOption).CompareTo
 			Return Me.DisplayText.CompareTo(other.DisplayText)
 		End Function
+	End Class
+
+	Public Class LanguageCredits
+		Public Property User As String
+		Public Property Details As String
+		Public Property LastUpdate As DateTime?
 	End Class
 
 End Class

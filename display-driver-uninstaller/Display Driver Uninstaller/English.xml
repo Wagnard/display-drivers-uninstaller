@@ -1,21 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="en-US" Text="English" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
-	<frmMain Text="Display Driver Uninstaller (DDU)">
+	<xxx>Place text here</xxx>   
+	or 
+	<xxx Text="Place text here" >
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below)	-->
+
+	<!-- This is comment -->
+	<frmMain Text="Display Driver Uninstaller (DDU)">	 <!-- This is comment -->
+	<!-- This is comment -->
+		
 		<btnCleanRestart>
 			<Text>Clean and restart|(Highly Recommended)</Text>
 			<Tooltip>Uninstall the current and previous drivers, then restart the computer.|(Highly Recommended)</Tooltip>
@@ -32,29 +45,31 @@
 			<Text>Set Windows Automatic Driver|installation to default.</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Detected Windows Version:</Text>
+			<Text>Detected Windows Version</Text>
 		</lblWinVersion>
-		<Label4>
+		<lblDonate>
 			<Text>*** You like DDU? Think about a Donation, it will help further development. ***</Text>
-		</Label4>
-		<Label5>
-			<Text>Log :</Text>
-		</Label5>
-		<Label7>
-			<Text>Select Graphic Driver :</Text>
-		</Label7>
+		</lblDonate>
+		<lblLog>
+			<Text>Log</Text>
+		</lblLog>
+		<lblSelectedGPU>
+			<Text>Select Graphic Driver</Text>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>Note: Any damage or errors caused to your PC is your responsibility.</Text>
 		</Label9>
 		<Label10>
 			<Text>Using DDU in Safe Mode is recommended.</Text>
 		</Label10>
-		<Label11>
+		
+		<lblUpdate>
 			<Text>Checking for updates...</Text>
 			<Text2>No Updates found. Program is up to date.</Text2>
 			<Text3>Updates found! Expect limited support on older versions than the most recent.</Text3>
-			<Text4>Unable to Fetch updates!</Text4>
-		</Label11>	
+			<Text4>Unable to fetch updates!</Text4>
+		</lblUpdate>	
+		
 		<lblOffer>
 		  <Text>Offers from our partners</Text>
 		  <Tooltip>You can disable this from the option menu.</Tooltip>
@@ -69,12 +84,15 @@
 		<InfoMenuItem>
 			<Text>Info</Text>
 		</InfoMenuItem>
-		<ToSMenuItem>
-			<Text>Terms of Service (ToS)</Text>
-		</ToSMenuItem>
 		<ExtendedLogMenuItem>
 			<Text>Extended log</Text>
 		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>	
+		<ToSMenuItem>
+			<Text>Terms of Service (ToS)</Text>
+		</ToSMenuItem>
 		<AboutMenuItem>
 			<Text>About</Text>
 		</AboutMenuItem>
@@ -93,6 +111,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Visit Geforce Thread</Text>
 		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>Updates are available! Visit DDU website now?</Text1>
 			<Text2>Expect limited support on older versions than the most recent. Please check newer version before reporting bugs.</Text2>
@@ -106,11 +125,11 @@
 			<Text10>Clean uninstall completed! Would you like to exit now?</Text10>
 			<Text11>Done!</Text11>
 			<Text12>You are not in safe mode. It is highly recommended that you reboot into safe mode to avoid possible issues. Reboot into Safe Mode now?</Text12>
-			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
 		</Messages>
 		<UpdateLog>
-			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
+			<Text1>Executing Driver Store cleanUP (Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
 			<Text3>Cleaning known Regkeys... May take a minute or two.</Text3>
 			<Text4>Cleaning UpdatusUser users account if present.</Text4>
@@ -120,24 +139,24 @@
 			<Text8>Starting the removal of nVidia Optimus UpperFilter if present.</Text8>
 			<Text9>Scanning for new device...</Text9>
 			<Text10>Clean uninstall completed!</Text10>
-			<Text11>DDU Version:</Text11>
+			<Text11>DDU Version</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Detected :</Text13>
-			<Text14>GPU DeviceId :</Text14>
-			<Text15>Detected Driver(s) Version(s) :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>INF Section :</Text17>
-			<Text18>GPU not Correctly Installed :</Text18>
+			<Text13>Detected:</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Detected Driver(s) Version(s)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Section</Text17>
+			<Text18>GPU not Correctly Installed</Text18>
 			<Text19>Deleting some specials folders, it may take some times...</Text19>
 			<Text20>CleanUP started...</Text20>
 			<Text21>Uninstalling</Text21>
 			<Text22>driver</Text22>
-			<Text23>Executing ddudr Remove , Please wait(can take a few minutes)</Text23>
+			<Text23>Executing ddudr Remove, Please wait (can take a few minutes)</Text23>
 			<Text24>GPU(s) Removed from Device Manager.</Text24>
 			<Text25>Executing DDUDR Remove Audio controller.</Text25>
-			<Text26>HD audio adapters Removed !</Text26>
+			<Text26>HD audio adapters Removed!</Text26>
 			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
-			<Text28>Monitors and Hidden monitors removed !</Text28>
+			<Text28>Monitors and Hidden monitors removed!</Text28>
 			<Text29>ddudr Remove complete</Text29>
 			<Text30>Starting S-1-5-xx region cleanUP</Text30>
 			<Text31>End of S-1-5-xx region cleanUP</Text31>
@@ -224,6 +243,7 @@
 			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
+	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -247,20 +267,49 @@
 	
 	<frmLog Text="Extended log">
 		<btnClose>
-		  <Text>Close</Text>
+			<Text>Close</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy Enabled</Text>
+		</copyMenuItem>
+		
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show Events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show Warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show Errors</Text>
+		</errorsMenuItem>
 	</frmLog>
   
-  <frmSystemRestore Text="System Restore">
-    <lblSystemRestore>
-      <Text>Trying to create a System Restore point.</Text>
-    </lblSystemRestore>
-  </frmSystemRestore>
-  
-	<frmAbout Text="About">
-		<Label1>
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+	
+	<Misc>
+		<About>
 			<Text>
-Display Driver Uninstaller (DDU) / Cleaner made for Display (GPU) Drivers.(NVIDIA/AMD)
+Display Driver Uninstaller (DDU) / Cleaner made for Display (GPU) Drivers. (NVIDIA/AMD)
 
 What it does is remove the display/GPU driver from device manager and remove the current and 
 all precedent driver(s) from the Windows Driver store along with removing services from NVIDIA/AMD.
@@ -290,15 +339,15 @@ to you or your computer and are in no way affiliates of DDU, or it's creators.
 
 Created By Wagnard.
 
-Coders:Wagnard, Devmltk, Shady757
+Coders: Wagnard, Devmltk, Shady757
 
-Tester : Dellon132
+Tester: Dellon132
 
-Logos : juanchacin
+Logos: juanchacin
 
 Huge Thanks to Jackalito for the donation of a AMD 7850.
 
-Thanks to Helge Klein (http://helgeklein.com/setacl/) : for the permission to use his Program with DDU "SetAcl"
+Thanks to Helge Klein ( http://helgeklein.com/setacl/ ) : for the permission to use his Program with DDU "SetAcl"
 
 Huge Thanks for their time for testing : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (took time debugging with me)
 Extraordinary (Testing a bug fix)
@@ -307,9 +356,8 @@ Thanks to anyone who put their system at risk. (special thanks to Dellon132)
 
 *DDU, it's creators and affiliates are in no way affiliated with Driver Sweeper, or it's creators.
 </Text>
-		</Label1>
-	</frmAbout>
-	<Misc>
+		</About>
+
 		<Tos>
 			<Text>
 Display Driver Uninstaller ("DDU") USER AGREEMENT
@@ -323,4 +371,35 @@ anything to do with this program, and in no way affiliates of DDU or it's creato
 </Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+		<Credits>
+			<User>Wagnard</User>
+			<Details>Owner</Details>
+			<LastUpdate>23/05/2016</LastUpdate>
+		</Credits>
+
+		<Credits2>
+			<User>Devmltk</User>
+			<LastUpdate>24/05/2016</LastUpdate>
+		</Credits2>
+
+		<!--
+		<Credits3>
+			<User>Example</User>
+		</Credits3>
+
+		<Credits4>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits4>
+		-->	
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

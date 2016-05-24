@@ -29,7 +29,7 @@
 			<Tooltip>Poista nykyiset ja edelliset ajurit ja sammuta tietokone|(Asentaessa uutta näytönohjainta)</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Palauta Windowsin automaattinen ajurien asennus oletus asetukseen</Text>
+			<Text>Palauta Windowsin automaattinen|ajurien asennus oletus asetukseen</Text>
 		</btnWuRestore>
 		<btnExtendedLog>
 			<Text>Näytä laajennettu loki.</Text>
