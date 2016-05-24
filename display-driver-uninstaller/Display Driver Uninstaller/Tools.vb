@@ -5,6 +5,8 @@ Imports System.Runtime.InteropServices
 
 Imports Microsoft.Win32
 Imports Display_Driver_Uninstaller.Win32
+Imports System.Reflection
+Imports System.ComponentModel
 
 Public Module Tools
 	' 9 = vbTAB --- 10 = vbLF --- 11 = vbVerticalTab --- 12 = vbFormFeed --- 13 = vbCR --- 32 = SPACE
@@ -147,6 +149,20 @@ Public Module Tools
 
 		Return False
 	End Function
+
+
+	' <Extension()>
+	Public Function GetDescription(ByVal EnumConstant As [Enum]) As String
+		Dim fi As FieldInfo = EnumConstant.GetType().GetField(EnumConstant.ToString())
+		Dim attr() As DescriptionAttribute = DirectCast(fi.GetCustomAttributes(GetType(DescriptionAttribute), False), DescriptionAttribute())
+
+		If attr.Length > 0 Then
+			Return attr(0).Description
+		Else
+			Return EnumConstant.ToString()
+		End If
+	End Function
+
 
 	''' <summary>Get files from directory using Windows API (FAST!)</summary>
 	''' <param name="directory">Directory where to look for files</param>

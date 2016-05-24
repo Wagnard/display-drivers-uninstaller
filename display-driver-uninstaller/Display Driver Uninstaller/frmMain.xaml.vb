@@ -1435,7 +1435,7 @@ Public Class frmMain
 		'---------------------------------------------
 
 		Try
-			If config.WinVersion < "6.2" And WinForm.SystemInformation.BootMode <> WinForm.BootMode.Normal Then	'win 7 and lower + safemode only
+			If config.WinVersion < OSVersion.Win81 AndAlso WinForm.SystemInformation.BootMode <> WinForm.BootMode.Normal Then 'win 7 and lower + safemode only
 				Application.Log.AddMessage("Cleaning LEGACY_AMDKMDAG")
 				Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
 				 ("SYSTEM")
@@ -5239,7 +5239,7 @@ Public Class frmMain
 
 		EnableControls(False)
 
-		disabledriversearch(Application.Settings.WinVersion)
+		EnableDriverSearch(False)
 		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
 		KillGPUStatsProcesses()
 		'this shouldn't be slow, so it isn't on a thread/background worker
@@ -5261,7 +5261,7 @@ Public Class frmMain
 
 		EnableControls(False)
 
-		disabledriversearch(Application.Settings.WinVersion)
+		EnableDriverSearch(False)
 		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
 		KillGPUStatsProcesses()
 		'this shouldn't be slow, so it isn't on a thread/background worker
@@ -5284,7 +5284,7 @@ Public Class frmMain
 
 		EnableControls(False)
 
-		disabledriversearch(Application.Settings.WinVersion)
+		EnableDriverSearch(False)
 		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
 		KillGPUStatsProcesses()
 		'this shouldn't be slow, so it isn't on a thread/background worker
@@ -5299,30 +5299,7 @@ Public Class frmMain
 	End Sub
 
 	Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
-
-		Dim regkey As RegistryKey = Nothing
-
-		If Application.Settings.WinVersion >= "6.1" Then
-			Try
-				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
-				regkey.SetValue("SearchOrderConfig", 1)
-
-				MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			End Try
-		End If
-		If Application.Settings.WinVersion >= "6.0" And Application.Settings.WinVersion < "6.1" Then
-			Try
-				regkey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-				regkey.SetValue("DontSearchWindowsUpdate", 0)
-
-				MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			End Try
-		End If
-
+		EnableDriverSearch(True)
 	End Sub
 
 
@@ -5532,18 +5509,41 @@ Public Class frmMain
 			End If
 
 			'second, we check on what we are running and set variables accordingly (os, architecture)
+			Dim versionFound As Boolean = False
+			Dim regOSValue As String = Nothing
+
 			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
 				If regkey IsNot Nothing Then
-					Dim regValue As String = CStr(regkey.GetValue("CurrentVersion"))
+					regOSValue = CStr(regkey.GetValue("CurrentVersion"))
 
-					If Not IsNullOrWhitespace(regValue) Then
-						Application.Settings.WinVersion = regValue
-					Else
-						Application.Settings.WinVersion = "5.0"
+					If Not IsNullOrWhitespace(regOSValue) Then
+						Try
+							For Each os As [Enum] In [Enum].GetValues(GetType(OSVersion))
+								If GetDescription(os).Equals(regOSValue) Then
+									Application.Settings.WinVersion = DirectCast(os, OSVersion)
+									versionFound = (Application.Settings.WinVersion <> OSVersion.Unknown)
+									Exit For
+								End If
+							Next
+						Catch ex As Exception
+							versionFound = False
+						End Try
 					End If
-				Else : Application.Settings.WinVersion = "5.0"
 				End If
 			End Using
+
+			If Not versionFound Then		' Double check
+				Select Case regOSValue
+					Case "5.1" : Application.Settings.WinVersion = OSVersion.WinXP
+					Case "5.2" : Application.Settings.WinVersion = OSVersion.WinXPPro_Server2003
+					Case "6.0" : Application.Settings.WinVersion = OSVersion.WinVista
+					Case "6.1" : Application.Settings.WinVersion = OSVersion.Win7
+					Case "6.2" : Application.Settings.WinVersion = OSVersion.Win8
+					Case "6.3" : Application.Settings.WinVersion = OSVersion.Win81
+					Case "6.4", "10", "10.0" : Application.Settings.WinVersion = OSVersion.Win10
+					Case Else : Application.Settings.WinVersion = OSVersion.Unknown
+				End Select
+			End If
 
 #If 1 + 1 = 3 Then ' TODO: REMOVE (msgboxes gets annoying...)
 			MessageBox.Show("version (regkey): " & version & vbCrLf & vbCrLf &
@@ -5555,25 +5555,25 @@ Public Class frmMain
 			EnableControls(True)
 
 			Select Case Application.Settings.WinVersion
-				Case "5.1"
+				Case OSVersion.WinXP
 					Application.Settings.WinVersionText = "Windows XP"
 					winxp = True
 
-				Case "5.2"
+				Case OSVersion.WinXPPro_Server2003
 					Application.Settings.WinVersionText = "Windows XP (x64) or Server 2003"
 					winxp = True
 
-				Case "6.0"
+				Case OSVersion.WinVista
 					Application.Settings.WinVersionText = "Windows Vista or Server 2008"
 
-				Case "6.1"
+				Case OSVersion.Win7
 					Application.Settings.WinVersionText = "Windows 7 or Server 2008R2"
 
-				Case "6.2"
+				Case OSVersion.Win8
 					Application.Settings.WinVersionText = "Windows 8 or Server 2012"
 					win8higher = True
 
-				Case "6.3"
+				Case OSVersion.Win81
 					Application.Settings.WinVersionText = "Windows 8.1"
 					win8higher = True
 
@@ -5588,7 +5588,7 @@ Public Class frmMain
 						End If
 					End Using
 
-				Case "6.4", "10.0"
+				Case OSVersion.Win10
 					Application.Settings.WinVersionText = "Windows 10"
 					win8higher = True
 					win10 = True
@@ -5943,7 +5943,7 @@ Public Class frmMain
 									Using subRegkey As RegistryKey = regkey.OpenSubKey(child)
 										If subRegkey IsNot Nothing Then
 											Dim regValue As String = CStr(subRegkey.GetValue("Device Description"))
-										
+
 											If Not IsNullOrWhitespace(regValue) Then
 												UpdateTextMethod(String.Format("{0}{1} - {2} {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
 												info.Add("GPU # " & child, regValue)
@@ -7287,7 +7287,7 @@ Public Class frmMain
 			End With
 
 			frmSystemRestore.ShowDialog()
-			
+
 		End If
 	End Sub
 
@@ -7491,16 +7491,26 @@ Public Class frmMain
 
 	End Sub
 
-	Private Sub disabledriversearch(ByVal version As String)
-		Application.Log.AddMessage("Trying to disable search for Windows Updates", "Version", Version)
+	Private Sub EnableDriverSearch(ByVal enable As Boolean)
+		Dim version As OSVersion = Application.Settings.WinVersion
 
-		If Version >= "6.1" Then
+		If Not enable Then
+			Application.Log.AddMessage("Trying to disable search for Windows Updates", "Version", GetDescription(version))
+		End If
+
+		If version >= OSVersion.Win7 Then
 			Try
 				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
+					Dim regValue As Int32 = CInt(regkey.GetValue("SearchOrderConfig"))
 
-					If regkey IsNot Nothing AndAlso CInt(regkey.GetValue("SearchOrderConfig").ToString) <> 0 Then
-						regkey.SetValue("SearchOrderConfig", 0)
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+					If regkey IsNot Nothing AndAlso regValue <> If(enable, 1, 0) Then
+						regkey.SetValue("SearchOrderConfig", If(enable, 1, 0), RegistryValueKind.DWord)
+
+						If enable Then
+							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+						Else
+							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+						End If
 					End If
 				End Using
 			Catch ex As Exception
@@ -7508,13 +7518,19 @@ Public Class frmMain
 			End Try
 		End If
 
-		If Version >= "6.0" And Version < "6.1" Then
+		If version >= OSVersion.WinVista AndAlso version < OSVersion.Win7 Then
 			Try
 				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
+					Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate"))
 
-					If regkey IsNot Nothing AndAlso CInt(regkey.GetValue("DontSearchWindowsUpdate").ToString) <> 1 Then
-						regkey.SetValue("DontSearchWindowsUpdate", 1)
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+					If regkey IsNot Nothing AndAlso regValue <> If(enable, 0, 1) Then
+						regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
+
+						If enable Then
+							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+						Else
+							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+						End If
 					End If
 				End Using
 
@@ -7838,7 +7854,6 @@ Public Class frmMain
 
 		testWindow.ShowDialog()
 	End Sub
-
 End Class
 
 Public Class CleanupEngine

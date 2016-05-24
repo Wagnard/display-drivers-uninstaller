@@ -114,18 +114,6 @@ Namespace Win32
 #Region "Functions"
 
 		' <Extension()>
-		Public Function GetDescription(ByVal EnumConstant As [Enum]) As String
-			Dim fi As FieldInfo = EnumConstant.GetType().GetField(EnumConstant.ToString())
-			Dim attr() As DescriptionAttribute = DirectCast(fi.GetCustomAttributes(GetType(DescriptionAttribute), False), DescriptionAttribute())
-
-			If attr.Length > 0 Then
-				Return attr(0).Description
-			Else
-				Return EnumConstant.ToString()
-			End If
-		End Function
-
-		' <Extension()>
 		Public Function ToStringArray(Of T)(ByVal e As [Enum]) As String()
 			Dim eNames As List(Of String) = New List(Of String)(10)
 			Dim flags As UInt32 = Convert.ToUInt32(e)

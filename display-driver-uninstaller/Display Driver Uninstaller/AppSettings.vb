@@ -10,6 +10,41 @@ Public Enum GPUVendor
 	Intel
 End Enum
 
+Public Enum OSVersion
+	''' <summary> [ 0.0 ] - Unsupported OS</summary>
+	<ComponentModel.Description("0.0")>
+	Unknown = 0
+
+	''' <summary> [ 5.1 ] - Windows XP</summary>
+	<ComponentModel.Description("5.1")>
+	WinXP = 51
+
+	''' <summary> [ 5.2 ] - Windows XP (x64) or Server 2003</summary>
+	<ComponentModel.Description("5.2")>
+	WinXPPro_Server2003 = 52
+
+	''' <summary> [ 6.0 ] - Windows Vista or Server 2008</summary>
+	<ComponentModel.Description("6.0")>
+	WinVista = 60
+
+	''' <summary> [ 6.1 ] - Windows 7 or Server 2008R2</summary>
+	<ComponentModel.Description("6.1")>
+	Win7 = 61
+
+	''' <summary> [ 6.2 ] - Windows 8 or Server 2012</summary>
+	<ComponentModel.Description("6.2")>
+	Win8 = 62
+
+	''' <summary> [ 6.3 ] - Windows 8.1</summary>
+	<ComponentModel.Description("6.3")>
+	Win81 = 63
+
+	''' <summary> [ 6.4 / 10.0 ] - Windows 10</summary>
+	<ComponentModel.Description("6.4")>
+	Win10 = 64
+
+End Enum
+
 Public Class AppSettings
 	Inherits DependencyObject
 
@@ -20,7 +55,7 @@ Public Class AppSettings
 	Private m_gpuSelected As DependencyProperty = Reg("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
 	Private m_langSelected As DependencyProperty = Reg("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
 
-	Private m_winVersion As DependencyProperty = Reg("WinVersion", GetType(String), GetType(AppSettings), "0.0")
+	Private m_winVersion As DependencyProperty = Reg("WinVersion", GetType(OSVersion), GetType(AppSettings), OSVersion.Unknown)
 	Private m_winVersionText As DependencyProperty = Reg("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
 	Private m_winIs64 As DependencyProperty = Reg("WinIs64", GetType(Boolean), GetType(AppSettings), False)
 
@@ -79,11 +114,11 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property WinVersion As String
+	Public Property WinVersion As OSVersion
 		Get
-			Return CStr(GetValue(m_winVersion))
+			Return DirectCast(GetValue(m_winVersion), OSVersion)
 		End Get
-		Set(value As String)
+		Set(value As OSVersion)
 			SetValue(m_winVersion, value)
 		End Set
 	End Property

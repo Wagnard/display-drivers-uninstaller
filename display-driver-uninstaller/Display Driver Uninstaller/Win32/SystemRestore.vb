@@ -8,6 +8,7 @@ Namespace Win32
 		Private Const MAX_DESC As Int32 = 64		' Ansi
 		Private Const MAX_DESC_W As Int32 = 256		' Unicode
 
+#Region "P/Invoke"
 
 		<DllImport("srclient.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
 		Private Shared Function SRSetRestorePoint(
@@ -24,6 +25,10 @@ Namespace Win32
    <MarshalAs(UnmanagedType.LPWStr)> ByVal lpBuffer As StringBuilder,
    ByVal lpFilePart As String) As UInteger
 		End Function
+
+#End Region
+
+#Region "Structures"
 
 		''' <summary>Contains information used by the SRSetRestorePoint function</summary>
 		<StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Unicode)>
@@ -54,6 +59,10 @@ Namespace Win32
 			''' <summary> The sequence number of the restore point</summary>
 			Public llSequenceNumber As Int64
 		End Structure
+
+#End Region
+
+#Region "Enums"
 
 		''' <summary> Type of restorations</summary>
 		Friend Enum RESTORE_TYPE As UInt32
@@ -97,6 +106,8 @@ Namespace Win32
 			WINDOWSSHUTDOWN = 8UI
 			WINDOWSBOOT = 9UI
 		End Enum
+
+#End Region
 
 		''' <summary>
 		''' Verifies that the OS can do system restores
@@ -151,7 +162,7 @@ Namespace Win32
 			Dim rpStatus As New STATEMGRSTATUS()
 
 			' Prepare Restore Point
-			rpInfo.dwEventType = EVENT_TYPE.BeginSystemChange
+			rpInfo.dwEventType = EVENT_TYPE.BEGINSYSTEMCHANGE
 
 			' By default we create a verification system
 			rpInfo.dwRestorePtType = restoreType
@@ -179,7 +190,7 @@ Namespace Win32
 			Dim rpInfo As New RESTOREPOINTINFO()
 			Dim rpStatus As New STATEMGRSTATUS()
 
-			rpInfo.dwEventType = EVENT_TYPE.EndSystemChange
+			rpInfo.dwEventType = EVENT_TYPE.ENDSYSTEMCHANGE
 			rpInfo.llSequenceNumber = lSeqNum
 
 			Using ptrInfo As New StructPtr(rpInfo)
@@ -201,7 +212,7 @@ Namespace Win32
 			Dim rpInfo As New RESTOREPOINTINFO()
 			Dim rpStatus As New STATEMGRSTATUS()
 
-			rpInfo.dwEventType = EVENT_TYPE.EndSystemChange
+			rpInfo.dwEventType = EVENT_TYPE.ENDSYSTEMCHANGE
 			rpInfo.dwRestorePtType = RESTORE_TYPE.CANCELLED_OPERATION
 			rpInfo.llSequenceNumber = lSeqNum
 

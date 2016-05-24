@@ -1,6 +1,7 @@
 ﻿Imports System.Management
 Imports System.Runtime.InteropServices
 Imports System.Threading
+Imports Microsoft.Win32
 
 Public Class frmSystemRestore
 	Implements IDisposable
@@ -16,15 +17,20 @@ Public Class frmSystemRestore
 		canClose2.Reset()
 
 		Try
+			Try
+				Using regKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore", RegistryKeyPermissionCheck.ReadWriteSubTree, Security.AccessControl.RegistryRights.SetValue)
+					If regKey IsNot Nothing Then
+						regKey.SetValue("SystemRestorePointCreationFrequency", 0, RegistryValueKind.DWord)
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Settings value for RegistryKey 'SystemRestorePointCreationFrequency' failed!")
+			End Try
+
 			Dim result As Int64 = 0
 
-			' Devmltk;	NOTE!
-			'
-			' You must initialize COM security to allow NetworkService, LocalService and System to call back into any process that uses SRSetRestorePoint. 
-			' This is necessary for SRSetRestorePoint to operate properly. 
-			' For information on setting up the COM calls to CoInitializeEx and CoInitializeSecurity, see Using System Restore.
-
-			Win32.SystemRestore.StartRestore("DDU Restore Point", Win32.SystemRestore.RESTORE_TYPE.CHECKPOINT, result)
+			' RESTORE_TYPE.CHECKPOINT is used be System  (which also overrides Description)
+			Win32.SystemRestore.StartRestore("DDU Restore Point", Win32.SystemRestore.RESTORE_TYPE.MODIFY_SETTINGS, result)
 
 			Win32.SystemRestore.EndRestore(result)
 
@@ -52,7 +58,7 @@ Public Class frmSystemRestore
 			'Application.Log.AddMessage("System Restored Point Created. Code: " + errCode.ToString())
 
 		Catch ex As Exception
-			Application.Log.AddWarning(ex, "System Restored Point Could not be Created!")
+			Application.Log.AddWarning(ex, "System Restored Point could not be Created!")
 		Finally
 			canClose2.Set()
 		End Try
