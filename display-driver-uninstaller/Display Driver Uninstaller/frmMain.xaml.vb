@@ -338,7 +338,7 @@ Public Class frmMain
 				deletedirectory(filePath)
 			Catch ex As Exception
 				Application.Log.AddException(ex)
-				TestDelete(filePath)
+				TestDelete(filepath, config)
 			End Try
 		End If
 
@@ -377,7 +377,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -387,7 +387,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -409,7 +409,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -419,7 +419,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -440,7 +440,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -452,7 +452,7 @@ Public Class frmMain
 
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -469,7 +469,7 @@ Public Class frmMain
 				deletedirectory(filePath)
 			Catch ex As Exception
 				Application.Log.AddException(ex)
-				TestDelete(filePath)
+				TestDelete(filepath, config)
 			End Try
 		End If
 
@@ -482,7 +482,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				End Try
 			End If
 
@@ -501,7 +501,7 @@ Public Class frmMain
 									deletedirectory(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
-									TestDelete(child)
+									TestDelete(child, config)
 								End Try
 							End If
 						End If
@@ -511,7 +511,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filePath)
+							TestDelete(filepath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -541,7 +541,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				End Try
 			End If
 
@@ -549,7 +549,7 @@ Public Class frmMain
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
 			If Directory.Exists(filePath) Then
 				Try
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
@@ -559,7 +559,7 @@ Public Class frmMain
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoFirefox"
 			If Directory.Exists(filePath) Then
 				Try
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
@@ -569,7 +569,7 @@ Public Class frmMain
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoChrome"
 			If Directory.Exists(filePath) Then
 				Try
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
@@ -585,7 +585,7 @@ Public Class frmMain
 								deletedirectory(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
-								TestDelete(child)
+								TestDelete(child, config)
 							End Try
 						End If
 					End If
@@ -596,7 +596,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filePath)
+							TestDelete(filepath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -616,7 +616,7 @@ Public Class frmMain
 			Try
 				deletedirectory(filePath)
 			Catch ex As Exception
-				TestDelete(filePath)
+				TestDelete(filepath, config)
 			End Try
 		End If
 
@@ -627,7 +627,7 @@ Public Class frmMain
 			Try
 				deletedirectory(filePath)
 			Catch ex As Exception
-				TestDelete(filePath)
+				TestDelete(filepath, config)
 			End Try
 		End If
 
@@ -641,7 +641,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -651,7 +651,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -672,7 +672,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -682,7 +682,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -706,7 +706,7 @@ Public Class frmMain
 									deletedirectory(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
-									TestDelete(child)
+									TestDelete(child, config)
 								End Try
 							End If
 						End If
@@ -716,7 +716,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filePath)
+							TestDelete(filepath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -743,7 +743,7 @@ Public Class frmMain
 									deletedirectory(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
-									TestDelete(child)
+									TestDelete(child, config)
 								End Try
 							End If
 						End If
@@ -753,7 +753,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filePath)
+							TestDelete(filepath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -782,7 +782,7 @@ Public Class frmMain
 									deletedirectory(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
-									TestDelete(child)
+									TestDelete(child, config)
 								End Try
 							End If
 						End If
@@ -792,7 +792,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filePath)
+							TestDelete(filepath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -823,7 +823,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -834,7 +834,7 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						TestDelete(filePath)
+						TestDelete(filepath, config)
 					End Try
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -858,7 +858,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -868,7 +868,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -910,7 +910,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -947,7 +947,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -1744,7 +1744,7 @@ Public Class frmMain
 															deletedirectory(childf)
 														Catch ex As Exception
 															Application.Log.AddException(ex)
-															TestDelete(childf)
+															TestDelete(childf, config)
 														End Try
 													End If
 												End If
@@ -1754,7 +1754,7 @@ Public Class frmMain
 													deletedirectory(filePath)
 												Catch ex As Exception
 													Application.Log.AddException(ex)
-													TestDelete(filePath)
+													TestDelete(filepath, config)
 												End Try
 											End If
 										End If
@@ -2500,7 +2500,7 @@ Public Class frmMain
 				deletedirectory(filePath)
 			Catch ex As Exception
 				Application.Log.AddException(ex)
-				TestDelete(filePath)
+				TestDelete(filepath, config)
 			End Try
 
 		End If
@@ -2511,7 +2511,7 @@ Public Class frmMain
 			If IsNullOrWhitespace(child) = False Then
 				If child.ToLower.Contains("updatususer") Then
 					Try
-						TestDelete(child)
+						TestDelete(child, config)
 					Catch ex As Exception
 					End Try
 
@@ -2524,7 +2524,7 @@ Public Class frmMain
 
 					'Yes we do it 2 times. This will workaround a problem on junction/sybolic/hard link
 					Try
-						TestDelete(child)
+						TestDelete(child, config)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 					End Try
@@ -2555,7 +2555,7 @@ Public Class frmMain
 								deletedirectory(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
-								TestDelete(child)
+								TestDelete(child, config)
 							End Try
 						End If
 					End If
@@ -2566,7 +2566,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filePath)
+							TestDelete(filepath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -2591,7 +2591,7 @@ Public Class frmMain
 								deletedirectory(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
-								TestDelete(child)
+								TestDelete(child, config)
 							End Try
 						End If
 					End If
@@ -2602,7 +2602,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filePath)
+							TestDelete(filepath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -2670,7 +2670,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -2681,7 +2681,7 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						TestDelete(filePath)
+						TestDelete(filepath, config)
 					End Try
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -2712,7 +2712,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -2722,7 +2722,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -2743,7 +2743,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -2754,7 +2754,7 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						TestDelete(filePath)
+						TestDelete(filepath, config)
 					End Try
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -2800,7 +2800,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 					If child.ToLower.Contains("installer2") Then
@@ -2834,7 +2834,7 @@ Public Class frmMain
 										deletedirectory(child2)
 									Catch ex As Exception
 										Application.Log.AddException(ex)
-										TestDelete(child2)
+										TestDelete(child2, config)
 									End Try
 								End If
 							End If
@@ -2845,7 +2845,7 @@ Public Class frmMain
 								deletedirectory(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
-								TestDelete(child)
+								TestDelete(child, config)
 							End Try
 						Else
 							For Each data As String In Directory.GetDirectories(child)
@@ -2861,7 +2861,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filePath)
+					TestDelete(filepath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -2915,7 +2915,7 @@ Public Class frmMain
 									deletedirectory(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
-									TestDelete(child)
+									TestDelete(child, config)
 								End Try
 							Else
 								If child.ToLower.Contains("physx") Then
@@ -2925,7 +2925,7 @@ Public Class frmMain
 										deletedirectory(child)
 									Catch ex As Exception
 										Application.Log.AddException(ex)
-										TestDelete(child)
+										TestDelete(child, config)
 									End Try
 								End If
 							End If
@@ -2938,7 +2938,7 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						TestDelete(filePath)
+						TestDelete(filepath, config)
 					End Try
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -3017,7 +3017,7 @@ Public Class frmMain
 							deletedirectory(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child)
+							TestDelete(child, config)
 						End Try
 					End If
 				End If
@@ -3028,7 +3028,7 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						TestDelete(filePath)
+						TestDelete(filepath, config)
 					End Try
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -3056,7 +3056,7 @@ Public Class frmMain
 								deletedirectory(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
-								TestDelete(child)
+								TestDelete(child, config)
 							End Try
 						End If
 					End If
@@ -3067,7 +3067,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filePath)
+							TestDelete(filepath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -3091,7 +3091,7 @@ Public Class frmMain
 								deletedirectory(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
-								TestDelete(child)
+								TestDelete(child, config)
 							End Try
 						End If
 					End If
@@ -3102,7 +3102,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filePath)
+							TestDelete(filepath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -3125,7 +3125,7 @@ Public Class frmMain
 								deletedirectory(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
-								TestDelete(child)
+								TestDelete(child, config)
 							End Try
 						End If
 					End If
@@ -3136,7 +3136,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filePath)
+							TestDelete(filepath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -3166,7 +3166,7 @@ Public Class frmMain
 			'									deletedirectory(child)
 			'								Catch ex As Exception
 			'									Application.Log.AddException(ex)
-			'									TestDelete(child)
+			'									TestDelete(child,config)
 			'								End Try
 			'							End If
 			'						End If
@@ -3177,7 +3177,7 @@ Public Class frmMain
 			'							deletedirectory(filePath)
 			'						Catch ex As Exception
 			'							Application.Log.AddException(ex)
-			'							TestDelete(filePath)
+			'							TestDelete(filepath,config)
 			'						End Try
 			'					Else
 			'						For Each data As String In Directory.GetDirectories(filePath)
@@ -3213,7 +3213,7 @@ Public Class frmMain
 								deletedirectory(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
-								TestDelete(child)
+								TestDelete(child, config)
 							End Try
 						End If
 					End If
@@ -7318,7 +7318,7 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Public Sub TestDelete(ByVal folder As String)
+	Public Shared Sub TestDelete(ByVal folder As String, ByVal config As ThreadSettings)
 		' UpdateTextMethod(UpdateTextMethodmessagefn("18"))
 		'Application.Log.AddMessage("Deleting some specials folders, it could take some times...")
 		'ensure that this folder can be accessed with current user ac.
@@ -7368,7 +7368,7 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Private Sub TraverseDirectory(ByVal di As DirectoryInfo)
+	Private Shared Sub TraverseDirectory(ByVal di As DirectoryInfo)
 
 		'If the current directory has more child directories, then continure
 		'to traverse down until we are at the lowest level and remove
@@ -7400,7 +7400,7 @@ Public Class frmMain
 			Try
 				di.Delete()
 			Catch ex As Exception
-				Application.log.AddException(ex)
+				Application.Log.AddException(ex)
 			End Try
 		End If
 
@@ -7411,7 +7411,7 @@ Public Class frmMain
 	''' It may be necessary to wrap this call in impersonation or ensure parent directory
 	''' permissions prior, because delete permissions are not guaranteed.
 
-	Private Sub CleanAllFilesInDirectory(ByVal DirectoryToClean As DirectoryInfo)
+	Private Shared Sub CleanAllFilesInDirectory(ByVal DirectoryToClean As DirectoryInfo)
 
 		Try
 			For Each fi As FileInfo In DirectoryToClean.GetFiles()
@@ -7867,11 +7867,6 @@ Public Class CleanupEngine
 		'updatetextmethod(strmessage)
 	End Sub
 
-
-	Public Sub TestDelete(ByVal folder As String)
-		'TestDelete(folder)
-	End Sub
-
 	Public Sub deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String)
 		Dim fixregacls As Boolean = False
 
@@ -8201,7 +8196,7 @@ Public Class CleanupEngine
 																				  subregkey.GetValue("UninstallString").ToString.ToLower.Contains("{") Then
 																					Dim folder As String = subregkey.GetValue("UninstallString").ToString
 																					folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
-																					TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
+																					frmMain.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder, config)
 																					If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
 																						For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
 																					 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
@@ -8324,7 +8319,7 @@ Public Class CleanupEngine
 															  subregkey.GetValue("ProductIcon").ToString.ToLower.Contains("{") Then
 																Dim folder As String = subregkey.GetValue("ProductIcon").ToString
 																folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
-																TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder)
+																frmMain.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder, config)
 																If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
 																	For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
 																  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
