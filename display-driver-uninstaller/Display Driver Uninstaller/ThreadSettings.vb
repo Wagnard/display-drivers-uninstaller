@@ -31,6 +31,17 @@ Public Class ThreadSettings
 	Public Property WinVersion As OSVersion
 	Public Property WinIs64 As Boolean
 
+	Public ReadOnly Property Win8Higher As Boolean
+		Get
+			Return WinVersion >= OSVersion.Win8
+		End Get
+	End Property
+	Public ReadOnly Property Win10 As Boolean
+		Get
+			Return WinVersion = OSVersion.Win10
+		End Get
+	End Property
+
 	Public Sub New()
 		PropertyCopy(Application.Paths, Me.Paths)
 		PropertyCopy(Application.Settings, Me)
@@ -44,9 +55,12 @@ Public Class ThreadSettings
 		Dim propertiesNew As PropertyInfo() = typeNew.GetProperties(BindingFlags.Public Or BindingFlags.Instance)
 
 		For Each pNew As PropertyInfo In propertiesNew
+			If Not pNew.CanWrite Then Continue For
+
 			For Each p As PropertyInfo In properties
 				If p.Name = pNew.Name Then
 					pNew.SetValue(toObj, p.GetValue(fromObj, Nothing), Nothing)
+					Exit For
 				End If
 			Next
 		Next
