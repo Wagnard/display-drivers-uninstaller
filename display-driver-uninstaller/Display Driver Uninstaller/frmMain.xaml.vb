@@ -6214,9 +6214,6 @@ Public Class frmMain
 							For Each Sibling In SystemDevice.SiblingDevices
 								If SystemDevice.LowerFilters IsNot Nothing AndAlso StrContainsAny(SystemDevice.LowerFilters(0), True, "amdkmafd") Then
 									If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
-										'Remove msgbox before release.
-										MsgBox("Device to remove: " + SystemDevice.Description + " from sibling " + Sibling.Description + Sibling.DeviceID)
-
 										Dim logEntry As LogEntry = Application.Log.CreateEntry()
 										logEntry.Message = "Removing AMD HD Audio Bus (amdkmafd)"
 										logEntry.AddDevices(SystemDevice)
