@@ -1,9 +1,9 @@
 ﻿<Window x:Name="frmSystemRestore" x:Class="frmSystemRestore"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="frmSystemRestore" Height="81.299" Width="156.643" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
-    <Grid>
-        <Label x:Name="lblSystemRestore" Content="Label" Margin="10" RenderTransformOrigin="0.506,0.515" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Calibri" FontSize="14"/>
-
+    Title="frmSystemRestore" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+   
+	<Grid>
+        <Label x:Name="lblSystemRestore" Content="Label" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Calibri" FontSize="14"/>
     </Grid>
 </Window>

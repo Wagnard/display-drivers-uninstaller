@@ -7829,6 +7829,10 @@ Public Class frmMain
 		ACL.test3()
 	End Sub
 
+	Private Sub restoreMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles restoreMenuItem.Click
+		SystemRestore()
+	End Sub
+
 	Private Sub SetupAPIMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles SetupAPIMenuItem.Click
 		Dim testWindow As New SetupAPITestWindow
 

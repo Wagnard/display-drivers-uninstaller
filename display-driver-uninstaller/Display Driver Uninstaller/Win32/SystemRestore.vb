@@ -1,95 +1,108 @@
 ﻿Imports System.Collections.Generic
 Imports System.Text
 Imports System.Runtime.InteropServices
+Imports System.ComponentModel
 
 Namespace Win32
 	Friend Class SystemRestore
-		<DllImport("srclient.dll")> _
-		Friend Shared Function SRSetRestorePointW(ByRef pRestorePtSpec As RestorePointInfo, ByRef pSMgrStatus As STATEMGRSTATUS) As <MarshalAs(UnmanagedType.Bool)> Boolean
+		Private Const MAX_DESC As Int32 = 64		' Ansi
+		Private Const MAX_DESC_W As Int32 = 256		' Unicode
+
+
+		<DllImport("srclient.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+		Private Shared Function SRSetRestorePoint(
+ <[In]()> ByVal pRestorePtSpec As IntPtr,
+ <[In](), [Out]()> ByVal pSMgrStatus As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 		End Function
 
-		<DllImport("kernel32.dll", SetLastError:=True, CharSet:=CharSet.Auto)> _
-		Friend Shared Function SearchPath(lpPath As String, lpFileName As String, lpExtension As String, nBufferLength As Integer, <MarshalAs(UnmanagedType.LPTStr)> lpBuffer As StringBuilder, lpFilePart As String) As UInteger
+		<DllImport("kernel32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+		Private Shared Function SearchPath(
+   ByVal lpPath As String,
+   ByVal lpFileName As String,
+   ByVal lpExtension As String,
+   ByVal nBufferLength As Integer,
+   <MarshalAs(UnmanagedType.LPWStr)> ByVal lpBuffer As StringBuilder,
+   ByVal lpFilePart As String) As UInteger
 		End Function
 
-		''' <summary>
-		''' Contains information used by the SRSetRestorePoint function
-		''' </summary>
-		<StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Unicode)> _
-		Friend Structure RestorePointInfo
-			Public dwEventType As Integer
-			' The type of event
-			Public dwRestorePtType As Integer
-			' The type of restore point
+		''' <summary>Contains information used by the SRSetRestorePoint function</summary>
+		<StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Unicode)>
+		Private Structure RESTOREPOINTINFO
+
+			''' <summary> The type of event</summary>
+			Public dwEventType As UInt32
+
+			''' <summary> The type of restore point.</summary>
+			Public dwRestorePtType As UInt32
+
+			''' <summary> The sequence number of the restore point. 
+			''' To end a system change, set this to the sequence number returned by the previous call to SRSetRestorePoint.</summary>
 			Public llSequenceNumber As Int64
-			' The sequence number of the restore point
-			<MarshalAs(UnmanagedType.ByValTStr, SizeConst:=MaxDescW + 1)> _
+
+			''' <summary> The description to be displayed so the user can easily identify a restore point</summary>
+			<MarshalAs(UnmanagedType.ByValTStr, SizeConst:=MAX_DESC_W)>
 			Public szDescription As String
-			' The description to be displayed so the user can easily identify a restore point
 		End Structure
 
-		''' <summary>
-		''' Contains status information used by the SRSetRestorePoint function
-		''' </summary>
-		<StructLayout(LayoutKind.Sequential)> _
-		Friend Structure STATEMGRSTATUS
-			Public nStatus As Integer
-			' The status code
+		''' <summary>Contains status information used by the SRSetRestorePoint function</summary>
+		<StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Unicode)>
+		Private Structure STATEMGRSTATUS
+
+			''' <summary> The status code</summary>
+			Public nStatus As UInt32
+
+			''' <summary> The sequence number of the restore point</summary>
 			Public llSequenceNumber As Int64
-			' The sequence number of the restore point
 		End Structure
 
-		' Type of restorations
-		Friend Enum RestoreType
-			ApplicationInstall = 0
-			' Installing a new application
-			ApplicationUninstall = 1
-			' An application has been uninstalled
-			ModifySettings = 12
-			' An application has had features added or removed
-			CancelledOperation = 13
-			' An application needs to delete the restore point it created
-			Restore = 6
-			' System Restore
-			Checkpoint = 7
-			' Checkpoint
-			DeviceDriverInstall = 10
-			' Device driver has been installed
-			FirstRun = 11
-			' Program used for 1st time 
-			BackupRecovery = 14
-			' Restoring a backup
+		''' <summary> Type of restorations</summary>
+		Friend Enum RESTORE_TYPE As UInt32
+			''' <summary> Installing a new application</summary>
+			APPLICATION_INSTALL = 0UI
+
+			''' <summary> An application has been uninstalled</summary>
+			APPLICATION_UNINSTALL = 1UI
+
+			''' <summary> System Restore</summary>
+			RESTORE = 6UI
+
+			''' <summary> Checkpoint</summary>
+			CHECKPOINT = 7UI
+
+			''' <summary> Device driver has been installed</summary>
+			DEVICE_DRIVER_INSTALL = 10UI
+
+			''' <summary> Program used for 1st time </summary>
+			FIRSTRUN = 11UI
+
+			''' <summary> An application has had features added or removed</summary>
+			MODIFY_SETTINGS = 12UI
+
+			''' <summary> An application needs to delete the restore point it created</summary>
+			CANCELLED_OPERATION = 13UI
+
+			''' <summary> Restoring a backup</summary>
+			BACKUP_RECOVERY = 14UI
 		End Enum
 
-		' Constants
-		Friend Const BeginSystemChange As Int16 = 100
-		' Start of operation 
-		Friend Const EndSystemChange As Int16 = 101
-		' End of operation
-		' Windows XP only - used to prevent the restore points intertwined
-		Friend Const BeginNestedSystemChange As Int16 = 102
-		Friend Const EndNestedSystemChange As Int16 = 103
-
-		Friend Const DesktopSetting As Int16 = 2
-		' not implemented 
-		Friend Const AccessibilitySetting As Int16 = 3
-		' not implemented 
-		Friend Const OeSetting As Int16 = 4
-		' not implemented 
-		Friend Const ApplicationRun As Int16 = 5
-		' not implemented 
-		Friend Const WindowsShutdown As Int16 = 8
-		' not implemented 
-		Friend Const WindowsBoot As Int16 = 9
-		' not implemented 
-		Friend Const MaxDesc As Int16 = 64
-		Friend Const MaxDescW As Int16 = 256
+		Friend Enum EVENT_TYPE As UInt32
+			BEGINSYSTEMCHANGE = 100UI
+			ENDSYSTEMCHANGE = 101UI
+			BEGINNESTEDSYSTEMCHANGE = 102UI
+			ENDNESTEDSYSTEMCHANGE = 103UI
+			DESKTOPSETTING = 2UI
+			ACCESSIBILITYSETTING = 3UI
+			OESETTING = 4UI
+			APPLICATIONRUN = 5UI
+			WINDOWSSHUTDOWN = 8UI
+			WINDOWSBOOT = 9UI
+		End Enum
 
 		''' <summary>
 		''' Verifies that the OS can do system restores
 		''' </summary>
 		''' <returns>True if OS is either ME,XP,Vista,7</returns>
-		Friend Shared Function SysRestoreAvailable() As Boolean
+		Private Shared Function SysRestoreAvailable() As Boolean
 			Dim majorVersion As Integer = Environment.OSVersion.Version.Major
 			Dim minorVersion As Integer = Environment.OSVersion.Version.Minor
 
@@ -128,36 +141,33 @@ Namespace Win32
 		''' Starts system restore
 		''' </summary>
 		''' <param name="strDescription">The description of the restore</param>
-		''' <param name="rt">The type of restore point</param>
-		''' <param name="lSeqNum">Returns the sequence number</param>
 		''' <returns>The status of call</returns>
-
-		Friend Shared Function StartRestore(strDescription As String, rt As RestoreType, ByRef lSeqNum As Long) As Integer
-			Dim rpInfo As New RestorePointInfo()
-			Dim rpStatus As New STATEMGRSTATUS()
-
+		Friend Shared Function StartRestore(ByVal strDescription As String, ByVal restoreType As RESTORE_TYPE, ByRef result As Int64) As Boolean
 			If Not SysRestoreAvailable() Then
-				lSeqNum = 0
-				Return -1
+				Return False
 			End If
 
-			Try
-				' Prepare Restore Point
-				rpInfo.dwEventType = BeginSystemChange
-				' By default we create a verification system
-				rpInfo.dwRestorePtType = CInt(rt)
-				rpInfo.llSequenceNumber = 0
-				rpInfo.szDescription = strDescription
+			Dim rpInfo As New RESTOREPOINTINFO()
+			Dim rpStatus As New STATEMGRSTATUS()
 
-				SRSetRestorePointW(rpInfo, rpStatus)
-			Catch generatedExceptionName As DllNotFoundException
-				lSeqNum = 0
-				Return -1
-			End Try
+			' Prepare Restore Point
+			rpInfo.dwEventType = EVENT_TYPE.BeginSystemChange
 
-			lSeqNum = rpStatus.llSequenceNumber
+			' By default we create a verification system
+			rpInfo.dwRestorePtType = restoreType
+			rpInfo.llSequenceNumber = 0L
+			rpInfo.szDescription = strDescription
 
-			Return rpStatus.nStatus
+			Using ptrInfo As New StructPtr(rpInfo)
+				Using ptrStatus As New StructPtr(rpStatus)
+					If Not SRSetRestorePoint(ptrInfo.Ptr, ptrStatus.Ptr) Then
+						Throw New Win32Exception()
+					Else
+						result = rpStatus.llSequenceNumber
+						Return True
+					End If
+				End Using
+			End Using
 		End Function
 
 		''' <summary>
@@ -165,24 +175,21 @@ Namespace Win32
 		''' </summary>
 		''' <param name="lSeqNum">The restore sequence number</param>
 		''' <returns>The status of call</returns>
-		Friend Shared Function EndRestore(lSeqNum As Long) As Integer
-			Dim rpInfo As New RestorePointInfo()
+		Friend Shared Function EndRestore(ByVal lSeqNum As Int64) As Boolean
+			Dim rpInfo As New RESTOREPOINTINFO()
 			Dim rpStatus As New STATEMGRSTATUS()
 
-			If Not SysRestoreAvailable() Then
-				Return -1
-			End If
+			rpInfo.dwEventType = EVENT_TYPE.EndSystemChange
+			rpInfo.llSequenceNumber = lSeqNum
 
-			Try
-				rpInfo.dwEventType = EndSystemChange
-				rpInfo.llSequenceNumber = lSeqNum
-
-				SRSetRestorePointW(rpInfo, rpStatus)
-			Catch generatedExceptionName As DllNotFoundException
-				Return -1
-			End Try
-
-			Return rpStatus.nStatus
+			Using ptrInfo As New StructPtr(rpInfo)
+				Using ptrStatus As New StructPtr(rpStatus)
+					If Not SRSetRestorePoint(ptrInfo.Ptr, ptrStatus.Ptr) Then
+						Throw New Win32Exception()
+					End If
+				End Using
+			End Using
+			Return True
 		End Function
 
 		''' <summary>
@@ -190,25 +197,23 @@ Namespace Win32
 		''' </summary>
 		''' <param name="lSeqNum">The restore sequence number</param>
 		''' <returns>The status of call</returns>
-		Friend Shared Function CancelRestore(lSeqNum As Long) As Integer
-			Dim rpInfo As New RestorePointInfo()
+		Friend Shared Function CancelRestore(ByVal lSeqNum As Int64) As Boolean
+			Dim rpInfo As New RESTOREPOINTINFO()
 			Dim rpStatus As New STATEMGRSTATUS()
 
-			If Not SysRestoreAvailable() Then
-				Return -1
-			End If
+			rpInfo.dwEventType = EVENT_TYPE.EndSystemChange
+			rpInfo.dwRestorePtType = RESTORE_TYPE.CANCELLED_OPERATION
+			rpInfo.llSequenceNumber = lSeqNum
 
-			Try
-				rpInfo.dwEventType = EndSystemChange
-				rpInfo.dwRestorePtType = CInt(RestoreType.CancelledOperation)
-				rpInfo.llSequenceNumber = lSeqNum
+			Using ptrInfo As New StructPtr(rpInfo)
+				Using ptrStatus As New StructPtr(rpStatus)
+					If Not SRSetRestorePoint(ptrInfo.Ptr, ptrStatus.Ptr) Then
+						Throw New Win32Exception()
+					End If
+				End Using
+			End Using
 
-				SRSetRestorePointW(rpInfo, rpStatus)
-			Catch generatedExceptionName As DllNotFoundException
-				Return -1
-			End Try
-
-			Return rpStatus.nStatus
+			Return True
 		End Function
 	End Class
 End Namespace

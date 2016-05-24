@@ -56,7 +56,7 @@
 			<ColumnDefinition Width="Auto" MinWidth="200" MaxWidth="350" />
 			<ColumnDefinition Width="*" />	
 			<ColumnDefinition Width="20" />		<!-- Space ( 30px ) -->
-			<ColumnDefinition Width="Auto" MaxWidth="300" />
+			<ColumnDefinition Width="200" MaxWidth="300" />
 		</Grid.ColumnDefinitions>
 		
 		<Grid.RowDefinitions>
@@ -91,6 +91,7 @@
 				<MenuItem x:Name="RegMenuItem" Header="Reg (test3)" />
 				<MenuItem x:Name="createXMLMenuItem" Header="Create XMLs" />
 				<MenuItem x:Name="SetupAPIMenuItem" Header="SetupAPI" />
+				<MenuItem x:Name="restoreMenuItem" Header="System Restore" />
 			</MenuItem>
 		</Menu>
 
