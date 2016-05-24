@@ -5582,6 +5582,7 @@ Public Class frmMain
 							Dim regValue As String = CStr(regkey.GetValue("CurrentMajorVersionNumber"))
 
 							If Not IsNullOrWhitespace(regValue) AndAlso regValue.Equals("10") Then
+								Application.Settings.WinVersion = OSVersion.Win10
 								Application.Settings.WinVersionText = "Windows 10"
 								win10 = True
 							End If
