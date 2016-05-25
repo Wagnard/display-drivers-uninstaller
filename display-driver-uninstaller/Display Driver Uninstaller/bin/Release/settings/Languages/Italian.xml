@@ -1,60 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="it-IT" Text="Italian" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>Pulisci e Riavvia|(Raccomandato)</Text>
 			<Tooltip>Rimuovi i driver correnti e precedenti e riavvia il computer|(Raccomandato)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Pulisci SENZA riavviare.|(Potrebbe causare problemi come schermate nere)</Text>
 			<Tooltip>Rimuovi i driver correnti e precedenti e NON riavviare il computer.|(Potrebbe causare problemi come schermate nere)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Pulisci e Spegni il PC|(per installare una nuova scheda video)</Text>
 			<Tooltip>Rimuovi i driver correnti e precedenti e spegni il computer senza rescan|(Se devi installare una nuova scheda video)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Ripristina l'installazione dei driver su Windows Update alla configurazione di default.</Text>
-		</Button4>
-		<Button5>
-			<Text>Show extended log.</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>Versione di Windows rilevata:</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** You like DDU? Think about a Donation, it will help further developement. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Log :</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Seleziona driver video :</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>Nota: Sei responsabile di qualsiasi danno causato al tuo PC.</Text>
 		</Label9>
 		<Label10>
 			<Text>DDU raccomanda l'uso della modalità provvisoria.</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Controlla aggiornamenti ...</Text>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Options</Text>
 		</OptionsToolStripMenuItem>
@@ -143,9 +154,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Options">
-		<Label1>
+		<lblWinVersion>
 			<Text>GPUs Specifics Options</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>General Options</Text>
 		</Label2>
@@ -207,6 +218,9 @@
 		<lblNotSafeMode>
 			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -216,65 +230,98 @@
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Driver Uninstaller (DDU) / Cleaner per i driver video. (NVIDIA/AMD)
+				Driver Uninstaller (DDU) / Cleaner per i driver video. (NVIDIA/AMD)
 
-Rimuove il driver video dalla gestione periferiche eliminando qualsiasi traccia di driver
-dal Driver store di Windows compresi i servizi NVIDIA/AMD.
+				Rimuove il driver video dalla gestione periferiche eliminando qualsiasi traccia di driver
+				dal Driver store di Windows compresi i servizi NVIDIA/AMD.
 
-L'effetto ottenuto sarà simile a una "nuova installazione" di Windows.
+				L'effetto ottenuto sarà simile a una "nuova installazione" di Windows.
 
-Questo programma agisce in modo simile a Driver sweeper + gli extra menzionati sopra.
+				Questo programma agisce in modo simile a Driver sweeper + gli extra menzionati sopra.
 
-In caso di problemi durante l'installazione di driver datati o recenti si consiglia di provarlo,
-a dimostrazione delle testimonianze avute finora.
+				In caso di problemi durante l'installazione di driver datati o recenti si consiglia di provarlo,
+				a dimostrazione delle testimonianze avute finora.
 
-USO RACCOMANDATO :
+				USO RACCOMANDATO :
 
-- Personalmente consiglio la disconnessione da Internet prima dell'utilizzo, poichè alcune volte
-dopo la rimozione, windows update potrebbe reinstallare il driver senza la tua autorizzazione...
+				- Personalmente consiglio la disconnessione da Internet prima dell'utilizzo, poichè alcune volte
+				dopo la rimozione, windows update potrebbe reinstallare il driver senza la tua autorizzazione...
 
-- Questo programma può essere usato in modalità normale ma per un'assoluta stabilità, la modalità 
-provvisoria è sempre la più indicata.
+				- Questo programma può essere usato in modalità normale ma per un'assoluta stabilità, la modalità
+				provvisoria è sempre la più indicata.
 
-- Si consiglia di creare un backup o un punto di ripristino come precauzione, dato che il programma
-in sè è abbastanza sicuro.
+				- Si consiglia di creare un backup o un punto di ripristino come precauzione, dato che il programma
+				in sè è abbastanza sicuro.
 
-- Se hai avuto problemi con un driver video e questo programma ti è stato d'aiuto, puoi condividere
-il risultato nella discussione ufficiale del programma: http://forums.guru3d.com/showthread.php?t=379505
+				- Se hai avuto problemi con un driver video e questo programma ti è stato d'aiuto, puoi condividere
+				il risultato nella discussione ufficiale del programma: http://forums.guru3d.com/showthread.php?t=379505
 
-Tieni a mente che NVIDIA/AMD non hanno niente a che fare con noi. Non lavoriamo per NVIDIA/AMD e 
-non devono essere ritenuti responsabili per qualunque danno causato al tuo sistema.
--------------------------------
-Created By Wagnard.
+				Tieni a mente che NVIDIA/AMD non hanno niente a che fare con noi. Non lavoriamo per NVIDIA/AMD e
+				non devono essere ritenuti responsabili per qualunque danno causato al tuo sistema.
+				-------------------------------
+				Created By Wagnard.
 
-Co-owner: Shady7557
+				Co-owner: Shady7557
 
-Tester : Dellon132
+				Tester : Dellon132
 
-Logos : juanchacin
+				Logos : juanchacin
 
-Grazie a tutti quelli che hanno messo il loro sistema a rischio per rendere DDU stabile.
-(special thanks to Dellon132)
-</Text>
-		</Label1>
+				Grazie a tutti quelli che hanno messo il loro sistema a rischio per rendere DDU stabile.
+				(special thanks to Dellon132)
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Contratto di licenza per l'utilizzo di Display Driver Uninstaller ("DDU")
+				Contratto di licenza per l'utilizzo di Display Driver Uninstaller ("DDU")
 
-Diventerai un utente di DDU ("User") non appena avrai utilizzato il software DDU per disinstallare un driver.
+				Diventerai un utente di DDU ("User") non appena avrai utilizzato il software DDU per disinstallare un driver.
 
-Utilizzando DDU accetti di non accusare DDU o i suoi creatori, e affiliati, di danni o di qualsiasi cosa che possa influenzare negativamente il tuo PC.
+				Utilizzando DDU accetti di non accusare DDU o i suoi creatori, e affiliati, di danni o di qualsiasi cosa che possa influenzare negativamente il tuo PC.
 
-Utilizzando DDU riconosci che nè NVIDIA ("NVIDIA, GeForce") nè Advanced Micro Devices ("AMD, Radeon") hanno niente a che vedere con questo programma,
-e che non sono in alcun modo affiliati a DDU o ai suoi creatori.
-</Text>
+				Utilizzando DDU riconosci che nè NVIDIA ("NVIDIA, GeForce") nè Advanced Micro Devices ("AMD, Radeon") hanno niente a che vedere con questo programma,
+				e che non sono in alcun modo affiliati a DDU o ai suoi creatori.
+
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

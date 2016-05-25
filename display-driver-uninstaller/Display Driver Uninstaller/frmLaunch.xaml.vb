@@ -16,7 +16,8 @@
 	End Sub
 
 	Private Sub frmLaunch_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
-        Me.Visibility = Windows.Visibility.Visible
+		Me.Visibility = Windows.Visibility.Visible
+
         Languages.TranslateForm(Me)
 	End Sub
 
@@ -27,6 +28,5 @@
 			btnAccept.Content = Languages.GetTranslation(Me.Name, btnAccept.Name, "Text2")
 		End If
 	End Sub
-
 End Class
 

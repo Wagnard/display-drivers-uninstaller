@@ -1,60 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="el-GR" Text="Greek" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>Καθαρισμός και επανεκκίνηση|(Συνιστάται)</Text>
 			<Tooltip>Κατάργηση των τρέχων και προηγούμενων οδηγών, έπειτα επανεκκίνηση του υπολογιστή. |(Συνιστάται)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Καθαρισμός ΧΩΡΙΣ επανεκκίνηση|(Μπορεί να προκαλέσει προβλήματα όπως μαύρη οθόνη)</Text>
 			<Tooltip>Κατάργηση των τρέχων και προηγούμενων οδηγών, αλλά να μη γίνει επανεκκίνηση του υπολογιστή. |(Μπορεί να προκαλέσει προβλήματα όπως μαύρη οθόνη)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Καθαρισμός και Τερματισμός|(Για την εγκατάσταση νέας κάρτας γραφικών)</Text>
 			<Tooltip>Κατάργηση των τρέχων και προηγούμενων οδηγών και Τερματισμός του υπολογιστή χωρίς σάρωση.|(Για εγκατάσταση νέας κάρτας γραφικών)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Ρύθμιση της αυτόματης εγκατάστασης οδηγών Windows σε προεπιλογή.</Text>
-		</Button4>
-		<Button5>
-			<Text>Show extended log.</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>Ανιχνευμένη Έκδοση Windows:</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** You like DDU? Think about a Donation, it will help further developement. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Log:</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Επιλέξτε οδηγούς Γραφικών:</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>ΣΗΜΕΙΩΣΗ: Τυχόν βλάβες ή σφάλματα που μπορεί να δημιουργηθούν στον υπολογιστή σας είναι δική σας ευθύνη.</Text>
 		</Label9>
 		<Label10>
 			<Text>Η χρήση του DDU σε Ασφαλή Λειτουργεία συνιστάται.</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Έλεγχος για ενημερώσεις...</Text>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Options</Text>
 		</OptionsToolStripMenuItem>
@@ -143,9 +154,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Options">
-		<Label1>
+		<lblWinVersion>
 			<Text>GPUs Specifics Options</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>General Options</Text>
 		</Label2>
@@ -207,6 +218,9 @@
 		<lblNotSafeMode>
 			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -216,68 +230,101 @@
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Display Driver Uninstaller ( DDU ) / Καθαρίζει Οδηγούς Γραφικών ( GPU ). ( NVIDIA / AMD )
+				Display Driver Uninstaller ( DDU ) / Καθαρίζει Οδηγούς Γραφικών ( GPU ). ( NVIDIA / AMD )
 
-Αυτό που κάνει είναι να καταργεί το πρόγραμμα οδήγησης οθόνης / GPU από τη διαχείριση συσκευών και αφαιρεί τους τρέχων
-και προηγούμενους οδηγούς από το Windows Driver Store ενώ επιπρόσθετα αφαιρεί τις υπηρεσίες της NVIDIA / AMD.
+				Αυτό που κάνει είναι να καταργεί το πρόγραμμα οδήγησης οθόνης / GPU από τη διαχείριση συσκευών και αφαιρεί τους τρέχων
+				και προηγούμενους οδηγούς από το Windows Driver Store ενώ επιπρόσθετα αφαιρεί τις υπηρεσίες της NVIDIA / AMD.
 
-Το αποτέλεσμα μετά τη χρήση αυτού του εργαλείου θα είναι παρόμοιο με αν τα Windows ήταν σε κατάσταση "Νέας Εγκατάστασης".
+				Το αποτέλεσμα μετά τη χρήση αυτού του εργαλείου θα είναι παρόμοιο με αν τα Windows ήταν σε κατάσταση "Νέας Εγκατάστασης".
 
-Το εργαλείο αυτό λειτουργεί σαν το "Driver Sweeper"*, και έχει όλα τα επιπλέον στοιχεία που αναφέρονται παραπάνω.
+				Το εργαλείο αυτό λειτουργεί σαν το "Driver Sweeper"*, και έχει όλα τα επιπλέον στοιχεία που αναφέρονται παραπάνω.
 
-Εάν έχετε οποιοδήποτε πρόβλημα με την εγκατάσταση παλαιότερων προγραμμάτων οδήγησης ή νεότερων, κάντε μια δοκιμή, καθώς υπάρχουν κάποιες αναφορές ότι διορθώνει
-αυτά τα προβλήματα.
+				Εάν έχετε οποιοδήποτε πρόβλημα με την εγκατάσταση παλαιότερων προγραμμάτων οδήγησης ή νεότερων, κάντε μια δοκιμή, καθώς υπάρχουν κάποιες αναφορές ότι διορθώνει
+				αυτά τα προβλήματα.
 
-Συνιστώμενη χρήση:
+				Συνιστώμενη χρήση:
 
-- Το πρόγραμμα αυτό μπορεί να χρησιμοποιηθεί σε Κανονική Λειτουργία, αλλά για απόλυτη σταθερότητα κατά τη χρήση του DDU, η Ασφαλής Λειτουργεία είναι
-πάντα καλύτερη.
+				- Το πρόγραμμα αυτό μπορεί να χρησιμοποιηθεί σε Κανονική Λειτουργία, αλλά για απόλυτη σταθερότητα κατά τη χρήση του DDU, η Ασφαλής Λειτουργεία είναι
+				πάντα καλύτερη.
 
-- Θα θέλαμε να συγκεντρώσουμε πληροφορίες από όλους, πείτε μας αν είχε επιτυχία ή όχι.
+				- Θα θέλαμε να συγκεντρώσουμε πληροφορίες από όλους, πείτε μας αν είχε επιτυχία ή όχι.
 
-- Κάντε ένα αντίγραφο ασφαλείας ή σημείο επαναφοράς του συστήματος (αλλά κανονικά είναι αρκετά ασφαλές).
+				- Κάντε ένα αντίγραφο ασφαλείας ή σημείο επαναφοράς του συστήματος (αλλά κανονικά είναι αρκετά ασφαλές).
 
-- Εάν έχετε ή είχατε κάποιο πρόβλημα με τους οδηγούς και αυτό το εργαλείο σας βοήθησε με κάποια θέματα που είχατε ή που
-βιώνετε σήμερα, παρακαλώ μοιραστείτε το αποτέλεσμά σας.
+				- Εάν έχετε ή είχατε κάποιο πρόβλημα με τους οδηγούς και αυτό το εργαλείο σας βοήθησε με κάποια θέματα που είχατε ή που
+				βιώνετε σήμερα, παρακαλώ μοιραστείτε το αποτέλεσμά σας.
 
-Λάβετε υπόψη σας ότι η NVIDIA, AMD, και η Microsoft δεν μπορούν να θεωρηθούν υπεύθυνες για τυχόν ζημιές
-σε εσάς ή στον υπολογιστή σας και σε καμία περίπτωση δε σχετίζονται με το DDU, ή τους δημιουργούς του.
--------------------------------
+				Λάβετε υπόψη σας ότι η NVIDIA, AMD, και η Microsoft δεν μπορούν να θεωρηθούν υπεύθυνες για τυχόν ζημιές
+				σε εσάς ή στον υπολογιστή σας και σε καμία περίπτωση δε σχετίζονται με το DDU, ή τους δημιουργούς του.
+				-------------------------------
 
-Δημιουργήθηκε Από Τον Wagnard.
+				Δημιουργήθηκε Από Τον Wagnard.
 
-Συνιδιοκτήτης: Shady7557
+				Συνιδιοκτήτης: Shady7557
 
-Δοκιμαστής: Dellon132
+				Δοκιμαστής: Dellon132
 
-Λογότυπο: juanchacin
+				Λογότυπο: juanchacin
 
-Ευχαριστίες στον Helge Klein (http://helgeklein.com/setacl/) για την άδεια να χρησιμοποιήσουμε το πρόγραμμά του με το DDU "SetAcl".
+				Ευχαριστίες στον Helge Klein (http://helgeklein.com/setacl/) για την άδεια να χρησιμοποιήσουμε το πρόγραμμά του με το DDU "SetAcl".
 
-Τεράστιες Ευχαριστίες για το χρόνο του για δοκιμή: Gamer1291
+				Τεράστιες Ευχαριστίες για το χρόνο του για δοκιμή: Gamer1291
 
-Ευχαριστίες σε όποιον θέτει το σύστημά του σε κίνδυνο (ιδιαίτερες ευχαριστίες στον Dellon132).
+				Ευχαριστίες σε όποιον θέτει το σύστημά του σε κίνδυνο (ιδιαίτερες ευχαριστίες στον Dellon132).
 
-*DDU, οι δημιουργοί και οι συνεργάτες σε καμία περίπτωση δε σχετίζονται με το Driver Sweeper, ή τους δημιουργούς του.
-</Text>
-		</Label1>
+				*DDU, οι δημιουργοί και οι συνεργάτες σε καμία περίπτωση δε σχετίζονται με το Driver Sweeper, ή τους δημιουργούς του.
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") ΣΥΜΦΩΝΙΑ ΧΡΗΣΤΗ 
+				Display Driver Uninstaller ("DDU") ΣΥΜΦΩΝΙΑ ΧΡΗΣΤΗ
 
-Μπορείτε να γίνετε ένας χρήστης του DDU ("Χρήστης") χρησιμοποιώντας το λογισμικό DDU. Η παρούσα συμφωνία τίθεται σε ισχύ με το που χρησιμοποιήσετε το πρόγραμμα για να καταργήσετε την εγκατάσταση ενός προγράμματος οδήγησης. 
+				Μπορείτε να γίνετε ένας χρήστης του DDU ("Χρήστης") χρησιμοποιώντας το λογισμικό DDU. Η παρούσα συμφωνία τίθεται σε ισχύ με το που χρησιμοποιήσετε το πρόγραμμα για να καταργήσετε την εγκατάσταση ενός προγράμματος οδήγησης.
 
-Με τη χρήση του DDU συμφωνείτε να μην κατηγορήσετε το DDU ή τους δημιουργούς του και σχετιζόμενους του, ότι καταστρέψανε ή ότι επηρέασαν αρνητικά τον υπολογιστή σας. 
+				Με τη χρήση του DDU συμφωνείτε να μην κατηγορήσετε το DDU ή τους δημιουργούς του και σχετιζόμενους του, ότι καταστρέψανε ή ότι επηρέασαν αρνητικά τον υπολογιστή σας.
 
-Με τη χρήση του DDU αναγνωρίζετε ότι ούτε η NVIDIA («NVIDIA, GeForce») αλλά ούτε και η Advanced Micro Devices («AMD, Radeon») έχουν την οποιαδήποτε σχέση με το πρόγραμμα αυτό, και σε καμία περίπτωση δεν έχουν σχέση με τους σχετιζόμενους του DDU, ή τους δημιουργούς του.
-</Text>
+				Με τη χρήση του DDU αναγνωρίζετε ότι ούτε η NVIDIA («NVIDIA, GeForce») αλλά ούτε και η Advanced Micro Devices («AMD, Radeon») έχουν την οποιαδήποτε σχέση με το πρόγραμμα αυτό, και σε καμία περίπτωση δεν έχουν σχέση με τους σχετιζόμενους του DDU, ή τους δημιουργούς του.
+
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

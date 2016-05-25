@@ -1,21 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="pt-BR" Text="Portuguese-Brazil" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<!-- This is comment -->
+
 		<btnCleanRestart>
 			<Text>Limpar e reiniciar|(Altamente Recomendado)</Text>
 			<Tooltip>Desinstalar o driver atual e o anterior e reiniciar o computador|(Altamente Recomendado)</Tooltip>
@@ -31,33 +45,30 @@
 		<btnWuRestore>
 			<Text>Definir instalação de driver no|Windows Update para padrão.</Text>
 		</btnWuRestore>
-		<btnExtendedLog>
-			<Text>Mostrar log estendido.</Text>
-		</btnExtendedLog>
 		<lblWinVersion>
 			<Text>Versão do Windows Detectada:</Text>
 		</lblWinVersion>
-		<Label4>
+		<lblDonate>
 			<Text>*** Gostou do DDU? Pense sobre uma doação, isso ajuda a manter o desenvolvimento. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Log :</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Selecione o Driver Gráfico :</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>Nota: Qualquer dano ou erros causados ao seu PC é de sua responsabilidade.</Text>
 		</Label9>
 		<Label10>
 			<Text>O uso do DDU em Modo de Segurança é recomendado.</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Verificando atualizações...</Text>
 			<Text2>Nenhuma atualização encontrada. O programa está atualizado.</Text2>
 			<Text3>Atualizações encontradas! Espere suporte limitado em versões mais antigas do que a mais recente</Text3>
 			<Text4>Não foi possível obter as atualizações!</Text4>
-		</Label11>
+		</lblUpdate>
 		<OptionsMenuItem>
 			<Text>Opções</Text>
 		</OptionsMenuItem>
@@ -145,13 +156,13 @@
 			<Text41>Valor removido.</Text41>
 			<Text42>Arquivo deletado.</Text42>
 		</UpdateLog>
-		
-		
-</frmMain>
+
+
+	</frmMain>
 	<frmOptions Text="Options">
-	<btnClose>
-      <Text>Fechar</Text>
-    </btnClose>
+		<btnClose>
+			<Text>Fechar</Text>
+		</btnClose>
 		<lblNvidiaspecific>
 			<Text>Opções especificas NVIDIA</Text>
 		</lblNvidiaspecific>
@@ -227,6 +238,9 @@
 		<lblNotSafeMode>
 			<Text>Você não está em modo seguro. É altamente recomendado|reiniciar em modo seguro para evitar problemas.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Modo Seguro (Recomendado)</Item2>
@@ -236,71 +250,103 @@
 	<frmLog Text="Log extendido">
 		<btnClose>
 			<Text>Fechar</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Desinstalador de Driver (DDU) / Construido para limpeza de drivers de video.(NVIDIA/AMD)
+				Desinstalador de Driver (DDU) / Construido para limpeza de drivers de video.(NVIDIA/AMD)
 
-O que a ferramenta faz? Faz a remoção de drivers de video do gerenciador de dispositivo e remove o atual 
-e todos os drivers precedente do Armazenamento de Drivers do Windows(Windows Driver Store) e tambem a remoção 
-de serviços da NVIDIA/AMD.
+				O que a ferramenta faz? Faz a remoção de drivers de video do gerenciador de dispositivo e remove o atual
+				e todos os drivers precedente do Armazenamento de Drivers do Windows(Windows Driver Store) e tambem a remoção
+				de serviços da NVIDIA/AMD.
 
-O efeito atual apos você ter usado essa ferramento será similar a uma "Nova Instalação" do Windows.
+				O efeito atual apos você ter usado essa ferramento será similar a uma "Nova Instalação" do Windows.
 
-Esta ferramenta atua similiar ao que o Driver Sweeper faz, tambem o extra mencionado acima.
+				Esta ferramenta atua similiar ao que o Driver Sweeper faz, tambem o extra mencionado acima.
 
-Caso você estiver com problemas de instalação de novos ou antigos drivers, 
-tente poís há informação de que o DDU corrige esses problemas.
+				Caso você estiver com problemas de instalação de novos ou antigos drivers,
+				tente poís há informação de que o DDU corrige esses problemas.
 
-RECOMENDAÇÂO DE USO :
+				RECOMENDAÇÂO DE USO :
 
-- A ferramenta pode ser usada no modo Normal mas para estabilidade absoluta no uso do DDU, 
-Modo de Segurança é sempre melhor.
+				- A ferramenta pode ser usada no modo Normal mas para estabilidade absoluta no uso do DDU,
+				Modo de Segurança é sempre melhor.
 
-- Gostariamos de reunir o feedback de vocês. Diga-nos se você obteve sucesso ou não. 
+				- Gostariamos de reunir o feedback de vocês. Diga-nos se você obteve sucesso ou não.
 
-- Faça um backup ou crie um ponto de restauração do sistema (mas normalmente é bem seguro).
+				- Faça um backup ou crie um ponto de restauração do sistema (mas normalmente é bem seguro).
 
-- Se voce esta ou tinha problemas com drivers, e essa ferramenta ajudou com algum dos problemas 
-que você esta experenciando atualmente, por favor compartilhe seu resultado.
+				- Se voce esta ou tinha problemas com drivers, e essa ferramenta ajudou com algum dos problemas
+				que você esta experenciando atualmente, por favor compartilhe seu resultado.
 
-Lembre-se que a NVIDIA, AMD, ou Microsoft não podem ser responsibilizadas por qualquer dano á 
-você ou seu computador e de maneira alguma os afiliados do DDU, ou seus criadores.
+				Lembre-se que a NVIDIA, AMD, ou Microsoft não podem ser responsibilizadas por qualquer dano á
+				você ou seu computador e de maneira alguma os afiliados do DDU, ou seus criadores.
 
--------------------------------
+				-------------------------------
 
-Created By Wagnard.
+				Created By Wagnard.
 
-Co-owner: Shady7557
+				Co-owner: Shady7557
 
-Tester : Dellon132
+				Tester : Dellon132
 
-Logos : juanchacin
+				Logos : juanchacin
 
-Thanks to Helge Klein (http://helgeklein.com/setacl/) : for the permission to use his Program with DDU "SetAcl"
+				Thanks to Helge Klein (http://helgeklein.com/setacl/) : for the permission to use his Program with DDU "SetAcl"
 
-Huge Thanks for his time for testing: Gamer1291
+				Huge Thanks for his time for testing: Gamer1291
 
-Thanks to anyone who put their system at risk. (special thanks to Dellon132)
+				Thanks to anyone who put their system at risk. (special thanks to Dellon132)
 
-*DDU, seus criadores e afiliados não estão afiliados com driver sweeper, ou seus criadores.
-</Text>
-		</Label1>
+				*DDU, seus criadores e afiliados não estão afiliados com driver sweeper, ou seus criadores.
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") USER AGREEMENT 
+				Display Driver Uninstaller ("DDU") USER AGREEMENT
 
-Você se tornou um usuario do DDU ("Usuario") por ter usado o software DDU. Este acordo tem efeito assim que você utilizar o programa para desinstalação de um driver.
+				Você se tornou um usuario do DDU ("Usuario") por ter usado o software DDU. Este acordo tem efeito assim que você utilizar o programa para desinstalação de um driver.
 
-Por estar utilizando DDU você concorda em não acusar DDU os seus criadores, e afiliados, de danificar ou afetar negativamente seu PC.
+				Por estar utilizando DDU você concorda em não acusar DDU os seus criadores, e afiliados, de danificar ou afetar negativamente seu PC.
 
-Por estar utilizando DDU você reconhece que NVIDIA ("NVIDIA, GeForce") ou Advanced Micro Devices ("AMD, Radeon") não tem
-nada à haver com este programa, e de maneira nenhuma afiliados do DDU ou seus criadores.
-</Text>
+				Por estar utilizando DDU você reconhece que NVIDIA ("NVIDIA, GeForce") ou Advanced Micro Devices ("AMD, Radeon") não tem
+				nada à haver com este programa, e de maneira nenhuma afiliados do DDU ou seus criadores.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

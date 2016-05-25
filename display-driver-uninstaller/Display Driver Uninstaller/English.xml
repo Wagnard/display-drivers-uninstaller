@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="en-US" Text="English" NewLineChar="|">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
 	Text =	Shown to user (as written in english, shown on language selection box)
@@ -9,8 +9,9 @@
 					Can be changed, with caution! (Use special char what won't be used on text)
 	
 	<xxx>Place text here</xxx>   
-	or 
-	<xxx Text="Place text here" >
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
 	
 	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
 	
@@ -23,7 +24,7 @@
 	[ Optional ]
 	Add credits to yourself at end of file	
 	 
-	If wan't to set comment, see below)	-->
+	If wan't to set comment, see below for example -->
 
 	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">	 <!-- This is comment -->
@@ -56,12 +57,6 @@
 		<lblSelectedGPU>
 			<Text>Select Graphic Driver</Text>
 		</lblSelectedGPU>
-		<Label9>
-			<Text>Note: Any damage or errors caused to your PC is your responsibility.</Text>
-		</Label9>
-		<Label10>
-			<Text>Using DDU in Safe Mode is recommended.</Text>
-		</Label10>
 		
 		<lblUpdate>
 			<Text>Checking for updates...</Text>
@@ -255,9 +250,15 @@
 		<lblLaunchOption>
 			<Text>Launch option</Text>
 		</lblLaunchOption>
+		<lblSelectedLanguage>
+			<Text>Selected language</Text>
+		</lblSelectedLanguage>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended to|reboot into Safe Mode to avoid possible issues.| |Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>You are not in safe mode. It is highly recommended to|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -379,6 +380,7 @@ anything to do with this program, and in no way affiliates of DDU or it's creato
 		[ Optional ]	Details			Anything, contact, email				@	note: its public
 		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
 		-->
+		
 		<Credits>
 			<User>Wagnard</User>
 			<Details>Owner</Details>
@@ -399,6 +401,11 @@ anything to do with this program, and in no way affiliates of DDU or it's creato
 			<User>Test</User>
 			<Details>Something</Details>
 		</Credits4>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
 		-->	
 	</LanguageCredits>
 

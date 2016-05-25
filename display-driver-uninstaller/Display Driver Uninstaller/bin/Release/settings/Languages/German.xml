@@ -1,63 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="de-DE" Text="German" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>Säubern und Neustart|(Empfohlene Aktion)</Text>
 			<Tooltip>Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer neu|(sehr empfohlen)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Säubern und KEIN Neustart|(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)</Text>
 			<Tooltip>Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer NICHT neu|(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Säubern und Herunterfahren|(Zur Installation einer neuen Grafikkarte)</Text>
 			<Tooltip>Deinstalliert den aktuellen sowie die vorherigen Treiber und schaltet den Computer ohne erneutes Scannen aus|(Zur Installation einer neuen Grafikkarte)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Setze Treiberinstallation durch Windows Update auf Standard.</Text>
-		</Button4>
-		<Button5>
-			<Text>Ausführliche Logdatei anzeigen.</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>Erkannte Windows-Version:</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** Mögen Sie DDU? Denken Sie über eine Spende nach, dies würde eine zukünftige Entwicklung fördern. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Log:</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Grafiktreiber auswählen:</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>Hinweis: Jegliche Schäden oder Fehler, die Ihrem Computer zugefügt werden, liegen in Ihrer Verantwortung.</Text>
 		</Label9>
 		<Label10>
 			<Text>Das Verwenden von DDU im abgesicherten Modus wird empfohlen.</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Suche nach Updates...</Text>
 			<Text2>Keine Updates gefunden. Programm ist auf dem neuesten Stand.</Text2>
 			<Text3>Updates gefunden! Eingeschränkte Unterstützung für ältere Versionen ist zu erwarten.</Text3>
 			<Text4>Kann keine Updates abrufen!</Text4>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Options</Text>
 		</OptionsToolStripMenuItem>
@@ -147,9 +158,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Optionen">
-		<Label1>
+		<lblWinVersion>
 			<Text>Grafikkartenspezifische Optionen</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>Allgemeine Optionen</Text>
 		</Label2>
@@ -211,6 +222,9 @@
 		<lblNotSafeMode>
 			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -220,70 +234,102 @@
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Display Driver Uninstaller (DDU) / Cleaner für Grafiktreiber (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Cleaner für Grafiktreiber (NVIDIA/AMD)
 
-Das Programm entfernt den Grafiktreiber vom Gerätemanager, den aktuellen und alle vorhergehendenden Treiber vom Windows Treiber
-Speicher, sowie die Dienste von NVIDIA/AMD.
+				Das Programm entfernt den Grafiktreiber vom Gerätemanager, den aktuellen und alle vorhergehendenden Treiber vom Windows Treiber
+				Speicher, sowie die Dienste von NVIDIA/AMD.
 
-Nach der Anwendung des Tools ist der Zustand des Betriebssystems vergleichbar dem Zustand nach einer Neuinstallation.
+				Nach der Anwendung des Tools ist der Zustand des Betriebssystems vergleichbar dem Zustand nach einer Neuinstallation.
 
-Dieses Tool arbeitet ähnlich wie "Driver Sweeper"* und die oben genannten Programme.
+				Dieses Tool arbeitet ähnlich wie "Driver Sweeper"* und die oben genannten Programme.
 
-Falls Sie Probleme bei der Installation älterer oder neuerer Treiber haben sollten, probieren Sie dieses 
-Programm aus. Es gibt einige Berichte, dass DDU dieses Probleme beheben kann.
+				Falls Sie Probleme bei der Installation älterer oder neuerer Treiber haben sollten, probieren Sie dieses
+				Programm aus. Es gibt einige Berichte, dass DDU dieses Probleme beheben kann.
 
-EMPFOHLENE BENUTZUNG:
+				EMPFOHLENE BENUTZUNG:
 
-- Dieses Programm kann im normalen Windows Modus benutzt werden, für absolute Stabilität bei der Benutzung des Tools
-  ist der abgesicherte Modus aber immer die beste Wahl.
+				- Dieses Programm kann im normalen Windows Modus benutzt werden, für absolute Stabilität bei der Benutzung des Tools
+				ist der abgesicherte Modus aber immer die beste Wahl.
 
-- Wir würden gerne Feedback von Ihnen erhalten. Bitte teilen Sie uns mit, ob Sie Erfolg hatten oder nicht.
+				- Wir würden gerne Feedback von Ihnen erhalten. Bitte teilen Sie uns mit, ob Sie Erfolg hatten oder nicht.
 
-- Erstellen Sie ein Backup oder einen Wiederherstellungspunkt (in der Regel sollte es jedoch ziemlich sicher sein).
+				- Erstellen Sie ein Backup oder einen Wiederherstellungspunkt (in der Regel sollte es jedoch ziemlich sicher sein).
 
-- Wenn Sie jemals ein Treiber-Problem hatten und dieses Tool Ihnen geholfen hat Fehler zu beheben, teilen Sie bitte Ihr Ergebnis mit.
+				- Wenn Sie jemals ein Treiber-Problem hatten und dieses Tool Ihnen geholfen hat Fehler zu beheben, teilen Sie bitte Ihr Ergebnis mit.
 
-Beachten Sie, dass weder NVIDIA, AMD noch Microsoft für eventuelle Schäden an Ihnen oder Ihrem System haftbar gemacht werden
-können und mit DDU oder seinen Partnern in Verbindung stehen.
--------------------------------
+				Beachten Sie, dass weder NVIDIA, AMD noch Microsoft für eventuelle Schäden an Ihnen oder Ihrem System haftbar gemacht werden
+				können und mit DDU oder seinen Partnern in Verbindung stehen.
+				-------------------------------
 
-Erstellt von Wagnard.
+				Erstellt von Wagnard.
 
-Mitinhaber: Shady7557
+				Mitinhaber: Shady7557
 
-Tester: Dellon132
+				Tester: Dellon132
 
-Logos: juanchacin
+				Logos: juanchacin
 
-Besonderer Dank gilt Jackalito für eine Spende einer AMD 7850.
+				Besonderer Dank gilt Jackalito für eine Spende einer AMD 7850.
 
-Danke an Helge Klein (http://helgeklein.com/setacl/): für die Erlaubnis sein Programm mit DDU "SetAc1" zu verwenden.
+				Danke an Helge Klein (http://helgeklein.com/setacl/): für die Erlaubnis sein Programm mit DDU "SetAc1" zu verwenden.
 
-Großer Dank für ihre Zeit zum Testen geht an: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (Fehlersuche mit mir)
-Extraordinary (Bugfix getestet)
+				Großer Dank für ihre Zeit zum Testen geht an: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (Fehlersuche mit mir)
+				Extraordinary (Bugfix getestet)
 
-Danke an alle, die ihre Systeme der Gefahr ausgesetzt haben (Besonderer Dank gilt Dellon132)
+				Danke an alle, die ihre Systeme der Gefahr ausgesetzt haben (Besonderer Dank gilt Dellon132)
 
-*DDU, seine Ersteller und Partner sind in keiner Weise mit Driver Sweeper oder seinen Erstellern verbunden.
-</Text>
-		</Label1>
+				*DDU, seine Ersteller und Partner sind in keiner Weise mit Driver Sweeper oder seinen Erstellern verbunden.
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-NUTZERVEREINBARUNG - Display Driver Uninstaller ("DDU")
+				NUTZERVEREINBARUNG - Display Driver Uninstaller ("DDU")
 
-Sie werden ein Nutzer von DDU ("Nutzer") durch die Anwendung des DDU Programms. Diese Vereinbarung tritt in Kraft, sobald Sie die Treiberdeinstallation beginnen.
+				Sie werden ein Nutzer von DDU ("Nutzer") durch die Anwendung des DDU Programms. Diese Vereinbarung tritt in Kraft, sobald Sie die Treiberdeinstallation beginnen.
 
-Durch die Benutzung von DDU sind Sie damit einverstanden, den Hersteller und andere mit dem Unternehmen verbundene Personen, nicht zu beschuldigen, Ihren PC beschädigt oder negativ beeinflusst zu haben.
+				Durch die Benutzung von DDU sind Sie damit einverstanden, den Hersteller und andere mit dem Unternehmen verbundene Personen, nicht zu beschuldigen, Ihren PC beschädigt oder negativ beeinflusst zu haben.
 
-Durch die Benutzung von DDU erkennen Sie an, dass weder NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices ("AMD, Radeon") irgendetwas mit diesem Programm zu tun haben und in keinster Art und Weise mit DDU oder seinen Erstellern verbunden sind.
-</Text>
+				Durch die Benutzung von DDU erkennen Sie an, dass weder NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices ("AMD, Radeon") irgendetwas mit diesem Programm zu tun haben und in keinster Art und Weise mit DDU oder seinen Erstellern verbunden sind.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

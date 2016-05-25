@@ -1,63 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="zh-CHS" Text="Chinese (Simplified)" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
-	<frmMain Text="显卡驱动卸载工具（DDU）">
-		<Button1>
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>清理显卡驱动并重启|（强烈推荐）</Text>
 			<Tooltip>卸载当前和以前版本的显卡驱动程序，并重新启动计算机|（强烈推荐）</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>清理显卡驱动，但【不要】重启|（可能会导致黑屏等问题）</Text>
 			<Tooltip>卸载当前和以前版本的显卡驱动程序，但【不要】重新启动计算机|（可能会导致黑屏等问题）</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>清理显卡驱动并关机|（用于安装新的显示卡）</Text>
 			<Tooltip>卸载当前和以前版本的显卡驱动程序，阻止新硬件扫描并关闭计算机|（用于安装新的显示卡）</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>重置“设备安装设置”为默认值</Text>
-		</Button4>
-		<Button5>
-			<Text>显示扩展日志</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>检测到的 Windows 版本：</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** 您喜欢 DDU 这款软件吗？不妨考虑捐助，使软件能够进一步发展。 ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>日志：</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>选择显卡芯片所属厂商：</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>注意：任何因使用本软件造成的计算机错误或损坏将由您自行承担</Text>
 		</Label9>
 		<Label10>
 			<Text>推荐在安全模式下使用 DDU</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>正在检查更新...</Text>
 			<Text2>当前程序已是最新版本，无需更新。</Text2>
 			<Text3>发现新版本！请立即更新以获得更好的驱动清理服务！</Text3>
 			<Text4>无法获取更新信息！请检查网络连接！</Text4>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>选项</Text>
 		</OptionsToolStripMenuItem>
@@ -147,9 +158,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="选项">
-		<Label1>
+		<lblWinVersion>
 			<Text>GPU 设置</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>常规设置</Text>
 		</Label2>
@@ -215,6 +226,9 @@
 		<lblNotSafeMode>
 			<Text>检测到当前系统不是在安全模式中运行，强力推荐您|重启电脑进入安全模式以避免任何可能存在的问题。</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>正常模式（当前模式）</Item1>
 			<Item2>安全模式（推荐）</Item2>
@@ -224,73 +238,105 @@
 	<frmLog Text="扩展日志">
 		<btnClose>
 			<Text>关闭</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-显卡驱动智能卸载工具（Display Driver Uninstaller，缩写为 DDU）是为显示驱动而生的。（NVIDIA/AMD）
+				显卡驱动智能卸载工具（Display Driver Uninstaller，缩写为 DDU）是为显示驱动而生的。（NVIDIA/AMD）
 
-本软件的作用就是从设备管理器和 Windows Driver Store 移除掉所有版本的显卡驱动程序，
-以及 NVIDIA/AMD 安装的服务。
+				本软件的作用就是从设备管理器和 Windows Driver Store 移除掉所有版本的显卡驱动程序，
+				以及 NVIDIA/AMD 安装的服务。
 
-当您使用过本软件后，其效果等同于从未安装过显示器驱动的崭新系统。
+				当您使用过本软件后，其效果等同于从未安装过显示器驱动的崭新系统。
 
-本软件的行为类似 Driver Sweeper，但是包含上文提到的额外清理。
+				本软件的行为类似 Driver Sweeper，但是包含上文提到的额外清理。
 
-如果您在回退旧版/安装新版显示驱动程序时遇到了问题，不妨试一试 DDU，我们已经帮很多人解决过类似问题。
+				如果您在回退旧版/安装新版显示驱动程序时遇到了问题，不妨试一试 DDU，我们已经帮很多人解决过类似问题。
 
-推荐用法：
+				推荐用法：
 
- - 本软件可以在正常模式下直接使用，但安全模式永远是追求绝对稳定的最好选择。
+				- 本软件可以在正常模式下直接使用，但安全模式永远是追求绝对稳定的最好选择。
 
- - 我们希望能收集到您的反馈，无论成功或否都请告诉我们。
- 
- - 请做好备份或者系统还原点以防万一（当然通常情况下本软件都非常安全）
+				- 我们希望能收集到您的反馈，无论成功或否都请告诉我们。
 
- - 如果本软件解决了您当前或者曾经有过的问题，请向更多人分享它。
+				- 请做好备份或者系统还原点以防万一（当然通常情况下本软件都非常安全）
 
-请记住， NVIDIA/AMD 以及 Microsoft 均与这一切无关，我们并非这些企业的工作人员。|如果您的系统出了任何问题，他们并不应该为此负责。
--------------------------------
+				- 如果本软件解决了您当前或者曾经有过的问题，请向更多人分享它。
 
-由 Wagnard 创作
+				请记住， NVIDIA/AMD 以及 Microsoft 均与这一切无关，我们并非这些企业的工作人员。|如果您的系统出了任何问题，他们并不应该为此负责。
+				-------------------------------
 
-共同拥有者：Shady7557
+				由 Wagnard 创作
 
-测试员：Dellon132
+				共同拥有者：Shady7557
 
-徽标设计：juanchacin
+				测试员：Dellon132
 
-早起版本汉化：BenYeeHua、北斗长曦、kongfl888
+				徽标设计：juanchacin
 
-新版本中文资源调整：牧马吃鸡腿
+				早起版本汉化：BenYeeHua、北斗长曦、kongfl888
 
-非常感谢 Jackalito 捐赠了一张 AMD 7850 显示卡。
+				新版本中文资源调整：牧马吃鸡腿
 
-感谢 Helge Klein（http://helgeklein.com/setacl/）允许 DDU 使用他的软件“SetAcl”。
+				非常感谢 Jackalito 捐赠了一张 AMD 7850 显示卡。
 
-非常感谢以下人士花费时间测试：Gamer1291（帮助测试 Optimus 系统）、Octopuss（帮助测试 AMD Enduro 系统）、
-nedooo`（花费时间和作者一起调试 DDU 软件）、Extraordinary（测试了 DDU 软件的一个缺陷修复）。
+				感谢 Helge Klein（http://helgeklein.com/setacl/）允许 DDU 使用他的软件“SetAcl”。
 
-感谢任何为了测试本软件，而把他们电脑置于危险之中的人（特别感谢 Dellon132）。
+				非常感谢以下人士花费时间测试：Gamer1291（帮助测试 Optimus 系统）、Octopuss（帮助测试 AMD Enduro 系统）、
+				nedooo`（花费时间和作者一起调试 DDU 软件）、Extraordinary（测试了 DDU 软件的一个缺陷修复）。
 
-*DDU 软件及其开发者们与 Driver Sweeper 及其开发者们无关。
-</Text>
-		</Label1>
+				感谢任何为了测试本软件，而把他们电脑置于危险之中的人（特别感谢 Dellon132）。
+
+				*DDU 软件及其开发者们与 Driver Sweeper 及其开发者们无关。
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-显卡驱动卸载工具（Display Driver Uninstaller，即“DDU”）用户协议
+				显卡驱动卸载工具（Display Driver Uninstaller，即“DDU”）用户协议
 
-使用 DDU 软件即表明您自愿成为本软件用户（"User"）。本协议在您开始使用 DDU 软件卸载驱动程序后生效。
+				使用 DDU 软件即表明您自愿成为本软件用户（"User"）。本协议在您开始使用 DDU 软件卸载驱动程序后生效。
 
-开始使用 DDU 软件即表明您放弃追究 DDU 开发者及联属人员相关责任的权利，即使使用 DDU 软件导致您的电脑出现错误甚至损坏。
+				开始使用 DDU 软件即表明您放弃追究 DDU 开发者及联属人员相关责任的权利，即使使用 DDU 软件导致您的电脑出现错误甚至损坏。
 
-开始使用 DDU 软件即表明您承诺不私自修改 DDU，承诺不发布未经授权的版本。
+				开始使用 DDU 软件即表明您承诺不私自修改 DDU，承诺不发布未经授权的版本。
 
-开始使用 DDU 软件即表明您已被告知英伟达（"NVIDIA, GeForce"）和超威半导体（"AMD，Radeon"）均未参与本软件的开发，也与 DDU 软件及其开发者们无关。
-</Text>
+				开始使用 DDU 软件即表明您已被告知英伟达（"NVIDIA, GeForce"）和超威半导体（"AMD，Radeon"）均未参与本软件的开发，也与 DDU 软件及其开发者们无关。
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

@@ -135,6 +135,8 @@ Public Module Tools
 
 	''' <summary>Check if text contains any of the given parameters</summary>
 	Public Function StrContainsAny(ByVal text As String, ByVal ignoreCase As Boolean, ParamArray Str As String()) As Boolean
+		If IsNullOrWhitespace(text) Then Return False
+
 		If Str IsNot Nothing And Str.Length > 0 Then
 			Dim comparison As StringComparison = If(ignoreCase, StringComparison.OrdinalIgnoreCase, StringComparison.Ordinal)
 

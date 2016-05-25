@@ -89,7 +89,7 @@ notFound:
 				For Each kvp As KeyValuePair(Of String, String) In tc.Attributes
 					If (kvp.Key.Equals(type, StringComparison.OrdinalIgnoreCase)) Then
 						If Not String.IsNullOrEmpty(kvp.Value) Then
-							Return kvp.Value.Trim(vbCrLf.ToCharArray())
+							Return kvp.Value.Trim(vbCrLf.ToCharArray()).Replace(newLineStr, String.Empty)
 						Else
 							If noTranslation Then
 								Return String.Empty
@@ -112,6 +112,10 @@ notFound:
 	''' <returns>Translated text. If language not found, return English text</returns> 
 	Public Shared Function GetTranslation(ByVal parent As String, ByVal control As String, ByVal type As String, Optional ByVal returnValue As String = Nothing) As String
 		SyncLock (threadLock)
+			If IsNullOrWhitespace(parent) OrElse IsNullOrWhitespace(control) OrElse IsNullOrWhitespace(type) Then
+				Return returnValue
+			End If
+
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
 			End If
@@ -135,7 +139,7 @@ notFound:
 			For Each kvp As KeyValuePair(Of String, String) In tc.Values
 				If (kvp.Key.Equals(type, StringComparison.OrdinalIgnoreCase)) Then
 					If Not String.IsNullOrEmpty(kvp.Value) Then
-						Return kvp.Value.Trim(vbCrLf.ToCharArray()).Replace(newLineStr, vbCrLf)
+						Return kvp.Value.Replace(newLineStr, vbCrLf).Trim(vbCrLf.ToCharArray())
 					Else
 						Exit For
 					End If
@@ -176,7 +180,7 @@ notFound:
 
 				For Each kvp As KeyValuePair(Of String, String) In tc.Values
 					If (kvp.Key.StartsWith(beginsWith, StringComparison.OrdinalIgnoreCase)) Then
-						items.Add(kvp.Value)
+						items.Add(kvp.Value.Replace(newLineStr, String.Empty))
 					End If
 				Next
 				Return items

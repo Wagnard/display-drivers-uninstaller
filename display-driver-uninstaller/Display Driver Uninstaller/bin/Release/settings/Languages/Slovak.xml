@@ -1,60 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="sk-SK" Text="Slovak" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>Vyčistiť a reštartovať|(Silno odporúčané)</Text>
 			<Tooltip>Odinštalovať aktuálne aj predchádzajúce ovládače a reštartovať počítač|(Silno odporúčané)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Vyčistiť a NEreštartovať|(Môže spôsobiť problémy ako čiernu obrazovku)</Text>
 			<Tooltip>Odinštalovať aktuálne aj predchádzajúce ovládače a NEreštartovať počítač.|(Môže spôsobiť problémy ako je čierna obrazovka)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Vyčistiť a vypnúť|(Na inštaláciu novej grafickej karty)</Text>
 			<Tooltip>Odinštalovať aktuálne aj predchádzajúce ovládače a Vypnúť počítač bez vyhľadania hardvéru|(Na inštaláciu novej grafickej karty)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Obnoviť nastavenia inštalácie ovládačov cez Windows Update.</Text>
-		</Button4>
-		<Button5>
-			<Text>Show extended log.</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>Zistená verzia Windows:</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** Máte radi DDU? Zvážte poskytnutie finančného príspevku, ktorý pomôže ďalšiemu vývoju. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Záznam:</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Vyberte grafický ovládač:</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>Poznámka: Akákoľvek chyba alebo škoda na PC je na Vašu zodpovednosť.</Text>
 		</Label9>
 		<Label10>
 			<Text>Odporúčame použiť DDU v Núdzovom režime.</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Kontrola aktualizácií...</Text>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Options</Text>
 		</OptionsToolStripMenuItem>
@@ -143,9 +154,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Options">
-		<Label1>
+		<lblWinVersion>
 			<Text>GPUs Specifics Options</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>General Options</Text>
 		</Label2>
@@ -207,6 +218,9 @@
 		<lblNotSafeMode>
 			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -214,66 +228,98 @@
 		</cbBootOption>
 	</frmLaunch>
 	<frmLog Text="Extended log">
-     	<btnClose>
+		<btnClose>
 			<Text>Close</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Odinštalátor ovládačov (DDU) / Čistič grafických ovládačov.(NVIDIA/AMD)
+				Odinštalátor ovládačov (DDU) / Čistič grafických ovládačov.(NVIDIA/AMD)
 
-Tento program odstraňuje aktuálne aj staré verzie grafických ovládačov NVIDIA/AMD 
-zo správcu zariadení a katalógu ovládačov systému Windows vrátane ich služieb.
+				Tento program odstraňuje aktuálne aj staré verzie grafických ovládačov NVIDIA/AMD
+				zo správcu zariadení a katalógu ovládačov systému Windows vrátane ich služieb.
 
-Po použití tohto programu nastane efekt podobný tomu, ako by bol Windows čerstvo nainštalovaný.
+				Po použití tohto programu nastane efekt podobný tomu, ako by bol Windows čerstvo nainštalovaný.
 
-Tento program robí to čo Driver sweeper + veci uvedené vyššie.
+				Tento program robí to čo Driver sweeper + veci uvedené vyššie.
 
-Ak máte akýkoľvek problém s inštaláciou staršieho či novšieho ovládača, skúste použiť tento program,  
-ohlasy ukazujú, že pomohol veľa ľuďom.
+				Ak máte akýkoľvek problém s inštaláciou staršieho či novšieho ovládača, skúste použiť tento program,
+				ohlasy ukazujú, že pomohol veľa ľuďom.
 
-ODPORÚČANÉ POUŽITIE:
+				ODPORÚČANÉ POUŽITIE:
 
-- Osobne odporúčam počas použitia odpojiť internet, aby windows update nezačal bez opýtania 
-inštalovať ovládače...
+				- Osobne odporúčam počas použitia odpojiť internet, aby windows update nezačal bez opýtania
+				inštalovať ovládače...
 
-- Tento nástroj môže byť použitý v Normálnom režime, ale pre úplnú stabilitu je pri použití DDU 
-najlepší Núdzový režim.
+				- Tento nástroj môže byť použitý v Normálnom režime, ale pre úplnú stabilitu je pri použití DDU
+				najlepší Núdzový režim.
 
-- Radi od Vás dostaneme odozvu. Povedzte nám, či program pomohol alebo nie. Spravte si 
-pre istotu zálohu alebo bod obnovy (aj keď by to nemalo byť potrebné).
+				- Radi od Vás dostaneme odozvu. Povedzte nám, či program pomohol alebo nie. Spravte si
+				pre istotu zálohu alebo bod obnovy (aj keď by to nemalo byť potrebné).
 
-- Ak ste mali alebo máte problém s ovládačmi, a tento program Vám pomohol, 
-podeľte sa o výsledky.
+				- Ak ste mali alebo máte problém s ovládačmi, a tento program Vám pomohol,
+				podeľte sa o výsledky.
 
-Berte na vedomie, že NVIDIA/AMD nemajú s týmto programom nič spoločné, Nepracujeme pre NVIDIA/AMD 
-a oni nenesú žiadnu zodpovednosť za škody na Vašom systéme spôsobené týmto programom.
--------------------------------
+				Berte na vedomie, že NVIDIA/AMD nemajú s týmto programom nič spoločné, Nepracujeme pre NVIDIA/AMD
+				a oni nenesú žiadnu zodpovednosť za škody na Vašom systéme spôsobené týmto programom.
+				-------------------------------
 
-Vytvoril Wagnard.
+				Vytvoril Wagnard.
 
-Spolumajiteľ: Shady7557
-Tester: Dellon132
-Logá: juanchacin
-Slovenský preklad: Gyrxiur - Prípadné chyby v preklade mi hláste na gyrxiur@gmail.com
+				Spolumajiteľ: Shady7557
+				Tester: Dellon132
+				Logá: juanchacin
+				Slovenský preklad: Gyrxiur - Prípadné chyby v preklade mi hláste na gyrxiur@gmail.com
 
-Ďakujeme všetkým, ktorí testovali program (špeciálne poďakovanie patrí Dellon132).
-</Text>
-		</Label1>
+				Ďakujeme všetkým, ktorí testovali program (špeciálne poďakovanie patrí Dellon132).
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") - UŽIVATEĽSKÁ ZMLUVA
+				Display Driver Uninstaller ("DDU") - UŽIVATEĽSKÁ ZMLUVA
 
-Použitím DDU softvéru sa stávate jeho užívateľom. Táto zmluva vstupuje do platnosti hneď, ako použijete program na odinštaláciu ovládača.
+				Použitím DDU softvéru sa stávate jeho užívateľom. Táto zmluva vstupuje do platnosti hneď, ako použijete program na odinštaláciu ovládača.
 
-Použitím DDU súhlasíte, že nebudete obviňovať DDU alebo jeho tvorcov a spolutvorcov, z pokazenia alebo negatívneho ovplvynenia vášho PC.
+				Použitím DDU súhlasíte, že nebudete obviňovať DDU alebo jeho tvorcov a spolutvorcov, z pokazenia alebo negatívneho ovplvynenia vášho PC.
 
-Použitím DDU beriete na vedomie, že NVIDIA ("NVIDIA, GeForce") ani Advanced Micro Devices ("AMD, Radeon") nemajú
-nič spoločné s týmto programom a v žiadnom prípade nespolupracujú s DDU a jeho tvorcami.
-</Text>
+				Použitím DDU beriete na vedomie, že NVIDIA ("NVIDIA, GeForce") ani Advanced Micro Devices ("AMD, Radeon") nemajú
+				nič spoločné s týmto programom a v žiadnom prípade nespolupracujú s DDU a jeho tvorcami.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

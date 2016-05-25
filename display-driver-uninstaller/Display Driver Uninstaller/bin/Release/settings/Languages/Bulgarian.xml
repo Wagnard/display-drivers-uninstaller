@@ -1,63 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="bg-BG" Text="Bulgarian" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>Почисти и рестартирай|(силно препоръчително)</Text>
 			<Tooltip>Деинсталира текущия и всички предишно инсталирани драйвери, след което рестартира компютъра.|(силно препоръчително)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Почисти, но НЕ рестартирай|(може да доведе до проблеми като черен екран)</Text>
 			<Tooltip>Деинсталира текущия и всички предишно инсталирани драйвери, но не рестартира компютъра.|(може да причини някои проблеми като черен екран)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Почисти и изключи компютъра|(ако инсталирате нова видео карта)</Text>
 			<Tooltip>Деинсталира текущия и всички предишно инсталирани драйвери и изключва компютъра, без повторно сканиране.|(за инсталиране на нова видео карта)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Задай автоматичната инсталация на драйвери в Windows по подразбиране</Text>
-		</Button4>
-		<Button5>
-			<Text>Покажи разширен дневник</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>Засечена версия на Windows:</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** Харесвате DDU? Помислете за дарение, то ще помогне за бъдещото развитие. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Дневник:</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Изберете графичен драйвер:</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>Забележка: всякакви щети или грешки, причинени на Вашия компютър са на Ваша отговорност.</Text>
 		</Label9>
 		<Label10>
 			<Text>Препоръчително е да използвате DDU в безопасен режим (Safe Mode).</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Проверяване за актуализации...</Text>
 			<Text2>Не са открити актуализации. Програмата е актуална.</Text2>
 			<Text3>Открити са актуализации! Очаквайте ограничена поддръжка на по-стари версии спрямо по-новите.</Text3>
 			<Text4>Изтеглянето на актуализациите беше неуспешно!</Text4>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Options</Text>
 		</OptionsToolStripMenuItem>
@@ -146,9 +157,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Options">
-		<Label1>
+		<lblWinVersion>
 			<Text>GPUs Specifics Options</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>General Options</Text>
 		</Label2>
@@ -210,6 +221,9 @@
 		<lblNotSafeMode>
 			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -219,71 +233,103 @@
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Display Driver Uninstaller (DDU) / Чистачът е създаден за видео (ГП) драйвери. (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Чистачът е създаден за видео (ГП) драйвери. (NVIDIA/AMD)
 
-Програмата премахва видео драйвера на графичния процесор от диспечера на устройства (device manager)
-и премахва текущия и всички инсталирани преди него драйвери от хранилището за драйвери на Windows,
-заедно с всичките им прилежащи услуги.
+				Програмата премахва видео драйвера на графичния процесор от диспечера на устройства (device manager)
+				и премахва текущия и всички инсталирани преди него драйвери от хранилището за драйвери на Windows,
+				заедно с всичките им прилежащи услуги.
 
-Ефектът след използване на този инструмент ще е много сходен до състоянието на Windows след „прясна инсталация“.
+				Ефектът след използване на този инструмент ще е много сходен до състоянието на Windows след „прясна инсталация“.
 
-Този инструмент действа доста като „Driver Sweeper“*, но включва и всичко споменато по-горе.
+				Този инструмент действа доста като „Driver Sweeper“*, но включва и всичко споменато по-горе.
 
-Ако имате някакви проблеми с инсталиране на по-стар или по-нов драйвер, опитайте този инструмент,
-защото може да помогне в тази насока.
+				Ако имате някакви проблеми с инсталиране на по-стар или по-нов драйвер, опитайте този инструмент,
+				защото може да помогне в тази насока.
 
-ПРЕПОРЪЧИТЕЛНА УПОТРЕБА:
+				ПРЕПОРЪЧИТЕЛНА УПОТРЕБА:
 
-- Този инструмент може да се използва в нормален режим, но за максимална стабилност е най-добре да преминете в безопасен (Safe Mode).
+				- Този инструмент може да се използва в нормален режим, но за максимална стабилност е най-добре да преминете в безопасен (Safe Mode).
 
-- Бихме искали да съберем мнения от всички, кажете ако инструментът Ви е помогнал.
+				- Бихме искали да съберем мнения от всички, кажете ако инструментът Ви е помогнал.
 
-- Създайте архив на системата или точка на възстановяване, въпреки че използването на инструмента би трябвало да е доста безопасно.
+				- Създайте архив на системата или точка на възстановяване, въпреки че използването на инструмента би трябвало да е доста безопасно.
 
-- Ако имате или сте имали проблем с драйвер и този инструмент ви е помогнал, моля, споделете Вашите резултати.
+				- Ако имате или сте имали проблем с драйвер и този инструмент ви е помогнал, моля, споделете Вашите резултати.
 
-Имайте предвид, че NVIDIA, AMD и Microsoft не могат да бъдат отговорни за щети, нанесени на Вас или Вашия компютър,
-и не са по никакъв начин съдружници на DDU или неговите създатели.
+				Имайте предвид, че NVIDIA, AMD и Microsoft не могат да бъдат отговорни за щети, нанесени на Вас или Вашия компютър,
+				и не са по никакъв начин съдружници на DDU или неговите създатели.
 
--------------------------------
+				-------------------------------
 
-Инструментът е създаден от Wagnard.
+				Инструментът е създаден от Wagnard.
 
-Съсобственик: Shady757
+				Съсобственик: Shady757
 
-Тестер: Dellon132
+				Тестер: Dellon132
 
-Лого: juanchacin
+				Лого: juanchacin
 
-Огромни благодарности на Jackalito за дарението на AMD 7850.
+				Огромни благодарности на Jackalito за дарението на AMD 7850.
 
-Благодарности на Helge Klein (http://helgeklein.com/setacl/) за позволението за използване на неговата програма (SetACL) с DDU
+				Благодарности на Helge Klein (http://helgeklein.com/setacl/) за позволението за използване на неговата програма (SetACL) с DDU
 
-Огромни благодарности на тестерите за отделеното време: Gamer1291 (optimus), Octopuss (Amd Enduro),
-nedooo` (прекара време за дебъг с мен), Extraordinary (тества отстраняване на бъг)
+				Огромни благодарности на тестерите за отделеното време: Gamer1291 (optimus), Octopuss (Amd Enduro),
+				nedooo` (прекара време за дебъг с мен), Extraordinary (тества отстраняване на бъг)
 
-Благодарности на всеки, който изложи системата си на риск и специални благодарности на Dellon132.
+				Благодарности на всеки, който изложи системата си на риск и специални благодарности на Dellon132.
 
-*DDU, неговите създатели и съдружници не са свързани по никакъв начин с Driver Sweeper или неговите създатели.
-</Text>
-		</Label1>
+				*DDU, неговите създатели и съдружници не са свързани по никакъв начин с Driver Sweeper или неговите създатели.
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") ПОТРЕБИТЕЛСКО СПОРАЗУМЕНИЕ
+				Display Driver Uninstaller ("DDU") ПОТРЕБИТЕЛСКО СПОРАЗУМЕНИЕ
 
-Превръщате се в потребител на DDU ("Потребител"), като използвате програмата. Това споразумение влиза в сила в момента, в който използвате програмата, за да премахнете драйвер.
+				Превръщате се в потребител на DDU ("Потребител"), като използвате програмата. Това споразумение влиза в сила в момента, в който използвате програмата, за да премахнете драйвер.
 
-Използвайки DDU Вие се съгласявате да не обвинявате DDU или неговите създатели и съдружници в повреждане или оказване на негативен ефект върху Вашия компютър.
+				Използвайки DDU Вие се съгласявате да не обвинявате DDU или неговите създатели и съдружници в повреждане или оказване на негативен ефект върху Вашия компютър.
 
-Използвайки DDU Вие потвърждавате, че нито NVIDIA ("NVIDIA, GeForce"), нито Advanced Micro Devices ("AMD, Radeon") нямат нищо общо с тази програма или авторите ѝ.
-</Text>
+				Използвайки DDU Вие потвърждавате, че нито NVIDIA ("NVIDIA, GeForce"), нито Advanced Micro Devices ("AMD, Radeon") нямат нищо общо с тази програма или авторите ѝ.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

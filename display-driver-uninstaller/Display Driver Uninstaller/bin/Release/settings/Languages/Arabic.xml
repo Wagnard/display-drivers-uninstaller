@@ -1,21 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="ar-SA" Text="Arabic" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<!-- This is comment -->
+		<!-- This is comment -->
+
 		<btnCleanRestart>
 			<Text>تنظيف وإعادة تشغيـــل النظام|(ينصــح بـه بشـدة)</Text>
 			<Tooltip>Uninstall the current and previous drivers, then restart the computer.|(Highly Recommended)</Tooltip>
@@ -31,33 +46,30 @@
 		<btnWuRestore>
 			<Text>ارجاع نظام التثبيت التلقائي للتعريفات إلى الوضع الافتراضي</Text>
 		</btnWuRestore>
-		<btnExtendedLog>
-			<Text>عرض تقريـر مفصل</Text>
-		</btnExtendedLog>
 		<lblWinVersion>
 			<Text>نـظام التشغيــل الحالـــي :</Text>
 		</lblWinVersion>
-		<Label4>
+		<lblDonate>
 			<Text>** هـل تحب هذا الأداة ؟ ؛ اذا ما رأيك بالتبـرع لنا. التبرعات تساهم في عملية التطويـر **</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>التقــريـــر : </Text>
-		</Label5>
-		<Label7>
-			<Text>حـدد نـوع الكـرت الخاص بـك : |</Text>
-		</Label7>
+		</lblLog>
+		<lblSelectedGPU>
+			<Text>حـدد نـوع الكـرت الخاص بـك :</Text>
+		</lblSelectedGPU>
 		<Label9>
-			<Text>مـلاحظـة : أيـة اضرار أو اخطاء قـد تلحـق بجهازك هي تحت مسؤوليتـك الخاصة فقـط .||</Text>
+			<Text>مـلاحظـة : أيـة اضرار أو اخطاء قـد تلحـق بجهازك هي تحت مسؤوليتـك الخاصة فقـط .</Text>
 		</Label9>
 		<Label10>
 			<Text>ينصــح باستخــدام هـذه الاداة في الوضع الآمن </Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>التحقـق من التحديثات .....</Text>
 			<Text2>لا يوجد تحديث حاليا ؛ الأداة بآخر اصدار.</Text2>
 			<Text3>تم العثور على تحديث جديد! ؛ سينحـصر الدعم عن الاصدارات القديمـة تدريجيا بعكس الاصدارات الحديثة</Text3>
 			<Text4>لا يمكـن جلب التحديثات في الوقت الحالي !</Text4>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Options</Text>
 		</OptionsToolStripMenuItem>
@@ -147,9 +159,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Options">
-		<Label1>
+		<lblWinVersion>
 			<Text>GPUs Specifics Options</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>General Options</Text>
 		</Label2>
@@ -211,6 +223,9 @@
 		<lblNotSafeMode>
 			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -220,77 +235,109 @@
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Display Driver Uninstaller (DDU) / Cleaner made for Display (GPU) Drivers.(NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Cleaner made for Display (GPU) Drivers.(NVIDIA/AMD)
 
-وظيفة هذه الأداة تكمن في الغاء تثبيت تعريف الكرت الرسومي من إدارة الأجهــزة ؛ وأيضا حذف جميع الملفات المتعلقة بالتعريف الموجودة داخل النظام التشغيلي 
-بالإضافة إلى ايقاف الخدمات الخاصة بالتعريف سواء كان الكرت من 
-NVIDIA أو AMD .
+				وظيفة هذه الأداة تكمن في الغاء تثبيت تعريف الكرت الرسومي من إدارة الأجهــزة ؛ وأيضا حذف جميع الملفات المتعلقة بالتعريف الموجودة داخل النظام التشغيلي
+				بالإضافة إلى ايقاف الخدمات الخاصة بالتعريف سواء كان الكرت من
+				NVIDIA أو AMD .
 
-الهدف من هذه الأداة هو تنظيف النظام نهائيا من مشغل الكرت الرسومي. وكأن النظام قد تم تنصيبه للتو
+				الهدف من هذه الأداة هو تنظيف النظام نهائيا من مشغل الكرت الرسومي. وكأن النظام قد تم تنصيبه للتو
 
-هذه الأداة مشابهة لأداة درايفر سويبر* لكن تحتوي على الخصائص الاضافية التي تم ذكرها سلفا
+				هذه الأداة مشابهة لأداة درايفر سويبر* لكن تحتوي على الخصائص الاضافية التي تم ذكرها سلفا
 
-في حال ظهرت لك مشاكل أثناء تنصيب التعريفات القديمة أو الجديدة ؛ الرجاء إبلاغنا بها لكي نقوم بحلها في الاإصدارات الجديدة
+				في حال ظهرت لك مشاكل أثناء تنصيب التعريفات القديمة أو الجديدة ؛ الرجاء إبلاغنا بها لكي نقوم بحلها في الاإصدارات الجديدة
 
 
-طريقة استخدام الاداة :
+				طريقة استخدام الاداة :
 
--هذه الأداة يمكن ان تستخدمها في الوضع الطبيعي لنظام التشغيل ؛ لكن يفضل استخدامها في الوضع الآمن
+				-هذه الأداة يمكن ان تستخدمها في الوضع الطبيعي لنظام التشغيل ؛ لكن يفضل استخدامها في الوضع الآمن
 
-- نحن نرحب بالآراء والمقترحات الجديدة ؛ الرجاء ابلاغنا في حال كان لديك ملاحظة 
+				- نحن نرحب بالآراء والمقترحات الجديدة ؛ الرجاء ابلاغنا في حال كان لديك ملاحظة
 
-- دائما احتفظ بنسخة احتياطية للنظام أو نقطة استعادة ؛ تحسبا لأية مشاكل قد تظهر بعد الاستخدام
+				- دائما احتفظ بنسخة احتياطية للنظام أو نقطة استعادة ؛ تحسبا لأية مشاكل قد تظهر بعد الاستخدام
 
--اذا واجهت مشاكل في التعريف الكرت الخاص بك ؛ وبعد استخدام هذه الاداة تم حل المشكلة؛ الرجاء مشاركتنا 
-بتجربتك وأية اقتراحات تود اطلاعنا عليها
+				-اذا واجهت مشاكل في التعريف الكرت الخاص بك ؛ وبعد استخدام هذه الاداة تم حل المشكلة؛ الرجاء مشاركتنا
+				بتجربتك وأية اقتراحات تود اطلاعنا عليها
 
-الرجاء الانتباه بأن كل من 
-NVIDIA , AMD , Microsoft
-غير مسؤولة نهائيا عن أية اضرار قد تلحق بجهازك جراء استخدام هذه الاداة أو من مصمم الاداة
--------------------------------
+				الرجاء الانتباه بأن كل من
+				NVIDIA , AMD , Microsoft
+				غير مسؤولة نهائيا عن أية اضرار قد تلحق بجهازك جراء استخدام هذه الاداة أو من مصمم الاداة
+				-------------------------------
 
-هذه الاداة من برمجة Wagnard.
+				هذه الاداة من برمجة Wagnard.
 
-بالاشتراك مع: Shady757
+				بالاشتراك مع: Shady757
 
-الاختبار : Dellon132
+				الاختبار : Dellon132
 
-تصميم الشعار : juanchacin
+				تصميم الشعار : juanchacin
 
-الشكر الجزيل لـ
-Jackalito
-لتبرعه ببطاقة 
-AMD 7850
-شكر خاص لـ
-Helge Klein (http://helgeklein.com/setacl/) "SetAcl"
-لتصريحه لنا باستخدم برنامجه ودمجه مع هذه الاداة
+				الشكر الجزيل لـ
+				Jackalito
+				لتبرعه ببطاقة
+				AMD 7850
+				شكر خاص لـ
+				Helge Klein (http://helgeklein.com/setacl/) "SetAcl"
+				لتصريحه لنا باستخدم برنامجه ودمجه مع هذه الاداة
 
-جزيل الشكر لكل من ساهم في تجربة البرنامج ؛ وهم
-Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (took time debugging with me) 
-Extraordinary (Testing a bug fix)
+				جزيل الشكر لكل من ساهم في تجربة البرنامج ؛ وهم
+				Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (took time debugging with me)
+				Extraordinary (Testing a bug fix)
 
-شكرا لكل من جرب هذه الاداة وعرض جهازه للاخطار في سبيل نجاحها (شكر خاص لـ Dellon132)
+				شكرا لكل من جرب هذه الاداة وعرض جهازه للاخطار في سبيل نجاحها (شكر خاص لـ Dellon132)
 
-هذه الاداة ؛ مبتكرها وكل الاشخاص الذين ساهموا مع المبرمج  ليس لهم علاقة مع برنامج درايفر سويبر أو حتى مبتكره
-</Text>
-		</Label1>
+				هذه الاداة ؛ مبتكرها وكل الاشخاص الذين ساهموا مع المبرمج  ليس لهم علاقة مع برنامج درايفر سويبر أو حتى مبتكره
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") اتفاقيـة الترخيص 
+				Display Driver Uninstaller ("DDU") اتفاقيـة الترخيص
 
-أنت الان تعتبر مستخدم لهذه الاداة طالما تستخدم البرمجيات المتعلقة بها. لذلك فإن هذه الاتفاقيـة سارية المفعول عند استخدام هذا البرنامج لحذف تعريفات جهازك.
+				أنت الان تعتبر مستخدم لهذه الاداة طالما تستخدم البرمجيات المتعلقة بها. لذلك فإن هذه الاتفاقيـة سارية المفعول عند استخدام هذا البرنامج لحذف تعريفات جهازك.
 
-باستخدامك لهذه الأداة أنت توافق بعدم اتهام مبتكرها أو اي شخص ساهم في هذه الاداة في حال حدوث أية اضرار أو اخطاء لجهازك.
+				باستخدامك لهذه الأداة أنت توافق بعدم اتهام مبتكرها أو اي شخص ساهم في هذه الاداة في حال حدوث أية اضرار أو اخطاء لجهازك.
 
-عند استخدامك لهذه الاداة فأنت تقر بأن كلا من  NVIDIA ("NVIDIA, GeForce")  و/أو  Advanced Micro Devices ("AMD, Radeon") ليس لها/لهما علاقة بهذه الاداة ؛ أو مع مبرمجها وكل من ساهم في عملها بجميع الأحوال.
-</Text>
+				عند استخدامك لهذه الاداة فأنت تقر بأن كلا من  NVIDIA ("NVIDIA, GeForce")  و/أو  Advanced Micro Devices ("AMD, Radeon") ليس لها/لهما علاقة بهذه الاداة ؛ أو مع مبرمجها وكل من ساهم في عملها بجميع الأحوال.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

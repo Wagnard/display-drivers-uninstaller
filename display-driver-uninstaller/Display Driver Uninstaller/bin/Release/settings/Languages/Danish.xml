@@ -1,63 +1,76 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="da-DK" Text="Danish" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>Fjern og genstart|(Anbefales)</Text>
 			<Tooltip>Afinstallér nuværende og tidligere drivere, og genstart derefter computeren.|(Anbefalet)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Fjern men genstart IKKE.|(Kan forårsage fejl som sort skærm)</Text>
 			<Tooltip>Afinstallér nuværende og tidligere drivere, uden at genstarte computeren.|(Kan forårsage fejl som sort skærm)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Fjern og luk ned|(For installation af nyt grafikkort)</Text>
 			<Tooltip>Afinstallér nuværende og tidligere drivere, og sluk computeren uden ny gennemsøgning.|(For installation af nyt grafikkort)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Anvend standardindstillingerne for Windows automatiseret driverinstallation.</Text>
-		</Button4>
-		<Button5>
-			<Text>Show extended log.</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>Aktuel Windows-version:</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** You like DDU? Think about a Donation, it will help further developement. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Log:</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Vælg grafikdriver:</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>OBS! Eventuel skade eller fejl på din PC er under eget ansvar.</Text>
 		</Label9>
 		<Label10>
 			<Text>Vi anbefaler at du anvender DDU i fejlsikker tilstand.</Text>
 		</Label10>
-		<Label11>
+		
+		<lblUpdate>
 			<Text>Kontrollerer om der er opdateringer...</Text>
 			<Text2>Ingen opdateringer fundet. Programmet er opdateret.</Text2>
 			<Text3>Nye opdateringer fundet! Begrænset support på ældre versioner.</Text3>
 			<Text4>Ikke i stand til at hente opdateringer!</Text4>
-		</Label11>
+		</lblUpdate>
+		
 		<OptionsToolStripMenuItem>
 			<Text>Options</Text>
 		</OptionsToolStripMenuItem>
@@ -146,9 +159,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Options">
-		<Label1>
+		<lblWinVersion>
 			<Text>GPUs Specifics Options</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>General Options</Text>
 		</Label2>
@@ -210,6 +223,9 @@
 		<lblNotSafeMode>
 			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -219,62 +235,94 @@
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Display Driver Uninstaller (DDU) / Afinstalleringsværktøj for grafikdrivere.(NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Afinstalleringsværktøj for grafikdrivere.(NVIDIA/AMD)
 
-Programmet fjerner skærm-/grafikkortdriverne fra Enhedshåndtering, alle aktuelle og tidligere drivere fra Windows Driver-mappen samt systemtjenester fra NVIDIA/AMD.
+				Programmet fjerner skærm-/grafikkortdriverne fra Enhedshåndtering, alle aktuelle og tidligere drivere fra Windows Driver-mappen samt systemtjenester fra NVIDIA/AMD.
 
-Den umiddelbare effekt af at anvende dette værktøj, er at Windows bliver tilbageført til "nyinstalleret" tilstand hvad angår grafikkortet.
+				Den umiddelbare effekt af at anvende dette værktøj, er at Windows bliver tilbageført til "nyinstalleret" tilstand hvad angår grafikkortet.
 
-Værktøjet fungerer nogenlunde som "Driver Sweeper"*, plus ovennævnte ektrafunktioner.
+				Værktøjet fungerer nogenlunde som "Driver Sweeper"*, plus ovennævnte ektrafunktioner.
 
-Har du problemer at op-/nedgradere dine grafikdrivere, kan du prøve at køre DDU først. ANBEFALET ANVENDELSE:
+				Har du problemer at op-/nedgradere dine grafikdrivere, kan du prøve at køre DDU først. ANBEFALET ANVENDELSE:
 
-- Værktøjet kan køres i normaltilstand men for absolut stabilitet er fejlsikker tilstand altid det bedste.
+				- Værktøjet kan køres i normaltilstand men for absolut stabilitet er fejlsikker tilstand altid det bedste.
 
-- Vi vil gerne have tilbagemeldinger fra alle brugere, så fortæl om dine erfaringer med programmet. 
+				- Vi vil gerne have tilbagemeldinger fra alle brugere, så fortæl om dine erfaringer med programmet.
 
-- Skab for sikkerheds skyld en sikkerhedskopi eller et systemgendannelsespunkt før brug. (Normalt er programmet ret sikkert.)
+				- Skab for sikkerheds skyld en sikkerhedskopi eller et systemgendannelsespunkt før brug. (Normalt er programmet ret sikkert.)
 
-- Hvis du har eller har haft driverproblemer og programmet har hjulpet dig med at løse problemet, så del gerne din løsning.
+				- Hvis du har eller har haft driverproblemer og programmet har hjulpet dig med at løse problemet, så del gerne din løsning.
 
-Husk at hverken NVIDIA, AMD, eller Microsoft kan gøres ansvarlige for eventuelle skader eller fejl 
-på din computer, heller ikke DDU, dets skaber eller samarbejdspartnere.
--------------------------------
+				Husk at hverken NVIDIA, AMD, eller Microsoft kan gøres ansvarlige for eventuelle skader eller fejl
+				på din computer, heller ikke DDU, dets skaber eller samarbejdspartnere.
+				-------------------------------
 
-Skabt af Wagnard.
+				Skabt af Wagnard.
 
-Co-ejer: Shady7557
+				Co-ejer: Shady7557
 
-Tester : Dellon132
+				Tester : Dellon132
 
-Logoer : juanchacin
+				Logoer : juanchacin
 
-Tak til Helge Klein (http://helgeklein.com/setacl/) : for tilladelse til at bruge hans program i DDU "SetAcl"
+				Tak til Helge Klein (http://helgeklein.com/setacl/) : for tilladelse til at bruge hans program i DDU "SetAcl"
 
-Stort Tak for tiden brugt med at teste: Gamer1291
+				Stort Tak for tiden brugt med at teste: Gamer1291
 
-Tak til alle som har risikeret deres systemer. (En speciel tak til Dellon132)
+				Tak til alle som har risikeret deres systemer. (En speciel tak til Dellon132)
 
-*DDU, dets skabere og samarbejdspartnere er på ingen måde associerede med Driver Sweeper eller dets skabere.
-</Text>
-		</Label1>
+				*DDU, dets skabere og samarbejdspartnere er på ingen måde associerede med Driver Sweeper eller dets skabere.
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") BRUGERAFTALE
+				Display Driver Uninstaller ("DDU") BRUGERAFTALE
 
-Du betegnes automatiskt som "Bruger" ved at anvende DDU-programmet. Denne aftale begynder at gælde i samme stund som du anvender programmet til at afinstallere en driver.
+				Du betegnes automatiskt som "Bruger" ved at anvende DDU-programmet. Denne aftale begynder at gælde i samme stund som du anvender programmet til at afinstallere en driver.
 
-Gennem at anvende DDU forpligter du dig til ikke at anklage DDU, dets skaber og/eller datterselskab for skader eller negativ effekt på din computer.
+				Gennem at anvende DDU forpligter du dig til ikke at anklage DDU, dets skaber og/eller datterselskab for skader eller negativ effekt på din computer.
 
-Gennem at anvende DDU vedkender du at NVIDIA ("NVIDIA, GeForce") og/eller Advanced Micro Devices ("AMD, Radeon") ikke har noget med dette program at gøre, heller ikke med DDU eller dets skaber.
-</Text>
+				Gennem at anvende DDU vedkender du at NVIDIA ("NVIDIA, GeForce") og/eller Advanced Micro Devices ("AMD, Radeon") ikke har noget med dette program at gøre, heller ikke med DDU eller dets skaber.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

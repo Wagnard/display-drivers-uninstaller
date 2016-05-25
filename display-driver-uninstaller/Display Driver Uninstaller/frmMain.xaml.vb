@@ -5828,6 +5828,7 @@ Public Class frmMain
 											Dim frmSafeBoot As New frmLaunch
 
 											With frmSafeBoot
+												.DataContext = Me.DataContext
 												.Topmost = True
 												.ShowInTaskbar = False
 												.ResizeMode = Windows.ResizeMode.NoResize

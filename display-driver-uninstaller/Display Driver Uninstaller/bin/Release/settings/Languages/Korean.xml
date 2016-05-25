@@ -1,63 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="ko-KR" Text="Korean" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>지우고, 다시 시작하기|(적극 권장)</Text>
 			<Tooltip>현재 및 이전 드라이버를 제거하고, 컴퓨터를 다시 시작합니다.|(적극 권장)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>지우고, 다시 시작하지 않기|(blackscreen 같은 문제 발생 가능)</Text>
 			<Tooltip>현재 및 이전 드라이버를 제거하지만, 컴퓨터를 다시 시작하진 않습니다.|(blackscreen 같은 문제 발생 가능)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>지우고, 시스템 끄기|(새 그래픽 카드를 장착할 경우)</Text>
 			<Tooltip>현재 및 이전 드라이버를 제거하고, 다시 검색없이 컴퓨터를 끕니다.|(새 그래픽 카드를 장착하는 경우)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Windows 자동 드라이버 설치를       기본값으로 설정</Text>
-		</Button4>
-		<Button5>
-			<Text>자세한 로그(기록) 보이기</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>감지된 Windows 버전 :</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** DDU가 맘에 들면, 기부에 대해 생각해봐 주세요.  추가 개발에 도움이 됩니다. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>로그(기록) :</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>그래픽 드라이버 선택 :</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>참고: 사용자의 PC에 발생하는 모든 손상이나 오류는 사용자의 책임입니다.</Text>
 		</Label9>
 		<Label10>
 			<Text>안전 모드에서의 DDU 사용을 권장합니다.</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>업데이트 확인하는 중...</Text>
 			<Text2>업데이트가 없습니다.  프로그램이 최신 버전입니다.</Text2>
 			<Text3>업데이트가 있습니다!  가장 최신보다 더 오래된 버전에서는 기능 지원이 제한될 수 있습니다.</Text3>
 			<Text4>업데이트 패치를 할 수 없습니다!</Text4>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Options</Text>
 		</OptionsToolStripMenuItem>
@@ -147,9 +158,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="옵션">
-		<Label1>
+		<lblWinVersion>
 			<Text>GPU 특정 옵션</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>일반 옵션</Text>
 		</Label2>
@@ -211,6 +222,9 @@
 		<lblNotSafeMode>
 			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -220,83 +234,115 @@
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Display Driver Uninstaller (DDU)
-- 디스플레이 (GPU) 드라이버 (nVIDIA/AMD) 용으로 만든 청소 도구
+				Display Driver Uninstaller (DDU)
+				- 디스플레이 (GPU) 드라이버 (nVIDIA/AMD) 용으로 만든 청소 도구
 
-장치 관리자에서 디스플레이/GPU 드라이버를 제거하고,
-nVIDIA/AMD로부터 제공받은 걸 포함해
-Windows 드라이버 저장소에서 현재 및 이전의 모든 드라이버를 제거합니다.
+				장치 관리자에서 디스플레이/GPU 드라이버를 제거하고,
+				nVIDIA/AMD로부터 제공받은 걸 포함해
+				Windows 드라이버 저장소에서 현재 및 이전의 모든 드라이버를 제거합니다.
 
-이 도구를 사용한 후의 효과는 '새로 설치'한 상태의 Windows와 비슷합니다.
+				이 도구를 사용한 후의 효과는 '새로 설치'한 상태의 Windows와 비슷합니다.
 
-이 도구는 'Driver Sweeper'와 같은 역할을 하며, 위에 언급한 모든 걸 추가했습니다.
+				이 도구는 'Driver Sweeper'와 같은 역할을 하며, 위에 언급한 모든 걸 추가했습니다.
 
-이전 드라이버나 새로운 거 하나를 설치하는데 어떠한 문제가 있을 경우,
-그 문제의 해결 시도를 위해 몇 가지 보고서를 제공합니다.
+				이전 드라이버나 새로운 거 하나를 설치하는데 어떠한 문제가 있을 경우,
+				그 문제의 해결 시도를 위해 몇 가지 보고서를 제공합니다.
 
 
-권장하는 사용 방법 :
+				권장하는 사용 방법 :
 
-- 이 도구는 보통(일반) 모드에서 사용할 수 있지만,
-  절대적인 안정성을 위해서는 언제나 안전 모드가 최선입니다.
+				- 이 도구는 보통(일반) 모드에서 사용할 수 있지만,
+				절대적인 안정성을 위해서는 언제나 안전 모드가 최선입니다.
 
-- 모두로부터의 의견을 수집하고자 합니다.  성공이냐 실패냐의 여부를 알려주세요.
-  백업이나 시스템 복원을 만드세요. (그렇지만, 일반적으로 매우 안전합니다.)
+				- 모두로부터의 의견을 수집하고자 합니다.  성공이냐 실패냐의 여부를 알려주세요.
+				백업이나 시스템 복원을 만드세요. (그렇지만, 일반적으로 매우 안전합니다.)
 
-- 드라이버 문제가 생기거나 생긴 경우, 이 도구는 안고 있거나 현재 겪고 있는
-  몇 가지 문제점에 대해 당신을 도울 겁니다.  여러분의 결과를 공유해 주세요.
+				- 드라이버 문제가 생기거나 생긴 경우, 이 도구는 안고 있거나 현재 겪고 있는
+				몇 가지 문제점에 대해 당신을 도울 겁니다.  여러분의 결과를 공유해 주세요.
 
-nVIDIA도 AMD도 Microsoft도 당신이나 당신의 컴퓨터의 어떠한 종류의 손상에 대해서도
-책임을 지지 않고, DDU의 계열사나 그 제작자에게 물을 방법이 없음을 명심하세요.
--------------------------------------------------------------------------------------------------------------------------------------------------------
+				nVIDIA도 AMD도 Microsoft도 당신이나 당신의 컴퓨터의 어떠한 종류의 손상에 대해서도
+				책임을 지지 않고, DDU의 계열사나 그 제작자에게 물을 방법이 없음을 명심하세요.
+				-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-제작: Wagnard.
+				제작: Wagnard.
 
-공동 소유자: Shady757
+				공동 소유자: Shady757
 
-테스터: Dellon132
+				테스터: Dellon132
 
-로고 제작: juanchacin
+				로고 제작: juanchacin
 
-AMD 7850을 기부해 주신 Jackalito에게 너~무 너무 고맙습니다.
+				AMD 7850을 기부해 주신 Jackalito에게 너~무 너무 고맙습니다.
 
-Helge Klein에게 감사드립니다. (http://helgeklein.com/setacl/):
- DDU 'SetAcl'을 포함한 그의 프로그램 사용을 허가해줬습니다.
+				Helge Klein에게 감사드립니다. (http://helgeklein.com/setacl/):
+				DDU 'SetAcl'을 포함한 그의 프로그램 사용을 허가해줬습니다.
 
-테스트를 위해 자신의 시간을 할애함에 너무 감사드립니다:
- Gamer1291, Octopuss (Amd Enduro), nedooo` (나와 함께 디버깅했음),
- Extraordinary (버그 수정 테스트)
+				테스트를 위해 자신의 시간을 할애함에 너무 감사드립니다:
+				Gamer1291, Octopuss (Amd Enduro), nedooo` (나와 함께 디버깅했음),
+				Extraordinary (버그 수정 테스트)
 
-자신의 시스템을 위험에 몰아넣은(?) 모든 분들께 감사드립니다.
- (Dellon132에게 특별히 감사드립니다.)
+				자신의 시스템을 위험에 몰아넣은(?) 모든 분들께 감사드립니다.
+				(Dellon132에게 특별히 감사드립니다.)
 
-* DDU의 제작자와 계열사는 'Driver Sweeper' 또는 그 제작자와는 어떠한
-  제휴(관련)도 없습니다.
-</Text>
-		</Label1>
+				* DDU의 제작자와 계열사는 'Driver Sweeper' 또는 그 제작자와는 어떠한
+				제휴(관련)도 없습니다.
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Display Driver Uninstaller ('DDU') 사용자 계약
+				Display Driver Uninstaller ('DDU') 사용자 계약
 
 
-당신은 DDU 소프트웨어를 사용해서 DDU의 '사용자'가 됩니다.
-이 계약은 드라이버를 제거하기 위해 이 프로그램을 사용하는 즉시 효력이 발생합니다.
+				당신은 DDU 소프트웨어를 사용해서 DDU의 '사용자'가 됩니다.
+				이 계약은 드라이버를 제거하기 위해 이 프로그램을 사용하는 즉시 효력이 발생합니다.
 
-DDU를 사용함에 있어, 사용자의 PC에 손상이나 부정적인 영향을 끼치는 것에 대해
-DDU 또는 그 제작자 및 계열사를 비난(고발)하지 않을 것에 동의합니다.
+				DDU를 사용함에 있어, 사용자의 PC에 손상이나 부정적인 영향을 끼치는 것에 대해
+				DDU 또는 그 제작자 및 계열사를 비난(고발)하지 않을 것에 동의합니다.
 
-DDU를 사용함에 있어,
-nVIDIA ('nVIDIA, GeForce')도 Advanced Micro Devices ('AMD, Radeon')도
-Microsoft도 당신이나 당신의 컴퓨터의 어떠한 종류의 손상에 대해서도
-책임을 지지 않고, DDU의 계열사나 그 제작자에게 물을 방법이 없음을 인정합니다.
-</Text>
+				DDU를 사용함에 있어,
+				nVIDIA ('nVIDIA, GeForce')도 Advanced Micro Devices ('AMD, Radeon')도
+				Microsoft도 당신이나 당신의 컴퓨터의 어떠한 종류의 손상에 대해서도
+				책임을 지지 않고, DDU의 계열사나 그 제작자에게 물을 방법이 없음을 인정합니다.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

@@ -1,70 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="nl-NL" Text="Dutch" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.TwoLetterISOLanguageName (lower case, ISO 639-1)
-	For other languages: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
+	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
+	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
 
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-
-	-->
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>Verwijder drivers en herstart de computer.|(Sterk aanbevolen)</Text>
 			<Tooltip>Verwijder de huidige en de vorige drivers en herstart de computer.|(Sterk aanbevolen)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Verwijder drivers en start de computer NIET opnieuw op.|(Kan kwesties/problemen zoals een zwart scherm veroorzaken)</Text>
 			<Tooltip>Verwijder de huidige en de vorige drivers en start de computer niet opnieuw op.|(Kan kwesties/problemen zoals zwart scherm veroorzaken)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Verwijder drivers en schakel de computer uit.|(Voor het installeren van een nieuwe grafische kaart).</Text>
 			<Tooltip>Verwijder de huidige en de vorige drivers en sluit af zonder dat de computer opnieuw scant.|(Voor het installeren van een nieuwe grafische kaart).</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Zet windows driver installatie op standaard.</Text>
-		</Button4>
-		<Button5>
-			<Text>Laat uitgebreide log zien.</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>Gedetecteerde Windows-versie:</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** Vind je DDU goed? Denk misschien eens aan een donatie, het zal de ontwikkeling enorm helpen. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Log :</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Selecteer grafische driver :</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>Opmerking: Eventuele schade of fouten veroorzaakt aan uw pc is uw verantwoordelijkheid.</Text>
 		</Label9>
 		<Label10>
 			<Text>Het gebruiken van DDU word in Veilige Modus aanbeloven. |</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Controloren of er nieuwe updates zijn...</Text>
 			<Text2>Geen updates gevonden. Programma is up-to-date.</Text2>
 			<Text3>Updates gevonden! Verwacht beperkte ondersteuning op oudere versies dan de meest recente versie.</Text3>
 			<Text4>Kan geen updates halen!</Text4>
-		</Label11>
-    <lblOffer>
-      <Text>       Offers from our partners</Text>
-      <Tooltip>You can disable this from the option menu.</Tooltip>
-    </lblOffer>
-    <imgOffer>
-      <Tooltip>You can disable this from the option menu.</Tooltip>
-    </imgOffer>
+		</lblUpdate>
+		<lblOffer>
+			<Text>       Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
+		<imgOffer>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</imgOffer>
 		<OptionsMenuItem>
 			<Text>Opties</Text>
 		</OptionsMenuItem>
@@ -154,15 +165,15 @@
 		</UpdateLog>
 
 
-</frmMain>
+	</frmMain>
 	<frmOptions Text="Opties">
-    <lblOffer>
-      <Text>Show Offers from our partners</Text>
-      <Tooltip>You can disable this from the option menu.</Tooltip>
-    </lblOffer>
-    <btnClose>
-      <Text>Close</Text>
-    </btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
 		<lblNvidiaspecific>
 			<Text>Specifieke NVIDIA Opties</Text>
 		</lblNvidiaspecific>
@@ -238,6 +249,9 @@
 		<lblNotSafeMode>
 			<Text>Je bent niet in Veilige Modus. Het is sterk aanbevolen|Herstart naar Veilige Modus om problemen te voorkomen.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normaal</Item1>
 			<Item2>Veilige Modus (Aanbevolen)</Item2>
@@ -245,72 +259,104 @@
 		</cbBootOption>
 	</frmLaunch>
 	<frmLog Text="Uitgebreide log">
-    <btnClose>
-      <Text>Close</Text>
-    </btnClose>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
 	</frmLog>
 	<frmAbout Text="Over DDU">
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Driver Uninstaller (DDU) / Schoonmaker gemaakt voor Display Drivers.(NVIDIA/AMD/Intel)
+				Driver Uninstaller (DDU) / Schoonmaker gemaakt voor Display Drivers.(NVIDIA/AMD/Intel)
 
-Wat het doet is het verwijderen van de display driver uit het apparaatbeheer en het verwijderen van de huidige en alle vorige drivers van de Windows Driver winkel 
-samen met het verwijderen van diensten van NVIDIA/AMD/Intel.
+				Wat het doet is het verwijderen van de display driver uit het apparaatbeheer en het verwijderen van de huidige en alle vorige drivers van de Windows Driver winkel
+				samen met het verwijderen van diensten van NVIDIA/AMD/Intel.
 
-Het resultaat nadat u deze tool gebruikt zal vergelijkbaar zijn alsof je net een nieuwe Windows versie hebt geinstalleerd.
+				Het resultaat nadat u deze tool gebruikt zal vergelijkbaar zijn alsof je net een nieuwe Windows versie hebt geinstalleerd.
 
-Dit programma is vergelijkbaar met wat Driver sweeper/... doet + het extra bovenvermelde.
+				Dit programma is vergelijkbaar met wat Driver sweeper/... doet + het extra bovenvermelde.
 
-Als je problemen hebt met het installeren van oudere driver(s) of nieuwere, probeer dan eens dit programma want er zijn enkele meldingen dat het deze problemen repareert.
+				Als je problemen hebt met het installeren van oudere driver(s) of nieuwere, probeer dan eens dit programma want er zijn enkele meldingen dat het deze problemen repareert.
 
-AANBEVOLEN GEBRUIK:
+				AANBEVOLEN GEBRUIK:
 
-- De tool kan gebruikt worden in de normale modus van windows maar voor absolute stabiliteit bij het gebruik, gebruik je DDU in Veilige modus.
+				- De tool kan gebruikt worden in de normale modus van windows maar voor absolute stabiliteit bij het gebruik, gebruik je DDU in Veilige modus.
 
-- We zouden graag feedback krijgen van jou. Vertel ons als het een succes was of niet.
+				- We zouden graag feedback krijgen van jou. Vertel ons als het een succes was of niet.
 
-- Maak een Back-up of een Herstelpunt.(Dit voor de zekerheid maar het zou veilig moeten zijn.)
+				- Maak een Back-up of een Herstelpunt.(Dit voor de zekerheid maar het zou veilig moeten zijn.)
 
-- Als je een probleem hebt en dit programma je geholpen heeft met jou probleem, deel dit alstublieft.
+				- Als je een probleem hebt en dit programma je geholpen heeft met jou probleem, deel dit alstublieft.
 
-Hou wel in gedachten dat NVIDIA/AMD/Intel niks met deze programma te maken heeft, wij werken niet voor NVIDIA/AMD/Intel en zij zijn niet verantwoordelijk voor
-eventuele schade of fouten veroorzaakt op uw systeem.
--------------------------------
+				Hou wel in gedachten dat NVIDIA/AMD/Intel niks met deze programma te maken heeft, wij werken niet voor NVIDIA/AMD/Intel en zij zijn niet verantwoordelijk voor
+				eventuele schade of fouten veroorzaakt op uw systeem.
+				-------------------------------
 
-Gemaakt door Wagnard.
+				Gemaakt door Wagnard.
 
-CO-eigenaar: Shady757
+				CO-eigenaar: Shady757
 
-Tester: Dellon132
+				Tester: Dellon132
 
-Logos: juanchacin
+				Logos: juanchacin
 
-Een grote dank aan Jackalito voor de donatie van een AMD 7850.
+				Een grote dank aan Jackalito voor de donatie van een AMD 7850.
 
-Dank aan Helge Klein (http://helgeklein.com/setacl/) : Voor de permissie om zijn Programma te mogen gebruiken in DDU "SetAcl"
+				Dank aan Helge Klein (http://helgeklein.com/setacl/) : Voor de permissie om zijn Programma te mogen gebruiken in DDU "SetAcl"
 
 
-Bedankt aan iedereen die te tijd heeft genomen om te testen : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (Hij nam de tijd om met mij te debuggen) 
-Extraordinary (Het testen van een bug fix)
+				Bedankt aan iedereen die te tijd heeft genomen om te testen : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (Hij nam de tijd om met mij te debuggen)
+				Extraordinary (Het testen van een bug fix)
 
- en bedankt naar iedereen die zijn systeeem in gevaar heeft gebracht. (speciale dank aan Dellon132)
+				en bedankt naar iedereen die zijn systeeem in gevaar heeft gebracht. (speciale dank aan Dellon132)
 
-Vertaler: MojoW
-</Text>
-		</Label1>
+				Vertaler: MojoW
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") GEBRUIKERSOVEREENKOMST
+				Display Driver Uninstaller ("DDU") GEBRUIKERSOVEREENKOMST
 
-U wordt een gebruiker van DDU ("Gebruiker") door gebruik te maken van de DDU-software. Deze overeenkomst wordt van kracht zodra u het programma gebruikt om een ​​driver te verwijderen.
+				U wordt een gebruiker van DDU ("Gebruiker") door gebruik te maken van de DDU-software. Deze overeenkomst wordt van kracht zodra u het programma gebruikt om een ​​driver te verwijderen.
 
-Door het gebruik van DDU gaat u akkoord met het niet beschuldigen van DDU of zijn makers, en filialen, te beschadigen of negatieve invloed te gedaan hebben op uw PC.
+				Door het gebruik van DDU gaat u akkoord met het niet beschuldigen van DDU of zijn makers, en filialen, te beschadigen of negatieve invloed te gedaan hebben op uw PC.
 
-Door het gebruik van DDU erkent u dat NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices ("AMD, Radeon")
- (Intel) iets te maken hebben met dit programma, en op geen enkele wijze filialen van DDU of zijn makers.
-</Text>
+				Door het gebruik van DDU erkent u dat NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices ("AMD, Radeon")
+				(Intel) iets te maken hebben met dit programma, en op geen enkele wijze filialen van DDU of zijn makers.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

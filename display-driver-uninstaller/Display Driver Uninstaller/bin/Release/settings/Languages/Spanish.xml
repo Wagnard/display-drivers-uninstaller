@@ -1,63 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="es-ES" Text="Spanish" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+	<!-- This is comment -->
+		
+		<btnCleanRestart>
 			<Text>Limpiar y Reiniciar|(Altamente Recomendado)|</Text>
 			<Tooltip>Desinstalar los controladores actuales y anteriores, a continuación reiniciar el ordenador.|(Altamente Recomendado)|</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Limpiar y NO Reiniciar.|(Puede provocar problemas como pantalla en negro, sin imagen)|</Text>
 			<Tooltip>Desinstalar los controladores actuales y anteriores, pero no reiniciar el ordenador.|(Puede provocar problemas como pantalla en negro, quedarse sin imagen)|</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Limpiar y Apagar|(Para instalar una nueva tarjeta gráfica)|</Text>
 			<Tooltip>Desinstalar los controladores actuales y anteriores y Apagar el ordenador evitando la instalación automática de los mismos por el S.O.|(Para instalar una nueva tarjeta gráfica)|</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Establecer por defecto la Instalación de Controlador Automático de Windows.|</Text>
-		</Button4>
-		<Button5>
-			<Text>Mostrar registro extendido.</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>Versión de Windows Detectada:|</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** ¿Le gusta DDU? Considere realizar una Donación, la cual ayudará al futuro desarrollo de la aplicación. ***|</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Registro:|</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Elija Controlador de Pantalla:|</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>Aviso: Cualquier daño o error causado a su PC será bajo su propia responsabilidad.|</Text>
 		</Label9>
 		<Label10>
 			<Text>Se recomienda usar DDU en Modo Seguro.|</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Buscando actualizaciones...</Text>
 			<Text2>No se han encontrado actualizaciones. Su versión es la más reciente.</Text2>
 			<Text3>¡Actualización encontrada! Tenga presente que el soporte en versiones antiguas es más limitado que en la más reciente.</Text3>
 			<Text4>¡Error al intentar obtener actualización!</Text4>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Opciones</Text>
 		</OptionsToolStripMenuItem>
@@ -146,9 +157,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Opciones">
-		<Label1>
+		<lblWinVersion>
 			<Text>Opciones Específicas de GPUs</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>Opciones Generales</Text>
 		</Label2>
@@ -210,6 +221,9 @@
 		<lblNotSafeMode>
 			<Text>No se encuentra en modo Seguro. Se recomienda|encarecidamente reiniciar en dicho modo para evitar conflictos.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Modo Seguro (Recomendado)</Item2>
@@ -222,7 +236,7 @@
 		</btnClose>	
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
 Display Driver Uninstaller (DDU)/Limpiador para Controladores de Pantalla (NVIDIA/AMD).
 
@@ -258,9 +272,10 @@ Gracias a todos aquellos que corrieron el riesgo con su sistema.
 Especial Agradecimiento a Dellon132.
 *DDU, sus creadores y colaboradores no están de ningún modo
 afiliados a Driver Sweeper, o a sus creadores.
-Traducción al Español realizada por Jackalito.
+Traducción al Español realizada por Jackalito.
+
 </Text>
-		</Label1>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
@@ -271,8 +286,41 @@ En el momento de utilizar DDU, usted pasa a convertirse en ("Usuario") del softw
 
 Al usar DDU usted accede a no acusar a DDU o a sus creadores, y colaboradores, de dañar o afectar negativamente su PC.
 
-Al usar DDU usted reconoce que ni NVIDIA ("NVIDIA, Geforce") ni Advanced Micro Devices ("AMD, Radeon") tienen nada que ver con este programa, y que de ningún modo están afiliados a DDU o a sus creadores.
+Al usar DDU usted reconoce que ni NVIDIA ("NVIDIA, Geforce") ni Advanced Micro Devices ("AMD, Radeon") tienen nada que ver con este programa, y que de ningún modo están afiliados a DDU o a sus creadores.
+
 </Text>
 		</Tos>
 	</Misc>
+	
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

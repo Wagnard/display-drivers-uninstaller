@@ -1,60 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="sv-SE" Text="Swedish" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>Rensa och starta om|(Rekommenderas)</Text>
 			<Tooltip>Avinstallera nuvarande och tidigare drivrutiner, starta sedan om datorn.|(Rekommenderas)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Rensa men starta INTE om.|(Kan orsaka fel som svart skärm)</Text>
 			<Tooltip>Avinstallera nuvarande och tidigare drivrutiner, men starta inte om datorn.|(Kan orsaka fel som svart skärm)</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Rensa och stäng av|(För installation av nytt grafikkort)</Text>
 			<Tooltip>Avinstallera nuvarande och tidigare drivrutiner och stäng av datorn utan ny genomsökning.|(För installation av nytt grafikkort)</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Använd standardinställning för Windows automatiska drivrutininstallation.</Text>
-		</Button4>
-		<Button5>
-			<Text>Show extended log.</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>Aktuell Windows-version:</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** You like DDU? Think about a Donation, it will help further developement. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Logg:</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Välj grafikdrivrutin:</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>OBS! Eventuell skada eller fel på din PC är ditt eget ansvar.</Text>
 		</Label9>
 		<Label10>
 			<Text>Vi rekommenderar att du använder DDU i felsäkert läge.</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Söker efter uppdateringar...</Text>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Options</Text>
 		</OptionsToolStripMenuItem>
@@ -143,9 +154,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Options">
-		<Label1>
+		<lblWinVersion>
 			<Text>GPUs Specifics Options</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>General Options</Text>
 		</Label2>
@@ -207,6 +218,9 @@
 		<lblNotSafeMode>
 			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -214,66 +228,98 @@
 		</cbBootOption>
 	</frmLaunch>
 	<frmLog Text="Extended log">
-     	<btnClose>
+		<btnClose>
 			<Text>Close</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Display Driver Uninstaller (DDU) / Rensningsverktyg för grafikdrivrutiner.(NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Rensningsverktyg för grafikdrivrutiner.(NVIDIA/AMD)
 
-Programmet tar bort installerade, aktuella och tidigare skärm-/grafikdrivrutiner från Enhetshanteraren och från Windows Driver-mappen tillsammans med systemtjänster från NVIDIA/AMD.
+				Programmet tar bort installerade, aktuella och tidigare skärm-/grafikdrivrutiner från Enhetshanteraren och från Windows Driver-mappen tillsammans med systemtjänster från NVIDIA/AMD.
 
-Den omedelbara effekten av att använda detta verktyg, blir att Windows återgår till "nyinstallerat" skick vad gäller grafiken.
+				Den omedelbara effekten av att använda detta verktyg, blir att Windows återgår till "nyinstallerat" skick vad gäller grafiken.
 
-Verktyget fungera ungefär som "Driver Sweeper"*, plus nämnda extrafunktioner.
+				Verktyget fungera ungefär som "Driver Sweeper"*, plus nämnda extrafunktioner.
 
-Har du problem att upp-/nerdatera dina grafikdrivrutiner, kan du prova att köra DDU först.
+				Har du problem att upp-/nerdatera dina grafikdrivrutiner, kan du prova att köra DDU först.
 
-REKOMMENDERAD ANVÄNDNING:
+				REKOMMENDERAD ANVÄNDNING:
 
-- Verktyget kan köras i normalläge men för absolut stabilitet är felsäkert läge alltid det bästa.
+				- Verktyget kan köras i normalläge men för absolut stabilitet är felsäkert läge alltid det bästa.
 
-- Vi vill gärna få återkoppling från alla användare, så berätta gärna om din erfarenhet av programmet. 
+				- Vi vill gärna få återkoppling från alla användare, så berätta gärna om din erfarenhet av programmet.
 
-- Skapa  för säkerhets skull en säkerhetskopia eller systemåterställningspunkt före körning. (normalt skall programmet vara säkert.)
+				- Skapa  för säkerhets skull en säkerhetskopia eller systemåterställningspunkt före körning. (normalt skall programmet vara säkert.)
 
-- Om du har eller har haft drivrutinsproblem, och det här programmet hjälpte dig lösa problemen, så dela gärna din lösning.
+				- Om du har eller har haft drivrutinsproblem, och det här programmet hjälpte dig lösa problemen, så dela gärna din lösning.
 
-Kom ihåg att varken NVIDIA, AMD, eller Microsoft kan hållas ansvariga för eventuella skador eller fel 
-på din dator, inte heller DDU, dess skapare eller samarbetspartners  kan göras ansvariga.
--------------------------------
+				Kom ihåg att varken NVIDIA, AMD, eller Microsoft kan hållas ansvariga för eventuella skador eller fel
+				på din dator, inte heller DDU, dess skapare eller samarbetspartners  kan göras ansvariga.
+				-------------------------------
 
-Created By Wagnard.
+				Created By Wagnard.
 
-Co-owner: Shady7557
+				Co-owner: Shady7557
 
-Tester : Dellon132
+				Tester : Dellon132
 
-Logos : juanchacin
+				Logos : juanchacin
 
-Thanks to Helge Klein (http://helgeklein.com/setacl/) : for the permission to use his Program with DDU "SetAcl"
+				Thanks to Helge Klein (http://helgeklein.com/setacl/) : for the permission to use his Program with DDU "SetAcl"
 
-Huge Thanks for his time for testing: Gamer1291
+				Huge Thanks for his time for testing: Gamer1291
 
-Thanks to anyone who put their system at risk. (special thanks to Dellon132)
+				Thanks to anyone who put their system at risk. (special thanks to Dellon132)
 
-*DDU, it's creators and affiliates are in no way affiliated with Driver Sweeper, or it's creators.
-</Text>
-		</Label1>
+				*DDU, it's creators and affiliates are in no way affiliated with Driver Sweeper, or it's creators.
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") ANVÄNDARAVTAL
+				Display Driver Uninstaller ("DDU") ANVÄNDARAVTAL
 
-Du betecknas automatiskt som "Användare" genom att använda DDU-mjukvaran. Detta avtal börjar gälla i samma stund som du använder programmet till att avinstallera en drivrutin.
+				Du betecknas automatiskt som "Användare" genom att använda DDU-mjukvaran. Detta avtal börjar gälla i samma stund som du använder programmet till att avinstallera en drivrutin.
 
-Genom att använda DDU förbinder du dig att inte anklaga DDU eller dess skapare och/eller dotterbolag, för skador eller negativa effekter på din dator.
+				Genom att använda DDU förbinder du dig att inte anklaga DDU eller dess skapare och/eller dotterbolag, för skador eller negativa effekter på din dator.
 
-Genom att använda DDU medger du kännedom om att NVIDIA ("NVIDIA, GeForce") och/eller Advanced Micro Devices ("AMD, Radeon") inte har någonting med detta program att göra, ej heller med DDU eller dess skapare.
-</Text>
+				Genom att använda DDU medger du kännedom om att NVIDIA ("NVIDIA, GeForce") och/eller Advanced Micro Devices ("AMD, Radeon") inte har någonting med detta program att göra, ej heller med DDU eller dess skapare.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

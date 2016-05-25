@@ -1,60 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="ru-RU" Text="Russian" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<Button1>
+		<!-- This is comment -->
+
+		<btnCleanRestart>
 			<Text>Удалить и перезагрузить|(настоятельно рекомендуется)|</Text>
 			<Tooltip>Нажмите эту кнопку, чтобы удалить |предыдущие и текущие драйверы| и перезагрузить компьютер|(настоятельно рекомендуется)</Tooltip>
-		</Button1>
-		<Button2>
+		</btnCleanRestart>
+		<btnClean>
 			<Text>Удалить БЕЗ перезагрузки|(может привести к проблемам вроде черного экрана)|</Text>
 			<Tooltip>Нажмите эту кнопку, чтобы удалить |предыдущие и текущие драйверы,| но не перезагружать компьютер. |Это может привести к проблемам |вроде чёрного экрана</Tooltip>
-		</Button2>
-		<Button3>
+		</btnClean>
+		<btnCleanShutdown>
 			<Text>Удалить и выключить|(для установки новой видеокарты)|</Text>
 			<Tooltip>Нажмите эту кнопку, чтобы удалить| предыдущие и текущие драйверы |и выключить компьютер. Этот вариант подойдёт для| установки новой видеокарты</Tooltip>
-		</Button3>
-		<Button4>
+		</btnCleanShutdown>
+		<btnWuRestore>
 			<Text>Вкл. установку драйверов через Windows Update по умолчанию</Text>
-		</Button4>
-		<Button5>
-			<Text>Показать расширенный журнал.</Text>
-		</Button5>
-		<Label1>
+		</btnWuRestore>
+		<lblWinVersion>
 			<Text>Версия Windows:</Text>
-		</Label1>
-		<Label4>
+		</lblWinVersion>
+		<lblDonate>
 			<Text>*** Вам нравится DDU? Подумайте о Пожертвовании, это поможет дальнейшей разработке. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Журнал:</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Выбор видеодрайвера:</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>Примечание: любые неполадки или ошибки, вызванные работой программы, на вашей ответственности.</Text>
 		</Label9>
 		<Label10>
 			<Text>Используйте DDU в безопасном режиме</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Идёт проверка обновлений...</Text>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Options</Text>
 		</OptionsToolStripMenuItem>
@@ -143,9 +154,9 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Опции">
-		<Label1>
+		<lblWinVersion>
 			<Text>Специфические параметры GPUs</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>Общие параметры</Text>
 		</Label2>
@@ -207,6 +218,9 @@
 		<lblNotSafeMode>
 			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Safe Mode (Recommended)</Item2>
@@ -214,66 +228,98 @@
 		</cbBootOption>
 	</frmLaunch>
 	<frmLog Text="Extended log">
-     	<btnClose>
+		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
- Display Driver Uninstaller (DDU) - утилита для удаления видеодрайверов NVIDIA, AMD, Intel.
+				Display Driver Uninstaller (DDU) - утилита для удаления видеодрайверов NVIDIA, AMD, Intel.
 
-Удаляет текущие и предыдущие видеодрайверы из диспетчера устройств
-и хранилища драйверов Windows. Также удаляются службы NVIDIA и AMD.
+				Удаляет текущие и предыдущие видеодрайверы из диспетчера устройств
+				и хранилища драйверов Windows. Также удаляются службы NVIDIA и AMD.
 
-С помощью DDU вы можете решить проблемы с установкой более старой 
-версии драйвера или более новой. Установка драйверов после использования 
-DDU подобна "чистой" установке.
+				С помощью DDU вы можете решить проблемы с установкой более старой
+				версии драйвера или более новой. Установка драйверов после использования
+				DDU подобна "чистой" установке.
 
-РЕКОМЕНДАЦИИ ПО ПРИМЕНЕНИЮ:
+				РЕКОМЕНДАЦИИ ПО ПРИМЕНЕНИЮ:
 
-- Для надежности удаления и безопасности системы используйте программу 
-в безопасном режиме (хотя можно и в обычном).
+				- Для надежности удаления и безопасности системы используйте программу
+				в безопасном режиме (хотя можно и в обычном).
 
-- Отключите интернет, так как иногда после удаления видеодрайверов служба
-Windows Update может повторно установить драйвер без запроса.
+				- Отключите интернет, так как иногда после удаления видеодрайверов служба
+				Windows Update может повторно установить драйвер без запроса.
 
-- Создайте резервную копию или точку восстановления перед использованием DDU
-(как правило, утилита довольно безопасна).
+				- Создайте резервную копию или точку восстановления перед использованием DDU
+				(как правило, утилита довольно безопасна).
 
-- Мы хотели бы получать обратную связь от вас. Сообщите нам, успешно ли было
-применение утилиты или нет. Если у вас были проблемы  с видеодрайвером, и DDU
-помог вам их решить, пожалуйста, поделитесь своим результатом.
+				- Мы хотели бы получать обратную связь от вас. Сообщите нам, успешно ли было
+				применение утилиты или нет. Если у вас были проблемы  с видеодрайвером, и DDU
+				помог вам их решить, пожалуйста, поделитесь своим результатом.
 
-Имейте в виду, что NVIDIA, AMD, Microsoft не имеют отношения к этой программе, 
-мы не работаем на компании NVIDIA или AMD, и они не несут ответственность 
-за любые повреждения или ошибки, вызванные в вашей системе.
--------------------------------
+				Имейте в виду, что NVIDIA, AMD, Microsoft не имеют отношения к этой программе,
+				мы не работаем на компании NVIDIA или AMD, и они не несут ответственность
+				за любые повреждения или ошибки, вызванные в вашей системе.
+				-------------------------------
 
-Разработчик: Wagnard.
+				Разработчик: Wagnard.
 
-Совладелец: Shady7557.
+				Совладелец: Shady7557.
 
-Тестирование: Dellon132.
+				Тестирование: Dellon132.
 
-Логотипы: juanchacin.
+				Логотипы: juanchacin.
 
-Спасибо всем, кто подвергал свою систему риску (особая благодарность Dellon132).
-</Text>
-		</Label1>
+				Спасибо всем, кто подвергал свою систему риску (особая благодарность Dellon132).
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ Display Driver Uninstaller ("DDU")
+				ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ Display Driver Uninstaller ("DDU")
 
-Вы становитесь пользователем DDU ("Пользователь"), используя DDU. Настоящее Соглашение вступает в силу, как только вы используете программу для удаления драйверов.
+				Вы становитесь пользователем DDU ("Пользователь"), используя DDU. Настоящее Соглашение вступает в силу, как только вы используете программу для удаления драйверов.
 
- Используя DDU, вы отказываетесь от претензий к создателям DDU в случае возникновения неполадок или ошибок в системе. 
+				Используя DDU, вы отказываетесь от претензий к создателям DDU в случае возникновения неполадок или ошибок в системе.
 
-Используя DDU, вы признаете, что ни NVIDIA ("NVIDIA, GeForce"), ни Advanced Micro Devices ("AMD, Radeon") не имеют
-ничего общего с этой программой, и никоим образом не являются партнерами DDU или ее создателей.
-</Text>
+				Используя DDU, вы признаете, что ни NVIDIA ("NVIDIA, GeForce"), ни Advanced Micro Devices ("AMD, Radeon") не имеют
+				ничего общего с этой программой, и никоим образом не являются партнерами DDU или ее создателей.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>

@@ -1,21 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="fi-FI" Text="Finnish" NewLineChar="|">
 	<!--
-	ISO = CultureInfo.CurrentCulture.Name (en-US, en-GB, fr-FR .. etc)
+	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
 	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
 
-	Text = Shown to user (as written in english, found on language selection box)
-
-	<xxx>Place text here</xxx>    or <xxx Text="Place text here" >
-	[char = replaces]  xml doesn't allow some special chars like <>&"
-	| = newline
-	&amp; = &
-	&quot; = "
-	&gt; = >
-	&lt; = <
-	-->
+	Text =	Shown to user (as written in english, shown on language selection box)
+	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
+					Can be changed, with caution! (Use special char what won't be used on text)
 	
+	<xxx>Place text here</xxx>   
+	
+	or 	
+	<xxx Text="Place text here" ToolTip="Or here" />
+	
+	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
+	
+	|		=	"newline"		(default NewLineChar)
+	&amp;	=	&
+	&quot;	=	"
+	&gt;	=	>
+	&lt;	=	<
+	
+	[ Optional ]
+	Add credits to yourself at end of file	
+	 
+	If wan't to set comment, see below for example -->
+
+	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<!-- This is comment -->
+
 		<btnCleanRestart>
 			<Text>Puhdista ja käynnistä uudelleen|(Erittäin suositeltavaa)</Text>
 			<Tooltip>Poista nykyiset ja edelliset ajurit ja käynnistä tietokone uudelleen|(Erittäin suositeltavaa)</Tooltip>
@@ -31,33 +45,30 @@
 		<btnWuRestore>
 			<Text>Palauta Windowsin automaattinen|ajurien asennus oletus asetukseen</Text>
 		</btnWuRestore>
-		<btnExtendedLog>
-			<Text>Näytä laajennettu loki.</Text>
-		</btnExtendedLog>
 		<lblWinVersion>
 			<Text>Havaittu Windows versio:</Text>
 		</lblWinVersion>
-		<Label4>
+		<lblDonate>
 			<Text>*** Pidätkö ohjelmasta DDU? Harkitse lahjoitusta, mikä auttaa ohjelman kehittämisessä jatkossa. ***</Text>
-		</Label4>
-		<Label5>
+		</lblDonate>
+		<lblLog>
 			<Text>Loki :</Text>
-		</Label5>
-		<Label7>
+		</lblLog>
+		<lblSelectedGPU>
 			<Text>Valitse Näytönohjain ajuri:</Text>
-		</Label7>
+		</lblSelectedGPU>
 		<Label9>
 			<Text>Huomautus: Mikä tahansa tietokoneelle aiheutettu vaurio tai virhe on omalla vastuullasi.</Text>
 		</Label9>
 		<Label10>
 			<Text>DDU:n käyttäminen vikasietotilassa suositeltavaa</Text>
 		</Label10>
-		<Label11>
+		<lblUpdate>
 			<Text>Tarkistetaan päivityksiä...</Text>
 			<Text2>Ei löytynyt päivityksiä. Ohjelma on ajantasalla.</Text2>
 			<Text3>Päivityksiä löydetty! Vanhemman version tuki on huonompaa.</Text3>
 			<Text4>Päivityksien hakeminen epäonnistui!</Text4>
-		</Label11>
+		</lblUpdate>
 		<OptionsToolStripMenuItem>
 			<Text>Asetukset</Text>
 		</OptionsToolStripMenuItem>
@@ -145,15 +156,15 @@
 			<Text41>Value removed.</Text41>
 			<Text42>File Deleted.</Text42>
 		</UpdateLog>
-	
-</frmMain>
+
+	</frmMain>
 	<frmOptions Text="Asetukset">
 		<btnClose>
 			<Text>Sulje</Text>
 		</btnClose>
-		<Label1>
+		<lblWinVersion>
 			<Text>Näytönohjaimen asetukset</Text>
-		</Label1>
+		</lblWinVersion>
 		<Label2>
 			<Text>Yleiset asetukset</Text>
 		</Label2>
@@ -215,6 +226,9 @@
 		<lblNotSafeMode>
 			<Text>Et ole vikasietotilassa. On erittäin suositeltavaa|käynnistää uudelleen vikasietotilaan</Text>
 		</lblNotSafeMode>
+		<lblWin10Warn>
+			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normaali</Item1>
 			<Item2>Vikasietotila (Suositeltavaa)</Item2>
@@ -224,73 +238,105 @@
 	<frmLog Text="Laajennettu loki" >
 		<btnClose>
 			<Text>Sulje</Text>
-		</btnClose>	
+		</btnClose>
 	</frmLog>
 	<frmAbout>
-		<Label1>
+		<lblWinVersion>
 			<Text>
-Display Driver Uninstaller (DDU) / Puhdistusohjelma näytönohjain (GPU) Ajureille. (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Puhdistusohjelma näytönohjain (GPU) Ajureille. (NVIDIA/AMD)
 
-Ohjelma poistaa nykyiset ja kaikki edelliset ajurit Laitehallinnasta ja Windowsin ajurihakemistoista
-kuten myös ajurien palvelut.
+				Ohjelma poistaa nykyiset ja kaikki edelliset ajurit Laitehallinnasta ja Windowsin ajurihakemistoista
+				kuten myös ajurien palvelut.
 
-Vaikutus ohjelman käyttämisen jälkeen on samankaltainen kuin Windows olisi uudelleenasennettu.
+				Vaikutus ohjelman käyttämisen jälkeen on samankaltainen kuin Windows olisi uudelleenasennettu.
 
-Tämä ohjelma toimii kuten ohjelma "Driver Sweeper"* ja sisältää kaikki uudet yllämainitut ominaisuudet.
+				Tämä ohjelma toimii kuten ohjelma "Driver Sweeper"* ja sisältää kaikki uudet yllämainitut ominaisuudet.
 
-Jos sinullla on ongelmia vanhan tai uuden ajurin asennuksessa, anna ohjelmalle mahdollisuus. Ohjelmasta löytyy
-useita palautteita ongelmien korjaantumisista ohjelman käytön jälkeen.
+				Jos sinullla on ongelmia vanhan tai uuden ajurin asennuksessa, anna ohjelmalle mahdollisuus. Ohjelmasta löytyy
+				useita palautteita ongelmien korjaantumisista ohjelman käytön jälkeen.
 
 
-SUOSITELTAVA KÄYTTÖ:
+				SUOSITELTAVA KÄYTTÖ:
 
-- Ohjelmaa voi käyttää normaalissa tilassa (työpöydällä), mutta parhaan toimivuuden vuoksi,
-ohjelman käyttäminen vikasietotilassa on suositeltavaa.
+				- Ohjelmaa voi käyttää normaalissa tilassa (työpöydällä), mutta parhaan toimivuuden vuoksi,
+				ohjelman käyttäminen vikasietotilassa on suositeltavaa.
 
-- Haluaisimme palautetta ohjelman toiminnasta, kerro jos ohjelma auttoi sinua tai ei toiminut.
+				- Haluaisimme palautetta ohjelman toiminnasta, kerro jos ohjelma auttoi sinua tai ei toiminut.
 
-- Luo varmuuskopio tai järjestelmän palautuspiste. (ohjelman pitäisi olla kuitenkin turvallinen)
+				- Luo varmuuskopio tai järjestelmän palautuspiste. (ohjelman pitäisi olla kuitenkin turvallinen)
 
-- Jos sinulla on tai oli ajuri ongelmia, ja tämä ohjelma auttoi ongelmissa joita sinulla on tai oli,
-kertokaa tuloksista eteenpäin.
+				- Jos sinulla on tai oli ajuri ongelmia, ja tämä ohjelma auttoi ongelmissa joita sinulla on tai oli,
+				kertokaa tuloksista eteenpäin.
 
-- Huomioikaa että yrityksiä NVIDIA, AMD ja/tai Microsoft ei voi pitää vastuussa mistään vahingoista
-tietokoneellesi ja eivät ole missään suhteessa tekemisissä ohjelman "DDU" tai sen luojien kanssa.
--------------------------------
+				- Huomioikaa että yrityksiä NVIDIA, AMD ja/tai Microsoft ei voi pitää vastuussa mistään vahingoista
+				tietokoneellesi ja eivät ole missään suhteessa tekemisissä ohjelman "DDU" tai sen luojien kanssa.
+				-------------------------------
 
-Luoja : Wagnard.
+				Luoja : Wagnard.
 
-Osa-luoja: Shady757
+				Osa-luoja: Shady757
 
-Testaaja : Dellon132
+				Testaaja : Dellon132
 
-Logot : juanchacin
+				Logot : juanchacin
 
-Suuri kiitos 'Jackalito':lle näytönohjaimen AMD 7850:n lahjoituksesta.
+				Suuri kiitos 'Jackalito':lle näytönohjaimen AMD 7850:n lahjoituksesta.
 
-Kiitos 'Helge Klein':lle (http://helgeklein.com/setacl/) : luvasta käyttää häen ohjelmiaan "DDU":n kanssa.
+				Kiitos 'Helge Klein':lle (http://helgeklein.com/setacl/) : luvasta käyttää häen ohjelmiaan "DDU":n kanssa.
 
-Suuri kiitos ajasta ja testaamisesta käyttäjille : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (testaukseen käytetystä ajasta)
-Extraordinary (ohjelmistovirheiden korjauksien testaamisista)
+				Suuri kiitos ajasta ja testaamisesta käyttäjille : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (testaukseen käytetystä ajasta)
+				Extraordinary (ohjelmistovirheiden korjauksien testaamisista)
 
-Kiitos kaikille jotka ovat laittaneen tietokoneenne vaaraan testatessaan (erityiset kiitokset käyttäjälle 'Dellon132')
+				Kiitos kaikille jotka ovat laittaneen tietokoneenne vaaraan testatessaan (erityiset kiitokset käyttäjälle 'Dellon132')
 
-*"DDU", tai sen luojat ja tukijat eivät ole missään suhteessa tekemisissä ohjelman "Driver Sweeper" tai sen luojien kanssa.
-</Text>
-		</Label1>
+				*"DDU", tai sen luojat ja tukijat eivät ole missään suhteessa tekemisissä ohjelman "Driver Sweeper" tai sen luojien kanssa.
+			</Text>
+		</lblWinVersion>
 	</frmAbout>
 	<Misc>
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") KÄYTTÖEHDOT
+				Display Driver Uninstaller ("DDU") KÄYTTÖEHDOT
 
-Sinusta tulee ohjelman "DDU" ("Käyttäjä") käyttämällä ohjelmaa. Tämä ehto tulee voimaan heti kun olet käyttänyt ohjelmaa ajurien poistamiseen.
+				Sinusta tulee ohjelman "DDU" ("Käyttäjä") käyttämällä ohjelmaa. Tämä ehto tulee voimaan heti kun olet käyttänyt ohjelmaa ajurien poistamiseen.
 
-Käyttämällä ohjelmaa "DDU" hyväksyt että et syytä ohjelmaa "DDU" tai sen luojia, ja tukijoita, tietokoneen vahingoittamisesta tai toimivuuden heikentämisestä.
+				Käyttämällä ohjelmaa "DDU" hyväksyt että et syytä ohjelmaa "DDU" tai sen luojia, ja tukijoita, tietokoneen vahingoittamisesta tai toimivuuden heikentämisestä.
 
-Käyttämällä ohjelmaa "DDU" tiedostat että yrityksillä NVIDIA ("NVIDIA, GeForce") ja/tai Advanced Micro Devices ("AMD, Radeon") ei ole
-mitään tekemistä tämän ohjelman kanssa ja eivät ole missään suhteessa tekemisissä ohjelman "DDU" tai sen luojien kanssa.
-</Text>
+				Käyttämällä ohjelmaa "DDU" tiedostat että yrityksillä NVIDIA ("NVIDIA, GeForce") ja/tai Advanced Micro Devices ("AMD, Radeon") ei ole
+				mitään tekemistä tämän ohjelman kanssa ja eivät ole missään suhteessa tekemisissä ohjelman "DDU" tai sen luojien kanssa.
+			</Text>
 		</Tos>
 	</Misc>
+
+	<!-- Optional, not required -->
+	<LanguageCredits>
+		<!--
+		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
+		[ Optional ]	Details			Anything, contact, email				@	note: its public
+		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
+		-->
+
+		<Credits>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Credits>
+
+		<!--
+		<Credits2>
+			<User>Example</User>
+		</Credits2>
+
+		<Credits3>
+			<User>Test</User>
+			<Details>Something</Details>
+		</Credits3>
+				
+		<CreditsN>
+			<User>Test2</User>
+			<Details>Something Else</Details>
+		</CreditsN>
+		-->
+	</LanguageCredits>
+
 </DisplayDriverUninstaller>
