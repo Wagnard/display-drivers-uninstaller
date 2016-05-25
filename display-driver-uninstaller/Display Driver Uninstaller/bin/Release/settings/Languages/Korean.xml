@@ -57,45 +57,55 @@
 		<lblSelectedGPU>
 			<Text>그래픽 드라이버 선택 :</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>참고: 사용자의 PC에 발생하는 모든 손상이나 오류는 사용자의 책임입니다.</Text>
 		</Label9>
 		<Label10>
 			<Text>안전 모드에서의 DDU 사용을 권장합니다.</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>업데이트 확인하는 중...</Text>
 			<Text2>업데이트가 없습니다.  프로그램이 최신 버전입니다.</Text2>
 			<Text3>업데이트가 있습니다!  가장 최신보다 더 오래된 버전에서는 기능 지원이 제한될 수 있습니다.</Text3>
 			<Text4>업데이트 패치를 할 수 없습니다!</Text4>
 		</lblUpdate>
-		<OptionsToolStripMenuItem>
+
+		<OptionsMenuItem>
 			<Text>Options</Text>
-		</OptionsToolStripMenuItem>
-		<ToolStripMenuItem1>
-			<Text>?</Text>
-		</ToolStripMenuItem1>
-		<ToSToolStripMenuItem>
-			<Text>ToS</Text>
-		</ToSToolStripMenuItem>
-		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
-		</VisitDDUHomepageToolStripMenuItem>
-		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
-		</SVNToolStripMenuItem>
-		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
-		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
-		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
-		</VisitGuru3dAMDThreadToolStripMenuItem>
-		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
-		</VisitGeforceThreadToolStripMenuItem>
-		<AboutToolStripMenuItem>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Terms of Service (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
 			<Text>About</Text>
-		</AboutToolStripMenuItem>
+		</AboutMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Visit SVN Website</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>업데이트를 사용할 수 있습니다!  지금 DDU 웹 사이트에 방문할까요?</Text1>
 			<Text2>가장 최신보다 오래된 버전에서는 지원(기능)이 제한될 수 있습니다.  버그를 보고하기 전에 최신 버전을 확인해 보세요.</Text2>
@@ -112,6 +122,7 @@
 			<Text13>여기는 파란 복구 화면에서 선택해야 하는 겁니다: 문제 해결 -&gt; 고급 옵션 -&gt; 시작 프로그램 설정</Text13>
 			<Text14>리부트를 보류 중인 상태입니다.  DDU를 사용하기 전에 리부트하세요.</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>드라이버 저장소 정리 (OEM 단계 삭제) 실행하는 중...</Text1>
 			<Text2>디렉토리 정리</Text2>
@@ -157,13 +168,23 @@
 			<Text42>파일이 삭제됐습니다.</Text42>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="옵션">
-		<lblWinVersion>
-			<Text>GPU 특정 옵션</Text>
-		</lblWinVersion>
-		<Label2>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specific Options</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specific Options</Text>
+		</lblAmdspecific>
+		<lblGeneral>
 			<Text>일반 옵션</Text>
-		</Label2>
+		</lblGeneral>
 		<lblRemNvidiaDirs>
 			<Text>'C:\nVidia' 드라이버 폴더 제거 (권장 안 함)</Text>
 		</lblRemNvidiaDirs>
@@ -208,6 +229,7 @@
 			<Tooltip>손상된 쉐이더 캐시 데이터에 의해 발생한 그래픽 이상 (속도나 시각 손상)이 있는 경우에 권장합니다.|또한, nVIDIA 같은 다른 브랜드로 전환하려는 경우에도 권장합니다.|</Tooltip>
 		</lblRemCrimsonCache>
 	</frmOptions>
+	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -231,13 +253,50 @@
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Display Driver Uninstaller (DDU)
 				- 디스플레이 (GPU) 드라이버 (nVIDIA/AMD) 용으로 만든 청소 도구
@@ -292,9 +351,7 @@
 				* DDU의 제작자와 계열사는 'Driver Sweeper' 또는 그 제작자와는 어떠한
 				제휴(관련)도 없습니다.
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ('DDU') 사용자 계약

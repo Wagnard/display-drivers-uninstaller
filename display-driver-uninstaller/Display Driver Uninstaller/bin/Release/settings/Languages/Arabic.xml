@@ -58,45 +58,55 @@
 		<lblSelectedGPU>
 			<Text>حـدد نـوع الكـرت الخاص بـك :</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>مـلاحظـة : أيـة اضرار أو اخطاء قـد تلحـق بجهازك هي تحت مسؤوليتـك الخاصة فقـط .</Text>
 		</Label9>
 		<Label10>
 			<Text>ينصــح باستخــدام هـذه الاداة في الوضع الآمن </Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>التحقـق من التحديثات .....</Text>
 			<Text2>لا يوجد تحديث حاليا ؛ الأداة بآخر اصدار.</Text2>
 			<Text3>تم العثور على تحديث جديد! ؛ سينحـصر الدعم عن الاصدارات القديمـة تدريجيا بعكس الاصدارات الحديثة</Text3>
 			<Text4>لا يمكـن جلب التحديثات في الوقت الحالي !</Text4>
 		</lblUpdate>
-		<OptionsToolStripMenuItem>
+
+		<OptionsMenuItem>
 			<Text>Options</Text>
-		</OptionsToolStripMenuItem>
-		<ToolStripMenuItem1>
-			<Text>?</Text>
-		</ToolStripMenuItem1>
-		<ToSToolStripMenuItem>
-			<Text>ToS</Text>
-		</ToSToolStripMenuItem>
-		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
-		</VisitDDUHomepageToolStripMenuItem>
-		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
-		</SVNToolStripMenuItem>
-		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
-		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
-		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
-		</VisitGuru3dAMDThreadToolStripMenuItem>
-		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
-		</VisitGeforceThreadToolStripMenuItem>
-		<AboutToolStripMenuItem>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Terms of Service (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
 			<Text>About</Text>
-		</AboutToolStripMenuItem>
+		</AboutMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Visit SVN Website</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>يوجـد تحديث جديـد ! ؛ هـل تريد زيارة موقع الأداة الآن ؟</Text1>
 			<Text2>الاصدارات القديمــة لهذه الأداة دعمها محدود ؛ لذلك قم بتحديث الأداة لآخر اصدار قبل تبليغنـا بأيـة مشاكل أو اخطاء.</Text2>
@@ -113,6 +123,7 @@
 			<Text13>في حال حدوث شاشة زرقاء  Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>يجب عمل اعادة تشغيل للنظام قبل اعادة استخدام هذه الآداة مجددا</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
@@ -158,13 +169,23 @@
 			<Text42>File Deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="Options">
-		<lblWinVersion>
-			<Text>GPUs Specifics Options</Text>
-		</lblWinVersion>
-		<Label2>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specific Options</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specific Options</Text>
+		</lblAmdspecific>
+		<lblGeneral>
 			<Text>General Options</Text>
-		</Label2>
+		</lblGeneral>
 		<lblRemNvidiaDirs>
 			<Text>حذف مجلد "C:\nVidia" ? (لا ينصح بهذا الاجراء) </Text>
 		</lblRemNvidiaDirs>
@@ -209,6 +230,7 @@
 			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
 		</lblRemCrimsonCache>
 	</frmOptions>
+	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -232,13 +254,50 @@
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Display Driver Uninstaller (DDU) / Cleaner made for Display (GPU) Drivers.(NVIDIA/AMD)
 
@@ -293,9 +352,7 @@
 
 				هذه الاداة ؛ مبتكرها وكل الاشخاص الذين ساهموا مع المبرمج  ليس لهم علاقة مع برنامج درايفر سويبر أو حتى مبتكره
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") اتفاقيـة الترخيص

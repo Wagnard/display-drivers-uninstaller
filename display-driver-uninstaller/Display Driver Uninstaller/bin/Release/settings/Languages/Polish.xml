@@ -57,45 +57,55 @@
 		<lblSelectedGPU>
 			<Text>Wybierz sterownik graficzny:</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>Uwaga: Za wszelkie błędy lub zniszczenie sprzętu bierzesz odpowiedzialność wyłącznie na siebie. </Text>
 		</Label9>
 		<Label10>
 			<Text>Zalecane jest użycie DDU w Trybie Awaryjnym.</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>Sprawdzanie aktualizacji...</Text>
 			<Text2>Nie znaleziono aktualizacji. Posiadasz najnowszą wersję.</Text2>
 			<Text3>Znaleziono aktualizację! Spodziewaj się ograniczonego wsparcia dla starszych wersji programu niż najnowszych.</Text3>
 			<Text4>Nie można pobrać informacji o aktualizacjach!</Text4>
 		</lblUpdate>
-		<OptionsToolStripMenuItem>
+
+		<OptionsMenuItem>
 			<Text>Options</Text>
-		</OptionsToolStripMenuItem>
-		<ToolStripMenuItem1>
-			<Text>?</Text>
-		</ToolStripMenuItem1>
-		<ToSToolStripMenuItem>
-			<Text>ToS</Text>
-		</ToSToolStripMenuItem>
-		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
-		</VisitDDUHomepageToolStripMenuItem>
-		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
-		</SVNToolStripMenuItem>
-		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
-		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
-		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
-		</VisitGuru3dAMDThreadToolStripMenuItem>
-		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
-		</VisitGeforceThreadToolStripMenuItem>
-		<AboutToolStripMenuItem>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Terms of Service (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
 			<Text>About</Text>
-		</AboutToolStripMenuItem>
+		</AboutMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Visit SVN Website</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>Dostępne nowe aktualizacje! Czy przejść do strony DDU?</Text1>
 			<Text2>Oczekuj zmniejszonego wsparcia dla starszych wersji niż dla nowszych. Prosze sprawdź nowszą wersję zanim zgłosisz błędy.</Text2>
@@ -111,6 +121,7 @@
 			<Text12>System nie jest uruchomiony w trybie awaryjnym. Jest wysoce zalecane aby zrestartować system do trybu awaryjnego aby uniknąć możliwych problemów. Czy uruchomić ponownie system do Trybu Awaryjnego?</Text12>
 			<Text13>Oto co potrzebujesz wybrać jeśli pojawi się niebieski ekran odzyskiwania : Rozwiązywanie problemów -&gt; zaawansowane opcje -&gt; Opcje startowe Windows.</Text13>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Uruchamianie oczyszczania Driver Store (etap usuwania OEM)...</Text1>
 			<Text2>Czyszczenie folderu</Text2>
@@ -156,13 +167,23 @@
 			<Text42>Plik usunięty.</Text42>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="Opcje">
-		<lblWinVersion>
-			<Text>Opcje specyficzne dla karty grafiki</Text>
-		</lblWinVersion>
-		<Label2>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specific Options</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specific Options</Text>
+		</lblAmdspecific>
+		<lblGeneral>
 			<Text>Ogólne opcje</Text>
-		</Label2>
+		</lblGeneral>
 		<lblRemNvidiaDirs>
 			<Text>Usuń folder sterowników "C:\nVidia" (NIE zalecane) </Text>
 		</lblRemNvidiaDirs>
@@ -207,6 +228,7 @@
 			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
 		</lblRemCrimsonCache>
 	</frmOptions>
+	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -230,13 +252,50 @@
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Driver Uninstaller (DDU) / Program Usuwający Sterowniki Graficzne.(NVIDIA/AMD)
 
@@ -287,9 +346,7 @@
 
 				*Program DDU, jego twórcy jak i członkowie ekipy nie są w żaden sposób powiązani z programem Driver Sweeper ani z jego twórcami.
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") ZGODA UŻYTKOWNIKA

@@ -57,24 +57,33 @@
 		<lblSelectedGPU>
 			<Text>Sélectionnez Pilote graphique:</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>Note: Tout dommage ou erreurs causés à votre PC est de votre responsabilité.</Text>
 		</Label9>
 		<Label10>
 			<Text>Utiliser DDU en mode sans échec est recommandé.</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>Vérification des mises à jour ...</Text>
 			<Text2>Aucune mise-à-jour trouvé. DDU est à jour.</Text2>
 			<Text3>Mise-à-jour trouvée!</Text3>
 			<Text4>Incapable de vérifier les mises-à-jour.</Text4>
 		</lblUpdate>
+		
 		<OptionsMenuItem>
 			<Text>Options</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
 			<Text>Info</Text>
 		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
 		<ToSMenuItem>
 			<Text>Terms of Service (ToS)</Text>
 		</ToSMenuItem>
@@ -96,6 +105,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Visiter Geforce Thread</Text>
 		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>Mise à jour disponible! Visitez le site Internet DDU maintenant? </Text1>
 			<Text2>Attendez-vous un soutien limité sur les versions plus anciennes que la plus récente. S'il vous plaît vérifier la nouvelle version avant de signaler des bugs. </Text2>
@@ -112,6 +122,7 @@
 			<Text13>Voici les options que vous devez selectioner a l'ecran bleu du menu de recuperation" : Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Il ya un redémarrage en attente , s'il vous plaît, redémarrer avant d'utiliser DDU.</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
@@ -156,16 +167,23 @@
 			<Text41>Value removed.</Text41>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="Options">
 		<btnClose>
 			<Text>Fermer</Text>
 		</btnClose>
-		<lblWinVersion>
-			<Text>Options par GPUs</Text>
-		</lblWinVersion>
-		<Label2>
-			<Text>Options générales</Text>
-		</Label2>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specific Options</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specific Options</Text>
+		</lblAmdspecific>
+		<lblGeneral>
+			<Text>General Options</Text>
+		</lblGeneral>
 		<lblRemNvidiaDirs>
 			<Text>Retirer les dossiers "C:\nVidia" (PAS recommendé) </Text>
 		</lblRemNvidiaDirs>
@@ -210,6 +228,7 @@
 			<Tooltip>Recommandé s’il y a des anomalies graphiques (vitesse ou la corruption visuelle) causée par un cache de données de shader corrompu.|Aussi recommandé si vous passez à une autre marque comme nVidia.</Tooltip>
 		</lblRemCrimsonCache>
 	</frmOptions>
+	
 	<frmLaunch Text="Options de démarrage">
 		<btnAccept>
 			<Text>Exécuter</Text>
@@ -233,13 +252,50 @@
 			<Item3>Mode sans échec avec prise en charge du réseau</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Log Étendu">
 		<btnClose>
 			<Text>Fermer</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Display Driver Uninstaller (DDU) / Utilitaire de désinstallation des pilotes graphiques. (NVIDIA / AMD)
 
@@ -282,9 +338,7 @@
 				Merci à tous ceux qui ont mis leur système en danger (un remerciement tout particulier à Dellon132).
 
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				Display Driver Uninstaller («DDU») ACCORD DE L'UTILISATEUR

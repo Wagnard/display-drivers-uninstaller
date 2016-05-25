@@ -57,24 +57,33 @@
 		<lblSelectedGPU>
 			<Text>Selecione o Driver Gráfico :</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>Nota: Qualquer dano ou erros causados ao seu PC é de sua responsabilidade.</Text>
 		</Label9>
 		<Label10>
 			<Text>O uso do DDU em Modo de Segurança é recomendado.</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>Verificando atualizações...</Text>
 			<Text2>Nenhuma atualização encontrada. O programa está atualizado.</Text2>
 			<Text3>Atualizações encontradas! Espere suporte limitado em versões mais antigas do que a mais recente</Text3>
 			<Text4>Não foi possível obter as atualizações!</Text4>
 		</lblUpdate>
+		
 		<OptionsMenuItem>
 			<Text>Opções</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
 			<Text>Informações</Text>
 		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
 		<ToSMenuItem>
 			<Text>Termos de Serviço</Text>
 		</ToSMenuItem>
@@ -96,6 +105,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Visite o forum da Geforce</Text>
 		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>Atualizações disponiveis! Visitar DDU agora?</Text1>
 			<Text2>Espere por menor suporte em versões antigas do que nas atuais. Por favor cheque por atualização antes de reportar erros.</Text2>
@@ -112,6 +122,7 @@
 			<Text13>Isso é o que você precisa selecionar na tela azul de recuperação : Solucionar-&gt; opções avançadas -&gt; configurações de inicialização.</Text13>
 			<Text14>Existe uma reinicialização pendende, reinicie ante de usar o DDU</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Executando Driver Store cleanUP(Deletando detalhes OEM )...</Text1>
 			<Text2>Limpando diretório</Text2>
@@ -156,13 +167,15 @@
 			<Text41>Valor removido.</Text41>
 			<Text42>Arquivo deletado.</Text42>
 		</UpdateLog>
-
-
 	</frmMain>
+	
 	<frmOptions Text="Options">
 		<btnClose>
 			<Text>Fechar</Text>
 		</btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>Opções especificas NVIDIA</Text>
 		</lblNvidiaspecific>
@@ -224,6 +237,7 @@
 			<Tooltip>Usar SetupAPI ao invés da ferramenta DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
+	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Iniciar</Text>
@@ -247,13 +261,50 @@
 			<Item3>Modo Seguro com Internet</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Log extendido">
 		<btnClose>
 			<Text>Fechar</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Desinstalador de Driver (DDU) / Construido para limpeza de drivers de video.(NVIDIA/AMD)
 
@@ -301,9 +352,7 @@
 
 				*DDU, seus criadores e afiliados não estão afiliados com driver sweeper, ou seus criadores.
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") USER AGREEMENT

@@ -57,45 +57,55 @@
 		<lblSelectedGPU>
 			<Text>Válassz grafikus illesztőprogramot :</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>Figyelem: Bármely esetleges hiba vagy kár, ami a számítógépedet éri, a te felelősséged.</Text>
 		</Label9>
 		<Label10>
 			<Text>DDU csökkentett mód használata ajánlott.</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>Frissítések keresése ...</Text>
 			<Text2>Nem található frissítés. A program a legfrissebb.</Text2>
 			<Text3>Frissítések elérhetőek! A régebbi verziók esetén korlátozott támogatásra számíthatsz.</Text3>
 			<Text4>Frissítések ellenőrzése nem lehetséges!</Text4>
 		</lblUpdate>
-		<OptionsToolStripMenuItem>
+
+		<OptionsMenuItem>
 			<Text>Options</Text>
-		</OptionsToolStripMenuItem>
-		<ToolStripMenuItem1>
-			<Text>?</Text>
-		</ToolStripMenuItem1>
-		<ToSToolStripMenuItem>
-			<Text>ToS</Text>
-		</ToSToolStripMenuItem>
-		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
-		</VisitDDUHomepageToolStripMenuItem>
-		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
-		</SVNToolStripMenuItem>
-		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
-		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
-		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
-		</VisitGuru3dAMDThreadToolStripMenuItem>
-		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
-		</VisitGeforceThreadToolStripMenuItem>
-		<AboutToolStripMenuItem>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Terms of Service (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
 			<Text>About</Text>
-		</AboutToolStripMenuItem>
+		</AboutMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Visit SVN Website</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>Frissítések érhetőek el! Meglátogatod most a DDU honlapját?</Text1>
 			<Text2>A régebbi verziókon korlátozott támogatásra számíthatsz. Kérlek először próbáld ki az újabb verziókat, mielőtt hibát jelentenél.</Text2>
@@ -112,6 +122,7 @@
 			<Text13>A kék helyreállító képernyő esetén a következőt kell kiválasztanod: Hibakeresés-&gt; Haladó beállítások -&gt; Indítópult beállítások.</Text13>
 			<Text14>Egy várakozó újraindítás van folyamatban, a DDU használata előtt kérlek indítsd újra a számítógépet</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Illesztőprogram tároló takarítás végrehajtása (OEM lépés törlése)...</Text1>
 			<Text2>Könyvtár törlése</Text2>
@@ -157,13 +168,23 @@
 			<Text42>Fájl törölve.</Text42>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="Beállítások">
-		<lblWinVersion>
-			<Text>GPU specifikus beállítások</Text>
-		</lblWinVersion>
-		<Label2>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specific Options</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specific Options</Text>
+		</lblAmdspecific>
+		<lblGeneral>
 			<Text>Általános beállítások</Text>
-		</Label2>
+		</lblGeneral>
 		<lblRemNvidiaDirs>
 			<Text>"C:\nVidia" illesztőprogram mappák eltávolítása (NEM ajánlott) </Text>
 		</lblRemNvidiaDirs>
@@ -208,6 +229,7 @@
 			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
 		</lblRemCrimsonCache>
 	</frmOptions>
+	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -231,13 +253,50 @@
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Illesztőprogram eltávolító (DDU) / takarító kijelző illesztőprogramokhoz.(NVIDIA/AMD)
 
@@ -285,9 +344,7 @@
 				Köszönet mindenkinek, aki veszélybe sodorta a rendszerét (különleges köszönet Dellon132-nek)
 				*A DDU, és fejlesztői semmilyen formában nem állnak kapcsolatban a Driver Sweeperrel, vagy annak fejlesztőivel.
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") FELHASZNÁLÓI SZERZŐDÉS

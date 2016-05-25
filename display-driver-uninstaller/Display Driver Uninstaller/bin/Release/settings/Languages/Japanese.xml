@@ -57,18 +57,21 @@
 		<lblSelectedGPU>
 			<Text>グラフィックドライバーを選択：</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>注意：如何なる損害やエラーがあなたのPCに発生しても自己責任です。</Text>
 		</Label9>
 		<Label10>
 			<Text>セーフモードでのDDU の使用を推奨します</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>アップデートを確認しています...</Text>
 			<Text2>アップデートは見つかりませんでした。プログラムは最新版です。</Text2>
 			<Text3>アップデートが見つかりました！最新版ではより多くのサポートが期待できます。</Text3>
 			<Text4>アップデート版を入手することができません！</Text4>
 		</lblUpdate>
+		
 		<lblOffer>
 			<Text>       パートナーからのお勧め</Text>
 			<Tooltip>オプションメニューから無効にできます。</Tooltip>
@@ -76,12 +79,19 @@
 		<imgOffer>
 			<Tooltip>オプションメニューから無効にできます。</Tooltip>
 		</imgOffer>
+		
 		<OptionsMenuItem>
 			<Text>オプション</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
 			<Text>情報</Text>
 		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
 		<ToSMenuItem>
 			<Text>利用規約 (ToS)</Text>
 		</ToSMenuItem>
@@ -103,6 +113,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Geforce スレッドに行く</Text>
 		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>最新版があります！ DDUのウェブサイトに行きますか？</Text1>
 			<Text2>最新版ではより多くのサポートが期待できます。バグ報告の前に最新版を試してください。</Text2>
@@ -119,6 +130,7 @@
 			<Text13>水色の回復画面で次のように選択する必要があります:「オプションの選択」→「トラブルシューティング」→「詳細オプション」→「スタートアップ設定」→ 再起動</Text13>
 			<Text14>再起動を待機中です、DDUを使用する前に再起動してください。</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Driver Storeのクリーンアップを実行中（OEMの削除）...</Text1>
 			<Text2>ディレクトリをクリーンアップ</Text2>
@@ -164,14 +176,14 @@
 			<Text42>ファイルが削除されました。</Text42>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="オプション">
-		<lblOffer>
-			<Text>パートナーからのお勧めを表示する</Text>
-			<Tooltip>オプションメニューから無効にできます。</Tooltip>
-		</lblOffer>
 		<btnClose>
 			<Text>閉じる</Text>
 		</btnClose>
+		<lblOffer>
+			<Text>パートナーからのお勧めを表示する</Text>
+		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>NVIDIA 固有オプション</Text>
 		</lblNvidiaspecific>
@@ -233,6 +245,7 @@
 			<Tooltip>外部ツール DDUDR (DEVCON) ではなく SetupAPI を使用する</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
+	
 	<frmLaunch Text="起動オプション">
 		<btnAccept>
 			<Text>起動</Text>
@@ -256,13 +269,50 @@
 			<Item3>セーフモード(ネットワーク有効)</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="拡張ログ">
 		<btnClose>
 			<Text>閉じる</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
 	<frmAbout Text="DDUについて">
-		<lblWinVersion>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Display Driver Uninstaller (DDU) / ディスプレイ（ GPU ）ドライバー（ NVIDIA/AMD）のために作られたクリーナー
 
@@ -314,9 +364,7 @@
 
 				*DDUとそのクリエイター、関係者は、 Driver Sweeperとそのクリエイターとは何ら提携関係にありません
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") ユーザー使用許諾契約

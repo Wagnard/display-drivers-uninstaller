@@ -57,18 +57,21 @@
 		<lblSelectedGPU>
 			<Text>選擇顯示卡驅動程式：</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>注意:您將為操作本工具造成的損壞或錯誤自行承擔責任。</Text>
 		</Label9>
 		<Label10>
 			<Text>建議在安全模式下使用 DDU。</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>檢查更新中...</Text>
 			<Text2>找不到更新，程式為最新版本。</Text2>
 			<Text3>找到更新!請更新成最新版本以取得更多的支援。</Text3>
 			<Text4>無法擷取更新!</Text4>
 		</lblUpdate>
+		
 		<lblOffer>
 			<Text>       我們的合作夥伴提供</Text>
 			<Tooltip>您可以從「選項」選單將這停用。</Tooltip>
@@ -76,12 +79,19 @@
 		<imgOffer>
 			<Tooltip>您可以從「選項」選單將這停用。</Tooltip>
 		</imgOffer>
+		
 		<OptionsMenuItem>
 			<Text>選項</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
 			<Text>資訊</Text>
 		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
 		<ToSMenuItem>
 			<Text>服務條款(ToS)</Text>
 		</ToSMenuItem>
@@ -103,6 +113,7 @@
 		<VisitGeforceMenuItem>
 			<Text>造訪 Geforce 討論串</Text>
 		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>有更新可用!立即造訪 DDU 網站嗎?</Text1>
 			<Text2>最新版本比較舊版本有更多的支援。報告錯誤前請檢查較新的版本。</Text2>
@@ -119,6 +130,7 @@
 			<Text13>這裡就是您需要選擇藍色修復畫面:疑難排解-&gt; 進階選項-&gt; 啟動設定。</Text13>
 			<Text14>正在等候重新開機，請在使用 DDU 前重新開機</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>執行 Driver 存儲區清理中(刪除 OEM 驅動的步驟)...</Text1>
 			<Text2>清理目錄中</Text2>
@@ -164,14 +176,15 @@
 			<Text42>檔案已刪除。</Text42>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="選項">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
 		<lblOffer>
 			<Text>顯示我們的合作伙伴提供</Text>
 			<Tooltip>您可以從「選項」選單將這停用。</Tooltip>
 		</lblOffer>
-		<btnClose>
-			<Text>Close</Text>
-		</btnClose>
 		<lblNvidiaspecific>
 			<Text>NVIDIA 特定選項</Text>
 		</lblNvidiaspecific>
@@ -233,6 +246,7 @@
 			<Tooltip>使用 SetupAPI 而不是外部工具 DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
+	
 	<frmLaunch Text="啟動選項">
 		<btnAccept>
 			<Text>啟動</Text>
@@ -256,13 +270,50 @@
 			<Item3>安全模式 (含網路功能)</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>關閉</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Display Driver Uninstaller (DDU) / 顯示卡(GPU)驅動程式(NVIDIA/AMD)清除工具
 
@@ -311,12 +362,8 @@
 				感謝任何為了測試本工具，把他們電腦置於危險之中的人(特別感謝 Dellon132)
 
 				* DDU，它的創作者和附屬不以任何方式隸屬於 Driver Sweeper 或其創造者。
-
-
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") 使用者授權合約

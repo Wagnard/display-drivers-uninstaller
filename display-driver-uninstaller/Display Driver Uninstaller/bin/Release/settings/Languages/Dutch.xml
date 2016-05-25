@@ -57,18 +57,21 @@
 		<lblSelectedGPU>
 			<Text>Selecteer grafische driver :</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>Opmerking: Eventuele schade of fouten veroorzaakt aan uw pc is uw verantwoordelijkheid.</Text>
 		</Label9>
 		<Label10>
 			<Text>Het gebruiken van DDU word in Veilige Modus aanbeloven. |</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>Controloren of er nieuwe updates zijn...</Text>
 			<Text2>Geen updates gevonden. Programma is up-to-date.</Text2>
 			<Text3>Updates gevonden! Verwacht beperkte ondersteuning op oudere versies dan de meest recente versie.</Text3>
 			<Text4>Kan geen updates halen!</Text4>
 		</lblUpdate>
+		
 		<lblOffer>
 			<Text>       Offers from our partners</Text>
 			<Tooltip>You can disable this from the option menu.</Tooltip>
@@ -76,12 +79,19 @@
 		<imgOffer>
 			<Tooltip>You can disable this from the option menu.</Tooltip>
 		</imgOffer>
+		
 		<OptionsMenuItem>
 			<Text>Opties</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
 			<Text>Info</Text>
 		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
 		<ToSMenuItem>
 			<Text>Algemene Voorwaarden (ToS)</Text>
 		</ToSMenuItem>
@@ -103,6 +113,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Bezoek de Geforce Thread</Text>
 		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>Updates gevonden! Nu de DDU website bezoeken?</Text1>
 			<Text2>Verwacht beperkte ondersteuning op oudere versies dan de meest recente versie. Alstublieft alleen fouten rapporteren van de nieuwste versie van DDU.</Text2>
@@ -119,6 +130,7 @@
 			<Text13>Dit is wat je moet selecteren in het blauwe menu van Geavanceerde opstartopties: Problemen oplossen -&gt; Geavanceerde opties -&gt; Opstartinstellingen.</Text13>
 			<Text14>Er is een herstart in afwachting, a.u.b. opnieuw opstarten voordat u DDU gebruikt.</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Driver Winkel schoonmaak word uitgevoerd(Verwijdert OEM step)...</Text1>
 			<Text2>Map schoonmaken</Text2>
@@ -163,17 +175,15 @@
 			<Text41>Waarde verwijdert.</Text41>
 			<Text42>Bestand verwijdert.</Text42>
 		</UpdateLog>
-
-
 	</frmMain>
+	
 	<frmOptions Text="Opties">
-		<lblOffer>
-			<Text>Show Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
-		</lblOffer>
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>Specifieke NVIDIA Opties</Text>
 		</lblNvidiaspecific>
@@ -235,6 +245,7 @@
 			<Tooltip>Gebruik SetupAPI inplaats van de externe tool DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
+	
 	<frmLaunch Text="Opstart Opties">
 		<btnAccept>
 			<Text>Starten</Text>
@@ -258,13 +269,50 @@
 			<Item3>Veilige Modus Met Netwerk Mogelijkheden</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Uitgebreide log">
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
 	<frmAbout Text="Over DDU">
-		<lblWinVersion>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Driver Uninstaller (DDU) / Schoonmaker gemaakt voor Display Drivers.(NVIDIA/AMD/Intel)
 
@@ -311,9 +359,7 @@
 
 				Vertaler: MojoW
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") GEBRUIKERSOVEREENKOMST

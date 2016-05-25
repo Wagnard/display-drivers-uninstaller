@@ -57,45 +57,55 @@
 		<lblSelectedGPU>
 			<Text>Одабери драјвер за граф.кар.:</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>Напомена: Било каква штета или грешке проузроковане Вашем компјутеру искључиво су Ваша Одговорност!</Text>
 		</Label9>
 		<Label10>
 			<Text>Коришћење DDU у Safe Mode-у је препоручљиво!</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>Провера да ли постоји новија верзија програма...</Text>
 			<Text2>Не постоји новија верзија програма. Користите тренутно најновију верзију.</Text2>
 			<Text3>Пронађена новија верзија програма! Старије верзије имају ограничену подршку уодносу на новије.</Text3>
 			<Text4>Неуспешан прелазак на нову верзију програма!</Text4>
 		</lblUpdate>
-		<OptionsToolStripMenuItem>
+
+		<OptionsMenuItem>
 			<Text>Options</Text>
-		</OptionsToolStripMenuItem>
-		<ToolStripMenuItem1>
-			<Text>?</Text>
-		</ToolStripMenuItem1>
-		<ToSToolStripMenuItem>
-			<Text>ToS</Text>
-		</ToSToolStripMenuItem>
-		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
-		</VisitDDUHomepageToolStripMenuItem>
-		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
-		</SVNToolStripMenuItem>
-		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
-		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
-		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
-		</VisitGuru3dAMDThreadToolStripMenuItem>
-		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
-		</VisitGeforceThreadToolStripMenuItem>
-		<AboutToolStripMenuItem>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Terms of Service (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
 			<Text>About</Text>
-		</AboutToolStripMenuItem>
+		</AboutMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Visit SVN Website</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>Нова верзија је расположива! Желите ли сада да посетите DDU сајт?</Text1>
 			<Text2>Очекујте ограничену подршку за старије верзије уодносу на тренутно најновије. Молимо покушајте са најновијом верзијом пре пријављивања грешака.</Text2>
@@ -112,6 +122,7 @@
 			<Text13>Ово треба да изаберете на плавом Recovery екрану: Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Неопходан је рестарт система, молимо да прво рестартујете оперативни систем па тек онда наставите са коришћењем DDU програма.</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Извршавање Driver Store cleanUP-а (брисање OEM step-а)...</Text1>
 			<Text2>Чишћење Directory-а</Text2>
@@ -157,13 +168,23 @@
 			<Text42>Фајл обрисан.</Text42>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="Опције">
-		<lblWinVersion>
-			<Text>GPU специфичне опције</Text>
-		</lblWinVersion>
-		<Label2>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specific Options</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specific Options</Text>
+		</lblAmdspecific>
+		<lblGeneral>
 			<Text>Главне опције</Text>
-		</Label2>
+		</lblGeneral>
 		<lblRemNvidiaDirs>
 			<Text>Уклони:  "C:\nVidia"  ...драјвер директоријуме (фолдере) (НИЈЕ ПРЕПОРУЧЉИВО!) </Text>
 		</lblRemNvidiaDirs>
@@ -208,6 +229,7 @@
 			<Tooltip>Препоручљиво уклонити ако приметите аномалије у вези приказа графике (успорења или артефакте) проузроковане оштећеним Shader Cache подацима.|Такође препоручљиво уклонити ако прелазите на другог произвођача графичких картица, некu nVidia GeForce графичку картицу рецимо.</Tooltip>
 		</lblRemCrimsonCache>
 	</frmOptions>
+	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -231,13 +253,50 @@
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Display Driver Uninstaller (DDU) / Програм намењен за уклањање (GPU) драјвера.(NVIDIA/AMD)
 
@@ -247,9 +306,7 @@
 				Тренутни ефекат након употребе oвог програма сличан је као када је Windows у "свеже инсталираном" стању.
 
 
-
 				Ovaj програм понаша се врло слично програму "Driver Sweeper" и има све додатне погодности поменуте изнад.
-
 
 
 				Ако имате неких проблема при инсталацији старијег или неког новијег драјвера за NVIDIA/AMD графичку картицу дајте овом
@@ -258,8 +315,6 @@
 
 
 				ПРЕПОРУКЕ ЗА УПОТРЕБУ:
-
-
 
 				- Програм може бити коришћен у нормалном Windows моду, али за апсолутну стабилност када користите DDU Windows-ов Safe Mode
 				је увeк најбоље решење.
@@ -271,7 +326,6 @@
 				прилично безбедан).
 
 
-
 				- Ако имате или сте имали проблема са драјверима за NVIDIA/AMD графичку картицу, а овај програм Вам је помогао у решавању тих
 				проблема у којима сте били или сте тренутно, молимо да поделите Ваше искуство са нама.
 
@@ -281,12 +335,9 @@
 
 				-------------------------------
 
-
-
 				Програм креирао: Wagnard
 
 				Сувласник: Shady757
-
 
 				Тестер: Dellon132
 
@@ -304,9 +355,7 @@
 				*DDU, његови креатори и остали који су учествовали у креирању програма нису ниукаквој вези са програмом Driver Sweeper или
 				његовим креаторима.
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") КОРИСНИЧКИ УГОВОР (USER AGREEMENT)

@@ -69,33 +69,41 @@
 			<Text3>发现新版本！请立即更新以获得更好的驱动清理服务！</Text3>
 			<Text4>无法获取更新信息！请检查网络连接！</Text4>
 		</lblUpdate>
+		
 		<OptionsToolStripMenuItem>
 			<Text>选项</Text>
 		</OptionsToolStripMenuItem>
-		<ToolStripMenuItem1>
-			<Text>帮助</Text>
-		</ToolStripMenuItem1>
-		<ToSToolStripMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
 			<Text>用户协议</Text>
-		</ToSToolStripMenuItem>
-		<VisitDDUHomepageToolStripMenuItem>
-			<Text>浏览 DDU 软件官方网站</Text>
-		</VisitDDUHomepageToolStripMenuItem>
-		<SVNToolStripMenuItem>
-			<Text>浏览 Github 上的项目主页</Text>
-		</SVNToolStripMenuItem>
-		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>浏览 Guru3d 论坛的 NVIDIA 板块</Text>
-		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
-		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>浏览 Guru3d 论坛的 AMD 板块</Text>
-		</VisitGuru3dAMDThreadToolStripMenuItem>
-		<VisitGeforceThreadToolStripMenuItem>
-			<Text>浏览 Geforce 论坛的相关主题</Text>
-		</VisitGeforceThreadToolStripMenuItem>
-		<AboutToolStripMenuItem>
+		</ToSMenuItem>
+		<AboutMenuItem>
 			<Text>关于</Text>
-		</AboutToolStripMenuItem>
+		</AboutMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>浏览 DDU 软件官方网站</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>浏览 Github 上的项目主页</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>浏览 Guru3d 论坛的 NVIDIA 板块</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>浏览 Guru3d 论坛的 AMD 板块</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>浏览 Geforce 论坛的相关主题</Text>
+		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>检测到新版本！是否访问 DDU 官方网站下载最新版本？</Text1>
 			<Text2>旧版本的驱动清理能力远不如新版本。在向论坛报告本软件错误前，请先检查有无更新版本。</Text2>
@@ -112,6 +120,7 @@
 			<Text13>当您在蓝色背景的恢复模式时，请根据以下步骤：疑难解答-&gt;高级选项-&gt;启动设置。</Text13>
 			<Text14>检测到当前系统有一个挂起的重启行为，如果您想要使用本软件，请先重新启动计算机</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>正在执行 Driver Store 清理（删除 OEM 驱动的步骤）...</Text1>
 			<Text2>正在清理目录</Text2>
@@ -157,13 +166,23 @@
 			<Text42>文件成功删除！</Text42>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="选项">
-		<lblWinVersion>
-			<Text>GPU 设置</Text>
-		</lblWinVersion>
-		<Label2>
-			<Text>常规设置</Text>
-		</Label2>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specific Options</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specific Options</Text>
+		</lblAmdspecific>
+		<lblGeneral>
+			<Text>General Options</Text>
+		</lblGeneral>
 		<CheckBox1>
 			<Text>移除“C:\nVidia”驱动文件夹【不推荐】</Text>
 		</CheckBox1>
@@ -212,6 +231,7 @@
 			<Tooltip>当您有两块不同的能够调用 Vulkan API 的显卡时不推荐。</Tooltip>
 		</cbxVulkan>
 	</frmOptions>
+	
 	<frmLaunch Text="安全模式提示框">
 		<btnAccept>
 			<Text>继续加载</Text>
@@ -235,13 +255,50 @@
 			<Item3>带网络连接的安全模式</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="扩展日志">
 		<btnClose>
 			<Text>关闭</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				显卡驱动智能卸载工具（Display Driver Uninstaller，缩写为 DDU）是为显示驱动而生的。（NVIDIA/AMD）
 
@@ -290,9 +347,7 @@
 
 				*DDU 软件及其开发者们与 Driver Sweeper 及其开发者们无关。
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				显卡驱动卸载工具（Display Driver Uninstaller，即“DDU”）用户协议
@@ -338,5 +393,6 @@
 		</CreditsN>
 		-->
 	</LanguageCredits>
+
 
 </DisplayDriverUninstaller>

@@ -170,13 +170,12 @@
 	</frmMain>
 	
 	<frmOptions Text="Options">
-		<lblOffer>
-		  <Text>Show Offers from our partners</Text>
-		  <Tooltip>You can disable this from the option menu.</Tooltip>
-		</lblOffer>
 		<btnClose>
 		  <Text>Close</Text>
 		</btnClose>
+		<lblOffer>
+		  <Text>Show Offers from our partners</Text>
+		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>NVIDIA Specific Options</Text>
 		</lblNvidiaspecific>
@@ -278,20 +277,20 @@
 			<Text>Options</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy Enabled</Text>
+			<Text>Copy enabled</Text>
 		</copyMenuItem>
 		
 		<filtersMenuItem>
 			<Text>Filters</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show Events</Text>
+			<Text>Show events</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show Warnings</Text>
+			<Text>Show warnings</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show Errors</Text>
+			<Text>Show errors</Text>
 		</errorsMenuItem>
 	</frmLog>
   
@@ -301,7 +300,7 @@
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout>
+	<frmAbout Text="About">
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>

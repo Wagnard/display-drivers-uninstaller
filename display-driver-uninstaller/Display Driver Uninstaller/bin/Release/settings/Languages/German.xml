@@ -57,45 +57,55 @@
 		<lblSelectedGPU>
 			<Text>Grafiktreiber auswählen:</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>Hinweis: Jegliche Schäden oder Fehler, die Ihrem Computer zugefügt werden, liegen in Ihrer Verantwortung.</Text>
 		</Label9>
 		<Label10>
 			<Text>Das Verwenden von DDU im abgesicherten Modus wird empfohlen.</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>Suche nach Updates...</Text>
 			<Text2>Keine Updates gefunden. Programm ist auf dem neuesten Stand.</Text2>
 			<Text3>Updates gefunden! Eingeschränkte Unterstützung für ältere Versionen ist zu erwarten.</Text3>
 			<Text4>Kann keine Updates abrufen!</Text4>
 		</lblUpdate>
-		<OptionsToolStripMenuItem>
+
+		<OptionsMenuItem>
 			<Text>Options</Text>
-		</OptionsToolStripMenuItem>
-		<ToolStripMenuItem1>
-			<Text>?</Text>
-		</ToolStripMenuItem1>
-		<ToSToolStripMenuItem>
-			<Text>ToS</Text>
-		</ToSToolStripMenuItem>
-		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Visit official DDU Website</Text>
-		</VisitDDUHomepageToolStripMenuItem>
-		<SVNToolStripMenuItem>
-			<Text>Visit SVN Website</Text>
-		</SVNToolStripMenuItem>
-		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
-		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
-		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
-		</VisitGuru3dAMDThreadToolStripMenuItem>
-		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Visit Geforce Thread</Text>
-		</VisitGeforceThreadToolStripMenuItem>
-		<AboutToolStripMenuItem>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Terms of Service (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
 			<Text>About</Text>
-		</AboutToolStripMenuItem>
+		</AboutMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Visit official DDU Website</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Visit SVN Website</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Visit Guru3d NVIDIA Thread</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Visit Guru3d AMD Thread</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Visit Geforce Thread</Text>
+		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>Updates sind erhältlich! Möchten Sie jetzt die DDU Webseite besuchen?</Text1>
 			<Text2>Für ältere Versionen besteht eine eingeschränkte Unterstützung. Bitte überprüfen Sie, ob neue Versionen verfügbar sind bevor Sie Fehler melden.</Text2>
@@ -112,6 +122,7 @@
 			<Text13>Folgendes müssen Sie bei einem blauen Wiederherstellungsbildschirm auswählen: Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Ein noch ausstehender Neustart ist vorhanden, bitte vor der Benutzung von DDU neustarten</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Ausführen von Driver Store Säuberung (Löschen vom OEM Schritt)...</Text1>
 			<Text2>Säubern des Verzeichnis</Text2>
@@ -157,13 +168,23 @@
 			<Text42>Datei gelöscht.</Text42>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="Optionen">
-		<lblWinVersion>
-			<Text>Grafikkartenspezifische Optionen</Text>
-		</lblWinVersion>
-		<Label2>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specific Options</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specific Options</Text>
+		</lblAmdspecific>
+		<lblGeneral>
 			<Text>Allgemeine Optionen</Text>
-		</Label2>
+		</lblGeneral>
 		<lblRemNvidiaDirs>
 			<Text>Treiberordner "C:\nVidia" entfernen (NICHT empfohlen)</Text>
 		</lblRemNvidiaDirs>
@@ -208,6 +229,7 @@
 			<Tooltip>Empfohlen, falls aufgrund von defekten Shader-Cache-Daten grafische Unregelmäßigkeiten (Geschwindigkeit oder sichtbare Fehler) auftreten.|Ebenfalls empfohlen, falls Sie zu einem anderen Hersteller, wie nVidia, wechseln.</Tooltip>
 		</lblRemCrimsonCache>
 	</frmOptions>
+	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -231,13 +253,50 @@
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Display Driver Uninstaller (DDU) / Cleaner für Grafiktreiber (NVIDIA/AMD)
 
@@ -285,9 +344,7 @@
 
 				*DDU, seine Ersteller und Partner sind in keiner Weise mit Driver Sweeper oder seinen Erstellern verbunden.
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				NUTZERVEREINBARUNG - Display Driver Uninstaller ("DDU")

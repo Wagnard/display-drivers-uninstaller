@@ -57,45 +57,55 @@
 		<lblSelectedGPU>
 			<Text>Виберіть графічний драйвер:</Text>
 		</lblSelectedGPU>
+		
 		<Label9>
 			<Text>Зауваження: Будь-які пошкодження чи помилки, що виникнуть у вашому комп'ютері, на вашій відповідальності.</Text>
 		</Label9>
 		<Label10>
 			<Text>Радимо використовувати DDU в безпечному режимі.</Text>
 		</Label10>
+		
 		<lblUpdate>
 			<Text>Перевіряємо наявність оновлень...</Text>
 			<Text2>Оновлень не виявлено. Програма в актуальному стані.</Text2>
 			<Text3>Виявлено оновлення! Очікуйте на обмежену підтримку версій, старіших ніж найостанніша.</Text3>
 			<Text4>Не вдалося завантажити оновлення!</Text4>
 		</lblUpdate>
-		<OptionsToolStripMenuItem>
+
+		<OptionsMenuItem>
 			<Text>Параметри</Text>
-		</OptionsToolStripMenuItem>
-		<ToolStripMenuItem1>
-			<Text>Довідка</Text>
-		</ToolStripMenuItem1>
-		<ToSToolStripMenuItem>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Extended log</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Links</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
 			<Text>Угода з користувачем</Text>
-		</ToSToolStripMenuItem>
-		<VisitDDUHomepageToolStripMenuItem>
-			<Text>Відвідайте веб-сайт DDU</Text>
-		</VisitDDUHomepageToolStripMenuItem>
-		<SVNToolStripMenuItem>
-			<Text>Відвідайте веб-сайт SVN</Text>
-		</SVNToolStripMenuItem>
-		<VisitGuru3dNVIDIAThreadToolStripMenuItem>
-			<Text>Відвідайте тему NVIDIA на Guru3d</Text>
-		</VisitGuru3dNVIDIAThreadToolStripMenuItem>
-		<VisitGuru3dAMDThreadToolStripMenuItem>
-			<Text>Відвідайте тему AMD Guru3d</Text>
-		</VisitGuru3dAMDThreadToolStripMenuItem>
-		<VisitGeforceThreadToolStripMenuItem>
-			<Text>Відвідайте тему Geforce</Text>
-		</VisitGeforceThreadToolStripMenuItem>
-		<AboutToolStripMenuItem>
+		</ToSMenuItem>
+		<AboutMenuItem>
 			<Text>Про DDU</Text>
-		</AboutToolStripMenuItem>
+		</AboutMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Відвідайте веб-сайт DDU</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Відвідайте веб-сайт SVN</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Відвідайте тему NVIDIA на Guru3d</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Відвідайте тему AMD Guru3d</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Відвідайте тему Geforce</Text>
+		</VisitGeforceMenuItem>
+		
 		<Messages>
 			<Text1>Доступні оновлення! Відвідати веб-сайт DDU зараз?</Text1>
 			<Text2>Очікуйте на обмежену підтримку версій, старіших ніж найостанніша. Будь ласка, перевірте нову версію до повідомлень про помилки.</Text2>
@@ -112,6 +122,7 @@
 			<Text13>Ось що вам необхідно вибрати на синьому екрані відновлення: Виправити неполадки -&gt; Додаткові параметри-&gt; Настройки завантаження.</Text13>
 			<Text14>Існує відкладене перезавантаження, виконайте його, перш ніж використовувати DDU</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Виконання очищення сховища драйверів Windows (крок видалення OEM)...</Text1>
 			<Text2>Очищення каталогу</Text2>
@@ -157,13 +168,23 @@
 			<Text42>Файл видалено.</Text42>
 		</UpdateLog>
 	</frmMain>
+	
 	<frmOptions Text="Параметри">
-		<lblWinVersion>
-			<Text>Параметри, специфічні для GPU</Text>
-		</lblWinVersion>
-		<Label2>
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Show Offers from our partners</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specific Options</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specific Options</Text>
+		</lblAmdspecific>
+		<lblGeneral>
 			<Text>Загальні параметри</Text>
-		</Label2>
+		</lblGeneral>
 		<CheckBox1>
 			<Text>Видалити папку драйверів "C:\nVidia" (НЕ рекомендовано)</Text>
 		</CheckBox1>
@@ -212,6 +233,7 @@
 			<Tooltip>НЕ рекомендовано, якщо у вас є 2 різні графічні процесори, здатні використовувати Vulkan API.</Tooltip>
 		</cbxVulkan>
 	</frmOptions>
+	
 	<frmLaunch Text="Варіанти запуску">
 		<btnAccept>
 			<Text>Запустити</Text>
@@ -235,13 +257,50 @@
 			<Item3>Безпечний режим з підтримкою мережі</Item3>
 		</cbBootOption>
 	</frmLaunch>
+	
 	<frmLog Text="Розширений журнал">
 		<btnClose>
 			<Text>Закрити</Text>
 		</btnClose>
+		<btnOpenLog>
+			<Text>Open log</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Options</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copy enabled</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filters</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Show events</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Show warnings</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Show errors</Text>
+		</errorsMenuItem>
 	</frmLog>
-	<frmAbout>
-		<lblWinVersion>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Trying to create a System Restore point.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Close</Text>
+		</btnClose>
+	</frmAbout>
+
+	<Misc>
+		<About>
 			<Text>
 				Display Driver Uninstaller (DDU) — програма для видалення відеодрайверів (NVIDIA/AMD/Intel)
 
@@ -280,11 +339,8 @@
 				Дякую всім, хто піддавав свою систему ризику. (Особлива подяка Dellon132).
 
 				* DDU, його автори та партнери жодним чином не пов'язані з Driver Sweeper, або його авторами.
-
 			</Text>
-		</lblWinVersion>
-	</frmAbout>
-	<Misc>
+		</About>
 		<Tos>
 			<Text>
 				УГОДА З КОРИСТУВАЧЕМ Display Driver Uninstaller ("DDU")
