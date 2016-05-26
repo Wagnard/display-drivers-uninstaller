@@ -4,7 +4,8 @@ Imports System.Reflection
 Imports System.Text
 
 Public Class Languages
-	Private Shared newLineStr As String = "|"
+	Private Shared ReadOnly sysNewLine As String = Environment.NewLine
+	'Private Shared newLineStr As String = "|"
 	Private Shared ReadOnly threadLock As String = "You shall not pass!" 'lock access for one thread at time
 
 	Private Shared isEngLoaded As Boolean = False
@@ -61,27 +62,26 @@ Public Class Languages
 
 	''' <param name="parent">Which form (Form1, fmrLaunch)</param>
 	''' <param name="type">Name of propery (Me.Text)</param>
-	''' <param name="returnValue">If no translation (english or current) found, return given value</param>
 	''' <returns>Translated text. If language not found, return English text.</returns> 
-	Public Shared Function GetParentTranslation(ByVal parent As String, ByVal type As String, Optional ByVal returnValue As String = Nothing) As String
+	Public Shared Function GetParentTranslation(ByVal parent As String, ByVal type As String, Optional ByVal forceEnglish As Boolean = False) As String
 		SyncLock (threadLock)
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
 			End If
 
-			Dim tc As TranslatedControl = GetParent(useTranslated, parent)
+			Dim tc As TranslatedControl = GetParent(If(forceEnglish, False, useTranslated), parent)
 			Dim noTranslation As Boolean = False
 
 			If tc Is Nothing Then
-				If Not useTranslated Then
-					Return returnValue
+				If forceEnglish Or Not useTranslated Then
+					Return Nothing
 				End If
 notFound:
 				tc = GetParent(False, parent)
 				noTranslation = True
 
 				If tc Is Nothing Then
-					Return returnValue
+					Return Nothing
 				End If
 			End If
 
@@ -89,7 +89,7 @@ notFound:
 				For Each kvp As KeyValuePair(Of String, String) In tc.Attributes
 					If (kvp.Key.Equals(type, StringComparison.OrdinalIgnoreCase)) Then
 						If Not String.IsNullOrEmpty(kvp.Value) Then
-							Return kvp.Value.Trim(vbCrLf.ToCharArray()).Replace(newLineStr, String.Empty)
+							Return kvp.Value.Trim(sysNewLine.ToCharArray())
 						Else
 							If noTranslation Then
 								Return String.Empty
@@ -101,45 +101,44 @@ notFound:
 				Next
 			End If
 
-			Return returnValue
+			Return Nothing
 		End SyncLock
 	End Function
 
 	''' <param name="parent">In which form control is located (Form1, fmrLaunch)</param>
 	''' <param name="control">Name of control, eg Button1</param>
 	''' <param name="type">What attribute to return. Text, Tooltip etc.</param>
-	''' <param name="returnValue">If no translation (english or current) found, return given value</param>
 	''' <returns>Translated text. If language not found, return English text</returns> 
-	Public Shared Function GetTranslation(ByVal parent As String, ByVal control As String, ByVal type As String, Optional ByVal returnValue As String = Nothing) As String
+	Public Shared Function GetTranslation(ByVal parent As String, ByVal control As String, ByVal type As String, Optional ByVal forceEnglish As Boolean = False) As String
 		SyncLock (threadLock)
 			If IsNullOrWhitespace(parent) OrElse IsNullOrWhitespace(control) OrElse IsNullOrWhitespace(type) Then
-				Return returnValue
+				Return Nothing
 			End If
 
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
 			End If
 
-			Dim tc As TranslatedControl = GetControl(useTranslated, parent, control)
+			Dim tc As TranslatedControl = GetControl(If(forceEnglish, False, useTranslated), parent, control)
 			Dim noTranslation As Boolean = False
 
 			If tc Is Nothing Then
-				If Not useTranslated Then
-					Return returnValue
+				If forceEnglish Or Not useTranslated Then
+					Return Nothing
 				End If
 notFound:
 				tc = GetControl(False, parent, control)
 				noTranslation = True
 
 				If tc Is Nothing Then
-					Return returnValue
+					Return Nothing
 				End If
 			End If
 
 			For Each kvp As KeyValuePair(Of String, String) In tc.Values
 				If (kvp.Key.Equals(type, StringComparison.OrdinalIgnoreCase)) Then
 					If Not String.IsNullOrEmpty(kvp.Value) Then
-						Return kvp.Value.Replace(newLineStr, vbCrLf).Trim(vbCrLf.ToCharArray())
+						Return kvp.Value.Trim(sysNewLine.ToCharArray())
 					Else
 						Exit For
 					End If
@@ -147,7 +146,7 @@ notFound:
 			Next
 
 			If noTranslation Then
-				Return returnValue
+				Return Nothing
 			Else
 				GoTo notFound
 			End If
@@ -158,16 +157,16 @@ notFound:
 	''' <param name="control">Name of control, eg Button1</param>
 	''' <param name="beginsWith">Begins with text. Useful for getting array of values (eg. ComboBox/ListBox)</param>
 	''' <returns>Translated text array. If language not found, return as English</returns> 
-	Public Shared Function GetTranslationList(ByVal parent As String, ByVal control As String, ByVal beginsWith As String) As List(Of String)
+	Public Shared Function GetTranslationList(ByVal parent As String, ByVal control As String, ByVal beginsWith As String, Optional ByVal forceEnglish As Boolean = False) As List(Of String)
 		SyncLock (threadLock)
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
 			End If
 
-			Dim tc As TranslatedControl = GetControl(useTranslated, parent, control)
+			Dim tc As TranslatedControl = GetControl(If(forceEnglish, False, useTranslated), parent, control)
 
 			If tc Is Nothing Then
-				If Not useTranslated Then
+				If forceEnglish Or Not useTranslated Then
 					Return Nothing
 				End If
 
@@ -180,7 +179,7 @@ notFound:
 
 				For Each kvp As KeyValuePair(Of String, String) In tc.Values
 					If (kvp.Key.StartsWith(beginsWith, StringComparison.OrdinalIgnoreCase)) Then
-						items.Add(kvp.Value.Replace(newLineStr, String.Empty))
+						items.Add(kvp.Value.Replace(sysNewLine, String.Empty))
 					End If
 				Next
 				Return items
@@ -370,12 +369,12 @@ notFound:
 					' Attributes = ISO="en-US" , Text="English"
 
 					If reader.NodeType <> XmlNodeType.Element Or Not reader.Name.Equals(Application.Settings.AppName.Replace(" ", ""), StringComparison.OrdinalIgnoreCase) Or Not reader.HasAttributes Then
-						Throw New InvalidDataException("Language file's format is invalid!" & vbCrLf & String.Format("Root node doesn't match '{0}'", Application.Settings.AppName.Replace(" ", "")) & vbCrLf & "Or missing attributes 'ISO' and 'Text'")
+						Throw New InvalidDataException("Language file's format is invalid!" & sysNewLine & String.Format("Root node doesn't match '{0}'", Application.Settings.AppName.Replace(" ", "")) & sysNewLine & "Or missing attributes 'ISO' and 'Text'")
 					End If
 
 					Dim lang_iso As String = Nothing
 					Dim lang_text As String = Nothing
-					Dim newLineChr As String = "|"
+					'	Dim newLineChr As String = "|"
 
 					' <DisplayDriverUninstaller ISO="en-US" Text="English"> <-- read ISO & Text attribute's values
 					Do While reader.MoveToNextAttribute()
@@ -384,20 +383,20 @@ notFound:
 								lang_iso = reader.Value
 							ElseIf reader.Name.Equals("Text", StringComparison.OrdinalIgnoreCase) Then
 								lang_text = reader.Value
-							ElseIf reader.Name.Equals("NewLineChar", StringComparison.OrdinalIgnoreCase) Then
-								newLineChr = reader.Value
+								'ElseIf reader.Name.Equals("NewLineChar", StringComparison.OrdinalIgnoreCase) Then
+								'	newLineChr = reader.Value
 							End If
 						End If
 					Loop
 
 					' ISO="en-US" and/or Text="English" attribute(s) not found 
 					If String.IsNullOrEmpty(lang_iso) Or String.IsNullOrEmpty(lang_text) Then
-						Throw New InvalidDataException("Language file's format is invalid!" & vbCrLf & "Missing required attributes 'ISO' and 'Text'" & vbCrLf & "(eg. 'ISO=""en-US""' and 'Text=""English""' )")
+						Throw New InvalidDataException("Language file's format is invalid!" & sysNewLine & "Missing required attributes 'ISO' and 'Text'" & sysNewLine & "(eg. 'ISO=""en-US""' and 'Text=""English""' )")
 					End If
 
-					If Not IsNullOrWhitespace(newLineChr) Then
-						newLineStr = newLineChr
-					End If
+					'If Not IsNullOrWhitespace(newLineChr) Then
+					'	newLineStr = newLineChr
+					'End If
 
 					Dim file As TranslatedFile = New TranslatedFile(lang_iso, lang_text, langFile)
 					Dim controls As List(Of TranslatedControl)
@@ -455,7 +454,7 @@ notFound:
 
 							If reader.HasAttributes Then 'parent has attributes. <frmMain Text="..."> <-- 'Text' attribute
 								Do While reader.MoveToNextAttribute()
-									parent.Attributes.Add(reader.Name, reader.Value.Replace(newLineStr, vbCrLf))
+									parent.Attributes.Add(reader.Name, reader.Value.Trim(sysNewLine.ToCharArray()))
 								Loop
 							End If
 
@@ -467,7 +466,7 @@ notFound:
 
 									If reader.HasAttributes Then  ' has attributes? Shouldn't, but may used in future if needed
 										Do While reader.MoveToNextAttribute()
-											ctrl.Attributes.Add(reader.Name, reader.Value.Replace(newLineStr, vbCrLf))
+											ctrl.Attributes.Add(reader.Name, reader.Value.Trim(sysNewLine.ToCharArray()))
 										Loop
 									End If
 
@@ -499,17 +498,17 @@ notFound:
 			End Using
 		Catch ex As Exception
 			'if English translation is badly formatted/not readable (should never be)
-			If langFile.Equals("en-US", StringComparison.OrdinalIgnoreCase) Or Not onlyCheckValid Then
-				MsgBox(ex.Message + ex.StackTrace)
+			If langFile.EndsWith("\English.xml", StringComparison.OrdinalIgnoreCase) Or Not onlyCheckValid Then
+				MsgBox(ex.Message & sysNewLine & ex.StackTrace)
 			End If
 
 			If Not onlyCheckValid Then
-				Throw New InvalidDataException(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", vbCrLf, langFile))
+				Throw New InvalidDataException(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", sysNewLine, langFile))
 			Else
 				If TypeOf (ex) Is InvalidDataException Then
-					MessageBox.Show(ex.Message & vbCrLf & String.Format("{0}File: '{1}'", vbCrLf, langFile))
+					MessageBox.Show(ex.Message & String.Format("{0}{0}File: '{1}'", sysNewLine, langFile))
 				Else
-					MessageBox.Show(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", vbCrLf, langFile))
+					MessageBox.Show(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", sysNewLine, langFile))
 				End If
 			End If
 
@@ -555,6 +554,163 @@ notFound:
 		Return Nothing
 	End Function
 
+	Public Shared Sub CheckLanguageFileForErrors(ByVal logFile As String, ByVal skipSuccess As Boolean, ByVal langOption As LanguageOption)
+		Using sw As StreamWriter = New StreamWriter(logFile, True, Encoding.UTF8)
+			sw.WriteLine(">>>>>>>>> BEGINNING OF FILE <<<<<<<<<")
+			sw.WriteLine("")
+
+			Dim errors As New List(Of String)(100)
+			Try
+
+				Load(langOption)
+
+				Dim foundParent As Boolean = False
+				Dim foundTc As Boolean = False
+				Dim foundTcValue As Boolean = False
+				Dim foundAttr As Boolean = False
+				Dim trims() As Char = sysNewLine.ToCharArray()
+				Dim MaxLEN As Integer = 40
+
+				For Each parent As KeyValuePair(Of TranslatedControl, List(Of TranslatedControl)) In englishDictionary.Parents
+					foundParent = False
+
+					For Each parent2 As KeyValuePair(Of TranslatedControl, List(Of TranslatedControl)) In translatedDictionary.Parents
+						If parent.Key.ControlName = parent2.Key.ControlName Then
+							foundParent = True
+							If Not skipSuccess Then sw.WriteLine(parent.Key.ControlName & " -> " & parent2.Key.ControlName)
+
+							For Each attr As KeyValuePair(Of String, String) In parent.Key.Attributes
+								foundAttr = False
+
+								For Each attr2 As KeyValuePair(Of String, String) In parent2.Key.Attributes
+									If attr2.Key = attr.Key Then
+										foundAttr = True
+
+										If Not skipSuccess Then sw.WriteLine(vbTab & "Attribute: " & attr.Key & " -> " & attr2.Key)
+										If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & """" & attr.Value & """ -> """ & If(IsNullOrWhitespace(attr2.Value.Trim(trims)), "???", attr2.Value.Trim(trims)) & """")
+
+										If IsNullOrWhitespace(attr2.Value) Then
+											errors.Add("'" & parent2.Key.ControlName & "'s attribute '" & attr2.Key & "'s value is empty!")
+										End If
+
+										If Not skipSuccess Then sw.WriteLine("")
+										Exit For
+									End If
+								Next
+
+								If Not foundAttr Then
+									errors.Add("'" & parent.Key.ControlName & "'s attribute '" & attr.Key & "' not found!")
+								End If
+							Next
+
+							For Each tc As TranslatedControl In parent.Value
+								foundTc = False
+
+								For Each tc2 As TranslatedControl In parent2.Value
+									If tc.ControlName = tc2.ControlName Then
+										foundTc = True
+										If Not skipSuccess Then sw.WriteLine(vbTab & tc.ControlName & " -> " & tc2.ControlName)
+
+
+										For Each attr As KeyValuePair(Of String, String) In tc.Attributes
+											foundAttr = False
+
+											For Each attr2 As KeyValuePair(Of String, String) In tc2.Attributes
+												If attr2.Key = attr.Key Then
+													foundAttr = True
+
+													If Not skipSuccess Then sw.WriteLine(vbTab & "Attribute: " & attr.Key & " -> " & attr2.Key)
+													If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & """" & If(attr.Value.Trim(trims).Length > MaxLEN, attr.Value.Trim(trims).Substring(0, MaxLEN) & " ...", attr.Value.Trim(trims)) & """ -> """ & If(IsNullOrWhitespace(attr2.Value.Trim(trims)), "???", If(attr2.Value.Trim(trims).Length > MaxLEN, attr2.Value.Trim(trims).Substring(0, MaxLEN) & " ...", attr2.Value.Trim(trims))) & """")
+
+													If IsNullOrWhitespace(attr2.Value) Then
+														errors.Add("'" & parent2.Key.ControlName & "'s control '" & tc2.ControlName & "'s attribute '" & attr2.Key & "'s value is empty!")
+													End If
+
+													Exit For
+												End If
+											Next
+
+											If Not foundAttr Then
+												errors.Add("'" & parent.Key.ControlName & "'s control '" & tc.ControlName & "'s attribute '" & attr.Key & "' not found!")
+											End If
+										Next
+
+										For Each kvp As KeyValuePair(Of String, String) In tc.Values
+											foundTcValue = False
+
+											For Each kvp2 As KeyValuePair(Of String, String) In tc2.Values
+												If kvp.Key = kvp2.Key Then
+													foundTcValue = True
+
+													If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & kvp.Key & " -> " & kvp2.Key)
+													If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & vbTab & """" & If(kvp.Value.Trim(trims).Length > MaxLEN, kvp.Value.Trim(trims).Substring(0, MaxLEN) & " ...", kvp.Value.Trim(trims)) & """ -> """ & If(IsNullOrWhitespace(kvp2.Value.Trim(trims)), "???", If(kvp2.Value.Trim(trims).Length > MaxLEN, kvp2.Value.Trim(trims).Substring(0, MaxLEN) & " ...", kvp2.Value.Trim(trims))) & """")
+
+													If IsNullOrWhitespace(kvp2.Value) Then
+														errors.Add("'" & parent2.Key.ControlName & "'s control '" & tc2.ControlName & "' child elements '" & kvp2.Key & "'s value is empty!")
+													End If
+
+													Exit For
+												End If
+											Next
+
+											If Not foundTcValue Then
+												errors.Add("'" & parent.Key.ControlName & "'s control '" & tc.ControlName & "' child element '" & kvp.Key & "' not found!")
+											End If
+										Next
+
+										If Not skipSuccess Then sw.WriteLine("")
+										Exit For
+									End If
+								Next
+
+								If Not foundTc Then
+									errors.Add("'" & parent.Key.ControlName & "'s control '" & tc.ControlName & "' not found!")
+								End If
+							Next
+
+							If Not skipSuccess Then sw.WriteLine("")
+							Exit For
+						End If
+					Next
+
+					If Not foundParent Then
+						errors.Add("'" & parent.Key.ControlName & " not found!")
+					End If
+				Next
+
+			Catch ex As XmlException
+				errors.Add(">>>>>>>>> XML ERROR! " & ex.Message)
+			End Try
+
+			sw.WriteLine("")
+
+			If errors.Count > 0 Then
+				sw.WriteLine(">>>>>>>>> ERRORS <<<<<<<<<")
+				sw.WriteLine("")
+				sw.WriteLine(langOption.Filename.Substring(langOption.Filename.LastIndexOf("\")))
+				sw.WriteLine("")
+
+				For Each msg As String In errors
+					sw.WriteLine(msg)
+				Next
+
+			Else
+				sw.WriteLine(">>>>>>>>> NO ERRORS <<<<<<<<<")
+				sw.WriteLine("")
+				sw.WriteLine(langOption.Filename.Substring(langOption.Filename.LastIndexOf("\")))
+			End If
+
+			sw.WriteLine("")
+			sw.WriteLine(">>>>>>>>> END OF FILE <<<<<<<<<")
+			sw.WriteLine("")
+			sw.WriteLine("")
+			sw.WriteLine("")
+			sw.WriteLine("")
+
+			sw.Flush()
+			sw.Close()
+		End Using
+	End Sub
 
 	Private Class TranslatedFile
 		Private m_details As LanguageOption
@@ -673,5 +829,9 @@ notFound:
 		Public Property Details As String
 		Public Property LastUpdate As DateTime?
 	End Class
+
+	Shared Sub Compare(p1 As String, opt As LanguageOption)
+		Throw New NotImplementedException
+	End Sub
 
 End Class

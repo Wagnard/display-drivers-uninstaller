@@ -1,61 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="bg-BG" Text="Bulgarian" NewLineChar="|">
+<DisplayDriverUninstaller ISO="bg-BG" Text="Bulgarian">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Почисти и рестартирай|(силно препоръчително)</Text>
-			<Tooltip>Деинсталира текущия и всички предишно инсталирани драйвери, след което рестартира компютъра.|(силно препоръчително)</Tooltip>
+			<Text>
+				Почисти и рестартирай
+				(силно препоръчително)
+			</Text>
+			<Tooltip>
+				Деинсталира текущия и всички предишно инсталирани драйвери, след което рестартира компютъра.
+				(силно препоръчително)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Почисти, но НЕ рестартирай|(може да доведе до проблеми като черен екран)</Text>
-			<Tooltip>Деинсталира текущия и всички предишно инсталирани драйвери, но не рестартира компютъра.|(може да причини някои проблеми като черен екран)</Tooltip>
+			<Text>
+				Почисти, но НЕ рестартирай
+				(може да доведе до проблеми като черен екран)
+			</Text>
+			<Tooltip>
+				Деинсталира текущия и всички предишно инсталирани драйвери, но не рестартира компютъра.
+				(може да причини някои проблеми като черен екран)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Почисти и изключи компютъра|(ако инсталирате нова видео карта)</Text>
-			<Tooltip>Деинсталира текущия и всички предишно инсталирани драйвери и изключва компютъра, без повторно сканиране.|(за инсталиране на нова видео карта)</Tooltip>
+			<Text>
+				Почисти и изключи компютъра
+				(ако инсталирате нова видео карта)
+			</Text>
+			<Tooltip>
+				Деинсталира текущия и всички предишно инсталирани драйвери и изключва компютъра, без повторно сканиране.
+				(за инсталиране на нова видео карта)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Задай автоматичната инсталация на драйвери в Windows по подразбиране</Text>
+			<Text>
+				Задай автоматичната инсталация на
+				драйвери в Windows по подразбиране
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Засечена версия на Windows:</Text>
+			<Text>Засечена версия на Windows</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Харесвате DDU? Помислете за дарение, то ще помогне за бъдещото развитие. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Дневник:</Text>
+			<Text>Дневник</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Изберете графичен драйвер:</Text>
+			<Text>Изберете графичен драйвер</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -71,6 +68,11 @@
 			<Text3>Открити са актуализации! Очаквайте ограничена поддръжка на по-стари версии спрямо по-новите.</Text3>
 			<Text4>Изтеглянето на актуализациите беше неуспешно!</Text4>
 		</lblUpdate>
+
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 
 		<OptionsMenuItem>
 			<Text>Options</Text>
@@ -119,7 +121,8 @@
 			<Text10>Почистването завърши! Желаете ли да затворите програмата?</Text10>
 			<Text11>Готово!</Text11>
 			<Text12>Не сте в безопасен режим (Safe Mode). Силно се препоръчва да рестартирате в безопасен режим, за да избегнете възможни проблеми. Искате ли да рестартирате в безопасен режим сега?</Text12>
-			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
 		</Messages>
 		
 		<UpdateLog>
@@ -133,14 +136,14 @@
 			<Text8>Премахване на nVidia Optimus UpperFilter, ако е наличен....</Text8>
 			<Text9>Сканиране за ново устройство...</Text9>
 			<Text10>Чистата деинсталация е завършена!</Text10>
-			<Text11>DDU версия:</Text11>
-			<Text12>ГП №:</Text12>
-			<Text13>Открит:</Text13>
-			<Text14>DeviceId на ГП:</Text14>
-			<Text15>Открита(и) версия(и) на драйвер(и):</Text15>
-			<Text16>INF:</Text16>
-			<Text17>Секция в INF:</Text17>
-			<Text18>ГП не е инсталиран коректно:</Text18>
+			<Text11>DDU версия</Text11>
+			<Text12>ГП №</Text12>
+			<Text13>Открит</Text13>
+			<Text14>DeviceId на ГП</Text14>
+			<Text15>Открита(и) версия(и) на драйвер(и)</Text15>
+			<Text16>INF</Text16>
+			<Text17>Секция в INF</Text17>
+			<Text18>ГП не е инсталиран коректно</Text18>
 			<Text19>Изтриване на някои специални папки. Може да отнеме известно време.</Text19>
 			<Text20>Започнато е почистване.</Text20>
 			<Text21>Деинсталиране</Text21>
@@ -185,20 +188,20 @@
 			<Text>General Options</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Премахни папката с драйвери „C:\nVidia“ (НЕ се препоръчва) </Text>
+			<Text>Премахни папката с драйвери „C:\nVidia“ (НЕ се препоръчва)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>Дневници в пътя за стартиране (силно се препоръчва)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Премахни PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Премахни 3DTV Play</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Създай точка за възстановяване (ако е възможно)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Премахни налични и неналични монитори (препоръчва се)</Text>
 		</lblRemMonitors>
@@ -206,33 +209,47 @@
 			<Text>Премахни AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Премахни папката с драйвери „C:\AMD“ (НЕ се препоръчва) </Text>
+			<Text>Премахни папката с драйвери „C:\AMD“ (НЕ се препоръчва)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Enable Windows 8+ Direct Safe Mode.</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Show Safe Mode message box on startup</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Store config file in roaming folder</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>Do not check for DDU updates on startup (NOT Recommended)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Remove Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Remove AMD Crimson Shader Cache folder</Text>
-			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+			<Tooltip>
+				Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.
+				Also recommended if you are switching to another brand like nVidia.
+			</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text2>
+				Reboot to
+				Safe Mode
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Close</Text>
@@ -241,10 +258,17 @@
 			<Text>Launch option</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>
+				You are not in safe mode. It is highly recommended
+				reboot into Safe Mode to avoid possible issues.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -357,36 +381,13 @@
 			</Text>
 		</Tos>
 	</Misc>
-
-	<!-- Optional, not required -->
+	
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

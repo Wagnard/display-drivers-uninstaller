@@ -1,68 +1,65 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="nl-NL" Text="Dutch" NewLineChar="|">
+<DisplayDriverUninstaller ISO="nl-NL" Text="Dutch">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Verwijder drivers en herstart de computer.|(Sterk aanbevolen)</Text>
-			<Tooltip>Verwijder de huidige en de vorige drivers en herstart de computer.|(Sterk aanbevolen)</Tooltip>
+			<Text>
+				Verwijder drivers en herstart de computer.
+				(Sterk aanbevolen)
+			</Text>
+			<Tooltip>
+				Verwijder de huidige en de vorige drivers en herstart de computer.
+				(Sterk aanbevolen)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Verwijder drivers en start de computer NIET opnieuw op.|(Kan kwesties/problemen zoals een zwart scherm veroorzaken)</Text>
-			<Tooltip>Verwijder de huidige en de vorige drivers en start de computer niet opnieuw op.|(Kan kwesties/problemen zoals zwart scherm veroorzaken)</Tooltip>
+			<Text>
+				Verwijder drivers en start de computer NIET opnieuw op.
+				(Kan kwesties/problemen zoals een zwart scherm veroorzaken)
+			</Text>
+			<Tooltip>
+				Verwijder de huidige en de vorige drivers en start de computer niet opnieuw op.
+				(Kan kwesties/problemen zoals zwart scherm veroorzaken)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Verwijder drivers en schakel de computer uit.|(Voor het installeren van een nieuwe grafische kaart).</Text>
-			<Tooltip>Verwijder de huidige en de vorige drivers en sluit af zonder dat de computer opnieuw scant.|(Voor het installeren van een nieuwe grafische kaart).</Tooltip>
+			<Text>
+				Verwijder drivers en schakel de computer uit.
+				(Voor het installeren van een nieuwe grafische kaart).
+			</Text>
+			<Tooltip>
+				Verwijder de huidige en de vorige drivers en sluit af zonder dat de computer opnieuw scant.
+				(Voor het installeren van een nieuwe grafische kaart).
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Zet windows driver installatie op standaard.</Text>
+			<Text>
+				Zet windows driver
+				installatie op standaard.
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Gedetecteerde Windows-versie:</Text>
+			<Text>Gedetecteerde Windows-versie</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Vind je DDU goed? Denk misschien eens aan een donatie, het zal de ontwikkeling enorm helpen. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Log :</Text>
+			<Text>Log</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Selecteer grafische driver :</Text>
+			<Text>Selecteer grafische driver</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
 			<Text>Opmerking: Eventuele schade of fouten veroorzaakt aan uw pc is uw verantwoordelijkheid.</Text>
 		</Label9>
 		<Label10>
-			<Text>Het gebruiken van DDU word in Veilige Modus aanbeloven. |</Text>
+			<Text>Het gebruiken van DDU word in Veilige Modus aanbeloven.</Text>
 		</Label10>
 		
 		<lblUpdate>
@@ -73,12 +70,9 @@
 		</lblUpdate>
 		
 		<lblOffer>
-			<Text>       Offers from our partners</Text>
+			<Text>Offers from our partners</Text>
 			<Tooltip>You can disable this from the option menu.</Tooltip>
 		</lblOffer>
-		<imgOffer>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
-		</imgOffer>
 		
 		<OptionsMenuItem>
 			<Text>Opties</Text>
@@ -142,14 +136,14 @@
 			<Text8>Gestart met het verwijderen van nVidia Optimus UpperFilter indien aanwezig.</Text8>
 			<Text9>Scannen voor nieuwe apparaten...</Text9>
 			<Text10>Volledige verwijdering klaar!</Text10>
-			<Text11>DDU Versie:</Text11>
+			<Text11>DDU Versie</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Gedetecteerd :</Text13>
-			<Text14>GPU DeviceId :</Text14>
-			<Text15>Gedetecteerde Driver(s) Versie(s) :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>INF Sectie :</Text17>
-			<Text18>GPU niet Correct Geinstalleerd :</Text18>
+			<Text13>Gedetecteerd</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Gedetecteerde Driver(s) Versie(s)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Sectie</Text17>
+			<Text18>GPU niet Correct Geinstalleerd</Text18>
 			<Text19>Speciale mappen worden verwijdert, dit kan even duren...</Text19>
 			<Text20>Schoonmaak gestart...</Text20>
 			<Text21>Deinstalleren</Text21>
@@ -194,20 +188,20 @@
 			<Text>Algemene Opties</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Verwijder "C:\nVidia" Driver map (NIET aanbevolen) </Text>
+			<Text>Verwijder "C:\nVidia" Driver map (NIET aanbevolen)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>Bewaar log bestanden in het opstartpad (Sterk aanbevolen)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Verwijder PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Verwijder 3DTV Play</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Creëer een Systeem Herstel Punt (indien mogelijk)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Verwijder gedecteerde en niet gedecteerde monitors(Aanbevolen)</Text>
 		</lblRemMonitors>
@@ -215,14 +209,14 @@
 			<Text>Verwijder AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Verwijder "C:\AMD" Driver map (NIET aanbevolen) </Text>
+			<Text>Verwijder "C:\AMD" Driver map (NIET aanbevolen)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Verwijder de driver/filter AMDKMPFD (Een backup is aanbevolen voor AMD chipsets)</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Toon de Veilige Modus berichten box bij het opstarten van DDU</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Bewaar de config file in de roaming map</Text>
 		</lblUseRoamingCfg>
@@ -234,14 +228,17 @@
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Verwijder AMD Crimson Shader Cache map</Text>
-			<Tooltip>Aanbevolen als er graphische abnormaliteiten voordoen(Snelheid of visueele corruptie) veroorzaakt door een corrupte shader chache data|Ook aanbevolen als je wisselt van een GPU merk als nVidia.</Tooltip>
+			<Tooltip>
+				Aanbevolen als er graphische abnormaliteiten voordoen(Snelheid of visueele corruptie) veroorzaakt door een corrupte shader chache data
+				Ook aanbevolen als je wisselt van een GPU merk als nVidia.
+			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>Verwijder Vulkan Runtime</Text>
 			<Tooltip>Niet Aanbevolen Als Je 2 Verschillende GPU's Hebt Die Gebruik Van De Vulkan API Kunnen Maken.</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Gebruik SetupAPI *Experimenteel* </Text>
+			<Text>Gebruik SetupAPI *Experimenteel*</Text>
 			<Tooltip>Gebruik SetupAPI inplaats van de externe tool DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
@@ -249,7 +246,10 @@
 	<frmLaunch Text="Opstart Opties">
 		<btnAccept>
 			<Text>Starten</Text>
-			<Text2>Opnieuw Opstarten naar|Veilige Modus</Text2>
+			<Text2>
+				Opnieuw Opstarten naar
+				Veilige Modus
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Sluiten</Text>
@@ -258,10 +258,17 @@
 			<Text>Opstart Optie</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>Je bent niet in Veilige Modus. Het is sterk aanbevolen|Herstart naar Veilige Modus om problemen te voorkomen.</Text>
+			<Text>
+				Je bent niet in Veilige Modus. Het is sterk aanbevolen
+				Herstart naar Veilige Modus om problemen te voorkomen.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normaal</Item1>
@@ -374,35 +381,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

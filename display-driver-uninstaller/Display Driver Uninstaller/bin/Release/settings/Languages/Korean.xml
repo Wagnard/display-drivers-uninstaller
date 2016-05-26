@@ -1,61 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="ko-KR" Text="Korean" NewLineChar="|">
+<DisplayDriverUninstaller ISO="ko-KR" Text="Korean">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>지우고, 다시 시작하기|(적극 권장)</Text>
-			<Tooltip>현재 및 이전 드라이버를 제거하고, 컴퓨터를 다시 시작합니다.|(적극 권장)</Tooltip>
+			<Text>
+				지우고, 다시 시작하기
+				(적극 권장)
+			</Text>
+			<Tooltip>
+				현재 및 이전 드라이버를 제거하고, 컴퓨터를 다시 시작합니다.
+				(적극 권장)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>지우고, 다시 시작하지 않기|(blackscreen 같은 문제 발생 가능)</Text>
-			<Tooltip>현재 및 이전 드라이버를 제거하지만, 컴퓨터를 다시 시작하진 않습니다.|(blackscreen 같은 문제 발생 가능)</Tooltip>
+			<Text>
+				지우고, 다시 시작하지 않기
+				(blackscreen 같은 문제 발생 가능)
+			</Text>
+			<Tooltip>
+				현재 및 이전 드라이버를 제거하지만, 컴퓨터를 다시 시작하진 않습니다.
+				(blackscreen 같은 문제 발생 가능)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>지우고, 시스템 끄기|(새 그래픽 카드를 장착할 경우)</Text>
-			<Tooltip>현재 및 이전 드라이버를 제거하고, 다시 검색없이 컴퓨터를 끕니다.|(새 그래픽 카드를 장착하는 경우)</Tooltip>
+			<Text>
+				지우고, 시스템 끄기
+				(새 그래픽 카드를 장착할 경우)
+			</Text>
+			<Tooltip>
+				현재 및 이전 드라이버를 제거하고, 다시 검색없이 컴퓨터를 끕니다.
+				(새 그래픽 카드를 장착하는 경우)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Windows 자동 드라이버 설치를       기본값으로 설정</Text>
+			<Text>
+				Windows 자동 드라이버 설치를
+				기본값으로 설정
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>감지된 Windows 버전 :</Text>
+			<Text>감지된 Windows 버전</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** DDU가 맘에 들면, 기부에 대해 생각해봐 주세요.  추가 개발에 도움이 됩니다. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>로그(기록) :</Text>
+			<Text>로그(기록)</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>그래픽 드라이버 선택 :</Text>
+			<Text>그래픽 드라이버 선택</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -72,6 +69,11 @@
 			<Text4>업데이트 패치를 할 수 없습니다!</Text4>
 		</lblUpdate>
 
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
+		
 		<OptionsMenuItem>
 			<Text>Options</Text>
 		</OptionsMenuItem>
@@ -134,14 +136,14 @@
 			<Text8>있는 경우, nVIDIA Optimus UpperFilter의 제거를 시작합니다.</Text8>
 			<Text9>새 장치 검색하는 중...</Text9>
 			<Text10>제거 정리가 완료됐습니다!</Text10>
-			<Text11>DDU 버전 :</Text11>
+			<Text11>DDU 버전</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>감지됨 :</Text13>
-			<Text14>GPU 장치 ID :</Text14>
-			<Text15>감지된 드라이버 버전 :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>INF 섹션 :</Text17>
-			<Text18>GPU가 올바르게 설치되지 않았습니다 :</Text18>
+			<Text13>감지됨</Text13>
+			<Text14>GPU 장치 ID</Text14>
+			<Text15>감지된 드라이버 버전</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF 섹션</Text17>
+			<Text18>GPU가 올바르게 설치되지 않았습니다</Text18>
 			<Text19>일부 특수 폴더 삭제하는 중...  약간의 시간이 걸릴 수 있습니다.</Text19>
 			<Text20>정리가 시작됐습니다...</Text20>
 			<Text21>제거</Text21>
@@ -188,18 +190,18 @@
 		<lblRemNvidiaDirs>
 			<Text>'C:\nVidia' 드라이버 폴더 제거 (권장 안 함)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>DDU 프로그램 폴더에 로그(기록) 파일 저장 (적극 권장)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>PhysX 제거</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>3DTV Play 제거</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>시스템 복원 지점 만들기 (허용된 경우)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>존재 및 존재하지 않는 모니터 제거 (권장)</Text>
 		</lblRemMonitors>
@@ -212,28 +214,42 @@
 		<lblRemAMDKMPFD>
 			<Text>AMDKMPFD 드라이버/필터 제거 (AMD 칩셋에서는 백업 권장)</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>시작시, 안전 모드 메시지 상자 보이기</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>roaming 폴더에 구성 파일 저장</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>프로그램 시작시, DDU 업데이트 확인 안 함 (권장 안 함)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Geforce Experience (GFE) 제거</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>AMD Crimson 쉐이더 캐시 폴더 제거</Text>
-			<Tooltip>손상된 쉐이더 캐시 데이터에 의해 발생한 그래픽 이상 (속도나 시각 손상)이 있는 경우에 권장합니다.|또한, nVIDIA 같은 다른 브랜드로 전환하려는 경우에도 권장합니다.|</Tooltip>
+			<Tooltip>
+				손상된 쉐이더 캐시 데이터에 의해 발생한 그래픽 이상 (속도나 시각 손상)이 있는 경우에 권장합니다.
+				또한, nVIDIA 같은 다른 브랜드로 전환하려는 경우에도 권장합니다.
+			</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text2>
+				Reboot to
+				Safe Mode
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Close</Text>
@@ -242,10 +258,17 @@
 			<Text>Launch option</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>
+				You are not in safe mode. It is highly recommended
+				reboot into Safe Mode to avoid possible issues.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -371,35 +394,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

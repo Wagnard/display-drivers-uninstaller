@@ -1,49 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="ja-JP" Text="Japanese" NewLineChar="|">
+<DisplayDriverUninstaller ISO="ja-JP" Text="Japanese">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>削除して再起動|(強く推奨します)</Text>
-			<Tooltip>全てのドライバーをアンインストールして、コンピューターを再起動します。|(強く推奨します)</Tooltip>
+			<Text>
+				削除して再起動
+				(強く推奨します)
+			</Text>
+			<Tooltip>
+				全てのドライバーをアンインストールして、コンピューターを再起動します。
+				(強く推奨します)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>削除後に再起動しない (黒画面のような|問題を引き起こす可能性があります)</Text>
-			<Tooltip>全てのドライバーをアンインストールしますが、その後再起動しません。|(黒画面のような問題を引き起こす可能性があります)</Tooltip>
+			<Text>
+				削除後に再起動しない (黒画面のような
+				問題を引き起こす可能性があります)
+			</Text>
+			<Tooltip>
+				全てのドライバーをアンインストールしますが、その後再起動しません。
+				(黒画面のような問題を引き起こす可能性があります)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>削除してシャットダウン (新しいグラフィック|カードをインストールする場合)</Text>
-			<Tooltip>全てのドライバーをアンインストールして、再スキャンさせないようコンピューターをシャットダウンします。|(新しいグラフィックカードをインストールする場合)</Tooltip>
+			<Text>
+				削除してシャットダウン (新しいグラフィック
+				カードをインストールする場合)</Text>
+			<Tooltip>
+				全てのドライバーをアンインストールして、再スキャンさせないようコンピューターをシャットダウンします。
+				(新しいグラフィックカードをインストールする場合)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Windowsの標準ドライバー|自動インストールを既定にセット。</Text>
+			<Text>
+				Windowsの標準ドライバー
+				自動インストールを既定にセット。
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>検出された Windows バージョン：</Text>
@@ -73,12 +69,9 @@
 		</lblUpdate>
 		
 		<lblOffer>
-			<Text>       パートナーからのお勧め</Text>
+			<Text>パートナーからのお勧め</Text>
 			<Tooltip>オプションメニューから無効にできます。</Tooltip>
 		</lblOffer>
-		<imgOffer>
-			<Tooltip>オプションメニューから無効にできます。</Tooltip>
-		</imgOffer>
 		
 		<OptionsMenuItem>
 			<Text>オプション</Text>
@@ -196,18 +189,18 @@
 		<lblRemNvidiaDirs>
 			<Text>"C:\nVidia" ドライバーフォルダーを削除 (非推奨)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>ログファイルをDDUのフォルダー内に保存 (強く推奨)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>PhysX を削除</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>3DTV Play を削除</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>システムの復元ポイントを作成する (可能な場合)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>現在のモニターと非表示（未接続）のモニターを削除 (推奨)</Text>
 		</lblRemMonitors>
@@ -220,9 +213,9 @@
 		<lblRemAMDKMPFD>
 			<Text>AMDKMPFD ドライバー / フィルターを削除 (AMD チップセットの場合バックアップを推奨)</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>起動時にセーフモードのメッセージボックスを表示</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>roaming フォルダーに設定ファイルを保存</Text>
 		</lblUseRoamingCfg>
@@ -234,14 +227,17 @@
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>AMD Crimson Shader Cache フォルダーを削除</Text>
-			<Tooltip>破損したシェーダー キャッシュ データによるグラフィックの異常 (速度または視覚的な破損) がある場合に推奨します。|また、nVidia のような別のブランドに換装している場合にも推奨します。</Tooltip>
+			<Tooltip>
+				破損したシェーダー キャッシュ データによるグラフィックの異常 (速度または視覚的な破損) がある場合に推奨します。
+				また、nVidia のような別のブランドに換装している場合にも推奨します。
+			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>Vulkan ランタイムを削除</Text>
 			<Tooltip>Vulkan APIを利用できる2つの異なるGPUを持っている場合非推奨。</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>SetupAPI を使用する *実験段階* </Text>
+			<Text>SetupAPI を使用する *実験段階*</Text>
 			<Tooltip>外部ツール DDUDR (DEVCON) ではなく SetupAPI を使用する</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
@@ -249,7 +245,10 @@
 	<frmLaunch Text="起動オプション">
 		<btnAccept>
 			<Text>起動</Text>
-			<Text2>セーフモードで|再起動</Text2>
+			<Text2>
+				セーフモードで
+				再起動
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>閉じる</Text>
@@ -258,10 +257,17 @@
 			<Text>起動オプション</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>現在セーフモードではありません。|不具合を回避するためにセーフモードで再起動することを強く推奨します。</Text>
+			<Text>
+				現在セーフモードではありません。
+				不具合を回避するためにセーフモードで再起動することを強く推奨します。
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>通常モード</Item1>
@@ -382,35 +388,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

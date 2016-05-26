@@ -1,68 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="es-ES" Text="Spanish" NewLineChar="|">
+<DisplayDriverUninstaller ISO="es-ES" Text="Spanish">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-	<!-- This is comment -->
-		
 		<btnCleanRestart>
-			<Text>Limpiar y Reiniciar|(Altamente Recomendado)|</Text>
-			<Tooltip>Desinstalar los controladores actuales y anteriores, a continuación reiniciar el ordenador.|(Altamente Recomendado)|</Tooltip>
+			<Text>
+				Limpiar y Reiniciar
+				(Altamente Recomendado)
+			</Text>
+			<Tooltip>
+				Desinstalar los controladores actuales y anteriores, a continuación reiniciar el ordenador.
+				(Altamente Recomendado)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Limpiar y NO Reiniciar.|(Puede provocar problemas como pantalla en negro, sin imagen)|</Text>
-			<Tooltip>Desinstalar los controladores actuales y anteriores, pero no reiniciar el ordenador.|(Puede provocar problemas como pantalla en negro, quedarse sin imagen)|</Tooltip>
+			<Text>
+				Limpiar y NO Reiniciar.
+				(Puede provocar problemas como pantalla en negro, sin imagen)
+			</Text>
+			<Tooltip>
+				Desinstalar los controladores actuales y anteriores, pero no reiniciar el ordenador.
+				(Puede provocar problemas como pantalla en negro, quedarse sin imagen)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Limpiar y Apagar|(Para instalar una nueva tarjeta gráfica)|</Text>
-			<Tooltip>Desinstalar los controladores actuales y anteriores y Apagar el ordenador evitando la instalación automática de los mismos por el S.O.|(Para instalar una nueva tarjeta gráfica)|</Tooltip>
+			<Text>
+				Limpiar y Apagar
+				(Para instalar una nueva tarjeta gráfica)
+			</Text>
+			<Tooltip>
+				Desinstalar los controladores actuales y anteriores y Apagar el ordenador evitando la instalación automática de los mismos por el S.O.
+				(Para instalar una nueva tarjeta gráfica)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Establecer por defecto la Instalación de Controlador Automático de Windows.|</Text>
+			<Text>Establecer por defecto la Instalación de Controlador Automático de Windows.</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Versión de Windows Detectada:|</Text>
+			<Text>Versión de Windows Detectada</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** ¿Le gusta DDU? Considere realizar una Donación, la cual ayudará al futuro desarrollo de la aplicación. ***|</Text>
+			<Text>*** ¿Le gusta DDU? Considere realizar una Donación, la cual ayudará al futuro desarrollo de la aplicación. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Registro:|</Text>
+			<Text>Registro</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Elija Controlador de Pantalla:|</Text>
+			<Text>Elija Controlador de Pantalla</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
-			<Text>Aviso: Cualquier daño o error causado a su PC será bajo su propia responsabilidad.|</Text>
+			<Text>Aviso: Cualquier daño o error causado a su PC será bajo su propia responsabilidad.</Text>
 		</Label9>
 		<Label10>
-			<Text>Se recomienda usar DDU en Modo Seguro.|</Text>
+			<Text>Se recomienda usar DDU en Modo Seguro.</Text>
 		</Label10>
 		
 		<lblUpdate>
@@ -71,6 +65,11 @@
 			<Text3>¡Actualización encontrada! Tenga presente que el soporte en versiones antiguas es más limitado que en la más reciente.</Text3>
 			<Text4>¡Error al intentar obtener actualización!</Text4>
 		</lblUpdate>
+
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 
 		<OptionsMenuItem>
 			<Text>Opciones</Text>
@@ -119,7 +118,8 @@
 			<Text10>¡Proceso de limpieza de desinstalación completado! ¿Desea salir ahora?</Text10>
 			<Text11>¡Proceso terminado!</Text11>
 			<Text12>No se encuentra en modo Seguro. Se recomienda encarecidamente reiniciar en dicho modo para evitar conflictos. ¿Desea reiniciar en Modo Seguro ahora?</Text12>
-			<Text13>Esto es lo que necesita seleccionar en la pantalla azul de recuperación: Solucionar problemas-&gt; Opciones avanzadas -&gt; Configuración de inicio.</Text13>
+			<Text13>Esto es lo que necesita seleccionar en la pantalla azul de recuperación: Solucionar problemas -&gt; Opciones avanzadas -&gt; Configuración de inicio.</Text13>
+			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
 		</Messages>
 		
 		<UpdateLog>
@@ -133,14 +133,14 @@
 			<Text8>Iniciando la eliminación de “nVidia Optimus UpperFilter”, si se halla.</Text8>
 			<Text9>Escaneando en busca de nuevo dispositivo...</Text9>
 			<Text10>¡Desinstalación a fondo completada!</Text10>
-			<Text11>Versión de DDU:</Text11>
+			<Text11>Versión de DDU</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Detectada:</Text13>
-			<Text14>Id Dispositivo GPU:</Text14>
-			<Text15>Versión(es) de Controlador(es) Detectada(s):</Text15>
-			<Text16>INF:</Text16>
-			<Text17>Sección INF:</Text17>
-			<Text18>GPU Instalada Incorrectamente:</Text18>
+			<Text13>Detectada</Text13>
+			<Text14>Id Dispositivo GPU</Text14>
+			<Text15>Versión(es) de Controlador(es) Detectada(s)</Text15>
+			<Text16>INF</Text16>
+			<Text17>Sección INF</Text17>
+			<Text18>GPU Instalada Incorrectamente</Text18>
 			<Text19>Borrando algunas carpetas especiales, puede tardar un rato...</Text19>
 			<Text20>Limpieza iniciada...</Text20>
 			<Text21>Desinstalando</Text21>
@@ -152,7 +152,7 @@
 			<Text27>Adaptador USB de 3D Vision eliminado del Administrador de Dispositivos.</Text27>
 			<Text28>¡Monitores y monitores Ocultos eliminados!</Text28>
 			<Text29>Eliminación ddudr completada</Text29>
-			<Text30>Iniciando limpieza de región S-1-5-xx </Text30>
+			<Text30>Iniciando limpieza de región S-1-5-xx</Text30>
 			<Text31>Fin de limpieza de región S-1-5-xx</Text31>
 			<Text32>Iniciar limpieza Clasesraíz ,instalador\productos</Text32>
 			<Text33>Fin de limpieza Clasesraíz ,instalador\productos</Text33>
@@ -184,55 +184,69 @@
 		<lblGeneral>
 			<Text>Opciones Generales</Text>
 		</lblGeneral>
-		<CheckBox1>
+		<lblRemNvidiaDirs>
 			<Text>Eliminar las carpetas de Controladores "C:\nVidia" (No recomendado)</Text>
-		</CheckBox1>
-		<CheckBox2>
-			<Text>Guardar archivos de registro en la ruta de arranque\n(recomendado)|</Text>
-		</CheckBox2>
-		<CheckBox3>
-			<Text>Eliminar PhysX|</Text>
-		</CheckBox3>
-		<CheckBox4>
-			<Text>Eliminar 3DTV Play|</Text>
-		</CheckBox4>
-		<CheckBox5>
-			<Text>Crear un Punto de Restauración de Sistema (si es posible)|</Text>
-		</CheckBox5>
-		<CheckBox6>
+		</lblRemNvidiaDirs>
+		<lblSaveLogs>
+			<Text>Guardar archivos de registro en la ruta de arranque (recomendado)</Text>
+		</lblSaveLogs>
+		<lblRemPhysX>
+			<Text>Eliminar PhysX</Text>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
+			<Text>Eliminar 3DTV Play</Text>
+		</lblRem3DtvPlay>
+		<lblCreateRestorePoint>
+			<Text>Crear un Punto de Restauración de Sistema (si es posible)</Text>
+		</lblCreateRestorePoint>
+		<lblRemMonitors>
 			<Text>Eliminar los monitores presentes y no presentes (Recomendado)</Text>
-		</CheckBox6>
-		<CheckBox7>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
 			<Text>Eliminar Bus de Audio AMD</Text>
-		</CheckBox7>
-		<CheckBox8>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
 			<Text>Eliminar las carpetas de Controladores "C:\AMD" (No recomendado)</Text>
-		</CheckBox8>
-		<CheckBox9>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
 			<Text>Eliminar el controlador/filtro AMDKMPFD (Se recomienda realizar una copia de seguridad en sistemas con chipset AMD)</Text>
-		</CheckBox9>
-		<CheckBox10>
+		</lblRemAMDKMPFD>
+		<lblShowSafeModeMsg>
 			<Text>Mostrar mensaje de Modo Seguro al arrancar</Text>
-		</CheckBox10>
-		<CheckBox11>
+		</lblShowSafeModeMsg>
+		<lblUseRoamingCfg>
 			<Text>Guardar el archivo de configuración en la carpeta roaming</Text>
-		</CheckBox11>
-		<CheckBox12>
-			<Text>Desactivar la búsqueda de nuevas actualizaciones al arrancar (NO se Recomienda)</Text>
-		</CheckBox12>
-		<CheckBox13>
-			<Text>Eliminar 'Geforce Experience' (GFE)</Text>
-		</CheckBox13>
-		<CheckBox14>
+		</lblUseRoamingCfg>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
+		<lblRemGFE>
+			<Text>Eliminar 'Geforce Experience' (GFE)</Text>		
+		</lblRemGFE>
+		<lblRemCrimsonCache>
 			<Text>Eliminar carpeta de caché de AMD 'Crimson Shader'</Text>
-			<Tooltip>Recomendado en caso de anomalías gráficas (velocidad o corrupción de imagen) causadas por datos de caché de 'shader' corruptos.|También recomendado si se va a proceder a cambiar a otra marca como nVidia.</Tooltip>
-		</CheckBox14>
+			<Tooltip>
+				Recomendado en caso de anomalías gráficas (velocidad o corrupción de imagen) causadas por datos de caché de 'shader' corruptos.
+				También recomendado si se va a proceder a cambiar a otra marca como nVidia.
+			</Tooltip>
+		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Arranque</Text>
-			<Text2>Reiniciar en|Modo Seguro</Text2>
+			<Text2>
+				Reiniciar en
+				Modo Seguro
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Cerrar</Text>
@@ -241,10 +255,17 @@
 			<Text>Opciones de Arranque</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>No se encuentra en modo Seguro. Se recomienda|encarecidamente reiniciar en dicho modo para evitar conflictos.</Text>
+			<Text>
+				No se encuentra en modo Seguro. Se recomienda
+				encarecidamente reiniciar en dicho modo para evitar conflictos.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -347,35 +368,12 @@
 		</Tos>
 	</Misc>
 	
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

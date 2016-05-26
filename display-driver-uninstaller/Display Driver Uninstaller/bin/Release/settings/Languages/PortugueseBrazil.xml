@@ -1,61 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="pt-BR" Text="Portuguese-Brazil" NewLineChar="|">
+<DisplayDriverUninstaller ISO="pt-BR" Text="Portuguese-Brazil">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Limpar e reiniciar|(Altamente Recomendado)</Text>
-			<Tooltip>Desinstalar o driver atual e o anterior e reiniciar o computador|(Altamente Recomendado)</Tooltip>
+			<Text>
+				Limpar e reiniciar
+				(Altamente Recomendado)
+			</Text>
+			<Tooltip>
+				Desinstalar o driver atual e o anterior e reiniciar o computador
+				(Altamente Recomendado)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Limpar e NÃO reiniciar|(Pode causar problemas como Tela Preta)</Text>
-			<Tooltip>Desinstalar o driver atual e os anteriores e NÃO reiniciar o computador.|(Pode causar Tela Preta)</Tooltip>
+			<Text>
+				Limpar e NÃO reiniciar
+				(Pode causar problemas como Tela Preta)
+			</Text>
+			<Tooltip>
+				Desinstalar o driver atual e os anteriores e NÃO reiniciar o computador.
+				(Pode causar Tela Preta)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Limpar e Desligar|(Para instalação de nova Placa de Video)</Text>
-			<Tooltip>Desinstalar o driver atual e os anteriores e Desligar o computador sem reescan|(Instalação de nova placa de video)</Tooltip>
+			<Text>
+				Limpar e Desligar
+				(Para instalação de nova Placa de Video)
+			</Text>
+			<Tooltip>
+				Desinstalar o driver atual e os anteriores e Desligar o computador sem reescan
+				(Instalação de nova placa de video)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Definir instalação de driver no|Windows Update para padrão.</Text>
+			<Text>
+				Definir instalação de driver no
+				Windows Update para padrão.
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Versão do Windows Detectada:</Text>
+			<Text>Versão do Windows Detectada</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Gostou do DDU? Pense sobre uma doação, isso ajuda a manter o desenvolvimento. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Log :</Text>
+			<Text>Log</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Selecione o Driver Gráfico :</Text>
+			<Text>Selecione o Driver Gráfico</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -71,6 +68,11 @@
 			<Text3>Atualizações encontradas! Espere suporte limitado em versões mais antigas do que a mais recente</Text3>
 			<Text4>Não foi possível obter as atualizações!</Text4>
 		</lblUpdate>
+
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 		
 		<OptionsMenuItem>
 			<Text>Opções</Text>
@@ -97,7 +99,7 @@
 			<Text>Visite o site SVN</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visite o forum Guru3d NVIDIA </Text>
+			<Text>Visite o forum Guru3d NVIDIA</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
 			<Text>Visite o forum Guru3d AMD</Text>
@@ -118,8 +120,8 @@
 			<Text9>DDU mudou uma configuração que impede que o windows forneça atualização de driver. Você pode voltar ao normal APÓS a desinstalação.</Text9>
 			<Text10>Desinstalação limpa concluida! Gostaria de sair agora?</Text10>
 			<Text11>Pronto!</Text11>
-			<Text12>Você não está em modo seguro. É altamente recomendado|reiniciar em modo seguro para evitar problemas, Reiniciar em modo seguro agora?"</Text12>
-			<Text13>Isso é o que você precisa selecionar na tela azul de recuperação : Solucionar-&gt; opções avançadas -&gt; configurações de inicialização.</Text13>
+			<Text12>Você não está em modo seguro. É altamente recomendado reiniciar em modo seguro para evitar problemas, Reiniciar em modo seguro agora?"</Text12>
+			<Text13>Isso é o que você precisa selecionar na tela azul de recuperação : Solucionar -&gt; opções avançadas -&gt; configurações de inicialização.</Text13>
 			<Text14>Existe uma reinicialização pendende, reinicie ante de usar o DDU</Text14>
 		</Messages>
 		
@@ -134,14 +136,14 @@
 			<Text8>Iniciando a remoção do nVidia Optimus UpperFilter(Se presente).</Text8>
 			<Text9>Buscando novos dispositivos...</Text9>
 			<Text10>Desinstalação limpa concluida!</Text10>
-			<Text11>DDU versão:</Text11>
+			<Text11>DDU versão</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Detectado :</Text13>
-			<Text14>GPU DeviceId :</Text14>
-			<Text15>Versão do driver detectado :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>INF Section :</Text17>
-			<Text18>GPU não foi instalada corretamente :</Text18>
+			<Text13>Detectado</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Versão do driver detectado</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Section</Text17>
+			<Text18>GPU não foi instalada corretamente</Text18>
 			<Text19>Deleting some specials folders, it may take some times...</Text19>
 			<Text20>Limpeza iniciada...</Text20>
 			<Text21>Desinstalando</Text21>
@@ -186,35 +188,35 @@
 			<Text>Opções gerais</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Remover "C:\nVidia" pasta de drivers (Não recomendado) </Text>
+			<Text>Remover "C:\nVidia" pasta de drivers (Não recomendado)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>Salvar arquivos de log na mesma pasta (Recomendado)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Remover PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Remover 3DTV Play</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Criar ponto de restauração (se possivel)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Remover monitores presentes e não presentes\n( Recomendada)</Text>
+			<Text>Remover monitores presentes e não presentes (Recomendada)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
 			<Text>Remover AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Remover "C:\AMD" pasta de drivers (não recomendado) </Text>
+			<Text>Remover "C:\AMD" pasta de drivers (não recomendado)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Habilitar Windows 8+ modo seguro direto.</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Mostrar janela de modo seguro quando executar</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Salvar arquivo de configurações</Text>
 		</lblUseRoamingCfg>
@@ -226,14 +228,17 @@
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Remover pasta AMD Crimson Shader Cache</Text>
-			<Tooltip>Recomendado se existir anomalias graficas(imagens corrompidas) causada por arquivos corrompidos.|Recomendado se for trocar de GPU.</Tooltip>
+			<Tooltip>
+				Recomendado se existir anomalias graficas(imagens corrompidas) causada por arquivos corrompidos.
+				Recomendado se for trocar de GPU.
+			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>Remover Vulkan Runtime</Text>
 			<Tooltip>Não recomendado se você possui diferentes GPUS com suporte a Vulkan API.</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Usar SetupAPI *Experimental* </Text>
+			<Text>Usar SetupAPI *Experimental*</Text>
 			<Tooltip>Usar SetupAPI ao invés da ferramenta DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
@@ -241,7 +246,10 @@
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Iniciar</Text>
-			<Text2>Reiniciar|Modo seguro</Text2>
+			<Text2>
+				Reiniciar
+				Modo seguro
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Fechar</Text>
@@ -250,10 +258,17 @@
 			<Text>Opções de Inicialização</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>Você não está em modo seguro. É altamente recomendado|reiniciar em modo seguro para evitar problemas.</Text>
+			<Text>
+				Você não está em modo seguro. É altamente recomendado
+				reiniciar em modo seguro para evitar problemas.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -367,35 +382,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

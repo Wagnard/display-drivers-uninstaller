@@ -1,61 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="tr-TR" Text="Turkish" NewLineChar="|">
+<DisplayDriverUninstaller ISO="tr-TR" Text="Turkish">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Temizledikten sonra yeniden başlat|(Tavsiye Edilen)</Text>
-			<Tooltip>Mevcut ve onceki sürücüleri kaldırın, sonra bilgisayarı yeniden başlatın.|(Tavsiye Edilir)</Tooltip>
+			<Text>
+				Temizledikten sonra yeniden başlat
+				(Tavsiye Edilen)
+			</Text>
+			<Tooltip>
+				Mevcut ve onceki sürücüleri kaldırın, sonra bilgisayarı yeniden başlatın.
+				(Tavsiye Edilir)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Temizledikten sonra yeniden başlatma|(Siyah ekran gibi sorunlara neden olabilir)</Text>
-			<Tooltip>Mevcut ve önceki sürücüleri kaldırın, ancak bilgisayarı yeniden başlatmayın.|(Siyah ekran gibi sorunlar neden olabilir)</Tooltip>
+			<Text>
+				Temizledikten sonra yeniden başlatma
+				(Siyah ekran gibi sorunlara neden olabilir)
+			</Text>
+			<Tooltip>
+				Mevcut ve önceki sürücüleri kaldırın, ancak bilgisayarı yeniden başlatmayın.
+				(Siyah ekran gibi sorunlar neden olabilir)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Temizledikten sonra yeniden başlat|(Yeni bir grafik kartı yüklemek için).</Text>
-			<Tooltip>Mevcut ve önceki sürücüleri kaldırın ve bilgisayarı kapat yeniden tarama yapma|(Yeni grafik kartı yüklemek için).</Tooltip>
+			<Text>
+				Temizledikten sonra yeniden başlat
+				(Yeni bir grafik kartı yüklemek için).
+			</Text>
+			<Tooltip>
+				Mevcut ve önceki sürücüleri kaldırın ve bilgisayarı kapat yeniden tarama yapma
+				(Yeni grafik kartı yüklemek için).
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
 			<Text>Otomatik olarak Windows varsayılan sürücüyü yüklemek için ayarla</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Yüklü olan Windows sürümü:</Text>
+			<Text>Yüklü olan Windows sürümü</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** DDU'yu sevdiniz mi? Bağış yaparak daha da gelişmemize yardımcı olabilirsiniz ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Günlük(Log):</Text>
+			<Text>Günlük(Log)</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Grafik Sürücüsünü Seçin :</Text>
+			<Text>Grafik Sürücüsünü Seçin</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -71,6 +65,11 @@
 			<Text3>Güncellemeler bulundu! En son sürümden daha eski sürümlerde sınırlı destek veriyoruz.</Text3>
 			<Text4>Güncelleştirmeler yapılamıyor veya zaten güncel!</Text4>
 		</lblUpdate>
+
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 
 		<OptionsMenuItem>
 			<Text>Options</Text>
@@ -119,7 +118,7 @@
 			<Text10>Silme işlemi tamamlandı. Çıkmak istiyor musunuz?</Text10>
 			<Text11>Tamamlandı!</Text11>
 			<Text12>Güvenli modda değil. Güvenli modda olası sorunları önlemek için yeniden başlatmanız önerilir. Şimdi güvenli moda geçilsin mi?</Text12>
-			<Text13>Mavi kurtarma ekranında seçmeniz gereken budur: Troubleshoot(Sorun Giderme)-&gt; advanced options(Gelişmiş Seçenekler) -&gt; startup Settings(Başlangıç Ayarları).</Text13>
+			<Text13>Mavi kurtarma ekranında seçmeniz gereken budur: Troubleshoot(Sorun Giderme) -&gt; advanced options(Gelişmiş Seçenekler) -&gt; startup Settings(Başlangıç Ayarları).</Text13>
 			<Text14>Bekleyen yeniden başlatma var, DDU'yu kullanmadan önce sistemi yeniden başaltınız.</Text14>
 		</Messages>
 		
@@ -134,14 +133,14 @@
 			<Text8>Eğer mevcutsa nVidia Optimus UpperFilter silme işlemi başlatıldı.</Text8>
 			<Text9>Yeni aygıt için taranıyor...</Text9>
 			<Text10>Temizleme işlemi tamamlandı!</Text10>
-			<Text11>DDU sürümü:</Text11>
+			<Text11>DDU sürümü</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Algılanan :</Text13>
-			<Text14>GPU aygıt kimliği :</Text14>
-			<Text15>Algılanan sürücü(ler) sürüm(ler) :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>INF Bölümü :</Text17>
-			<Text18>GPU düzgün yüklü değil :</Text18>
+			<Text13>Algılanan</Text13>
+			<Text14>GPU aygıt kimliği</Text14>
+			<Text15>Algılanan sürücü(ler) sürüm(ler)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Bölümü</Text17>
+			<Text18>GPU düzgün yüklü değil</Text18>
 			<Text19>Bazı özel klasörler temizleniyor biraz zaman alabilir...</Text19>
 			<Text20>Temizleme başladı...</Text20>
 			<Text21>Kaldırılıyor..</Text21>
@@ -186,20 +185,20 @@
 			<Text>Genel Seçenekler</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>"C:\NVidia" Sürücü klasörlerini sil (Tavsiye edilmez) </Text>
+			<Text>"C:\NVidia" Sürücü klasörlerini sil (Tavsiye edilmez)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>Önyükleme yolunda günlük dosyalarına kaydet (Tavsiye edilen).</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>PhysX'i Sil.</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>3DTV Play'i Sil.</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Sistem geri yükleme noktası oluştur (İzin veriliyorsa)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Mevcut olan veya olmayan monitörleri kaldır (Önerilen)</Text>
 		</lblRemMonitors>
@@ -212,28 +211,42 @@
 		<lblRemAMDKMPFD>
 			<Text>AMDKMPFD Sürücü/Filtre sil. (AMD chipset için yedeklemeniz tavsiye edilir)</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Başlangıçta Güvenli Mod mesaj kutusu göster.</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Yapılandırma dosyalarını Romaing klasöründe sakla.</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>Başlatılırken DDU güncellemelerini kontrol etme (Tavsiye edilmez).</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Geforce Experience (GFE) Kaldır.</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>AMD Crimson Shader Önbellek klasörünü sil.</Text>
-			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+			<Tooltip>
+				Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.
+				Also recommended if you are switching to another brand like nVidia.
+			</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text2>
+				Reboot to
+				Safe Mode
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Close</Text>
@@ -242,10 +255,17 @@
 			<Text>Launch option</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>
+				You are not in safe mode. It is highly recommended
+				reboot into Safe Mode to avoid possible issues.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -341,35 +361,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

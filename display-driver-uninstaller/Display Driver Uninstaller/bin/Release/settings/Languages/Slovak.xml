@@ -1,61 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="sk-SK" Text="Slovak" NewLineChar="|">
+<DisplayDriverUninstaller ISO="sk-SK" Text="Slovak">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Vyčistiť a reštartovať|(Silno odporúčané)</Text>
-			<Tooltip>Odinštalovať aktuálne aj predchádzajúce ovládače a reštartovať počítač|(Silno odporúčané)</Tooltip>
+			<Text>
+				Vyčistiť a reštartovať
+				(Silno odporúčané)
+			</Text>
+			<Tooltip
+				>Odinštalovať aktuálne aj predchádzajúce ovládače a reštartovať počítač
+				(Silno odporúčané)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Vyčistiť a NEreštartovať|(Môže spôsobiť problémy ako čiernu obrazovku)</Text>
-			<Tooltip>Odinštalovať aktuálne aj predchádzajúce ovládače a NEreštartovať počítač.|(Môže spôsobiť problémy ako je čierna obrazovka)</Tooltip>
+			<Text>
+				Vyčistiť a NEreštartovať
+				(Môže spôsobiť problémy ako čiernu obrazovku)
+			</Text>
+			<Tooltip>
+				Odinštalovať aktuálne aj predchádzajúce ovládače a NEreštartovať počítač.
+				(Môže spôsobiť problémy ako je čierna obrazovka)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Vyčistiť a vypnúť|(Na inštaláciu novej grafickej karty)</Text>
-			<Tooltip>Odinštalovať aktuálne aj predchádzajúce ovládače a Vypnúť počítač bez vyhľadania hardvéru|(Na inštaláciu novej grafickej karty)</Tooltip>
+			<Text>
+				Vyčistiť a vypnúť
+				(Na inštaláciu novej grafickej karty)
+			</Text>
+			<Tooltip>
+				Odinštalovať aktuálne aj predchádzajúce ovládače a Vypnúť počítač bez vyhľadania hardvéru
+				(Na inštaláciu novej grafickej karty)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
 			<Text>Obnoviť nastavenia inštalácie ovládačov cez Windows Update.</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Zistená verzia Windows:</Text>
+			<Text>Zistená verzia Windows</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Máte radi DDU? Zvážte poskytnutie finančného príspevku, ktorý pomôže ďalšiemu vývoju. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Záznam:</Text>
+			<Text>Záznam</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Vyberte grafický ovládač:</Text>
+			<Text>Vyberte grafický ovládač</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -67,7 +61,15 @@
 		
 		<lblUpdate>
 			<Text>Kontrola aktualizácií...</Text>
+			<Text2>No Updates found. Program is up to date.</Text2>
+			<Text3>Updates found! Expect limited support on older versions than the most recent.</Text3>
+			<Text4>Unable to fetch updates!</Text4>
 		</lblUpdate>
+
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 
 		<OptionsMenuItem>
 			<Text>Options</Text>
@@ -116,7 +118,8 @@
 			<Text10>Čistá odinštalácia hotová! Chcete ukončiť aplikáciu?</Text10>
 			<Text11>Hotovo!</Text11>
 			<Text12>Nie ste v núdzovom režime. Odporúčame reštartovať do núdzového režimu, aby ste predišli možným problémom., Chcete reštartovať do núdzového režimu?"</Text12>
-			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
 		</Messages>
 		
 		<UpdateLog>
@@ -130,14 +133,14 @@
 			<Text8>Začiatok odstraňovania nVidia Optimus UpperFilter, ak existuje.</Text8>
 			<Text9>Hľadanie nového zariadenia...</Text9>
 			<Text10>Čistá odinštalácia hotová!</Text10>
-			<Text11>DDU Verzia:</Text11>
+			<Text11>DDU Verzia</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Zistené :</Text13>
-			<Text14>GPU DeviceId :</Text14>
-			<Text15>Zistená verzia ovládača :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>INF Sekcia :</Text17>
-			<Text18>Nesprávne nainštalované GPU :</Text18>
+			<Text13>Zistené</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Zistená verzia ovládača</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Sekcia</Text17>
+			<Text18>Nesprávne nainštalované GPU</Text18>
 			<Text19>Odstraňovanie špeciálnych priečinkov, môže to chvíľu trvať...</Text19>
 			<Text20>Čistenie začalo...</Text20>
 			<Text21>Odinštalovanie</Text21>
@@ -182,20 +185,20 @@
 			<Text>General Options</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Remove "C:\nVidia" Drivers folders (NOT recommended) </Text>
+			<Text>Remove "C:\nVidia" Drivers folders (NOT recommended)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>Uložiť súbory záznamov v ceste po spustení (odporúčané)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Odstrániť PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Odstrániť 3DTV Play</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Vytvoriť bod obnovenia systému (ak je povolené)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Odstrániť existujúce a non - súčasné monitory ( odporúčané)</Text>
 		</lblRemMonitors>
@@ -203,33 +206,47 @@
 			<Text>Remove AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Remove "C:\AMD" Drivers folders (NOT recommended) </Text>
+			<Text>Remove "C:\AMD" Drivers folders (NOT recommended)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Enable Windows 8+ Direct Safe Mode.</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Show Safe Mode message box on startup</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Store config file in roaming folder</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>Do not check for DDU updates on startup (NOT Recommended)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Remove Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Remove AMD Crimson Shader Cache folder</Text>
-			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+			<Tooltip>
+				Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.
+				Also recommended if you are switching to another brand like nVidia.
+			</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text2>
+				Reboot to
+				Safe Mode
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Close</Text>
@@ -238,10 +255,17 @@
 			<Text>Launch option</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>
+				You are not in safe mode. It is highly recommended
+				reboot into Safe Mode to avoid possible issues.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -348,35 +372,13 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
 
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

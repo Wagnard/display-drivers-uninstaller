@@ -1,61 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="Cy-sr-SP" Text="Serbian (Cyrilic)" NewLineChar="|">
+<DisplayDriverUninstaller ISO="Cy-sr-SP" Text="Serbian (Cyrilic)">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Уклони и рестартуј компјутер|(Препоручљиво)</Text>
-			<Tooltip>Уклони тренутне и претходне заостале драјвере, након тога рестартуј компјутер.|(Препоручљиво)</Tooltip>
+			<Text>
+				Уклони и рестартуј компјутер
+				(Препоручљиво)
+			</Text>
+			<Tooltip>
+				Уклони тренутне и претходне заостале драјвере, након тога рестартуј компјутер.
+				(Препоручљиво)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Уклони и НЕМОЈ рестартовати компјутер|(Може довести до проблема као што су зацрњење екрана)</Text>
-			<Tooltip>Уклони тренутне и претходне заостале драјвере, али НЕМОЈ рестартовати компјутер.|(Може довести до проблема као што су зацрњење екрана)</Tooltip>
+			<Text>
+				Уклони и НЕМОЈ рестартовати компјутер
+				(Може довести до проблема као што су зацрњење екрана)
+			</Text>
+			<Tooltip>
+				Уклони тренутне и претходне заостале драјвере, али НЕМОЈ рестартовати компјутер.
+				(Може довести до проблема као што су зацрњење екрана)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Уклони и угаси компјутер|(За уградњу/инсталацију нове графичке картице)</Text>
-			<Tooltip>Обриши тренутне и претходне заостале драјвере и угаси компјутер, без поновног скенирања|(За уградњу/инсталацију нове графичке картице)</Tooltip>
+			<Text>
+				Уклони и угаси компјутер
+				(За уградњу/инсталацију нове графичке картице)
+			</Text>
+			<Tooltip>
+				Обриши тренутне и претходне заостале драјвере и угаси компјутер, без поновног скенирања
+				(За уградњу/инсталацију нове графичке картице)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
 			<Text>Windows аутоматску инсталацију драјвера врати на Default (укључи)</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Детектована вер.Windows-a:</Text>
+			<Text>Детектована вер.Windows-a</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Свиђа вам се DDU? Размислите о донацији, помозите даљи развој програма. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Извештај (log):</Text>
+			<Text>Извештај (log)</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Одабери драјвер за граф.кар.:</Text>
+			<Text>Одабери драјвер за граф.кар.</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -71,6 +65,11 @@
 			<Text3>Пронађена новија верзија програма! Старије верзије имају ограничену подршку уодносу на новије.</Text3>
 			<Text4>Неуспешан прелазак на нову верзију програма!</Text4>
 		</lblUpdate>
+
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 
 		<OptionsMenuItem>
 			<Text>Options</Text>
@@ -119,7 +118,7 @@
 			<Text10>Уклањање драјвера је завршено! Да ли желите да изађете из програма?</Text10>
 			<Text11>Завршено!</Text11>
 			<Text12>Нисте у Windows Safe Мode-u. Препоручљиво је да рестартујете Windows у Safe Mode-у да би избегли могуће проблеме. Желите ли да стартујете Windows у Safe Mode-у?</Text12>
-			<Text13>Ово треба да изаберете на плавом Recovery екрану: Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text13>Ово треба да изаберете на плавом Recovery екрану: Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Неопходан је рестарт система, молимо да прво рестартујете оперативни систем па тек онда наставите са коришћењем DDU програма.</Text14>
 		</Messages>
 		
@@ -134,14 +133,14 @@
 			<Text8>Почетак уклањања nVidia Optimus UpperFilter-а ако је присутан.</Text8>
 			<Text9>Скенирање нових уређаја...</Text9>
 			<Text10>Процедура чишћења је завршена!</Text10>
-			<Text11>DDU верзија:</Text11>
+			<Text11>DDU верзија</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Детектован :</Text13>
-			<Text14>GPU DeviceId :</Text14>
-			<Text15>Детектована верзија (верзије) драјвера :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>INF секција :</Text17>
-			<Text18>GPU није правилно инсталиран :</Text18>
+			<Text13>Детектован</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Детектована верзија (верзије) драјвера</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF секција</Text17>
+			<Text18>GPU није правилно инсталиран</Text18>
 			<Text19>Брисање специјалних директоријума, може потрајати...</Text19>
 			<Text20>CleanUP процедура стартована...</Text20>
 			<Text21>Деинсталација</Text21>
@@ -186,54 +185,68 @@
 			<Text>Главне опције</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Уклони:  "C:\nVidia"  ...драјвер директоријуме (фолдере) (НИЈЕ ПРЕПОРУЧЉИВО!) </Text>
+			<Text>Уклони:  "C:\nVidia"  ...драјвер директоријуме (фолдере) (НИЈЕ ПРЕПОРУЧЉИВО!)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
-			<Text>Сними извештај (log) фајлове у стартни директоријум\n(препоручљиво)</Text>
-		</lblsaveLogs>
+		<lblSaveLogs>
+			<Text>Сними извештај (log) фајлове у стартни директоријум (препоручљиво)</Text>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Уклони PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Уклони 3DTV Play</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Kреирај System Restore Point (ако је могуће)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Уклоните постојеће мониторе и онe који нису присутни\n(препоручљиво)</Text>
+			<Text>Уклоните постојеће мониторе и онe који нису присутни (препоручљиво)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
 			<Text>Уклони: AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Уклони:  "C:\AMD"  ...драјвер директоријуме (фодлере) (НИЈЕ ПРЕПОРУЧЉИВО!) </Text>
+			<Text>Уклони:  "C:\AMD"  ...драјвер директоријуме (фодлере) (НИЈЕ ПРЕПОРУЧЉИВО!)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Уклони драјвер/филтер AMDKMPFD (препоручљиво направити резервну копију за AMD чипсет-е)</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Прикажи Safe Mode поруку при стартовању</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Сачувај конфигурациони фајл у роаминг директоријуму\n (фолдеру)</Text>
+			<Text>Сачувај конфигурациони фајл у роаминг директоријуму (фолдеру)</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>Немој проверавати да ли постоји нова DDU верзија приликом\n стартовања (није препоручљиво)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Уклони Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Уклони AMD Crimson Shader Cache директоријум (фолдер)</Text>
-			<Tooltip>Препоручљиво уклонити ако приметите аномалије у вези приказа графике (успорења или артефакте) проузроковане оштећеним Shader Cache подацима.|Такође препоручљиво уклонити ако прелазите на другог произвођача графичких картица, некu nVidia GeForce графичку картицу рецимо.</Tooltip>
+			<Tooltip>
+				Препоручљиво уклонити ако приметите аномалије у вези приказа графике (успорења или артефакте) проузроковане оштећеним Shader Cache подацима.
+				Такође препоручљиво уклонити ако прелазите на другог произвођача графичких картица, некu nVidia GeForce графичку картицу рецимо.
+			</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text2>
+				Reboot to
+				Safe Mode
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Close</Text>
@@ -242,10 +255,17 @@
 			<Text>Launch option</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>
+				You are not in safe mode. It is highly recommended
+				reboot into Safe Mode to avoid possible issues.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -369,35 +389,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

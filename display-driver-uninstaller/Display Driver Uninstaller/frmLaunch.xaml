@@ -20,7 +20,7 @@
 			<Image Name="Image1" Source="/Resources/ddu logo3.png" Stretch="Uniform" Margin="6" />
 		</Border>
 
-		<DockPanel Grid.Row="1" Grid.Column="0">
+		<DockPanel Grid.Row="1" Grid.Column="0" Margin="10">
 			<Label DockPanel.Dock="Top" Name="lblLaunchOption" Content="lblLaunchOption" Padding="0" FontSize="14" HorizontalAlignment="Left" />
 			<ComboBox DockPanel.Dock="Top" x:Name="cbBootOption" SelectedIndex="0" Grid.Row="2" />
 		</DockPanel>

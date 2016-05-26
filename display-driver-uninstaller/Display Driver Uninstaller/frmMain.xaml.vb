@@ -5100,14 +5100,14 @@ Public Class frmMain
 
 	End Sub
 
-	Private Function winupdatepending() As Boolean
-		Dim regkey As RegistryKey = Nothing
-		regkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
-		If regkey IsNot Nothing Then
-			Return True
-		Else
-			Return False
-		End If
+	Private Function WinUpdatePending() As Boolean
+		Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
+			If regkey IsNot Nothing Then
+				Return True
+			Else
+				Return False
+			End If
+		End Using
 	End Function
 
 	Private Function GPUIdentify() As GPUVendor
@@ -5305,7 +5305,7 @@ Public Class frmMain
 
 	Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
 		If cbLanguage.SelectedItem IsNot Nothing Then
-			InitLanguage(False, CType(cbLanguage.SelectedItem, Languages.LanguageOption))
+			InitLanguage(False, DirectCast(cbLanguage.SelectedItem, Languages.LanguageOption))
 		End If
 	End Sub
 
@@ -5327,8 +5327,7 @@ Public Class frmMain
 			.Background = Me.Background
 			.Owner = Me
 			.DataContext = Me.DataContext
-			.ResizeMode = Windows.ResizeMode.NoResize
-			.WindowStyle = Windows.WindowStyle.ToolWindow
+
 		End With
 
 		frmOptions.ShowDialog()
@@ -5350,7 +5349,6 @@ Public Class frmMain
 
 		frmAbout.ShowDialog()
 	End Sub
-
 
 	Private Sub TosMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles ToSMenuItem.Click
 		Dim frmAbout As New frmAbout
@@ -5489,20 +5487,18 @@ Public Class frmMain
 				Exit Sub
 			End If
 
-			If Not Application.Data.IsDebug Then
+			If Not Application.Data.IsDebug Or 1 + 1 = 2 Then
 
 				If Not isElevated Then
 					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					'closeddu()
 					' Restart program and run as admin
 					Try
-						Dim exeName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
-						Dim startInfo As New ProcessStartInfo(exeName)
-						startInfo.Verb = "runas"
-						System.Diagnostics.Process.Start(startInfo)
+						System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile) With {.Verb = "runas"})
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 					End Try
+
 					Application.Current.Shutdown()
 					Exit Sub
 				End If
@@ -5545,14 +5541,8 @@ Public Class frmMain
 				End Select
 			End If
 
-#If 1 + 1 = 3 Then ' TODO: REMOVE (msgboxes gets annoying...)
-			MessageBox.Show("version (regkey): " & version & vbCrLf & vbCrLf &
-			"My.Computer.Info.OSFullName: " & My.Computer.Info.OSFullName &
-			"My.Computer.Info.OSVersion: " & My.Computer.Info.OSVersion)
-#End If
-			' https://msdn.microsoft.com/en-us/library/windows/desktop/ms724832%28v=vs.85%29.aspx
 
-			EnableControls(True)
+			' https://msdn.microsoft.com/en-us/library/windows/desktop/ms724832%28v=vs.85%29.aspx
 
 			Select Case Application.Settings.WinVersion
 				Case OSVersion.WinXP
@@ -5711,6 +5701,7 @@ Public Class frmMain
 						End If
 					End If
 				End If
+
 				'processing arguments
 
 				'arg = String.Join(" ", arguments, 1, arguments.Length - 1)
@@ -5782,7 +5773,7 @@ Public Class frmMain
 
 
 				'We check if there are any reboot from windows update pending. and if so we quit.
-				If winupdatepending() Then
+				If WinUpdatePending() Then
 					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text14"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Warning)
 					closeddu()
 					Exit Sub
@@ -5924,124 +5915,7 @@ Public Class frmMain
 					Me.WindowState = Windows.WindowState.Normal
 				End If
 
-				UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(10), Application.Settings.AppVersion.ToString()))
-
-				Dim info As LogEntry = LogEntry.Create()
-				info.Message = "System Information"
-				info.Add("DDU Version", Application.Settings.AppVersion.ToString())
-				info.Add("OS", Application.Settings.WinVersionText)
-				info.Add("Architecture", If(Application.Settings.WinIs64, "x64", "x86"))
-				info.Add(KvP.Empty)
-
-
-				Try
-					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
-						If regkey IsNot Nothing Then
-							For Each child As String In regkey.GetSubKeyNames
-								If IsNullOrWhitespace(child) Then Continue For
-
-								If Not StrContainsAny(child, True, "properties") Then
-
-									Using subRegkey As RegistryKey = regkey.OpenSubKey(child)
-										If subRegkey IsNot Nothing Then
-											Dim regValue As String = CStr(subRegkey.GetValue("Device Description"))
-
-											If Not IsNullOrWhitespace(regValue) Then
-												UpdateTextMethod(String.Format("{0}{1} - {2} {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
-												info.Add("GPU # " & child, regValue)
-											Else
-												regValue = CStr(subRegkey.GetValue("DriverDesc"))
-
-												If Not IsNullOrWhitespace(regValue) Then
-													If subRegkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
-														regValue = HexToString(GetREG_BINARY(regValue, "DriverDesc").Replace("00", ""))
-													End If
-
-													UpdateTextMethod(String.Format("{0}{1} - {2} {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
-													info.Add("GPU # " & child, regValue)
-												End If
-											End If
-
-											regValue = CStr(subRegkey.GetValue("MatchingDeviceId"))
-
-											If Not IsNullOrWhitespace(regValue) Then
-												UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(13), regValue))
-												info.Add("GPU DeviceId", regValue)
-											End If
-
-											Try
-												regValue = CStr(subRegkey.GetValue("HardwareInformation.BiosString"))
-
-												If Not IsNullOrWhitespace(regValue) Then
-													If subRegkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
-														regValue = HexToString(GetREG_BINARY(subRegkey.ToString, "HardwareInformation.BiosString").Replace("00", ""))
-
-														UpdateTextMethod(String.Format("Vbios: {0}", regValue))
-														info.Add("Vbios", regValue)
-													Else
-														regValue = CStr(subRegkey.GetValue("HardwareInformation.BiosString"))
-
-														' Devmltk; missed last char (no dot at end)
-														' regvalue	=	"Version 84.0.36.0.7"
-														' after		=	"Version 84.00.36.00.7"
-														' Should	=	"Version 84.00.36.00.07"
-														'For i As Integer = 0 To 9
-														'	'this is a little fix to correctly show the vbios version info
-														'	regValue = regValue.Replace("." & i.ToString & ".", ".0" & i.ToString & ".")
-														'Next
-
-														Dim sb As New StringBuilder(30)
-														Dim values() As String = regValue.Split(New String() {" ", "."}, StringSplitOptions.None)
-
-														For i As Int32 = 0 To values.Length - 1
-															If i = values.Length - 1 Then		'Last
-																sb.Append(values(i).PadLeft(2, "0"c))
-															ElseIf i > 0 Then
-																sb.AppendFormat("{0}.", values(i).PadLeft(2, "0"c))
-															Else
-																sb.AppendFormat("{0} ", values(i))
-															End If
-														Next
-														regValue = sb.ToString()
-
-														UpdateTextMethod(String.Format("Vbios: {0}", regValue))
-														info.Add("Vbios", regValue)
-													End If
-												End If
-											Catch ex As Exception
-											End Try
-
-											regValue = CStr(subRegkey.GetValue("DriverVersion"))
-
-											If Not IsNullOrWhitespace(regValue) Then
-												UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(14), regValue))
-												info.Add("Detected Driver(s) Version(s)", regValue)
-											End If
-
-											regValue = CStr(subRegkey.GetValue("InfPath"))
-
-											If Not IsNullOrWhitespace(regValue) Then
-												UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(15), regValue))
-												info.Add("INF name", regValue)
-											End If
-
-											regValue = CStr(subRegkey.GetValue("InfSection"))
-
-											If Not IsNullOrWhitespace(regValue) Then
-												UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(16), regValue))
-												info.Add("INF section", regValue)
-											End If
-										End If
-										UpdateTextMethod("--------------")
-										info.Add(KvP.Empty)
-									End Using
-								End If
-							Next
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
+				GetGPUDetails(True)
 
 				' ----------------------------------------------------------------------------
 				' Trying to get the installed GPU info 
@@ -6097,8 +5971,6 @@ Public Class frmMain
 					End Select
 				End If
 
-				Application.Log.Add(info)
-
 				GetOemInfo()
 
 			Catch ex As Exception
@@ -6107,8 +5979,9 @@ Public Class frmMain
 				Exit Sub
 			End Try
 
-
 			Topmost = False
+
+			EnableControls(True)
 
 			If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
 				Dim trd As Thread = New Thread(AddressOf ThreadTask) With
@@ -7211,6 +7084,137 @@ Public Class frmMain
 
 #End Region
 
+	Private Sub GetGPUDetails(ByVal firstLaunch As Boolean)
+		lbLog.Items.Clear()
+
+		UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(10), Application.Settings.AppVersion.ToString()))
+
+		Dim info As LogEntry = Nothing
+
+		If firstLaunch Then
+			info = LogEntry.Create()
+
+			info.Message = "System Information"
+			info.Add("DDU Version", Application.Settings.AppVersion.ToString())
+			info.Add("OS", Application.Settings.WinVersionText)
+			info.Add("Architecture", If(Application.Settings.WinIs64, "x64", "x86"))
+			info.Add(KvP.Empty)
+		End If
+
+		Try
+			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetSubKeyNames
+						If IsNullOrWhitespace(child) Then Continue For
+
+						If Not StrContainsAny(child, True, "properties") Then
+
+							Using subRegkey As RegistryKey = regkey.OpenSubKey(child)
+								If subRegkey IsNot Nothing Then
+									Dim regValue As String = CStr(subRegkey.GetValue("Device Description"))
+
+									If Not IsNullOrWhitespace(regValue) Then
+										UpdateTextMethod(String.Format("{0}{1} - {2} {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
+										If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
+									Else
+										regValue = CStr(subRegkey.GetValue("DriverDesc"))
+
+										If Not IsNullOrWhitespace(regValue) Then
+											If subRegkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
+												regValue = HexToString(GetREG_BINARY(regValue, "DriverDesc").Replace("00", ""))
+											End If
+
+											UpdateTextMethod(String.Format("{0}{1} - {2} {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
+											If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
+										End If
+									End If
+
+									regValue = CStr(subRegkey.GetValue("MatchingDeviceId"))
+
+									If Not IsNullOrWhitespace(regValue) Then
+										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(13), regValue))
+										If firstLaunch Then info.Add("GPU DeviceID", regValue)
+									End If
+
+									Try
+										regValue = CStr(subRegkey.GetValue("HardwareInformation.BiosString"))
+
+										If Not IsNullOrWhitespace(regValue) Then
+											If subRegkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
+												regValue = HexToString(GetREG_BINARY(subRegkey.ToString, "HardwareInformation.BiosString").Replace("00", ""))
+
+												UpdateTextMethod(String.Format("Vbios: {0}", regValue))
+												If firstLaunch Then info.Add("Vbios", regValue)
+											Else
+												regValue = CStr(subRegkey.GetValue("HardwareInformation.BiosString"))
+
+												' Devmltk; missed last char (no dot at end)
+												' regvalue	=	"Version 84.0.36.0.7"
+												' after		=	"Version 84.00.36.00.7"
+												' Should	=	"Version 84.00.36.00.07"
+												'For i As Integer = 0 To 9
+												'	'this is a little fix to correctly show the vbios version info
+												'	regValue = regValue.Replace("." & i.ToString & ".", ".0" & i.ToString & ".")
+												'Next
+
+												Dim sb As New StringBuilder(30)
+												Dim values() As String = regValue.Split(New String() {" ", "."}, StringSplitOptions.None)
+
+												For i As Int32 = 0 To values.Length - 1
+													If i = values.Length - 1 Then		'Last
+														sb.Append(values(i).PadLeft(2, "0"c))
+													ElseIf i > 0 Then
+														sb.AppendFormat("{0}.", values(i).PadLeft(2, "0"c))
+													Else
+														sb.AppendFormat("{0} ", values(i))
+													End If
+												Next
+												regValue = sb.ToString()
+
+												UpdateTextMethod(String.Format("Vbios: {0}", regValue))
+												If firstLaunch Then info.Add("Vbios", regValue)
+											End If
+										End If
+									Catch ex As Exception
+									End Try
+
+									regValue = CStr(subRegkey.GetValue("DriverVersion"))
+
+									If Not IsNullOrWhitespace(regValue) Then
+										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(14), regValue))
+										If firstLaunch Then info.Add("Detected Driver(s) Version(s)", regValue)
+									End If
+
+									regValue = CStr(subRegkey.GetValue("InfPath"))
+
+									If Not IsNullOrWhitespace(regValue) Then
+										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(15), regValue))
+										If firstLaunch Then info.Add("INF name", regValue)
+									End If
+
+									regValue = CStr(subRegkey.GetValue("InfSection"))
+
+									If Not IsNullOrWhitespace(regValue) Then
+										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(16), regValue))
+										If firstLaunch Then info.Add("INF section", regValue)
+									End If
+								End If
+								UpdateTextMethod("--------------")
+								If firstLaunch Then info.Add(KvP.Empty)
+							End Using
+						End If
+					Next
+				End If
+			End Using
+
+			If firstLaunch Then
+				Application.Log.Add(info)
+			End If
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+	End Sub
+
 	Private Sub EnableControls(ByVal enabled As Boolean)
 		'	Me.IsEnabled = enabled
 
@@ -7624,6 +7628,8 @@ Public Class frmMain
 			If changeTo IsNot Nothing AndAlso Not changeTo.Equals(Languages.Current) Then
 				Languages.Load(changeTo)
 				Languages.TranslateForm(Me)
+
+				GetGPUDetails(False)
 			End If
 		End If
 	End Sub
@@ -7657,6 +7663,10 @@ Public Class frmMain
 
 	Public Function UpdateTextTranslated(ByVal number As Integer) As String
 		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1))
+	End Function
+
+	Public Function UpdateTextEnglish(ByVal number As Integer) As String
+		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1), true)
 	End Function
 
 	Private Sub temporarynvidiaspeedup(ByVal config As ThreadSettings)	 'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
@@ -7848,7 +7858,43 @@ Public Class frmMain
 	End Sub
 
 	Private Sub restoreMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles restoreMenuItem.Click
-		SystemRestore()
+
+	End Sub
+
+	Private Sub checkXMLMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles checkXMLMenuItem.Click
+		Dim current As Languages.LanguageOption = Application.Settings.SelectedLanguage
+
+		Using sfd As WinForm.SaveFileDialog = New WinForm.SaveFileDialog
+			sfd.Title = "Select path for log file"
+			sfd.AddExtension = True
+			sfd.FilterIndex = 1
+			sfd.Filter = "Log files (*.log)|*.log"
+			sfd.DefaultExt = ".log"
+
+			If sfd.ShowDialog() = Forms.DialogResult.OK Then
+				If File.Exists(sfd.FileName) Then
+					File.Delete(sfd.FileName)
+				End If
+
+				Dim fileCount As Integer = 0
+				For Each opt As Languages.LanguageOption In Application.Settings.LanguageOptions
+					If opt.Equals(Languages.DefaultEng) Then
+						Continue For
+					End If
+
+					'	Only errors
+					'Languages.CheckLanguageFileForErrors(sfd.FileName, True, opt)
+
+					Languages.CheckLanguageFileForErrors(sfd.FileName, False, opt)
+
+					fileCount += 1
+				Next
+
+				MessageBox.Show("All files checked!" & Environment.NewLine & "Files: " & fileCount.ToString())
+			End If
+		End Using
+
+		Languages.Load(current)
 	End Sub
 
 	Private Sub SetupAPIMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles SetupAPIMenuItem.Click

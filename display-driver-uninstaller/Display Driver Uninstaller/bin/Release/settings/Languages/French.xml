@@ -1,61 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="fr-FR" Text="French" NewLineChar="|">
+<DisplayDriverUninstaller ISO="fr-FR" Text="French">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Nettoyer et redémarrer|(Hautement Recommendé)</Text>
-			<Tooltip>Désinstaller les pilotes actuels et antérieurs et redémarrez l'ordinateur|(Fortement recommandé)</Tooltip>
+			<Text>
+				Nettoyer et redémarrer
+				(Hautement Recommendé)
+			</Text>
+			<Tooltip>
+				Désinstaller les pilotes actuels et antérieurs et redémarrez l'ordinateur
+				(Fortement recommandé)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Nettoyer et NE PAS redémarrer.|(Possible écran noir)</Text>
-			<Tooltip>Désinstaller les pilotes actuels et antérieurs et ne PAS redémarrez l'ordinateur.|(Peut causer un écran noir)</Tooltip>
+			<Text>
+				Nettoyer et NE PAS redémarrer.
+				(Possible écran noir)
+			</Text>
+			<Tooltip>
+				Désinstaller les pilotes actuels et antérieurs et ne PAS redémarrez l'ordinateur.
+				(Peut causer un écran noir)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Nettoyer et éteindre|(pour l'installation d'une nouvelle carte graphique)</Text>
-			<Tooltip>Désinstaller les pilotes et arrêt de l'ordinateur sans rescan|(Pour installer une nouvelle carte graphique)</Tooltip>
+			<Text>
+				Nettoyer et éteindre
+				(pour l'installation d'une nouvelle carte graphique)
+			</Text>
+			<Tooltip>
+				Désinstaller les pilotes et arrêt de l'ordinateur sans rescan
+				(Pour installer une nouvelle carte graphique)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Réglez l'installation du pilote Windows Update par défaut.</Text>
+			<Text>
+				Réglez l'installation du pilote
+				Windows Update par défaut.
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Version de Windows détecté :</Text>
+			<Text>Version de Windows détecté</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** You like DDU? Think about a Donation, it will help further developement. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Log :</Text>
+			<Text>Log</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Sélectionnez Pilote graphique:</Text>
+			<Text>Sélectionnez Pilote graphique</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -71,6 +68,11 @@
 			<Text3>Mise-à-jour trouvée!</Text3>
 			<Text4>Incapable de vérifier les mises-à-jour.</Text4>
 		</lblUpdate>
+
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 		
 		<OptionsMenuItem>
 			<Text>Options</Text>
@@ -107,19 +109,19 @@
 		</VisitGeforceMenuItem>
 		
 		<Messages>
-			<Text1>Mise à jour disponible! Visitez le site Internet DDU maintenant? </Text1>
-			<Text2>Attendez-vous un soutien limité sur les versions plus anciennes que la plus récente. S'il vous plaît vérifier la nouvelle version avant de signaler des bugs. </Text2>
-			<Text3>Vous n'utilisez pas DDU avec des privilèges d'administrateur. DDU va maintenant quitter. </Text3>
-			<Text4>Impossible de trouver ddudr. S'il vous plaît se référer au log. </Text4>
-			<Text5>Display Driver Uninstaller (DDU) modifie votre base de registre beaucoup. DDU va essayer de créer automatiquement un point de restauration système (mode normal uniquement). </Text5>
-			<Text6>Un problème est survenu dans l'un des modules, envoyer vos logs de DDU au développeur. </Text6>
-			<Text7>DDU a détecté que vous disposez d'un ordinateur portable AMD de commutation (Enduro ou équivalent), DDU n'est pas encore pleinement compatible / testé avec des systèmes enduro, utiliser à vos risques et périls. </Text7>
-			<Text8>DDU a détecté que vous n'êtes pas en mode sans échec ... Pour un meilleur CleanUP sans problèmes, il est recommandé que vous redémarrez en mode sans échec. </Text8>
-			<Text9>DDU a changé un paramètre qui empêche les pilotes de télécharger automatiquement avec Windows Update. Vous pouvez définir ce retour à défaut, si vous voulez après votre installation du nouveau pilote. </Text9>
-			<Text10>Désinstallation propre terminée! Voulez-vous quitter maintenant? </Text10>
+			<Text1>Mise à jour disponible! Visitez le site Internet DDU maintenant?</Text1>
+			<Text2>Attendez-vous un soutien limité sur les versions plus anciennes que la plus récente. S'il vous plaît vérifier la nouvelle version avant de signaler des bugs.</Text2>
+			<Text3>Vous n'utilisez pas DDU avec des privilèges d'administrateur. DDU va maintenant quitter.</Text3>
+			<Text4>Impossible de trouver ddudr. S'il vous plaît se référer au log.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) modifie votre base de registre beaucoup. DDU va essayer de créer automatiquement un point de restauration système (mode normal uniquement).</Text5>
+			<Text6>Un problème est survenu dans l'un des modules, envoyer vos logs de DDU au développeur.</Text6>
+			<Text7>DDU a détecté que vous disposez d'un ordinateur portable AMD de commutation (Enduro ou équivalent), DDU n'est pas encore pleinement compatible / testé avec des systèmes enduro, utiliser à vos risques et périls.</Text7>
+			<Text8>DDU a détecté que vous n'êtes pas en mode sans échec ... Pour un meilleur CleanUP sans problèmes, il est recommandé que vous redémarrez en mode sans échec.</Text8>
+			<Text9>DDU a changé un paramètre qui empêche les pilotes de télécharger automatiquement avec Windows Update. Vous pouvez définir ce retour à défaut, si vous voulez après votre installation du nouveau pilote.</Text9>
+			<Text10>Désinstallation propre terminée! Voulez-vous quitter maintenant?</Text10>
 			<Text11>Fait!</Text11>
 			<Text12>Vous n'êtes pas en mode sans échec. Il est fortement recommandé de redémarrer en mode sans échec pour éviter des problèmes. Redémarrez en mode sans échec, maintenant? "</Text12>
-			<Text13>Voici les options que vous devez selectioner a l'ecran bleu du menu de recuperation" : Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text13>Voici les options que vous devez selectioner a l'ecran bleu du menu de recuperation" : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Il ya un redémarrage en attente , s'il vous plaît, redémarrer avant d'utiliser DDU.</Text14>
 		</Messages>
 		
@@ -134,14 +136,14 @@
 			<Text8>Starting the removal of nVidia Optimus UpperFilter if present.</Text8>
 			<Text9>Scanning for new device...</Text9>
 			<Text10>Clean uninstall completed!</Text10>
-			<Text11>DDU Version:</Text11>
+			<Text11>DDU Version</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Detected :</Text13>
-			<Text14>GPU DeviceId :</Text14>
-			<Text15>Detected Driver(s) Version(s) :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>INF Section :</Text17>
-			<Text18>GPU not Correctly Installed :</Text18>
+			<Text13>Detected</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Detected Driver(s) Version(s)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Section</Text17>
+			<Text18>GPU not Correctly Installed</Text18>
 			<Text19>Deleting some specials folders, it may take some times...</Text19>
 			<Text20>CleanUP started...</Text20>
 			<Text21>Uninstalling</Text21>
@@ -165,6 +167,7 @@
 			<Text39>Process/Services CleanUP Complete</Text39>
 			<Text40>Deleted.</Text40>
 			<Text41>Value removed.</Text41>
+			<Text42>File Deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
 	
@@ -185,20 +188,20 @@
 			<Text>General Options</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Retirer les dossiers "C:\nVidia" (PAS recommendé) </Text>
+			<Text>Retirer les dossiers "C:\nVidia" (PAS recommendé)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
-			<Text>Enregistrer les fichiers journaux dans le chemin de démarrage\n(recommandé)</Text>
-		</lblsaveLogs>
+		<lblSaveLogs>
+			<Text>Enregistrer les fichiers journaux dans le chemin de démarrage (recommandé)</Text>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Retirer PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Retirer 3DTV Play</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Créer un point de restauration système (Si il est actif)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Retirez les moniteurs présents et non présents (recommandé)</Text>
 		</lblRemMonitors>
@@ -206,33 +209,47 @@
 			<Text>Retirer AMD Audio Bus (System Device)</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Retirer les dossiers "C:\AMD" (PAS recommendé) </Text>
+			<Text>Retirer les dossiers "C:\AMD" (PAS recommendé)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Retirer pilote / filtre AMDKMPFD  (Une Sauvegarde est recommandée pour les chipset AMD)</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Afficher le message du mode sans échec au démarrage.</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Sauvegarder le fichier de configuration dans le dossier d'itinérance</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>Ne pas vérifier les mises à jour au démarrage de DDU (non recommandé)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Retirer Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Retirer le répertoire du AMD Crimson Shader Cache</Text>
-			<Tooltip>Recommandé s’il y a des anomalies graphiques (vitesse ou la corruption visuelle) causée par un cache de données de shader corrompu.|Aussi recommandé si vous passez à une autre marque comme nVidia.</Tooltip>
+			<Tooltip>
+				Recommandé s’il y a des anomalies graphiques (vitesse ou la corruption visuelle) causée par un cache de données de shader corrompu.
+				Aussi recommandé si vous passez à une autre marque comme nVidia.
+			</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Options de démarrage">
 		<btnAccept>
 			<Text>Exécuter</Text>
-			<Text2>Redémarrer en|Mode sans échec</Text2>
+			<Text2>
+				Redémarrer en
+				Mode sans échec
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Fermer</Text>
@@ -241,10 +258,17 @@
 			<Text>Options de démarrage</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>Vous n'êtes pas en mode sans échec . Il est fortement recommandé de |redémarrer en mode sans échec pour éviter des problèmes.</Text>
+			<Text>
+				Vous n'êtes pas en mode sans échec . Il est fortement recommandé de
+				redémarrer en mode sans échec pour éviter des problèmes.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -353,35 +377,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

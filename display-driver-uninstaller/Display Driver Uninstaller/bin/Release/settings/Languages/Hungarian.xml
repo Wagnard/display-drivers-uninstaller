@@ -1,61 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="hu-HU" Text="Hungarian" NewLineChar="|">
+<DisplayDriverUninstaller ISO="hu-HU" Text="Hungarian">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Tisztítás és újraindítás|(Erősen ajánlott)</Text>
-			<Tooltip>Jelenlegi és előző driverek eltávolítása és a számítógép újraindítása|(Erősen ajánlott)</Tooltip>
+			<Text>
+				Tisztítás és újraindítás
+				(Erősen ajánlott)
+			</Text>
+			<Tooltip>
+				Jelenlegi és előző driverek eltávolítása és a számítógép újraindítása
+				(Erősen ajánlott)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Tisztítás újraindítás NÉLKÜL|(Hibákat okozhat, például fekete képernyőt)</Text>
-			<Tooltip>Jelenlegi és előző driverek eltávolítása, de ne indítsa újra a számítógépet.|(például elsötétülő képernyőt okozhat)</Tooltip>
+			<Text>
+				Tisztítás újraindítás NÉLKÜL
+				(Hibákat okozhat, például fekete képernyőt)
+			</Text>
+			<Tooltip>
+				Jelenlegi és előző driverek eltávolítása, de ne indítsa újra a számítógépet.
+				(például elsötétülő képernyőt okozhat)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Tisztítás és leállítás|(Új videókártya beüzemeléséhez)</Text>
-			<Tooltip>Jelenlegi és előző driverek eltávolítása és a számítógép leállítása újraellenőrzés nélkül|(Új grafikus kártya telepítéséhez)</Tooltip>
+			<Text>
+				Tisztítás és leállítás
+				(Új videókártya beüzemeléséhez)
+			</Text>
+			<Tooltip>
+				Jelenlegi és előző driverek eltávolítása és a számítógép leállítása újraellenőrzés nélkül
+				(Új grafikus kártya telepítéséhez)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Windows Update illesztőprogram telepítés beállítása alapértelmezettre.</Text>
+			<Text>
+				Windows Update illesztőprogram
+				telepítés beállítása alapértelmezettre.
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Észlelt Windows verzió:</Text>
+			<Text>Észlelt Windows verzió</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Tetszik a DDU? Gondold át egy esetleges támogatás lehetőségét, sokat segítene a fejlesztés jövőjén. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Napló :</Text>
+			<Text>Napló</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Válassz grafikus illesztőprogramot :</Text>
+			<Text>Válassz grafikus illesztőprogramot</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -72,6 +69,11 @@
 			<Text4>Frissítések ellenőrzése nem lehetséges!</Text4>
 		</lblUpdate>
 
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
+		
 		<OptionsMenuItem>
 			<Text>Options</Text>
 		</OptionsMenuItem>
@@ -119,7 +121,7 @@
 			<Text10>Tiszta eltávolítás kész! Szeretnél most kilépni?</Text10>
 			<Text11>Kész!</Text11>
 			<Text12>Jelenleg nem csökkentett módban vagy. Erősen ajánlott csökkentett módba újraindítani az esetleges hibák elkerülése érdekében. Újraindítod most csökkentett módba?</Text12>
-			<Text13>A kék helyreállító képernyő esetén a következőt kell kiválasztanod: Hibakeresés-&gt; Haladó beállítások -&gt; Indítópult beállítások.</Text13>
+			<Text13>A kék helyreállító képernyő esetén a következőt kell kiválasztanod: Hibakeresés -&gt; Haladó beállítások -&gt; Indítópult beállítások.</Text13>
 			<Text14>Egy várakozó újraindítás van folyamatban, a DDU használata előtt kérlek indítsd újra a számítógépet</Text14>
 		</Messages>
 		
@@ -134,17 +136,17 @@
 			<Text8>nVidia Optimus UpperFilter eltávolításának indítása, ha létezik.</Text8>
 			<Text9>Új eszköz keresése...</Text9>
 			<Text10>Tiszta eltávolítás kész !</Text10>
-			<Text11>DDU verzió:</Text11>
+			<Text11>DDU verzió</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Észlelve :</Text13>
-			<Text14>GPU DeviceId :</Text14>
-			<Text15>Észlelt illesztőprogram verzió(k) :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>INF szekció :</Text17>
-			<Text18>GPU nincs megfelelően telepítve :</Text18>
+			<Text13>Észlelve</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Észlelt illesztőprogram verzió(k)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF szekció</Text17>
+			<Text18>GPU nincs megfelelően telepítve</Text18>
 			<Text19>Néhány különleges könyvtár törlése, beletelhet némi időbe...</Text19>
 			<Text20>Takarítás elindult...</Text20>
-			<Text21>Eltávolítás:</Text21>
+			<Text21>Eltávolítás</Text21>
 			<Text22>illesztőprogram</Text22>
 			<Text23>ddudr eltávolítás végrehajtása, kérlek várj (néhány percbe beletelhet)</Text23>
 			<Text24>GPU(k) eltávolítva az Eszközkezelőből.</Text24>
@@ -186,20 +188,20 @@
 			<Text>Általános beállítások</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>"C:\nVidia" illesztőprogram mappák eltávolítása (NEM ajánlott) </Text>
+			<Text>"C:\nVidia" illesztőprogram mappák eltávolítása (NEM ajánlott)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>Naplófájlok mentése az indítási útvonalra (ajánlott)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>PhysX eltávolítása</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>3DTV Play eltávolítása</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Rendszervisszaállítási pont létrehozása (ha engedélyezett)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Aktuális és nem aktuális kijelzők eltávolítása (ajánlott)</Text>
 		</lblRemMonitors>
@@ -207,33 +209,47 @@
 			<Text>AMD Audio Bus eltávolítása</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>"C:\AMD" illesztőprogram könyvtárak eltávolítása (NEM ajánlott) </Text>
+			<Text>"C:\AMD" illesztőprogram könyvtárak eltávolítása (NEM ajánlott)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>AMDKMPFD illesztőprogram/szűrő eltávolítása (az AMD chipset biztonsági mentése ajánlott)</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Csökkentett mód üzenet megjelenítése indításkor</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Konfigurációs fájl tárolása a roaming könyvtárban (még hibás lehet)</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>Ne ellenõrizze a DDU frissítéseket indításkor (NEM ajánlott)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Remove Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Remove AMD Crimson Shader Cache folder</Text>
-			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+			<Tooltip>
+				Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.
+				Also recommended if you are switching to another brand like nVidia.
+			</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text2>
+				Reboot to
+				Safe Mode
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Close</Text>
@@ -242,10 +258,17 @@
 			<Text>Launch option</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>
+				You are not in safe mode. It is highly recommended
+				reboot into Safe Mode to avoid possible issues.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -359,35 +382,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

@@ -1,65 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="pl-PL" Text="Polish" NewLineChar="|">
+<DisplayDriverUninstaller ISO="pl-PL" Text="Polish">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Wyczyść i Restartuj|(Wysoce Zalecane)</Text>
-			<Tooltip>Odinstaluj obecne i poprzednie sterowniki i uruchom ponownie komputer|(Wysoce Zalecane)</Tooltip>
+			<Text>
+				Wyczyść i Restartuj
+				(Wysoce Zalecane)
+			</Text>
+			<Tooltip>
+				Odinstaluj obecne i poprzednie sterowniki i uruchom ponownie komputer
+				(Wysoce Zalecane)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Wyczyść i NIE Restartuj|(Może powodować problemy jak czarny ekran)</Text>
-			<Tooltip>Odinstaluj obecne i poprzednie sterowniki i NIE uruchamiaj ponownie komputera.|(Może powodować problemy jak czarny ekran)</Tooltip>
+			<Text>
+				Wyczyść i NIE Restartuj
+				(Może powodować problemy jak czarny ekran)
+			</Text>
+			<Tooltip>
+				Odinstaluj obecne i poprzednie sterowniki i NIE uruchamiaj ponownie komputera.
+				(Może powodować problemy jak czarny ekran)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Wyczyść i Zamknij System|(W przypadku instalowania nowej karty)</Text>
-			<Tooltip>Odinstaluj obecne i poprzednie sterowniki i Wyłącz komputer bez ponownego skanowania|(W przypadku instalowania nowej karty)</Tooltip>
+			<Text>
+				Wyczyść i Zamknij System
+				(W przypadku instalowania nowej karty)
+			</Text>
+			<Tooltip>
+				Odinstaluj obecne i poprzednie sterowniki i Wyłącz komputer bez ponownego skanowania
+				(W przypadku instalowania nowej karty)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Przywróć domyślne ustawienia aktualizacji sterowników z Windows Update.</Text>
+			<Text>
+				Przywróć domyślne ustawienia aktualizacji
+				sterowników z Windows Update.
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Wykryta wersja Windows:</Text>
+			<Text>Wykryta wersja Windows</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>Uwaga: Ostatnio zostało dodane ToS (Warunki Użytkowania), prosze przeczytaj to klikając na "?"</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Dziennik zdarzeń:</Text>
+			<Text>Dziennik zdarzeń</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Wybierz sterownik graficzny:</Text>
+			<Text>Wybierz sterownik graficzny</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
-			<Text>Uwaga: Za wszelkie błędy lub zniszczenie sprzętu bierzesz odpowiedzialność wyłącznie na siebie. </Text>
+			<Text>Uwaga: Za wszelkie błędy lub zniszczenie sprzętu bierzesz odpowiedzialność wyłącznie na siebie.</Text>
 		</Label9>
 		<Label10>
 			<Text>Zalecane jest użycie DDU w Trybie Awaryjnym.</Text>
@@ -71,6 +68,11 @@
 			<Text3>Znaleziono aktualizację! Spodziewaj się ograniczonego wsparcia dla starszych wersji programu niż najnowszych.</Text3>
 			<Text4>Nie można pobrać informacji o aktualizacjach!</Text4>
 		</lblUpdate>
+
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 
 		<OptionsMenuItem>
 			<Text>Options</Text>
@@ -120,6 +122,7 @@
 			<Text11>Zrobione!</Text11>
 			<Text12>System nie jest uruchomiony w trybie awaryjnym. Jest wysoce zalecane aby zrestartować system do trybu awaryjnego aby uniknąć możliwych problemów. Czy uruchomić ponownie system do Trybu Awaryjnego?</Text12>
 			<Text13>Oto co potrzebujesz wybrać jeśli pojawi się niebieski ekran odzyskiwania : Rozwiązywanie problemów -&gt; zaawansowane opcje -&gt; Opcje startowe Windows.</Text13>
+			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
 		</Messages>
 		
 		<UpdateLog>
@@ -133,14 +136,14 @@
 			<Text8>Rozpoczynanie usuwania nVidia Optimus UpperFilter jeśli istnieje.</Text8>
 			<Text9>Skanowanie w poszukiwaniu nowego sprzętu...</Text9>
 			<Text10>Usuwanie zakończone!</Text10>
-			<Text11>Wersja DDU:</Text11>
+			<Text11>Wersja DDU</Text11>
 			<Text12>Karta graficzna #</Text12>
-			<Text13>Wykryty :</Text13>
-			<Text14>DeviceId karty graficznej :</Text14>
-			<Text15>Wykryte wersje sterowników :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>Sekcja INF :</Text17>
-			<Text18>Karta graficzna nie została poprawnie zainstalowana :</Text18>
+			<Text13>Wykryty</Text13>
+			<Text14>DeviceId karty graficznej</Text14>
+			<Text15>Wykryte wersje sterowników</Text15>
+			<Text16>INF</Text16>
+			<Text17>Sekcja INF</Text17>
+			<Text18>Karta graficzna nie została poprawnie zainstalowana</Text18>
 			<Text19>Usuwanie kilku wybranych folderów, może to zająć chwilę czasu...</Text19>
 			<Text20>Rozpoczęto czyszczenie CleanUP...</Text20>
 			<Text21>Odinstalowywanie</Text21>
@@ -185,20 +188,20 @@
 			<Text>Ogólne opcje</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Usuń folder sterowników "C:\nVidia" (NIE zalecane) </Text>
+			<Text>Usuń folder sterowników "C:\nVidia" (NIE zalecane)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>Zapisuj pliki dziennika zdarzeń w folderze startowym (Wysoce zalecane)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Usuń PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Usuń 3DTV Play</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Utwórz Punkt Przywracania Systemu (jeśli możliwe)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Usuń obecne i nie obecne monitory (zalecane)</Text>
 		</lblRemMonitors>
@@ -206,33 +209,47 @@
 			<Text>Usuń AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Usuń folder sterowników "C:\AMD" (NIE zalecane) </Text>
+			<Text>Usuń folder sterowników "C:\AMD" (NIE zalecane)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Aktywuj bezpośredni Tryb Awaryjny Windows 8+ </Text>
+			<Text>Aktywuj bezpośredni Tryb Awaryjny Windows 8+</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
-			<Text>Poka� informacj� o Trybie Awaryjnym na starcie</Text>
-		</lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
+			<Text>Show Safe Mode message box on startup</Text>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Przechowuj plik konfiguracyjny w folderze roaming</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>Nie sprawdzaj dostępności aktualizacji dla DDU przy starcie (NIE zalecane)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Remove Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Remove AMD Crimson Shader Cache folder</Text>
-			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+			<Tooltip>
+				Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.
+				Also recommended if you are switching to another brand like nVidia.
+			</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text2>
+				Reboot to
+				Safe Mode
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Close</Text>
@@ -241,10 +258,17 @@
 			<Text>Launch option</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>
+				You are not in safe mode. It is highly recommended
+				reboot into Safe Mode to avoid possible issues.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -360,35 +384,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

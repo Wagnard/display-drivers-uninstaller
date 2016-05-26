@@ -8,7 +8,7 @@
 	mc:Ignorable="d" 
 	
     Title="{Binding Settings.AppName, Mode=OneWay}" 
-	Height="550" Width="640"
+	Height="600" Width="800"
     MinHeight="550" MinWidth="640" ResizeMode="CanResize" Loaded="frmMain_Loaded" 
     Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" 
     Visibility="Visible" WindowStartupLocation="CenterScreen" d:DesignHeight="550" d:DesignWidth="640">
@@ -56,7 +56,7 @@
 			<ColumnDefinition Width="Auto" MinWidth="200" MaxWidth="350" />
 			<ColumnDefinition Width="*" />	
 			<ColumnDefinition Width="20" />		<!-- Space ( 30px ) -->
-			<ColumnDefinition Width="200" MaxWidth="300" />
+			<ColumnDefinition Width="250" MaxWidth="300" />
 		</Grid.ColumnDefinitions>
 		
 		<Grid.RowDefinitions>
@@ -89,9 +89,9 @@
 
 			<MenuItem x:Name="TestMenuItem" Header="TESTING" Visibility="{Binding IsDebug, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
 				<MenuItem x:Name="RegMenuItem" Header="Reg (test3)" />
-				<MenuItem x:Name="createXMLMenuItem" Header="Create XMLs" />
+				<MenuItem x:Name="checkXMLMenuItem" Header="Check language files for errors" />
 				<MenuItem x:Name="SetupAPIMenuItem" Header="SetupAPI" />
-				<MenuItem x:Name="restoreMenuItem" Header="System Restore" />
+				<MenuItem x:Name="restoreMenuItem" Header="Generic test" />
 			</MenuItem>
 		</Menu>
 
@@ -132,13 +132,31 @@
 			</Border>
 		</DockPanel>
 
-		<UniformGrid Grid.Row="2" x:Name="ButtonsPanel" Rows="3">
-			<Button DockPanel.Dock="Top" Margin="10,10,10,0" x:Name="btnCleanRestart" Content="btnRestart" HorizontalAlignment="Stretch" Height="50" />
-			<Button DockPanel.Dock="Top" Margin="10,10,10,0" x:Name="btnClean" Content="btnClean" HorizontalAlignment="Stretch" Height="50" />
-			<Button DockPanel.Dock="Top" Margin="10,10,10,0" x:Name="btnCleanShutdown" Content="btnCleanShutdown" HorizontalAlignment="Stretch" Height="50" />
-		</UniformGrid >
+		<DockPanel Grid.Row="2" x:Name="ButtonsPanel" >
+			<DockPanel.Resources>
+				<Style TargetType="Button" >
+					<Setter Property="MinWidth" Value="250" />
+					<Setter Property="MaxWidth" Value="320" />
+					<Setter Property="MinHeight" Value="40" />
+					<Setter Property="MaxHeight" Value="80" />
+					<Setter Property="Margin" Value="10,10,10,0" />
+				</Style>
+			</DockPanel.Resources>
+			
+			<Button DockPanel.Dock="Top" x:Name="btnCleanRestart" HorizontalAlignment="Stretch" >
+				<TextBlock Text="btnRestart" TextWrapping="Wrap" TextAlignment="Center" />
+			</Button>
+			<Button DockPanel.Dock="Top" x:Name="btnClean" HorizontalAlignment="Stretch" >
+				<TextBlock Text="btnClean" TextWrapping="Wrap" TextAlignment="Center" />
+			</Button>
+			<Button DockPanel.Dock="Top" x:Name="btnCleanShutdown" HorizontalAlignment="Stretch" >
+				<TextBlock Text="btnCleanShutdown" TextWrapping="Wrap" TextAlignment="Center" />
+			</Button>
+		</DockPanel>
 
-		<Button Grid.Row="4" Grid.Column="3" Margin="10,0" x:Name="btnWuRestore" Content="btnWuRestore" Height="50"/>
+		<Button Grid.Row="4" Grid.Column="3" Margin="10,0" x:Name="btnWuRestore" MinHeight="40" MaxHeight="60">
+			<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center" />
+		</Button>
 		    
         <Label x:Name="lblUpdate" Content="lblUpdate" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="6" />
    
@@ -162,7 +180,7 @@
 				<Button x:Name="imgOffer">
 					<Button.Template>
 						<ControlTemplate>
-							<Image Source="Resources/btn (2).png"/>
+							<Image Source="Resources/btn (2).png" ToolTip="{Binding ElementName=lblOffer, Path=ToolTip, Mode=OneWay}"/>
 						</ControlTemplate>
 					</Button.Template>
 				</Button>

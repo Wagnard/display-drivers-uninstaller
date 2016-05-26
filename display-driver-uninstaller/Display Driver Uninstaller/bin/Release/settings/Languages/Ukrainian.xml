@@ -1,61 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="uk-UA" Text="Ukrainian" NewLineChar="|">
+<DisplayDriverUninstaller ISO="uk-UA" Text="Ukrainian">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Очистити та перезавантажити|(настійно рекомендовано)</Text>
-			<Tooltip>Натисніть, щоб видалити поточний і попередні драйвери, а потім перезавантажити комп'ютер.|(настійно рекомендовано)</Tooltip>
+			<Text>
+				Очистити та перезавантажити
+				(настійно рекомендовано)
+			</Text>
+			<Tooltip>
+				Натисніть, щоб видалити поточний і попередні драйвери, а потім перезавантажити комп'ютер.
+				(настійно рекомендовано)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Очистити БЕЗ перезавантаження|(може спричинити проблеми, подібні до "чорного екрана")</Text>
-			<Tooltip>Натисніть, щоб видалити поточний і попередні драйвери, але не перезавантажувати комп'ютер.|(може спричинити проблеми, подібні до "чорного екрана")</Tooltip>
+			<Text>
+				Очистити БЕЗ перезавантаження
+				(може спричинити проблеми, подібні до "чорного екрана")
+			</Text>
+			<Tooltip>
+				Натисніть, щоб видалити поточний і попередні драйвери, але не перезавантажувати комп'ютер.
+				(може спричинити проблеми, подібні до "чорного екрана")
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Видалити та завершити роботу|(для встановлення нової відеокарти)</Text>
-			<Tooltip>Натисніть, щоб видалити поточний і попередні драйвери та завершити роботу комп'ютера без повторного сканування.|(для встановлення нової відеокарти)</Tooltip>
+			<Text>
+				Видалити та завершити роботу
+				(для встановлення нової відеокарти)
+			</Text>
+			<Tooltip>
+				Натисніть, щоб видалити поточний і попередні драйвери та завершити роботу комп'ютера без повторного сканування.
+				(для встановлення нової відеокарти)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
 			<Text>Встановити типове налаштування для системи оновлення драйверів з Windows Update</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Виявлено версію Windows:</Text>
+			<Text>Виявлено версію Windows</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>Подобається DDU? Поміркуйте щодо пожертвування (Donate) - це допоможе його подальшому розвитку.</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Журнал:</Text>
+			<Text>Журнал</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Виберіть графічний драйвер:</Text>
+			<Text>Виберіть графічний драйвер</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -71,6 +65,11 @@
 			<Text3>Виявлено оновлення! Очікуйте на обмежену підтримку версій, старіших ніж найостанніша.</Text3>
 			<Text4>Не вдалося завантажити оновлення!</Text4>
 		</lblUpdate>
+
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 
 		<OptionsMenuItem>
 			<Text>Параметри</Text>
@@ -119,7 +118,7 @@
 			<Text10>Повне видалення завершено! Ви хочете зараз вийти?</Text10>
 			<Text11>Готово!</Text11>
 			<Text12>Система працює не в безпечному режимі. Настійно рекомендовано перезавантажити її в безпечному режимі, щоб уникнути можливих проблем. Перезапустити систему в безпечному режимі зараз?</Text12>
-			<Text13>Ось що вам необхідно вибрати на синьому екрані відновлення: Виправити неполадки -&gt; Додаткові параметри-&gt; Настройки завантаження.</Text13>
+			<Text13>Ось що вам необхідно вибрати на синьому екрані відновлення: Виправити неполадки -&gt; Додаткові параметри -&gt; Настройки завантаження.</Text13>
 			<Text14>Існує відкладене перезавантаження, виконайте його, перш ніж використовувати DDU</Text14>
 		</Messages>
 		
@@ -134,14 +133,14 @@
 			<Text8>Запуск видалення NVIDIA Optimus UpperFilter, якщо він є.</Text8>
 			<Text9>Пошук нового пристрою...</Text9>
 			<Text10>Повне видалення завершено!</Text10>
-			<Text11>Версія DDU:</Text11>
+			<Text11>Версія DDU</Text11>
 			<Text12>Графічний процесор #</Text12>
-			<Text13>виявлено:</Text13>
-			<Text14>DeviceId графічного процесора:</Text14>
-			<Text15>Виявлені версії драйверів:</Text15>
-			<Text16>Файл INF:</Text16>
-			<Text17>Секція INF:</Text17>
-			<Text18>Графічний процесор інстальовано неправильно:</Text18>
+			<Text13>виявлено</Text13>
+			<Text14>DeviceId графічного процесора</Text14>
+			<Text15>Виявлені версії драйверів</Text15>
+			<Text16>Файл INF</Text16>
+			<Text17>Секція INF</Text17>
+			<Text18>Графічний процесор інстальовано неправильно</Text18>
 			<Text19>Видалення деяких спеціальних папок, це може тривати деякий час...</Text19>
 			<Text20>Розпочато очищення...</Text20>
 			<Text21>Видалення</Text21>
@@ -185,59 +184,69 @@
 		<lblGeneral>
 			<Text>Загальні параметри</Text>
 		</lblGeneral>
-		<CheckBox1>
+		<lblRemNvidiaDirs>
 			<Text>Видалити папку драйверів "C:\nVidia" (НЕ рекомендовано)</Text>
-		</CheckBox1>
-		<CheckBox2>
-			<Text>Зберегти файли журналу в папці запуску\n(рекомендовано)</Text>
-		</CheckBox2>
-		<CheckBox3>
+		</lblRemNvidiaDirs>
+		<lblSaveLogs>
+			<Text>Зберегти файли журналу в папці запуску (рекомендовано)</Text>
+		</lblSaveLogs>
+		<lblRemPhysX>
 			<Text>Видалити PhysX</Text>
-		</CheckBox3>
-		<CheckBox4>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
 			<Text>Видалити 3DTV Play</Text>
-		</CheckBox4>
-		<CheckBox5>
-			<Text>Створити точку відновлення системи\n(якщо це дозволено)</Text>
-		</CheckBox5>
-		<CheckBox6>
-			<Text>Видалити існуючі й неіснуючі монітори\n(рекомендовано)</Text>
-		</CheckBox6>
-		<CheckBox7>
+		</lblRem3DtvPlay>
+		<lblCreateRestorePoint>
+			<Text>Створити точку відновлення системи (якщо це дозволено)</Text>
+		</lblCreateRestorePoint>
+		<lblRemMonitors>
+			<Text>Видалити існуючі й неіснуючі монітори (рекомендовано)</Text>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
 			<Text>Видалити AMD Audio Bus</Text>
-		</CheckBox7>
-		<CheckBox8>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
 			<Text>Видалити папку драйверів "C:\AMD" (НЕ рекомендовано)</Text>
-		</CheckBox8>
-		<CheckBox9>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
 			<Text>Видалити драйвер/фільтр AMDKMPFD (для чіпсета AMD, рекомендовано створення резервної копії)</Text>
-		</CheckBox9>
-		<CheckBox10>
-			<Text>Відображати вікно повідомлення про безпечний режим\nпри запуску</Text>
-		</CheckBox10>
-		<CheckBox11>
+		</lblRemAMDKMPFD>
+		<lblShowSafeModeMsg>
+			<Text>Відображати вікно повідомлення про безпечний режим при запуску</Text>
+		</lblShowSafeModeMsg>
+		<lblUseRoamingCfg>
 			<Text>Зберігати файл конфігурації у папці, що переміщується</Text>
-		</CheckBox11>
-		<CheckBox12>
-			<Text>Не перевіряти наявність оновлень при запуску DDU (НЕ рекомендовано)</Text>
-		</CheckBox12>
-		<CheckBox13>
+		</lblUseRoamingCfg>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
+		<lblRemGFE>
 			<Text>Видалити Geforce Experience (GFE)</Text>
-		</CheckBox13>
-		<CheckBox14>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
 			<Text>Видалити папку AMD Crimson Shader Cache</Text>
-			<Tooltip>Рекомендовано за наявності графічних аномалій (швидкості чи візуальних спотворень) через пошкодження кешу даних шейдерів.|Також рекомендовано, якщо ви переходите до іншої марки, наприклад nVidia.</Tooltip>
-		</CheckBox14>
-		<cbxVulkan>
+			<Tooltip>
+				Рекомендовано за наявності графічних аномалій (швидкості чи візуальних спотворень) через пошкодження кешу даних шейдерів.
+				Також рекомендовано, якщо ви переходите до іншої марки, наприклад nVidia.
+			</Tooltip>
+		</lblRemCrimsonCache>
+		<lblVulkan>
 			<Text>Видалити середовище виконання Vulkan</Text>
 			<Tooltip>НЕ рекомендовано, якщо у вас є 2 різні графічні процесори, здатні використовувати Vulkan API.</Tooltip>
-		</cbxVulkan>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Варіанти запуску">
 		<btnAccept>
 			<Text>Запустити</Text>
-			<Text2>Перезавантаж.|у безп. режимі</Text2>
+			<Text2>
+				Перезавантаж.
+				у безп. режимі
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Закрити</Text>
@@ -246,10 +255,17 @@
 			<Text>Варіанти запуску</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>Система не в безпечному режимі. Щоб уникнути можливих проблем,|НАСТІЙНО РЕКОМЕНДОВАНО перезавантажити її в безпечному режимі.</Text>
+			<Text>
+				Система не в безпечному режимі. Щоб уникнути можливих проблем,
+				НАСТІЙНО РЕКОМЕНДОВАНО перезавантажити її в безпечному режимі.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Нормальний режим</Item1>
@@ -360,35 +376,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

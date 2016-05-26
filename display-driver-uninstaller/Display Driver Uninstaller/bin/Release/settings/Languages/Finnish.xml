@@ -1,61 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="fi-FI" Text="Finnish" NewLineChar="|">
+<DisplayDriverUninstaller ISO="fi-FI" Text="Finnish">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Puhdista ja käynnistä uudelleen|(Erittäin suositeltavaa)</Text>
-			<Tooltip>Poista nykyiset ja edelliset ajurit ja käynnistä tietokone uudelleen|(Erittäin suositeltavaa)</Tooltip>
+			<Text>
+				Puhdista ja käynnistä uudelleen
+				(Erittäin suositeltavaa)
+			</Text>
+			<Tooltip>
+				Poista nykyiset ja edelliset ajurit ja käynnistä tietokone uudelleen
+				(Erittäin suositeltavaa)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Puhdista ja älä tee mitään|(Voi aiheuttaa ongelmia kuten kuvan menetyksen)</Text>
-			<Tooltip>Poista nykyiset ja edelliset ajurit ja älä käynnistä uudelleen|(Voi aiheuttaa ongelmia kuten kuvan menetyksen)</Tooltip>
+			<Text>
+				Puhdista ja älä tee mitään
+				(Voi aiheuttaa ongelmia kuten kuvan menetyksen)
+			</Text>
+			<Tooltip>
+				Poista nykyiset ja edelliset ajurit ja älä käynnistä uudelleen
+				(Voi aiheuttaa ongelmia kuten kuvan menetyksen)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Puhdista ja Sammuta|(Asentaessa uutta näytönohjainta)</Text>
-			<Tooltip>Poista nykyiset ja edelliset ajurit ja sammuta tietokone|(Asentaessa uutta näytönohjainta)</Tooltip>
+			<Text>
+				Puhdista ja Sammuta
+				(Asentaessa uutta näytönohjainta)
+			</Text>
+			<Tooltip>
+				Poista nykyiset ja edelliset ajurit ja sammuta tietokone
+				(Asentaessa uutta näytönohjainta)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Palauta Windowsin automaattinen|ajurien asennus oletus asetukseen</Text>
+			<Text>
+				Palauta Windowsin automaattinen
+				ajurien asennus oletus asetukseen
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Havaittu Windows versio:</Text>
+			<Text>Havaittu Windows versio</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Pidätkö ohjelmasta? Harkitse lahjoitusta, mikä auttaa ohjelman kehittämisessä jatkossa. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Loki :</Text>
+			<Text>Loki</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Valitse Näytönohjain ajuri:</Text>
+			<Text>Valitse Näytönohjain ajuri</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -71,6 +68,11 @@
 			<Text3>Päivityksiä löydetty! Vanhemman version tuki on huonompaa.</Text3>
 			<Text4>Päivityksien hakeminen epäonnistui!</Text4>
 		</lblUpdate>
+		
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 
 		<OptionsMenuItem>
 			<Text>Asetukset</Text>
@@ -119,7 +121,7 @@
 			<Text10>Puhdan asennuksen poisto on valmis! Haluaisitko sulkea ohjelman?</Text10>
 			<Text11>Valmis!</Text11>
 			<Text12>Et ole vikasietotilassa. On erittäin suositeltavaa käynnistää uudelleen vikasietotilaan virheiden välttämiseksi. Käynnistä uudelleen vikasietotilaan?</Text12>
-			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Täällä on odottava uudellenkäynnistys jonossa, Käynnistä uudelleen ennen ohjelman käyttöä.</Text14>
 		</Messages>
 		
@@ -134,14 +136,14 @@
 			<Text8>Starting the removal of nVidia Optimus UpperFilter if present.</Text8>
 			<Text9>Scanning for new device...</Text9>
 			<Text10>Clean uninstall completed!</Text10>
-			<Text11>DDU Version:</Text11>
+			<Text11>DDU Version</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Detected :</Text13>
-			<Text14>GPU DeviceId :</Text14>
-			<Text15>Detected Driver(s) Version(s) :</Text15>
-			<Text16>INF :</Text16>
-			<Text17>INF Section :</Text17>
-			<Text18>GPU not Correctly Installed :</Text18>
+			<Text13>Detected</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Detected Driver(s) Version(s)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Section</Text17>
+			<Text18>GPU not Correctly Installed</Text18>
 			<Text19>Deleting some specials folders, it may take some times...</Text19>
 			<Text20>CleanUP started...</Text20>
 			<Text21>Uninstalling</Text21>
@@ -186,20 +188,20 @@
 			<Text>Yleiset asetukset</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Poista "C:\nVidia" ajuri kansiot (EI suositeltavaa) </Text>
+			<Text>Poista "C:\nVidia" ajuri kansiot (EI suositeltavaa)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>Tallenna lokitiedostot ohjelman pääkansioon (Erittäin suositeltavaa)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Poista PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Poista 3DTV Play</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Luo järjestelmän palautuspiste (jos mahdollista)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Poista nykyiset ja edelliset näytöt(Suositeltavaa)</Text>
 		</lblRemMonitors>
@@ -207,33 +209,47 @@
 			<Text>Poista AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Poista "C:\AMD" ajuri kansiot (EI suositeltavaa) </Text>
+			<Text>Poista "C:\AMD" ajuri kansiot (EI suositeltavaa)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Poista AMDKMPFD ajuri (Varmuuskopio AMD piirisarjan omistaville suositeltavaa)</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Näytä käynnistysvalinta ikkuna käynnistäessä</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Tallenna asetukset 'Roaming' kansioon</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>Älä tarkista ohjelman päivityksiä käynnistäessä (EI suositeltavaa)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Tarkista ohjelman päivitykset käynnistäessä (Suositeltavaa)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Poista Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Poista AMD Crimson Shader Cache kansio</Text>
-			<Tooltip>Suositeltavaa jos ilmenee grafiikka ongelmia (nopeus tai virheet kuvassa) korruptoituneiden varjostimien välimuistin takia.|Myös suositeltavaa jos ole vaihtamassa näytönohjain valmistajan merkkiä kuten Nvidiaan</Tooltip>
+			<Tooltip>
+				Suositeltavaa jos ilmenee grafiikka ongelmia (suorituskyky tai virheet kuvassa) korruptoituneiden varjostimien välimuistin takia.
+				Myös suositeltavaa jos ole vaihtamassa näytönohjain valmistajan merkkiä kuten Nvidiaan
+			</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Käynnistysvalinta">
 		<btnAccept>
 			<Text>Käynnistä</Text>
-			<Text2>Käynnistä uudelleen|Vikasietotilaan</Text2>
+			<Text2>
+				Käynnistä uudelleen
+				Vikasietotilaan
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Sulje</Text>
@@ -242,10 +258,17 @@
 			<Text>Käynnistysvalinta</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>Et ole vikasietotilassa. On erittäin suositeltavaa|käynnistää uudelleen vikasietotilaan</Text>
+			<Text>
+				Et ole vikasietotilassa. On erittäin suositeltavaa
+				käynnistää uudelleen vikasietotilaan
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normaali</Item1>
@@ -361,35 +384,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

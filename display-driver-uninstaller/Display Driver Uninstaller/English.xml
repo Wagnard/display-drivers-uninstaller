@@ -1,49 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="en-US" Text="English" NewLineChar="|">
+<DisplayDriverUninstaller ISO="en-US" Text="English" >
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
-
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
-	<frmMain Text="Display Driver Uninstaller (DDU)">	 <!-- This is comment -->
-	<!-- This is comment -->
-		
+	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
-			<Text>Clean and restart|(Highly Recommended)</Text>
-			<Tooltip>Uninstall the current and previous drivers, then restart the computer.|(Highly Recommended)</Tooltip>
+			<Text>
+				Clean and restart
+				(Highly Recommended)
+			</Text>
+			<Tooltip>
+				Uninstall the current and previous drivers, then restart the computer.
+				(Highly Recommended)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Clean and DO NOT restart.|(May cause issues like blackscreen)</Text>
-			<Tooltip>Uninstall the current and previous drivers, but don't restart the computer.|(May cause issues like blackscreen)</Tooltip>
+			<Text>
+				Clean and DO NOT restart.
+				(May cause issues like blackscreen)
+			</Text>
+			<Tooltip>
+				Uninstall the current and previous drivers, but don't restart the computer.	
+				(May cause issues like blackscreen)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Clean and Shutdown|(For installing a new graphic card)</Text>
-			<Tooltip>Uninstall the current and previous drivers and Shutdown the computer with no rescan|(For installing a new graphic card)</Tooltip>
+			<Text>
+				Clean and Shutdown
+				(For installing a new graphic card)
+			</Text>
+			<Tooltip>
+				Uninstall the current and previous drivers and Shutdown the computer with no rescan
+				(For installing a new graphic card)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Set Windows Automatic Driver|installation to default.</Text>
+			<Text>
+				Set Windows Automatic Driver
+				installation to default.
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>Detected Windows Version</Text>
@@ -69,9 +66,6 @@
 		  <Text>Offers from our partners</Text>
 		  <Tooltip>You can disable this from the option menu.</Tooltip>
 		</lblOffer>
-		<imgOffer>
-		  <Tooltip>You can disable this from the option menu.</Tooltip>
-		</imgOffer>
 		
 		<OptionsMenuItem>
 			<Text>Options</Text>
@@ -123,6 +117,7 @@
 			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
 		</Messages>
+		
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP (Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
@@ -186,20 +181,20 @@
 			<Text>General Options</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Remove "C:\nVidia" Drivers folders (NOT recommended) </Text>
+			<Text>Remove "C:\nVidia" Drivers folders (NOT recommended)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>Save log files in startup path (Highly recommended)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Remove PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Remove 3DTV Play</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Create a System Restore Point (if allowed)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Remove present and non-present monitors (Recommended)</Text>
 		</lblRemMonitors>
@@ -207,33 +202,36 @@
 			<Text>Remove AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Remove "C:\AMD" Drivers folders (NOT recommended) </Text>
+			<Text>Remove "C:\AMD" Drivers folders (NOT recommended)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Remove the driver/filter AMDKMPFD (A backup is recommended for AMD chipset)</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Show Safe Mode message box on startup</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Store config file in roaming folder</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automaticall check for DDU updates on startup. (Recommended)</Text>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Remove Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Remove AMD Crimson Shader Cache folder</Text>
-			<Tooltip>Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.|Also recommended if you are switching to another brand like nVidia.</Tooltip>
+			<Tooltip>
+				Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.
+				Also recommended if you are switching to another brand like nVidia.
+			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>Remove Vulkan Runtime</Text>
 			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Use SetupAPI *Experimental* </Text>
+			<Text>Use SetupAPI *Experimental*</Text>
 			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
@@ -241,7 +239,10 @@
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text2>
+				Reboot to
+				Safe Mode
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Close</Text>
@@ -249,14 +250,18 @@
 		<lblLaunchOption>
 			<Text>Launch option</Text>
 		</lblLaunchOption>
-		<lblSelectedLanguage>
-			<Text>Selected language</Text>
-		</lblSelectedLanguage>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended to|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>
+				You are not in safe mode. It is highly recommended to
+				reboot into Safe Mode to avoid possible issues.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -372,14 +377,7 @@ anything to do with this program, and in no way affiliates of DDU or it's creato
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-		
 		<Credits>
 			<User>Wagnard</User>
 			<Details>Owner</Details>
@@ -388,24 +386,8 @@ anything to do with this program, and in no way affiliates of DDU or it's creato
 
 		<Credits2>
 			<User>Devmltk</User>
-			<LastUpdate>24/05/2016</LastUpdate>
+			<LastUpdate>26/05/2016</LastUpdate>
 		</Credits2>
-
-		<!--
-		<Credits3>
-			<User>Example</User>
-		</Credits3>
-
-		<Credits4>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits4>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->	
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>

@@ -1,61 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="de-DE" Text="German" NewLineChar="|">
+<DisplayDriverUninstaller ISO="de-DE" Text="German">
 	<!--
-	ISO =	(.NET) CultureInfo.CurrentCulture.Name		(en-US, en-GB, fr-FR .. etc)
-	For other languages: https://msdn.microsoft.com/en-us/library/ee825488%28v=cs.20%29.aspx
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
 
-	Text =	Shown to user (as written in english, shown on language selection box)
-	NewLineChar =	Separator for new line ->    Line1|Line2    -> Two lines	
-					Can be changed, with caution! (Use special char what won't be used on text)
-	
-	<xxx>Place text here</xxx>   
-	
-	or 	
-	<xxx Text="Place text here" ToolTip="Or here" />
-	
-	[ char in xml => visible in UI ]	xml doesn't allow some special chars like <>&"
-	
-	|		=	"newline"		(default NewLineChar)
-	&amp;	=	&
-	&quot;	=	"
-	&gt;	=	>
-	&lt;	=	<
-	
-	[ Optional ]
-	Add credits to yourself at end of file	
-	 
-	If wan't to set comment, see below for example -->
-
-	<!-- This is comment -->
 	<frmMain Text="Display Driver Uninstaller (DDU)">
-		<!-- This is comment -->
-
 		<btnCleanRestart>
-			<Text>Säubern und Neustart|(Empfohlene Aktion)</Text>
-			<Tooltip>Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer neu|(sehr empfohlen)</Tooltip>
+			<Text>
+				Säubern und Neustart
+				(Empfohlene Aktion)
+			</Text>
+			<Tooltip>
+				Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer neu
+				(sehr empfohlen)
+			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>Säubern und KEIN Neustart|(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)</Text>
-			<Tooltip>Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer NICHT neu|(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)</Tooltip>
+			<Text>
+				Säubern und KEIN Neustart
+				(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)
+			</Text>
+			<Tooltip>
+				Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer NICHT neu
+				(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>Säubern und Herunterfahren|(Zur Installation einer neuen Grafikkarte)</Text>
-			<Tooltip>Deinstalliert den aktuellen sowie die vorherigen Treiber und schaltet den Computer ohne erneutes Scannen aus|(Zur Installation einer neuen Grafikkarte)</Tooltip>
+			<Text>
+				Säubern und Herunterfahren
+				(Zur Installation einer neuen Grafikkarte)
+			</Text>
+			<Tooltip>
+				Deinstalliert den aktuellen sowie die vorherigen Treiber und schaltet den Computer ohne erneutes Scannen aus
+				(Zur Installation einer neuen Grafikkarte)
+			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Setze Treiberinstallation durch Windows Update auf Standard.</Text>
+			<Text>
+				Setze Treiberinstallation durch
+				Windows Update auf Standard.
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Erkannte Windows-Version:</Text>
+			<Text>Erkannte Windows-Version</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Mögen Sie DDU? Denken Sie über eine Spende nach, dies würde eine zukünftige Entwicklung fördern. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Log:</Text>
+			<Text>Log</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Grafiktreiber auswählen:</Text>
+			<Text>Grafiktreiber auswählen</Text>
 		</lblSelectedGPU>
 		
 		<Label9>
@@ -71,6 +68,11 @@
 			<Text3>Updates gefunden! Eingeschränkte Unterstützung für ältere Versionen ist zu erwarten.</Text3>
 			<Text4>Kann keine Updates abrufen!</Text4>
 		</lblUpdate>
+
+		<lblOffer>
+			<Text>Offers from our partners</Text>
+			<Tooltip>You can disable this from the option menu.</Tooltip>
+		</lblOffer>
 
 		<OptionsMenuItem>
 			<Text>Options</Text>
@@ -119,7 +121,7 @@
 			<Text10>Saubere Deinstallation vollständig! Möchten Sie jetzt beenden?</Text10>
 			<Text11>Fertig!</Text11>
 			<Text12>Sie sind nicht im abgesicherten Modus. Um Fehler zu vermeiden wird ein Neustart im abgesicherten Modus dringend empfohlen. Jetzt im abgesicherten Modus neustarten?</Text12>
-			<Text13>Folgendes müssen Sie bei einem blauen Wiederherstellungsbildschirm auswählen: Troubleshoot-&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text13>Folgendes müssen Sie bei einem blauen Wiederherstellungsbildschirm auswählen: Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Ein noch ausstehender Neustart ist vorhanden, bitte vor der Benutzung von DDU neustarten</Text14>
 		</Messages>
 		
@@ -134,14 +136,14 @@
 			<Text8>Starten der Entfernung des nVidia Optimus UpperFilter (falls vorhanden).</Text8>
 			<Text9>Scannen nach neuen Geräten...</Text9>
 			<Text10>Saubere Deinstallation vollständig!</Text10>
-			<Text11>DDU Version:</Text11>
+			<Text11>DDU Version</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Erkannt:</Text13>
-			<Text14>GPU GeräteId:</Text14>
-			<Text15>Erkannte Treiber Version(en):</Text15>
-			<Text16>INF:</Text16>
-			<Text17>INF Abschnitt:</Text17>
-			<Text18>GPU nicht korrekt installiert:</Text18>
+			<Text13>Erkannt</Text13>
+			<Text14>GPU GeräteId</Text14>
+			<Text15>Erkannte Treiber Version(en)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Abschnitt</Text17>
+			<Text18>GPU nicht korrekt installiert</Text18>
 			<Text19>Löschen von bestimmten Ordnern, kann eine Weile dauern...</Text19>
 			<Text20>Säuberung gestartet...</Text20>
 			<Text21>Deinstallation</Text21>
@@ -188,18 +190,18 @@
 		<lblRemNvidiaDirs>
 			<Text>Treiberordner "C:\nVidia" entfernen (NICHT empfohlen)</Text>
 		</lblRemNvidiaDirs>
-		<lblsaveLogs>
+		<lblSaveLogs>
 			<Text>Speichere Logdateien im Startup-Pfad (ausdrücklich empfohlen)</Text>
-		</lblsaveLogs>
+		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Entferne PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
 			<Text>Entferne 3DTV Play</Text>
 		</lblRem3DtvPlay>
-		<lblcreateRestorePoint>
+		<lblCreateRestorePoint>
 			<Text>Erstelle einen Systemwiederherstellungspunkt (falls erlaubt)</Text>
-		</lblcreateRestorePoint>
+		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Entferne alle vorhandenen und derzeit nicht vorhandenen Bildschirme (empfohlen)</Text>
 		</lblRemMonitors>
@@ -212,28 +214,42 @@
 		<lblRemAMDKMPFD>
 			<Text>Entferne Treiber/Filter AMDKMPFD (Ein Backup für AMD Chipsätze wird empfohlen)</Text>
 		</lblRemAMDKMPFD>
-		<lblshowSafeModeMsg>
+		<lblShowSafeModeMsg>
 			<Text>Hinweis zum abgesicherten Modus beim Start anzeigen</Text>
-		</lblshowSafeModeMsg>
+		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Speichere Config-Datei im Roaming-Ordner</Text>
 		</lblUseRoamingCfg>
-		<lblDontCheckUpdates>
-			<Text>DDU beim Start nicht auf Updates überprüfen (NICHT empfohlen)</Text>
-		</lblDontCheckUpdates>
+		<lblCheckUpdates>
+			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>GeForce Experience (GFE) entfernen</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>AMD Crimson Shader Cache Ordner entfernen</Text>
-			<Tooltip>Empfohlen, falls aufgrund von defekten Shader-Cache-Daten grafische Unregelmäßigkeiten (Geschwindigkeit oder sichtbare Fehler) auftreten.|Ebenfalls empfohlen, falls Sie zu einem anderen Hersteller, wie nVidia, wechseln.</Tooltip>
+			<Tooltip>
+				Empfohlen, falls aufgrund von defekten Shader-Cache-Daten grafische Unregelmäßigkeiten (Geschwindigkeit oder sichtbare Fehler) auftreten.
+				Ebenfalls empfohlen, falls Sie zu einem anderen Hersteller, wie nVidia, wechseln.
+			</Tooltip>
 		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Remove Vulkan Runtime</Text>
+			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Use SetupAPI *Experimental*</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
-			<Text2>Reboot to|Safe Mode</Text2>
+			<Text2>
+				Reboot to
+				Safe Mode
+			</Text2>
 		</btnAccept>
 		<btnClose>
 			<Text>Close</Text>
@@ -242,10 +258,17 @@
 			<Text>Launch option</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
-			<Text>You are not in safe mode. It is highly recommended|reboot into Safe Mode to avoid possible issues.</Text>
+			<Text>
+				You are not in safe mode. It is highly recommended
+				reboot into Safe Mode to avoid possible issues.
+			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
-			<Text>Important note for Windows 10 users:|Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)|Quit Immediately if you lost or don't know it!</Text>
+			<Text>
+				Important note for Windows 10 users:
+				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Quit Immediately if you lost or don't know it!
+			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
@@ -358,35 +381,12 @@
 		</Tos>
 	</Misc>
 
-	<!-- Optional, not required -->
 	<LanguageCredits>
-		<!--
-		[ Required ]	User			Username/nick/email/something as "ID"	@	If not set, won't be shown
-		[ Optional ]	Details			Anything, contact, email				@	note: its public
-		[ Optional ]	LastUpdate		Date as 'dd/MM/yyyy'					@	dd = Day (1-31),   MM = Month (1-12),  	yyyy = Year (2016 - 2050)
-		-->
-
 		<Credits>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Credits>
-
-		<!--
-		<Credits2>
-			<User>Example</User>
-		</Credits2>
-
-		<Credits3>
-			<User>Test</User>
-			<Details>Something</Details>
-		</Credits3>
-				
-		<CreditsN>
-			<User>Test2</User>
-			<Details>Something Else</Details>
-		</CreditsN>
-		-->
 	</LanguageCredits>
 
 </DisplayDriverUninstaller>
