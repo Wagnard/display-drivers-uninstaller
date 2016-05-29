@@ -67,42 +67,42 @@
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>Ortaklarımızın Teklifleri</Text>
+			<Tooltip>Seçenekler menüsünden devre dışı bırakabilirsiniz.</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
-			<Text>Options</Text>
+			<Text>Seçenekler</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
-			<Text>Info</Text>
+			<Text>Bilgi</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>Genişletilmiş Günlük</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
-			<Text>Links</Text>
+			<Text>Bağlantılar</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>Kullanım Koşulları (ToS)</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
-			<Text>About</Text>
+			<Text>Hakkında</Text>
 		</AboutMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visit official DDU Website</Text>
+			<Text>Resmi DDU Web Sitesini ziyaret edin.</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Visit SVN Website</Text>
+			<Text>SVN web sitesini ziyaret edin.</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
+			<Text>Guru3D NVIDIA Konusunu ziyaret edin.</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
+			<Text>Guru3D AMD Konusunu ziyaret edin.</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Visit Geforce Thread</Text>
+			<Text>Geforce Konusunu ziyaret edin.</Text>
 		</VisitGeforceMenuItem>
 		
 		<Messages>
@@ -135,7 +135,7 @@
 			<Text10>Temizleme işlemi tamamlandı!</Text10>
 			<Text11>DDU sürümü</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Algılanan</Text13>
+			<Text13>Algılanan:</Text13>
 			<Text14>GPU aygıt kimliği</Text14>
 			<Text15>Algılanan sürücü(ler) sürüm(ler)</Text15>
 			<Text16>INF</Text16>
@@ -170,16 +170,16 @@
 	
 	<frmOptions Text="Seçenekler">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Çıkış</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>Ortakların Tekliflerini Göster</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Specific Options</Text>
+			<Text>NVIDIA Seçenekleri</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Specific Options</Text>
+			<Text>AMD Seçenekleri</Text>
 		</lblAmdspecific>
 		<lblGeneral>
 			<Text>Genel Seçenekler</Text>
@@ -218,7 +218,7 @@
 			<Text>Yapılandırma dosyalarını Romaing klasöründe sakla.</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+			<Text>Başlangıçta otomatik olarak DDU güncellemelerini kontrol edin. (Önerilen)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Geforce Experience (GFE) Kaldır.</Text>
@@ -226,92 +226,91 @@
 		<lblRemCrimsonCache>
 			<Text>AMD Crimson Shader Önbellek klasörünü sil.</Text>
 			<Tooltip>
-				Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.
-				Also recommended if you are switching to another brand like nVidia.
+				Shader önbellek veri nedeniyle (hızlı veya görsel bozulma)grafiksel anormal bozukluk varsa tavsiye edilir.
+				Eğer nVıdıa gibi bir marka için de kullanıyorsanız tavsiye edilir.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Remove Vulkan Runtime</Text>
-			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+			<Text>Vulkan Runtime Kaldır</Text>
+			<Tooltip>Eğer Vulkan API Kullanan 2 Farklı GPU Yeteneği Varsa Tavsiye edilmez.</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Use SetupAPI *Experimental*</Text>
-			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+			<Text>*Deneysel* SetupAPİ.</Text>
+			<Tooltip>(DEVCON) yerine SetupAPİ harici aracı DDUDR kullanın.</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
 	
-	<frmLaunch Text="Launch option">
+	<frmLaunch Text="Başlatma Seçeneği">
 		<btnAccept>
-			<Text>Launch</Text>
+			<Text>Başlat</Text>
 			<Text2>
-				Reboot to
-				Safe Mode
+				Güvenli modda yeniden başlatın.
 			</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Çıkış</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>Başlatma Seçeneği</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				You are not in safe mode. It is highly recommended
-				reboot into Safe Mode to avoid possible issues.
+				Güvenli modda değil. Şiddetle tavsiye edilir.
+				Olası sorunları önlemek için güvenli modda yeniden başlatın.
 			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
 			<Text>
-				Important note for Windows 10 users:
-				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Windows 10 kullanıcıları için önemli not:
+				Windows 10 "ŞİFRE" gereklidir. (PIN güvenli modda çalışmıyor)
+				Ne yaptığınızı bilmiyorsanız çıkın.
 			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
-			<Item3>Safe Mode With Networking</Item3>
+			<Item2>Güvenli Mod (Tavsiye Edilen)</Item2>
+			<Item3>Ağ ile Güvenli Mod</Item3>
 		</cbBootOption>
 	</frmLaunch>
 	
-	<frmLog Text="Extended log">
+	<frmLog Text="Genişletilmiş Günlük">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Çıkış</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Open log</Text>
+			<Text>Günlüğü Aç</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
-			<Text>Options</Text>
+			<Text>Seçenekler</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>Kopyalama Etkin</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>Filters</Text>
+			<Text>Filtreler</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>Olayları Göster</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>Uyarıları Göster</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>Hataları Göster</Text>
 		</errorsMenuItem>
 	</frmLog>
 
-	<frmSystemRestore Text="System Restore">
+	<frmSystemRestore Text="Sistem Geri Yükleme">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>Sistem Geri Yükleme noktası oluşturmak için çalışıyor.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="About">
+	<frmAbout Text="Hakkında">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Çıkış</Text>
 		</btnClose>
 	</frmAbout>
 
@@ -363,9 +362,9 @@
 
 	<LanguageCredits>
 		<Credits>
-			<User></User>
-			<Details></Details>
-			<LastUpdate></LastUpdate>
+			<User>murat5038</User>
+			<Details>Translater</Details>
+			<LastUpdate>29.05.2016</LastUpdate>
 		</Credits>
 	</LanguageCredits>
 
