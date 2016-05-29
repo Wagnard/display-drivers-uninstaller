@@ -74,6 +74,10 @@
 			<Tooltip>You can disable this from the option menu.</Tooltip>
 		</lblOffer>
 		
+		<lblLanguage>
+		  <Tooltip>Langue sélectionnée</Tooltip>
+		</lblLanguage>
+
 		<OptionsMenuItem>
 			<Text>Options</Text>
 		</OptionsMenuItem>
