@@ -75,7 +75,7 @@
 		</lblOffer>
 		
 		<lblLanguage>
-		  <Tooltip>Langue sélectionnée</Tooltip>
+		  <Text>Langue sélectionnée</Text>
 		</lblLanguage>
 
 		<OptionsMenuItem>

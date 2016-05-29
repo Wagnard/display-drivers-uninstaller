@@ -56,7 +56,7 @@
 		</lblSelectedGPU>
 
     <lblLanguage>
-      <Tooltip>Selected language</Tooltip>
+      <Text>Selected language</Text>
     </lblLanguage>
 
     <lblUpdate>
