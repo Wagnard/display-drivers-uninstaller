@@ -235,8 +235,8 @@
 			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Use SetupAPI *Experimental*</Text>
-			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+			<Text>Use SetupAPI</Text>
+			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON) for removing drivers.</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
 	

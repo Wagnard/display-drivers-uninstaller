@@ -2537,6 +2537,37 @@ Public Class frmMain
 			End If
 		Next
 
+		filePath = IO.Path.GetDirectoryName(userpth) + "\Public\Pictures\NVIDIA Corporation"
+		If filePath IsNot Nothing Then
+			For Each child As String In Directory.GetDirectories(filePath)
+				If IsNullOrWhitespace(child) = False Then
+					If StrContainsAny(child, True, "3d vision experience") Then
+						Try
+							deletedirectory(child)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+							TestDelete(child, config)
+						End Try
+					End If
+				End If
+			Next
+			Try
+				If Directory.GetDirectories(filePath).Length = 0 Then
+					Try
+						deletedirectory(filePath)
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+						TestDelete(filePath, config)
+					End Try
+				Else
+					For Each data As String In Directory.GetDirectories(filePath)
+						Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+					Next
+
+				End If
+			Catch ex As Exception
+			End Try
+		End If
 
 		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(userpth))
 
@@ -3150,47 +3181,47 @@ Public Class frmMain
 			End Try
 
 			'windows 8+ only (store apps nv_cache cleanup)
-			'COmmenting this out as it is suspected to cause issue on some coputer with Tiles. (need to be tested/ confirmed etc...)
-			'Try
-			'	If win8higher Then
-			'		Dim prefilePath As String = filepaths + "\AppData\Local\Packages"
-			'		For Each childs As String In My.Computer.FileSystem.GetDirectories(prefilePath)
-			'			If Not IsNullOrWhitespace(childs) Then
-			'				filePath = childs + "\AC\Temp\NVIDIA Corporation"
 
-			'				If Directory.Exists(filePath) Then
-			'					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-			'						If IsNullOrWhitespace(child) = False Then
-			'							If child.ToLower.Contains("nv_cache") Then
-			'								Try
-			'									deletedirectory(child)
-			'								Catch ex As Exception
-			'									Application.Log.AddException(ex)
-			'									TestDelete(child,config)
-			'								End Try
-			'							End If
-			'						End If
-			'					Next
+			Try
+				If win8higher Then
+					Dim prefilePath As String = filepaths + "\AppData\Local\Packages"
+					For Each childs As String In My.Computer.FileSystem.GetDirectories(prefilePath)
+						If Not IsNullOrWhitespace(childs) Then
+							filePath = childs + "\AC\Temp\NVIDIA Corporation"
 
-			'					If Directory.GetDirectories(filePath).Length = 0 Then
-			'						Try
-			'							deletedirectory(filePath)
-			'						Catch ex As Exception
-			'							Application.Log.AddException(ex)
-			'							TestDelete(filepath,config)
-			'						End Try
-			'					Else
-			'						For Each data As String In Directory.GetDirectories(filePath)
-			'							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
-			'						Next
+							If Directory.Exists(filePath) Then
+								For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+									If IsNullOrWhitespace(child) = False Then
+										If child.ToLower.Contains("nv_cache") Then
+											Try
+												deletedirectory(child)
+											Catch ex As Exception
+												Application.Log.AddException(ex)
+												TestDelete(child, config)
+											End Try
+										End If
+									End If
+								Next
 
-			'					End If
-			'				End If
-			'			End If
-			'		Next
-			'	End If
-			'Catch ex As Exception
-			'End Try
+								If Directory.GetDirectories(filePath).Length = 0 Then
+									Try
+										deletedirectory(filePath)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+										TestDelete(filePath, config)
+									End Try
+								Else
+									For Each data As String In Directory.GetDirectories(filePath)
+										Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+									Next
+
+								End If
+							End If
+						End If
+					Next
+				End If
+			Catch ex As Exception
+			End Try
 
 		Next
 
@@ -5569,7 +5600,7 @@ Public Class frmMain
 				Exit Sub
 			End If
 
-			If Not Application.Data.IsDebug Or 1 + 1 = 2 Then
+			If Not Application.Data.IsDebug Then
 
 				If Not isElevated Then
 					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
