@@ -5441,6 +5441,88 @@ Public Class frmMain
 				End If
 			End If
 
+			Dim args As String() = Environment.GetCommandLineArgs()
+
+			If args.Length > 1 AndAlso Not isElevated Then
+
+				For i As Int32 = 1 To args.Length - 1
+					If StrContainsAny(args(i), True, "donate") Then
+						Try
+							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
+						Application.Current.Shutdown()
+						Exit Sub
+
+					ElseIf StrContainsAny(args(i), True, "svn") Then
+						Try
+							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
+						Application.Current.Shutdown()
+						Exit Sub
+
+					ElseIf StrContainsAny(args(i), True, "guru3dnvidia") Then
+						Try
+							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
+						Application.Current.Shutdown()
+						Exit Sub
+
+					ElseIf StrContainsAny(args(i), True, "guru3damd") Then
+						Try
+							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
+						Application.Current.Shutdown()
+						Exit Sub
+
+					ElseIf StrContainsAny(args(i), True, "dduhome") Then
+						Try
+							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
+						Application.Current.Shutdown()
+						Exit Sub
+
+					ElseIf StrContainsAny(args(i), True, "geforce") Then
+						Try
+							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
+						Application.Current.Shutdown()
+						Exit Sub
+
+					ElseIf StrContainsAny(args(i), True, "visitoffer") Then
+						Try
+							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
+						Application.Current.Shutdown()
+						Exit Sub
+
+					ElseIf StrContainsAny(args(i), True, "5648674614687") Then
+						Application.Data.IsDebug = True
+					End If
+				Next
+			Else
+
+			End If
 
 			'we check if the donate/guru3dnvidia/gugu3damd/geforce/dduhome is trigger here directly.
 
