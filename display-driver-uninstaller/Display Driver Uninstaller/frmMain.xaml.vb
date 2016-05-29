@@ -2538,35 +2538,37 @@ Public Class frmMain
 		Next
 
 		filePath = IO.Path.GetDirectoryName(userpth) + "\Public\Pictures\NVIDIA Corporation"
-		If filePath IsNot Nothing Then
-			For Each child As String In Directory.GetDirectories(filePath)
-				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "3d vision experience") Then
+		If Directory.Exists(filePath) Then
+			If filePath IsNot Nothing Then
+				For Each child As String In Directory.GetDirectories(filePath)
+					If IsNullOrWhitespace(child) = False Then
+						If StrContainsAny(child, True, "3d vision experience") Then
+							Try
+								deletedirectory(child)
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+								TestDelete(child, config)
+							End Try
+						End If
+					End If
+				Next
+				Try
+					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							deletedirectory(child)
+							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(child, config)
+							TestDelete(filePath, config)
 						End Try
-					End If
-				End If
-			Next
-			Try
-				If Directory.GetDirectories(filePath).Length = 0 Then
-					Try
-						deletedirectory(filePath)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-						TestDelete(filePath, config)
-					End Try
-				Else
-					For Each data As String In Directory.GetDirectories(filePath)
-						Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
-					Next
+					Else
+						For Each data As String In Directory.GetDirectories(filePath)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+						Next
 
-				End If
-			Catch ex As Exception
-			End Try
+					End If
+				Catch ex As Exception
+				End Try
+			End If
 		End If
 
 		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(userpth))
@@ -2597,7 +2599,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filepath, config)
+							TestDelete(filePath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -2633,7 +2635,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filepath, config)
+							TestDelete(filePath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -2712,7 +2714,7 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						TestDelete(filepath, config)
+						TestDelete(filePath, config)
 					End Try
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -2753,7 +2755,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -2785,7 +2787,7 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						TestDelete(filepath, config)
+						TestDelete(filePath, config)
 					End Try
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -2892,7 +2894,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -2969,7 +2971,7 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						TestDelete(filepath, config)
+						TestDelete(filePath, config)
 					End Try
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -3059,7 +3061,7 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						TestDelete(filepath, config)
+						TestDelete(filePath, config)
 					End Try
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -3098,7 +3100,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filepath, config)
+							TestDelete(filePath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -3133,7 +3135,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filepath, config)
+							TestDelete(filePath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -3167,7 +3169,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filepath, config)
+							TestDelete(filePath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
