@@ -22,10 +22,10 @@
 	End Sub
 
 	Private Sub cbBootOption_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cbBootOption.SelectionChanged
-		If cbBootOption.SelectedIndex = 0 Then
-			btnAccept.Content = Languages.GetTranslation(Me.Name, btnAccept.Name, "Text")
-		Else
-			btnAccept.Content = Languages.GetTranslation(Me.Name, btnAccept.Name, "Text2")
+		Dim tb As TextBlock = TryCast(btnAccept.Content, TextBlock)
+
+		If tb IsNot Nothing Then
+			tb.Text = Languages.GetTranslation(Me.Name, btnAccept.Name, If(cbBootOption.SelectedIndex = 0, "Text", "Text2"))
 		End If
 	End Sub
 End Class

@@ -208,7 +208,7 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 		
-		<Menu Grid.Row="0" FontSize="14" >
+		<Menu Grid.Row="0" FontSize="14" Background="#FFE6E6E6">
 			<MenuItem x:Name="filtersMenuItem" Header="Filters">
 				<MenuItem x:Name="eventsMenuItem" Header="Show Events" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListEvents, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 				<MenuItem x:Name="warningsMenuItem" Header="Show Warnings" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListWarnings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -343,11 +343,11 @@
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
 
-				<Button Grid.Column="0" Grid.ColumnSpan="1" Margin="10" Content="Open Log" Grid.Row="1" Height="30" Name="btnOpenLog" VerticalAlignment="Top" Width="75" />
+				<Button Grid.Column="0" Grid.ColumnSpan="1" Margin="10" Content="Open Log" Grid.Row="1" Height="30" Name="btnOpenLog" VerticalAlignment="Top" MinWidth="80" />
 				<TextBlock Grid.Column="1" Grid.ColumnSpan="1" TextWrapping="Wrap" Name="tbOpenedLog" Visibility="Visible" VerticalAlignment="Center" FontWeight="Bold" Margin="10" />
 		
 				<StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Column="2" Grid.ColumnSpan="1">
-					<Button Margin="10" Content="Close" Grid.Row="1" Name="btnClose" HorizontalAlignment="Right" Width="80" Height="30" />
+					<Button Margin="10" Content="Close" Grid.Row="1" Name="btnClose" HorizontalAlignment="Right" MinWidth="80" Height="30" />
 				</StackPanel>
 			</Grid>	
 		</Border>

@@ -54,6 +54,9 @@
 		<lblSelectedGPU>
 			<Text>그래픽 드라이버 선택</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Selected language</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>참고: 사용자의 PC에 발생하는 모든 손상이나 오류는 사용자의 책임입니다.</Text>
@@ -394,12 +397,12 @@
 		</Tos>
 	</Misc>
 
-	<LanguageCredits>
-		<Credits>
+	<LanguageTranslators>
+		<Translator>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
-		</Credits>
-	</LanguageCredits>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

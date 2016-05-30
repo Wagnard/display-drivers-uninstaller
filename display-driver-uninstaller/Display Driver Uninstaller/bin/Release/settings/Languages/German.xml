@@ -54,6 +54,9 @@
 		<lblSelectedGPU>
 			<Text>Grafiktreiber auswählen</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Selected language</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>Hinweis: Jegliche Schäden oder Fehler, die Ihrem Computer zugefügt werden, liegen in Ihrer Verantwortung.</Text>
@@ -381,12 +384,12 @@
 		</Tos>
 	</Misc>
 
-	<LanguageCredits>
-		<Credits>
+	<LanguageTranslators>
+		<Translator>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
-		</Credits>
-	</LanguageCredits>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

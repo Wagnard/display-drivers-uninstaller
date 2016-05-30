@@ -51,6 +51,9 @@
 		<lblSelectedGPU>
 			<Text>Elija Controlador de Pantalla</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Selected language</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>Aviso: Cualquier daño o error causado a su PC será bajo su propia responsabilidad.</Text>
@@ -368,12 +371,12 @@
 		</Tos>
 	</Misc>
 	
-	<LanguageCredits>
-		<Credits>
+	<LanguageTranslators>
+		<Translator>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
-		</Credits>
-	</LanguageCredits>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

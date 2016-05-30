@@ -119,31 +119,31 @@
 	See below for examples
 		
 		
-	<LanguageCredits>
-		<Credits>
-			<User>Wagnard</User>					<-- Required. username/nick/email/something as "ID"	( If not set, won't be shown )
-			<Details>Creator</Details>				<-- Optional. Anything, contact, email				( Note! its available to view for everyone )
-			<LastUpdate>23/05/2016</LastUpdate>		<-- Optional. Last update Date as 'dd/MM/yyyy'		( dd = Day [1-31];  MM = Month [1-12];  yyyy = Year [2016 - 2050] )
-		</Credits>
+	<LanguageTranslators>
+		<Translator>
+			<User>Wagnard</User>					<-- Required. name/username/nick/email/something as "ID"		( If not set, won't be shown )
+			<Details>Owner</Details>				<-- Optional. Anything, contact, email, etc						( Note! its available to view for everyone )
+			<LastUpdate>23/05/2016</LastUpdate>		<-- Optional. Last update Date as 'dd/MM/yyyy' or 'dd.MM.yyyy'	( dd = Day [1-31];  MM = Month [1-12];  yyyy = Year [2016 - 2050] )
+		</Translator>
 
-		<Credits2>
+		<Translator2>
 			<User>Someone</User>
 			<LastUpdate>01/01/2000</LastUpdate>
-		</Credits2>
+		</Translator2>
 
 		<!--
-		<Credits3>
+		<Translator3>
 			<User>Example</User>					<-- Optional lines can be deleted or just leave empty
-		</Credits3>
+		</Translator3>
 
-		<Credits4>
+		<Translator4>
 			<User>Test</User>
 			<Details>Something</Details>
-		</Credits4>
+		</Translator4>
 				
-		<CreditsN>
+		<TranslatorN>
 			<User>Test2</User>
 			<LastUpdate>31/12/1999</LastUpdate>
-		</CreditsN>
+		</TranslatorN>
 		-->	
-	</LanguageCredits>
+	</LanguageTranslators>

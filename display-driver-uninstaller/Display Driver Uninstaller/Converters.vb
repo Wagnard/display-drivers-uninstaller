@@ -126,6 +126,36 @@ Namespace Converters
         End Function
     End Class
 
+	Public Class CountIsNotZero
+		Implements IValueConverter
+
+		Public Property Reversed As Boolean = False
+
+		Public Function Convert(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
+			If TypeOf (value) Is Int32 Then
+				Return If(Reversed, DirectCast(value, Int32) = 0, DirectCast(value, Int32) <> 0)
+			End If
+
+			Return If(Reversed, True, False)
+		End Function
+
+		Public Function ConvertBack(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.ConvertBack
+			Throw New NotImplementedException("CountIsZero::ConvertBack")
+		End Function
+	End Class
+
+	Public Class IsNotNullConverter
+		Implements IValueConverter
+
+		Public Function Convert(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
+			Return (value IsNot Nothing)
+		End Function
+
+		Public Function ConvertBack(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.ConvertBack
+			Throw New NotImplementedException("IsNotNullConverter::ConvertBack")
+		End Function
+	End Class
+
     Public Class IsNullConverter
         Implements IValueConverter
 

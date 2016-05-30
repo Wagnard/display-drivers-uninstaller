@@ -31,8 +31,13 @@
 	
 		<Border Grid.Row="3" BorderBrush="Black" BorderThickness="1" Margin="-1,0,-1,-1" Grid.ColumnSpan="2">
 			<DockPanel Margin="6">
-				<Button x:Name="btnAccept" Content="btnAccept" HorizontalAlignment="Left" Width="140" />
-				<Button x:Name="btnClose" Content="btnClose" HorizontalAlignment="Right" Width="140" IsCancel="True" />
+				<Button x:Name="btnAccept" HorizontalAlignment="Left" MinWidth="100" MaxWidth="200" Height="40">
+					<Button.Content>
+						<TextBlock Text="btnAccept" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
+					</Button.Content>
+				</Button>
+
+				<Button x:Name="btnClose" Content="btnClose" HorizontalAlignment="Right" MinWidth="100" MaxWidth="200" Height="40" IsCancel="True" />
 			</DockPanel>
 		</Border>
 	</Grid>

@@ -54,6 +54,9 @@
 		<lblSelectedGPU>
 			<Text>Επιλέξτε οδηγούς Γραφικών</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Selected language</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>ΣΗΜΕΙΩΣΗ: Τυχόν βλάβες ή σφάλματα που μπορεί να δημιουργηθούν στον υπολογιστή σας είναι δική σας ευθύνη.</Text>
@@ -380,12 +383,12 @@
 		</Tos>
 	</Misc>
 
-	<LanguageCredits>
-		<Credits>
+	<LanguageTranslators>
+		<Translator>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
-		</Credits>
-	</LanguageCredits>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

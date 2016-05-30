@@ -94,6 +94,8 @@ Public Class AppSettings
     Private m_visitOffer As DependencyProperty = Reg("VisitOffer", GetType(Boolean), GetType(AppSettings), False)
 
 	Private m_arguments As DependencyProperty = Reg("Arguments", GetType(String), GetType(AppSettings), String.Empty)
+	Private m_argumentsArray As DependencyProperty = Reg("ArgumentsArray", GetType(String()), GetType(AppSettings), Nothing)
+
 #End Region
 
 #Region "Public Properties"
@@ -376,6 +378,14 @@ Public Class AppSettings
 			SetValue(m_arguments, value)
 		End Set
 	End Property
+	Public Property ArgumentsArray As String()
+		Get
+			Return DirectCast(GetValue(m_argumentsArray), String())
+		End Get
+		Set(value As String())
+			SetValue(m_argumentsArray, value)
+		End Set
+	End Property
 
 #End Region
 
@@ -419,10 +429,14 @@ Public Class AppSettings
 			UseRoamingConfig = False
 		End If
 
+
 		Dim args As String() = Environment.GetCommandLineArgs()
 
 		If args.Length > 1 Then
-			Arguments = String.Join(" ", args, 1, args.Length - 1)
+			ReDim ArgumentsArray(args.Length - 2)
+			Array.Copy(args, 1, ArgumentsArray, 0, args.Length - 1)
+
+			Arguments = String.Join(" ", ArgumentsArray)
 
 			For i As Int32 = 1 To args.Length - 1
 				If StrContainsAny(args(i), True, "donate") Then
@@ -441,15 +455,15 @@ Public Class AppSettings
 					VisitDDUHome = True
 
 				ElseIf StrContainsAny(args(i), True, "geforce") Then
-                    VisitGeforce = True
+					VisitGeforce = True
 
-                ElseIf StrContainsAny(args(i), True, "visitoffer") Then
-                    VisitOffer = True
+				ElseIf StrContainsAny(args(i), True, "visitoffer") Then
+					VisitOffer = True
 
-                ElseIf StrContainsAny(args(i), True, "5648674614687") Then
-                    Application.Data.IsDebug = True
-                End If
-            Next
+				ElseIf StrContainsAny(args(i), True, "5648674614687") Then
+					Application.Data.IsDebug = True
+				End If
+			Next
 		Else
 			Arguments = String.Empty
 		End If

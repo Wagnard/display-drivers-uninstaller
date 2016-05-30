@@ -4,6 +4,6 @@
     Title="frmSystemRestore" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
    
 	<Grid>
-        <Label x:Name="lblSystemRestore" Content="Label" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Calibri" FontSize="14"/>
+		<Label x:Name="lblSystemRestore" Content="lblSystemRestore" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Calibri" FontSize="14"/>
     </Grid>
 </Window>

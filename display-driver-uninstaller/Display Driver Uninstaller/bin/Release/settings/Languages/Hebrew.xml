@@ -33,6 +33,9 @@
 		<lblSelectedGPU>
 			<Text>בחר את חברת הכרטיס מסך</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Selected language</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>.:: !!!כל נזק למחשב זה באחריותכם ::.</Text>
@@ -355,12 +358,12 @@
 		</Tos>
 	</Misc>
 
-	<LanguageCredits>
-		<Credits>
+	<LanguageTranslators>
+		<Translator>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
-		</Credits>
-	</LanguageCredits>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

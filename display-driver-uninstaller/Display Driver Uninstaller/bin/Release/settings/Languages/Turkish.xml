@@ -51,6 +51,9 @@
 		<lblSelectedGPU>
 			<Text>Grafik Sürücüsünü Seçin</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Selected language</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>Not: PC'nizde kaynaklanan herhangi bir hasar veya hata sizin sorumluluğunuzdadır.</Text>
@@ -135,7 +138,7 @@
 			<Text10>Temizleme işlemi tamamlandı!</Text10>
 			<Text11>DDU sürümü</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Algılanan:</Text13>
+			<Text13>Algılanan</Text13>
 			<Text14>GPU aygıt kimliği</Text14>
 			<Text15>Algılanan sürücü(ler) sürüm(ler)</Text15>
 			<Text16>INF</Text16>
@@ -360,12 +363,12 @@
 		</Tos>
 	</Misc>
 
-	<LanguageCredits>
-		<Credits>
+	<LanguageTranslators>
+		<Translator>
 			<User>murat5038</User>
 			<Details>Translater</Details>
-			<LastUpdate>29.05.2016</LastUpdate>
-		</Credits>
-	</LanguageCredits>
+			<LastUpdate>29/05/2016</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

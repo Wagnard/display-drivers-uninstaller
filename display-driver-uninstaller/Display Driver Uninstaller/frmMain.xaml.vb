@@ -43,7 +43,6 @@ Public Class frmMain
 	Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
 	Dim identity As WindowsIdentity = WindowsIdentity.GetCurrent()
 	Dim principal As WindowsPrincipal = New WindowsPrincipal(identity)
-	Dim isElevated As Boolean = principal.IsInRole(WindowsBuiltInRole.Administrator)
 	Dim processinfo As New ProcessStartInfo
 	Dim process As New Process
 
@@ -75,6 +74,7 @@ Public Class frmMain
 			Dispatcher.Invoke(Sub() Checkupdates2())
 		Else
 			lblUpdate.Content = Languages.GetTranslation(Me.Name, "lblUpdate", "Text")
+
 			Dim updates As Integer = HasUpdates()
 
 			If updates = 1 Then
@@ -338,7 +338,7 @@ Public Class frmMain
 				deletedirectory(filePath)
 			Catch ex As Exception
 				Application.Log.AddException(ex)
-				TestDelete(filepath, config)
+				TestDelete(filePath, config)
 			End Try
 		End If
 
@@ -387,7 +387,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -419,7 +419,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -452,7 +452,7 @@ Public Class frmMain
 
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -469,7 +469,7 @@ Public Class frmMain
 				deletedirectory(filePath)
 			Catch ex As Exception
 				Application.Log.AddException(ex)
-				TestDelete(filepath, config)
+				TestDelete(filePath, config)
 			End Try
 		End If
 
@@ -482,7 +482,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				End Try
 			End If
 
@@ -511,7 +511,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filepath, config)
+							TestDelete(filePath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -541,7 +541,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				End Try
 			End If
 
@@ -549,7 +549,7 @@ Public Class frmMain
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
 			If Directory.Exists(filePath) Then
 				Try
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
@@ -559,7 +559,7 @@ Public Class frmMain
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoFirefox"
 			If Directory.Exists(filePath) Then
 				Try
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
@@ -569,7 +569,7 @@ Public Class frmMain
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoChrome"
 			If Directory.Exists(filePath) Then
 				Try
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
@@ -596,7 +596,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filepath, config)
+							TestDelete(filePath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -616,7 +616,7 @@ Public Class frmMain
 			Try
 				deletedirectory(filePath)
 			Catch ex As Exception
-				TestDelete(filepath, config)
+				TestDelete(filePath, config)
 			End Try
 		End If
 
@@ -627,7 +627,7 @@ Public Class frmMain
 			Try
 				deletedirectory(filePath)
 			Catch ex As Exception
-				TestDelete(filepath, config)
+				TestDelete(filePath, config)
 			End Try
 		End If
 
@@ -651,7 +651,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -682,7 +682,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -716,7 +716,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filepath, config)
+							TestDelete(filePath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -753,7 +753,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filepath, config)
+							TestDelete(filePath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -792,7 +792,7 @@ Public Class frmMain
 							deletedirectory(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							TestDelete(filepath, config)
+							TestDelete(filePath, config)
 						End Try
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -834,7 +834,7 @@ Public Class frmMain
 						deletedirectory(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						TestDelete(filepath, config)
+						TestDelete(filePath, config)
 					End Try
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -868,7 +868,7 @@ Public Class frmMain
 					deletedirectory(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					TestDelete(filepath, config)
+					TestDelete(filePath, config)
 				End Try
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -1754,7 +1754,7 @@ Public Class frmMain
 													deletedirectory(filePath)
 												Catch ex As Exception
 													Application.Log.AddException(ex)
-													TestDelete(filepath, config)
+													TestDelete(filePath, config)
 												End Try
 											End If
 										End If
@@ -2297,7 +2297,7 @@ Public Class frmMain
 			Next
 
 		Catch ex As Exception
-			Application.log.AddException(ex)
+			Application.Log.AddException(ex)
 		End Try
 	End Sub
 
@@ -2500,7 +2500,7 @@ Public Class frmMain
 				deletedirectory(filePath)
 			Catch ex As Exception
 				Application.Log.AddException(ex)
-				TestDelete(filepath, config)
+				TestDelete(filePath, config)
 			End Try
 
 		End If
@@ -5061,7 +5061,7 @@ Public Class frmMain
 			End Using
 		Catch ex As Exception
 			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
-			Application.log.AddException(ex)
+			Application.Log.AddException(ex)
 		End Try
 	End Sub
 
@@ -5358,9 +5358,9 @@ Public Class frmMain
 		With frmOptions
 			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
 			.Background = Me.Background
-			.Owner = Me
 			.DataContext = Me.DataContext
-
+			.Icon = Me.Icon
+			.Owner = Me
 		End With
 
 		frmOptions.ShowDialog()
@@ -5374,6 +5374,7 @@ Public Class frmMain
 			.Owner = Me
 			.DataContext = Me.DataContext
 			.Width = Me.Width
+			.Icon = Me.Icon
 			.Height = Me.Height
 
 			.Text = Languages.GetTranslation("Misc", "About", "Text")
@@ -5390,6 +5391,7 @@ Public Class frmMain
 			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
 			.Owner = Me
 			.DataContext = Me.DataContext
+			.Icon = Me.Icon
 			.Width = Me.Width
 			.Height = Me.Height
 
@@ -5420,9 +5422,9 @@ Public Class frmMain
 		Dim frmLog As New frmLog
 
 		With frmLog
-			.Icon = Me.Icon
 			.Owner = Me
 			.DataContext = Me.DataContext
+			.Icon = Me.Icon
 			.ResizeMode = Windows.ResizeMode.CanResizeWithGrip
 			.WindowStyle = Windows.WindowStyle.SingleBorderWindow
 			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
@@ -5463,6 +5465,8 @@ Public Class frmMain
 
 			InitLanguage(True)
 
+			Dim isElevated As Boolean = principal.IsInRole(WindowsBuiltInRole.Administrator)
+
 			If Application.Settings.CheckUpdates AndAlso isElevated Then
 				Me.Topmost = True
 				Checkupdates2()
@@ -5474,83 +5478,18 @@ Public Class frmMain
 				End If
 			End If
 
-			Dim args As String() = Environment.GetCommandLineArgs()
-
-			If args.Length > 1 AndAlso Not isElevated Then
-
-				For i As Int32 = 1 To args.Length - 1
-					If StrContainsAny(args(i), True, "donate") Then
+			If Application.Settings.ArgumentsArray IsNot Nothing AndAlso Application.Settings.ArgumentsArray.Length > 0 AndAlso Not isElevated Then
+				For Each arg As String In Application.Settings.ArgumentsArray
+					If StrContainsAny(arg, True, "donate", "svn", "guru3dnvidia", "guru3damd", "dduhome", "geforce", "visitoffer") Then
 						Try
-							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
+							MessageBox.Show("RunAs; " & arg)
+							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, arg) With {.Verb = "runas"})
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 						End Try
 
 						Application.Current.Shutdown()
 						Exit Sub
-
-					ElseIf StrContainsAny(args(i), True, "svn") Then
-						Try
-							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-
-						Application.Current.Shutdown()
-						Exit Sub
-
-					ElseIf StrContainsAny(args(i), True, "guru3dnvidia") Then
-						Try
-							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-
-						Application.Current.Shutdown()
-						Exit Sub
-
-					ElseIf StrContainsAny(args(i), True, "guru3damd") Then
-						Try
-							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-
-						Application.Current.Shutdown()
-						Exit Sub
-
-					ElseIf StrContainsAny(args(i), True, "dduhome") Then
-						Try
-							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-
-						Application.Current.Shutdown()
-						Exit Sub
-
-					ElseIf StrContainsAny(args(i), True, "geforce") Then
-						Try
-							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-
-						Application.Current.Shutdown()
-						Exit Sub
-
-					ElseIf StrContainsAny(args(i), True, "visitoffer") Then
-						Try
-							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, args(i)) With {.Verb = "runas"})
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-
-						Application.Current.Shutdown()
-						Exit Sub
-
-					ElseIf StrContainsAny(args(i), True, "5648674614687") Then
-						Application.Data.IsDebug = True
 					End If
 				Next
 			Else
@@ -7229,7 +7168,7 @@ Public Class frmMain
 									Dim regValue As String = CStr(subRegkey.GetValue("Device Description"))
 
 									If Not IsNullOrWhitespace(regValue) Then
-										UpdateTextMethod(String.Format("{0}{1} - {2} {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
+										UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
 										If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
 									Else
 										regValue = CStr(subRegkey.GetValue("DriverDesc"))
@@ -7239,7 +7178,7 @@ Public Class frmMain
 												regValue = HexToString(GetREG_BINARY(regValue, "DriverDesc").Replace("00", ""))
 											End If
 
-											UpdateTextMethod(String.Format("{0}{1} - {2} {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
+											UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
 											If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
 										End If
 									End If
@@ -7335,7 +7274,7 @@ Public Class frmMain
 
 		ButtonsPanel.IsEnabled = enabled
 		btnWuRestore.IsEnabled = enabled
-		MenuStrip1.IsEnabled = enabled
+		MenuStrip1.IsEnabled = enabled	
 	End Sub
 
 	Private Sub ThreadTask()
@@ -7390,7 +7329,7 @@ Public Class frmMain
 				closeddu()
 			End If
 		Catch ex As Exception
-			Application.log.AddException(ex)
+			Application.Log.AddException(ex)
 		End Try
 	End Sub
 
@@ -7434,7 +7373,7 @@ Public Class frmMain
 
 			Application.Log.Add(info)
 		Catch ex As Exception
-			Application.log.AddException(ex)
+			Application.Log.AddException(ex)
 		End Try
 	End Sub
 
@@ -7781,7 +7720,7 @@ Public Class frmMain
 	End Function
 
 	Public Function UpdateTextEnglish(ByVal number As Integer) As String
-		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1), true)
+		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1), True)
 	End Function
 
 	Private Sub temporarynvidiaspeedup(ByVal config As ThreadSettings)	 'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
@@ -7973,7 +7912,19 @@ Public Class frmMain
 	End Sub
 
 	Private Sub restoreMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles restoreMenuItem.Click
+		Dim frmT As New frmTranslators
 
+		With frmT
+			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+			.Owner = Me
+			.DataContext = Me.DataContext
+			.Width = Me.Width
+			.Height = Me.Height
+
+			.Title = Languages.GetTranslation("frmMain", "AboutMenuItem", "Text")
+		End With
+
+		frmT.ShowDialog()
 	End Sub
 
 	Private Sub checkXMLMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles checkXMLMenuItem.Click

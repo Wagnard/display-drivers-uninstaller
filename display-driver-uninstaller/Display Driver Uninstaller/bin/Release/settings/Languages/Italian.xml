@@ -54,7 +54,10 @@
 		<lblSelectedGPU>
 			<Text>Seleziona driver video</Text>
 		</lblSelectedGPU>
-		
+		<lblLanguage>
+			<Text>Selected language</Text>
+		</lblLanguage>
+
 		<Label9>
 			<Text>Nota: Sei responsabile di qualsiasi danno causato al tuo PC.</Text>
 		</Label9>
@@ -377,12 +380,12 @@
 		</Tos>
 	</Misc>
 
-	<LanguageCredits>
-		<Credits>
+	<LanguageTranslators>
+		<Translator>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
-		</Credits>
-	</LanguageCredits>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

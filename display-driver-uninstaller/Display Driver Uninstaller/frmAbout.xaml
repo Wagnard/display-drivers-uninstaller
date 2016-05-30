@@ -7,7 +7,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="200" />
 			<RowDefinition Height="Auto" />
-			<RowDefinition Height="174*" />
+			<RowDefinition Height="*" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
@@ -15,13 +15,13 @@
 		<Image Source="Resources/ddu logo3.png" Stretch="Uniform" Grid.Row="0" />
 
 		<Separator BorderBrush="Black" BorderThickness="1" Grid.Row="1"  />
-		
-		<ScrollViewer Grid.Row="2" Margin="10" >
+
+		<ScrollViewer Grid.Row="2" Margin="10">
 			<TextBlock x:Name="tbText" Text="{Binding ElementName=frmAbout, Path=Text, Mode=OneWay}" Padding="10" TextWrapping="Wrap" />
 		</ScrollViewer>
-	
+
 		<Separator BorderBrush="Black" BorderThickness="1" Grid.Row="3"  />
 
-		<Button Name="btnClose" Content="btnClose" Grid.Row="4" Height="28" Width="80" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" IsCancel="True" />
+		<Button Name="btnClose" Content="btnClose" Grid.Row="4" Height="30" MinWidth="80" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" IsCancel="True" />
 	</Grid>
 </Window>

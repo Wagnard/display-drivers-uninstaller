@@ -9,7 +9,7 @@
 	
     Title="{Binding Settings.AppName, Mode=OneWay}" 
 	Height="600" Width="800"
-    MinHeight="550" MinWidth="640" ResizeMode="CanResize" Loaded="frmMain_Loaded" 
+    MinHeight="540" MinWidth="640" ResizeMode="CanResize" Loaded="frmMain_Loaded" 
     Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" 
     Visibility="Visible" WindowStartupLocation="CenterScreen" d:DesignHeight="550" d:DesignWidth="640">
 	
@@ -67,9 +67,10 @@
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 		
-		<Menu Name="MenuStrip1" FontSize="13" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="4" Background="#28000000">
+		<Menu Name="MenuStrip1" FontSize="14" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="4" Background="#28000000">
 			<MenuItem x:Name="OptionsMenuItem" Header="OptionsMenuItem"/>
 
 			<MenuItem x:Name="LinksMenuItem" Header="LinksMenuItem">
@@ -144,29 +145,19 @@
 			</DockPanel.Resources>
 			
 			<Button DockPanel.Dock="Top" x:Name="btnCleanRestart" HorizontalAlignment="Stretch" >
-				<TextBlock Text="btnRestart" TextWrapping="Wrap" TextAlignment="Center" />
+				<TextBlock Text="btnRestart" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
 			</Button>
 			<Button DockPanel.Dock="Top" x:Name="btnClean" HorizontalAlignment="Stretch" >
-				<TextBlock Text="btnClean" TextWrapping="Wrap" TextAlignment="Center" />
+				<TextBlock Text="btnClean" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
 			</Button>
 			<Button DockPanel.Dock="Top" x:Name="btnCleanShutdown" HorizontalAlignment="Stretch" >
-				<TextBlock Text="btnCleanShutdown" TextWrapping="Wrap" TextAlignment="Center" />
+				<TextBlock Text="btnCleanShutdown" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
 			</Button>
 		</DockPanel>
 
 		<Button Grid.Row="4" Grid.Column="3" Margin="10,0" x:Name="btnWuRestore" MinHeight="40" MaxHeight="60">
-			<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center" />
+			<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
 		</Button>
-		    
-        <Label x:Name="lblUpdate" Content="lblUpdate" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="6" />
-   
-        <Button x:Name="imgDonate" Grid.Row="6" Grid.Column="3" HorizontalAlignment="Right" Width="96" Margin="6">
-            <Button.Template>
-                <ControlTemplate>
-                    <Image Source="Resources/btn_donate_LG.gif"/>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
 
 		<DockPanel LastChildFill="True" Margin="10" Grid.Row="5" Grid.Column="3">
 			<StackPanel DockPanel.Dock="Bottom">
@@ -196,5 +187,27 @@
 				</Style>
 			</ListBox.ItemContainerStyle>
 		</ListBox>
-		</Grid>
+		    
+        <Label x:Name="lblUpdate" Content="lblUpdate" Grid.Row="6" Grid.ColumnSpan="2" />
+
+		<Border Grid.Row="7" Grid.ColumnSpan="4" Margin="0,10,0,0" Background="#28000000">
+			<Grid HorizontalAlignment="Center">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				
+				<TextBlock x:Name="lblDonate" Grid.Column="0" Text="lblDonate" FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Margin="6,0" />
+
+				<Button x:Name="imgDonate" Grid.Column="1" HorizontalAlignment="Right" Width="96" >
+					<Button.Template>
+						<ControlTemplate>
+							<Image Source="Resources/btn_donate_LG.gif"/>
+						</ControlTemplate>
+					</Button.Template>
+				</Button>
+			</Grid>
+		</Border>
+	
+	</Grid>
 </Window>

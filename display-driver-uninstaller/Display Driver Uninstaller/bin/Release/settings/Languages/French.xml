@@ -54,6 +54,9 @@
 		<lblSelectedGPU>
 			<Text>Sélectionnez Pilote graphique</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+		  <Text>Langue sélectionnée</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>Note: Tout dommage ou erreurs causés à votre PC est de votre responsabilité.</Text>
@@ -74,10 +77,6 @@
 			<Tooltip>You can disable this from the option menu.</Tooltip>
 		</lblOffer>
 		
-		<lblLanguage>
-		  <Text>Langue sélectionnée</Text>
-		</lblLanguage>
-
 		<OptionsMenuItem>
 			<Text>Options</Text>
 		</OptionsMenuItem>
@@ -381,12 +380,12 @@
 		</Tos>
 	</Misc>
 
-	<LanguageCredits>
-		<Credits>
+	<LanguageTranslators>
+		<Translator>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
-		</Credits>
-	</LanguageCredits>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

@@ -19,11 +19,12 @@
 		<btnClean>
 			<Text>
 				Puhdista ja älä tee mitään
-				(Voi aiheuttaa ongelmia kuten kuvan menetyksen)
+				(Voi aiheuttaa kuvan menetyksen)
 			</Text>
 			<Tooltip>
 				Poista nykyiset ja edelliset ajurit ja älä käynnistä uudelleen
-				(Voi aiheuttaa ongelmia kuten kuvan menetyksen)
+				Voi aiheuttaa ongelmia kuten kuvan menetyksen. Tällöin käynnistä
+				tietokone uudelleen esim. virtanapista.
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
@@ -33,7 +34,7 @@
 			</Text>
 			<Tooltip>
 				Poista nykyiset ja edelliset ajurit ja sammuta tietokone
-				(Asentaessa uutta näytönohjainta)
+				Asenna näytönohjain koneen sammuttua ja käynnistä.
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
@@ -54,6 +55,9 @@
 		<lblSelectedGPU>
 			<Text>Valitse Näytönohjain ajuri</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Valittu kieli</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>Huomautus: Mikä tahansa tietokoneelle aiheutettu vaurio tai virhe on omalla vastuullasi.</Text>
@@ -87,25 +91,25 @@
 			<Text>Linkit</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>Käyttöehdot (ToS)</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
 			<Text>Tietoa</Text>
 		</AboutMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visit official DDU Website</Text>
+			<Text>Avaa virallinen DDU kotisivu</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Visit SVN Website</Text>
+			<Text>Avaa lähdekoodi(SVN) sivu</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
+			<Text>Avaa Guru3D:n NVIDIA viestiketju</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
+			<Text>Avaa Guru3D:n AMD viestiketju</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Visit Geforce Thread</Text>
+			<Text>Avaa Geforce viestiketju</Text>
 		</VisitGeforceMenuItem>
 		
 		<Messages>
@@ -176,13 +180,14 @@
 			<Text>Sulje</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>Näytä tarjouksia yhteistyökumppaneilta</Text>
+			<ToolTip>Kielivalinnan yläpuolella oleva kuva</ToolTip>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Specific Options</Text>
+			<Text>NVIDIA-kohtaiset asetukset</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Specific Options</Text>
+			<Text>AMD-kohtaiset asetukset</Text>
 		</lblAmdspecific>
 		<lblGeneral>
 			<Text>Yleiset asetukset</Text>
@@ -234,8 +239,11 @@
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Remove Vulkan Runtime</Text>
-			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+			<Text>Poista Vulkan Runtime</Text>
+			<Tooltip>
+				Ei suositeltavaa jos sinulla on kaksi erillistä
+				näytönohjainta jotka kykenevät käyttää Vulkan APIa
+			</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
 			<Text>Use SetupAPI *Experimental*</Text>
@@ -265,9 +273,9 @@
 		</lblNotSafeMode>
 		<lblWin10Warn>
 			<Text>
-				Important note for Windows 10 users:
-				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Huomio Windows 10 käyttäjät:
+				Sinun käyttäjäsi salasana vaaditaan vikasietotilassa! (PIN koodia ei voi käyttää)
+				Sulje ohjelma heti jos olet kadottanut salasanasi tai et tiedä sitä!
 			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
@@ -282,7 +290,7 @@
 			<Text>Sulje</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Ávaa loki</Text>
+			<Text>Avaa loki</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
@@ -314,7 +322,7 @@
 
 	<frmAbout Text="Tietoa">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Sulje</Text>
 		</btnClose>
 	</frmAbout>
 
@@ -384,12 +392,12 @@
 		</Tos>
 	</Misc>
 
-	<LanguageCredits>
-		<Credits>
-			<User></User>
+	<LanguageTranslators>
+		<Translator>
+			<User>DevMltk</User>
 			<Details></Details>
-			<LastUpdate></LastUpdate>
-		</Credits>
-	</LanguageCredits>
+			<LastUpdate>30/05/2016</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

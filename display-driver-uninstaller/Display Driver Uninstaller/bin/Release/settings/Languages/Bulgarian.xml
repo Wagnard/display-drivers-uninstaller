@@ -54,6 +54,9 @@
 		<lblSelectedGPU>
 			<Text>Изберете графичен драйвер</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Selected language</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>Забележка: всякакви щети или грешки, причинени на Вашия компютър са на Ваша отговорност.</Text>
@@ -382,12 +385,12 @@
 		</Tos>
 	</Misc>
 	
-	<LanguageCredits>
-		<Credits>
+	<LanguageTranslators>
+		<Translator>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
-		</Credits>
-	</LanguageCredits>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

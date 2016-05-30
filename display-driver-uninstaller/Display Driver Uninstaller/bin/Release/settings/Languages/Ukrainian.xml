@@ -43,7 +43,7 @@
 			<Text>Виявлено версію Windows</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>Подобається DDU? Поміркуйте щодо пожертвування (Donate) - це допоможе його подальшому розвитку.</Text>
+			<Text>*** Подобається DDU? Поміркуйте щодо пожертвування (Donate) - це допоможе його подальшому розвитку. ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Журнал</Text>
@@ -51,6 +51,9 @@
 		<lblSelectedGPU>
 			<Text>Виберіть графічний драйвер</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Selected language</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>Зауваження: Будь-які пошкодження чи помилки, що виникнуть у вашому комп'ютері, на вашій відповідальності.</Text>
@@ -376,12 +379,12 @@
 		</Tos>
 	</Misc>
 
-	<LanguageCredits>
-		<Credits>
+	<LanguageTranslators>
+		<Translator>
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
-		</Credits>
-	</LanguageCredits>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

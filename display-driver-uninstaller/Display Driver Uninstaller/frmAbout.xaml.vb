@@ -27,33 +27,4 @@ Public Class frmAbout
 		Me.Close()
 	End Sub
 
-	' Testing  (works)
-	' For language credits
-	'Private Sub btnTranslators_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnTranslators.Click
-	'	Dim langOption As Languages.LanguageOption = DirectCast(Me.DataContext, Data).Settings.SelectedLanguage
-
-	'	Dim sb As New StringBuilder()
-	'	sb.AppendLine(String.Format("Language: {0}  ({1})", langOption.DisplayText, langOption.ISOLanguage))
-	'	sb.AppendLine("Translators: (in random order)")
-	'	sb.AppendLine()
-
-	'	Dim rnd As New System.Random
-
-	'	For Each credit As Languages.LanguageCredits In DirectCast(Me.DataContext, Data).Settings.SelectedLanguage.Credits
-	'		sb.AppendLine("User: " & credit.User)
-
-	'		If Not IsNullOrWhitespace(credit.Details) Then
-	'			sb.AppendLine("Details: " & credit.Details)
-	'		End If
-
-	'		If credit.LastUpdate IsNot Nothing AndAlso credit.LastUpdate.HasValue Then
-	'			sb.AppendLine("Last update: " & credit.LastUpdate.Value.ToString("dd MMMM yyyy"))
-	'		End If
-
-	'		sb.AppendLine("")
-	'	Next
-
-	'	MessageBox.Show(sb.ToString())
-	'End Sub
-
 End Class

@@ -5,7 +5,7 @@ Imports System.Text
 
 Public Class Languages
 	Private Shared ReadOnly sysNewLine As String = Environment.NewLine
-	'Private Shared newLineStr As String = "|"
+	Private Shared ReadOnly dateFormats As String() = New String() {"dd/MM/yyyy", "dd.MM.yyyy"}
 	Private Shared ReadOnly threadLock As String = "You shall not pass!" 'lock access for one thread at time
 
 	Private Shared isEngLoaded As Boolean = False
@@ -235,19 +235,31 @@ notFound:
 			For i As Int32 = 0 To VisualTreeHelper.GetChildrenCount(parent) - 1
 				Dim child As DependencyObject = VisualTreeHelper.GetChild(parent, i)
 
-				If TypeOf (child) Is Control OrElse TypeOf (child) Is TextBlock Then
-					controls.Add(child)
+				If TypeOf (child) Is Control Then
+					If Not TypeOf (child) Is MenuItem Then
+						Dim ctrl As Control = TryCast(child, Control)
+
+						If ctrl IsNot Nothing AndAlso Not IsNullOrWhitespace(ctrl.Name) Then
+							controls.Add(ctrl)
+						End If
+					Else
+						Dim menuitem As MenuItem = TryCast(child, MenuItem)
+
+						If menuitem IsNot Nothing Then
+							If Not IsNullOrWhitespace(menuitem.Name) Then controls.Add(menuitem)
+							GetMenuItems(menuitem, controls)
+						End If
+					End If
+				ElseIf TypeOf (child) Is TextBlock Then
+					Dim tb As TextBlock = TryCast(child, TextBlock)
+
+					If tb IsNot Nothing AndAlso Not IsNullOrWhitespace(tb.Name) Then
+						controls.Add(tb)
+					End If
 				End If
 
-				If TypeOf (child) Is MenuItem Then
-					Dim menuitem As MenuItem = CType(child, MenuItem)
-
-					controls.Add(menuitem)
-					GetMenuItems(menuitem, controls)
-				Else
-					If VisualTreeHelper.GetChildrenCount(child) > 0 Then
-						GetChildren(child, controls)
-					End If
+				If VisualTreeHelper.GetChildrenCount(child) > 0 Then
+					GetChildren(child, controls)
 				End If
 			Next
 		End If
@@ -266,6 +278,9 @@ notFound:
 	End Sub
 
 	Private Shared Sub TranslateControl(ByVal window As String, ByVal ctrl As DependencyObject)
+		Dim text As String = Nothing
+		Dim tooltipText As String = Nothing
+
 		If TypeOf (ctrl) Is ComboBox Then				'ComboBox
 			Dim cb As ComboBox = DirectCast(ctrl, ComboBox)
 			Dim items As List(Of String) = GetTranslationList(window, cb.Name, "Item")
@@ -276,9 +291,9 @@ notFound:
 				cb.SelectedIndex = 0
 			End If
 
-		ElseIf TypeOf (ctrl) Is ContentControl Then		'control has '.Content' property
+		ElseIf TypeOf (ctrl) Is ContentControl Then		'control has '.Content' property ( label, button )
 			Dim contentCtrl As ContentControl = DirectCast(ctrl, ContentControl)
-			Dim text = GetTranslation(window, contentCtrl.Name, "Text")
+			text = GetTranslation(window, contentCtrl.Name, "Text")
 
 			If Not String.IsNullOrEmpty(text) Then
 				If TypeOf (contentCtrl.Content) Is TextBlock Then
@@ -290,7 +305,7 @@ notFound:
 				End If
 			End If
 
-			Dim tooltipText As String = GetTranslation(window, contentCtrl.Name, "Tooltip")
+			tooltipText = GetTranslation(window, contentCtrl.Name, "Tooltip")
 
 			If Not String.IsNullOrEmpty(tooltipText) Then
 				contentCtrl.ToolTip = tooltipText
@@ -299,13 +314,13 @@ notFound:
 		ElseIf TypeOf (ctrl) Is MenuItem Then			'MenuItem
 			Dim menuCtrl As MenuItem = DirectCast(ctrl, MenuItem)
 
-			Dim text = GetTranslation(window, menuCtrl.Name, "Text")
+			text = GetTranslation(window, menuCtrl.Name, "Text")
 
 			If Not String.IsNullOrEmpty(text) Then
 				menuCtrl.Header = text
 			End If
 
-			Dim tooltipText As String = GetTranslation(window, menuCtrl.Name, "Tooltip")
+			tooltipText = GetTranslation(window, menuCtrl.Name, "Tooltip")
 
 			If Not String.IsNullOrEmpty(tooltipText) Then
 				menuCtrl.ToolTip = tooltipText
@@ -313,13 +328,13 @@ notFound:
 		ElseIf TypeOf (ctrl) Is TextBlock Then			'TextBlock
 			Dim tb As TextBlock = DirectCast(ctrl, TextBlock)
 
-			Dim text = GetTranslation(window, tb.Name, "Text")
+			text = GetTranslation(window, tb.Name, "Text")
 
 			If Not String.IsNullOrEmpty(text) Then
 				tb.Text = text
 			End If
 
-			Dim tooltipText As String = GetTranslation(window, tb.Name, "Tooltip")
+			tooltipText = GetTranslation(window, tb.Name, "Tooltip")
 
 			If Not String.IsNullOrEmpty(tooltipText) Then
 				tb.ToolTip = tooltipText
@@ -374,8 +389,7 @@ notFound:
 
 					Dim lang_iso As String = Nothing
 					Dim lang_text As String = Nothing
-					'	Dim newLineChr As String = "|"
-
+				
 					' <DisplayDriverUninstaller ISO="en-US" Text="English"> <-- read ISO & Text attribute's values
 					Do While reader.MoveToNextAttribute()
 						If Not String.IsNullOrEmpty(reader.Name) Then
@@ -383,8 +397,6 @@ notFound:
 								lang_iso = reader.Value
 							ElseIf reader.Name.Equals("Text", StringComparison.OrdinalIgnoreCase) Then
 								lang_text = reader.Value
-								'ElseIf reader.Name.Equals("NewLineChar", StringComparison.OrdinalIgnoreCase) Then
-								'	newLineChr = reader.Value
 							End If
 						End If
 					Loop
@@ -394,57 +406,65 @@ notFound:
 						Throw New InvalidDataException("Language file's format is invalid!" & sysNewLine & "Missing required attributes 'ISO' and 'Text'" & sysNewLine & "(eg. 'ISO=""en-US""' and 'Text=""English""' )")
 					End If
 
-					'If Not IsNullOrWhitespace(newLineChr) Then
-					'	newLineStr = newLineChr
-					'End If
-
 					Dim file As TranslatedFile = New TranslatedFile(lang_iso, lang_text, langFile)
 					Dim controls As List(Of TranslatedControl)
 					Dim ctrl As TranslatedControl
 					Dim parent As TranslatedControl
+					Dim dt As DateTime
+					Dim dateStr As String
+					Dim success As Boolean
 
 					' File should be in correct format at this point
 					Do While reader.Read() ' loop parents
 						If reader.NodeType = XmlNodeType.Element Then ' found parent, <frmMain Text="...">, <frmLaunch Text="..."> etc.
-							If reader.Name.Equals("LanguageCredits", StringComparison.OrdinalIgnoreCase) Then
-								Dim credits As LanguageCredits
+							If reader.Name.Equals("LanguageTranslators", StringComparison.OrdinalIgnoreCase) Then
+								Dim translator As LanguageTranslators
 
 								Do
 									reader.Read()
 
-									If reader.NodeType = XmlNodeType.Element AndAlso reader.Name.StartsWith("Credits", StringComparison.OrdinalIgnoreCase) Then
+									If reader.NodeType = XmlNodeType.Element AndAlso reader.Name.StartsWith("Translator", StringComparison.OrdinalIgnoreCase) Then
 										reader.Read()
-										credits = New LanguageCredits()
+										translator = New LanguageTranslators()
 
 										Do
 											If reader.NodeType = XmlNodeType.Element Then ' child elements found  <User>, <LastUpdate> etc.
 												If reader.Name.Equals("User", StringComparison.OrdinalIgnoreCase) Then
-													credits.User = reader.ReadElementContentAsString().Replace(vbTab, "")
-												ElseIf reader.Name.Equals("Details", StringComparison.OrdinalIgnoreCase) Then
-													credits.Details = reader.ReadElementContentAsString().Replace(vbTab, "")
-												ElseIf reader.Name.Equals("LastUpdate", StringComparison.OrdinalIgnoreCase) Then
-													Dim dt As DateTime
-													Dim dateStr As String = reader.ReadElementContentAsString().Replace(vbTab, "")
+													translator.User = reader.ReadElementContentAsString().Trim().Replace(vbTab, "")
 
-													If DateTime.TryParseExact(dateStr, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.None, dt) Then
-														credits.LastUpdate = dt
+												ElseIf reader.Name.Equals("Details", StringComparison.OrdinalIgnoreCase) Then
+													translator.Details = reader.ReadElementContentAsString().Trim().Replace(vbTab, "")
+
+												ElseIf reader.Name.Equals("LastUpdate", StringComparison.OrdinalIgnoreCase) Then
+													dateStr = reader.ReadElementContentAsString().Trim().Replace(vbTab, "")
+													success = False
+
+													For Each dFormat As String In dateFormats
+														If DateTime.TryParseExact(dateStr, dFormat, System.Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.None, dt) Then
+															success = True
+															Exit For
+														End If
+													Next
+
+													If success Then
+														translator.LastUpdate = dt
 													Else
-														credits.LastUpdate = System.IO.File.GetLastWriteTime(langFile)
+														translator.LastUpdate = Nothing
 													End If
 												End If
 
 											Else
 												reader.Read()
 											End If
-										Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.StartsWith("Credits", StringComparison.OrdinalIgnoreCase))
+										Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.StartsWith("Translator", StringComparison.OrdinalIgnoreCase))
 
-										If Not IsNullOrWhitespace(credits.User) Then
-											file.Details.Credits.Insert(New Random().Next(0, file.Details.Credits.Count + 1), credits)
+										If Not IsNullOrWhitespace(translator.User) Then
+											file.Details.Translators.Insert(New Random().Next(0, file.Details.Translators.Count + 1), translator)
 
 											'file.Details.Credits.Add(credits)
 										End If
 									End If
-								Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals("LanguageCredits", StringComparison.OrdinalIgnoreCase))
+								Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals("LanguageTranslators", StringComparison.OrdinalIgnoreCase))
 
 								Continue Do
 							End If
@@ -776,7 +796,7 @@ notFound:
 		Private m_isolang As String
 		Private m_displaytext As String
 		Private m_filename As String
-		Private m_credits As List(Of LanguageCredits)
+		Private m_translators As List(Of LanguageTranslators)
 
 		Public ReadOnly Property ISOLanguage As String
 			Get
@@ -793,9 +813,9 @@ notFound:
 				Return m_filename
 			End Get
 		End Property
-		Public ReadOnly Property Credits As List(Of LanguageCredits)
+		Public ReadOnly Property Translators As List(Of LanguageTranslators)
 			Get
-				Return m_credits
+				Return m_translators
 			End Get
 		End Property
 
@@ -803,7 +823,7 @@ notFound:
 			m_isolang = langISO
 			m_displaytext = langText
 			m_filename = langFile
-			m_credits = New List(Of LanguageCredits)(5)
+			m_translators = New List(Of LanguageTranslators)(5)
 		End Sub
 
 		Public Overrides Function ToString() As String
@@ -824,7 +844,7 @@ notFound:
 		End Function
 	End Class
 
-	Public Class LanguageCredits
+	Public Class LanguageTranslators
 		Public Property User As String
 		Public Property Details As String
 		Public Property LastUpdate As DateTime?
