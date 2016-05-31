@@ -5356,7 +5356,6 @@ Public Class frmMain
 		Dim frmOptions As New frmOptions
 
 		With frmOptions
-			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
 			.Background = Me.Background
 			.DataContext = Me.DataContext
 			.Icon = Me.Icon
@@ -5366,40 +5365,21 @@ Public Class frmMain
 		frmOptions.ShowDialog()
 	End Sub
 
-	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click
-		Dim frmAbout As New frmAbout
+	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click, ToSMenuItem.Click, TranslatorsMenuItem.Click
+		Dim menuItem As MenuItem = TryCast(sender, MenuItem)
 
-		With frmAbout
-			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
-			.Owner = Me
-			.DataContext = Me.DataContext
-			.Width = Me.Width
-			.Icon = Me.Icon
-			.Height = Me.Height
+		If menuItem Is Nothing Then
+			Return
+		End If
 
-			.Text = Languages.GetTranslation("Misc", "About", "Text")
-			.Title = Languages.GetTranslation("frmMain", "AboutMenuItem", "Text")
-		End With
-
-		frmAbout.ShowDialog()
-	End Sub
-
-	Private Sub TosMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles ToSMenuItem.Click
-		Dim frmAbout As New frmAbout
-
-		With frmAbout
-			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
-			.Owner = Me
-			.DataContext = Me.DataContext
-			.Icon = Me.Icon
-			.Width = Me.Width
-			.Height = Me.Height
-
-			.Text = Languages.GetTranslation("Misc", "ToS", "Text")
-			.Title = Languages.GetTranslation("frmMain", "ToSMenuItem", "Text")
-		End With
-
-		frmAbout.ShowDialog()
+		Select Case True
+			Case StrContainsAny(menuItem.Name, True, "AboutMenuItem")
+				ShowAboutWindow(1)
+			Case StrContainsAny(menuItem.Name, True, "ToSMenuItem")
+				ShowAboutWindow(2)
+			Case StrContainsAny(menuItem.Name, True, "TranslatorsMenuItem")
+				ShowAboutWindow(3)
+		End Select
 	End Sub
 
 	Private Sub VisitSVNMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitSVNMenuItem.Click
@@ -7138,6 +7118,20 @@ Public Class frmMain
 
 #End Region
 
+	Private Sub ShowAboutWindow(ByVal frmType As Int32)
+		Dim frmAbout As New frmAbout With
+		{
+		  .Owner = Me,
+		  .DataContext = Me.DataContext,
+		  .Icon = Me.Icon,
+		  .Width = Me.Width,
+		  .Height = Me.Height,
+		  .FrmType = frmType
+		}
+
+		frmAbout.ShowDialog()
+	End Sub
+
 	Private Sub GetGPUDetails(ByVal firstLaunch As Boolean)
 		lbLog.Items.Clear()
 
@@ -7647,7 +7641,7 @@ Public Class frmMain
 		'TODO: InitLanguage (just comment for quick find)
 
 		If firstLaunch Then
-			Languages.Load() 'default = english
+			Languages.Load()		'default = english
 
 			ExtractEnglishLangFile(Application.Paths.Language & "English.xml", Languages.DefaultEng)
 
@@ -7662,7 +7656,7 @@ Public Class frmMain
 				End If
 
 				If nativeLang Is Nothing AndAlso systemlang.Equals(item.ISOLanguage, StringComparison.OrdinalIgnoreCase) Then
-					nativeLang = item 'take native on hold incase last used language not found (avoid multiple loops)
+					nativeLang = item		'take native on hold incase last used language not found (avoid multiple loops)
 				End If
 			Next
 
@@ -7670,13 +7664,13 @@ Public Class frmMain
 				Application.Settings.SelectedLanguage = lastUsedLang
 			Else
 				If nativeLang IsNot Nothing Then
-					Application.Settings.SelectedLanguage = nativeLang 'couldn't find last used, using native lang
+					Application.Settings.SelectedLanguage = nativeLang				'couldn't find last used, using native lang
 				Else
 					Application.Settings.SelectedLanguage = Languages.DefaultEng	'couldn't find last used nor native lang, using default (English)
 				End If
 			End If
 
-			Languages.TranslateForm(Me)
+			Languages.TranslateForm(Me, False)
 
 		Else
 			If changeTo IsNot Nothing AndAlso Not changeTo.Equals(Languages.Current) Then
@@ -7912,7 +7906,7 @@ Public Class frmMain
 	End Sub
 
 	Private Sub restoreMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles restoreMenuItem.Click
-		Dim frmT As New frmTranslators
+		Dim frmT As New frmAbout
 
 		With frmT
 			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
@@ -7920,8 +7914,7 @@ Public Class frmMain
 			.DataContext = Me.DataContext
 			.Width = Me.Width
 			.Height = Me.Height
-
-			.Title = Languages.GetTranslation("frmMain", "AboutMenuItem", "Text")
+			.FrmType = 3
 		End With
 
 		frmT.ShowDialog()

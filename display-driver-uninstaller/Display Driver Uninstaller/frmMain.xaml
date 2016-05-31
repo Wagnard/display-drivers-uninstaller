@@ -86,6 +86,7 @@
 			<MenuItem x:Name="InfoMenuItem" Header="InfoMenuItem">
 				<MenuItem x:Name="ToSMenuItem" Header="ToSMenuItem" />
 				<MenuItem x:Name="AboutMenuItem" Header="AboutMenuItem" />
+				<MenuItem x:Name="TranslatorsMenuItem" Header="TranslatorsMenuItem" />
 			</MenuItem>
 
 			<MenuItem x:Name="TestMenuItem" Header="TESTING" Visibility="{Binding IsDebug, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">

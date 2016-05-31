@@ -3,7 +3,7 @@
 	For editting files, I recommended use 3rd party software.
 	Good example, Notepad++
 	
-	Avoid Microsoft Office products and WordPad
+	Avoid Microsoft Office products and WordPad (can break file's structure)
 	
 	
 	
@@ -18,11 +18,10 @@
 			Text = "English"	
 			->	Shown to user in language selection box on Main window (Write In English!)
 	
-	New languages are supported "out-of-box", just placed on \Settings\Languages\ directory.
-	If language file isn't correctly formatted, it won't be shown on Main windows Language selection box.
-	
-	
-
+		New languages are supported "out-of-box", just placed on \Settings\Languages\ directory.
+		If language file isn't correctly formatted, it won't be shown on Main windows Language selection box!
+		
+		
 	>>> For detailed information about XML; see
 	>>> http://www.w3schools.com/xml/xml_whatis.asp
 	
@@ -116,24 +115,40 @@
 		
 	>>> 	Optional	 <<<
 	You can add credits to yourself at end of file	
-	See below for examples
+	Shown at (Menu) Info -> Translators
+	
+	Note! 
+		All text are directly readed from each language file from <LanguageTranslators> section (if exists)
+		If your name won't show up there, <LanguageTranslators>...</LanguageTranslators> 'structure' may be invalid.
+		Below example is in correct format, so you can always copy below structure and modify texts if current file doesn't seem to work.
 		
+	Note!
+		If date won't show, it most likely is "incorrect" format. Check day and month are in correct positions (and not reversed)
+		Each language has some difference in date formats, but application supports only few. All below formats (9) are valid.
+		
+		d/M/yyyy		01/04/2016 	..	21/2/2016	..	09/12/2015
+		d.M.yyyy		01.04.2016 	..	21.2.2016 	..	09.12.2015
+		d-M-yyyy		01-04-2016 	..	21-2-2016 	..	09-12-2015
+		
+	
+	
+	See below for example:
+	
 		
 	<LanguageTranslators>
-		<Translator>
-			<User>Wagnard</User>					<-- Required. name/username/nick/email/something as "ID"		( If not set, won't be shown )
-			<Details>Owner</Details>				<-- Optional. Anything, contact, email, etc						( Note! its available to view for everyone )
-			<LastUpdate>23/05/2016</LastUpdate>		<-- Optional. Last update Date as 'dd/MM/yyyy' or 'dd.MM.yyyy'	( dd = Day [1-31];  MM = Month [1-12];  yyyy = Year [2016 - 2050] )
+		<Translator>							
+			<User>Wagnard</User>					<!-- Required. name/username/nick/email/something as "ID"		( If not set, won't be shown )  -->
+			<Details>Owner</Details>				<!-- Optional. Anything, contact, email, etc					( Note! its available to view for everyone )  -->
+			<LastUpdate>23/05/2016</LastUpdate>		<!-- Optional. Last update Date as mentioned on above note		( d = Day [1-31];  M = Month [1-12];  yyyy = Year [2016 -> ] )  -->
 		</Translator>
 
-		<Translator2>
+		<Translator2>								<!-- As long as 'element' starts with 'Translator', and has matching end element, its valid -->
 			<User>Someone</User>
 			<LastUpdate>01/01/2000</LastUpdate>
 		</Translator2>
 
-		<!--
 		<Translator3>
-			<User>Example</User>					<-- Optional lines can be deleted or just leave empty
+			<User>Example</User>					<!-- Optional lines can be deleted or just leave empty -->
 		</Translator3>
 
 		<Translator4>
@@ -145,5 +160,4 @@
 			<User>Test2</User>
 			<LastUpdate>31/12/1999</LastUpdate>
 		</TranslatorN>
-		-->	
 	</LanguageTranslators>

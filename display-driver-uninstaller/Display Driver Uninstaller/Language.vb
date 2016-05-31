@@ -5,7 +5,7 @@ Imports System.Text
 
 Public Class Languages
 	Private Shared ReadOnly sysNewLine As String = Environment.NewLine
-	Private Shared ReadOnly dateFormats As String() = New String() {"dd/MM/yyyy", "dd.MM.yyyy"}
+	Private Shared ReadOnly dateFormats As String() = New String() {"d/M/yyyy", "d.M.yyyy", "d-M-yyyy"}
 	Private Shared ReadOnly threadLock As String = "You shall not pass!" 'lock access for one thread at time
 
 	Private Shared isEngLoaded As Boolean = False
@@ -190,17 +190,20 @@ notFound:
 	End Function
 
 	''' <param name="window">Which window to translate (frmMain, frmLaunch etc)</param>
-	Public Shared Sub TranslateForm(ByVal window As Window)
+	Public Shared Sub TranslateForm(ByVal window As Window, Optional ByVal translateTitle As Boolean = True)
 		SyncLock (threadLock)
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
 			End If
 
-			Dim text As String = GetParentTranslation(window.Name, "Text")
+			If translateTitle Then
+				Dim text As String = GetParentTranslation(window.Name, "Text")
 
-			If Not String.IsNullOrEmpty(text) Then
-				window.Title = text
+				If Not IsNullOrWhitespace(text) Then
+					window.Title = text
+				End If
 			End If
+
 
 			Dim controls As New List(Of DependencyObject)
 			GetChildren(window, controls)
@@ -410,9 +413,7 @@ notFound:
 					Dim controls As List(Of TranslatedControl)
 					Dim ctrl As TranslatedControl
 					Dim parent As TranslatedControl
-					Dim dt As DateTime
 					Dim dateStr As String
-					Dim success As Boolean
 
 					' File should be in correct format at this point
 					Do While reader.Read() ' loop parents
@@ -437,20 +438,8 @@ notFound:
 
 												ElseIf reader.Name.Equals("LastUpdate", StringComparison.OrdinalIgnoreCase) Then
 													dateStr = reader.ReadElementContentAsString().Trim().Replace(vbTab, "")
-													success = False
 
-													For Each dFormat As String In dateFormats
-														If DateTime.TryParseExact(dateStr, dFormat, System.Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.None, dt) Then
-															success = True
-															Exit For
-														End If
-													Next
-
-													If success Then
-														translator.LastUpdate = dt
-													Else
-														translator.LastUpdate = Nothing
-													End If
+													translator.LastUpdate = ParseDate(dateStr)
 												End If
 
 											Else
@@ -533,6 +522,37 @@ notFound:
 			End If
 
 			Return False
+		End Try
+	End Function
+
+	Private Shared Function ParseDate(ByVal dateStr As String) As DateTime?
+		Try
+			If dateStr Is Nothing OrElse dateStr.Length < 8 Then	' d-m-yyyy = 8
+				Return Nothing
+			End If
+
+			Dim dt As DateTime
+			Dim success As Boolean = False
+
+			For Each dFormat As String In dateFormats
+				If DateTime.TryParseExact(dateStr, dFormat, System.Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.None, dt) Then
+					Return dt
+				End If
+			Next
+
+			Dim parts As String() = dateStr.Split(New String() {dateStr.Substring(dateStr.Length - 5, 1)}, StringSplitOptions.RemoveEmptyEntries)
+
+			If parts.Length = 3 Then
+				Dim dd, mm, yyyy As Int32
+
+				If Int32.TryParse(parts(0), dd) AndAlso Int32.TryParse(parts(1), mm) AndAlso Int32.TryParse(parts(2), yyyy) Then
+					Return New DateTime(yyyy, mm, dd)
+				End If
+			End If
+
+			Return Nothing
+		Catch ex As Exception
+			Return Nothing
 		End Try
 	End Function
 

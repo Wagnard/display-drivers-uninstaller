@@ -81,32 +81,32 @@ Namespace Converters
     Public Class LogTypeToColor
         Implements IValueConverter
 
-        Public Property Color1 As Color = Colors.Black
-        Public Property Color2 As Color = Colors.Black
-        Public Property Color3 As Color = Colors.Black
+		Public Property Color1 As Color = Colors.Black
+		Public Property Color2 As Color = Colors.Black
+		Public Property Color3 As Color = Colors.Black
 
-        Public Function Convert(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
-            If TypeOf (value) Is LogType Then
-                Dim type As LogType = DirectCast(value, LogType)
+		Public Function Convert(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
+			If TypeOf (value) Is LogType Then
+				Dim type As LogType = DirectCast(value, LogType)
 
-                Select Case type
-                    Case LogType.Event
-                        Return Color1
-                    Case LogType.Warning
-                        Return Color2
-                    Case LogType.Error
-                        Return Color3
-                End Select
+				Select Case type
+					Case LogType.Event
+						Return Color1
+					Case LogType.Warning
+						Return Color2
+					Case LogType.Error
+						Return Color3
+				End Select
 
-            End If
+			End If
 
-            Return Color1
-        End Function
+			Return Color1
+		End Function
 
-        Public Function ConvertBack(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.ConvertBack
-            Throw New NotImplementedException("LogTypeToColor::ConvertBack")
-        End Function
-    End Class
+		Public Function ConvertBack(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.ConvertBack
+			Throw New NotImplementedException("LogTypeToColor::ConvertBack")
+		End Function
+	End Class
 
     Public Class StringIsNotNullOrEmpty
         Implements IValueConverter
@@ -130,10 +130,15 @@ Namespace Converters
 		Implements IValueConverter
 
 		Public Property Reversed As Boolean = False
+		Public Property TargetValue As Int32 = 0
 
 		Public Function Convert(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
 			If TypeOf (value) Is Int32 Then
-				Return If(Reversed, DirectCast(value, Int32) = 0, DirectCast(value, Int32) <> 0)
+				If parameter Is Nothing OrElse Not TypeOf (parameter) Is String OrElse Not Int32.TryParse(DirectCast(parameter, String), TargetValue) Then
+					TargetValue = 0
+				End If
+
+				Return If(Reversed, DirectCast(value, Int32) = TargetValue, DirectCast(value, Int32) <> TargetValue)
 			End If
 
 			Return If(Reversed, True, False)

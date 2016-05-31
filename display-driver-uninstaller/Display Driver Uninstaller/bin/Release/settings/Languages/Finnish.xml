@@ -74,8 +74,8 @@
 		</lblUpdate>
 		
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>Näytä tarjouksia yhteistyökumppaneilta</Text>
+			<Tooltip>Voit poistaa tämän käytöstä asetuksista</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
@@ -130,48 +130,48 @@
 		</Messages>
 		
 		<UpdateLog>
-			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
-			<Text2>Cleaning Directory</Text2>
-			<Text3>Cleaning known Regkeys... May take a minute or two.</Text3>
-			<Text4>Cleaning UpdatusUser users account if present.</Text4>
-			<Text5>Cleaning Directory</Text5>
-			<Text6>Starting Registry CleanUP</Text6>
-			<Text7>Finished cleaning Registry</Text7>
-			<Text8>Starting the removal of nVidia Optimus UpperFilter if present.</Text8>
-			<Text9>Scanning for new device...</Text9>
-			<Text10>Clean uninstall completed!</Text10>
-			<Text11>DDU Version</Text11>
+			<Text1>Suoritetaan ajuri hakemiston puhdistusta (Poista OEM vaihe)...</Text1>
+			<Text2>Siivotaan hakemisto</Text2>
+			<Text3>Siivotaan tunnettuja rekisteriavaimia... Kestää arviolta pari minuuttia.</Text3>
+			<Text4>Siivotaan UpdatusUser käyttäjätili jos olemassa</Text4>
+			<Text5>Siivotaan hakemisto</Text5>
+			<Text6>Aloitetaan rekisterin puhdistusta</Text6>
+			<Text7>Rekisterin puhdistus valmis</Text7>
+			<Text8>Aloitetaan Nvidian Optimuksen UpperFilterin poista jos olemassa.</Text8>
+			<Text9>Etsitään uusia laitteita...</Text9>
+			<Text10>Asennuksien puhdistus valmis!</Text10>
+			<Text11>DDU Versio</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Detected</Text13>
+			<Text13>Havaittu</Text13>
 			<Text14>GPU DeviceId</Text14>
-			<Text15>Detected Driver(s) Version(s)</Text15>
+			<Text15>Havaitut ajuri versiot</Text15>
 			<Text16>INF</Text16>
-			<Text17>INF Section</Text17>
-			<Text18>GPU not Correctly Installed</Text18>
-			<Text19>Deleting some specials folders, it may take some times...</Text19>
-			<Text20>CleanUP started...</Text20>
-			<Text21>Uninstalling</Text21>
-			<Text22>driver</Text22>
-			<Text23>Executing ddudr Remove , Please wait(can take a few minutes)</Text23>
-			<Text24>GPU(s) Removed from Device Manager.</Text24>
-			<Text25>Executing DDUDR Remove Audio controller.</Text25>
-			<Text26>HD audio adapters Removed !</Text26>
-			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
-			<Text28>Monitors and Hidden monitors removed !</Text28>
-			<Text29>ddudr Remove complete</Text29>
-			<Text30>Starting S-1-5-xx region cleanUP</Text30>
-			<Text31>End of S-1-5-xx region cleanUP</Text31>
-			<Text32>Begin Classesroot ,installer\products cleanup</Text32>
-			<Text33>End Classesroot ,installer\products cleanup</Text33>
-			<Text34>Start localmachine ,installer\products cleanup</Text34>
-			<Text35>End localmachine ,installer\products cleanup</Text35>
-			<Text36>Start currentuser ,installer\products cleanup</Text36>
-			<Text37>End currentuser ,installer\products cleanup</Text37>
-			<Text38>Cleaning process/services...</Text38>
-			<Text39>Process/Services CleanUP Complete</Text39>
-			<Text40>Deleted.</Text40>
-			<Text41>Value removed.</Text41>
-			<Text42>File Deleted.</Text42>
+			<Text17>INF kohta</Text17>
+			<Text18>Näytönohjain ei ole kunnolla asennettu</Text18>
+			<Text19>Poistetaan joitan erikoiskansioita, voi kestää hetken aikaa...</Text19>
+			<Text20>Aloitetaan puhdistusta...</Text20>
+			<Text21>Poistetaan</Text21>
+			<Text22>ajuri</Text22>
+			<Text23>Aloitettaan laitteen poistoa (DDUDR), odota hetki (voi kestää pari minuuttia)</Text23>
+			<Text24>Näytönohjaimet oistettu Laitehallinnasta.</Text24>
+			<Text25>Suoritetaan laitteen ääniohjaimen poistoa (DDUDR)</Text25>
+			<Text26>HD audio adapteri poistettu!</Text26>
+			<Text27>3D Vision USB Adapteri poistettu Laitehallinnasta</Text27>
+			<Text28>Nykyiset ja piilotetut näytöt poistettu!</Text28>
+			<Text29>Laitteen poisto valmis (DDUDR)</Text29>
+			<Text30>Aloitetaan rekisterin S-1-5-xx alueen puhdistusta</Text30>
+			<Text31>S-1-5-xx alueen puhdistus valmis</Text31>
+			<Text32>Aloitetaan ClassesRoot, installer\products puhdistusta</Text32>
+			<Text33>ClassesRoot, installer\products puhdistus valmis</Text33>
+			<Text34>Aloitetaan LocalMachine, installer\products puhdistusta</Text34>
+			<Text35>LocalMachine, \products puhdistus valmis</Text35>
+			<Text36>Aloitetaan CurrentUser, installer\products puhdistusta</Text36>
+			<Text37>CurrentUser, installer\products puhdistus valmis</Text37>
+			<Text38>Puhdistetaan prosesseja/palveluita...</Text38>
+			<Text39>Prosessit/Palvelut puhdistus Valmis</Text39>
+			<Text40>Poistettu.</Text40>
+			<Text41>Arvo poistettu.</Text41>
+			<Text42>Tiedosto poistettu.</Text42>
 		</UpdateLog>
 	</frmMain>
 	
@@ -246,8 +246,8 @@
 			</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Use SetupAPI *Experimental*</Text>
-			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+			<Text>Käytä SetupAPI ohjelmointirajapintaa</Text>
+			<Tooltip>Käytä SetupAPI ulkoisen ohjelman DDUDR (DEVCON) sijasta.</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
 	
@@ -324,6 +324,15 @@
 		<btnClose>
 			<Text>Sulje</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>Tietoa</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Käyttöehdot (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Kääntäjät</Text>
+		</btnTranslators>
 	</frmAbout>
 
 	<Misc>
@@ -360,7 +369,7 @@
 
 				Luoja : Wagnard.
 
-				Osa-luoja: Shady757
+				Koodaajat: Wagnard, Devmltk, Shady757
 
 				Testaaja : Dellon132
 
@@ -368,7 +377,7 @@
 
 				Suuri kiitos 'Jackalito':lle näytönohjaimen AMD 7850:n lahjoituksesta.
 
-				Kiitos 'Helge Klein':lle (http://helgeklein.com/setacl/) : luvasta käyttää häen ohjelmiaan "DDU":n kanssa.
+				Kiitos 'Helge Klein':lle ( http://helgeklein.com/setacl/ ) : luvasta käyttää häen ohjelmiaan "DDU":n kanssa.
 
 				Suuri kiitos ajasta ja testaamisesta käyttäjille : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (testaukseen käytetystä ajasta)
 				Extraordinary (ohjelmistovirheiden korjauksien testaamisista)
@@ -396,7 +405,7 @@
 		<Translator>
 			<User>DevMltk</User>
 			<Details></Details>
-			<LastUpdate>30/05/2016</LastUpdate>
+			<LastUpdate>31/05/2016</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

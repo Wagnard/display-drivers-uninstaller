@@ -74,9 +74,6 @@
     <Compile Include="frmSystemRestore.xaml.vb">
       <DependentUpon>frmSystemRestore.xaml</DependentUpon>
     </Compile>
-    <Compile Include="frmTranslators.xaml.vb">
-      <DependentUpon>frmTranslators.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Inf.vb" />
     <Compile Include="Win32\ACL.vb" />
     <Compile Include="AppLog.vb" />
@@ -132,10 +129,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="frmSystemRestore.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="frmTranslators.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
