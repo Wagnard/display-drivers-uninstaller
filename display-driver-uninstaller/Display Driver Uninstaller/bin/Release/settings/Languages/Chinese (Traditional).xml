@@ -51,9 +51,6 @@
 		<lblSelectedGPU>
 			<Text>選擇顯示卡驅動程式：</Text>
 		</lblSelectedGPU>
-		<lblLanguage>
-			<Text>Selected language</Text>
-		</lblLanguage>
 		
 		<Label9>
 			<Text>注意:您將為操作本工具造成的損壞或錯誤自行承擔責任。</Text>
@@ -81,10 +78,10 @@
 			<Text>資訊</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>延伸記錄</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
-			<Text>Links</Text>
+			<Text>連結</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
 			<Text>服務條款(ToS)</Text>
@@ -173,7 +170,7 @@
 	
 	<frmOptions Text="選項">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>關閉</Text>
 		</btnClose>
 		<lblOffer>
 			<Text>顯示我們的合作伙伴提供</Text>
@@ -266,9 +263,9 @@
 		</lblNotSafeMode>
 		<lblWin10Warn>
 			<Text>
-				Important note for Windows 10 users:
-				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Windows 10 使用者重要注意事項:
+				需要您的 Windows 10「密碼」!(PIN 在安全模式下無法運作)
+				如果您遺失或不知道請立即結束!
 			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
@@ -283,39 +280,39 @@
 			<Text>關閉</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Open log</Text>
+			<Text>開啟記錄</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
-			<Text>Options</Text>
+			<Text>選項</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>複製已啟用</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>Filters</Text>
+			<Text>篩選</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>顯示事件</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>顯示警告</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>顯示錯誤</Text>
 		</errorsMenuItem>
 	</frmLog>
 
 	<frmSystemRestore Text="System Restore">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>試圖建立一個系統還原點。</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
 	<frmAbout Text="About">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>關閉</Text>
 		</btnClose>
 	</frmAbout>
 

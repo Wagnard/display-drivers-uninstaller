@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="tr-TR" Text="Turkish">
+<DisplayDriverUninstaller ISO="tr-TR" Text="Türkçe" >
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
 		for quick guide
 	-->
-
-	<frmMain Text="Display Driver Uninstaller (DDU)">
+	
+	<frmMain Text="Görüntü Sürücü Kaldırma Aracı (DDU)">
 		<btnCleanRestart>
 			<Text>
 				Temizledikten sonra yeniden başlat
@@ -23,7 +23,7 @@
 			</Text>
 			<Tooltip>
 				Mevcut ve önceki sürücüleri kaldırın, ancak bilgisayarı yeniden başlatmayın.
-				(Siyah ekran gibi sorunlar neden olabilir)
+				(Siyah ekran gibi sorunlara neden olabilir)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
@@ -37,13 +37,15 @@
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Otomatik olarak Windows varsayılan sürücüyü yüklemek için ayarla</Text>
+			<Text>
+				Windows Otomatik Sürücü yüklemeyi varsayılan olarak ayarla.
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>Yüklü olan Windows sürümü</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** DDU'yu sevdiniz mi? Bağış yaparak daha da gelişmemize yardımcı olabilirsiniz ***</Text>
+			<Text>*** DDU'yu sevdiniz mi? Bağış yaparak daha da gelişmemize yardımcı olabilirsiniz. ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Günlük(Log)</Text>
@@ -51,29 +53,23 @@
 		<lblSelectedGPU>
 			<Text>Grafik Sürücüsünü Seçin</Text>
 		</lblSelectedGPU>
-		<lblLanguage>
-			<Text>Selected language</Text>
-		</lblLanguage>
-		
-		<Label9>
-			<Text>Not: PC'nizde kaynaklanan herhangi bir hasar veya hata sizin sorumluluğunuzdadır.</Text>
-		</Label9>
-		<Label10>
-			<Text>Güvenli Mod'da DDU kullanilmasi tavsiye edilir.</Text>
-		</Label10>
-		
-		<lblUpdate>
-			<Text>Güncellemeler kontrol ediliyor ...</Text>
+
+    <lblLanguage>
+      <Text>Seçilen Dil</Text>
+    </lblLanguage>
+
+    <lblUpdate>
+			<Text>Güncellemeler kontrol ediliyor...</Text>
 			<Text2>Hiçbir guncelleme bulunamadı. Program günceldir.</Text2>
 			<Text3>Güncellemeler bulundu! En son sürümden daha eski sürümlerde sınırlı destek veriyoruz.</Text3>
 			<Text4>Güncelleştirmeler yapılamıyor veya zaten güncel!</Text4>
-		</lblUpdate>
-
+		</lblUpdate>	
+		
 		<lblOffer>
-			<Text>Ortaklarımızın Teklifleri</Text>
-			<Tooltip>Seçenekler menüsünden devre dışı bırakabilirsiniz.</Tooltip>
+		  <Text>Ortaklarımızın Teklifleri</Text>
+		  <Tooltip>Seçenekler menüsünden devre dışı bırakabilirsiniz.</Tooltip>
 		</lblOffer>
-
+		
 		<OptionsMenuItem>
 			<Text>Seçenekler</Text>
 		</OptionsMenuItem>
@@ -85,7 +81,7 @@
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
 			<Text>Bağlantılar</Text>
-		</LinksMenuItem>
+		</LinksMenuItem>	
 		<ToSMenuItem>
 			<Text>Kullanım Koşulları (ToS)</Text>
 		</ToSMenuItem>
@@ -138,7 +134,7 @@
 			<Text10>Temizleme işlemi tamamlandı!</Text10>
 			<Text11>DDU sürümü</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Algılanan</Text13>
+			<Text13>Algılanan:</Text13>
 			<Text14>GPU aygıt kimliği</Text14>
 			<Text15>Algılanan sürücü(ler) sürüm(ler)</Text15>
 			<Text16>INF</Text16>
@@ -173,10 +169,10 @@
 	
 	<frmOptions Text="Seçenekler">
 		<btnClose>
-			<Text>Çıkış</Text>
+		  <Text>Çıkış</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Ortakların Tekliflerini Göster</Text>
+		  <Text>Ortakların Tekliflerini Göster</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>NVIDIA Seçenekleri</Text>
@@ -188,7 +184,7 @@
 			<Text>Genel Seçenekler</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>"C:\NVidia" Sürücü klasörlerini sil (Tavsiye edilmez)</Text>
+			<Text>C:\NVidia" Sürücü klasörlerini sil (Tavsiye edilmez)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>Önyükleme yolunda günlük dosyalarına kaydet (Tavsiye edilen).</Text>
@@ -209,7 +205,7 @@
 			<Text>AMD Audio Bus'ı Sil.</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>"C:\AMD" sürücü klasörlerini sil (Tavsiye edilmez)</Text>
+			<Text>C:\AMD" sürücü klasörlerini sil (Tavsiye edilmez)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>AMDKMPFD Sürücü/Filtre sil. (AMD chipset için yedeklemeniz tavsiye edilir)</Text>
@@ -238,7 +234,7 @@
 			<Tooltip>Eğer Vulkan API Kullanan 2 Farklı GPU Yeteneği Varsa Tavsiye edilmez.</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>*Deneysel* SetupAPİ.</Text>
+			<Text>*Deneysel* SetupAPİ Kullan.</Text>
 			<Tooltip>(DEVCON) yerine SetupAPİ harici aracı DDUDR kullanın.</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
@@ -290,7 +286,7 @@
 		<copyMenuItem>
 			<Text>Kopyalama Etkin</Text>
 		</copyMenuItem>
-
+		
 		<filtersMenuItem>
 			<Text>Filtreler</Text>
 		</filtersMenuItem>
@@ -304,7 +300,7 @@
 			<Text>Hataları Göster</Text>
 		</errorsMenuItem>
 	</frmLog>
-
+  
 	<frmSystemRestore Text="Sistem Geri Yükleme">
 		<lblSystemRestore>
 			<Text>Sistem Geri Yükleme noktası oluşturmak için çalışıyor.</Text>
@@ -316,50 +312,51 @@
 			<Text>Çıkış</Text>
 		</btnClose>
 	</frmAbout>
-
+	
 	<Misc>
 		<About>
 			<Text>
-				Bu program ne işe yarar?
+Bu program ne işe yarar?
 
-				Eski sürücü sorunlarını ya da daha yeni kuruyorsanız ve yüklenenmeme gibi bir duurumda bu sorunları giderir.
+Eski sürücü sorunlarını ya da daha yeni kuruyorsanız ve yüklenenmeme gibi bir duurumda bu sorunları giderir.
 
-				ÖNERİLEN KULLANIM:
+ÖNERİLEN KULLANIM:
 
-				- Aracı windows normal modda da kullanabilirsiniz. Güvenli Mod tercihen kullanabilirsiniz.
+- Aracı windows normal modda da kullanabilirsiniz. Güvenli Mod tercihen kullanabilirsiniz.
 
-				- Biz görüşlerinizi almak istiyoruz. Başarılı ya da değil yine de bize söyleyin.
-				Ayrıca eğer yeni bir sorun varsa geri dönebilmek için bir geri yükleme noktası oluşturun.
+- Biz görüşlerinizi almak istiyoruz. Başarılı ya da değil yine de bize söyleyin.
+Ayrıca eğer yeni bir sorun varsa geri dönebilmek için bir geri yükleme noktası oluşturun.
 
-				- Eğer bir sorununuz varsa bu program sizin sorununuza yardımcı oldu veya olmadı ise lütfen paylaşın.
+- Eğer bir sorununuz varsa bu program sizin sorununuza yardımcı oldu veya olmadı ise lütfen paylaşın.
 
-				NVIDIA / AMD / Intel bu program ile ilgisi olduğunu unutmayın, biz NVIDIA / AMD / Intel içindir. İşe yaramazsa sorumlu değildir.
-				Sisteminizde herhangi bir hasar veya hata olduğunda sorumlu değildir.
-				-------------------------------
+NVIDIA / AMD / Intel bu program ile ilgisi olduğunu unutmayın, biz NVIDIA / AMD / Intel içindir. İşe yaramazsa sorumlu değildir.
+Sisteminizde herhangi bir hasar veya hata olduğunda sorumlu değildir.
+-------------------------------
 
-				Wagnard tarafından düzenlendi.
+Wagnard tarafından düzenlendi.
 
-				CO-Sahibi: Shady7557
+CO-Sahibi: Shady7557
 
-				Tester: Dellon132
+Tester: Dellon132
 
-				Logolar: juanchacin
+Logolar: juanchacin
 
-				Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
+Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
 
-				Çevirmen: murat5038
-			</Text>
+Çevirmen: murat5038
+</Text>
 		</About>
+
 		<Tos>
 			<Text>
-				Display Driver Uninstaller ("DDU") KULLANICI SÖZLEŞMESİ
+Display Driver Uninstaller ("DDU") KULLANICI SÖZLEŞMESİ
 
-				DDU yazılım kullanarak bir DDU ("kullanıcı") kullanıcısı olursunuz. Bu anlaşma bir sürücüyü kaldırmak için programı kullandığınızda etkin duruma gelir.
+DDU yazılım kullanarak bir DDU ("kullanıcı") kullanıcısı olursunuz. Bu anlaşma bir sürücüyü kaldırmak için programı kullandığınızda etkin duruma gelir.
 
-				DDU'yu kullanarak bilgisayarınıza gelebilecek tüm sorunları kabul etmiş olur ve suçlama talebinde bulunamazsınız.
+DDU'yu kullanarak bilgisayarınıza gelebilecek tüm sorunları kabul etmiş olur ve suçlama talebinde bulunamazsınız.
 
-				DDU'yu kullanarak, NVIDIA ("NVIDIA, GeForce") Advanced Micro Devices ("AMD, Radeon") sahip olduğunuzu kabul etmiş olursunuz.
-			</Text>
+DDU'yu kullanarak, NVIDIA ("NVIDIA, GeForce") Advanced Micro Devices ("AMD, Radeon") sahip olduğunuzu kabul etmiş olursunuz.
+</Text>
 		</Tos>
 	</Misc>
 
@@ -367,7 +364,7 @@
 		<Translator>
 			<User>murat5038</User>
 			<Details>Translater</Details>
-			<LastUpdate>29/05/2016</LastUpdate>
+			<LastUpdate>31/05/2016</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
