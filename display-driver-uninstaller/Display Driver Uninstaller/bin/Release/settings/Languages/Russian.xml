@@ -188,7 +188,7 @@
 			<Text>Общие параметры</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Удалить папку с драверами "C:\nVidia" ( Не рекомендуется )</Text>
+			<Text>Удалить папку с драйверами "C:\nVidia" ( Не рекомендуется )</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>Сохранять файлы журналов в папке программы (рекомендуется)</Text>
@@ -209,7 +209,7 @@
 			<Text>Удалить AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Удалить папку с дравверами "C:\AMD" ( Не рекомендуется )</Text>
+			<Text>Удалить папку с драйверами "C:\AMD" ( Не рекомендуется )</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Удалить драйвер/фильтр AMDKMPFD ( рекомендуется резервное копирование для чипсета AMD )</Text>
