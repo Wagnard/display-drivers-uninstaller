@@ -716,13 +716,15 @@ Namespace Win32
 				ACl.AddPriviliges(ACl.SE.SECURITY_NAME, ACl.SE.BACKUP_NAME, ACl.SE.RESTORE_NAME, ACl.SE.TAKE_OWNERSHIP_NAME)
 
 				'Create a new acl from scratch.
-				Dim newacl As New System.Security.AccessControl.DirectorySecurity()
+				'Dim newacl As New System.Security.AccessControl.DirectorySecurity()
+				Dim newacl As System.Security.AccessControl.DirectorySecurity = Directory.GetAccessControl(path, AccessControlSections.Owner)
 				'set owner only here (needed for WinXP)
 				newacl.SetOwner(sid)
 				dInfo.SetAccessControl(newacl)
 				'This remove inheritance.
-				newacl.SetAccessRuleProtection(True, False)
+				newacl.SetAccessRuleProtection(False, True)
 
+				newacl = Directory.GetAccessControl(path)
 				' Add the FileSystemAccessRule to the security settings. 
 				newacl.AddAccessRule(New FileSystemAccessRule(sid, Rights, ControlType))
 
