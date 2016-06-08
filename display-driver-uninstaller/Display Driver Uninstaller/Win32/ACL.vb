@@ -739,7 +739,7 @@ Namespace Win32
 			End Sub
 
 			Public Sub Addregistrysecurity(ByVal regkey As RegistryKey, ByVal subkeyname As String, ByVal Rights As RegistryRights, ByVal ControlType As AccessControlType)
-				Dim subkey As RegistryKey
+
 				Dim rs As New RegistrySecurity()
 				Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
 
@@ -747,21 +747,22 @@ Namespace Win32
 
 				'Dim originalsid = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions).GetAccessControl.GetOwner(GetType(System.Security.Principal.SecurityIdentifier))
 				'MsgBox(originalsid.ToString)
-				subkey = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.TakeOwnership)
-				rs.SetOwner(sid)
+				Using subkey As RegistryKey = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.TakeOwnership)
+					rs.SetOwner(sid)
 
-				' Set the new access settings.Owner
-				subkey.SetAccessControl(rs)
-				rs.SetAccessRuleProtection(True, False)
+					' Set the new access settings.Owner
+					subkey.SetAccessControl(rs)
+					rs.SetAccessRuleProtection(False, True)
 
-				'rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
-				sid = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
-				rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
+					'rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
+					sid = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
+					rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
 
-				'sid = New SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, Nothing)
-				'rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
-				' Set the new access settings.
-				subkey.SetAccessControl(rs)
+					'sid = New SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, Nothing)
+					'rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
+					' Set the new access settings.
+					subkey.SetAccessControl(rs)
+				End Using
 			End Sub
 
 			' Removes an ACL entry on the specified directory for the specified account.

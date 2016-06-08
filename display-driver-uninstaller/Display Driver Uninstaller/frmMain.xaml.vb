@@ -216,13 +216,15 @@ Public Class frmMain
 					If StrContainsAny(oem.Class, True, "display") Or StrContainsAny(oem.Class, True, "media") Then
 						SetupAPI.RemoveInf(oem, True)
 					Else
-						SetupAPI.RemoveInf(oem, False)
+						If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.
+							SetupAPI.RemoveInf(oem, False)
+						End If
 					End If
 				End If
-				'check if the oem was removed to process to the pnplockdownfile if necessary
-				If win8higher AndAlso (Not System.IO.File.Exists(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
-					CleanupEngine.prePnplockdownfiles(catalog)
-				End If
+					'check if the oem was removed to process to the pnplockdownfile if necessary
+					If win8higher AndAlso (Not System.IO.File.Exists(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
+						CleanupEngine.prePnplockdownfiles(catalog)
+					End If
 			Next
 		Else
 			For Each oem As Inf In GetOemInfList(Application.Paths.WinDir & "inf\")
@@ -9014,67 +9016,72 @@ Public Class CleanupEngine
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) = False Then
 								Using subregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\CLSID\" & child & "\InProcServer32", False)
+									Try
 
-									If subregkey IsNot Nothing Then
-										If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
-											wantedvalue = subregkey.GetValue("").ToString
-											If IsNullOrWhitespace(wantedvalue) = False Then
-												For i As Integer = 0 To clsidleftover.Length - 1
-													If Not IsNullOrWhitespace(clsidleftover(i)) Then
-														If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
+										If subregkey IsNot Nothing Then
+											If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
+												wantedvalue = subregkey.GetValue("").ToString
+												If IsNullOrWhitespace(wantedvalue) = False Then
+													For i As Integer = 0 To clsidleftover.Length - 1
+														If Not IsNullOrWhitespace(clsidleftover(i)) Then
+															If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
 
-															Try
-																If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
-																	appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
-																	Try
-																		deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True), appid)
-																	Catch ex As Exception
-																	End Try
-																End If
-															Catch ex As Exception
-															End Try
-
-															Try
-																If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
-																	typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
-																	Try
-																		deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
-																	Catch ex As Exception
-																	End Try
-																End If
-															Catch ex As Exception
-															End Try
-
-															Try
-																'here I remove the mediafoundationkeys if present
-																'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
 																Try
-																	deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms", True), (child.Replace("{", "")).Replace("}", ""))
-
+																	If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("AppID"))) Then
+																		appid = regkey.OpenSubKey(child).GetValue("AppID").ToString
+																		Try
+																			deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\AppID", True), appid)
+																		Catch ex As Exception
+																		End Try
+																	End If
 																Catch ex As Exception
 																End Try
+
 																Try
-																	deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), (child.Replace("{", "")).Replace("}", ""))
+																	If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child & "\TypeLib").GetValue(""))) Then
+																		typelib = regkey.OpenSubKey(child & "\TypeLib").GetValue("").ToString
+																		Try
+																			deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
+																		Catch ex As Exception
+																		End Try
+																	End If
 																Catch ex As Exception
 																End Try
-																deletesubregkey(regkey, child)
-																Exit For
-															Catch ex As Exception
-																Application.Log.AddException(ex)
-															End Try
+
+																Try
+																	'here I remove the mediafoundationkeys if present
+																	'f79eac7d-e545-4387-bdee-d647d7bde42a is the Encoder section. Same on all windows version.
+																	Try
+																		deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms", True), (child.Replace("{", "")).Replace("}", ""))
+
+																	Catch ex As Exception
+																	End Try
+																	Try
+																		deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), (child.Replace("{", "")).Replace("}", ""))
+																	Catch ex As Exception
+																	End Try
+																	deletesubregkey(regkey, child)
+																	Exit For
+																Catch ex As Exception
+																	Application.Log.AddException(ex)
+																End Try
+															End If
 														End If
-													End If
-												Next
+													Next
+												End If
 											End If
 										End If
-									End If
+									Catch ex As Exception
+										Application.Log.AddException(ex, subregkey.ToString)	 ' for logging conversion error from a user(byte()---> String) Probably user fault. 
+									End Try
 								End Using
 							End If
 						Next
 					End If
 				End Using
 			Catch ex As Exception
-				application.log.AddException(ex)
+				Application.Log.AddException(ex)
+
 			End Try
 
 			Try
