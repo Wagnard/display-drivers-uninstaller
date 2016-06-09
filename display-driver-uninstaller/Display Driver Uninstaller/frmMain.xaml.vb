@@ -7378,133 +7378,6 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Public Shared Sub TestDelete(ByVal folder As String, ByVal config As ThreadSettings)
-		' UpdateTextMethod(UpdateTextMethodmessagefn("18"))
-		'Application.Log.AddMessage("Deleting some specials folders, it could take some times...")
-		'ensure that this folder can be accessed with current user ac.
-		If Not Directory.Exists(folder) Then
-			Exit Sub
-		End If
-
-		'Get an object repesenting the directory path below
-		Dim di As New DirectoryInfo(folder)
-
-		'Traverse all of the child directors in the root; get to the lowest child
-		'and delete all files, working our way back up to the top.  All files
-		'must be deleted in the directory, before the directory itself can be deleted.
-		'also if there is hidden / readonly / system attribute..  change those attribute.
-		Try
-
-
-			For Each diChild As DirectoryInfo In di.GetDirectories()
-				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
-				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
-				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-				If Not (((Not config.RemovePhysX) AndAlso diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
-
-					Try
-						TraverseDirectory(diChild, config)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-				End If
-			Next
-		Catch ex As Exception
-			Application.Log.AddException(ex)
-		End Try
-		'Finally, clean all of the files directly in the root directory
-		CleanAllFilesInDirectory(di)
-
-		'The containing directory can only be deleted if the directory
-		'is now completely empty and all files previously within
-		'were deleted.
-		Try
-			If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
-				di.Delete()
-				Application.Log.AddMessage(di.ToString + " - " + "Folder removed via testdelete sub")
-			End If
-		Catch ex As Exception
-			Application.Log.AddException(ex)
-		End Try
-	End Sub
-
-	Private Shared Sub TraverseDirectory(ByVal di As DirectoryInfo, ByVal config As ThreadSettings)
-
-		'If the current directory has more child directories, then continure
-		'to traverse down until we are at the lowest level and remove
-		'there hidden / readonly / system attribute..  At that point all of the
-		'files will be deleted.
-		For Each diChild As DirectoryInfo In di.GetDirectories()
-			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
-			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
-			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-			If Not (((Not config.RemovePhysX) AndAlso diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
-
-				Try
-					TraverseDirectory(diChild, config)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
-			End If
-		Next
-
-		'Now that we have no more child directories to traverse, delete all of the files
-		'in the current directory, and then delete the directory itself.
-		CleanAllFilesInDirectory(di)
-
-
-		'The containing directory can only be deleted if the directory
-		'is now completely empty and all files previously within
-		'were deleted.
-		If di.GetFiles().Length = 0 Then
-			Try
-				di.Delete()
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			End Try
-		End If
-
-	End Sub
-
-	''' Iterates through all files in the directory passed into
-	''' method and deletes them.
-	''' It may be necessary to wrap this call in impersonation or ensure parent directory
-	''' permissions prior, because delete permissions are not guaranteed.
-
-	Private Shared Sub CleanAllFilesInDirectory(ByVal DirectoryToClean As DirectoryInfo)
-
-		Try
-			For Each fi As FileInfo In DirectoryToClean.GetFiles()
-				'The following code is NOT required, but shows how some logic can be wrapped
-				'around the deletion of files.  For example, only delete files with
-				'a creation date older than 1 hour from the current time.  If you
-				'always want to delete all of the files regardless, just remove
-				'the next 'If' statement.
-
-				'Read only files can not be deleted, so mark the attribute as 'IsReadOnly = False'
-
-				Try
-					fi.IsReadOnly = False
-				Catch ex As Exception
-				End Try
-
-				Try
-					fi.Delete()
-				Catch ex As Exception
-				End Try
-				'On a rare occasion, files being deleted might be slower than program execution, and upon returning
-				'from this call, attempting to delete the directory will throw an exception stating it is not yet
-				'empty, even though a fraction of a second later it actually is.  Therefore the 'Optional' code below
-				'can stall the process just long enough to ensure the file is deleted before proceeding. The value
-				'can be adjusted as needed from testing and running the process repeatedly.
-				'System.Threading.Thread.sleep(10)  '50 millisecond stall (0.025 Seconds)
-
-			Next
-		Catch ex As Exception
-			Application.Log.AddException(ex)
-		End Try
-	End Sub
-
 	Private Sub KillProcess(ByVal ParamArray processnames As String())
 		For Each processName As String In processnames
 			If String.IsNullOrEmpty(processName) Then
@@ -7812,24 +7685,27 @@ Public Class frmMain
 		Return com
 	End Function
 
-	Public Sub deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
-
+	Private Sub deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
 		CleanupEngine.deletesubregkey(value1, value2)
-
 	End Sub
 
 	Private Sub deletedirectory(ByVal directory As String)
 		CleanupEngine.deletedirectory(directory)
 	End Sub
 
+	Private Sub RemoveSharedDlls(ByVal directory As String)
+		CleanupEngine.RemoveSharedDlls(directory)
+	End Sub
+
 	Private Sub deletefile(ByVal file As String)
 		CleanupEngine.deletefile(file)
 	End Sub
 
-	Public Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
-
+	Private Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
 		CleanupEngine.deletevalue(value1, value2)
-
+	End Sub
+	Private Sub TestDelete(ByVal folder As String, config As ThreadSettings)
+		CleanupEngine.TestDelete(folder, config)
 	End Sub
 
 	Private Sub amdenvironementpath(ByVal filepath As String)
@@ -8012,9 +7888,12 @@ Public Class CleanupEngine
 
 				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
 			End If
+			RemoveSharedDlls(directorypath)
 		End If
 
-		If Not Directory.Exists(directorypath) Then
+	End Sub
+	Public Sub RemoveSharedDlls(ByVal directorypath As String)
+		If Not IsNullOrWhitespace(directorypath) AndAlso Not Directory.Exists(directorypath) Then
 			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetValueNames
@@ -8024,6 +7903,7 @@ Public Class CleanupEngine
 							Try
 								deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
 							Catch ex As Exception
+								Application.Log.AddException(ex)
 							End Try
 						End If
 					Next
@@ -8039,6 +7919,7 @@ Public Class CleanupEngine
 							Try
 								deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
 							Catch ex As Exception
+								Application.Log.AddException(ex)
 							End Try
 						End If
 					Next
@@ -8055,6 +7936,7 @@ Public Class CleanupEngine
 								Try
 									deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
 								Catch ex As Exception
+									Application.Log.AddException(ex)
 								End Try
 							End If
 						Next
@@ -8063,7 +7945,6 @@ Public Class CleanupEngine
 			End If
 		End If
 	End Sub
-
 	Public Sub deletefile(ByVal filepath As String)
 		If Not IsNullOrWhitespace(filepath) Then
 
@@ -8281,7 +8162,7 @@ Public Class CleanupEngine
 																				  subregkey.GetValue("UninstallString").ToString.ToLower.Contains("{") Then
 																					Dim folder As String = subregkey.GetValue("UninstallString").ToString
 																					folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
-																					frmMain.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder, config)
+																					TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder, config)
 																					If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
 																						For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
 																					 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
@@ -8404,7 +8285,7 @@ Public Class CleanupEngine
 															  subregkey.GetValue("ProductIcon").ToString.ToLower.Contains("{") Then
 																Dim folder As String = subregkey.GetValue("ProductIcon").ToString
 																folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
-																frmMain.TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder, config)
+																TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder, config)
 																If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
 																	For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
 																  ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
@@ -9604,5 +9485,130 @@ Public Class CleanupEngine
 			Next
 		End If
 	End Sub
+	Public Sub TestDelete(ByVal folder As String, config As ThreadSettings)
+		' UpdateTextMethod(UpdateTextMethodmessagefn("18"))
+		'Application.Log.AddMessage("Deleting some specials folders, it could take some times...")
+		'ensure that this folder can be accessed with current user ac.
+		If Not Directory.Exists(folder) Then
+			Exit Sub
+		End If
 
+		'Get an object repesenting the directory path below
+		Dim di As New DirectoryInfo(folder)
+
+		'Traverse all of the child directors in the root; get to the lowest child
+		'and delete all files, working our way back up to the top.  All files
+		'must be deleted in the directory, before the directory itself can be deleted.
+		'also if there is hidden / readonly / system attribute..  change those attribute.
+		Try
+
+
+			For Each diChild As DirectoryInfo In di.GetDirectories()
+				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
+				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
+				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
+				If Not (((Not config.RemovePhysX) AndAlso diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+
+					Try
+						TraverseDirectory(diChild, config)
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				End If
+			Next
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+		'Finally, clean all of the files directly in the root directory
+		CleanAllFilesInDirectory(di)
+
+		'The containing directory can only be deleted if the directory
+		'is now completely empty and all files previously within
+		'were deleted.
+		Try
+			If di.GetFiles().Length = 0 And Directory.GetDirectories(folder).Length = 0 Then
+				di.Delete()
+				Application.Log.AddMessage(di.ToString + " - " + "Folder removed via testdelete sub")
+			End If
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+		RemoveSharedDlls(folder)
+	End Sub
+	Private Sub TraverseDirectory(ByVal di As DirectoryInfo, ByVal config As ThreadSettings)
+
+		'If the current directory has more child directories, then continure
+		'to traverse down until we are at the lowest level and remove
+		'there hidden / readonly / system attribute..  At that point all of the
+		'files will be deleted.
+		For Each diChild As DirectoryInfo In di.GetDirectories()
+			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
+			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
+			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
+			If Not (((Not config.RemovePhysX) AndAlso diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+
+				Try
+					TraverseDirectory(diChild, config)
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
+			End If
+		Next
+
+		'Now that we have no more child directories to traverse, delete all of the files
+		'in the current directory, and then delete the directory itself.
+		CleanAllFilesInDirectory(di)
+
+
+		'The containing directory can only be deleted if the directory
+		'is now completely empty and all files previously within
+		'were deleted.
+		If di.GetFiles().Length = 0 Then
+			Try
+				di.Delete()
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
+		End If
+
+	End Sub
+
+	''' Iterates through all files in the directory passed into
+	''' method and deletes them.
+	''' It may be necessary to wrap this call in impersonation or ensure parent directory
+	''' permissions prior, because delete permissions are not guaranteed.
+
+	Private Sub CleanAllFilesInDirectory(ByVal DirectoryToClean As DirectoryInfo)
+
+		Try
+			For Each fi As FileInfo In DirectoryToClean.GetFiles()
+				'The following code is NOT required, but shows how some logic can be wrapped
+				'around the deletion of files.  For example, only delete files with
+				'a creation date older than 1 hour from the current time.  If you
+				'always want to delete all of the files regardless, just remove
+				'the next 'If' statement.
+
+				'Read only files can not be deleted, so mark the attribute as 'IsReadOnly = False'
+
+				Try
+					fi.IsReadOnly = False
+				Catch ex As Exception
+				End Try
+
+				Try
+					fi.Delete()
+				Catch ex As Exception
+				End Try
+				'On a rare occasion, files being deleted might be slower than program execution, and upon returning
+				'from this call, attempting to delete the directory will throw an exception stating it is not yet
+				'empty, even though a fraction of a second later it actually is.  Therefore the 'Optional' code below
+				'can stall the process just long enough to ensure the file is deleted before proceeding. The value
+				'can be adjusted as needed from testing and running the process repeatedly.
+				'System.Threading.Thread.sleep(10)  '50 millisecond stall (0.025 Seconds)
+
+			Next
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+	End Sub
 End Class
