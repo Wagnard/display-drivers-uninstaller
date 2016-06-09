@@ -47,22 +47,19 @@
       <Text>*** DDUはお気に召しましたか？ よろしければ更なる開発を支援する寄付をご検討ください。***</Text>
     </lblDonate>
     <lblLog>
-      <Text>ログ：</Text>
+      <Text>ログ</Text>
     </lblLog>
     <lblSelectedGPU>
-      <Text>グラフィックドライバーを選択：</Text>
+      <Text>グラフィックドライバーを選択</Text>
     </lblSelectedGPU>
-    <Label9>
-      <Text>注意：如何なる損害やエラーがあなたのPCに発生しても自己責任です。</Text>
-    </Label9>
-    <Label10>
-      <Text>セーフモードでのDDU の使用を推奨します</Text>
-    </Label10>
+    <lblLanguage>
+      <Text>選択した言語</Text>
+    </lblLanguage>
     <lblUpdate>
       <Text>アップデートを確認しています...</Text>
-      <Text2>アップデートは見つかりませんでした。プログラムは最新版です。</Text2>
-      <Text3>アップデートが見つかりました！最新版ではより多くのサポートが期待できます。</Text3>
-      <Text4>アップデート版を入手することができません！</Text4>
+      <Text2>アップデートは見つかりませんでした。プログラムは最新版です</Text2>
+      <Text3>アップデートが見つかりました！最新版ではより多くのサポートが期待できます</Text3>
+      <Text4>アップデート版を入手することができません!</Text4>
     </lblUpdate>
     <lblOffer>
       <Text>パートナーからのお勧め</Text>
@@ -372,14 +369,11 @@
 			</Text>
     </Tos>
   </Misc>
-  <LanguageTranslators>
-    <Translator>
-      <User>
-      </User>
-      <Details>
-      </Details>
-      <LastUpdate>
-      </LastUpdate>
-    </Translator>
-  </LanguageTranslators>
+  <LanguageCredits>
+    <Credits>
+      <User>DH ◆OmegaWBPUI/email:DH.OmegaWBPUI@gmail.com</User>
+      <Details>Translator</Details>
+      <LastUpdate>07/06/2016</LastUpdate>
+    </Credits>
+  </LanguageCredits>
 </DisplayDriverUninstaller>
