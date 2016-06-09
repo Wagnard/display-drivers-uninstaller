@@ -7,11 +7,16 @@ Public Class Languages
 	Private Shared ReadOnly sysNewLine As String = Environment.NewLine
 	Private Shared ReadOnly dateFormats As String() = New String() {"d/M/yyyy", "d.M.yyyy", "d-M-yyyy"}
 	Private Shared ReadOnly threadLock As String = "You shall not pass!" 'lock access for one thread at time
+	Private Shared ReadOnly whiteSpaceChars As Char()
+	Public Const DefaultEngISO As String = "en-US"
 
 	Private Shared isEngLoaded As Boolean = False
 	Private Shared isUserLoaded As Boolean = False
 	Private Shared useTranslated As Boolean = True
+
 	Private Shared currentLang As LanguageOption = Nothing
+	Private Shared englishDictionary As TranslatedFile = Nothing
+	Private Shared translatedDictionary As TranslatedFile = Nothing
 
 	Public Shared ReadOnly Property Current As LanguageOption
 		Get
@@ -29,15 +34,19 @@ Public Class Languages
 		End Get
 	End Property
 
-	Private Shared englishDictionary As TranslatedFile = Nothing
-	Private Shared translatedDictionary As TranslatedFile = Nothing
+	Shared Sub New()
+		Dim charList As New List(Of Char)(New Char() {ChrW(9), ChrW(10), ChrW(11), ChrW(12), ChrW(13), ChrW(32)})
+		charList.AddRange(sysNewLine.ToCharArray())
+
+		whiteSpaceChars = charList.ToArray()
+	End Sub
 
 	''' <param name="langOption">Which language to load for use. Use 'Nothing' for defaul (English)</param>
 	Public Shared Sub Load(Optional ByVal langOption As LanguageOption = Nothing)
 		SyncLock (threadLock)
-			If langOption Is Nothing OrElse langOption.ISOLanguage.Equals("en-US", StringComparison.OrdinalIgnoreCase) Then
+			If langOption Is Nothing OrElse langOption.ISOLanguage.Equals(DefaultEngISO, StringComparison.OrdinalIgnoreCase) Then
 				If Not isEngLoaded Or englishDictionary Is Nothing Then
-					isEngLoaded = ReadFile("en-US", False, englishDictionary)
+					isEngLoaded = ReadFile(DefaultEngISO, False, englishDictionary)
 				End If
 
 				useTranslated = False
@@ -55,7 +64,7 @@ Public Class Languages
 	End Sub
 
 	Private Shared Sub LoadDefault()
-		isEngLoaded = ReadFile("en-US", False, englishDictionary)
+		isEngLoaded = ReadFile(DefaultEngISO, False, englishDictionary)
 		useTranslated = False
 		currentLang = englishDictionary.Details
 	End Sub
@@ -89,7 +98,7 @@ notFound:
 				For Each kvp As KeyValuePair(Of String, String) In tc.Attributes
 					If (kvp.Key.Equals(type, StringComparison.OrdinalIgnoreCase)) Then
 						If Not String.IsNullOrEmpty(kvp.Value) Then
-							Return kvp.Value.Trim(sysNewLine.ToCharArray())
+							Return kvp.Value
 						Else
 							If noTranslation Then
 								Return String.Empty
@@ -138,7 +147,7 @@ notFound:
 			For Each kvp As KeyValuePair(Of String, String) In tc.Values
 				If (kvp.Key.Equals(type, StringComparison.OrdinalIgnoreCase)) Then
 					If Not String.IsNullOrEmpty(kvp.Value) Then
-						Return kvp.Value.Trim(sysNewLine.ToCharArray())
+						Return kvp.Value
 					Else
 						Exit For
 					End If
@@ -179,7 +188,7 @@ notFound:
 
 				For Each kvp As KeyValuePair(Of String, String) In tc.Values
 					If (kvp.Key.StartsWith(beginsWith, StringComparison.OrdinalIgnoreCase)) Then
-						items.Add(kvp.Value.Replace(sysNewLine, String.Empty))
+						items.Add(kvp.Value)
 					End If
 				Next
 				Return items
@@ -224,7 +233,7 @@ notFound:
 					Continue For 'Skip english file
 				End If
 
-				If ReadFile(file, True, tf) AndAlso Not tf.Details.ISOLanguage.Equals("en-US") Then
+				If ReadFile(file, True, tf) AndAlso Not tf.Details.ISOLanguage.Equals(DefaultEngISO) Then
 					ValidLangFiles.Add(tf.Details)
 				End If
 			Next
@@ -347,7 +356,7 @@ notFound:
 	End Sub
 
 	Private Shared Function LoadFile(ByVal langFile As String) As Stream
-		If (langFile.Equals("en-US", StringComparison.OrdinalIgnoreCase)) Then
+		If (langFile.Equals(DefaultEngISO, StringComparison.OrdinalIgnoreCase)) Then
 			Return Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml"))
 		Else
 			If (File.Exists(langFile)) Then
@@ -431,13 +440,13 @@ notFound:
 										Do
 											If reader.NodeType = XmlNodeType.Element Then ' child elements found  <User>, <LastUpdate> etc.
 												If reader.Name.Equals("User", StringComparison.OrdinalIgnoreCase) Then
-													translator.User = reader.ReadElementContentAsString().Trim().Replace(vbTab, "")
+													translator.User = ParseText(reader.ReadElementContentAsString())
 
 												ElseIf reader.Name.Equals("Details", StringComparison.OrdinalIgnoreCase) Then
-													translator.Details = reader.ReadElementContentAsString().Trim().Replace(vbTab, "")
+													translator.Details = ParseText(reader.ReadElementContentAsString())
 
 												ElseIf reader.Name.Equals("LastUpdate", StringComparison.OrdinalIgnoreCase) Then
-													dateStr = reader.ReadElementContentAsString().Trim().Replace(vbTab, "")
+													dateStr = ParseText(reader.ReadElementContentAsString())
 
 													translator.LastUpdate = ParseDate(dateStr)
 												End If
@@ -449,8 +458,6 @@ notFound:
 
 										If Not IsNullOrWhitespace(translator.User) Then
 											file.Details.Translators.Insert(New Random().Next(0, file.Details.Translators.Count + 1), translator)
-
-											'file.Details.Credits.Add(credits)
 										End If
 									End If
 								Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals("LanguageTranslators", StringComparison.OrdinalIgnoreCase))
@@ -463,7 +470,7 @@ notFound:
 
 							If reader.HasAttributes Then 'parent has attributes. <frmMain Text="..."> <-- 'Text' attribute
 								Do While reader.MoveToNextAttribute()
-									parent.Attributes.Add(reader.Name, reader.Value.Trim(sysNewLine.ToCharArray()))
+									parent.Attributes.Add(reader.Name, ParseText(reader.Value))
 								Loop
 							End If
 
@@ -475,7 +482,7 @@ notFound:
 
 									If reader.HasAttributes Then  ' has attributes? Shouldn't, but may used in future if needed
 										Do While reader.MoveToNextAttribute()
-											ctrl.Attributes.Add(reader.Name, reader.Value.Trim(sysNewLine.ToCharArray()))
+											ctrl.Attributes.Add(reader.Name, ParseText(reader.Value))
 										Loop
 									End If
 
@@ -483,7 +490,7 @@ notFound:
 
 									Do
 										If reader.NodeType = XmlNodeType.Element Then ' child elements found  <Text>, <Tooltip> etc.
-											ctrl.Values.Add(reader.Name, reader.ReadElementContentAsString().Replace(vbTab, ""))
+											ctrl.Values.Add(reader.Name, ParseText(reader.ReadElementContentAsString()))
 										Else
 											reader.Read()
 										End If
@@ -508,16 +515,16 @@ notFound:
 		Catch ex As Exception
 			'if English translation is badly formatted/not readable (should never be)
 			If langFile.EndsWith("\English.xml", StringComparison.OrdinalIgnoreCase) Or Not onlyCheckValid Then
-				MsgBox(ex.Message & sysNewLine & ex.StackTrace)
+				MessageBox.Show(ex.Message & sysNewLine & ex.StackTrace, "Lang: Critical Error!", MessageBoxButton.OK, MessageBoxImage.Error)
 			End If
 
 			If Not onlyCheckValid Then
 				Throw New InvalidDataException(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", sysNewLine, langFile))
 			Else
 				If TypeOf (ex) Is InvalidDataException Then
-					MessageBox.Show(ex.Message & String.Format("{0}{0}File: '{1}'", sysNewLine, langFile))
+					MessageBox.Show(ex.Message & String.Format("{0}{0}File: '{1}'", sysNewLine, langFile), "Lang: Critical Error!", MessageBoxButton.OK, MessageBoxImage.Error)
 				Else
-					MessageBox.Show(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", sysNewLine, langFile))
+					MessageBox.Show(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", sysNewLine, langFile), "Lang: Critical Error!", MessageBoxButton.OK, MessageBoxImage.Error)
 				End If
 			End If
 
@@ -554,6 +561,27 @@ notFound:
 		Catch ex As Exception
 			Return Nothing
 		End Try
+	End Function
+
+	Private Shared Function ParseText(ByVal text As String) As String
+		Dim parts As String() = text.Trim(whiteSpaceChars).Split(New String() {sysNewLine, vbCr, vbCrLf, vbLf}, StringSplitOptions.None)
+
+		If parts.Length = 0 Then Return Nothing
+		If parts.Length = 1 Then Return parts(0).Trim(whiteSpaceChars)
+
+		Dim sb As New StringBuilder(text.Length)
+		Dim trimmed As String = Nothing
+
+		For Each part As String In parts
+			trimmed = part.Trim(whiteSpaceChars)
+
+			If sb.Length > 0 Then
+				sb.Append(sysNewLine & trimmed)
+			Else : sb.Append(trimmed)
+			End If
+		Next
+
+		Return sb.ToString()
 	End Function
 
 	Private Shared Function GetDictionary(ByVal translated As Boolean) As TranslatedFile
@@ -594,7 +622,89 @@ notFound:
 		Return Nothing
 	End Function
 
-	Public Shared Sub CheckLanguageFileForErrors(ByVal logFile As String, ByVal skipSuccess As Boolean, ByVal langOption As LanguageOption)
+	Public Shared Sub CheckLanguageFiles()
+		Using sfd As Windows.Forms.SaveFileDialog = New Windows.Forms.SaveFileDialog
+			sfd.Title = "Select path for log file"
+			sfd.AddExtension = True
+			sfd.FilterIndex = 1
+			sfd.Filter = "Log files (*.log)|*.log"
+			sfd.DefaultExt = ".log"
+
+			If sfd.ShowDialog() = Forms.DialogResult.OK Then
+				If File.Exists(sfd.FileName) Then
+					File.Delete(sfd.FileName)
+				End If
+
+				' !!! USE WITH CAUTION !!!
+				' FIND ALL CONTROLS FROM WINDOWS (raises Loaded event!!!)
+				' Just to find all controls with name
+				'Using sw As StreamWriter = New StreamWriter(sfd.FileName, False, Encoding.UTF8)
+				'	sw.WriteLine(">>>>>>>>> ALL CONTROLS IN APPLICATION <<<<<<<<<")
+				'	sw.WriteLine("")
+
+				'	Dim controls As List(Of DependencyObject)
+
+				'	For Each w As Window In New Window() {New frmMain, New frmOptions, New frmSystemRestore, New frmLog, New frmLaunch, New frmAbout, New frmLaunch}
+				'		controls = New List(Of DependencyObject)
+
+				'		w.Visibility = Visibility.Collapsed
+				'		w.IsEnabled = False
+				'		w.ShowInTaskbar = False
+				'		w.Width = 0
+				'		w.Height = 0
+				'		w.ShowActivated = False
+				'		w.WindowStyle = WindowStyle.None
+
+				'		Try
+				'			w.Show()
+
+				'			GetChildren(w, controls)
+				'			sw.WriteLine(">>> WINDOW: " & w.Name & "    - Controls: " & controls.Count.ToString() & " <<<")
+
+				'			For Each dp As DependencyObject In controls
+				'				If TypeOf (dp) Is FrameworkElement Then
+				'					Dim fe As FrameworkElement = DirectCast(dp, FrameworkElement)
+
+				'					If Not IsNullOrWhitespace(fe.Name) Then
+				'						sw.WriteLine(vbTab & fe.Name)
+				'					End If
+				'				End If
+				'			Next
+				'		Catch ex As Exception
+				'		Finally
+				'			w.Close()
+				'		End Try
+
+				'		sw.WriteLine("")
+				'	Next
+
+				'	sw.WriteLine("")
+				'	sw.WriteLine(">>>>>>>>> END OF CONTROLS <<<<<<<<<")
+				'	sw.WriteLine("")
+				'	sw.WriteLine("")
+				'	sw.WriteLine("")
+				'End Using
+
+				Dim fileCount As Integer = 0
+				For Each opt As Languages.LanguageOption In Application.Settings.LanguageOptions
+					If opt.Equals(Languages.DefaultEng) Then
+						Continue For
+					End If
+
+					'	Only errors
+					Languages.CheckLanguageFileForErrors(sfd.FileName, True, opt)
+
+					'Languages.CheckLanguageFileForErrors(sfd.FileName, False, opt)
+
+					fileCount += 1
+				Next
+
+				MessageBox.Show("All files checked!" & Environment.NewLine & "Files: " & fileCount.ToString())
+			End If
+		End Using
+	End Sub
+
+	Private Shared Sub CheckLanguageFileForErrors(ByVal logFile As String, ByVal skipSuccess As Boolean, ByVal langOption As LanguageOption)
 		Using sw As StreamWriter = New StreamWriter(logFile, True, Encoding.UTF8)
 			sw.WriteLine(">>>>>>>>> BEGINNING OF FILE <<<<<<<<<")
 			sw.WriteLine("")
@@ -816,6 +926,7 @@ notFound:
 		Private m_isolang As String
 		Private m_displaytext As String
 		Private m_filename As String
+		Private m_hideTranslators As Boolean
 		Private m_translators As List(Of LanguageTranslators)
 
 		Public ReadOnly Property ISOLanguage As String
@@ -833,6 +944,11 @@ notFound:
 				Return m_filename
 			End Get
 		End Property
+		Public ReadOnly Property HideTranslators As Boolean
+			Get
+				Return m_hideTranslators
+			End Get
+		End Property
 		Public ReadOnly Property Translators As List(Of LanguageTranslators)
 			Get
 				Return m_translators
@@ -844,6 +960,7 @@ notFound:
 			m_displaytext = langText
 			m_filename = langFile
 			m_translators = New List(Of LanguageTranslators)(5)
+			m_hideTranslators = (String.Equals(m_isolang, DefaultEngISO, StringComparison.OrdinalIgnoreCase))
 		End Sub
 
 		Public Overrides Function ToString() As String

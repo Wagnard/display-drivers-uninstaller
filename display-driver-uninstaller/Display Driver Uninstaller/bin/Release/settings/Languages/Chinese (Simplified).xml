@@ -92,6 +92,9 @@
 		<AboutMenuItem>
 			<Text>关于</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Translators</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>浏览 DDU 软件官方网站</Text>
 		</VisitDDUHomeMenuItem>
@@ -309,10 +312,22 @@
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="About">
+	<frmAbout Text="关于">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>关闭</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>关于</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>用户协议</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Translators</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+		</lblTranslators>
 	</frmAbout>
 
 	<Misc>

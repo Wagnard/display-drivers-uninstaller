@@ -51,6 +51,9 @@
 		<lblSelectedGPU>
 			<Text>Elija Controlador de Pantalla</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+		  <Text>Selected language</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>Aviso: Cualquier daño o error causado a su PC será bajo su propia responsabilidad.</Text>
@@ -89,6 +92,9 @@
 		<AboutMenuItem>
 			<Text>Acerca de</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Translators</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visite el sitio web oficial de DDU</Text>
 		</VisitDDUHomeMenuItem>
@@ -313,6 +319,18 @@
 		<btnClose>
 			<Text>Cerrar</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>Acerca de</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Condiciones de Servicio (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Translators</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+		</lblTranslators>
 	</frmAbout>
 
 	<Misc>

@@ -54,11 +54,11 @@
 			<Text>Grafik Sürücüsünü Seçin</Text>
 		</lblSelectedGPU>
 
-    <lblLanguage>
-      <Text>Seçilen Dil</Text>
-    </lblLanguage>
+		<lblLanguage>
+		  <Text>Seçilen Dil</Text>
+		</lblLanguage>
 
-    <lblUpdate>
+		<lblUpdate>
 			<Text>Güncellemeler kontrol ediliyor...</Text>
 			<Text2>Hiçbir guncelleme bulunamadı. Program günceldir.</Text2>
 			<Text3>Güncellemeler bulundu! En son sürümden daha eski sürümlerde sınırlı destek veriyoruz.</Text3>
@@ -88,6 +88,9 @@
 		<AboutMenuItem>
 			<Text>Hakkında</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Translators</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Resmi DDU Web Sitesini ziyaret edin.</Text>
 		</VisitDDUHomeMenuItem>
@@ -311,6 +314,18 @@
 		<btnClose>
 			<Text>Çıkış</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>Hakkında</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Kullanım Koşulları (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Translators</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+		</lblTranslators>
 	</frmAbout>
 	
 	<Misc>

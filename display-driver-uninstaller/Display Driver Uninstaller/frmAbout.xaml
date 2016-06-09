@@ -29,7 +29,7 @@
 					<ItemsControl Grid.Row="1" ItemsSource="{Binding Settings.LanguageOptions}" AlternationCount="2" >
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
-								<Grid Visibility="{Binding Translators.Count, Converter={StaticResource NonZeroToVis}}" Margin="20" >
+								<Grid Margin="20" >
 									<Grid.RowDefinitions>
 										<RowDefinition Height="Auto" />
 										<RowDefinition Height="*" />
@@ -38,7 +38,21 @@
 										<ColumnDefinition Width="Auto" />
 										<ColumnDefinition Width="*" />
 									</Grid.ColumnDefinitions>
-
+									
+									<Grid.Style>
+										<Style TargetType="Grid">
+											<Setter Property="Visibility" Value="Visible"/>
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding Translators.Count}" Value="0">
+													<Setter Property="Visibility" Value="Collapsed"/>
+												</DataTrigger>
+												<DataTrigger Binding="{Binding HideTranslators}" Value="True">
+													<Setter Property="Visibility" Value="Collapsed"/>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</Grid.Style>
+									
 									<!--<Grid.Style>		
 										<Style TargetType="Grid">
 											<Style.Triggers>
@@ -68,9 +82,9 @@
 													<TextBlock Text="{Binding User}" FontWeight="Bold" FontSize="14" />
 													<TextBlock Text="{Binding Details}" FontSize="14" Visibility="{Binding Path=Details, Converter={StaticResource StrNotNullToVis}}"/>
 
-													<TextBlock FontStyle="Italic" FontSize="14" Visibility="{Binding Path=LastUpdate, Converter={StaticResource NotNullToVis}}">
+													<TextBlock FontStyle="Italic" FontSize="13" Visibility="{Binding Path=LastUpdate, Converter={StaticResource NotNullToVis}}">
 														<TextBlock Text="Last update:" />
-														<TextBlock Text="{Binding LastUpdate, StringFormat='{}{0:dd MMMM yyyy}'}"/>
+														<TextBlock Text="{Binding LastUpdate, StringFormat='{}{0:d MMMM yyyy}'}"/>
 													</TextBlock>
 
 													<TextBlock/>

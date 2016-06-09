@@ -7930,35 +7930,7 @@ Public Class frmMain
 	Private Sub checkXMLMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles checkXMLMenuItem.Click
 		Dim current As Languages.LanguageOption = Application.Settings.SelectedLanguage
 
-		Using sfd As WinForm.SaveFileDialog = New WinForm.SaveFileDialog
-			sfd.Title = "Select path for log file"
-			sfd.AddExtension = True
-			sfd.FilterIndex = 1
-			sfd.Filter = "Log files (*.log)|*.log"
-			sfd.DefaultExt = ".log"
-
-			If sfd.ShowDialog() = Forms.DialogResult.OK Then
-				If File.Exists(sfd.FileName) Then
-					File.Delete(sfd.FileName)
-				End If
-
-				Dim fileCount As Integer = 0
-				For Each opt As Languages.LanguageOption In Application.Settings.LanguageOptions
-					If opt.Equals(Languages.DefaultEng) Then
-						Continue For
-					End If
-
-					'	Only errors
-					'Languages.CheckLanguageFileForErrors(sfd.FileName, True, opt)
-
-					Languages.CheckLanguageFileForErrors(sfd.FileName, False, opt)
-
-					fileCount += 1
-				Next
-
-				MessageBox.Show("All files checked!" & Environment.NewLine & "Files: " & fileCount.ToString())
-			End If
-		End Using
+		Languages.CheckLanguageFiles()
 
 		Languages.Load(current)
 	End Sub

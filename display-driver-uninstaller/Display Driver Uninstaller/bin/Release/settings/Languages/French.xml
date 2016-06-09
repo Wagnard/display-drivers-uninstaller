@@ -95,6 +95,9 @@
 		<AboutMenuItem>
 			<Text>À propos</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Translators</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visiter official DDU Website</Text>
 		</VisitDDUHomeMenuItem>
@@ -315,10 +318,22 @@
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="About">
+	<frmAbout Text="À propos">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Fermer</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>À propos</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Terms of Service (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Translators</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+		</lblTranslators>
 	</frmAbout>
 
 	<Misc>

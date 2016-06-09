@@ -126,6 +126,7 @@
 		If date won't show, it most likely is "incorrect" format. Check day and month are in correct positions (and not reversed)
 		Each language has some difference in date formats, but application supports only few. All below formats (9) are valid.
 		
+		d = Day of month (1-31), M = Month (1-12), yyyy = Year in four numbers (2016-2100)
 		d/M/yyyy		01/04/2016 	..	21/2/2016	..	09/12/2015
 		d.M.yyyy		01.04.2016 	..	21.2.2016 	..	09.12.2015
 		d-M-yyyy		01-04-2016 	..	21-2-2016 	..	09-12-2015
@@ -138,7 +139,7 @@
 	<LanguageTranslators>
 		<Translator>							
 			<User>Wagnard</User>					<!-- Required. name/username/nick/email/something as "ID"		( If not set, won't be shown )  -->
-			<Details>Owner</Details>				<!-- Optional. Anything, contact, email, etc					( Note! its available to view for everyone )  -->
+			<Details>Owner</Details>				<!-- Optional. Anything, contact, email, etc					( Note! its available to view for everyone. Supports multiline! )  -->
 			<LastUpdate>23/05/2016</LastUpdate>		<!-- Optional. Last update Date as mentioned on above note		( d = Day [1-31];  M = Month [1-12];  yyyy = Year [2016 -> ] )  -->
 		</Translator>
 
@@ -153,7 +154,12 @@
 
 		<Translator4>
 			<User>Test</User>
-			<Details>Something</Details>
+			<Details>
+				Something
+				Need second line?
+				Even More details
+				This is 4th line	
+			</Details>
 		</Translator4>
 				
 		<TranslatorN>

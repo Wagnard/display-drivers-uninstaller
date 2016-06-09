@@ -92,6 +92,9 @@
 		<AboutMenuItem>
 			<Text>Про DDU</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Translators</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Відвідайте веб-сайт DDU</Text>
 		</VisitDDUHomeMenuItem>
@@ -312,10 +315,22 @@
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="About">
+	<frmAbout Text="Про DDU">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Закрити</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>Про DDU</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Угода з користувачем</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Translators</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+		</lblTranslators>
 	</frmAbout>
 
 	<Misc>

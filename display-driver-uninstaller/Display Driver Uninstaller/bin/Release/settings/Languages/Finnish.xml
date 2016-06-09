@@ -96,6 +96,9 @@
 		<AboutMenuItem>
 			<Text>Tietoa</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Kääntäjät</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Avaa virallinen DDU kotisivu</Text>
 		</VisitDDUHomeMenuItem>
@@ -333,6 +336,9 @@
 		<btnTranslators>
 			<Text>Kääntäjät</Text>
 		</btnTranslators>
+		<lblTranslators>
+			<Text>Suuri kiitos seuraaville kääntäjille ja heille joita ei ole mainittu!</Text>
+		</lblTranslators>
 	</frmAbout>
 
 	<Misc>
@@ -405,7 +411,7 @@
 		<Translator>
 			<User>DevMltk</User>
 			<Details></Details>
-			<LastUpdate>31/05/2016</LastUpdate>
+			<LastUpdate>09/06/2016</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

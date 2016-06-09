@@ -95,6 +95,9 @@
 		<AboutMenuItem>
 			<Text>Over DDU</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Translators</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Bezoek de officiële DDU Website</Text>
 		</VisitDDUHomeMenuItem>
@@ -319,6 +322,18 @@
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>Over</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Algemene Voorwaarden (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Translators</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+		</lblTranslators>
 	</frmAbout>
 
 	<Misc>

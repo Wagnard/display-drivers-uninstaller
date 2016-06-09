@@ -99,7 +99,7 @@
 
 		<StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" Margin="10,5,10,5">
 			<TextBlock x:Name="lblWinVersion" Text="lblWinVersionText" VerticalAlignment="Center" />
-			<TextBlock x:Name="lblWinVersionValue" FontWeight="Bold" Margin="3,0,0,0" VerticalAlignment="Center">
+			<TextBlock FontWeight="Bold" Margin="3,0,0,0" VerticalAlignment="Center">
 				<TextBlock.Text>
 					<MultiBinding StringFormat="{}{0} ({1})">
 						<Binding Path="Settings.WinVersionText" />

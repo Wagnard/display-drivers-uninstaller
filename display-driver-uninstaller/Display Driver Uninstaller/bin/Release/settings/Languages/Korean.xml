@@ -95,6 +95,9 @@
 		<AboutMenuItem>
 			<Text>About</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Translators</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visit official DDU Website</Text>
 		</VisitDDUHomeMenuItem>
@@ -319,6 +322,18 @@
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>About</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Terms of Service (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Translators</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+		</lblTranslators>
 	</frmAbout>
 
 	<Misc>

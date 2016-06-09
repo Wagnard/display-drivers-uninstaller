@@ -51,6 +51,9 @@
 		<lblSelectedGPU>
 			<Text>選擇顯示卡驅動程式：</Text>
 		</lblSelectedGPU>
+		<lblLanguage>
+		  <Text>Selected language</Text>
+		</lblLanguage>
 		
 		<Label9>
 			<Text>注意:您將為操作本工具造成的損壞或錯誤自行承擔責任。</Text>
@@ -89,6 +92,9 @@
 		<AboutMenuItem>
 			<Text>關於</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Translators</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>造訪官方 DDU 網站</Text>
 		</VisitDDUHomeMenuItem>
@@ -314,6 +320,18 @@
 		<btnClose>
 			<Text>關閉</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>關於</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>服務條款(ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Translators</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+		</lblTranslators>
 	</frmAbout>
 
 	<Misc>

@@ -55,11 +55,11 @@
 			<Text>Selecione o Controlador Gráfico</Text>
 		</lblSelectedGPU>
 		
-    <lblLanguage>
-      <Text>Idioma Seleccionado</Text>
-    </lblLanguage>	
+		<lblLanguage>
+		  <Text>Idioma Seleccionado</Text>
+		</lblLanguage>	
 		
-    <lblUpdate>
+		<lblUpdate>
 			<Text>A procurar actualizações...</Text>
 			<Text2>Não foram encontradas actualizações. O programa está actualizado.</Text2>
 			<Text3>Foram encontradas actualizações! É de esperar apoio limitado em versões mais antigas do que na mais recente</Text3>
@@ -89,6 +89,9 @@
 		<AboutMenuItem>
 			<Text>Acerca</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Translators</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visite a página oficial do DDU</Text>
 		</VisitDDUHomeMenuItem>
@@ -313,6 +316,18 @@
 		<btnClose>
 			<Text>Fechar</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>Acerca</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Termos de Utilização (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Translators</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+		</lblTranslators>
 	</frmAbout>
 
 	<Misc>

@@ -83,6 +83,9 @@
     <AboutMenuItem>
       <Text>DDUについて</Text>
     </AboutMenuItem>
+	<TranslatorsMenuItem>
+	  <Text>Translators</Text>
+	</TranslatorsMenuItem>
     <VisitDDUHomeMenuItem>
       <Text>DDUの公式ウェブサイトに行く</Text>
     </VisitDDUHomeMenuItem>
@@ -298,6 +301,18 @@
     <btnClose>
       <Text>閉じる</Text>
     </btnClose>
+	<btnAbout>
+	  <Text>DDUについて</Text>
+	</btnAbout>
+	<btnTos>
+	  <Text>利用規約 (ToS)</Text>
+	</btnTos>
+	<btnTranslators>
+	  <Text>Translators</Text>
+	</btnTranslators>
+	<lblTranslators>
+	  <Text>Big thanks to following translators and also those who aren't listed!</Text>
+	</lblTranslators>
   </frmAbout>
   <Misc>
     <About>
@@ -369,11 +384,14 @@
 			</Text>
     </Tos>
   </Misc>
-  <LanguageCredits>
-    <Credits>
-      <User>DH ◆OmegaWBPUI/email:DH.OmegaWBPUI@gmail.com</User>
-      <Details>Translator</Details>
-      <LastUpdate>07/06/2016</LastUpdate>
-    </Credits>
-  </LanguageCredits>
+	<LanguageTranslators>
+		<Translator>
+			<User>DH ◆OmegaWBPUI</User>
+			<Details>
+				Translator
+				email: DH.OmegaWBPUI@gmail.com
+			</Details>
+			<LastUpdate>07/06/2016</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 </DisplayDriverUninstaller>
