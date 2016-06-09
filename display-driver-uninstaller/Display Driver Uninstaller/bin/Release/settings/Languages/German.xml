@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="de-DE" Text="German">
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -13,13 +13,14 @@
 			</Text>
 			<Tooltip>
 				Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer neu
-				(sehr empfohlen)
+				(ausdrücklich empfohlen)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
 				Säubern und KEIN Neustart
-				(Kann Probleme wie einen schwarz bleibenden Bildschirm verursachen)
+				(Kann Probleme wie einen schwarz 
+				bleibenden Bildschirm verursachen)
 			</Text>
 			<Tooltip>
 				Deinstalliert den aktuellen sowie die vorherigen Treiber und startet den Computer NICHT neu
@@ -39,11 +40,11 @@
 		<btnWuRestore>
 			<Text>
 				Setze Treiberinstallation durch
-				Windows Update auf Standard.
+				Windows Update auf Standard
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Erkannte Windows-Version</Text>
+			<Text>Erkanntes Windows:</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Mögen Sie DDU? Denken Sie über eine Spende nach, dies würde eine zukünftige Entwicklung fördern. ***</Text>
@@ -55,7 +56,7 @@
 			<Text>Grafiktreiber auswählen</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Selected language</Text>
+			<Text>Ausgewählte Sprache</Text>
 		</lblLanguage>
 		
 		<Label9>
@@ -73,42 +74,45 @@
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>Angebote unserer Partner</Text>
+			<Tooltip>Sie können dies in den Optionen deaktivieren.</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
-			<Text>Options</Text>
+			<Text>Optionen</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
 			<Text>Info</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>Erweitertes Log</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
 			<Text>Links</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>Nutzungsbedingungen</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
-			<Text>About</Text>
+			<Text>Über</Text>
 		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Übersetzer</Text>
+		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visit official DDU Website</Text>
+			<Text>Offizielle DDU-Webseite besuchen</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Visit SVN Website</Text>
+			<Text>SVN-Webseite besuchen</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
+			<Text>Guru3d NVIDIA Thread besuchen</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
+			<Text>Guru3d AMD Thread besuchen</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Visit Geforce Thread</Text>
+			<Text>Geforce Thread besuchen</Text>
 		</VisitGeforceMenuItem>
 		
 		<Messages>
@@ -130,7 +134,7 @@
 		
 		<UpdateLog>
 			<Text1>Ausführen von Driver Store Säuberung (Löschen vom OEM Schritt)...</Text1>
-			<Text2>Säubern des Verzeichnis</Text2>
+			<Text2>Säubern des Verzeichnisses</Text2>
 			<Text3>Säubern bekannter Regkeys... Kann ein paar Minuten dauern.</Text3>
 			<Text4>Säubern der UpdatusUser Benutzerkonten (falls vorhanden).</Text4>
 			<Text5>Säubern des Verzeichnisses</Text5>
@@ -142,12 +146,12 @@
 			<Text11>DDU Version</Text11>
 			<Text12>GPU #</Text12>
 			<Text13>Erkannt</Text13>
-			<Text14>GPU GeräteId</Text14>
+			<Text14>GPU Geräte-Id</Text14>
 			<Text15>Erkannte Treiber Version(en)</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF Abschnitt</Text17>
 			<Text18>GPU nicht korrekt installiert</Text18>
-			<Text19>Löschen von bestimmten Ordnern, kann eine Weile dauern...</Text19>
+			<Text19>Löschen von speziellen Ordnern, kann eine Weile dauern...</Text19>
 			<Text20>Säuberung gestartet...</Text20>
 			<Text21>Deinstallation</Text21>
 			<Text22>Treiber</Text22>
@@ -156,7 +160,7 @@
 			<Text25>Ausführen der ddudr Entfernung Audio controller.</Text25>
 			<Text26>HD Audio Adapter entfernt!</Text26>
 			<Text27>3D Vision USB Adapter vom Gerätemanager entfernt.</Text27>
-			<Text28>Monitore and versteckte Monitore entfernt!</Text28>
+			<Text28>Monitore und versteckte Monitore entfernt!</Text28>
 			<Text29>ddudr Entfernung vollständig</Text29>
 			<Text30>Starten der Säuberung der S-1-5-xx Region</Text30>
 			<Text31>Ende der Säuberung der S-1-5-xx Region</Text31>
@@ -176,16 +180,16 @@
 	
 	<frmOptions Text="Optionen">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Schließen</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>Angebote unserer Partner anzeigen</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Specific Options</Text>
+			<Text>NVIDIA-Spezifische Optionen</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Specific Options</Text>
+			<Text>AMD-Spezifische Optionen</Text>
 		</lblAmdspecific>
 		<lblGeneral>
 			<Text>Allgemeine Optionen</Text>
@@ -197,10 +201,10 @@
 			<Text>Speichere Logdateien im Startup-Pfad (ausdrücklich empfohlen)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
-			<Text>Entferne PhysX</Text>
+			<Text>PhysX entfernen</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
-			<Text>Entferne 3DTV Play</Text>
+			<Text>3DTV Play entfernen</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
 			<Text>Erstelle einen Systemwiederherstellungspunkt (falls erlaubt)</Text>
@@ -209,13 +213,13 @@
 			<Text>Entferne alle vorhandenen und derzeit nicht vorhandenen Bildschirme (empfohlen)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Entferne AMD Audio Bus</Text>
+			<Text>AMD Audio Bus entfernen</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
 			<Text>Treiberordner "C:\AMD" entfernen (NICHT empfohlen)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Entferne Treiber/Filter AMDKMPFD (Ein Backup für AMD Chipsätze wird empfohlen)</Text>
+			<Text>Treiber/Filter AMDKMPFD entfernen (Ein Backup für AMD Chipsätze wird empfohlen)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Hinweis zum abgesicherten Modus beim Start anzeigen</Text>
@@ -224,7 +228,7 @@
 			<Text>Speichere Config-Datei im Roaming-Ordner</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+			<Text>Beim Start automatisch nach DDU-Updates suchen (empfohlen)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>GeForce Experience (GFE) entfernen</Text>
@@ -237,88 +241,100 @@
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Remove Vulkan Runtime</Text>
-			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+			<Text>Vulkan Runtime entfernen</Text>
+			<Tooltip>Nicht empfohlen, wenn Sie zwei verschiedene GPUs haben, die die Vulkan API verwenden können</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Use SetupAPI *Experimental*</Text>
-			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+			<Text>SetupAPI verwenden *experimentell*</Text>
+			<Tooltip>SetupAPI anstelle des externen Tools DDUDR (DEVCON) verwenden</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
 	
-	<frmLaunch Text="Launch option">
+	<frmLaunch Text="Startoptionen">
 		<btnAccept>
-			<Text>Launch</Text>
+			<Text>Starten</Text>
 			<Text2>
-				Reboot to
-				Safe Mode
+				Neustart im
+				abgesicherten Modus
 			</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Schließen</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>Startoptionen</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				You are not in safe mode. It is highly recommended
-				reboot into Safe Mode to avoid possible issues.
+				Sie befinden sich nicht im abgesicherten Modus. Um mögliche Fehler zu 
+				vermeiden, wird ein Neustart im abgesicherten Modus ausdrücklich empfohlen.
 			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
 			<Text>
-				Important note for Windows 10 users:
-				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Wichtiger Hinweis für Windows 10 Benutzer:
+				Ihr Windows 10 "KENNWORT" wird benötigt! (PIN reicht hierfür NICHT aus)
+				Beenden Sie DDU sofort, falls Sie dieses verloren oder vergessen haben!
 			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
-			<Item3>Safe Mode With Networking</Item3>
+			<Item2>Abgesicherter Modus (Empfohlen)</Item2>
+			<Item3>Abgesicherter Modus mit Netzwerktreibern</Item3>
 		</cbBootOption>
 	</frmLaunch>
 	
-	<frmLog Text="Extended log">
+	<frmLog Text="Erweitertes Log">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Schließen</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Open log</Text>
+			<Text>Log öffnen</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
-			<Text>Options</Text>
+			<Text>Optionen</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>Kopieren aktivieren</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>Filters</Text>
+			<Text>Filter</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>Ereignisse anzeigen</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>Warnungen anzeigen</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>Fehler anzeigen</Text>
 		</errorsMenuItem>
 	</frmLog>
 
 	<frmSystemRestore Text="System Restore">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>Versuche Systemwiederherstellungspunkt zu erstellen.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="About">
+	<frmAbout Text="Über">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Schließen</Text>
 		</btnClose>
+		<btnAbout>
+			<Text>Über</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Nutzungsbedingungen</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Übersetzer</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Großen Dank an die folgenden Übersetzer und auch denen, die nicht aufgelistet sind!</Text>
+		</lblTranslators>
 	</frmAbout>
 
 	<Misc>
@@ -373,7 +389,7 @@
 		</About>
 		<Tos>
 			<Text>
-				NUTZERVEREINBARUNG - Display Driver Uninstaller ("DDU")
+				NUTZUNGSBEDINGUNGEN - Display Driver Uninstaller ("DDU")
 
 				Sie werden ein Nutzer von DDU ("Nutzer") durch die Anwendung des DDU Programms. Diese Vereinbarung tritt in Kraft, sobald Sie die Treiberdeinstallation beginnen.
 
@@ -386,9 +402,9 @@
 
 	<LanguageTranslators>
 		<Translator>
-			<User></User>
-			<Details></Details>
-			<LastUpdate></LastUpdate>
+			<User>Daniel</User>
+			<Details>GitHub: danidoedel</Details>
+			<LastUpdate>07/06/2016</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
