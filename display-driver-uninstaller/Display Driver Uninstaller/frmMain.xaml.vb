@@ -7001,7 +7001,11 @@ Public Class frmMain
 
 					Dim appproc = process.GetProcessesByName("explorer")
 					For i As Integer = 0 To appproc.Length - 1
-						appproc(i).Kill()
+						Try
+							appproc(i).Kill()
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 					Next i
 				End If
 
@@ -7268,6 +7272,7 @@ Public Class frmMain
 	Private Sub EnableControls(ByVal enabled As Boolean)
 		'	Me.IsEnabled = enabled
 
+		cbSelectedGPU.IsEnabled = enabled
 		ButtonsPanel.IsEnabled = enabled
 		btnWuRestore.IsEnabled = enabled
 		MenuStrip1.IsEnabled = enabled	
@@ -7395,10 +7400,10 @@ Public Class frmMain
 				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
 				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
 				diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-				If Not (((Not Application.Settings.RemovePhysX) AndAlso diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+				If Not (((Not config.RemovePhysX) AndAlso diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
 
 					Try
-						TraverseDirectory(diChild)
+						TraverseDirectory(diChild, config)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 					End Try
@@ -7423,7 +7428,7 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Private Shared Sub TraverseDirectory(ByVal di As DirectoryInfo)
+	Private Shared Sub TraverseDirectory(ByVal di As DirectoryInfo, ByVal config As ThreadSettings)
 
 		'If the current directory has more child directories, then continure
 		'to traverse down until we are at the lowest level and remove
@@ -7433,10 +7438,10 @@ Public Class frmMain
 			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.ReadOnly
 			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.Hidden
 			diChild.Attributes = diChild.Attributes And Not IO.FileAttributes.System
-			If Not (((Not Application.Settings.RemovePhysX) AndAlso diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
+			If Not (((Not config.RemovePhysX) AndAlso diChild.ToString.ToLower.Contains("physx"))) AndAlso Not diChild.ToString.ToLower.Contains("nvidia demos") Then
 
 				Try
-					TraverseDirectory(diChild)
+					TraverseDirectory(diChild, config)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
