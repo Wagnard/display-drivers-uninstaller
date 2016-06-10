@@ -1899,6 +1899,52 @@ Public Class frmMain
 									End Try
 								End If
 								If child.ToLower.Contains("install") Then
+									'here we check the install path location in case CCC is not installed on the system drive.  A kill to explorer must be made
+									'to help cleaning in normal mode.
+									If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
+										Application.Log.AddMessage("Killing Explorer.exe")
+										Dim appproc = process.GetProcessesByName("explorer")
+										For i As Integer = 0 To appproc.Length - 1
+											Try
+												appproc(i).Kill()
+											Catch ex As Exception
+												Application.Log.AddException(ex)
+											End Try
+										Next i
+									End If
+									Try
+										If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("InstallDir"))) Then
+											filePath = regkey.OpenSubKey(child).GetValue("InstallDir").ToString
+											If Not IsNullOrWhitespace(filePath) AndAlso My.Computer.FileSystem.DirectoryExists(filePath) Then
+												For Each childf As String In Directory.GetDirectories(filePath)
+													If Not IsNullOrWhitespace(childf) Then
+														If childf.ToLower.Contains("ati.ace") Or
+														childf.ToLower.Contains("cnext") Or
+														childf.ToLower.Contains("amdkmpfd") Or
+														childf.ToLower.Contains("cim") Then
+															Try
+																deletedirectory(childf)
+															Catch ex As Exception
+																Application.Log.AddException(ex)
+																TestDelete(childf, config)
+															End Try
+														End If
+													End If
+												Next
+												If Directory.GetDirectories(filePath).Length = 0 Then
+													Try
+														deletedirectory(filePath)
+													Catch ex As Exception
+														Application.Log.AddException(ex)
+														TestDelete(filePath, config)
+													End Try
+												End If
+											End If
+										End If
+
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
 									For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
 										If child2.ToLower.Contains("ati catalyst") Or
 										 child2.ToLower.Contains("ati mcat") Or
