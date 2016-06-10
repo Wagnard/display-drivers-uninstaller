@@ -37,7 +37,9 @@
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>將 Windows Update 自動安裝驅動程式設成預設值。</Text>
+			<Text>將 Windows Update 自動安裝驅
+			      動程式設成預設值。
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>偵測到的 Windows 版本：</Text>
@@ -51,10 +53,10 @@
 		<lblSelectedGPU>
 			<Text>選擇顯示卡驅動程式：</Text>
 		</lblSelectedGPU>
+
 		<lblLanguage>
-		  <Text>Selected language</Text>
-		</lblLanguage>
-		
+		  <Text>選擇語言</Text>
+		</lblLanguage>		
 		<Label9>
 			<Text>注意:您將為操作本工具造成的損壞或錯誤自行承擔責任。</Text>
 		</Label9>
@@ -93,7 +95,7 @@
 			<Text>關於</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>譯者</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>造訪官方 DDU 網站</Text>
@@ -180,7 +182,6 @@
 		</btnClose>
 		<lblOffer>
 			<Text>顯示我們的合作伙伴提供</Text>
-			<Tooltip>您可以從「選項」選單將這停用。</Tooltip>
 		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>NVIDIA 特定選項</Text>
@@ -324,13 +325,13 @@
 			<Text>關於</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>服務條款(ToS)</Text>
+			<Text>服務條款 (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>譯者</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>非常感謝以下譯者，以及那些未列出的人員!</Text>
 		</lblTranslators>
 	</frmAbout>
 
@@ -402,10 +403,16 @@
 
 	<LanguageTranslators>
 		<Translator>
-			<User></User>
-			<Details></Details>
-			<LastUpdate></LastUpdate>
+			<User>Wagnard</User>
+			<Details>Owner</Details>
+			<LastUpdate>29/05/2016</LastUpdate>
 		</Translator>
+
+		<Translator2>
+			<User>Danfong Hsieh（丹楓）</User>
+			<Details>Chinese Traditional translator 正體中文譯者</Details>
+			<LastUpdate>10/06/2016</LastUpdate>
+		</Translator2>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

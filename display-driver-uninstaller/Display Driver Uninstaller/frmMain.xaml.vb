@@ -318,6 +318,7 @@ Public Class frmMain
 		 "Grid64",
 		 "HydraMD64",
 		 "HydraMD",
+		 "RadeonSettings",
 		 "ThumbnailExtractionHost",
 		 "jusched")
 

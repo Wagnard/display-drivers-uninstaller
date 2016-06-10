@@ -83,9 +83,9 @@
     <AboutMenuItem>
       <Text>DDUについて</Text>
     </AboutMenuItem>
-	<TranslatorsMenuItem>
-	  <Text>Translators</Text>
-	</TranslatorsMenuItem>
+    <TranslatorsMenuItem>
+      <Text>翻訳者</Text>
+    </TranslatorsMenuItem>
     <VisitDDUHomeMenuItem>
       <Text>DDUの公式ウェブサイトに行く</Text>
     </VisitDDUHomeMenuItem>
@@ -301,18 +301,18 @@
     <btnClose>
       <Text>閉じる</Text>
     </btnClose>
-	<btnAbout>
-	  <Text>DDUについて</Text>
-	</btnAbout>
-	<btnTos>
-	  <Text>利用規約 (ToS)</Text>
-	</btnTos>
-	<btnTranslators>
-	  <Text>Translators</Text>
-	</btnTranslators>
-	<lblTranslators>
-	  <Text>Big thanks to following translators and also those who aren't listed!</Text>
-	</lblTranslators>
+    <btnAbout>
+      <Text>DDUについて</Text>
+    </btnAbout>
+    <btnTos>
+      <Text>利用規約 (ToS)</Text>
+    </btnTos>
+    <btnTranslators>
+      <Text>翻訳者</Text>
+    </btnTranslators>
+    <lblTranslators>
+      <Text>以下の翻訳者、及びリストされていない翻訳者に大きな感謝を!</Text>
+    </lblTranslators>
   </frmAbout>
   <Misc>
     <About>
@@ -348,13 +348,11 @@
 
 				作成者： Wagnard.
 
-				共同所有者： Shady757
+				プログラマー： Wagnard, Devmltk, Shady757
 
 				テスター： Dellon132
 
 				ロゴ： juanchacin
-
-				日本語化： DH ◆OmegaWBPUI
 
 				AMD 7850を寄贈してくれた Jackalito に多大な感謝を
 
@@ -373,7 +371,7 @@
 				Display Driver Uninstaller ("DDU") ユーザー使用許諾契約
 
 				あなたがDDUソフトウェアを使用すると、DDUの利用者（以下「ユーザー」）になります。
-				本契約は、ドライバーをアンインストールする為に本ソフトウェアの使用を開始した時点で有効になります。
+				本契約は、ドライバーをアンインストールする為に本プログラムの使用を開始した時点で有効になります。
 
 				DDUを使用することであなたのPCに損害や悪影響を及ぼしても、DDUとそのクリエイターを
 				非難しないことに同意するものとみなします。
@@ -384,14 +382,11 @@
 			</Text>
     </Tos>
   </Misc>
-	<LanguageTranslators>
-		<Translator>
-			<User>DH ◆OmegaWBPUI</User>
-			<Details>
-				Translator
-				email: DH.OmegaWBPUI@gmail.com
-			</Details>
-			<LastUpdate>07/06/2016</LastUpdate>
-		</Translator>
-	</LanguageTranslators>
+  <LanguageTranslators>
+    <Translator>
+      <User>DH ◆OmegaWBPUI</User>
+      <Details>DH.OmegaWBPUI@gmail.com</Details>
+      <LastUpdate>10/06/2016</LastUpdate>
+    </Translator>
+  </LanguageTranslators>
 </DisplayDriverUninstaller>

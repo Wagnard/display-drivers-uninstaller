@@ -19,7 +19,8 @@
 		<btnClean>
 			<Text>
 				Очистити БЕЗ перезавантаження
-				(може спричинити проблеми, подібні до "чорного екрана")
+				(може спричинити проблеми,
+				подібні до "чорного екрана")
 			</Text>
 			<Tooltip>
 				Натисніть, щоб видалити поточний і попередні драйвери, але не перезавантажувати комп'ютер.
@@ -37,31 +38,27 @@
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
-			<Text>Встановити типове налаштування для системи оновлення драйверів з Windows Update</Text>
+			<Text>
+				Установити автоматичну інсталяцію
+				драйверів Windows типовою
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>Виявлено версію Windows</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** Подобається DDU? Поміркуйте щодо пожертвування (Donate) - це допоможе його подальшому розвитку. ***</Text>
+			<Text>Подобається DDU? Поміркуйте щодо пожертвування (Donate) - це допоможе його подальшому розвитку.</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Журнал</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Виберіть графічний драйвер</Text>
+			<Text>Вибраний графічний драйвер</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Selected language</Text>
+			<Text>Вибрана мова</Text>
 		</lblLanguage>
-		
-		<Label9>
-			<Text>Зауваження: Будь-які пошкодження чи помилки, що виникнуть у вашому комп'ютері, на вашій відповідальності.</Text>
-		</Label9>
-		<Label10>
-			<Text>Радимо використовувати DDU в безпечному режимі.</Text>
-		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Перевіряємо наявність оновлень...</Text>
 			<Text2>Оновлень не виявлено. Програма в актуальному стані.</Text2>
@@ -70,21 +67,21 @@
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>Пропозиції від наших партнерів</Text>
+			<Tooltip>Ви можете відключити цю функцію в меню параметрів.</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
 			<Text>Параметри</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
-			<Text>Info</Text>
+			<Text>Інформація</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>Розширений журнал</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
-			<Text>Links</Text>
+			<Text>Посилання</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
 			<Text>Угода з користувачем</Text>
@@ -93,7 +90,7 @@
 			<Text>Про DDU</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>Перекладачі</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Відвідайте веб-сайт DDU</Text>
@@ -110,7 +107,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Відвідайте тему Geforce</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Доступні оновлення! Відвідати веб-сайт DDU зараз?</Text1>
 			<Text2>Очікуйте на обмежену підтримку версій, старіших ніж найостанніша. Будь ласка, перевірте нову версію до повідомлень про помилки.</Text2>
@@ -141,7 +138,7 @@
 			<Text10>Повне видалення завершено!</Text10>
 			<Text11>Версія DDU</Text11>
 			<Text12>Графічний процесор #</Text12>
-			<Text13>виявлено</Text13>
+			<Text13>Виявлено</Text13>
 			<Text14>DeviceId графічного процесора</Text14>
 			<Text15>Виявлені версії драйверів</Text15>
 			<Text16>Файл INF</Text16>
@@ -176,16 +173,16 @@
 	
 	<frmOptions Text="Параметри">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Закрити</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>Показувати пропозиції від наших партнерів</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Specific Options</Text>
+			<Text>Папаметри, специфічні для NVIDIA</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Specific Options</Text>
+			<Text>Папаметри, специфічні для AMD</Text>
 		</lblAmdspecific>
 		<lblGeneral>
 			<Text>Загальні параметри</Text>
@@ -194,7 +191,7 @@
 			<Text>Видалити папку драйверів "C:\nVidia" (НЕ рекомендовано)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Зберегти файли журналу в папці запуску (рекомендовано)</Text>
+			<Text>Зберігати файли журналу в папці запуску (рекомендовано)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Видалити PhysX</Text>
@@ -206,7 +203,7 @@
 			<Text>Створити точку відновлення системи (якщо це дозволено)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Видалити існуючі й неіснуючі монітори (рекомендовано)</Text>
+			<Text>Видалити існуючі та неіснуючі монітори (рекомендовано)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
 			<Text>Видалити AMD Audio Bus</Text>
@@ -224,7 +221,7 @@
 			<Text>Зберігати файл конфігурації у папці, що переміщується</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+			<Text>Автоматично перевіряти наявність оновлень при запуску DDU (рекомендовано)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Видалити Geforce Experience (GFE)</Text>
@@ -241,8 +238,8 @@
 			<Tooltip>НЕ рекомендовано, якщо у вас є 2 різні графічні процесори, здатні використовувати Vulkan API.</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Use SetupAPI *Experimental*</Text>
-			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+			<Text>Використовувати SetupAPI *Еспериментально*</Text>
+			<Tooltip>Використовувати SetupAPI замість зовнішньго інструменту DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
 	
@@ -268,9 +265,9 @@
 		</lblNotSafeMode>
 		<lblWin10Warn>
 			<Text>
-				Important note for Windows 10 users:
-				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Важливе зауваження для користувачів Windows 10:
+				Потрібен ваш "ПАРОЛЬ" до Windows 10! (PIN-код не працює)
+				Вийдіть негайно, якщо ви втратили або не знаєте його!
 			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
@@ -285,33 +282,33 @@
 			<Text>Закрити</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Open log</Text>
+			<Text>Відкр. журн.</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
-			<Text>Options</Text>
+			<Text>Параметри</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>Копіювання ввімнено</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>Filters</Text>
+			<Text>Фільтри</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>Показати події</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>Показати попередження</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>Показати помилки</Text>
 		</errorsMenuItem>
 	</frmLog>
 
-	<frmSystemRestore Text="System Restore">
+	<frmSystemRestore Text="Відновлення системи">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>Спроба створити точку відновлення системи.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
@@ -323,13 +320,13 @@
 			<Text>Про DDU</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>Угода з користувачем</Text>
+			<Text>Угода з користувачем (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>Перекладачі</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>Щиро дякуємо переліченим перекладачам та тим, кого не перелічено!</Text>
 		</lblTranslators>
 	</frmAbout>
 
@@ -375,30 +372,26 @@
 				* DDU, його автори та партнери жодним чином не пов'язані з Driver Sweeper, або його авторами.
 			</Text>
 		</About>
+
 		<Tos>
 			<Text>
 				УГОДА З КОРИСТУВАЧЕМ Display Driver Uninstaller ("DDU")
 
 				Використовуючи програму DDU ви стаєте користувачем DDU.
-				Ця угода набуває чинності, як тільки ви видалите драйвер
-				за допомогою програми.
+				Ця угода набуває чинності, як тільки ви видалите драйвер за допомогою програми.
 
-				Використовуючи DDU, ви погоджуєтесь не звинувачувати DDU
-				або його авторів та партнерів, що вони пошкодили
-				чи негативно вплинули на ваш ПК.
+				Використовуючи DDU, ви погоджуєтесь не звинувачувати DDU або його авторів та партнерів, що вони пошкодили чи негативно вплинули на ваш ПК.
 
-				Використовуючи DDU ви визнаєте, що ні NVIDIA ("NVIDIA", "GeForce"),
-				ні Advanced Micro Devices ("AMD", "Radeon") не мають нічого спільного
-				з цією програмою, і жодним чином не пов'язані з DDU чи її авторами.
+				Використовуючи DDU ви визнаєте, що ні NVIDIA ("NVIDIA", "GeForce"), ні Advanced Micro Devices ("AMD", "Radeon") не мають нічого спільного з цією програмою, і жодним чином не пов'язані з DDU чи її авторами.
 			</Text>
 		</Tos>
 	</Misc>
 
 	<LanguageTranslators>
 		<Translator>
-			<User></User>
-			<Details></Details>
-			<LastUpdate></LastUpdate>
+			<User>YuriPet</User>
+			<Details>yuripet@gmail.com</Details>
+			<LastUpdate>10/06/2016</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
