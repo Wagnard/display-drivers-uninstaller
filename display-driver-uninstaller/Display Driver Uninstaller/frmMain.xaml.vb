@@ -7941,14 +7941,14 @@ Public Class CleanupEngine
 	End Sub
 	Public Sub RemoveSharedDlls(ByVal directorypath As String)
 		If Not IsNullOrWhitespace(directorypath) AndAlso Not Directory.Exists(directorypath) Then
-			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False)
+			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetValueNames
 						If IsNullOrWhitespace(child) Then Continue For
 
 						If StrContainsAny(child, True, directorypath & "\") Then
 							Try
-								deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True), child)
+								deletevalue(regkey, child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 							End Try
@@ -7957,14 +7957,14 @@ Public Class CleanupEngine
 				End If
 			End Using
 
-			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", False)
+			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetValueNames
 						If IsNullOrWhitespace(child) Then Continue For
 
 						If StrContainsAny(child, True, directorypath & "\") Then
 							Try
-								deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
+								deletevalue(regkey, child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 							End Try
@@ -7974,14 +7974,14 @@ Public Class CleanupEngine
 			End Using
 
 			If IntPtr.Size = 8 Then
-				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", False)
+				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetValueNames
 							If IsNullOrWhitespace(child) Then Continue For
 
-							If child.ToLower.Contains(directorypath & "\") Then
+							If StrContainsAny(child, True, directorypath & "\") Then
 								Try
-									deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True), child)
+									deletevalue(regkey, child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
 								End Try
