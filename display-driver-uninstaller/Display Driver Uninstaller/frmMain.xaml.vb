@@ -3432,11 +3432,12 @@ Public Class frmMain
 		'interface cleanup
 		'-----------------
 
-		CleanupEngine.interfaces(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\interface.cfg")) '// add each line as String Array.
 
-		'When removing GFE only
-		If removegfe Then
+
+		If removegfe Then 'When removing GFE only
 			CleanupEngine.interfaces(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
+		Else
+			CleanupEngine.interfaces(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\interface.cfg")) '// add each line as String Array.
 		End If
 
 		Application.Log.AddMessage("Finished dcom/clsid/appid/typelib/interface cleanup")
@@ -9343,110 +9344,107 @@ Public Class CleanupEngine
 
 	Public Sub interfaces(ByVal interfaces As String())
 
-		Dim wantedvalue As String
-		Dim typelib As String = Nothing
-
-		application.log.addmessage("Start Interface CleanUP")
+		Application.Log.AddMessage("Start Interface CleanUP")
 
 		Try
+			Dim wantedvalue As String
+			Dim typelib As String = Nothing
 			Using regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If IsNullOrWhitespace(child) = False Then
+						If IsNullOrWhitespace(child) Then Continue For
 
-							Using subregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
+						Using subregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("Interface\" & child, False)
 
-								If subregkey IsNot Nothing Then
-									If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
-										wantedvalue = subregkey.GetValue("").ToString
-										If IsNullOrWhitespace(wantedvalue) = False Then
-											For i As Integer = 0 To interfaces.Length - 1
-												If Not IsNullOrWhitespace(interfaces(i)) Then
-													If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
-														If subregkey.OpenSubKey("Typelib", False) IsNot Nothing Then
-															If IsNullOrWhitespace(CStr(subregkey.OpenSubKey("TypeLib", False).GetValue(""))) = False Then
-																typelib = CStr(subregkey.OpenSubKey("TypeLib", False).GetValue(""))
-																If IsNullOrWhitespace(typelib) = False Then
-																	Try
-																		deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True), typelib)
-																	Catch ex As Exception
-																	End Try
-																End If
-															End If
-														End If
-														Try
-															deletesubregkey(regkey, child)
-														Catch ex As Exception
-														End Try
-													End If
-												End If
-											Next
-										End If
+							If subregkey IsNot Nothing Then
+								wantedvalue = subregkey.GetValue("", String.Empty).ToString
+								If IsNullOrWhitespace(wantedvalue) Then Continue For
+
+								For Each iface As String In interfaces
+									If IsNullOrWhitespace(iface) Then Continue For
+
+									If wantedvalue.ToLower.StartsWith(iface.ToLower) Then
+
+										Using regkey2 As RegistryKey = subregkey.OpenSubKey("Typelib", True)
+											If regkey2 IsNot Nothing Then
+												typelib = regkey2.GetValue("", String.Empty).ToString
+												If IsNullOrWhitespace(typelib) Then Continue For
+
+												Try
+													deletesubregkey(regkey2, typelib)
+												Catch ex As Exception
+												End Try
+											End If
+										End Using
+
+										Try
+											deletesubregkey(regkey, child)
+										Catch ex As Exception
+										End Try
 									End If
-								End If
-							End Using
-						End If
+								Next
+							End If
+						End Using
 					Next
 				End If
 			End Using
 		Catch ex As Exception
-			application.log.AddException(ex)
+			Application.Log.AddException(ex)
 		End Try
 
 		If IntPtr.Size = 8 Then
 
-			Try
-				Using regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\Interface", True)
+					Try
+				Dim wantedvalue As String
+				Dim typelib As String = Nothing
+				Using regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("WOW6432Node\Interface", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) = False Then
+							If IsNullOrWhitespace(child) Then Continue For
 
-								Using subregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\Interface\" & child, False)
+							Using subregkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("WOW6432Node\Interface\" & child, False)
 
-									If subregkey IsNot Nothing Then
-										'Hack for some weird registry state  "For user: Watcher"
-										Try
-											If IsNullOrWhitespace(CStr((subregkey.GetValue("")))) = False Then
-												'do nothing
-											End If
-										Catch ex As Exception
-											Application.Log.AddException(ex, "non standard keytype found : " + child)
-											Continue For
-										End Try
-										If IsNullOrWhitespace(CStr((subregkey.GetValue("")))) = False Then
-											wantedvalue = subregkey.GetValue("").ToString
-											If IsNullOrWhitespace(wantedvalue) = False Then
-												For i As Integer = 0 To interfaces.Length - 1
-													If Not IsNullOrWhitespace(interfaces(i)) Then
-														If wantedvalue.ToLower.StartsWith(interfaces(i).ToLower) Then
-															If subregkey.OpenSubKey("Typelib", False) IsNot Nothing Then
-																If IsNullOrWhitespace(CStr(subregkey.OpenSubKey("TypeLib", False).GetValue(""))) = False Then
-																	typelib = CStr(subregkey.OpenSubKey("TypeLib", False).GetValue(""))
-																	If IsNullOrWhitespace(typelib) = False Then
-																		Try
-																			deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Wow6432Node\TypeLib", True), typelib)
-																		Catch ex As Exception
-																		End Try
-																	End If
-																End If
-															End If
-															Try
-																deletesubregkey(regkey, child)
-															Catch ex As Exception
-															End Try
-														End If
-													End If
-												Next
-											End If
+								If subregkey IsNot Nothing Then
+
+									Try
+										wantedvalue = subregkey.GetValue("", String.Empty).ToString
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+										wantedvalue = ""
+									End Try
+
+									If IsNullOrWhitespace(wantedvalue) Then Continue For
+
+									For Each iface As String In interfaces
+										If IsNullOrWhitespace(iface) Then Continue For
+
+										If wantedvalue.ToLower.StartsWith(iface.ToLower) Then
+
+											Using regkey2 As RegistryKey = subregkey.OpenSubKey("Typelib", True)
+												If regkey2 IsNot Nothing Then
+													typelib = regkey2.GetValue("", String.Empty).ToString
+													If IsNullOrWhitespace(typelib) Then Continue For
+
+													Try
+														deletesubregkey(regkey2, typelib)
+													Catch ex As Exception
+													End Try
+												End If
+											End Using
+
+											Try
+												deletesubregkey(regkey, child)
+											Catch ex As Exception
+											End Try
 										End If
-									End If
-								End Using
-							End If
+									Next
+								End If
+							End Using
 						Next
 					End If
 				End Using
 			Catch ex As Exception
-				application.log.AddException(ex)
+				Application.Log.AddException(ex)
 			End Try
 
 		End If
