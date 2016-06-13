@@ -5511,7 +5511,6 @@ Public Class frmMain
 				For Each arg As String In Application.Settings.ArgumentsArray
 					If StrContainsAny(arg, True, "donate", "svn", "guru3dnvidia", "guru3damd", "dduhome", "geforce", "visitoffer") Then
 						Try
-							MessageBox.Show("RunAs; " & arg)
 							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, arg) With {.Verb = "runas"})
 						Catch ex As Exception
 							Application.Log.AddException(ex)
