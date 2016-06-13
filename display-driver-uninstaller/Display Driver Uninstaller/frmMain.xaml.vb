@@ -8164,137 +8164,139 @@ Public Class CleanupEngine
 
 		Try
 			Application.Log.AddMessage("-Starting S-1-5-xx region cleanUP")
+			Dim file As String
+			Dim folder As String
 			Using basekey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
 			   ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
 				If basekey IsNot Nothing Then
 					For Each super As String In basekey.GetSubKeyNames()
-						If IsNullOrWhitespace(super) = False Then
-							If super.ToLower.Contains("s-1-5") Then
+						If IsNullOrWhitespace(super) Then Continue For
 
-								Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-								 ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
+						If StrContainsAny(super, True, "s-1-5") Then
 
-									If regkey IsNot Nothing Then
-										For Each child As String In regkey.GetSubKeyNames()
-											If IsNullOrWhitespace(child) = False Then
+							Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+							 ("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products", True)
 
-												Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-												("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
-												"\InstallProperties", False)
+								If regkey IsNot Nothing Then
+									For Each child As String In regkey.GetSubKeyNames()
+										If IsNullOrWhitespace(child) Then Continue For
 
-													If subregkey IsNot Nothing Then
-														If IsNullOrWhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
-															wantedvalue = subregkey.GetValue("DisplayName").ToString
-															If IsNullOrWhitespace(wantedvalue) = False Then
-																For i As Integer = 0 To packages.Length - 1
-																	If Not IsNullOrWhitespace(packages(i)) Then
-																		If wantedvalue.ToLower.Contains(packages(i).ToLower) AndAlso
-																		  Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
+										Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+										("Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child & _
+										"\InstallProperties", False)
 
+											If subregkey IsNot Nothing Then
 
+												wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
+												If IsNullOrWhitespace(wantedvalue) Then Continue For
 
-																			'Deleting here the c:\windows\installer entries.
-																			Try
-																				If (Not IsNullOrWhitespace(CStr(subregkey.GetValue("LocalPackage")))) AndAlso
-																				  subregkey.GetValue("LocalPackage").ToString.ToLower.Contains(".msi") Then
-																					deletefile(subregkey.GetValue("LocalPackage").ToString)
-																				End If
-																			Catch ex As Exception
-																			End Try
+												For Each package As String In packages
+													If IsNullOrWhitespace(package) Then Continue For
+													If (StrContainsAny(wantedvalue, True, package)) AndAlso
+													  Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
 
 
-																			Try
-																				If (Not IsNullOrWhitespace(CStr(subregkey.GetValue("UninstallString")))) AndAlso
-																				  subregkey.GetValue("UninstallString").ToString.ToLower.Contains("{") Then
-																					Dim folder As String = subregkey.GetValue("UninstallString").ToString
-																					folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
-																					TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder, config)
-																					If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", False) IsNot Nothing Then
-																						For Each subkeyname As String In My.Computer.Registry.LocalMachine.OpenSubKey _
-																					 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders").GetValueNames
-																							If Not IsNullOrWhitespace(subkeyname) Then
-																								If subkeyname.ToLower.Contains(folder.ToLower) Then
-																									deletevalue(My.Computer.Registry.LocalMachine.OpenSubKey _
-																								 ("Software\Microsoft\Windows\CurrentVersion\Installer\Folders", True), subkeyname)
-																								End If
-																							End If
-																						Next
-																					End If
-																				End If
-																			Catch ex As Exception
-																				Application.Log.AddException(ex)
-																			End Try
 
-																			Try
-																				deletesubregkey(regkey, child)
-																			Catch ex As Exception
-																			End Try
+														'Deleting here the c:\windows\installer entries.
+														Try
+															file = subregkey.GetValue("LocalPackage", String.Empty).ToString
+															If IsNullOrWhitespace(file) Then Continue For
 
-																			Using superregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-																		 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
-																				If superregkey IsNot Nothing Then
-																					For Each child2 As String In superregkey.GetSubKeyNames()
-																						If IsNullOrWhitespace(child2) = False Then
+															If StrContainsAny(file, True, ".msi") Then
+																deletefile(file)
+															End If
+														Catch ex As Exception
+														End Try
 
-																							Using subsuperregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-																						("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, False)
+														Try
+															folder = subregkey.GetValue("UninstallString", String.Empty).ToString
+															If IsNullOrWhitespace(folder) Then Continue For
+															If Not StrContainsAny(folder, True, "{") Then Continue For
+															If Not StrContainsAny(folder, True, "}") Then Continue For
 
-																								If subsuperregkey IsNot Nothing Then
-																									For Each wantedstring As String In subsuperregkey.GetValueNames()
-																										If IsNullOrWhitespace(wantedstring) = False Then
-																											If wantedstring.Contains(child) Then
-																												Try
-																													deletesubregkey(superregkey, child2)
-																												Catch ex As Exception
-																												End Try
-																											End If
-																										End If
-																									Next
-																								End If
-																							End Using
-																						End If
-																					Next
-																				End If
-																			End Using
-																			Using superregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-																		 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
-																				If superregkey IsNot Nothing Then
-																					For Each child2 As String In superregkey.GetSubKeyNames()
-																						If IsNullOrWhitespace(child2) = False Then
+															folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
+															TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder, config)
 
-																							Using subsuperregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-																						("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
+															Using regkey2 As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
+																If regkey2 IsNot Nothing Then
 
-
-																								If subsuperregkey IsNot Nothing Then
-																									For Each wantedstring In subsuperregkey.GetValueNames()
-																										If IsNullOrWhitespace(wantedstring) = False Then
-																											If wantedstring.Contains(child) Then
-																												Try
-																													deletesubregkey(superregkey, child2)
-																												Catch ex As Exception
-																												End Try
-																											End If
-																										End If
-																									Next
-																								End If
-																							End Using
-																						End If
-																					Next
-																				End If
-																			End Using
+																	For Each subkeyname As String In regkey2.GetValueNames
+																		If Not IsNullOrWhitespace(subkeyname) Then
+																			If StrContainsAny(subkeyname, True, folder) Then
+																				deletevalue(regkey2, subkeyname)
+																			End If
 																		End If
-																	End If
+																	Next
+																End If
+															End Using
+
+														Catch ex As Exception
+															Application.Log.AddException(ex)
+														End Try
+
+														Try
+															deletesubregkey(regkey, child)
+														Catch ex As Exception
+															Application.Log.AddException(ex)
+														End Try
+
+														Using superregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+													 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
+															If superregkey IsNot Nothing Then
+																For Each child2 As String In superregkey.GetSubKeyNames()
+																	If IsNullOrWhitespace(child2) Then Continue For
+
+																	Using subsuperregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+																("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, False)
+
+																		If subsuperregkey IsNot Nothing Then
+																			For Each wantedstring As String In subsuperregkey.GetValueNames()
+																				If IsNullOrWhitespace(wantedstring) Then Continue For
+
+																				If StrContainsAny(wantedstring, True, child) Then
+																					Try
+																						deletesubregkey(superregkey, child2)
+																					Catch ex As Exception
+																					End Try
+																				End If
+																			Next
+																		End If
+																	End Using
 																Next
 															End If
-														End If
+														End Using
+														Using superregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+													 ("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
+															If superregkey IsNot Nothing Then
+																For Each child2 As String In superregkey.GetSubKeyNames()
+																	If IsNullOrWhitespace(child2) Then Continue For
+
+																	Using subsuperregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+																("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
+
+																		If subsuperregkey IsNot Nothing Then
+																			For Each wantedstring In subsuperregkey.GetValueNames()
+																				If IsNullOrWhitespace(wantedstring) Then Continue For
+
+																				If wantedstring.Contains(child) Then
+																					Try
+																						deletesubregkey(superregkey, child2)
+																					Catch ex As Exception
+																					End Try
+																				End If
+																			Next
+																		End If
+																	End Using
+																Next
+															End If
+														End Using
 													End If
-												End Using
+												Next
 											End If
-										Next
-									End If
-								End Using
-							End If
+										End Using
+									Next
+								End If
+							End Using
 						End If
 					Next
 				End If
@@ -8412,62 +8414,62 @@ Public Class CleanupEngine
 			("Software\Classes\Installer\Products", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If IsNullOrWhitespace(child) = False Then
+						If IsNullOrWhitespace(child) Then Continue For
 
-							Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-							("Software\Classes\Installer\Products\" & child, False)
+						Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+						("Software\Classes\Installer\Products\" & child, False)
 
-								If subregkey IsNot Nothing Then
-									If IsNullOrWhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
-										wantedvalue = subregkey.GetValue("ProductName").ToString
-										If IsNullOrWhitespace(wantedvalue) = False Then
-											For i As Integer = 0 To packages.Length - 1
-												If Not IsNullOrWhitespace(packages(i)) Then
-													If wantedvalue.ToLower.Contains(packages(i).ToLower) AndAlso
-													  Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
-														Try
-															deletesubregkey(regkey, child)
-														Catch ex As Exception
-														End Try
-														Try
-															deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Installer\Features", True), child)
-														Catch ex As Exception
-														End Try
+							If subregkey IsNot Nothing Then
+								wantedvalue = subregkey.GetValue("ProductName", String.Empty).ToString
+								If IsNullOrWhitespace(wantedvalue) Then Continue For
 
-														Using superregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-														("Software\Classes\Installer\UpgradeCodes", True)
-															If superregkey IsNot Nothing Then
-																For Each child2 As String In superregkey.GetSubKeyNames()
-																	If IsNullOrWhitespace(child2) = False Then
+								For Each package As String In packages
+									If IsNullOrWhitespace(package) Then Continue For
 
-																		Using subsuperregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-																		  ("Software\Classes\Installer\UpgradeCodes\" & child2, False)
+									If (StrContainsAny(wantedvalue, True, package)) AndAlso
+									  Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
 
-																			If subsuperregkey IsNot Nothing Then
-																				For Each wantedstring As String In subsuperregkey.GetValueNames()
-																					If IsNullOrWhitespace(wantedstring) = False Then
-																						If wantedstring.Contains(child) Then
-																							Try
-																								deletesubregkey(superregkey, child2)
-																							Catch ex As Exception
-																							End Try
-																						End If
-																					End If
-																				Next
-																			End If
-																		End Using
-																	End If
-																Next
-															End If
-														End Using
-													End If
-												End If
-											Next
-										End If
+										Try
+											deletesubregkey(regkey, child)
+										Catch ex As Exception
+										End Try
+
+										Using regkey2 As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Installer\Features", True)
+											Try
+												deletesubregkey(regkey2, child)
+											Catch ex As Exception
+											End Try
+										End Using
+
+										Using superregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+										("Software\Classes\Installer\UpgradeCodes", True)
+											If superregkey IsNot Nothing Then
+												For Each child2 As String In superregkey.GetSubKeyNames()
+													If IsNullOrWhitespace(child2) Then Continue For
+
+													Using subsuperregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
+													  ("Software\Classes\Installer\UpgradeCodes\" & child2, False)
+
+														If subsuperregkey IsNot Nothing Then
+															For Each wantedstring As String In subsuperregkey.GetValueNames()
+																If IsNullOrWhitespace(wantedstring) Then Continue For
+
+																If StrContainsAny(wantedstring, True, child) Then
+																	Try
+																		deletesubregkey(superregkey, child2)
+																	Catch ex As Exception
+																	End Try
+																End If
+															Next
+														End If
+													End Using
+												Next
+											End If
+										End Using
 									End If
-								End If
-							End Using
-						End If
+								Next
+							End If
+						End Using
 					Next
 				End If
 			End Using
@@ -8480,73 +8482,72 @@ Public Class CleanupEngine
 		updatetextmethod(UpdateTextMethodmessagefn(35))
 		Try
 			For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
-				If Not IsNullOrWhitespace(users) Then
+				If IsNullOrWhitespace(users) Then Continue For
 
-					Using regkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey _
-					(users & "\Software\Microsoft\Installer\Products", True)
+				Using regkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey _
+				(users & "\Software\Microsoft\Installer\Products", True)
 
-						If regkey IsNot Nothing Then
-							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) = False Then
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(child) Then Continue For
 
-									Using subregkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey _
-								   (users & "\Software\Microsoft\Installer\Products\" & child, False)
+							Using subregkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey _
+						   (users & "\Software\Microsoft\Installer\Products\" & child, False)
 
-										If subregkey IsNot Nothing Then
-											If IsNullOrWhitespace(CStr(subregkey.GetValue("ProductName"))) = False Then
-												wantedvalue = subregkey.GetValue("ProductName").ToString
-												If IsNullOrWhitespace(wantedvalue) = False Then
-													For i As Integer = 0 To packages.Length - 1
-														If Not IsNullOrWhitespace(packages(i)) Then
-															If wantedvalue.ToLower.Contains(packages(i).ToLower) AndAlso
-															   Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
-																Try
-																	deletesubregkey(regkey, child)
-																Catch ex As Exception
-																End Try
-																Try
-																	deletesubregkey(My.Computer.Registry.Users.OpenSubKey(users & "\Software\Microsoft\Installer\Features", True), child)
-																Catch ex As Exception
-																End Try
+								If subregkey IsNot Nothing Then
+									wantedvalue = subregkey.GetValue("ProductName", String.Empty).ToString
+									If IsNullOrWhitespace(wantedvalue) Then Continue For
 
-																Using superregkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey _
-																(users & "\Software\Microsoft\Installer\UpgradeCodes", True)
-																	If superregkey IsNot Nothing Then
-																		For Each child2 As String In superregkey.GetSubKeyNames()
-																			If IsNullOrWhitespace(child2) = False Then
+									For Each package As String In packages
+										If IsNullOrWhitespace(package) Then Continue For
 
-																				Using subsuperregkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey _
-																				  (users & "\Software\Microsoft\Installer\UpgradeCodes" & child2, False)
+										If (StrContainsAny(wantedvalue, True, package)) AndAlso
+										   Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
 
-																					If subsuperregkey IsNot Nothing Then
-																						For Each wantedstring As String In subsuperregkey.GetValueNames()
-																							If IsNullOrWhitespace(wantedstring) = False Then
-																								If wantedstring.Contains(child) Then
-																									Try
-																										deletesubregkey(superregkey, child2)
-																									Catch ex As Exception
-																									End Try
-																								End If
-																							End If
-																						Next
-																					End If
-																				End Using
-																			End If
-																		Next
+											Try
+												deletesubregkey(regkey, child)
+											Catch ex As Exception
+											End Try
+
+											Using regkey2 As RegistryKey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Microsoft\Installer\Features", True)
+												Try
+													deletesubregkey(regkey2, child)
+												Catch ex As Exception
+												End Try
+											End Using
+
+											Using superregkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey _
+											(users & "\Software\Microsoft\Installer\UpgradeCodes", True)
+												If superregkey IsNot Nothing Then
+													For Each child2 As String In superregkey.GetSubKeyNames()
+														If IsNullOrWhitespace(child2) Then Continue For
+
+														Using subsuperregkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey _
+														  (users & "\Software\Microsoft\Installer\UpgradeCodes" & child2, False)
+
+															If subsuperregkey IsNot Nothing Then
+																For Each wantedstring As String In subsuperregkey.GetValueNames()
+																	If IsNullOrWhitespace(wantedstring) Then Continue For
+
+																	If wantedstring.Contains(child) Then
+																		Try
+																			deletesubregkey(superregkey, child2)
+																		Catch ex As Exception
+																		End Try
 																	End If
-																End Using
+																Next
 															End If
-														End If
+														End Using
 													Next
 												End If
-											End If
+											End Using
 										End If
-									End Using
+									Next
 								End If
-							Next
-						End If
-					End Using
-				End If
+							End Using
+						Next
+					End If
+				End Using
 			Next
 			updatetextmethod(UpdateTextMethodmessagefn(36))
 		Catch ex As Exception
