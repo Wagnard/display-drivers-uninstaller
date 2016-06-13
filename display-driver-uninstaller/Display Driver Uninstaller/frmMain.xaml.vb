@@ -3398,11 +3398,11 @@ Public Class frmMain
 
 		CleanupEngine.classroot(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\classroot.cfg")) '// add each line as String Array.
 
-		CleanupEngine.clsidleftover(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
-
 		'for GFE removal only
 		If removegfe Then
 			CleanupEngine.clsidleftover(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
+		Else
+			CleanupEngine.clsidleftover(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 		End If
 		'------------------------------
 		'Clean the rebootneeded message
@@ -9275,45 +9275,65 @@ Public Class CleanupEngine
 		'clean orphan typelib.....
 		application.log.addmessage("Orphan cleanUp")
 		Try
-			Using regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("TypeLib", True)
+			Dim value As String = Nothing
+
+			Using regkey As RegistryKey = Registry.ClassesRoot.OpenSubKey("TypeLib", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If (Not IsNullOrWhitespace(child)) AndAlso (regkey.OpenSubKey(child) IsNot Nothing) Then
-							For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-								If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child2)) Then
-									For Each child3 As String In regkey.OpenSubKey(child).OpenSubKey(child2).GetSubKeyNames()
-										If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child3)) Then
-											For Each child4 As String In regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).GetSubKeyNames()
-												If (Not IsNullOrWhitespace(child4)) AndAlso regkey.OpenSubKey(child, False) IsNot Nothing Then
-													For i As Integer = 0 To clsidleftover.Length - 1
-														If Not IsNullOrWhitespace(clsidleftover(i)) Then
-															If (regkey.OpenSubKey(child, False) IsNot Nothing) AndAlso (Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("")))) Then
-																If regkey.OpenSubKey(child).OpenSubKey(child2).OpenSubKey(child3).OpenSubKey(child4).GetValue("").ToString.ToLower.Contains(clsidleftover(i).ToLower) Then
-																	Try
-																		deletesubregkey(regkey, child)
-																		Application.Log.AddMessage(child + " for " + clsidleftover(i))
-																		Exit For
-																	Catch ex As Exception
-																	End Try
-																End If
-															End If
+						If IsNullOrWhitespace(child) Then Continue For
+
+						Using regkey2 As RegistryKey = regkey.OpenSubKey(child)
+							If regkey2 Is Nothing Then Continue For
+
+							For Each child2 As String In regkey2.GetSubKeyNames()
+								If IsNullOrWhitespace(child2) Then Continue For
+
+								Using regkey3 As RegistryKey = regkey2.OpenSubKey(child2)
+									If regkey3 Is Nothing Then Continue For
+
+									For Each child3 As String In regkey3.GetSubKeyNames()
+										If IsNullOrWhitespace(child3) Then Continue For
+
+										Using regkey4 As RegistryKey = regkey3.OpenSubKey(child3)
+											If regkey4 Is Nothing Then Continue For
+
+											For Each child4 As String In regkey4.GetSubKeyNames()
+												If IsNullOrWhitespace(child4) Then Continue For
+
+												Using regkey5 As RegistryKey = regkey4.OpenSubKey(child4)
+													If regkey5 Is Nothing Then Continue For
+													If IsNullOrWhitespace(CStr(regkey5.GetValue(""))) Then Continue For
+													value = regkey5.GetValue("").ToString()	'Can also be UInt32 btw! (Usualy abnormal from personal experience,bit still should be managed in the future)
+
+													If IsNullOrWhitespace(value) Then Continue For
+
+													For Each clsIdle As String In clsidleftover
+														If IsNullOrWhitespace(clsIdle) Then Continue For
+
+														If StrContainsAny(value, True, clsIdle) Then
+															Try
+																deletesubregkey(regkey, child)
+																Application.Log.AddMessage(child + " for " + clsIdle)
+																Exit For
+															Catch ex As Exception
+															End Try
 														End If
 													Next
-												End If
+												End Using
 											Next
-										End If
+										End Using
 									Next
-								End If
+								End Using
 							Next
-						End If
+						End Using
 					Next
 				End If
 			End Using
 		Catch ex As Exception
 			application.log.AddException(ex)
 		End Try
-
-		application.log.addmessage("End clsidleftover CleanUP")
+		Application.Log.AddMessage("End Orphan cleanUp")
+		Application.Log.AddMessage("End clsidleftover CleanUP")
 	End Sub
 
 	Public Sub interfaces(ByVal interfaces As String())
