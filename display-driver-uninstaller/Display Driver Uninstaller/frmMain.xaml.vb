@@ -5199,60 +5199,67 @@ Public Class frmMain
 
 	Private Function WinUpdatePending() As Boolean
 		Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
-			If regkey IsNot Nothing Then
-				Return True
-			Else
-				Return False
-			End If
+			Return (regkey IsNot Nothing)
 		End Using
 	End Function
 
 	Private Function GPUIdentify() As GPUVendor
-		Dim array() As String
+		Dim compatibleIDs() As String
 		Dim isGpu As Boolean
 
 		Try
 			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-				For Each child As String In regkey.GetSubKeyNames
-					If IsNullOrWhitespace(child) OrElse Not StrContainsAny(child, True, "ven_8086", "ven_1002", "ven_10de") Then Continue For
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetSubKeyNames
+						If IsNullOrWhitespace(child) OrElse Not StrContainsAny(child, True, "ven_8086", "ven_1002", "ven_10de") Then Continue For
 
-					Using subregkey As RegistryKey = regkey.OpenSubKey(child)
-						For Each child2 As String In subregkey.GetSubKeyNames
-							array = TryCast(subregkey.OpenSubKey(child2).GetValue("CompatibleIDs"), String())
+						Using regkey2 As RegistryKey = regkey.OpenSubKey(child)
+							If regkey2 Is Nothing Then Continue For
 
-							If array IsNot Nothing AndAlso array.Length > 0 Then
-								isGpu = False
+							For Each child2 As String In regkey2.GetSubKeyNames
+								If IsNullOrWhitespace(child2) Then Continue For
 
-								For Each id As String In array
-									If StrContainsAny(id, True, "pci\cc_03") Then
-										isGpu = True
-										Exit For
-									End If
-								Next
+								Using regkey3 As RegistryKey = regkey2.OpenSubKey(child2)
+									If regkey3 Is Nothing Then Continue For
 
-								If isGpu Then
-									For Each id As String In array
-										If StrContainsAny(id, True, "ven_8086") Then
-											Return GPUVendor.Intel
-										ElseIf StrContainsAny(id, True, "ven_1002") Then
-											Return GPUVendor.AMD
-										ElseIf StrContainsAny(id, True, "ven_10de") Then
-											Return GPUVendor.Nvidia
+									compatibleIDs = TryCast(regkey3.GetValue("CompatibleIDs"), String())
+
+									If compatibleIDs IsNot Nothing AndAlso compatibleIDs.Length > 0 Then
+										isGpu = False
+
+										For Each id As String In compatibleIDs
+											If StrContainsAny(id, True, "pci\cc_03") Then
+												isGpu = True
+												Exit For
+											End If
+										Next
+
+										If isGpu Then
+											For Each id As String In compatibleIDs
+												If StrContainsAny(id, True, "ven_8086") Then
+													Return GPUVendor.Intel
+												ElseIf StrContainsAny(id, True, "ven_1002") Then
+													Return GPUVendor.AMD
+												ElseIf StrContainsAny(id, True, "ven_10de") Then
+													Return GPUVendor.Nvidia
+												End If
+											Next
 										End If
-									Next
-								End If
-							End If
-						Next
-					End Using
-				Next
+									End If
+								End Using
+							Next
+						End Using
+					Next
+				End If
 			End Using
 
 			Return GPUVendor.Nvidia
 		Catch ex As Exception
-			Return GPUVendor.Nvidia
-
-			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 			Application.Log.AddException(ex)
+
+			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+
+			Return GPUVendor.Nvidia
 		End Try
 	End Function
 
