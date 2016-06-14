@@ -84,14 +84,14 @@ Public Class frmMain
 				lblUpdate.Content = Languages.GetTranslation(Me.Name, "lblUpdate", "Text3")
 
 				If Not MyIdentity.IsSystem Then	 'we dont want to open a webpage when the app is under "System" user.
-					Select Case MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text1"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
+					Select Case MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text1"), Application.Settings.AppName, MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
 						Case MessageBoxResult.Yes
 							process.Start("http://www.wagnardmobile.com")
 							closeapp = True
 							closeddu()
 							Exit Sub
 						Case MessageBoxResult.No
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text2"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Information)
+							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text2"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
 						Case MessageBoxResult.Cancel
 							closeapp = True
 							closeddu()
@@ -5064,7 +5064,7 @@ Public Class frmMain
 		UpdateTextMethod(UpdateTextTranslated(6))
 	End Sub
 
-	Private Sub checkpcieroot()	 'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
+	Private Sub checkpcieroot(ByVal config As ThreadSettings)	'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
 
 		Dim array() As String
 
@@ -5124,7 +5124,7 @@ Public Class frmMain
 				End If
 			End Using
 		Catch ex As Exception
-			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
+			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 			Application.Log.AddException(ex)
 		End Try
 	End Sub
@@ -5292,7 +5292,7 @@ Public Class frmMain
 		Try
 			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
 				If regkey IsNot Nothing Then
-					regkey.SetValue("*" + Application.Current.MainWindow.GetType().Assembly.GetName().Name, System.Reflection.Assembly.GetExecutingAssembly().Location)
+					regkey.SetValue("*" + Application.Settings.AppName, System.Reflection.Assembly.GetExecutingAssembly().Location)
 					regkey.SetValue("*UndoSM", "BCDEDIT /deletevalue safeboot")
 				End If
 			End Using
@@ -5594,7 +5594,7 @@ Public Class frmMain
 			If Not Application.Data.IsDebug Then
 
 				If Not isElevated Then
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Settings.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					'closeddu()
 					' Restart program and run as admin
 					Try
@@ -5796,7 +5796,7 @@ Public Class frmMain
 						End If
 					ElseIf archIs64 = False Then
 						If Not File.Exists(Application.Paths.AppBase & "x86\ddudr.exe") Then
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
+							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 
 							btnCleanRestart.IsEnabled = False
 							btnClean.IsEnabled = False
@@ -5878,7 +5878,7 @@ Public Class frmMain
 
 				'We check if there are any reboot from windows update pending. and if so we quit.
 				If WinUpdatePending() Then
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text14"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Warning)
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
 					closeddu()
 					Exit Sub
 				End If
@@ -5927,7 +5927,7 @@ Public Class frmMain
 												.Topmost = True
 												.ShowInTaskbar = False
 												.ResizeMode = Windows.ResizeMode.NoResize
-												.Owner = Application.Current.MainWindow
+												.Owner = Me
 											End With
 
 
@@ -6205,7 +6205,7 @@ Public Class frmMain
 						Next
 					End If
 				Catch ex As Exception
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
 			Else
@@ -6331,7 +6331,7 @@ Public Class frmMain
 					End If
 
 				Catch ex As Exception
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
 
@@ -6392,8 +6392,8 @@ Public Class frmMain
 							End If
 						End Using
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 					End Try
 				Next
 			End If
@@ -6419,7 +6419,7 @@ Public Class frmMain
 					End If
 
 				Catch ex As Exception
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
 			Else
@@ -6468,8 +6468,8 @@ Public Class frmMain
 						End If
 					End Using
 				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 					Application.Log.AddException(ex)
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 				End Try
 			End If
 			UpdateTextMethod(UpdateTextTranslated(25))
@@ -6552,8 +6552,8 @@ Public Class frmMain
 						End If
 
 					Catch ex As Exception
-						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 						Application.Log.AddException(ex)
+						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					End Try
 				Else
 					Try
@@ -6618,8 +6618,8 @@ Public Class frmMain
 						End While
 
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 					End Try
 
 					UpdateTextMethod(UpdateTextTranslated(26))
@@ -6676,7 +6676,7 @@ Public Class frmMain
 						End While
 
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 
@@ -6728,7 +6728,7 @@ Public Class frmMain
 								End If
 							End Using
 						Catch ex As Exception
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
+							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 							Application.Log.AddException(ex)
 						End Try
 
@@ -6773,7 +6773,7 @@ Public Class frmMain
 							End If
 						End Using
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 				End If
@@ -6830,7 +6830,7 @@ Public Class frmMain
 						End Using
 					End If
 				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 					Application.Log.AddException(ex)
 				End Try
 
@@ -6894,7 +6894,7 @@ Public Class frmMain
 						End If
 					End Using
 				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
+					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 					Application.Log.AddException(ex)
 				End Try
 			End If
@@ -6956,7 +6956,7 @@ Public Class frmMain
 							End If
 						End Using
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.OK, MessageBoxImage.Error)
+						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 				End If
@@ -6986,8 +6986,8 @@ Public Class frmMain
 						End If
 
 					Catch ex As Exception
-						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Error)
 						Application.Log.AddException(ex)
+						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					End Try
 				Else
 
@@ -7095,7 +7095,7 @@ Public Class frmMain
 
 
 				cleannvidiafolders(config)
-				checkpcieroot()
+				checkpcieroot(config)
 			End If
 
 			If config.SelectedGPU = GPUVendor.Intel Then
@@ -7170,7 +7170,7 @@ Public Class frmMain
 			EnableControls(True)
 
 			If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
-				If MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text10"), Application.Current.MainWindow.GetType().Assembly.GetName().Name, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
+				If MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text10"), Application.Settings.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
 					closeddu()
 					Exit Sub
 				End If
