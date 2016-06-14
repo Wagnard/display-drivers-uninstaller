@@ -73,25 +73,25 @@ Public Class frmMain
 		If Not Me.Dispatcher.CheckAccess() Then
 			Dispatcher.Invoke(Sub() Checkupdates2())
 		Else
-			lblUpdate.Content = Languages.GetTranslation(Me.Name, "lblUpdate", "Text")
+			lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text")
 
 			Dim updates As Integer = HasUpdates()
 
 			If updates = 1 Then
-				lblUpdate.Content = Languages.GetTranslation(Me.Name, "lblUpdate", "Text2")
+				lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text2")
 
 			ElseIf updates = 2 Then
-				lblUpdate.Content = Languages.GetTranslation(Me.Name, "lblUpdate", "Text3")
+				lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text3")
 
 				If Not MyIdentity.IsSystem Then	 'we dont want to open a webpage when the app is under "System" user.
-					Select Case MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text1"), Application.Settings.AppName, MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
+					Select Case MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text1"), Application.Settings.AppName, MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
 						Case MessageBoxResult.Yes
 							process.Start("http://www.wagnardmobile.com")
 							closeapp = True
 							closeddu()
 							Exit Sub
 						Case MessageBoxResult.No
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text2"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text2"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
 						Case MessageBoxResult.Cancel
 							closeapp = True
 							closeddu()
@@ -101,7 +101,7 @@ Public Class frmMain
 				End If
 
 			ElseIf updates = 3 Then
-				lblUpdate.Content = Languages.GetTranslation(Me.Name, "lblUpdate", "Text4")
+				lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text4")
 			End If
 		End If
 	End Sub
@@ -5124,7 +5124,7 @@ Public Class frmMain
 				End If
 			End Using
 		Catch ex As Exception
-			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+			MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 			Application.Log.AddException(ex)
 		End Try
 	End Sub
@@ -5257,7 +5257,7 @@ Public Class frmMain
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 
-			MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+			MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 
 			Return GPUVendor.Nvidia
 		End Try
@@ -5594,7 +5594,7 @@ Public Class frmMain
 			If Not Application.Data.IsDebug Then
 
 				If Not isElevated Then
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text3"), Application.Settings.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text3"), Application.Settings.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					'closeddu()
 					' Restart program and run as admin
 					Try
@@ -5787,7 +5787,7 @@ Public Class frmMain
 
 					If archIs64 = True Then
 						If Not File.Exists(Application.Paths.AppBase & "x64\ddudr.exe") Then
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 
 							btnCleanRestart.IsEnabled = False
 							btnClean.IsEnabled = False
@@ -5796,7 +5796,7 @@ Public Class frmMain
 						End If
 					ElseIf archIs64 = False Then
 						If Not File.Exists(Application.Paths.AppBase & "x86\ddudr.exe") Then
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 
 							btnCleanRestart.IsEnabled = False
 							btnClean.IsEnabled = False
@@ -5878,7 +5878,7 @@ Public Class frmMain
 
 				'We check if there are any reboot from windows update pending. and if so we quit.
 				If WinUpdatePending() Then
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
+					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
 					closeddu()
 					Exit Sub
 				End If
@@ -6138,26 +6138,24 @@ Public Class frmMain
 
 
 	Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
-		Dim config As ThreadSettings = CType(e.Argument, ThreadSettings)
-		Dim card1 As Integer = Nothing
-		Dim vendid As String = ""
-		Dim vendidexpected As String = ""
-		Dim removegfe As Boolean = config.RemoveGFE
-		Dim array() As String
-
-
-		UpdateTextMethod(UpdateTextTranslated(19))
-
-		preventclose = True
-
-		' Application.Settings is created on MainThread = crossthread
-		' Instead: use config.SelectedGPU  <-- Thread safe (actually, combobox1value not needed anymore)
-		' If you need any properties,  ThreadSettings.vb <-- just put new Propery line there and assign at btnClean / btnCleanShutdown / btnCleanRestart
-
-		'combobox1value = config.SelectedGPU.ToString()
-
+		Dim config As ThreadSettings = TryCast(e.Argument, ThreadSettings)
 
 		Try
+			Dim card1 As Integer = Nothing
+			Dim vendid As String = ""
+			Dim vendidexpected As String = ""
+			Dim removegfe As Boolean = config.RemoveGFE
+			Dim array() As String
+
+			UpdateTextMethod(UpdateTextTranslated(19))
+
+			preventclose = True
+
+			' Application.Settings is created on MainThread = crossthread
+			' Instead: use config.SelectedGPU  <-- Thread safe (actually, combobox1value not needed anymore)
+			' If you need any properties,  ThreadSettings.vb <-- just put new Propery line there and assign at btnClean / btnCleanShutdown / btnCleanRestart
+
+			'combobox1value = config.SelectedGPU.ToString()
 
 
 			Select Case config.SelectedGPU
@@ -6205,7 +6203,7 @@ Public Class frmMain
 						Next
 					End If
 				Catch ex As Exception
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
 			Else
@@ -6331,7 +6329,7 @@ Public Class frmMain
 					End If
 
 				Catch ex As Exception
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
 
@@ -6393,7 +6391,7 @@ Public Class frmMain
 						End Using
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 					End Try
 				Next
 			End If
@@ -6419,7 +6417,7 @@ Public Class frmMain
 					End If
 
 				Catch ex As Exception
-					'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
 			Else
@@ -6469,7 +6467,7 @@ Public Class frmMain
 					End Using
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 				End Try
 			End If
 			UpdateTextMethod(UpdateTextTranslated(25))
@@ -6553,7 +6551,7 @@ Public Class frmMain
 
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+						'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					End Try
 				Else
 					Try
@@ -6619,7 +6617,7 @@ Public Class frmMain
 
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 					End Try
 
 					UpdateTextMethod(UpdateTextTranslated(26))
@@ -6676,7 +6674,7 @@ Public Class frmMain
 						End While
 
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 
@@ -6728,7 +6726,7 @@ Public Class frmMain
 								End If
 							End Using
 						Catch ex As Exception
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 							Application.Log.AddException(ex)
 						End Try
 
@@ -6773,7 +6771,7 @@ Public Class frmMain
 							End If
 						End Using
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 				End If
@@ -6830,7 +6828,7 @@ Public Class frmMain
 						End Using
 					End If
 				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 					Application.Log.AddException(ex)
 				End Try
 
@@ -6894,7 +6892,7 @@ Public Class frmMain
 						End If
 					End Using
 				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 					Application.Log.AddException(ex)
 				End Try
 			End If
@@ -6956,7 +6954,7 @@ Public Class frmMain
 							End If
 						End Using
 					Catch ex As Exception
-						MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
 				End If
@@ -6987,7 +6985,7 @@ Public Class frmMain
 
 					Catch ex As Exception
 						Application.Log.AddException(ex)
-						'MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+						'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					End Try
 				Else
 
@@ -7122,7 +7120,6 @@ Public Class frmMain
 			MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 			stopme = True
 		End Try
-
 	End Sub
 
 	Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorker1.RunWorkerCompleted
@@ -7170,7 +7167,7 @@ Public Class frmMain
 			EnableControls(True)
 
 			If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
-				If MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text10"), Application.Settings.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
+				If MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text10"), Application.Settings.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
 					closeddu()
 					Exit Sub
 				End If
@@ -7511,7 +7508,7 @@ Public Class frmMain
 						If enable Then
 							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
 						Else
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
 						End If
 					End If
 				End Using
@@ -7531,7 +7528,7 @@ Public Class frmMain
 						If enable Then
 							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
 						Else
-							MessageBox.Show(Languages.GetTranslation(Me.Name, "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
 						End If
 					End If
 				End Using
