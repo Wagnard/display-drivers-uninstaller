@@ -7937,7 +7937,7 @@ Public Class CleanupEngine
 
 		If Not IsNullOrWhitespace(directorypath) AndAlso Directory.Exists(directorypath) Then
 			Try
-				My.Computer.FileSystem.DeleteDirectory(directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+				System.IO.Directory.Delete(directorypath, True)
 
 				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
 			Catch ex As UnauthorizedAccessException
@@ -7949,7 +7949,7 @@ Public Class CleanupEngine
 			If fixacls AndAlso Directory.Exists(directorypath) Then
 				ACL.AddDirectorySecurity(directorypath, FileSystemRights.FullControl, AccessControlType.Allow)
 
-				My.Computer.FileSystem.DeleteDirectory(directorypath, FileIO.DeleteDirectoryOption.DeleteAllContents)
+				System.IO.Directory.Delete(directorypath, True)
 
 				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
 			End If
@@ -8013,7 +8013,7 @@ Public Class CleanupEngine
 	Public Sub deletefile(ByVal filepath As String)
 		If Not IsNullOrWhitespace(filepath) Then
 
-			My.Computer.FileSystem.DeleteFile(filepath)	'filepath here include the file too.
+			System.IO.File.Delete(filepath)	'filepath here include the file too.
 
 			Application.Log.AddMessage(filepath & " - " & UpdateTextMethodmessagefn(41))
 		End If
