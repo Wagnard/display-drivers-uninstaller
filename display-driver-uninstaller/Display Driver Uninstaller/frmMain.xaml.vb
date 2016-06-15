@@ -4030,48 +4030,43 @@ Public Class frmMain
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) Then Continue For
 
-						If child.ToLower.Contains("ageia technologies") Then
+						If StrContainsAny(child, True, "ageia technologies") Then
 							If removephysx Then
 								deletesubregkey(regkey, child)
 							End If
 						End If
-						If child.ToLower.Contains("nvidia corporation") Then
-							For Each child2 As String In regkey.OpenSubKey(child).GetSubKeyNames()
-								If IsNullOrWhitespace(child2) = False Then
-									If child2.ToLower.Contains("global") Then
+						If StrContainsAny(child, True, "nvidia corporation") Then
+							Using regkey2 As RegistryKey = regkey.OpenSubKey(child, True)
+								For Each child2 As String In regkey2.GetSubKeyNames()
+									If IsNullOrWhitespace(child2) Then Continue For
+
+									If StrContainsAny(child2, True, "global") Then
 										If removegfe Then
 											Try
-												deletesubregkey(regkey.OpenSubKey(child, True), child2)
+												deletesubregkey(regkey2, child2)
 											Catch ex As Exception
 											End Try
 										Else
-											For Each child3 As String In regkey.OpenSubKey(child + "\" + child2).GetSubKeyNames()
-												If IsNullOrWhitespace(child3) = False Then
-													If child3.ToLower.Contains("gfeclient") Or _
-													 child3.ToLower.Contains("gfexperience") Or _
-													 child3.ToLower.Contains("nvbackend") Or _
-													 child3.ToLower.Contains("nvscaps") Or _
-													 child3.ToLower.Contains("shadowplay") Or _
-													 child3.ToLower.Contains("ledvisualizer") Then
+											Using regkey3 As RegistryKey = regkey2.OpenSubKey(child2, True)
+												For Each child3 As String In regkey3.GetSubKeyNames()
+													If IsNullOrWhitespace(child3) Then Continue For
+
+													If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer") Then
 														'do nothing
 													Else
 														Try
-															deletesubregkey(regkey.OpenSubKey(child + "\" + child2, True), child3)
+															deletesubregkey(regkey3, child3)
 														Catch ex As Exception
 														End Try
 													End If
-												End If
-											Next
+												Next
+											End Using
 										End If
 									End If
-									If child2.ToLower.Contains("logging") Or
-									 child2.ToLower.Contains("physx_systemsoftware") Or
-									 child2.ToLower.Contains("physxupdateloader") Or
-									   child2.ToLower.Contains("installer2") Or
-									   child2.ToLower.Contains("physx") Then
+									If StrContainsAny(child2, True, "logging", "physx_systemsoftware", "physxupdateloader", "installer2", "physx") Then
 										If removephysx Then
 											Try
-												deletesubregkey(regkey.OpenSubKey(child, True), child2)
+												deletesubregkey(regkey2, child2)
 											Catch ex As Exception
 											End Try
 										Else
@@ -4079,20 +4074,20 @@ Public Class frmMain
 												'do nothing
 											Else
 												Try
-													deletesubregkey(regkey.OpenSubKey(child, True), child2)
+													deletesubregkey(regkey2, child2)
 												Catch ex As Exception
 												End Try
 											End If
 										End If
 									End If
+								Next
+								If regkey2.SubKeyCount = 0 Then
+									Try
+										deletesubregkey(regkey, child)
+									Catch ex As Exception
+									End Try
 								End If
-							Next
-							If regkey.OpenSubKey(child).SubKeyCount = 0 Then
-								Try
-									deletesubregkey(regkey, child)
-								Catch ex As Exception
-								End Try
-							End If
+							End Using
 						End If
 					Next
 				End If
@@ -4107,49 +4102,51 @@ Public Class frmMain
 				 ("Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) = False Then
-								Try
+							If IsNullOrWhitespace(child) Then Continue For
+
+							Try
+								Using regkey2 As RegistryKey = regkey.OpenSubKey(child)
 									If removephysx Then
-										If IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("DisplayName"))) = False Then
-											If regkey.OpenSubKey(child).GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
+										If IsNullOrWhitespace(CStr(regkey2.GetValue("DisplayName"))) = False Then
+											If regkey2.GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
 												deletesubregkey(regkey, child)
 												Continue For
 											End If
 										End If
 									End If
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-								End Try
-								If child.ToLower.Contains("display.3dvision") Or
-								 child.ToLower.Contains("3dtv") Or
-								 child.ToLower.Contains("_display.controlpanel") Or
-								 child.ToLower.Contains("_display.driver") Or
-								 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
-								 child.ToLower.Contains("_display.nvirusb") Or
-								 child.ToLower.Contains("_display.physx") AndAlso removephysx Or
-								 child.ToLower.Contains("_display.update") AndAlso removegfe Or
-								 child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
-								 child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
-								 child.ToLower.Contains("_hdaudio.driver") Or
-								 child.ToLower.Contains("_installer") AndAlso removegfe Or
-								 child.ToLower.Contains("_network.service") AndAlso removegfe Or
-								 child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
-								 child.ToLower.Contains("_update.core") AndAlso removegfe Or
-								 child.ToLower.Contains("nvidiastereo") Or
-								 child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
-								 child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
-								 child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Then
-									If removephysx = False And child.ToLower.Contains("physx") Then
-										Continue For
-									End If
-									If config.Remove3DTVPlay = False And child.ToLower.Contains("3dtv") Then
-										Continue For
-									End If
-									Try
-										deletesubregkey(regkey, child)
-									Catch ex As Exception
-									End Try
+								End Using
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
+							If child.ToLower.Contains("display.3dvision") Or
+							 child.ToLower.Contains("3dtv") Or
+							 child.ToLower.Contains("_display.controlpanel") Or
+							 child.ToLower.Contains("_display.driver") Or
+							 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
+							 child.ToLower.Contains("_display.nvirusb") Or
+							 child.ToLower.Contains("_display.physx") AndAlso removephysx Or
+							 child.ToLower.Contains("_display.update") AndAlso removegfe Or
+							 child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
+							 child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
+							 child.ToLower.Contains("_hdaudio.driver") Or
+							 child.ToLower.Contains("_installer") AndAlso removegfe Or
+							 child.ToLower.Contains("_network.service") AndAlso removegfe Or
+							 child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
+							 child.ToLower.Contains("_update.core") AndAlso removegfe Or
+							 child.ToLower.Contains("nvidiastereo") Or
+							 child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
+							 child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
+							 child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Then
+								If removephysx = False And child.ToLower.Contains("physx") Then
+									Continue For
 								End If
+								If config.Remove3DTVPlay = False And child.ToLower.Contains("3dtv") Then
+									Continue For
+								End If
+								Try
+									deletesubregkey(regkey, child)
+								Catch ex As Exception
+								End Try
 							End If
 						Next
 					End If
