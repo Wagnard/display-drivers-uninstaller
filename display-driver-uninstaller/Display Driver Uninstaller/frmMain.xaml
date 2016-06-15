@@ -1,24 +1,24 @@
 ﻿<Window x:Class="frmMain" x:Name="frmMain"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="clr-namespace:Display_Driver_Uninstaller"
 	xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
-	mc:Ignorable="d" 
-	
-    Title="{Binding Settings.AppName, Mode=OneWay}" 
+	mc:Ignorable="d"
+
+	Title="{Binding Settings.AppName, Mode=OneWay}"
 	Height="600" Width="800"
-    MinHeight="540" MinWidth="640" ResizeMode="CanResize" Loaded="frmMain_Loaded" 
-    Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico" 
-    Visibility="Visible" WindowStartupLocation="CenterScreen" d:DesignHeight="550" d:DesignWidth="640">
-	
+	MinHeight="540" MinWidth="640" ResizeMode="CanResize" Loaded="frmMain_Loaded"
+	Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico"
+	Visibility="Visible" WindowStartupLocation="CenterScreen" d:DesignHeight="550" d:DesignWidth="640">
+
 	<Window.Resources>
-        <conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" TrueValue="Visible" FalseValue="Collapsed" />
+		<conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" TrueValue="Visible" FalseValue="Collapsed" />
 		<conv:BooleanToString x:Key="BoolToStr" TrueValue="x64" FalseValue="x86" />
 
-		<ImageBrush x:Key="logoAMD" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/RadeonLogo1.png" Stretch="Uniform" AlignmentY="Bottom" />
-		<ImageBrush x:Key="logoNvidia" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg" Stretch="Uniform" AlignmentY="Bottom" />
+		<ImageBrush x:Key="logoAMD" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/amd_logo.png" Stretch="Uniform" AlignmentY="Bottom" />
+		<ImageBrush x:Key="logoNvidia" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/nvidia_logo.png" Stretch="Uniform" AlignmentY="Bottom" />
 		<ImageBrush x:Key="logoIntel" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/intel_logo.png" Stretch="Uniform" AlignmentY="Bottom" />
 
 		<LinearGradientBrush x:Key="brushNvidia" EndPoint="0.5,1" StartPoint="0.5,0">
@@ -50,17 +50,17 @@
 			</Style.Triggers>
 		</Style>
 	</Window.Style>
-	
+
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto" MinWidth="200" MaxWidth="350" />
-			<ColumnDefinition Width="*" />	
+			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="20" />		<!-- Space ( 30px ) -->
 			<ColumnDefinition Width="250" MaxWidth="300" />
 		</Grid.ColumnDefinitions>
-		
+
 		<Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="30" />		<!-- Space ( 30px ) -->
@@ -69,7 +69,7 @@
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
-		
+
 		<Menu Name="MenuStrip1" FontSize="14" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="4" Background="#28000000">
 			<MenuItem x:Name="OptionsMenuItem" Header="OptionsMenuItem"/>
 
@@ -108,13 +108,13 @@
 				</TextBlock.Text>
 			</TextBlock>
 		</StackPanel>
-	
-		<DockPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="3" Margin="10,0">	
+
+		<DockPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="3" Margin="10,0">
 			<DockPanel DockPanel.Dock="Bottom" Grid.Row="1" Grid.Column="3" >
 				<ComboBox Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedItem="{Binding Settings.SelectedGPU, Mode=TwoWay}" DockPanel.Dock="Top" />
 				<Label Name="lblSelectedGPU" Content="Selected GPU: " DockPanel.Dock="Top" FontWeight="Bold" VerticalAlignment="Center" />
-			</DockPanel>	
-				
+			</DockPanel>
+
 			<Border DockPanel.Dock="Bottom" Margin="0,0,0,10">
 				<Border.Style>
 					<Style TargetType="{x:Type Border}">
@@ -165,18 +165,18 @@
 				<Label x:Name="lblLanguage" Content="Selected language" FontWeight="Bold" />
 				<ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" SelectedItem="{Binding Settings.SelectedLanguage, Mode=TwoWay}" DisplayMemberPath="DisplayText" VerticalAlignment="Top" Height="22" IsReadOnly="True" />
 			</StackPanel>
-			
+
 			<StackPanel Visibility="{Binding Settings.ShowOffer, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" DockPanel.Dock="Top" VerticalAlignment="Center">
 				<Label x:Name="lblOffer" FontWeight="Bold" Content="lblOffer" HorizontalContentAlignment="Center" />
-				
+
 				<Button x:Name="imgOffer">
 					<Button.Template>
 						<ControlTemplate>
-							<Image Source="Resources/btn (2).png" ToolTip="{Binding ElementName=lblOffer, Path=ToolTip, Mode=OneWay}"/>
+							<Image Source="Resources/btn_partner.png" ToolTip="{Binding ElementName=lblOffer, Path=ToolTip, Mode=OneWay}"/>
 						</ControlTemplate>
 					</Button.Template>
 				</Button>
-			</StackPanel>		
+			</StackPanel>
 		</DockPanel>
 
 		<Label Content="lblLog" Grid.Row="3" Name="lblLog" VerticalAlignment="Bottom" VerticalContentAlignment="Center" FontWeight="Bold" />
@@ -188,8 +188,8 @@
 				</Style>
 			</ListBox.ItemContainerStyle>
 		</ListBox>
-		    
-        <Label x:Name="lblUpdate" Content="lblUpdate" Grid.Row="6" Grid.ColumnSpan="2" />
+
+		<Label x:Name="lblUpdate" Content="lblUpdate" Grid.Row="6" Grid.ColumnSpan="2" />
 
 		<Border Grid.Row="7" Grid.ColumnSpan="4" Margin="0,10,0,0" Background="#28000000">
 			<Grid HorizontalAlignment="Center">
@@ -197,7 +197,7 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
-				
+
 				<TextBlock x:Name="lblDonate" Grid.Column="0" Text="lblDonate" FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Margin="6,0" />
 
 				<Button x:Name="imgDonate" Grid.Column="1" HorizontalAlignment="Right" Width="96" >
@@ -209,6 +209,6 @@
 				</Button>
 			</Grid>
 		</Border>
-	
+
 	</Grid>
 </Window>

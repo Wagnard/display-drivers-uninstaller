@@ -1,7 +1,7 @@
 ﻿<Window x:Class="frmLog" x:Name="frmLog"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:Display_Driver_Uninstaller"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:Display_Driver_Uninstaller"
 	xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
 	Title="Log" MinHeight="480" MinWidth="600" >
 
@@ -55,7 +55,7 @@
 
 		<conv:StringIsNotNullOrEmpty x:Key="NullOrEmpty" Reversed="True" />
 		<conv:CombiningConverter x:Key="NullToVis" Converter1="{StaticResource NullOrEmpty}" Converter2="{StaticResource BoolToVisibility}" />
-		
+
 		<ControlTemplate x:Key="logTitle" TargetType="{x:Type Control}">
 			<Grid Margin="5">
 				<Grid.RowDefinitions>
@@ -66,10 +66,10 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				
+
 				<Grid.Resources>
 					<Style TargetType="{x:Type TextBlock}" >
-						
+
 						<Setter Property="Foreground" Value="Black" />
 					</Style>
 				</Grid.Resources>
@@ -81,9 +81,9 @@
 							   Foreground="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrush}, UpdateSourceTrigger=PropertyChanged}" 
 							   FontWeight="Bold"
 							   Text=""
-					
+
 							   Visibility="{Binding IsSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" />
-				
+
 					<TextBlock Grid.Row="0" 
 							   Grid.Column="0" 
 							   VerticalAlignment="Center" 
@@ -91,7 +91,7 @@
 							   FontWeight="Bold"
 							   Text="{Binding Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat='[ {0} ]'}" />
 				</TextBlock>
-				
+
 				<TextBlock Margin="10,0,0,0" 
 						   Grid.RowSpan="2"
 						   Grid.Column="1" 
@@ -123,8 +123,8 @@
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
 
-				<TextBlock Grid.Column="0" Visibility="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
-						   Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToStyle},UpdateSourceTrigger=PropertyChanged}">
+				<TextBlock	Grid.Column="0" Visibility="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
+							Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource BoolToStyle},UpdateSourceTrigger=PropertyChanged}">
 					<TextBlock.Text>
 						<MultiBinding StringFormat="{}{0}{1}" Mode="OneWay">
 							<Binding Path="Key" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
@@ -132,7 +132,7 @@
 						</MultiBinding>
 					</TextBlock.Text>
 				</TextBlock>
-				
+
 				<TextBlock Grid.Column="1" 
 					Visibility="{Binding HasValue, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
 					Style="{Binding HasKey, Mode=OneWay, Converter={StaticResource NotBoolToStyle},UpdateSourceTrigger=PropertyChanged}" 
@@ -198,7 +198,6 @@
 		</Style>
 	</Window.Resources>
 
-	
 	<Grid x:Name="gridRoot">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
@@ -207,19 +206,19 @@
 			<RowDefinition Height="*"  MinHeight="100" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
-		
+
 		<Menu Grid.Row="0" FontSize="14" Background="#FFE6E6E6">
 			<MenuItem x:Name="filtersMenuItem" Header="Filters">
 				<MenuItem x:Name="eventsMenuItem" Header="Show Events" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListEvents, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 				<MenuItem x:Name="warningsMenuItem" Header="Show Warnings" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListWarnings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 				<MenuItem x:Name="errorsMenuItem" Header="Show Errors" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListErrors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 			</MenuItem>
-			
+
 			<MenuItem x:Name="optionsMenuItem" Header="Options">
 				<MenuItem x:Name="copyMenuItem" Header="Copy Enabled" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=EnableCopy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 			</MenuItem>	
 		</Menu>
-		
+
 		<ListBox Name="lbLog"
 				 Grid.Row="1"
 				 DataContext="{Binding Log.LogEntries, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
@@ -235,24 +234,23 @@
 				 VirtualizingStackPanel.IsVirtualizing="True"
 				 VirtualizingStackPanel.VirtualizationMode="Recycling"
 				 ItemTemplate="{StaticResource logItem}">
-	
-			
+
 			<ListBox.CommandBindings>
 				<CommandBinding Command="Copy" Executed="CopyCommand" />
 			</ListBox.CommandBindings>
 			<ListBox.InputBindings>
 				<KeyBinding Key="C" Modifiers="Control" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
 			</ListBox.InputBindings>
-			
+
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="{x:Type Control}" >
 					<Setter Property="Focusable" Value="True" />
 				</Style>
 			</ListBox.ItemContainerStyle>
 		</ListBox>
-		
+
 		<GridSplitter Margin="0,0,0,0" Grid.Row="2" ResizeDirection="Rows" ShowsPreview="True" HorizontalAlignment="Stretch" Background="Black" MinHeight="2" />
-	
+
 		<Border Grid.Row="3" 
 				DataContext="{Binding ElementName=frmLog, Path=SelectedEntry, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 				Background="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrushBg}, UpdateSourceTrigger=PropertyChanged}"
@@ -266,8 +264,8 @@
 						 x:Name="tabEx"
 						 Visibility="{Binding Path=HasException, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" 
 						 Background="{x:Null}">
-				
-					<ListBox  
+
+					<ListBox 
 						Name="lbException"
 						Style="{StaticResource styleCMValues}"
 						ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -285,7 +283,7 @@
 						<ListBox.InputBindings>
 							<KeyBinding Key="C" Modifiers="Control" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
 						</ListBox.InputBindings>
-						
+
 						<ListBox.ItemContainerStyle>		
 							<Style TargetType="{x:Type Control}" >
 								<Setter Property="Focusable" Value="{Binding ElementName=frmLog, Path=EnableCopy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -293,7 +291,7 @@
 						</ListBox.ItemContainerStyle>
 					</ListBox>
 				</TabItem>
-				
+
 				<TabItem Header="[ Values ]" 
 						x:Name="tabValues"
 						Visibility="{Binding Path=HasValues, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" 
@@ -310,14 +308,14 @@
 						SelectionMode="Extended"
 						ItemsSource="{Binding Values, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
 						ItemTemplate="{StaticResource logValues}" Background="{x:Null}">
-					
+
 						<ListBox.CommandBindings>
 							<CommandBinding Command="Copy" Executed="CopyCommand" />
 						</ListBox.CommandBindings>
 						<ListBox.InputBindings>
 							<KeyBinding Key="C" Modifiers="Control" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
 						</ListBox.InputBindings>
-						
+
 						<ListBox.ItemContainerStyle>
 							<Style TargetType="{x:Type Control}" >
 								<Setter Property="Focusable" Value="{Binding ElementName=frmLog, Path=EnableCopy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -325,7 +323,7 @@
 						</ListBox.ItemContainerStyle>
 					</ListBox>
 				</TabItem>
-				
+
 				<TabItem Header="[ No data ]" 
 						 x:Name="tabNoData"
 						 Visibility="{Binding HasAnyData, Mode=OneWay, Converter={StaticResource NotBoolToVisibility},ConverterParameter=True, UpdateSourceTrigger=PropertyChanged}" 
@@ -334,7 +332,7 @@
 				</TabItem>
 			</TabControl>
 		</Border>
-		
+
 		<Border Grid.Row="4" BorderThickness="0,1,0,0" BorderBrush="Black">
 			<Grid>
 				<Grid.ColumnDefinitions>
@@ -345,11 +343,11 @@
 
 				<Button Grid.Column="0" Grid.ColumnSpan="1" Margin="10" Content="Open Log" Grid.Row="1" Height="30" Name="btnOpenLog" VerticalAlignment="Top" MinWidth="80" />
 				<TextBlock Grid.Column="1" Grid.ColumnSpan="1" TextWrapping="Wrap" Name="tbOpenedLog" Visibility="Visible" VerticalAlignment="Center" FontWeight="Bold" Margin="10" />
-		
+
 				<StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Column="2" Grid.ColumnSpan="1">
 					<Button Margin="10" Content="Close" Grid.Row="1" Name="btnClose" HorizontalAlignment="Right" MinWidth="80" Height="30" />
 				</StackPanel>
-			</Grid>	
+			</Grid>
 		</Border>
 	</Grid>
 </Window>

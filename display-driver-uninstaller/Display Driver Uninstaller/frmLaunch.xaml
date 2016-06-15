@@ -1,8 +1,8 @@
 ﻿<Window x:Name="frmLaunch" x:Class="frmLaunch"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="frmLaunch" Height="400" Width="500" ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
-	
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="frmLaunch" Height="400" Width="500" ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
+
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
@@ -17,7 +17,7 @@
 		</Grid.RowDefinitions>
 
 		<Border BorderThickness="1" BorderBrush="Black" Margin="-1,-1,-1,0" Grid.ColumnSpan="2">
-			<Image Name="Image1" Source="/Resources/ddu logo3.png" Stretch="Uniform" Margin="6" />
+			<Image Name="Image1" Source="/Resources/ddu_logo.png" Stretch="Uniform" Margin="6" />
 		</Border>
 
 		<DockPanel Grid.Row="1" Grid.Column="0" Margin="10">

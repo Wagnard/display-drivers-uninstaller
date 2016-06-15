@@ -75,6 +75,11 @@
       <DependentUpon>frmSystemRestore.xaml</DependentUpon>
     </Compile>
     <Compile Include="Inf.vb" />
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Win32\ACL.vb" />
     <Compile Include="AppLog.vb" />
     <Compile Include="AppPaths.vb" />
@@ -165,11 +170,6 @@
       <VBMyExtensionTemplateID>Microsoft.VisualBasic.WPF.MyExtension</VBMyExtensionTemplateID>
       <VBMyExtensionTemplateVersion>1.0.0.0</VBMyExtensionTemplateVersion>
     </Compile>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -177,9 +177,9 @@
     </Compile>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Settings.settings">
@@ -189,13 +189,11 @@
     <AppDesigner Include="My Project\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\amd_logo.png" />
+    <Resource Include="Resources\nvidia_logo.png" />
     <Resource Include="Resources\paexec.exe" />
-    <Resource Include="Resources\RadeonLogo1.png" />
-    <Resource Include="Resources\NV_GF_GTX_preferred_badge_FOR_WEB_ONLY.jpg" />
     <Resource Include="Resources\btn_donate_LG.gif" />
-    <Resource Include="Resources\ddu logo3.png" />
     <Resource Include="Resources\ddudr.exe" />
-    <Resource Include="Resources\intel_logo.png" />
     <Resource Include="Resources\xp64\ddudr.exe" />
     <Resource Include="Resources\xp32\ddudr.exe" />
     <Resource Include="Resources\x86\ddudr.exe" />
@@ -210,7 +208,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\btn %282%29.png" />
+    <Resource Include="Resources\intel_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ddu_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\btn_partner.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
