@@ -5081,7 +5081,7 @@ Public Class frmMain
 												Dim fixUpperFilters As Boolean = False
 
 												For Each u As String In array
-													If StrContainsAny(u, True, "nvpciflt") Then
+													If StrContainsAny(u, True, "nvpciflt", "nvkflt") Then
 
 														'If StrContainsAny(u, True, "nvpciflt", "nvkflt") Then
 														' Orginal didn't check for "nvkflt", should it?
