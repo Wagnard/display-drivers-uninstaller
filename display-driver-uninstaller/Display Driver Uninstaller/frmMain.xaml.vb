@@ -4893,19 +4893,16 @@ Public Class frmMain
 					Try
 						deletevalue(regkey, "IgfxTray")
 					Catch ex As Exception
-						Application.Log.AddException(ex)
 					End Try
 
 					Try
 						deletevalue(regkey, "Persistence")
 					Catch ex As Exception
-						Application.Log.AddException(ex)
 					End Try
 
 					Try
 						deletevalue(regkey, "HotKeysCmds")
 					Catch ex As Exception
-						Application.Log.AddException(ex)
 					End Try
 				End If
 			End Using
