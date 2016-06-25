@@ -1639,13 +1639,30 @@ Public Class frmMain
 							For Each child As String In regkey.GetSubKeyNames()
 								If IsNullOrWhitespace(child) = False Then
 									If child.StartsWith("ATI") Then
-										deletesubregkey(regkey, child)
+										Try
+											deletesubregkey(regkey, child)
+										Catch ex As Exception
+										End Try
 									End If
 								End If
 							Next
 						End If
 					End Using
 				End If
+				Using regkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey(users & "\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetValueNames()
+							If IsNullOrWhitespace(child) Then Continue For
+
+							If StrContainsAny(child, True, "radeonsettings.exe")  Then
+								Try
+									deletevalue(regkey, child)
+								Catch ex As Exception
+								End Try
+							End If
+						Next
+					End If
+				End Using
 			Next
 		Catch ex As Exception
 			Application.Log.AddException(ex)
