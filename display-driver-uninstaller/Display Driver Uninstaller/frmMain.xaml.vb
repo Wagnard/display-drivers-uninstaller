@@ -8134,8 +8134,58 @@ Public Class CleanupEngine
 															Catch ex As Exception
 															End Try
 
-															deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True), wantedvalue)
+															Using crkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+																If crkey IsNot Nothing Then
+																	For Each wantedvaluekey In crkey.GetSubKeyNames
+																		If IsNullOrWhitespace(wantedvaluekey) Then Continue For
+																		If StrContainsAny(wantedvaluekey, True, wantedvalue) Then
+																			Try
+																				deletesubregkey(crkey, wantedvalue)
+																				For Each childfile As String In regkey.GetSubKeyNames()
+																					If IsNullOrWhitespace(childfile) Then Continue For
 
+																					If childfile.ToLower.EndsWith("file") Then
+
+																						Using regkey2 As RegistryKey = regkey.OpenSubKey(childfile)
+																							If regkey2 IsNot Nothing Then
+																								For Each shellEX As String In regkey2.GetSubKeyNames
+																									If IsNullOrWhitespace(shellEX) Then Continue For
+
+																									If StrContainsAny(shellEX, True, "shellex") Then
+																										Using regkey3 As RegistryKey = regkey2.OpenSubKey(shellEX & "\ContextMenuHandlers", True)
+																											If regkey3 IsNot Nothing Then
+																												For Each ShExt As String In regkey3.GetSubKeyNames
+																													If IsNullOrWhitespace(ShExt) Then Continue For
+
+																													If StrContainsAny(ShExt, True, "openglshext", "nvappshext") Then
+																														Using regkey4 As RegistryKey = regkey3.OpenSubKey(ShExt)
+																															If regkey4 IsNot Nothing Then
+																																If StrContainsAny(regkey4.GetValue("", String.Empty).ToString, True, wantedvalue) Then
+																																	Try
+																																		deletesubregkey(regkey3, ShExt)
+																																	Catch ex As Exception
+																																		Application.Log.AddException(ex)
+																																	End Try
+																																End If
+																															End If
+																														End Using
+																													End If
+																												Next
+																											End If
+																										End Using
+																									End If
+																								Next
+																							End If
+																						End Using
+																					End If
+																				Next
+																			Catch ex As Exception
+																				Application.Log.AddException(ex)
+																			End Try
+																		End If
+																	Next
+																End If
+															End Using
 														Catch ex As Exception
 														End Try
 													End If
