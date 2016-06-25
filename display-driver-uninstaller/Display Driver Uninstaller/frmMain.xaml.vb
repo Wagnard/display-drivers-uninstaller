@@ -4356,10 +4356,12 @@ Public Class frmMain
 											Catch ex As Exception
 											End Try
 											'special case only to nvidia afaik. there i a clsid for a control pannel that link from namespace.
-											Try
-												deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True), child)
-											Catch ex As Exception
-											End Try
+											Using regkey2 As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True)
+												Try
+													deletesubregkey(regkey2, child)
+												Catch ex As Exception
+												End Try
+											End Using
 										End If
 									End If
 								End If
@@ -4524,10 +4526,12 @@ Public Class frmMain
 				Catch ex As Exception
 				End Try
 				If regkey.SubKeyCount = 0 Then
-					Try
-						deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE", True), "NVIDIA Corporation")
-					Catch ex As Exception
-					End Try
+					Using regkey2 As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("VirtualStore\MACHINE\SOFTWARE", True)
+						Try
+							deletesubregkey(regkey2, "NVIDIA Corporation")
+						Catch ex As Exception
+						End Try
+					End Using
 				End If
 			End If
 		End Using
@@ -4542,10 +4546,12 @@ Public Class frmMain
 							Catch ex As Exception
 							End Try
 							If regkey.SubKeyCount = 0 Then
-								Try
-									deletesubregkey(My.Computer.Registry.Users.OpenSubKey(users & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE", True), "NVIDIA Corporation")
-								Catch ex As Exception
-								End Try
+								Using regkey2 As RegistryKey = My.Computer.Registry.Users.OpenSubKey(users & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE", True)
+									Try
+										deletesubregkey(regkey2, "NVIDIA Corporation")
+									Catch ex As Exception
+									End Try
+								End Using
 							End If
 						End If
 					End Using
@@ -4559,13 +4565,20 @@ Public Class frmMain
 			For Each child As String In My.Computer.Registry.Users.GetSubKeyNames()
 				If Not IsNullOrWhitespace(child) Then
 					If child.ToLower.Contains("s-1-5") Then
-						Try
-							deletesubregkey(My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True), "Global")
-							If My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", False).SubKeyCount = 0 Then
-								deletesubregkey(My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE", True), "NVIDIA Corporation")
-							End If
-						Catch ex As Exception
-						End Try
+						Using regkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
+							Try
+								deletesubregkey(regkey, "Global")
+								If regkey.SubKeyCount = 0 Then
+									Using regkey2 As RegistryKey = My.Computer.Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE", True)
+										Try
+											deletesubregkey(regkey2, "NVIDIA Corporation")
+										Catch ex As Exception
+										End Try
+									End Using
+								End If
+							Catch ex As Exception
+							End Try
+						End Using
 					End If
 				End If
 			Next
@@ -4654,27 +4667,31 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		Try
-			deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" &
-			   "Display\shellex\PropertySheetHandlers", True), "NVIDIA CPL Extension")
-		Catch ex As Exception
-		End Try
+		Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" &
+				   "Display\shellex\PropertySheetHandlers", True)
+			Try
+				deletesubregkey(regkey, "NVIDIA CPL Extension")
+			Catch ex As Exception
+			End Try
+		End Using
 
 		Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Extended Properties", False)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
-					If IsNullOrWhitespace(child) = False Then
-						For Each childs As String In regkey.OpenSubKey(child).GetValueNames()
-							If Not IsNullOrWhitespace(childs) Then
-								If childs.ToLower.Contains("nvcpl.cpl") Then
-									Try
-										deletevalue(regkey.OpenSubKey(child, True), childs)
-									Catch ex As Exception
-									End Try
-								End If
+					If IsNullOrWhitespace(child) Then Continue For
+
+					Using regkey2 As RegistryKey = regkey.OpenSubKey(child, True)
+						For Each childs As String In regkey2.GetValueNames()
+							If IsNullOrWhitespace(childs) Then Continue For
+
+							If StrContainsAny(childs, True, "nvcpl.cpl") Then
+								Try
+									deletevalue(regkey2, childs)
+								Catch ex As Exception
+								End Try
 							End If
 						Next
-					End If
+					End Using
 				Next
 			End If
 		End Using
@@ -4684,13 +4701,13 @@ Public Class frmMain
 			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetValueNames()
-						If IsNullOrWhitespace(child) = False Then
-							If regkey.GetValue(child).ToString.ToLower.Contains("nvcpl desktopcontext class") Then
-								Try
-									deletevalue(regkey, child)
-								Catch ex As Exception
-								End Try
-							End If
+						If IsNullOrWhitespace(child) Then Continue For
+
+						If StrContainsAny(regkey.GetValue(child, String.Empty).ToString, False, "nvcpl desktopcontext class") Then
+							Try
+								deletevalue(regkey, child)
+							Catch ex As Exception
+							End Try
 						End If
 					Next
 				End If
@@ -4701,31 +4718,34 @@ Public Class frmMain
 		'-----------------------------
 
 		'Shell ext
-		Try
-			deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True), "NvCplDesktopContext")
-		Catch ex As Exception
-		End Try
+		Using regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True)
+			Try
+				deletesubregkey(regkey, "NvCplDesktopContext")
+			Catch ex As Exception
+			End Try
 
-		Try
-			deletesubregkey(My.Computer.Registry.ClassesRoot.OpenSubKey("Directory\background\shellex\ContextMenuHandlers", True), "00nView")
-		Catch ex As Exception
-		End Try
+			Try
+				deletesubregkey(regkey, "00nView")
+			Catch ex As Exception
+			End Try
+		End Using
 
-		Try
-			deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True), "NvCplDesktopContext")
-		Catch ex As Exception
-		End Try
+		Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True)
+			Try
+				deletesubregkey(regkey, "NvCplDesktopContext")
+			Catch ex As Exception
+			End Try
 
-		Try
-			deletesubregkey(My.Computer.Registry.LocalMachine.OpenSubKey("Software\Classes\Directory\background\shellex\ContextMenuHandlers", True), "00nView")
-		Catch ex As Exception
-		End Try
+			Try
+				deletesubregkey(regkey, "00nView")
+			Catch ex As Exception
+			End Try
+		End Using
 
 		'Cleaning of some "open with application" related to 3d vision
 		Using regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("jpsfile\shell\open\command", True)
 			If regkey IsNot Nothing Then
-				If (Not IsNullOrWhitespace(CType(regkey.GetValue(""), String))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
-				 ("nvstview") Then
+				If (Not IsNullOrWhitespace(CType(regkey.GetValue(""), String))) AndAlso StrContainsAny(regkey.GetValue("", String.Empty).ToString, True, "nvstview") Then
 					Try
 						deletesubregkey(My.Computer.Registry.ClassesRoot, "jpsfile")
 					Catch ex As Exception
@@ -4736,8 +4756,7 @@ Public Class frmMain
 
 		Using regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("mpofile\shell\open\command", True)
 			If regkey IsNot Nothing Then
-				If (Not IsNullOrWhitespace(CStr(regkey.GetValue("")))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
-				 ("nvstview") Then
+				If (Not IsNullOrWhitespace(CStr(regkey.GetValue("")))) AndAlso StrContainsAny(regkey.GetValue("", String.Empty).ToString, True, "nvstview") Then
 					Try
 						deletesubregkey(My.Computer.Registry.ClassesRoot, "mpofile")
 					Catch ex As Exception
@@ -4748,8 +4767,7 @@ Public Class frmMain
 
 		Using regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("pnsfile\shell\open\command", True)
 			If regkey IsNot Nothing Then
-				If (Not IsNullOrWhitespace(CStr(regkey.GetValue("")))) AndAlso regkey.GetValue("").ToString.ToLower.Contains _
-				 ("nvstview") Then
+				If (Not IsNullOrWhitespace(CStr(regkey.GetValue("")))) AndAlso StrContainsAny(regkey.GetValue("", String.Empty).ToString, True, "nvstview") Then
 					Try
 						deletesubregkey(My.Computer.Registry.ClassesRoot, "pnsfile")
 					Catch ex As Exception
