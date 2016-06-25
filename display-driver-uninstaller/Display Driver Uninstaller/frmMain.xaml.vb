@@ -3326,10 +3326,8 @@ Public Class frmMain
 											For Each Keyname As String In regkey2.GetValueNames
 												If IsNullOrWhitespace(Keyname) Then Continue For
 
-												If Keyname.ToLower.Contains("nvstlink.exe") Or
-												 Keyname.ToLower.Contains("nvstview.exe") Or
-												   (Keyname.ToLower.Contains("gfexperience.exe") AndAlso config.RemoveGFE) Or
-												   Keyname.ToLower.Contains("nvcpluir.dll") Then
+												If StrContainsAny(Keyname, True, "nvstlink.exe", "nvstview.exe", "nvcpluir.dll", "nvcplui.exe") Or
+													(StrContainsAny(Keyname, True, "gfexperience.exe") AndAlso config.RemoveGFE) Then
 													Try
 														deletevalue(regkey2, Keyname)
 													Catch ex As Exception
@@ -3344,6 +3342,23 @@ Public Class frmMain
 						Next
 					End If
 				End Using
+
+				Using regkey As RegistryKey = My.Computer.Registry.Users.OpenSubKey(regusers & "\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetValueNames()
+							If IsNullOrWhitespace(child) Then Continue For
+
+							If StrContainsAny(child, True, "nvcplui.exe", "nvtray.exe") Or
+								(StrContainsAny(child, True, "nvbackend.exe") AndAlso config.RemoveGFE) Then
+								Try
+									deletevalue(regkey, child)
+								Catch ex As Exception
+								End Try
+							End If
+						Next
+					End If
+				End Using
+
 			Next
 		Catch ex As Exception
 			Application.Log.AddException(ex)
@@ -3891,6 +3906,9 @@ Public Class frmMain
 							Next
 						End If
 					End Using
+
+
+
 				End If
 			Next
 		Catch ex As Exception
