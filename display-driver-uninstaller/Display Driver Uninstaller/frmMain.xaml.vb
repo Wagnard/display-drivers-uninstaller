@@ -5208,38 +5208,44 @@ Public Class frmMain
 	End Sub
 
 	Private Sub restartcomputer()
-
 		Application.Log.AddMessage("Restarting Computer ")
-		processinfo.FileName = "shutdown"
-		processinfo.Arguments = "/r /t 0"
-		processinfo.WindowStyle = ProcessWindowStyle.Hidden
-		processinfo.UseShellExecute = True
-		processinfo.CreateNoWindow = True
-		processinfo.RedirectStandardOutput = False
 
-		process.StartInfo = processinfo
-		process.Start()
+		Application.SaveData()
+
+		process.Start(New ProcessStartInfo("shutdown", "/r /t 0") With
+		  {
+		   .WindowStyle = ProcessWindowStyle.Hidden,
+		   .UseShellExecute = True,
+		   .CreateNoWindow = True,
+		   .RedirectStandardOutput = False
+		  }
+		 )
 		process.WaitForExit()
 		process.Close()
-		closeddu()
 
+		closeddu()
 	End Sub
 
 	Private Sub shutdowncomputer()
-		preventclose = False
-		processinfo.FileName = "shutdown"
-		processinfo.Arguments = "/s /t 0"
-		processinfo.WindowStyle = ProcessWindowStyle.Hidden
-		processinfo.UseShellExecute = True
-		processinfo.CreateNoWindow = True
-		processinfo.RedirectStandardOutput = False
+		Application.Log.AddMessage("Shutdown Computer ")
 
-		process.StartInfo = processinfo
-		process.Start()
+		Application.SaveData()
+
+		preventclose = False
+
+		process.Start(New ProcessStartInfo("shutdown", "/s /t 0") With
+		  {
+		   .WindowStyle = ProcessWindowStyle.Hidden,
+		   .UseShellExecute = True,
+		   .CreateNoWindow = True,
+		   .RedirectStandardOutput = False
+		  }
+		 )
+
 		process.WaitForExit()
 		process.Close()
-		closeddu()
 
+		closeddu()
 	End Sub
 
 	Private Sub rescan()
@@ -6209,8 +6215,7 @@ Public Class frmMain
 			End Try
 		End If
 
-		Application.Settings.Save()
-		Application.Log.SaveToFile()
+		Application.SaveData()
 	End Sub
 
 
@@ -7928,7 +7933,7 @@ Public Class frmMain
 	End Sub
 
 	Private Sub RegMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles RegMenuItem.Click
-		ACL.test3()
+		MessageBox.Show(If(ACL.Registry.FixRights("HKEY_LOCAL_MACHINE\SOFTWARE\ATI"), "Fix'd!", "Fix failed"), "Test", MessageBoxButton.OK, MessageBoxImage.Information)
 	End Sub
 
 	Private Sub restoreMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles restoreMenuItem.Click

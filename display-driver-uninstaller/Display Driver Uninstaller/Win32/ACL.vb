@@ -9,16 +9,9 @@ Imports System.Security.Principal
 
 Namespace Win32
 	Namespace ACL
-		Public Module ACL
+		Public Module Priviliges
 
 #Region "Consts"
-			Private ReadOnly HKEY_CLASSES_ROOT As IntPtr = New IntPtr(-2147483648)
-			Private ReadOnly HKEY_CURRENT_USER As IntPtr = New IntPtr(-2147483647)
-			Private ReadOnly HKEY_LOCAL_MACHINE As IntPtr = New IntPtr(-2147483646)
-			Private ReadOnly HKEY_USERS As IntPtr = New IntPtr(-2147483645)
-			Private ReadOnly HKEY_PERFORMANCE_DATA As IntPtr = New IntPtr(-2147483644)
-			Private ReadOnly HKEY_CURRENT_CONFIG As IntPtr = New IntPtr(-2147483643)
-			Private ReadOnly HKEY_DYN_DATA As IntPtr = New IntPtr(-2147483642)
 
 			''' <remarks>https://technet.microsoft.com/en-us/library/dd349804%28v=ws.10%29.aspx</remarks>
 			Public Class SE
@@ -198,18 +191,6 @@ Namespace Win32
 
 #Region "Enums"
 
-			Private Enum SID_NAME_USE As Integer
-				SidTypeUser = 1
-				SidTypeGroup
-				SidTypeDomain
-				SidTypeAlias
-				SidTypeWellKnownGroup
-				SidTypeDeletedAccount
-				SidTypeInvalid
-				SidTypeUnknown
-				SidTypeComputer
-			End Enum
-
 			Private Enum SE_OBJECT_TYPE As UInt32
 				''' <summary>Unknown object type.</summary>
 				SE_UNKNOWN_OBJECT_TYPE
@@ -270,124 +251,6 @@ Namespace Win32
 
 				''' <summary>Indicates an object for a registry entry under WOW64. </summary>
 				SE_REGISTRY_WOW64_32KEY
-			End Enum
-
-			<Flags()>
-			Private Enum SECURITY_INFORMATION As UInt32
-				''' <summary>The owner identifier of the object is being referenced.</summary>
-				OWNER_SECURITY_INFORMATION = &H1UI
-
-				''' <summary>The primary group identifier of the object is being referenced.</summary>
-				GROUP_SECURITY_INFORMATION = &H2UI
-
-				''' <summary>The DACL of the object is being referenced.</summary>
-				DACL_SECURITY_INFORMATION = &H4UI
-
-				''' <summary>The SACL of the object is being referenced.</summary>
-				SACL_SECURITY_INFORMATION = &H8UI
-
-				''' <summary>The mandatory integrity label is being referenced.</summary>
-				LABEL_SECURITY_INFORMATION = &H10UI
-
-				''' <summary>The SACL inherits access control entries (ACEs) from the parent object.</summary>
-				UNPROTECTED_SACL_SECURITY_INFORMATION
-
-				''' <summary>The DACL inherits ACEs from the parent object.</summary>
-				UNPROTECTED_DACL_SECURITY_INFORMATION
-
-				''' <summary>The SACL cannot inherit ACEs.</summary>
-				PROTECTED_SACL_SECURITY_INFORMATION
-
-				''' <summary>The DACL cannot inherit ACEs.</summary>
-				PROTECTED_DACL_SECURITY_INFORMATION
-
-				''' <summary>A SYSTEM_RESOURCE_ATTRIBUTE_ACE (section 2.4.4.15) is being referenced.</summary>
-				''' <remarks>https://msdn.microsoft.com/en-us/library/hh877837.aspx</remarks>
-				ATTRIBUTE_SECURITY_INFORMATION
-
-				''' <summary>A SYSTEM_SCOPED_POLICY_ID_ACE (section 2.4.4.16) is being referenced.</summary>
-				''' <remarks>https://msdn.microsoft.com/en-us/library/hh877846.aspx</remarks>
-				SCOPE_SECURITY_INFORMATION
-
-				''' <summary>The security descriptor is being accessed for use in a backup operation.</summary>
-				BACKUP_SECURITY_INFORMATION
-			End Enum
-
-			<Flags()>
-			Private Enum REGSAM As UInt32
-				''' <summary>Permission to query subkey data.</summary>
-				KEY_QUERY_VALUE = &H1UI
-
-				''' <summary>Permission to set subkey data.</summary>
-				KEY_SET_VALUE = &H2UI
-
-				''' <summary>Permission to create subkeys.
-				''' Subkeys directly underneath the 'HKEY_LOCAL_MACHINE' and 'HKEY_USERS'
-				''' predefined keys cannot be created even if this bit is set.</summary>
-				KEY_CREATE_SUB_KEY = &H4UI
-
-				''' <summary>Permission to enumerate subkeys.</summary>
-				KEY_ENUMERATE_SUB_KEYS = &H8UI
-
-				''' <summary>Permission to create a symbolic link.</summary>
-				KEY_CREATE_LINK = &H20UI
-
-				''' <summary>When set, indicates that a registry server on a 64-bit operating system operates on the 64-bit key namespace.</summary>
-				KEY_WOW64_64KEY = &H100UI
-
-				''' <summary>When set, indicates that a registry server on a 64-bit operating system operates on the 32-bit key namespace.</summary>
-				KEY_WOW64_32KEY = &H200UI
-
-				''' <summary>Permission for read access.</summary>
-				KEY_EXECUTE = &H20019UI
-
-				''' <summary>Permission for change notification.</summary>
-				KEY_NOTIFY = &H10UI
-
-				''' <summary>Combination of KEY_QUERY_VALUE, KEY_ENUMERATE_SUB_KEYS, and KEY_NOTIFY access.</summary>
-				KEY_READ = &H20019UI
-
-				''' <summary>Combination of KEY_SET_VALUE and KEY_CREATE_SUB_KEY access.</summary>
-				KEY_WRITE = &H20006UI
-
-				''' <summary>Combination of KEY_QUERY_VALUE, KEY_ENUMERATE_SUB_KEYS, KEY_NOTIFY, KEY_CREATE_SUB_KEY, KEY_CREATE_LINK, and KEY_SET_VALUE access.</summary>
-				KEY_ALL_ACCESS = &H2F003FUI
-			End Enum
-
-			<Flags()>
-			Private Enum REG_OPTION As UInt32
-				''' <summary>This key is not volatile; this is the default.
-				''' The information is stored in a file and is preserved when the system is restarted.
-				''' The RegSaveKey function saves keys that are not volatile.</summary>
-				NON_VOLATILE = &H0UI
-
-				''' <summary>All keys created by the function are volatile.
-				''' The information is stored in memory and is not preserved when the corresponding registry hive is unloaded.
-				''' For HKEY_LOCAL_MACHINE, this occurs only when the system initiates a full shutdown.
-				''' For registry keys loaded by the RegLoadKey function, this occurs when the corresponding RegUnLoadKey is performed. 
-				''' The RegSaveKey function does not save volatile keys. This flag is ignored for keys that already exist. 
-				''' 
-				''' Note: On a user selected shutdown, a fast startup shutdown is the default behavior for the system.</summary>
-				VOLATILE = &H1UI
-
-				''' <summary>This key is a symbolic link. 
-				''' The target path is assigned to the L"SymbolicLinkValue" value of the key.
-				''' The target path must be an absolute registry path.
-				''' 
-				''' Note: Registry symbolic links should only be used for for application compatibility when absolutely necessary.</summary>
-				CREATE_LINK = &H2UI
-
-				''' <summary>If this flag is set, the function ignores the samDesired parameter and attempts to open the key with the access required to backup or restore the key. 
-				''' If the calling thread has the SE_BACKUP_NAME privilege enabled, 
-				''' the key is opened with the ACCESS_SYSTEM_SECURITY and KEY_READ access rights.
-				''' 
-				''' If the calling thread has the SE_RESTORE_NAME privilege enabled, beginning with Windows Vista, 
-				''' the key is opened with the ACCESS_SYSTEM_SECURITY, DELETE and KEY_WRITE access rights. 
-				''' 
-				''' If both privileges are enabled, the key has the combined access rights for both privileges. 
-				''' For more information, see Running with Special Privileges.</summary>
-				''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/ms717802(v=vs.85).aspx</remarks>
-				BACKUP_RESTORE = &H4UI
 			End Enum
 
 			<Flags()>
@@ -515,91 +378,6 @@ Namespace Win32
    <[Out]()> ByRef lpLuid As LUID) As <MarshalAs(UnmanagedType.Bool)> Boolean
 			End Function
 
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function RegGetValue(
-   <[In]()> ByVal hKey As IntPtr,
-   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpSubKey As String,
-   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpValue As String,
-   <[In](), [Optional]()> ByVal dwFlags As UInt32,
-   <[Out](), [Optional]()> ByRef pdwType As UInt32,
-   <[Out](), [Optional]()> ByVal pvData As IntPtr,
-   <[In](), [Out](), [Optional]()> ByRef pcbData As UInt32) As UInt32
-			End Function
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function RegGetKeySecurity(
-   <[In]()> ByVal hKey As IntPtr,
-   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
-   <[In](), [Out](), [Optional]()> ByRef pSecurityDescriptor As IntPtr,
-   <[In](), [Out]()> ByRef lpcbSecurityDescriptor As UInt32) As UInt32
-			End Function
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function GetSecurityDescriptorOwner(
-   <[In]()> ByRef pSecurityDescriptor As IntPtr,
-   <[In](), [Out]()> ByRef pOwner As IntPtr,
-   <[Out]()> ByRef lpbOwnerDefaulted As Integer) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function IsValidSecurityDescriptor(
-   <[In]()> ByVal pSecurityDescriptor As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function InitializeSecurityDescriptor(
-   <[Out]()> ByVal pSecurityDescriptor As IntPtr,
-   <[In]()> ByVal dwRevision As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function RegOpenKeyEx(
-   <[In]()> ByVal hKey As IntPtr,
-   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal subKey As String,
-   <[In]()> ByVal ulOptions As UInt32,
-   <[In]()> ByVal samDesired As REGSAM,
-   <[Out]()> ByRef phkResult As IntPtr) As UInt32
-			End Function
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function RegCloseKey(
- <[In]()> ByVal hKey As IntPtr) As UInt32
-			End Function
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function RegCreateKeyEx(
-   <[In]()> ByVal hKey As IntPtr,
-   <[In]()> lpSubKey As String,
-   ByVal Reserved As Integer,
-   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> lpClass As String,
-   <[In]()> dwOptions As REG_OPTION,
-   <[In]()> samDesired As REGSAM,
-   <[In](), [Optional]()> lpSecurityAttributes As IntPtr,
-   <[Out]()> ByRef hkResult As IntPtr,
-   <[Out](), [Optional]()> ByRef lpdwDisposition As UInt32) As UInt32
-			End Function
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function GetSecurityInfo(
-   <[In]()> ByVal handle As IntPtr,
-   <[In]()> ByVal objectType As SE_OBJECT_TYPE,
-   <[In]()> ByVal securityInfo As SECURITY_INFORMATION,
-   <[Out](), [Optional]()> ByRef sidOwner As IntPtr,
-   <[Out](), [Optional]()> ByRef sidGroup As IntPtr,
-   <[Out](), [Optional]()> ByRef dacl As IntPtr,
-   <[Out](), [Optional]()> ByRef sacl As IntPtr,
-   <[Out](), [Optional]()> ByRef securityDescriptor As IntPtr) As UInt32
-			End Function
-
-			<DllImport("advapi32", CharSet:=CharSet.Auto, SetLastError:=True)>
-			Private Function ConvertSidToStringSid(
-   <[In]()> ByRef Sid As IntPtr,
-   <[Out](), MarshalAs(UnmanagedType.LPTStr)> ByRef StringSid As String) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-
-
 			<DllImport("kernel32.dll", SetLastError:=True)>
 			Private Function LocalFree(
    <[In]()> ByVal handle As IntPtr) As IntPtr
@@ -610,37 +388,8 @@ Namespace Win32
    <[In]()> ByVal hHandle As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 			End Function
 
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function InitializeSid(
-   <[Out]()> ByRef Sid As IntPtr,
-   <[In]()> ByVal pIdentifierAuthority As IntPtr,
-   <[In]()> ByVal nSubAuthorityCount As Byte) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-			'BOOL WINAPI ConvertSecurityDescriptorToStringSecurityDescriptor(
-			'  _In_  PSECURITY_DESCRIPTOR SecurityDescriptor,
-			'  _In_  DWORD                RequestedStringSDRevision,
-			'  _In_  SECURITY_INFORMATION SecurityInformation,
-			'  _Out_ LPTSTR               *StringSecurityDescriptor,
-			'  _Out_ PULONG               StringSecurityDescriptorLen
-			');
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function GetSecurityDescriptorControl(
-   <[In]()> ByRef pSecurityDescriptor As IntPtr,
-   <[Out]()> ByRef pControl As IntPtr,
-   <[Out]()> ByRef lpdwRevision As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function ConvertSecurityDescriptorToStringSecurityDescriptor(
-   <[In]()> ByRef SecurityDescriptor As IntPtr,
-   <[In]()> ByVal RequestedStringSDRevision As UInt32,
-   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
-   <[Out](), MarshalAs(UnmanagedType.LPWStr)> ByRef StringSecurityDescriptor As String,
-   <[Out]()> ByRef StringSecurityDescriptorLen As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
 #End Region
+
 
 			Public Sub AddPriviliges(ByVal ParamArray priviliges() As String)
 				AdjustToken(True, GetCurrentProcess(), priviliges)
@@ -713,7 +462,7 @@ Namespace Win32
 				' current security settings.
 				'Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
 				'Activate necessary admin privileges to make changes without NTFS perms
-				ACl.AddPriviliges(ACl.SE.SECURITY_NAME, ACl.SE.BACKUP_NAME, ACl.SE.RESTORE_NAME, ACl.SE.TAKE_OWNERSHIP_NAME)
+				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
 
 				'Create a new acl from scratch.
 				'Dim newacl As New System.Security.AccessControl.DirectorySecurity()
@@ -743,7 +492,7 @@ Namespace Win32
 				Dim rs As New RegistrySecurity()
 				Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
 
-				ACl.AddPriviliges(ACl.SE.SECURITY_NAME, ACl.SE.BACKUP_NAME, ACl.SE.RESTORE_NAME, ACl.SE.TAKE_OWNERSHIP_NAME)
+				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
 
 				'Dim originalsid = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions).GetAccessControl.GetOwner(GetType(System.Security.Principal.SecurityIdentifier))
 				'MsgBox(originalsid.ToString)
@@ -783,100 +532,381 @@ Namespace Win32
 			End Sub
 
 
-			Public Sub test3(Optional ByVal regKey As String = "SOFTWARE\ATI")
-				'  Throw New Win32Exception(5)
+		End Module
 
-				AddPriviliges(SE.BACKUP_NAME, SE.RESTORE_NAME, SE.SECURITY_NAME, SE.TAKE_OWNERSHIP_NAME)
+		Public Class Registry
 
-				Dim ptrRegKey As IntPtr = IntPtr.Zero
-				Dim returnValue As UInt32
+#Region "Consts"
+			'For Testing
+			'Private Shared ReadOnly SYSTEM_ACCOUNT As IdentityReference = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)	
+			Private Shared ReadOnly SYSTEM_ACCOUNT As IdentityReference = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
+			Private Shared ReadOnly HKEY_CLASSES_ROOT As IntPtr = New IntPtr(-2147483648)
+			Private Shared ReadOnly HKEY_CURRENT_USER As IntPtr = New IntPtr(-2147483647)
+			Private Shared ReadOnly HKEY_LOCAL_MACHINE As IntPtr = New IntPtr(-2147483646)
+			Private Shared ReadOnly HKEY_USERS As IntPtr = New IntPtr(-2147483645)
+			Private Shared ReadOnly HKEY_CURRENT_CONFIG As IntPtr = New IntPtr(-2147483643)
+			'	Private ReadOnly HKEY_PERFORMANCE_DATA As IntPtr = New IntPtr(-2147483644)
+			'	Private ReadOnly HKEY_DYN_DATA As IntPtr = New IntPtr(-2147483642)
 
-				Try
-					returnValue = RegOpenKeyEx(HKEY_LOCAL_MACHINE, regKey, 0UI, REGSAM.KEY_READ, ptrRegKey)
-					MsgBox("RegOpenKeyEx: " & returnValue.ToString())
+#End Region
 
-					If returnValue <> 0UI Then
-						Throw New Win32Exception(GetInt32(returnValue))
-					End If
+#Region "Enums"
 
-					Dim ptrOwner As IntPtr = IntPtr.Zero
-					Dim ptrSecurity As IntPtr = IntPtr.Zero
-					Dim requiredSize As UInt32 = 0UI
+			<Flags()>
+			Private Enum SECURITY_INFORMATION As UInt32
+				''' <summary>The owner identifier of the object is being referenced.</summary>
+				OWNER_SECURITY_INFORMATION = &H1UI
 
-					returnValue = RegGetKeySecurity(ptrRegKey, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION, ptrSecurity, requiredSize)
+				''' <summary>The primary group identifier of the object is being referenced.</summary>
+				GROUP_SECURITY_INFORMATION = &H2UI
 
-					If returnValue <> Errors.INSUFFICIENT_BUFFER Then
-						Throw New Win32Exception(GetInt32(returnValue))
-					End If
+				''' <summary>The DACL of the object is being referenced.</summary>
+				DACL_SECURITY_INFORMATION = &H4UI
 
-					ptrSecurity = Marshal.AllocHGlobal(GetInt32(requiredSize))
-					returnValue = 0UI
+				''' <summary>The SACL of the object is being referenced.</summary>
+				SACL_SECURITY_INFORMATION = &H8UI
 
-					If Not InitializeSecurityDescriptor(ptrSecurity, 1) Then
-						Throw New Win32Exception(GetLastWin32Error)
-					End If
+				''' <summary>The mandatory integrity label is being referenced.</summary>
+				LABEL_SECURITY_INFORMATION = &H10UI
 
-					returnValue = RegGetKeySecurity(ptrRegKey, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION, ptrSecurity, requiredSize)
+				''' <summary>The SACL inherits access control entries (ACEs) from the parent object.</summary>
+				UNPROTECTED_SACL_SECURITY_INFORMATION
 
-					If returnValue <> 0UI Then
-						Throw New Win32Exception(GetInt32(returnValue))
-					End If
+				''' <summary>The DACL inherits ACEs from the parent object.</summary>
+				UNPROTECTED_DACL_SECURITY_INFORMATION
 
-					Dim rev As UInt32
-					Dim ptrSecurityControl As IntPtr = IntPtr.Zero
-					Dim getRev As Boolean = GetSecurityDescriptorControl(ptrSecurity, ptrSecurityControl, rev)
-					Dim isValid As Boolean = IsValidSecurityDescriptor(ptrSecurity)
+				''' <summary>The SACL cannot inherit ACEs.</summary>
+				PROTECTED_SACL_SECURITY_INFORMATION
 
-					Dim strOwner As String = Nothing
-					Dim strOwnerLen As UInt32
+				''' <summary>The DACL cannot inherit ACEs.</summary>
+				PROTECTED_DACL_SECURITY_INFORMATION
 
-					Dim success As Boolean = ConvertSecurityDescriptorToStringSecurityDescriptor(ptrSecurity, rev, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION, strOwner, strOwnerLen)
+				''' <summary>A SYSTEM_RESOURCE_ATTRIBUTE_ACE (section 2.4.4.15) is being referenced.</summary>
+				''' <remarks>https://msdn.microsoft.com/en-us/library/hh877837.aspx</remarks>
+				ATTRIBUTE_SECURITY_INFORMATION
 
-					If Not success Then
-						Throw New Win32Exception(GetLastWin32Error)
-					End If
+				''' <summary>A SYSTEM_SCOPED_POLICY_ID_ACE (section 2.4.4.16) is being referenced.</summary>
+				''' <remarks>https://msdn.microsoft.com/en-us/library/hh877846.aspx</remarks>
+				SCOPE_SECURITY_INFORMATION
 
-					'Dim defaulted As Int32
-					'Dim success As Boolean = GetSecurityDescriptorOwner(ptrSecurity, ptrOwner, defaulted)
+				''' <summary>The security descriptor is being accessed for use in a backup operation.</summary>
+				BACKUP_SECURITY_INFORMATION
+			End Enum
 
-					'If Not success Then
-					'    Throw New Win32Exception(GetLastWin32Error)
-					'End If
+			<Flags()>
+			Private Enum REGSAM As UInt32
+				''' <summary>Permission to query subkey data.</summary>
+				KEY_QUERY_VALUE = &H1UI
 
-					'If returnValue <> 0UI Then
-					'    Throw New Win32Exception(GetInt32(returnValue))
-					'End If
+				''' <summary>Permission to set subkey data.</summary>
+				KEY_SET_VALUE = &H2UI
 
-					'If ptrOwner <> IntPtr.Zero Then
-					'    Dim ptrOwnerSid As IntPtr = IntPtr.Zero
+				''' <summary>Permission to create subkeys.
+				''' Subkeys directly underneath the 'HKEY_LOCAL_MACHINE' and 'HKEY_USERS'
+				''' predefined keys cannot be created even if this bit is set.</summary>
+				KEY_CREATE_SUB_KEY = &H4UI
 
-					'    Try
-					'        Dim sidStr As String = Nothing
+				''' <summary>Permission to enumerate subkeys.</summary>
+				KEY_ENUMERATE_SUB_KEYS = &H8UI
 
-					'        If ConvertSidToStringSid(ptrOwner, sidStr) Then
-					'            MsgBox(sidStr)
-					'        Else
-					'            '   ERROR_INVALID_SID()
-					'            '   1337 (0x539)
-					'            '   The security ID structure is invalid.
+				''' <summary>Permission to create a symbolic link.</summary>
+				KEY_CREATE_LINK = &H20UI
 
-					'            Throw New Win32Exception(GetLastWin32Error)
-					'        End If
-					'    Finally
-					'        If ptrOwnerSid <> IntPtr.Zero Then
-					'            LocalFree(ptrOwnerSid)
-					'        End If
-					'    End Try
-					'End If
-				Catch Ex As Exception
-					ShowException(Ex)
-				Finally
-					If ptrRegKey <> IntPtr.Zero Then
-						RegCloseKey(ptrRegKey)
-					End If
-				End Try
+				''' <summary>When set, indicates that a registry server on a 64-bit operating system operates on the 64-bit key namespace.</summary>
+				KEY_WOW64_64KEY = &H100UI
+
+				''' <summary>When set, indicates that a registry server on a 64-bit operating system operates on the 32-bit key namespace.</summary>
+				KEY_WOW64_32KEY = &H200UI
+
+				''' <summary>Permission for read access.</summary>
+				KEY_EXECUTE = &H20019UI
+
+				''' <summary>Permission for change notification.</summary>
+				KEY_NOTIFY = &H10UI
+
+				''' <summary>Combination of KEY_QUERY_VALUE, KEY_ENUMERATE_SUB_KEYS, and KEY_NOTIFY access.</summary>
+				KEY_READ = &H20019UI
+
+				''' <summary>Combination of KEY_SET_VALUE and KEY_CREATE_SUB_KEY access.</summary>
+				KEY_WRITE = &H20006UI
+
+				''' <summary>Combination of KEY_QUERY_VALUE, KEY_ENUMERATE_SUB_KEYS, KEY_NOTIFY, KEY_CREATE_SUB_KEY, KEY_CREATE_LINK, and KEY_SET_VALUE access.</summary>
+				KEY_ALL_ACCESS = &H2F003FUI
+			End Enum
+
+			<Flags()>
+			Private Enum REG_OPTION As UInt32
+				''' <summary>This key is not volatile; this is the default.
+				''' The information is stored in a file and is preserved when the system is restarted.
+				''' The RegSaveKey function saves keys that are not volatile.</summary>
+				NON_VOLATILE = &H0UI
+
+				''' <summary>All keys created by the function are volatile.
+				''' The information is stored in memory and is not preserved when the corresponding registry hive is unloaded.
+				''' For HKEY_LOCAL_MACHINE, this occurs only when the system initiates a full shutdown.
+				''' For registry keys loaded by the RegLoadKey function, this occurs when the corresponding RegUnLoadKey is performed. 
+				''' The RegSaveKey function does not save volatile keys. This flag is ignored for keys that already exist. 
+				''' 
+				''' Note: On a user selected shutdown, a fast startup shutdown is the default behavior for the system.</summary>
+				VOLATILE = &H1UI
+
+				''' <summary>This key is a symbolic link. 
+				''' The target path is assigned to the L"SymbolicLinkValue" value of the key.
+				''' The target path must be an absolute registry path.
+				''' 
+				''' Note: Registry symbolic links should only be used for for application compatibility when absolutely necessary.</summary>
+				CREATE_LINK = &H2UI
+
+				''' <summary>If this flag is set, the function ignores the samDesired parameter and attempts to open the key with the access required to backup or restore the key. 
+				''' If the calling thread has the SE_BACKUP_NAME privilege enabled, 
+				''' the key is opened with the ACCESS_SYSTEM_SECURITY and KEY_READ access rights.
+				''' 
+				''' If the calling thread has the SE_RESTORE_NAME privilege enabled, beginning with Windows Vista, 
+				''' the key is opened with the ACCESS_SYSTEM_SECURITY, DELETE and KEY_WRITE access rights. 
+				''' 
+				''' If both privileges are enabled, the key has the combined access rights for both privileges. 
+				''' For more information, see Running with Special Privileges.</summary>
+				''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/ms717802(v=vs.85).aspx</remarks>
+				BACKUP_RESTORE = &H4UI
+			End Enum
+
+			Private Enum REG_RESULT As UInt32
+				''' <summary>The key did not exist and was created.</summary>
+				REG_CREATED_NEW_KEY = &H1UI
+
+				''' <summary>The key existed and was simply opened without being changed.</summary>
+				REG_OPENED_EXISTING_KEY = &H2UI
+			End Enum
+
+#End Region
+
+#Region "P/Invoke"
+
+			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Shared Function RegOpenKeyEx(
+   <[In]()> ByVal hKey As IntPtr,
+   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal subKey As String,
+   <[In]()> ByVal ulOptions As UInt32,
+   <[In]()> ByVal samDesired As REGSAM,
+   <[Out]()> ByRef phkResult As IntPtr) As UInt32
+			End Function
+
+			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Shared Function RegCloseKey(
+ <[In]()> ByVal hKey As IntPtr) As UInt32
+			End Function
+
+			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Shared Function RegDeleteKey(
+ <[In]()> ByVal hKey As IntPtr,
+ <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpSubKey As String,
+ <[In]()> ByVal samDesired As REGSAM,
+ <[In]()> ByVal Reserved As UInt32) As UInt32
+			End Function
+
+			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Shared Function RegCreateKeyEx(
+   <[In]()> ByVal hKey As IntPtr,
+   <[In]()> lpSubKey As String,
+   ByVal Reserved As Integer,
+   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> lpClass As String,
+   <[In]()> dwOptions As REG_OPTION,
+   <[In]()> samDesired As REGSAM,
+   <[In](), [Optional]()> lpSecurityAttributes As IntPtr,
+   <[Out]()> ByRef hkResult As IntPtr,
+   <[Out](), [Optional]()> ByRef lpdwDisposition As UInt32) As UInt32
+			End Function
+
+			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Shared Function RegGetKeySecurity(
+   <[In]()> ByVal hKey As IntPtr,
+   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
+   <[In](), [Out](), [Optional]()> ByVal pSecurityDescriptor() As Byte,
+   <[In](), [Out]()> ByRef lpcbSecurityDescriptor As UInt32) As UInt32
+			End Function
+
+			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Shared Function RegSetKeySecurity(
+   <[In]()> ByVal hKey As IntPtr,
+   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
+   <[In]()> ByVal pSecurityDescriptor() As Byte) As UInt32
+			End Function
+
+#End Region
+
+			Shared Sub New()
+				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
 			End Sub
 
-		End Module
+			''' <summary>
+			''' Close key before using this and reopen after. Otherwise changes may not be applied!
+			''' </summary>
+			''' <param name="fullPath">Fullpath of regkey including beginning HKEY_ part
+			''' eg.  HKEY_LOCAL_MACHINE\SOFTWARE\ATI</param>
+			''' <returns>
+			''' True = OK
+			''' False = couldn't be fix'd or error thrown (added to log)</returns>
+			Public Shared Function FixRights(ByVal fullPath As String) As Boolean
+				Dim ptrRegKey As IntPtr = IntPtr.Zero
+				Dim retVal As UInt32
+				Dim ownerModified As Boolean = False
+				Dim rootKey As IntPtr = GetRootKey(fullPath)
+				Dim pathKey As String = fullPath.Substring(fullPath.IndexOf("\"c) + 1)
+				Dim previousOwner As IdentityReference = Nothing
+
+				Try
+					retVal = RegOpenKeyEx(rootKey, pathKey, 0UI, REGSAM.KEY_READ Or REGSAM.KEY_WOW64_64KEY, ptrRegKey)
+
+					If retVal <> 0UI Then
+						If retVal = 5UI Then
+							Dim returnAction As UInt32 = 0UI
+
+							retVal = RegCreateKeyEx(rootKey, pathKey, 0UI, Nothing, REG_OPTION.BACKUP_RESTORE, REGSAM.KEY_READ Or REGSAM.KEY_WOW64_64KEY, IntPtr.Zero, ptrRegKey, returnAction)
+
+							If returnAction = REG_RESULT.REG_CREATED_NEW_KEY Then
+								DeleteKey(rootKey, pathKey)
+								Return False
+							ElseIf returnAction = REG_RESULT.REG_OPENED_EXISTING_KEY Then
+							Else
+								Throw New Win32Exception(GetInt32(retVal))
+								Exit Function
+							End If
+						ElseIf retVal = 2UI Then
+							Return False	' Key doesn't exists
+						Else
+							Throw New Win32Exception(GetInt32(retVal))
+						End If
+					End If
+
+
+					Dim rs As New RegistrySecurity
+
+
+					retVal = GetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
+					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
+					previousOwner = rs.GetOwner(GetType(SecurityIdentifier))
+
+					rs.SetOwner(SYSTEM_ACCOUNT)
+					retVal = SetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
+					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
+
+					ownerModified = True
+
+					SetAccessRights(ptrRegKey,
+					  New RegistryAccessRule(
+					   SYSTEM_ACCOUNT,
+					   RegistryRights.FullControl,
+					   InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
+					   PropagationFlags.None,
+					   AccessControlType.Allow)
+					  )
+
+
+					retVal = GetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
+					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
+
+					rs.SetOwner(previousOwner)
+					retVal = SetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
+					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
+
+					ownerModified = False
+					FixRights = True
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+					Return False
+				Finally
+					Try
+						If ownerModified Then
+							Dim rs As New RegistrySecurity
+
+							retVal = GetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
+							If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
+
+							rs.SetOwner(previousOwner)
+							retVal = SetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
+							If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
+
+							ownerModified = False
+						End If
+					Catch ex As Exception
+						FixRights = False
+						Application.Log.AddWarningMessage("Registry key's owner changed, but permission couldn't be fixed. Owner wasn't restored!", "fullPath", fullPath)
+					Finally
+						If ptrRegKey <> IntPtr.Zero Then
+							RegCloseKey(ptrRegKey)
+						End If
+					End Try
+				End Try
+
+				Return FixRights
+			End Function
+
+			Private Shared Function GetRootKey(ByVal name As String) As IntPtr
+				Select Case True
+					Case name.StartsWith("HKEY_CLASSES_ROOT", StringComparison.OrdinalIgnoreCase)
+						Return HKEY_CLASSES_ROOT
+					Case name.StartsWith("HKEY_CURRENT_USER", StringComparison.OrdinalIgnoreCase)
+						Return HKEY_CURRENT_USER
+					Case name.StartsWith("HKEY_CURRENT_CONFIG", StringComparison.OrdinalIgnoreCase)
+						Return HKEY_CURRENT_CONFIG
+					Case name.StartsWith("HKEY_LOCAL_MACHINE", StringComparison.OrdinalIgnoreCase)
+						Return HKEY_LOCAL_MACHINE
+					Case name.StartsWith("HKEY_USERS", StringComparison.OrdinalIgnoreCase)
+						Return HKEY_USERS
+					Case Else
+						Throw New ArgumentException("name is unknown!" & Environment.NewLine & name, "name")
+				End Select
+			End Function
+
+			Private Shared Sub DeleteKey(ByVal rootKey As IntPtr, ByVal pathKey As String)
+				Dim retVal As UInt32 = RegDeleteKey(rootKey, pathKey, REGSAM.KEY_WRITE, 0UI)
+
+				If retVal <> 0UI AndAlso retVal <> 2UI Then
+					Throw New Win32Exception(GetInt32(retVal))
+				End If
+			End Sub
+
+			Private Shared Sub SetAccessRights(ByVal ptrRegKey As IntPtr, ByVal regAccessRule As RegistryAccessRule)
+				Dim rs As New RegistrySecurity
+				Dim returnValue As UInt32 = GetSD(ptrRegKey, rs, SECURITY_INFORMATION.DACL_SECURITY_INFORMATION Or SECURITY_INFORMATION.UNPROTECTED_DACL_SECURITY_INFORMATION Or SECURITY_INFORMATION.UNPROTECTED_SACL_SECURITY_INFORMATION)
+				If returnValue <> 0 Then Throw New Win32Exception(GetInt32(returnValue))
+
+				rs.AddAccessRule(regAccessRule)
+				rs.SetAccessRuleProtection(False, True)
+
+				returnValue = SetSD(ptrRegKey, rs, SECURITY_INFORMATION.DACL_SECURITY_INFORMATION Or SECURITY_INFORMATION.UNPROTECTED_DACL_SECURITY_INFORMATION Or SECURITY_INFORMATION.UNPROTECTED_SACL_SECURITY_INFORMATION)
+				If returnValue <> 0 Then Throw New Win32Exception(GetInt32(returnValue))
+			End Sub
+
+			Private Shared Function GetSD(ByVal ptrRegKey As IntPtr, ByRef rs As RegistrySecurity, ByVal securityInformation As SECURITY_INFORMATION) As UInt32
+				rs = New RegistrySecurity()
+
+				Dim ptrSecurityBytes() As Byte = Nothing
+				Dim requiredSize As UInt32 = 0UI
+				Dim returnValue As UInt32 = RegGetKeySecurity(ptrRegKey, securityInformation, ptrSecurityBytes, requiredSize)
+
+				If returnValue <> 122UI Then
+					Return returnValue
+				End If
+
+				ReDim ptrSecurityBytes(GetInt32(requiredSize) - 1)
+
+				returnValue = RegGetKeySecurity(ptrRegKey, securityInformation, ptrSecurityBytes, requiredSize)
+
+				If returnValue <> 0UI Then
+					Return returnValue
+				End If
+
+				rs.SetSecurityDescriptorBinaryForm(ptrSecurityBytes)
+
+				Return 0UI
+			End Function
+
+			Private Shared Function SetSD(ByVal ptrRegKey As IntPtr, ByRef rs As RegistrySecurity, ByVal securityInformation As SECURITY_INFORMATION) As UInt32
+				Return RegSetKeySecurity(ptrRegKey, securityInformation, rs.GetSecurityDescriptorBinaryForm())
+			End Function
+
+		End Class
+
 	End Namespace
 End Namespace

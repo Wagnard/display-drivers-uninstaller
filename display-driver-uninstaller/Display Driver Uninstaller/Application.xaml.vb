@@ -6,6 +6,7 @@ Imports System.Windows.Markup
 Class Application
 	' Application-level events, such as Startup, Exit, and DispatcherUnhandledException
 	' can be handled in this file.
+	Private Shared m_dataSaved As Boolean = False
     Private Shared m_Data As Data
 	Public Shared ReadOnly Property Data As Data
 		Get
@@ -45,7 +46,16 @@ Class Application
 
         FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement),
            New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
-    End Sub
+	End Sub
+
+	Public Shared Sub SaveData()
+		If Not m_dataSaved Then
+			Settings.Save()
+			Log.SaveToFile()
+
+			m_dataSaved = True
+		End If
+	End Sub
 End Class
 
 Public Module Generic
