@@ -8137,7 +8137,7 @@ Public Class CleanupEngine
 																End If
 															End Using
 														Catch ex As Exception
-															Application.Log.AddWarning(ex)
+															'Application.Log.AddWarning(ex) 'Temporary not logging because its spamming unnecessary warnings
 														End Try
 													End If
 												End If
@@ -8158,7 +8158,7 @@ Public Class CleanupEngine
 																End If
 															End Using
 														Catch ex As Exception
-															Application.Log.AddWarning(ex)
+															'Application.Log.AddWarning(ex) 'Temporary not logging because its spamming unnecessary warnings
 														End Try
 													End If
 												End If
@@ -8258,7 +8258,7 @@ Public Class CleanupEngine
 		End Try
 
 		If IntPtr.Size = 8 Then
-			' DevMltk: I think there was typo?
+			' DevMltk: I think there was typo?    Yes look like so. nice catch. (Wagnard)
 			'
 			' Orginal code:
 			'
