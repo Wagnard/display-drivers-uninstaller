@@ -694,7 +694,7 @@ Public Class frmMain
 			End If
 		End If
 
-		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.UserPath))
+		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
 			filePath = filepaths + "\AppData\Roaming\ATI"
 			If winxp Then
 				filePath = filepaths + "\Application Data\ATI"
@@ -2558,7 +2558,7 @@ Public Class frmMain
 		End If
 
 		' here I erase the folders / files of the nvidia GFE / update in users.
-		filePath = IO.Path.GetDirectoryName(config.UserPath)
+		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath)
 		For Each child As String In Directory.GetDirectories(filePath)
 			If IsNullOrWhitespace(child) = False Then
 				If child.ToLower.Contains("updatususer") Then
@@ -2589,7 +2589,7 @@ Public Class frmMain
 			End If
 		Next
 
-		filePath = IO.Path.GetDirectoryName(config.UserPath) + "\Public\Pictures\NVIDIA Corporation"
+		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath) + "\Public\Pictures\NVIDIA Corporation"
 		If Directory.Exists(filePath) Then
 			If filePath IsNot Nothing Then
 				For Each child As String In Directory.GetDirectories(filePath)
@@ -2623,7 +2623,7 @@ Public Class frmMain
 			End If
 		End If
 
-		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.UserPath))
+		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
 
 			filePath = filepaths + "\AppData\Local\NVIDIA"
 
@@ -3128,7 +3128,7 @@ Public Class frmMain
 
 
 
-		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.UserPath))
+		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
 
 			filePath = filepaths + "\AppData\Local\Temp\NVIDIA Corporation"
 
@@ -8083,7 +8083,7 @@ Public Class CleanupEngine
 		End If
 	End Sub
 	Public Sub deletefile(ByVal filepath As String)
-		If Not IsNullOrWhitespace(filepath) Then
+		If Not IsNullOrWhitespace(filepath) AndAlso File.Exists(filepath) Then
 
 			System.IO.File.Delete(filepath)	'filepath here include the file too.
 

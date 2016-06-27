@@ -5,7 +5,6 @@ Public Class ThreadSettings
 	Public Property Paths As New AppPaths(False)
     Public Property SelectedGPU As GPUVendor
     Public Property AppName As String
-	Public Property UserPath As String
 	Public Property DoShutdown As Boolean
 	Public Property DoReboot As Boolean
 
