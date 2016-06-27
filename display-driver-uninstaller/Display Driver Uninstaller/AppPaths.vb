@@ -3,7 +3,7 @@ Imports System.Reflection
 
 Public Class AppPaths
 	Private m_exefile, m_dirapp, m_dirapproaming, m_dirsettings, m_dirlanguage, m_dirlog,
-	 m_roaming, m_sysdrive, m_windir, m_programfiles, m_programfilesx86 As String
+	 m_roaming, m_sysdrive, m_windir, m_programfiles, m_programfilesx86, m_userpath As String
 
 	'NOTE!!! All paths ends with \
 	'No need to check for ending \
@@ -108,6 +108,15 @@ Public Class AppPaths
 		End Set
 	End Property
 
+	Public Property UserPath As String
+		Get
+			Return m_userpath
+		End Get
+		Private Set(value As String)
+			m_userpath = value
+		End Set
+	End Property
+
 	Public Sub New(Optional ByVal createPaths As Boolean = True)
 		If createPaths Then
 			m_exefile = Assembly.GetExecutingAssembly().Location
@@ -124,6 +133,10 @@ Public Class AppPaths
 			m_windir = Environment.GetEnvironmentVariable("windir")
 			m_programfiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
 			m_programfilesx86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + " (x86)"
+
+			Using regkey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist")
+				m_userpath = regkey.GetValue("ProfilesDirectory", String.Empty).ToString + "\"
+			End Using
 
 			If Not m_dirapp.EndsWith("\") Then m_dirapp &= Path.DirectorySeparatorChar
 
