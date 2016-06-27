@@ -3376,10 +3376,8 @@ Public Class frmMain
 						For Each Keyname As String In regkey.GetValueNames
 							If IsNullOrWhitespace(Keyname) Then Continue For
 
-							If Keyname.ToLower.Contains("nvstlink.exe") Or
-							 Keyname.ToLower.Contains("nvstview.exe") Or
-							   Keyname.ToLower.Contains("gfexperience.exe") AndAlso config.RemoveGFE Or
-							   Keyname.ToLower.Contains("nvcpluir.dll") Then
+							If StrContainsAny(Keyname, True, "nvcplui.exe", "nvstlink.exe", "nvstview.exe", "nvcpluir.dll") Or
+							   (StrContainsAny(Keyname, True, "gfexperience.exe") AndAlso config.RemoveGFE) Then
 								Try
 									deletevalue(regkey, Keyname)
 								Catch ex As Exception
