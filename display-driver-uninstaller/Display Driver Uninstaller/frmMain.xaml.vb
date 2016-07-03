@@ -6269,7 +6269,7 @@ Public Class frmMain
 			'----------------------------------------------
 			If config.UseSetupAPI AndAlso config.SelectedGPU = GPUVendor.AMD Then
 				Try
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", vendidexpected)
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", vendidexpected, True)
 					If found.Count > 0 Then
 						For Each SystemDevice As SetupAPI.Device In found
 							For Each Sibling In SystemDevice.SiblingDevices
@@ -6935,7 +6935,7 @@ Public Class frmMain
 			If config.SelectedGPU = GPUVendor.Intel Then
 				If config.UseSetupAPI Then
 					'Removing Intel WIdI bus Enumerator
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", , False)
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If StrContainsAny(d.HardwareIDs(0), True, "root\iwdbus") Then  'May need to confirm this one.

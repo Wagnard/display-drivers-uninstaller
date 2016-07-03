@@ -2200,13 +2200,12 @@ Namespace Win32
 
 
 		' REVERSED FOR CLEANING FROM CODE
-		Public Shared Function GetDevices(ByVal className As String, Optional ByVal vendorID As String = Nothing, Optional ByVal getDetails As Boolean = True) As List(Of Device)
+		Public Shared Function GetDevices(ByVal className As String, Optional ByVal vendorID As String = Nothing, Optional ByVal includeSiblings As Boolean = True) As List(Of Device)
 			Try
 				If IsNullOrWhitespace(className) Then
 					Throw New ArgumentNullException("className")
 				End If
 
-				Dim SiblingDevicesToFind As List(Of Device) = New List(Of Device)(5)
 				Dim Devices As List(Of Device) = New List(Of Device)(5)
 				Dim nullGuid As Guid = Nothing
 
@@ -2261,8 +2260,8 @@ Namespace Win32
 							End If
 						End While
 
-						If getDetails Then
-							If Devices IsNot Nothing AndAlso Devices.Count > 0 Then
+						If Devices IsNot Nothing AndAlso Devices.Count > 0 Then
+							If includeSiblings Then
 								For Each dev As Device In Devices
 									GetSiblings(dev)
 
@@ -2270,20 +2269,20 @@ Namespace Win32
 										UpdateDevicesByID(dev.SiblingDevices)
 									End If
 								Next
-
-								UpdateDevicesByID(Devices)
 							End If
+
+							UpdateDevicesByID(Devices)
 
 							Dim logEntry As LogEntry = Application.Log.CreateEntry()
 							logEntry.Message = String.Format("Devices found: {0}", Devices.Count.ToString())
-							logEntry.Add("-> ClassName", className)
+							logEntry.Add("-> className", className)
+							logEntry.Add("-> vendorID", If(IsNullOrWhitespace(vendorID), "Nothing", vendorID))
+							logEntry.Add("-> includeSiblings", includeSiblings.ToString())
 							logEntry.Add(KvP.Empty)
 
 							logEntry.AddDevices(Devices.ToArray())
 
 							Application.Log.Add(logEntry)
-						Else
-							UpdateDevicesByID(Devices)
 						End If
 
 						Return Devices
@@ -2291,17 +2290,11 @@ Namespace Win32
 						If ptrDevInfo IsNot Nothing Then
 							ptrDevInfo.Dispose()
 						End If
-
-						If SiblingDevicesToFind.Count > 0 Then
-							UpdateDevicesByID(SiblingDevicesToFind)
-						End If
 					End Try
 				End Using
 			Catch ex As Exception
 				Application.Log.AddException(ex, "GetDevices failed!")
 				Return New List(Of Device)(0)
-			Finally
-
 			End Try
 		End Function
 
