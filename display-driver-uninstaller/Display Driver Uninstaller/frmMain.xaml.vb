@@ -3355,7 +3355,8 @@ Public Class frmMain
 							If IsNullOrWhitespace(child) Then Continue For
 
 							If StrContainsAny(child, True, "nvcplui.exe", "nvtray.exe") Or
-							 (StrContainsAny(child, True, "nvbackend.exe") AndAlso config.RemoveGFE) Then
+							 (StrContainsAny(child, True, "nvbackend.exe") AndAlso config.RemoveGFE) Or
+							 (StrContainsAny(child, True, "GeForce Experience\Update\setup.exe") AndAlso config.RemoveGFE) Then
 								Try
 									deletevalue(regkey, child)
 								Catch ex As Exception
