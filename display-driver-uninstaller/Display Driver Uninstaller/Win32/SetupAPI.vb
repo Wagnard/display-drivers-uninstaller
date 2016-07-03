@@ -2260,27 +2260,31 @@ Namespace Win32
 							End If
 						End While
 
-						If Devices IsNot Nothing AndAlso Devices.Count > 0 Then
-							If includeSiblings Then
-								For Each dev As Device In Devices
-									GetSiblings(dev)
+						If Devices IsNot Nothing Then
+							If Devices.Count > 0 Then
+								If includeSiblings Then
+									For Each dev As Device In Devices
+										GetSiblings(dev)
 
-									If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
-										UpdateDevicesByID(dev.SiblingDevices)
-									End If
-								Next
+										If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
+											UpdateDevicesByID(dev.SiblingDevices)
+										End If
+									Next
+								End If
+
+								UpdateDevicesByID(Devices)
 							End If
-
-							UpdateDevicesByID(Devices)
 
 							Dim logEntry As LogEntry = Application.Log.CreateEntry()
 							logEntry.Message = String.Format("Devices found: {0}", Devices.Count.ToString())
 							logEntry.Add("-> className", className)
-							logEntry.Add("-> vendorID", If(IsNullOrWhitespace(vendorID), "Nothing", vendorID))
+							logEntry.Add("-> vendorID", If(IsNullOrWhitespace(vendorID), "<empty>", vendorID))
 							logEntry.Add("-> includeSiblings", includeSiblings.ToString())
-							logEntry.Add(KvP.Empty)
 
-							logEntry.AddDevices(Devices.ToArray())
+							If Devices.Count > 0 Then
+								logEntry.Add(KvP.Empty)
+								logEntry.AddDevices(Devices.ToArray())
+							End If
 
 							Application.Log.Add(logEntry)
 						End If

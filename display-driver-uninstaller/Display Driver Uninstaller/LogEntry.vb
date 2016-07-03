@@ -197,7 +197,7 @@ Public Class LogEntry
 			Values.Add(New KvP("Description", d.Description))
 			Values.Add(New KvP("ClassName", d.ClassName))
 			Values.Add(New KvP("DeviceID", d.DeviceID))
-			Values.Add(New KvP("SiblingDevices", If(d.SiblingDevices Is Nothing, "<Nothing>", d.SiblingDevices.Length.ToString())))
+			Values.Add(New KvP("SiblingDevices", If(d.SiblingDevices Is Nothing, "<empty>", d.SiblingDevices.Length.ToString())))
 
 			If d.HardwareIDs IsNot Nothing Then
 				Values.Add(New KvP("HardwareIDs", String.Join(Environment.NewLine, d.HardwareIDs)))
