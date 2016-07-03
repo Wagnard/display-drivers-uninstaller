@@ -2370,21 +2370,21 @@ Public Class frmMain
 				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("DRIVERS\DriverDatabase\DriverInfFiles", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If Not IsNullOrWhitespace(child) Then
-								If child.ToLower.StartsWith("oem") AndAlso child.ToLower.EndsWith(".inf") Then
-									If Not infslist.ToLower.Contains(child) Then
-										Try
-											deletesubregkey(My.Computer.Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverPackages\" & regkey.OpenSubKey(child).GetValue("Active", String.Empty).ToString)
-										Catch ex As Exception
-											Application.Log.AddException(ex)
-										End Try
+							If IsNullOrWhitespace(child) Then Continue For
 
-										Try
-											deletesubregkey(regkey, child)
-										Catch ex As Exception
-											Application.Log.AddException(ex)
-										End Try
-									End If
+							If child.ToLower.StartsWith("oem") AndAlso child.ToLower.EndsWith(".inf") Then
+								If Not StrContainsAny(infslist, True, child) Then
+									Try
+										deletesubregkey(My.Computer.Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverPackages\" & regkey.OpenSubKey(child).GetValue("Active", String.Empty).ToString)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+
+									Try
+										deletesubregkey(regkey, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
 								End If
 							End If
 						Next
@@ -2394,17 +2394,20 @@ Public Class frmMain
 				Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("DRIVERS\DriverDatabase\DriverPackages", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If Not IsNullOrWhitespace(child) Then
-								If CStr(regkey.OpenSubKey(child).GetValue("")).ToLower.StartsWith("oem") AndAlso
-								 CStr(regkey.OpenSubKey(child).GetValue("")).ToLower.EndsWith(".inf") AndAlso
-								 Not infslist.ToLower.Contains(CStr(regkey.OpenSubKey(child).GetValue(""))) Then
+							If IsNullOrWhitespace(child) Then Continue For
+
+							Using regkey2 As RegistryKey = regkey.OpenSubKey(child)
+								If (Not IsNullOrWhitespace(regkey2.GetValue("", String.Empty).ToString)) AndAlso
+								 regkey2.GetValue("", String.Empty).ToString.ToLower.StartsWith("oem") AndAlso
+								 regkey2.GetValue("", String.Empty).ToString.ToLower.EndsWith(".inf") AndAlso
+								 (Not StrContainsAny(infslist, True, regkey2.GetValue("", String.Empty).ToString)) Then
 									Try
 										deletesubregkey(regkey, child)
 									Catch ex As Exception
 										Application.Log.AddException(ex)
 									End Try
 								End If
-							End If
+							End Using
 						Next
 					End If
 				End Using
@@ -6298,56 +6301,70 @@ Public Class frmMain
 							Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\HDAUDIO")
 								If regkey IsNot Nothing Then
 									For Each child As String In regkey.GetSubKeyNames()
-										If IsNullOrWhitespace(child) = False Then
-											If child.ToLower.Contains("ven_1002") Then
-												For Each ParentIdPrefix As String In regkey.OpenSubKey(child).GetSubKeyNames
-													Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-														If subregkey IsNot Nothing Then
-															For Each child2 As String In subregkey.GetSubKeyNames()
-																removed = False
-																If IsNullOrWhitespace(child2) = False Then
-																	If child2.ToLower.Contains("ven_1002") Then
-																		For Each child3 As String In subregkey.OpenSubKey(child2).GetSubKeyNames()
-																			If IsNullOrWhitespace(child3) = False Then
-																				array = CType(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("LowerFilters"), String())
-																				If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
-																					For i As Integer = 0 To array.Length - 1
-																						If Not IsNullOrWhitespace(array(i)) Then
-																							If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey.OpenSubKey(child2 & "\" & child3).GetValue("ParentIdPrefix").ToString.ToLower) Then
-																								Application.Log.AddMessage("Found an AMD audio controller bus !")
-																								Try
-																									Application.Log.AddMessage("array result: " + array(i))
-																								Catch ex As Exception
-																								End Try
-																								processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-																								processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
-																								processinfo.UseShellExecute = False
-																								processinfo.CreateNoWindow = True
-																								processinfo.RedirectStandardOutput = True
-																								process.StartInfo = processinfo
-																								process.Start()
-																								reply2 = process.StandardOutput.ReadToEnd
-																								process.StandardOutput.Close()
-																								process.Close()
-																								Application.Log.AddMessage(reply2)
-																								Application.Log.AddMessage("AMD HD Audio Bus Removed !")
-																								removed = True
+										If IsNullOrWhitespace(child) Then Continue For
+
+										If StrContainsAny(child, True, "ven_1002") Then
+											Using regkey2 As RegistryKey = regkey.OpenSubKey(child)
+												If regkey2 IsNot Nothing Then
+													For Each ParentIdPrefix As String In regkey2.GetSubKeyNames
+														If IsNullOrWhitespace(ParentIdPrefix) Then Continue For
+
+														Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+															If subregkey IsNot Nothing Then
+																For Each child2 As String In subregkey.GetSubKeyNames()
+																	If IsNullOrWhitespace(child2) Then Continue For
+																	removed = False
+
+																	If StrContainsAny(child2, True, "ven_1002") Then
+																		Using subregkey2 As RegistryKey = subregkey.OpenSubKey(child2)
+																			If subregkey2 IsNot Nothing Then
+																				For Each child3 As String In subregkey2.GetSubKeyNames()
+																					If IsNullOrWhitespace(child3) Then Continue For
+
+																					Using subregkey3 As RegistryKey = subregkey2.OpenSubKey(child3)
+																						If subregkey3 IsNot Nothing Then
+																							array = CType(subregkey3.GetValue("LowerFilters"), String())
+																							If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+																								For i As Integer = 0 To array.Length - 1
+																									If Not IsNullOrWhitespace(array(i)) Then
+																										If array(i).ToLower.Contains("amdkmafd") AndAlso ParentIdPrefix.ToLower.Contains(subregkey3.GetValue("ParentIdPrefix", String.Empty).ToString.ToLower) Then
+																											Application.Log.AddMessage("Found an AMD audio controller bus !")
+																											Try
+																												Application.Log.AddMessage("array result: " + array(i))
+																											Catch ex As Exception
+																											End Try
+																											processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+																											processinfo.Arguments = "remove =system " & Chr(34) & "*" & child2 & Chr(34)
+																											processinfo.UseShellExecute = False
+																											processinfo.CreateNoWindow = True
+																											processinfo.RedirectStandardOutput = True
+																											process.StartInfo = processinfo
+																											process.Start()
+																											reply2 = process.StandardOutput.ReadToEnd
+																											process.StandardOutput.Close()
+																											process.Close()
+																											Application.Log.AddMessage(reply2)
+																											Application.Log.AddMessage("AMD HD Audio Bus Removed !")
+																											removed = True
+																										End If
+																									End If
+																								Next
+																							End If
+																							If removed Then
+																								Exit For
 																							End If
 																						End If
-																					Next
-																				End If
-																				If removed Then
-																					Exit For
-																				End If
+																					End Using
+																				Next
 																			End If
-																		Next
+																		End Using
 																	End If
-																End If
-															Next
-														End If
-													End Using
-												Next
-											End If
+																Next
+															End If
+														End Using
+													Next
+												End If
+											End Using
 										End If
 									Next
 								End If
@@ -6865,7 +6882,7 @@ Public Class frmMain
 				Application.Log.AddMessage("Removing AMD Audio Endpoints")
 				Try
 					If config.UseSetupAPI Then
-						'nVidia AudioEndpoints Removal
+						'AMD AudioEndpoints Removal
 						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint")
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
@@ -6916,68 +6933,80 @@ Public Class frmMain
 			End If
 
 			If config.SelectedGPU = GPUVendor.Intel Then
-				'Removing Intel WIdI bus Enumerator
-				Application.Log.AddMessage("Removing IWD Bus Enumerator")
+				If config.UseSetupAPI Then
+					'Removing Intel WIdI bus Enumerator
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", , False)
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If StrContainsAny(d.HardwareIDs(0), True, "root\iwdbus") Then  'May need to confirm this one.
+								SetupAPI.UninstallDevice(d)
+							End If
+						Next
+						found.Clear()
+					End If
+				Else
+					'Removing Intel WIdI bus Enumerator
+					Application.Log.AddMessage("Removing IWD Bus Enumerator")
 
-				processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-				processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
-				processinfo.UseShellExecute = False
-				processinfo.CreateNoWindow = True
-				processinfo.RedirectStandardOutput = True
-				process.StartInfo = processinfo
+					processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+					processinfo.Arguments = "remove =system " & Chr(34) & "root\iwdbus" & Chr(34)
+					processinfo.UseShellExecute = False
+					processinfo.CreateNoWindow = True
+					processinfo.RedirectStandardOutput = True
+					process.StartInfo = processinfo
 
-				process.Start()
-				reply2 = process.StandardOutput.ReadToEnd
-				process.StandardOutput.Close()
-				process.Close()
-				'process.WaitForExit()
-				Application.Log.AddMessage(reply2)
-
-
-
-				' ------------------------------
-				' Removing Intel AudioEndpoints
-				' ------------------------------
-				Application.Log.AddMessage("Removing Intel Audio Endpoints")
-
-				Try
-					Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
-						If regkey IsNot Nothing Then
-							For Each child As String In regkey.GetSubKeyNames
-								If Not IsNullOrWhitespace(child) Then
-
-									If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
-									   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel widi") Or
-									   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel(r)") Then
-
-										vendid = child
-
-										processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-										processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
-										processinfo.UseShellExecute = False
-										processinfo.CreateNoWindow = True
-										processinfo.RedirectStandardOutput = True
-										process.StartInfo = processinfo
-
-										process.Start()
-										reply2 = process.StandardOutput.ReadToEnd
-										process.StandardOutput.Close()
-										process.Close()
-										'process.WaitForExit()
-										Application.Log.AddMessage(reply2)
+					process.Start()
+					reply2 = process.StandardOutput.ReadToEnd
+					process.StandardOutput.Close()
+					process.Close()
+					'process.WaitForExit()
+					Application.Log.AddMessage(reply2)
 
 
+
+					' ------------------------------
+					' Removing Intel AudioEndpoints
+					' ------------------------------
+					Application.Log.AddMessage("Removing Intel Audio Endpoints")
+
+					Try
+						Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
+							If regkey IsNot Nothing Then
+								For Each child As String In regkey.GetSubKeyNames
+									If Not IsNullOrWhitespace(child) Then
+
+										If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
+										   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel widi") Or
+										   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("intel(r)") Then
+
+											vendid = child
+
+											processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
+											processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
+											processinfo.UseShellExecute = False
+											processinfo.CreateNoWindow = True
+											processinfo.RedirectStandardOutput = True
+											process.StartInfo = processinfo
+
+											process.Start()
+											reply2 = process.StandardOutput.ReadToEnd
+											process.StandardOutput.Close()
+											process.Close()
+											'process.WaitForExit()
+											Application.Log.AddMessage(reply2)
+
+
+										End If
 									End If
-								End If
-							Next
-						End If
-					End Using
-				Catch ex As Exception
-					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
-					Application.Log.AddException(ex)
-				End Try
+								Next
+							End If
+						End Using
+					Catch ex As Exception
+						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+						Application.Log.AddException(ex)
+					End Try
+				End If
 			End If
-
 
 			Application.Log.AddMessage("ddudr Remove Audio/HDMI Complete")
 
@@ -7049,7 +7078,7 @@ Public Class frmMain
 			If config.RemoveAMDKMPFD Then
 				If config.UseSetupAPI Then
 					Try
-						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "0a0")
+						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "0a0", False)
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
@@ -8895,13 +8924,15 @@ Public Class CleanupEngine
 							Else
 								'Here, if subregkey is nothing, it mean \video doesnt exist and is no \0000, we can delete it.
 								'this is a general cleanUP we could say.
-								If regkey.OpenSubKey(child & "\0000") Is Nothing Then
-									Try
-										deletesubregkey(regkey, child)
-										deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-									Catch ex As Exception
-									End Try
-								End If
+								Using regkey3 As RegistryKey = regkey.OpenSubKey(child & "\0000")
+									If regkey3 Is Nothing Then
+										Try
+											deletesubregkey(regkey, child)
+											deletesubregkey(My.Computer.Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+										Catch ex As Exception
+										End Try
+									End If
+								End Using
 							End If
 						End Using
 					Next

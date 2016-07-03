@@ -2282,6 +2282,8 @@ Namespace Win32
 							logEntry.AddDevices(Devices.ToArray())
 
 							Application.Log.Add(logEntry)
+						Else
+							UpdateDevicesByID(Devices)
 						End If
 
 						Return Devices
