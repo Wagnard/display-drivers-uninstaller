@@ -3974,12 +3974,12 @@ Public Class frmMain
                                 End If
                             Next
 
-                            If regkey2.OpenSubKey(child).SubKeyCount = 0 Then
-                                Try
-                                    deletesubregkey(regkey, child)
-                                Catch ex As Exception
-                                End Try
-                            End If
+							If regkey2.SubKeyCount = 0 Then
+								Try
+									deletesubregkey(regkey, child)
+								Catch ex As Exception
+								End Try
+							End If
                         End Using
                     End If
                 Next

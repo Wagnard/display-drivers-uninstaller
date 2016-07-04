@@ -44,19 +44,19 @@
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Виявлено версію Windows</Text>
+			<Text>Виявлено ОС:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>Подобається DDU? Поміркуйте щодо пожертвування (Donate) - це допоможе його подальшому розвитку.</Text>
+			<Text>Подобається DDU? Поміркуйте щодо пожертвування — це допоможе його подальшому розвитку.</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Журнал</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Вибраний графічний драйвер</Text>
+			<Text>Вибрано графічний драйвер</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Вибрана мова</Text>
+			<Text>Вибрано мову</Text>
 		</lblLanguage>
 
 		<lblUpdate>
@@ -140,7 +140,7 @@
 			<Text12>Графічний процесор #</Text12>
 			<Text13>Виявлено</Text13>
 			<Text14>DeviceId графічного процесора</Text14>
-			<Text15>Виявлені версії драйверів</Text15>
+			<Text15>Виявлено версії драйверів</Text15>
 			<Text16>Файл INF</Text16>
 			<Text17>Секція INF</Text17>
 			<Text18>Графічний процесор інстальовано неправильно</Text18>
@@ -326,7 +326,7 @@
 			<Text>Перекладачі</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Щиро дякуємо переліченим перекладачам та тим, кого не перелічено!</Text>
+			<Text> Щиро дякуємо переліченим перекладачам та тим, кого не перелічено!</Text>
 		</lblTranslators>
 	</frmAbout>
 
@@ -391,7 +391,7 @@
 		<Translator>
 			<User>YuriPet</User>
 			<Details>yuripet@gmail.com</Details>
-			<LastUpdate>10/06/2016</LastUpdate>
+			<LastUpdate>04/07/2016</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
