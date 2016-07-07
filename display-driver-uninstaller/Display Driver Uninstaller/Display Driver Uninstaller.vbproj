@@ -71,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CleanupEngine.vb" />
     <Compile Include="frmSystemRestore.xaml.vb">
       <DependentUpon>frmSystemRestore.xaml</DependentUpon>
     </Compile>
