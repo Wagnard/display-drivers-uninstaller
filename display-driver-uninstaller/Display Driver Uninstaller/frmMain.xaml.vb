@@ -2515,6 +2515,7 @@ Public Class frmMain
 			 "WWAHost",
 			 "nvspcaps64",
 			 "nvspcaps",
+			 "NVIDIA Web Helper",
 			 "NvBackend")
 
 			If config.RemoveGFE Then
@@ -2712,6 +2713,8 @@ Public Class frmMain
 							If (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.EndsWith("\osc") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
@@ -2793,6 +2796,8 @@ Public Class frmMain
 					 (child.ToLower.Contains("crashdumps") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstream") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("downloader") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("gfebridges") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
@@ -2880,6 +2885,7 @@ Public Class frmMain
 					   child.ToLower.Contains("nview") Or
 					   child.ToLower.Contains("nvidia wmi provider") Or
 					   child.ToLower.Contains("gamemonitor") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvgsync") Or
 					   child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 
@@ -2916,6 +2922,9 @@ Public Class frmMain
 								   child2.ToLower.Contains("virtualaudio.driver") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("coretemp") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("shield") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvnodejs") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvplugin") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("hdaudio.driver") Then
 
 									Try
@@ -2995,6 +3004,8 @@ Public Class frmMain
 						 child.ToLower.Contains("nvstreamc") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("update common") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvgsync") Or
 						 child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
 						 child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
@@ -4027,24 +4038,24 @@ Public Class frmMain
                                         End Using
                                     End If
                                 End If
-                                If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd") Or
-                                (StrContainsAny(child2, True, "installer2", "nvstream", "nvtray") AndAlso removegfe) Then
-                                    If removephysx Then
-                                        Try
-                                            deletesubregkey(regkey2, child2)
-                                        Catch ex As Exception
-                                        End Try
-                                    Else
-                                        If child2.ToLower.Contains("physx") Then
-                                            'do nothing
-                                        Else
-                                            Try
-                                                deletesubregkey(regkey2, child2)
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                    End If
-                                End If
+								If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd") Or
+								(StrContainsAny(child2, True, "installer2", "nvstream", "nvtray", "nvcontainer") AndAlso removegfe) Then
+									If removephysx Then
+										Try
+											deletesubregkey(regkey2, child2)
+										Catch ex As Exception
+										End Try
+									Else
+										If child2.ToLower.Contains("physx") Then
+											'do nothing
+										Else
+											Try
+												deletesubregkey(regkey2, child2)
+											Catch ex As Exception
+											End Try
+										End If
+									End If
+								End If
                             Next
                             If regkey2.SubKeyCount = 0 Then
                                 Try
@@ -4099,23 +4110,29 @@ Public Class frmMain
                                         End If
                                     End If
                                     If StrContainsAny(child2, True, "logging", "physx_systemsoftware", "physxupdateloader", "installer2", "physx") Then
-                                        If removephysx Then
-                                            Try
-                                                deletesubregkey(regkey2, child2)
-                                            Catch ex As Exception
-                                            End Try
-                                        Else
-                                            If child2.ToLower.Contains("physx") Then
-                                                'do nothing
-                                            Else
-                                                Try
-                                                    deletesubregkey(regkey2, child2)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
-                                        End If
-                                    End If
-                                Next
+										If removephysx Then
+											Try
+												deletesubregkey(regkey2, child2)
+											Catch ex As Exception
+											End Try
+										Else
+											If child2.ToLower.Contains("physx") Then
+												'do nothing
+											Else
+												Try
+													deletesubregkey(regkey2, child2)
+												Catch ex As Exception
+												End Try
+											End If
+										End If
+									End If
+									If StrContainsAny(child2, True, "nvcontainer") AndAlso config.RemoveGFE Then
+										Try
+											deletesubregkey(regkey2, child2)
+										Catch ex As Exception
+										End Try
+									End If
+								Next
                                 If regkey2.SubKeyCount = 0 Then
                                     Try
                                         deletesubregkey(regkey, child)
