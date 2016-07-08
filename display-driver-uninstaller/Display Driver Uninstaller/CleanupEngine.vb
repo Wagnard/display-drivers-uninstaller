@@ -1804,7 +1804,7 @@ Public Class CleanupEngine
 
 				If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(driverFile, True, "amdkmafd")) Then
 
-					For Each child As String In My.Computer.FileSystem.GetFiles(winPath, FileIO.SearchOption.SearchTopLevelOnly, "*.log")
+					For Each child As String In My.Computer.FileSystem.GetFiles(winPath, Microsoft.VisualBasic.FileIO.SearchOption.SearchTopLevelOnly, "*.log")
 						If IsNullOrWhitespace(child) Then Continue For
 
 						If StrContainsAny(child, True, driverFile) Then

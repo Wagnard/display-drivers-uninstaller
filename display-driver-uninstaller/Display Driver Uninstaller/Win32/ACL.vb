@@ -390,6 +390,9 @@ Namespace Win32
 
 #End Region
 
+			Sub New()
+				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
+			End Sub
 
 			Public Sub AddPriviliges(ByVal ParamArray priviliges() As String)
 				AdjustToken(True, GetCurrentProcess(), priviliges)
@@ -451,6 +454,44 @@ Namespace Win32
 					End If
 				End Try
 			End Sub
+
+		End Module
+
+		Public Module FileSystem
+#Region "Consts"
+
+			Private ReadOnly _sidSystem As SecurityIdentifier = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
+			Private ReadOnly _sidAdmin As SecurityIdentifier = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
+			Private ReadOnly _sidAuthUser As SecurityIdentifier = New SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, Nothing)
+#End Region
+
+#Region "Enums"
+
+			'<Flags()>
+			'Private Enum SECURITY_INFORMATION As UInt32
+			'	ATTRIBUTE_SECURITY_INFORMATION
+			'End Enum
+
+#End Region
+
+#Region "P/Invoke"
+
+			'BOOL WINAPI GetFileSecurity(
+			'  _In_      LPCTSTR              lpFileName,
+			'  _In_      SECURITY_INFORMATION RequestedInformation,
+			'  _Out_opt_ PSECURITY_DESCRIPTOR pSecurityDescriptor,
+			'  _In_      DWORD                nLength,
+			'  _Out_     LPDWORD              lpnLengthNeeded
+			');
+
+
+			'BOOL WINAPI SetFileSecurity(
+			'  _In_ LPCTSTR              lpFileName,
+			'  _In_ SECURITY_INFORMATION SecurityInformation,
+			'  _In_ PSECURITY_DESCRIPTOR pSecurityDescriptor
+			');
+
+#End Region
 
 			' Adds an ACL entry on the specified directory for the specified account.
 			Public Sub AddDirectorySecurity(ByVal path As String, ByVal Rights As FileSystemRights, ByVal ControlType As AccessControlType)
@@ -531,6 +572,79 @@ Namespace Win32
 
 			End Sub
 
+
+
+			' NEED TO FIX, 260+ PATHS => WIN API
+			Public Sub AddFileSecurity(ByVal path As String, ByVal rights As FileSystemRights)
+				'Dim fixOwner As FileSecurity = File.GetAccessControl(path, AccessControlSections.Owner)
+				'fixOwner.SetOwner(_sidAdmin)
+				'File.SetAccessControl(path, fixOwner)
+
+				'Dim fileSecurity As FileSecurity = File.GetAccessControl(path, AccessControlSections.All)
+				'fileSecurity.SetAccessRuleProtection(False, True)
+
+				'fileSecurity.AddAccessRule(
+				'  New FileSystemAccessRule(
+				'  _sidSystem,
+				'  rights,
+				'  InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
+				'  PropagationFlags.None,
+				'  AccessControlType.Allow))
+
+				'fileSecurity.AddAccessRule(
+				'  New FileSystemAccessRule(
+				'  _sidAdmin,
+				'  rights,
+				'  InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
+				'  PropagationFlags.None,
+				'  AccessControlType.Allow))
+
+				'fileSecurity.AddAccessRule(
+				'   New FileSystemAccessRule(
+				'  _sidAuthUser,
+				'  rights,
+				'  InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
+				'  PropagationFlags.None,
+				'  AccessControlType.Allow))
+
+				'File.SetAccessControl(path, fileSecurity)
+			End Sub
+
+			' NEED TO FIX, 260+ PATHS => WIN API
+			Public Sub AddDirSecurity(ByVal path As String, ByVal rights As FileSystemRights)
+				'Dim fixOwner As DirectorySecurity = Directory.GetAccessControl(path, AccessControlSections.Owner)
+				'fixOwner.SetOwner(_sidAdmin)
+				'Directory.SetAccessControl(path, fixOwner)
+
+				'Dim dirSecurity As DirectorySecurity = Directory.GetAccessControl(path, AccessControlSections.All)
+				'dirSecurity.SetAccessRuleProtection(False, True)
+
+				'dirSecurity.AddAccessRule(
+				' New FileSystemAccessRule(
+				' _sidSystem,
+				' rights,
+				' InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
+				' PropagationFlags.None,
+				' AccessControlType.Allow))
+
+				'dirSecurity.AddAccessRule(
+				'  New FileSystemAccessRule(
+				'  _sidAdmin,
+				'  rights,
+				'  InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
+				'  PropagationFlags.None,
+				'  AccessControlType.Allow))
+
+				'dirSecurity.AddAccessRule(
+				'   New FileSystemAccessRule(
+				'  _sidAuthUser,
+				'  rights,
+				'  InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
+				'  PropagationFlags.None,
+				'  AccessControlType.Allow))
+
+				'Directory.SetAccessControl(path, dirSecurity)
+			End Sub
 
 		End Module
 

@@ -39,7 +39,7 @@ Public Class AppLog
 		End SyncLock
 	End Sub
 
-	Public Sub Add(ByRef log As LogEntry)
+	Public Sub Add(ByVal log As LogEntry)
 		SyncLock m_threadlock
 			If Not Me.Dispatcher.CheckAccess() Then
 				Me.Dispatcher.Invoke(New AddEntryDelegate(AddressOf Me.AddEntry), log)
@@ -49,27 +49,27 @@ Public Class AppLog
 		End SyncLock
 	End Sub
 
-    Public Sub AddMessage(ByRef message As String, Optional ByRef key As String = Nothing, Optional ByRef value As String = Nothing)
-        SyncLock m_threadlock
-            If Not Me.Dispatcher.CheckAccess() Then
+	Public Sub AddMessage(ByVal message As String, Optional ByVal key As String = Nothing, Optional ByVal value As String = Nothing)
+		SyncLock m_threadlock
+			If Not Me.Dispatcher.CheckAccess() Then
 				Me.Dispatcher.Invoke(New AddMessageEntryDelegate(AddressOf Me.AddMessageEntry), message, key, value, LogType.Event)
-            Else
+			Else
 				Me.AddMessageEntry(message, key, value, LogType.Event)
-            End If
-        End SyncLock
-    End Sub
+			End If
+		End SyncLock
+	End Sub
 
-    Public Sub AddWarningMessage(ByRef message As String, Optional ByRef key As String = Nothing, Optional ByRef value As String = Nothing)
-        SyncLock m_threadlock
-            If Not Me.Dispatcher.CheckAccess() Then
+	Public Sub AddWarningMessage(ByVal message As String, Optional ByVal key As String = Nothing, Optional ByVal value As String = Nothing)
+		SyncLock m_threadlock
+			If Not Me.Dispatcher.CheckAccess() Then
 				Me.Dispatcher.Invoke(New AddMessageEntryDelegate(AddressOf Me.AddMessageEntry), message, key, value, LogType.Warning)
-            Else
+			Else
 				Me.AddMessageEntry(message, key, value, LogType.Warning)
-            End If
-        End SyncLock
-    End Sub
+			End If
+		End SyncLock
+	End Sub
 
-	Public Sub AddWarning(ByRef Ex As Exception, Optional ByVal message As String = Nothing)
+	Public Sub AddWarning(ByVal Ex As Exception, Optional ByVal message As String = Nothing)
 		SyncLock m_threadlock
 			If Not Me.Dispatcher.CheckAccess() Then
 				Me.Dispatcher.Invoke(New AddWarningEntryDelegate(AddressOf Me.AddWarningEntry), Ex, message)
@@ -79,7 +79,7 @@ Public Class AppLog
 		End SyncLock
 	End Sub
 
-	Public Sub AddException(ByRef Ex As Exception, Optional ByVal message As String = Nothing)
+	Public Sub AddException(ByVal Ex As Exception, Optional ByVal message As String = Nothing)
 		SyncLock m_threadlock
 			If Not Me.Dispatcher.CheckAccess() Then
 				Me.Dispatcher.Invoke(New AddExceptionEntryDelegate(AddressOf Me.AddExceptionEntry), Ex, message)
@@ -89,7 +89,7 @@ Public Class AppLog
 		End SyncLock
 	End Sub
 
-	Public Sub AddExceptionWithValues(ByRef Ex As Exception, ParamArray otherData As String())
+	Public Sub AddExceptionWithValues(ByVal Ex As Exception, ParamArray otherData As String())
 		SyncLock m_threadlock
 			If Not Me.Dispatcher.CheckAccess() Then
 				Me.Dispatcher.Invoke(New AddExceptionParamsEntry(AddressOf Me.AddExceptionParams), Ex, otherData)
@@ -99,7 +99,7 @@ Public Class AppLog
 		End SyncLock
 	End Sub
 
-	Public Function CreateEntry(Optional ByRef Ex As Exception = Nothing, Optional ByVal message As String = Nothing) As LogEntry
+	Public Function CreateEntry(Optional ByVal Ex As Exception = Nothing, Optional ByVal message As String = Nothing) As LogEntry
 		If Not Me.Dispatcher.CheckAccess() Then
 			Return DirectCast(Me.Dispatcher.Invoke(New CreateLogEntryDelegate(AddressOf Me.CreateLogEntry), Ex, message), LogEntry)
 		Else
@@ -418,8 +418,8 @@ Public Class AppLog
 		End Try
 	End Sub
 
-	Private Delegate Function CreateLogEntryDelegate(ByRef Ex As Exception, ByVal message As String) As LogEntry
-	Private Function CreateLogEntry(ByRef Ex As Exception, ByVal message As String) As LogEntry
+	Private Delegate Function CreateLogEntryDelegate(ByVal Ex As Exception, ByVal message As String) As LogEntry
+	Private Function CreateLogEntry(ByVal Ex As Exception, ByVal message As String) As LogEntry
 		Dim logEntry As New LogEntry()
 
 		If Not IsNullOrWhitespace(message) Then
@@ -433,8 +433,8 @@ Public Class AppLog
 		Return logEntry
 	End Function
 
-	Private Delegate Sub AddWarningEntryDelegate(ByRef Ex As Exception, ByVal message As String)
-	Private Sub AddWarningEntry(ByRef Ex As Exception, ByVal message As String)
+	Private Delegate Sub AddWarningEntryDelegate(ByVal Ex As Exception, ByVal message As String)
+	Private Sub AddWarningEntry(ByVal Ex As Exception, ByVal message As String)
 		Dim logEntry As LogEntry = logEntry.Create()
 
 		logEntry.Message = message
@@ -444,8 +444,8 @@ Public Class AppLog
 		AddEntry(logEntry)
 	End Sub
 
-	Private Delegate Sub AddExceptionEntryDelegate(ByRef Ex As Exception, ByVal message As String)
-	Private Sub AddExceptionEntry(ByRef Ex As Exception, ByVal message As String)
+	Private Delegate Sub AddExceptionEntryDelegate(ByVal Ex As Exception, ByVal message As String)
+	Private Sub AddExceptionEntry(ByVal Ex As Exception, ByVal message As String)
 		Dim logEntry As LogEntry = logEntry.Create()
 		logEntry.Message = message
 		logEntry.AddException(Ex, False)
@@ -453,8 +453,8 @@ Public Class AppLog
 		AddEntry(logEntry)
 	End Sub
 
-	Private Delegate Sub AddExceptionParamsEntry(ByRef Ex As Exception, otherData As String())
-	Private Sub AddExceptionParams(ByRef Ex As Exception, ParamArray otherData As String())
+	Private Delegate Sub AddExceptionParamsEntry(ByVal Ex As Exception, otherData As String())
+	Private Sub AddExceptionParams(ByVal Ex As Exception, ParamArray otherData As String())
 		Dim logEntry As LogEntry = logEntry.Create()
 		logEntry.AddException(Ex)
 
@@ -468,8 +468,8 @@ Public Class AppLog
 		AddEntry(logEntry)
 	End Sub
 
-	Private Delegate Sub AddMessageEntryDelegate(ByRef message As String, ByRef key As String, ByRef value As String, ByVal type As LogType)
-	Private Sub AddMessageEntry(ByRef message As String, ByRef key As String, ByRef value As String, ByVal type As LogType)
+	Private Delegate Sub AddMessageEntryDelegate(ByVal message As String, ByVal key As String, ByVal value As String, ByVal type As LogType)
+	Private Sub AddMessageEntry(ByVal message As String, ByVal key As String, ByVal value As String, ByVal type As LogType)
 		Dim logEntry As LogEntry = logEntry.Create()
 
 		logEntry.Type = type
@@ -486,8 +486,8 @@ Public Class AppLog
 		AddEntry(logEntry)
 	End Sub
 
-	Private Delegate Sub AddEntryDelegate(ByRef log As LogEntry)
-	Private Sub AddEntry(ByRef log As LogEntry)
+	Private Delegate Sub AddEntryDelegate(ByVal log As LogEntry)
+	Private Sub AddEntry(ByVal log As LogEntry)
 		m_logEntries.Add(log)
 	End Sub
 

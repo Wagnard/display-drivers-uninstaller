@@ -2362,7 +2362,7 @@ Public Class frmMain
 			Try
 
 				Dim infslist As String = ""
-				For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
+				For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", Microsoft.VisualBasic.FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
 					If Not IsNullOrWhitespace(infs) Then
 						infslist = infslist + infs
 					End If
@@ -7985,18 +7985,21 @@ Public Class frmMain
 	End Sub
 
 	Private Sub restoreMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles restoreMenuItem.Click
-		Dim frmT As New frmAbout
+		Dim testDir As String = "E:\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should"
+		Dim testFileShort As String = "E:\PROGRA~1\NVIDIA~1\INSTAL~1\NVNODE~1.{23\NODE_M~1\socket.io\NODE_M~1\SOCKET~1.IO-\NODE_M~1\ENGINE~1.IO-\NODE_M~1\ENGINE~1.IO-\NODE_M~1\BASE64~1\lib\ddu\wagnard\does\this\work\I\think\it\should\test\"
 
-		With frmT
-			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
-			.Owner = Me
-			.DataContext = Me.DataContext
-			.Width = Me.Width
-			.Height = Me.Height
-			.FrmType = 3
-		End With
+		' 288 chars, feel free to test ;P
+		' Btw, change drive letter if you try!
 
-		frmT.ShowDialog()
+		Try
+			'	FileIO.CreateDir(testDir)			' Create dir for testing!
+
+			'	FileIO.Delete(testFileShort)		' Delete file with short path
+			FileIO.Delete(testDir)				' FileIO.Delete deletes both, is it Dir or File
+
+		Catch ex As Exception
+			MessageBox.Show(ex.Message, "FileIO Failure!")
+		End Try
 	End Sub
 
 	Private Sub checkXMLMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles checkXMLMenuItem.Click
