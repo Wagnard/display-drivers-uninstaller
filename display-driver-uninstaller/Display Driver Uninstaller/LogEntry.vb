@@ -279,8 +279,9 @@ Public Class LogEntry
 			Dim win32Ex As Win32Exception = TryCast(ex, Win32Exception)
 
 			If win32Ex IsNot Nothing Then
-				m_values.Add(New KvP("Win32_ErrorCode", Win32.GetUInt32(win32Ex.NativeErrorCode).ToString()))
 				m_values.Add(New KvP("Win32_Message", win32Ex.Message))
+				m_values.Add(New KvP("Win32_ErrorCode", Win32.GetUInt32(win32Ex.NativeErrorCode).ToString()))
+				m_values.Add(KvP.Empty)
 
 				HasValues = True
 				HasAnyData = True
@@ -289,8 +290,9 @@ Public Class LogEntry
 			Dim comEx As Runtime.InteropServices.COMException = TryCast(ex, Runtime.InteropServices.COMException)
 
 			If comEx IsNot Nothing Then
-				m_values.Add(New KvP("com_ErrorCode", Win32.GetUInt32(comEx.ErrorCode).ToString()))
-				m_values.Add(New KvP("com_Message", comEx.Message))
+				m_values.Add(New KvP("COM_Message", comEx.Message))
+				m_values.Add(New KvP("COM_ErrorCode", Win32.GetUInt32(comEx.ErrorCode).ToString()))
+				m_values.Add(KvP.Empty)
 
 				HasValues = True
 				HasAnyData = True

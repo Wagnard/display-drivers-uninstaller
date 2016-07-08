@@ -85,4 +85,8 @@ Public Class Inf
 			Application.Log.AddException(ex)
 		End Try
 	End Sub
+
+	Public Overrides Function ToString() As String
+		Return If(_fileName, "<empty>")
+	End Function
 End Class

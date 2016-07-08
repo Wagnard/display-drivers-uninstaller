@@ -165,32 +165,10 @@ Public Module Tools
 		End If
 	End Function
 
-
-	''' <summary>Get files from directory using Windows API (FAST!)</summary>
-	''' <param name="directory">Directory where to look for files</param>
-	''' <param name="wildCard">Wilcard for files (default = *)</param>
-	''' <param name="searchSubDirs">Search subdirectories of directory (recursive)</param>
-	''' <returns>List(Of String) files</returns>
-	Public Function GetFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
-		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
-			wildCard = "*"
-		End If
-
-		Return WinAPI.GetFileNames(directory, wildCard, searchSubDirs)
-	End Function
-
-	Public Function GetDirectories(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
-		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
-			wildCard = "*"
-		End If
-
-		Return WinAPI.GetDirNames(directory, wildCard, searchSubDirs)
-	End Function
-
 	Public Function GetOemInfList(ByVal directory As String) As List(Of Inf)
 		Dim oemInfList As New List(Of Inf)
 
-		For Each inf As String In GetFiles(directory, "oem*.inf", False)
+		For Each inf As String In FileIO.GetFiles(directory, "oem*.inf", False)
 			oemInfList.Add(New Inf(inf))
 		Next
 

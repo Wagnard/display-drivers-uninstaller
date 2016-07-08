@@ -467,29 +467,41 @@ Namespace Win32
 
 #Region "Enums"
 
-			'<Flags()>
-			'Private Enum SECURITY_INFORMATION As UInt32
-			'	ATTRIBUTE_SECURITY_INFORMATION
-			'End Enum
+			<Flags()>
+			Private Enum SECURITY_INFORMATION As UInt32
+				OWNER = &H1UI
+				GROUP = &H2UI
+				DACL = &H4UI
+				SACL = &H8UI
+				LABEL = &H10UI
+				ATTRIBUTE = &H20UI
+				SCOPE = &H40UI
+				BACKUP = &H10000UI
+				UNPROTECTED_SAC = &H10000000UI
+				UNPROTECTED_DACL = &H20000000UI
+				PROTECTED_SACL = &H40000000UI
+				PROTECTED_DACL = &H80000000UI
+			End Enum
 
 #End Region
 
 #Region "P/Invoke"
 
-			'BOOL WINAPI GetFileSecurity(
-			'  _In_      LPCTSTR              lpFileName,
-			'  _In_      SECURITY_INFORMATION RequestedInformation,
-			'  _Out_opt_ PSECURITY_DESCRIPTOR pSecurityDescriptor,
-			'  _In_      DWORD                nLength,
-			'  _Out_     LPDWORD              lpnLengthNeeded
-			');
+			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Function GetFileSecurity(
+   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
+   <[In](), [Optional]()> ByVal RequestedInformation As SECURITY_INFORMATION,
+   <[Out](), [Optional]()> ByVal pSecurityDescriptor() As Byte,
+   <[In]()> ByVal nLength As UInt32,
+   <[Out]()> ByRef lpnLengthNeeded As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
 
-
-			'BOOL WINAPI SetFileSecurity(
-			'  _In_ LPCTSTR              lpFileName,
-			'  _In_ SECURITY_INFORMATION SecurityInformation,
-			'  _In_ PSECURITY_DESCRIPTOR pSecurityDescriptor
-			');
+			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Function SetFileSecurity(
+   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
+   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
+   <[In]()> ByVal pSecurityDescriptor() As Byte) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
 
 #End Region
 
@@ -576,74 +588,56 @@ Namespace Win32
 
 			' NEED TO FIX, 260+ PATHS => WIN API
 			Public Sub AddFileSecurity(ByVal path As String, ByVal rights As FileSystemRights)
-				'Dim fixOwner As FileSecurity = File.GetAccessControl(path, AccessControlSections.Owner)
-				'fixOwner.SetOwner(_sidAdmin)
-				'File.SetAccessControl(path, fixOwner)
+				'Dim bSecurity(0) As Byte
+				'Dim requiredSize As UInt32 = 0UI
+				'Dim errCode As UInt32 = 0UI
 
-				'Dim fileSecurity As FileSecurity = File.GetAccessControl(path, AccessControlSections.All)
-				'fileSecurity.SetAccessRuleProtection(False, True)
+				'If Not path.StartsWith(FileIO.UNC_PREFIX) Then
+				'	path = FileIO.UNC_PREFIX & path
+				'End If
 
-				'fileSecurity.AddAccessRule(
-				'  New FileSystemAccessRule(
-				'  _sidSystem,
-				'  rights,
-				'  InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
-				'  PropagationFlags.None,
-				'  AccessControlType.Allow))
+				'If Not GetFileSecurity(path, SECURITY_INFORMATION.OWNER, bSecurity, GetUInt32(bSecurity.Length), requiredSize) Then
+				'	errCode = GetLastWin32ErrorU()
 
-				'fileSecurity.AddAccessRule(
-				'  New FileSystemAccessRule(
-				'  _sidAdmin,
-				'  rights,
-				'  InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
-				'  PropagationFlags.None,
-				'  AccessControlType.Allow))
+				'	If errCode = Errors.ACCESS_DENIED Then
+				'		Dim fileSecurity As New FileSecurity()
 
-				'fileSecurity.AddAccessRule(
-				'   New FileSystemAccessRule(
-				'  _sidAuthUser,
-				'  rights,
-				'  InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
-				'  PropagationFlags.None,
-				'  AccessControlType.Allow))
+				'		fileSecurity.SetAccessRuleProtection(False, True)
 
-				'File.SetAccessControl(path, fileSecurity)
+
+				'		Dim newSecurity() As Byte = fileSecurity.GetSecurityDescriptorBinaryForm()
+
+				'		If Not SetFileSecurity(path, SECURITY_INFORMATION.OWNER, newSecurity) Then
+				'			errCode = GetLastWin32ErrorU()
+
+				'			If requiredSize = 0 OrElse errCode <> Errors.INSUFFICIENT_BUFFER Then
+				'				Throw New Win32Exception(GetInt32(errCode))
+				'			End If
+				'		End If
+				'	Else
+				'		Throw New Win32Exception(GetInt32(errCode))
+				'	End If
+				'End If
+
+				'errCode = GetLastWin32ErrorU()
+
+				'If requiredSize = 0 OrElse errCode <> Errors.INSUFFICIENT_BUFFER Then
+				'	Throw New Win32Exception(GetInt32(errCode))
+				'End If
+
+				'errCode = 0UI
+				'ReDim bSecurity(GetInt32(requiredSize) - 1)
+
+				'GetFileSecurity(path, SECURITY_INFORMATION.OWNER And SECURITY_INFORMATION.DACL, bSecurity, GetUInt32(bSecurity.Length), requiredSize)
+
+				'If errCode <> 0UI Then
+				'	Throw New Win32Exception(GetInt32(errCode))
+				'End If
 			End Sub
 
 			' NEED TO FIX, 260+ PATHS => WIN API
 			Public Sub AddDirSecurity(ByVal path As String, ByVal rights As FileSystemRights)
-				'Dim fixOwner As DirectorySecurity = Directory.GetAccessControl(path, AccessControlSections.Owner)
-				'fixOwner.SetOwner(_sidAdmin)
-				'Directory.SetAccessControl(path, fixOwner)
-
-				'Dim dirSecurity As DirectorySecurity = Directory.GetAccessControl(path, AccessControlSections.All)
-				'dirSecurity.SetAccessRuleProtection(False, True)
-
-				'dirSecurity.AddAccessRule(
-				' New FileSystemAccessRule(
-				' _sidSystem,
-				' rights,
-				' InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
-				' PropagationFlags.None,
-				' AccessControlType.Allow))
-
-				'dirSecurity.AddAccessRule(
-				'  New FileSystemAccessRule(
-				'  _sidAdmin,
-				'  rights,
-				'  InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
-				'  PropagationFlags.None,
-				'  AccessControlType.Allow))
-
-				'dirSecurity.AddAccessRule(
-				'   New FileSystemAccessRule(
-				'  _sidAuthUser,
-				'  rights,
-				'  InheritanceFlags.ContainerInherit Or InheritanceFlags.ObjectInherit,
-				'  PropagationFlags.None,
-				'  AccessControlType.Allow))
-
-				'Directory.SetAccessControl(path, dirSecurity)
+		
 			End Sub
 
 		End Module
