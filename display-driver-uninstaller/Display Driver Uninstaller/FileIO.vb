@@ -1,7 +1,7 @@
-﻿Imports System.Text
+﻿Imports System.IO
+Imports System.Text
 Imports System.ComponentModel
 Imports System.Runtime.InteropServices
-Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Security.Principal
 
@@ -255,6 +255,8 @@ Public Class FileIO
 
 #End Region
 
+#Region "TESTING SECTION"
+
 	' WORKING TEST FUNCTION TO CREATE LONG PATHS OVER 248+ CHARS
 	' NO NEED TO CREATE ALL CHILD DIRS "RECURSIVELY", IT CREATES WHOLE DIRECTORY STRUCTURE AT ONCE
 	Public Shared Sub CreateDir(ByVal dirPath As String)
@@ -279,34 +281,26 @@ Public Class FileIO
 					CreateDirectory(sb.ToString(), IntPtr.Zero)
 				End If
 			Next
+		Catch ex As Exception When TypeOf ex Is Win32Exception
+			Dim wEx As Win32Exception = TryCast(ex, Win32Exception)
 
+			If wEx IsNot Nothing Then
+				MessageBox.Show(wEx.Message & CRLF & "Win32_ErrorCode: " & wEx.NativeErrorCode.ToString(), "Win32Exception")
+			Else
+				MessageBox.Show(ex.Message)
+			End If
 		Catch ex As Exception
 			MessageBox.Show(ex.Message)
 		End Try
 	End Sub
 
-	' WORKING TEST FUNCTION TO REMOVE ABOVE LONG PATHS (IF EXPLORER CAN'T DELETE THEM)
-	Public Shared Sub DeleteDir(ByVal dirPath As String)
-		Try
-			If RemoveDirectory(If(dirPath.StartsWith(UNC_PREFIX), dirPath, UNC_PREFIX & dirPath)) Then
-				Return
-			End If
+	' Removed Testing function... Use Delete()
+	' I assume you found ERROR_DIR_NOT_EMPTY exception... ^^
 
-			Dim errCode As UInt32 = GetLastWin32ErrorU()
+#End Region
 
-			If errCode <> 0UI AndAlso errCode <> Errors.FILE_NOT_FOUND Then
-				Throw New Win32Exception(GetInt32(errCode))
-			End If
+#Region "Functions"
 
-		Catch ex As Exception
-			MessageBox.Show(ex.Message)
-		End Try
-	End Sub
-
-
-
-
-	' DO NOT USE ON CLEANING. WORK IN PROGRESS. NEEDS TESTING!
 	Public Shared Sub Delete(ByVal fileName As String)
 		DeleteInternal(fileName, False)
 	End Sub
@@ -389,11 +383,11 @@ Public Class FileIO
 							Delete(files(i))
 						Next
 
-						System.Threading.Thread.Sleep(100)		' Windows is slow... takes bit time to files be deleted.
+						System.Threading.Thread.Sleep(10)		' Windows is slow... takes bit time to files be deleted.
 
 						Dim waits As Int32 = 0
 
-						While True
+						While waits < 100						 'MAX 10 sec to wait Windows remove all files. ( 100 * 100ms)
 							If GetFileCount(newFileName, "*", True) > 0 Then
 								waits += 1
 								System.Threading.Thread.Sleep(100)
@@ -401,11 +395,8 @@ Public Class FileIO
 								Exit While
 							End If
 
-							If waits >= 100 Then		'MAX 10 sec to remove all files.
-								Exit While
-							End If
+							waits += 1
 						End While
-
 
 						If RemoveDirectory(newFileName) Then
 							Application.Log.AddMessage("Directory deleted!", "Path", fileName)
@@ -413,6 +404,8 @@ Public Class FileIO
 						Else
 							Throw New Win32Exception(GetLastWin32Error)
 						End If
+					ElseIf errCode <> 0UI Then
+						Throw New Win32Exception(GetInt32(errCode))
 					End If
 				Else				' fileName is file
 					If DeleteFile(newFileName) Then
@@ -428,7 +421,18 @@ Public Class FileIO
 
 			' ACCESS_DENIED
 			If Not fixAcl Then
-				ACL.FixFileSecurity(newFileName, True)
+				Dim logEntry As LogEntry = Application.Log.CreateEntry()
+				logEntry.Type = LogType.Warning
+				logEntry.Message = "Couldn't delete file, access denied! Attempting to fix path's permissions."
+				logEntry.Add("fileName", fileName)
+
+				Dim success As Boolean
+				Try
+					success = ACL.FixFileSecurity(newFileName, True)
+				Finally
+					logEntry.Add("Fixed", If(success, "Yes", "No"))
+					Application.Log.Add(logEntry)
+				End Try
 
 				DeleteInternal(fileName, True)	'Retry
 				Return
@@ -457,6 +461,7 @@ Public Class FileIO
 			Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, "Couldn't delete file!")
 			logEntry.Type = LogType.Error
 			logEntry.Add("fileName", fileName)
+			logEntry.Add("fixAcl", fixAcl.ToString())
 
 			Application.Log.Add(logEntry)
 		End Try
@@ -487,6 +492,10 @@ Public Class FileIO
 					errCode = GetAttributes(newFileName, isDir)
 
 					If errCode <> 0UI Then
+						If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
+							Return GetFilesInternal
+						End If
+
 						Throw New Win32Exception(GetInt32(errCode))
 					End If
 				End If
@@ -589,20 +598,20 @@ Public Class FileIO
 		Dim findData As New WIN32_FIND_DATA
 		Dim findHandle As IntPtr
 
+		Try
 		If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
 		If Not directory.StartsWith(UNC_PREFIX) Then directory = UNC_PREFIX & directory
 
 		Dim findDir As String
 		Dim dirs As Queue(Of String)
 
-		If searchSubDirs Then
-			dirs = New Queue(Of String)(GetDirNames(directory, "*", True, True))
-			dirs.Enqueue(directory)
-		Else
-			dirs = New Queue(Of String)(New String() {directory})
-		End If
+			If searchSubDirs Then
+				dirs = New Queue(Of String)(GetDirNames(directory, "*", True, True))
+				dirs.Enqueue(directory)
+			Else
+				dirs = New Queue(Of String)(New String() {directory})
+			End If
 
-		Try
 			While dirs.Count > 0
 				findDir = dirs.Dequeue()
 
@@ -640,6 +649,7 @@ Public Class FileIO
 		Dim findData As New WIN32_FIND_DATA
 		Dim findHandle As New IntPtr
 
+		Try
 		If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
 		If Not directory.StartsWith(UNC_PREFIX) Then directory = UNC_PREFIX & directory
 
@@ -647,7 +657,6 @@ Public Class FileIO
 		Dim dirs As Queue(Of String) = New Queue(Of String)(1000)
 		dirs.Enqueue(directory)
 
-		Try
 			While dirs.Count > 0
 				findDir = dirs.Dequeue()
 				findHandle = FindFirstFile(findDir & wildCard, findData)
@@ -736,6 +745,8 @@ Public Class FileIO
 		isDirectory = ((fileAttr And FILE_ATTRIBUTES.DIRECTORY) = FILE_ATTRIBUTES.DIRECTORY)
 		Return 0UI
 	End Function
+
+#End Region
 
 End Class
 

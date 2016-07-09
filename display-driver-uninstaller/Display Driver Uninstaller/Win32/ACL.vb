@@ -4,11 +4,14 @@ Imports System.ComponentModel
 Imports System.Runtime.InteropServices
 Imports System.IO
 Imports System.Security.AccessControl
-Imports Microsoft.Win32
 Imports System.Security.Principal
 
+Imports Microsoft.Win32
+
 Namespace Win32
+
 	Namespace ACL
+
 		Public Module Priviliges
 
 #Region "Consts"
@@ -369,6 +372,8 @@ Namespace Win32
 
 #End Region
 
+#Region "Functions"
+
 			Sub New()
 				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
 			End Sub
@@ -433,6 +438,8 @@ Namespace Win32
 					End If
 				End Try
 			End Sub
+
+#End Region
 
 		End Module
 
@@ -620,6 +627,8 @@ Namespace Win32
 
 #End Region
 
+#Region "Functions"
+
 			Sub New()
 				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
 			End Sub
@@ -718,6 +727,10 @@ Namespace Win32
 
 					errCode = GetLastWin32ErrorU()
 
+					If errCode = Errors.PATH_NOT_FOUND OrElse errCode = Errors.FILE_NOT_FOUND Then
+						Return False
+					End If
+
 					If errCode <> 0UI Then
 						Throw New Win32Exception(GetInt32(errCode))
 					End If
@@ -778,6 +791,8 @@ Namespace Win32
 					End If
 				End Try
 			End Function
+
+#End Region
 
 		End Module
 
@@ -939,6 +954,8 @@ Namespace Win32
 			End Function
 
 #End Region
+
+#Region "Functions"
 
 			Shared Sub New()
 				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
@@ -1112,7 +1129,10 @@ Namespace Win32
 				Return RegSetKeySecurity(ptrRegKey, securityInformation, rs.GetSecurityDescriptorBinaryForm())
 			End Function
 
+#End Region
+
 		End Class
 
 	End Namespace
+
 End Namespace

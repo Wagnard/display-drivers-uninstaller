@@ -337,7 +337,7 @@ Public Class frmMain
 			filePath = sysdrv + "\AMD"
 
 			Try
-				fileio.delete(filePath)
+				FileIO.Delete(filePath)
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 				TestDelete(filePath, config)
@@ -376,7 +376,7 @@ Public Class frmMain
 					   child.ToLower.EndsWith("\px") Or
 					   child.ToLower.Contains("hydravision") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -386,7 +386,7 @@ Public Class frmMain
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 					TestDelete(filePath, config)
@@ -408,7 +408,7 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("cim") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -418,7 +418,7 @@ Public Class frmMain
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 					TestDelete(filePath, config)
@@ -439,7 +439,7 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("multimedia") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -449,7 +449,7 @@ Public Class frmMain
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 					'on success, do this
 
 				Catch ex As Exception
@@ -468,7 +468,7 @@ Public Class frmMain
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD APP"
 		If Directory.Exists(filePath) Then
 			Try
-				fileio.delete(filePath)
+				FileIO.Delete(filePath)
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 				TestDelete(filePath, config)
@@ -481,7 +481,7 @@ Public Class frmMain
 			  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
 			If Directory.Exists(filePath) Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 					TestDelete(filePath, config)
@@ -500,7 +500,7 @@ Public Class frmMain
 							 child.ToLower.EndsWith("\px") Or
 							 child.ToLower.Contains("hydravision") Then
 								Try
-									fileio.delete(child)
+									FileIO.Delete(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
 									TestDelete(child, config)
@@ -510,7 +510,7 @@ Public Class frmMain
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -540,7 +540,7 @@ Public Class frmMain
 			   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
 			If Directory.Exists(filePath) Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 					TestDelete(filePath, config)
@@ -584,7 +584,7 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("multimedia") Then
 							Try
-								fileio.delete(child)
+								FileIO.Delete(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 								TestDelete(child, config)
@@ -595,7 +595,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -616,7 +616,7 @@ Public Class frmMain
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
 		If Directory.Exists(filePath) Then
 			Try
-				fileio.delete(filePath)
+				FileIO.Delete(filePath)
 			Catch ex As Exception
 				TestDelete(filePath, config)
 			End Try
@@ -627,7 +627,7 @@ Public Class frmMain
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
 		If Directory.Exists(filePath) Then
 			Try
-				fileio.delete(filePath)
+				FileIO.Delete(filePath)
 			Catch ex As Exception
 				TestDelete(filePath, config)
 			End Try
@@ -640,7 +640,7 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ace") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -650,7 +650,7 @@ Public Class frmMain
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 					TestDelete(filePath, config)
@@ -671,7 +671,7 @@ Public Class frmMain
 					If child.ToLower.Contains("kdb") Or _
 					   child.ToLower.Contains("fuel") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -681,7 +681,7 @@ Public Class frmMain
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 					TestDelete(filePath, config)
@@ -705,7 +705,7 @@ Public Class frmMain
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ace") Then
 								Try
-									fileio.delete(child)
+									FileIO.Delete(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
 									TestDelete(child, config)
@@ -715,7 +715,7 @@ Public Class frmMain
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -742,7 +742,7 @@ Public Class frmMain
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ace") Then
 								Try
-									fileio.delete(child)
+									FileIO.Delete(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
 									TestDelete(child, config)
@@ -752,7 +752,7 @@ Public Class frmMain
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -781,7 +781,7 @@ Public Class frmMain
 							 removedxcache AndAlso child.ToLower.Contains("dxcache") Or _
 							 removedxcache AndAlso child.ToLower.Contains("glcache") Then
 								Try
-									fileio.delete(child)
+									FileIO.Delete(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
 									TestDelete(child, config)
@@ -791,7 +791,7 @@ Public Class frmMain
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -822,7 +822,7 @@ Public Class frmMain
 					 child.ToLower.Contains("920dec42-4ca5-4d1d-9487-67be645cddfc") Or
 					   child.ToLower.Contains("cim") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -833,7 +833,7 @@ Public Class frmMain
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
 					Try
-						fileio.delete(filePath)
+						FileIO.Delete(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 						TestDelete(filePath, config)
@@ -857,7 +857,7 @@ Public Class frmMain
 					If child.ToLower.Contains("ati.ace") Or _
 					   child.ToLower.Contains("cnext") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -867,7 +867,7 @@ Public Class frmMain
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 					TestDelete(filePath, config)
@@ -909,7 +909,7 @@ Public Class frmMain
 					 child.ToLower.Contains("\atixclib") Or
 					   child.ToLower.Contains("\dem.") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -946,7 +946,7 @@ Public Class frmMain
 					 child.ToLower.Contains("\atixclib") Or
 					 child.ToLower.Contains("\dem.") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -1223,7 +1223,7 @@ Public Class frmMain
 
 		'end of decom?
 		Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" &
-				   "Display\shellex\PropertySheetHandlers", True)
+			 "Display\shellex\PropertySheetHandlers", True)
 			Try
 				deletesubregkey(regkey, "ATIACE")
 			Catch ex As Exception
@@ -1767,7 +1767,7 @@ Public Class frmMain
 														childf.ToLower.Contains("amdkmpfd") Or
 														childf.ToLower.Contains("cim") Then
 															Try
-																fileio.delete(childf)
+																FileIO.Delete(childf)
 															Catch ex As Exception
 																Application.Log.AddException(ex)
 																TestDelete(childf, config)
@@ -1777,7 +1777,7 @@ Public Class frmMain
 												Next
 												If Directory.GetDirectories(filePath).Length = 0 Then
 													Try
-														fileio.delete(filePath)
+														FileIO.Delete(filePath)
 													Catch ex As Exception
 														Application.Log.AddException(ex)
 														TestDelete(filePath, config)
@@ -1789,7 +1789,7 @@ Public Class frmMain
 											If IsNullOrWhitespace(child2) Then Continue For
 
 											If StrContainsAny(child2, True, "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages",
-															  "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo") Then
+												  "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo") Then
 												Try
 													deletesubregkey(regkey2, child2)
 												Catch ex As Exception
@@ -1934,7 +1934,7 @@ Public Class frmMain
 
 														If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
 															Try
-																fileio.delete(childf)
+																FileIO.Delete(childf)
 															Catch ex As Exception
 																Application.Log.AddException(ex)
 																TestDelete(childf, config)
@@ -1943,7 +1943,7 @@ Public Class frmMain
 													Next
 													If Directory.GetDirectories(filePath).Length = 0 Then
 														Try
-															fileio.delete(filePath)
+															FileIO.Delete(filePath)
 														Catch ex As Exception
 															Application.Log.AddException(ex)
 															TestDelete(filePath, config)
@@ -1956,7 +1956,7 @@ Public Class frmMain
 												If IsNullOrWhitespace(child2) Then Continue For
 
 												If StrContainsAny(child2, True, "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "packages",
-																  "wirelessdisplay", "hydravision", "dndtranscoding64", "avivo", "steadyvideo") Then
+													  "wirelessdisplay", "hydravision", "dndtranscoding64", "avivo", "steadyvideo") Then
 													Try
 														deletesubregkey(regkey2, child2)
 													Catch ex As Exception
@@ -2553,7 +2553,7 @@ Public Class frmMain
 		If config.RemoveNvidiaDirs = True Then
 			filePath = sysdrv + "\NVIDIA"
 			Try
-				fileio.delete(filePath)
+				FileIO.Delete(filePath)
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 				TestDelete(filePath, config)
@@ -2572,7 +2572,7 @@ Public Class frmMain
 					End Try
 
 					Try
-						fileio.delete(child)
+						FileIO.Delete(child)
 					Catch ex As Exception
 
 						Application.Log.AddException(ex)
@@ -2585,7 +2585,7 @@ Public Class frmMain
 						Application.Log.AddException(ex)
 					End Try
 					Try
-						fileio.delete(child)
+						FileIO.Delete(child)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 					End Try
@@ -2600,7 +2600,7 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "3d vision experience") Then
 							Try
-								fileio.delete(child)
+								FileIO.Delete(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 								TestDelete(child, config)
@@ -2611,7 +2611,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -2641,7 +2641,7 @@ Public Class frmMain
 						 (child.ToLower.Contains("nvgs") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Then
 							Try
-								fileio.delete(child)
+								FileIO.Delete(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 								TestDelete(child, config)
@@ -2652,7 +2652,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -2677,7 +2677,7 @@ Public Class frmMain
 						If child.ToLower.Contains("computecache") Or
 						 child.ToLower.Contains("glcache") Then
 							Try
-								fileio.delete(child)
+								FileIO.Delete(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 								TestDelete(child, config)
@@ -2688,7 +2688,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -2723,7 +2723,7 @@ Public Class frmMain
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
 								Try
-									fileio.delete(child)
+									FileIO.Delete(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
 								End Try
@@ -2733,7 +2733,7 @@ Public Class frmMain
 					Try
 						If Directory.GetDirectories(filePath).Length = 0 Then
 							Try
-								fileio.delete(filePath)
+								FileIO.Delete(filePath)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 							End Try
@@ -2760,7 +2760,7 @@ Public Class frmMain
 					If child.ToLower.Contains("updatus") Or _
 					 (child.ToLower.Contains("grid") AndAlso config.RemoveGFE) Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -2771,7 +2771,7 @@ Public Class frmMain
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
 					Try
-						fileio.delete(filePath)
+						FileIO.Delete(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 						TestDelete(filePath, config)
@@ -2804,7 +2804,7 @@ Public Class frmMain
 					 (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -2814,7 +2814,7 @@ Public Class frmMain
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 					TestDelete(filePath, config)
@@ -2835,7 +2835,7 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("3d vision") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -2846,7 +2846,7 @@ Public Class frmMain
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
 					Try
-						fileio.delete(filePath)
+						FileIO.Delete(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 						TestDelete(filePath, config)
@@ -2893,8 +2893,8 @@ Public Class frmMain
 
 
 						Try
-							'fileio.delete(child)
-							fileio.delete(child)
+							'FileIO.Delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -2931,7 +2931,7 @@ Public Class frmMain
 								   child2.ToLower.Contains("hdaudio.driver") Then
 
 									Try
-										fileio.delete(child2)
+										FileIO.Delete(child2)
 									Catch ex As Exception
 										Application.Log.AddException(ex)
 										TestDelete(child2, config)
@@ -2942,7 +2942,7 @@ Public Class frmMain
 
 						If Directory.GetDirectories(child).Length = 0 Then
 							Try
-								fileio.delete(child)
+								FileIO.Delete(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 								TestDelete(child, config)
@@ -2958,7 +2958,7 @@ Public Class frmMain
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 					TestDelete(filePath, config)
@@ -2976,7 +2976,7 @@ Public Class frmMain
 			 (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
 			If Directory.Exists(filePath) Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 				End Try
 			End If
@@ -2986,7 +2986,7 @@ Public Class frmMain
 			filePath = config.Paths.ProgramFiles + "VulkanRT"
 			If Directory.Exists(filePath) Then
 				Try
-					fileio.delete(filePath)
+					FileIO.Delete(filePath)
 				Catch ex As Exception
 				End Try
 			End If
@@ -3014,7 +3014,7 @@ Public Class frmMain
 						 child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 							If removephysx Then
 								Try
-									fileio.delete(child)
+									FileIO.Delete(child)
 								Catch ex As Exception
 									Application.Log.AddException(ex)
 									TestDelete(child, config)
@@ -3024,7 +3024,7 @@ Public Class frmMain
 									'do nothing
 								Else
 									Try
-										fileio.delete(child)
+										FileIO.Delete(child)
 									Catch ex As Exception
 										Application.Log.AddException(ex)
 										TestDelete(child, config)
@@ -3037,7 +3037,7 @@ Public Class frmMain
 
 				If Directory.GetDirectories(filePath).Length = 0 Then
 					Try
-						fileio.delete(filePath)
+						FileIO.Delete(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 						TestDelete(filePath, config)
@@ -3058,7 +3058,7 @@ Public Class frmMain
 				 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
 				If Directory.Exists(filePath) Then
 					Try
-						fileio.delete(filePath)
+						FileIO.Delete(filePath)
 					Catch ex As Exception
 					End Try
 				End If
@@ -3070,7 +3070,7 @@ Public Class frmMain
 				filePath = Application.Paths.ProgramFilesx86 + "VulkanRT"
 				If Directory.Exists(filePath) Then
 					Try
-						fileio.delete(filePath)
+						FileIO.Delete(filePath)
 					Catch ex As Exception
 					End Try
 				End If
@@ -3106,7 +3106,7 @@ Public Class frmMain
 
 		filePath = Environment.GetEnvironmentVariable("windir")
 		Try
-			fileio.delete(filePath + "\Help\nvcpl")
+			FileIO.Delete(filePath + "\Help\nvcpl")
 		Catch ex As Exception
 		End Try
 
@@ -3116,7 +3116,7 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("nv_cache") Then
 						Try
-							fileio.delete(child)
+							FileIO.Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(child, config)
@@ -3127,7 +3127,7 @@ Public Class frmMain
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
 					Try
-						fileio.delete(filePath)
+						FileIO.Delete(filePath)
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 						TestDelete(filePath, config)
@@ -3155,7 +3155,7 @@ Public Class frmMain
 						If child.ToLower.Contains("nv_cache") Or
 						 child.ToLower.Contains("displaydriver") Then
 							Try
-								fileio.delete(child)
+								FileIO.Delete(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 								TestDelete(child, config)
@@ -3166,7 +3166,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -3190,7 +3190,7 @@ Public Class frmMain
 						If child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE Or _
 						   child.ToLower.Contains("displaydriver") Then
 							Try
-								fileio.delete(child)
+								FileIO.Delete(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 								TestDelete(child, config)
@@ -3201,7 +3201,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -3224,7 +3224,7 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("nv_cache") Then
 							Try
-								fileio.delete(child)
+								FileIO.Delete(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 								TestDelete(child, config)
@@ -3235,7 +3235,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 						Try
-							fileio.delete(filePath)
+							FileIO.Delete(filePath)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 							TestDelete(filePath, config)
@@ -3265,7 +3265,7 @@ Public Class frmMain
 									If IsNullOrWhitespace(child) = False Then
 										If child.ToLower.Contains("nv_cache") Then
 											Try
-												fileio.delete(child)
+												FileIO.Delete(child)
 											Catch ex As Exception
 												Application.Log.AddException(ex)
 												TestDelete(child, config)
@@ -3276,7 +3276,7 @@ Public Class frmMain
 
 								If Directory.GetDirectories(filePath).Length = 0 Then
 									Try
-										fileio.delete(filePath)
+										FileIO.Delete(filePath)
 									Catch ex As Exception
 										Application.Log.AddException(ex)
 										TestDelete(filePath, config)
@@ -3312,7 +3312,7 @@ Public Class frmMain
 						 child.ToLower.Contains("shadowplay") Or
 						   child.ToLower.Contains("nvidia.gfe") Then
 							Try
-								fileio.delete(child)
+								FileIO.Delete(child)
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 								TestDelete(child, config)
@@ -4708,7 +4708,7 @@ Public Class frmMain
 		End Try
 
 		Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" &
-			 "Display\shellex\PropertySheetHandlers", True)
+		  "Display\shellex\PropertySheetHandlers", True)
 			Try
 				deletesubregkey(regkey, "NVIDIA CPL Extension")
 			Catch ex As Exception
@@ -7831,7 +7831,7 @@ Public Class frmMain
 								   child2.ToLower.Contains("shield") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("hdaudio.driver") Then
 									Try
-										fileio.delete(child2)
+										FileIO.Delete(child2)
 									Catch ex As Exception
 									End Try
 								End If
@@ -7840,7 +7840,7 @@ Public Class frmMain
 
 						If Directory.GetDirectories(child).Length = 0 Then
 							Try
-								fileio.delete(child)
+								FileIO.Delete(child)
 							Catch ex As Exception
 							End Try
 						End If
