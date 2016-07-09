@@ -129,15 +129,6 @@ Public Class CleanupEngine
 			End If
 		End If
 	End Sub
-	Public Sub deletefile(ByVal filepath As String)
-		If Not IsNullOrWhitespace(filepath) AndAlso File.Exists(filepath) Then
-
-			System.IO.File.Delete(filepath)	'filepath here include the file too.
-
-			Application.Log.AddMessage(filepath & " - " & UpdateTextMethodmessagefn(41))
-		End If
-
-	End Sub
 
 	Public Sub deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String)
 		If regkeypath IsNot Nothing AndAlso Not IsNullOrWhitespace(child) Then
@@ -473,7 +464,7 @@ Public Class CleanupEngine
 															If IsNullOrWhitespace(file) Then Continue For
 
 															If StrContainsAny(file, True, ".msi") Then
-																deletefile(file)
+																FileIO.delete(file)
 															End If
 														Catch ex As Exception
 														End Try
@@ -1739,18 +1730,18 @@ Public Class CleanupEngine
 				filePath = System.Environment.SystemDirectory
 
 				Try
-					deletefile(filePath & "\" & driverFile)
+					FileIO.delete(filePath & "\" & driverFile)
 				Catch ex As Exception
 				End Try
 
 				Try
-					deletefile(filePath & "\Drivers\" & driverFile)
+					FileIO.delete(filePath & "\Drivers\" & driverFile)
 				Catch ex As Exception
 				End Try
 
 				If winxp Then
 					Try
-						deletefile(filePath & "\Drivers\dllcache\" & driverFile)
+						FileIO.delete(filePath & "\Drivers\dllcache\" & driverFile)
 					Catch ex As Exception
 					End Try
 				End If
@@ -1768,7 +1759,7 @@ Public Class CleanupEngine
 
 					If StrContainsAny(child, True, driverFile) Then
 						Try
-							deletefile(child)
+							FileIO.delete(child)
 						Catch ex As Exception
 						End Try
 					End If
@@ -1809,19 +1800,19 @@ Public Class CleanupEngine
 
 						If StrContainsAny(child, True, driverFile) Then
 							Try
-								deletefile(child)
+								FileIO.delete(child)
 							Catch ex As Exception
 							End Try
 						End If
 					Next
 
 					Try
-						deletefile(winPath & "\Drivers\" & driverFile)
+						FileIO.delete(winPath & "\Drivers\" & driverFile)
 					Catch ex As Exception
 					End Try
 
 					Try
-						deletefile(winPath & "\" & driverFile)
+						FileIO.delete(winPath & "\" & driverFile)
 					Catch ex As Exception
 					End Try
 				End If

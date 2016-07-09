@@ -336,12 +336,8 @@ Public Class frmMain
 		If config.RemoveAMDDirs Then
 			filePath = sysdrv + "\AMD"
 
-			Try
-				FileIO.Delete(filePath)
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-				TestDelete(filePath, config)
-			End Try
+			FileIO.Delete(filePath)
+
 		End If
 
 		'Delete driver files
@@ -353,13 +349,13 @@ Public Class frmMain
 
 		filePath = Environment.GetEnvironmentVariable("windir")
 		Try
-			deletefile(filePath + "\atiogl.xml")
+			FileIO.delete(filePath + "\atiogl.xml")
 		Catch ex As Exception
 		End Try
 
 		filePath = Environment.GetEnvironmentVariable("windir")
 		Try
-			deletefile(filePath + "\ativpsrm.bin")
+			FileIO.delete(filePath + "\ativpsrm.bin")
 		Catch ex As Exception
 		End Try
 
@@ -375,22 +371,16 @@ Public Class frmMain
 					   child.ToLower.Contains("application profiles") Or
 					   child.ToLower.EndsWith("\px") Or
 					   child.ToLower.Contains("hydravision") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					TestDelete(filePath, config)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -407,22 +397,16 @@ Public Class frmMain
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("cim") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					TestDelete(filePath, config)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -438,24 +422,16 @@ Public Class frmMain
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("multimedia") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
-				Try
-					FileIO.Delete(filePath)
-					'on success, do this
 
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					TestDelete(filePath, config)
-				End Try
+				FileIO.Delete(filePath)
+
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -467,12 +443,9 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD APP"
 		If Directory.Exists(filePath) Then
-			Try
-				FileIO.Delete(filePath)
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-				TestDelete(filePath, config)
-			End Try
+
+			FileIO.Delete(filePath)
+
 		End If
 
 		If IntPtr.Size = 8 Then
@@ -480,12 +453,9 @@ Public Class frmMain
 			filePath = Environment.GetFolderPath _
 			  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
 			If Directory.Exists(filePath) Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					TestDelete(filePath, config)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			End If
 
 			filePath = Environment.GetFolderPath _
@@ -499,22 +469,16 @@ Public Class frmMain
 							 child.ToLower.Contains("application profiles") Or
 							 child.ToLower.EndsWith("\px") Or
 							 child.ToLower.Contains("hydravision") Then
-								Try
-									FileIO.Delete(child)
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-									TestDelete(child, config)
-								End Try
+
+								FileIO.Delete(child)
+
 							End If
 						End If
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -529,52 +493,42 @@ Public Class frmMain
 			Dim files() As String = IO.Directory.GetFiles(filePath + "\", "coinst_*.*")
 			For i As Integer = 0 To files.Length - 1
 				If Not IsNullOrWhitespace(files(i)) Then
-					Try
-						deletefile(files(i))
-					Catch ex As Exception
-					End Try
+
+					FileIO.Delete(files(i))
+
 				End If
 			Next
 
 			filePath = Environment.GetFolderPath _
 			   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
 			If Directory.Exists(filePath) Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					TestDelete(filePath, config)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			End If
 
 			filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
 			If Directory.Exists(filePath) Then
-				Try
-					TestDelete(filePath, config)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			End If
 
 			filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoFirefox"
 			If Directory.Exists(filePath) Then
-				Try
-					TestDelete(filePath, config)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			End If
 
 			filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoChrome"
 			If Directory.Exists(filePath) Then
-				Try
-					TestDelete(filePath, config)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			End If
 
 			filePath = Environment.GetFolderPath _
@@ -583,23 +537,17 @@ Public Class frmMain
 				For Each child As String In Directory.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("multimedia") Then
-							Try
-								FileIO.Delete(child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-								TestDelete(child, config)
-							End Try
+
+							FileIO.Delete(child)
+
 						End If
 					End If
 				Next
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -615,22 +563,18 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
 		If Directory.Exists(filePath) Then
-			Try
-				FileIO.Delete(filePath)
-			Catch ex As Exception
-				TestDelete(filePath, config)
-			End Try
+
+			FileIO.Delete(filePath)
+
 		End If
 
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
 		If Directory.Exists(filePath) Then
-			Try
-				FileIO.Delete(filePath)
-			Catch ex As Exception
-				TestDelete(filePath, config)
-			End Try
+
+			FileIO.Delete(filePath)
+
 		End If
 
 		filePath = Environment.GetFolderPath _
@@ -639,22 +583,16 @@ Public Class frmMain
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ace") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					TestDelete(filePath, config)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -670,22 +608,16 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("kdb") Or _
 					   child.ToLower.Contains("fuel") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					TestDelete(filePath, config)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -704,22 +636,16 @@ Public Class frmMain
 					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ace") Then
-								Try
-									FileIO.Delete(child)
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-									TestDelete(child, config)
-								End Try
+
+								FileIO.Delete(child)
+
 							End If
 						End If
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -741,22 +667,16 @@ Public Class frmMain
 					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ace") Then
-								Try
-									FileIO.Delete(child)
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-									TestDelete(child, config)
-								End Try
+
+								FileIO.Delete(child)
+
 							End If
 						End If
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -780,22 +700,16 @@ Public Class frmMain
 							 child.ToLower.Contains("fuel") Or _
 							 removedxcache AndAlso child.ToLower.Contains("dxcache") Or _
 							 removedxcache AndAlso child.ToLower.Contains("glcache") Then
-								Try
-									FileIO.Delete(child)
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-									TestDelete(child, config)
-								End Try
+
+								FileIO.Delete(child)
+
 							End If
 						End If
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -821,23 +735,17 @@ Public Class frmMain
 					 child.ToLower.Contains("steadyvideo") Or
 					 child.ToLower.Contains("920dec42-4ca5-4d1d-9487-67be645cddfc") Or
 					   child.ToLower.Contains("cim") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
-					Try
-						FileIO.Delete(filePath)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-						TestDelete(filePath, config)
-					End Try
+
+					FileIO.Delete(filePath)
+
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -856,22 +764,16 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ati.ace") Or _
 					   child.ToLower.Contains("cnext") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					TestDelete(filePath, config)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -908,12 +810,9 @@ Public Class frmMain
 					 child.ToLower.Contains("\a4.found") Or
 					 child.ToLower.Contains("\atixclib") Or
 					   child.ToLower.Contains("\dem.") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
@@ -945,12 +844,9 @@ Public Class frmMain
 					 child.ToLower.Contains("\a4.found") Or
 					 child.ToLower.Contains("\atixclib") Or
 					 child.ToLower.Contains("\dem.") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
@@ -1766,22 +1662,16 @@ Public Class frmMain
 														childf.ToLower.Contains("cnext") Or
 														childf.ToLower.Contains("amdkmpfd") Or
 														childf.ToLower.Contains("cim") Then
-															Try
-																FileIO.Delete(childf)
-															Catch ex As Exception
-																Application.Log.AddException(ex)
-																TestDelete(childf, config)
-															End Try
+
+															FileIO.Delete(childf)
+
 														End If
 													End If
 												Next
 												If Directory.GetDirectories(filePath).Length = 0 Then
-													Try
-														FileIO.Delete(filePath)
-													Catch ex As Exception
-														Application.Log.AddException(ex)
-														TestDelete(filePath, config)
-													End Try
+
+													FileIO.Delete(filePath)
+
 												End If
 											End If
 										End If
@@ -1933,21 +1823,15 @@ Public Class frmMain
 														If IsNullOrWhitespace(childf) Then Continue For
 
 														If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
-															Try
-																FileIO.Delete(childf)
-															Catch ex As Exception
-																Application.Log.AddException(ex)
-																TestDelete(childf, config)
-															End Try
+
+															FileIO.Delete(childf)
+
 														End If
 													Next
 													If Directory.GetDirectories(filePath).Length = 0 Then
-														Try
-															FileIO.Delete(filePath)
-														Catch ex As Exception
-															Application.Log.AddException(ex)
-															TestDelete(filePath, config)
-														End Try
+
+														FileIO.Delete(filePath)
+
 													End If
 												End If
 											End If
@@ -2453,7 +2337,7 @@ Public Class frmMain
 				For i As Integer = 0 To files.Length - 1
 					If Not IsNullOrWhitespace(files(i)) Then
 						Try
-							deletefile(files(i))
+							FileIO.delete(files(i))
 						Catch ex As Exception
 						End Try
 					End If
@@ -2463,7 +2347,7 @@ Public Class frmMain
 				For i As Integer = 0 To files.Length - 1
 					If Not IsNullOrWhitespace(files(i)) Then
 						Try
-							deletefile(files(i))
+							FileIO.delete(files(i))
 						Catch ex As Exception
 						End Try
 					End If
@@ -2477,7 +2361,7 @@ Public Class frmMain
 					For i As Integer = 0 To files.Length - 1
 						If Not IsNullOrWhitespace(files(i)) Then
 							Try
-								deletefile(files(i))
+								FileIO.delete(files(i))
 							Catch ex As Exception
 							End Try
 						End If
@@ -2487,7 +2371,7 @@ Public Class frmMain
 					For i As Integer = 0 To files.Length - 1
 						If Not IsNullOrWhitespace(files(i)) Then
 							Try
-								deletefile(files(i))
+								FileIO.delete(files(i))
 							Catch ex As Exception
 							End Try
 						End If
@@ -2552,12 +2436,9 @@ Public Class frmMain
 
 		If config.RemoveNvidiaDirs = True Then
 			filePath = sysdrv + "\NVIDIA"
-			Try
-				FileIO.Delete(filePath)
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-				TestDelete(filePath, config)
-			End Try
+
+			FileIO.Delete(filePath)
+
 
 		End If
 
@@ -2566,29 +2447,18 @@ Public Class frmMain
 		For Each child As String In Directory.GetDirectories(filePath)
 			If IsNullOrWhitespace(child) = False Then
 				If child.ToLower.Contains("updatususer") Then
-					Try
-						TestDelete(child, config)
-					Catch ex As Exception
-					End Try
 
-					Try
-						FileIO.Delete(child)
-					Catch ex As Exception
+					FileIO.Delete(child)
 
-						Application.Log.AddException(ex)
-					End Try
+					FileIO.Delete(child)
+
 
 					'Yes we do it 2 times. This will workaround a problem on junction/sybolic/hard link
-					Try
-						TestDelete(child, config)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-					Try
-						FileIO.Delete(child)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
+					'(Will have to see if this is this valid. This was on old driver pre 300.xx I beleive :/ )
+					FileIO.Delete(child)
+
+					FileIO.Delete(child)
+
 				End If
 			End If
 		Next
@@ -2599,23 +2469,17 @@ Public Class frmMain
 				For Each child As String In Directory.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "3d vision experience") Then
-							Try
-								FileIO.Delete(child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-								TestDelete(child, config)
-							End Try
+
+							FileIO.Delete(child)
+
 						End If
 					End If
 				Next
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -2640,23 +2504,17 @@ Public Class frmMain
 						 (child.ToLower.Contains("shareconnect") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("nvgs") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Then
-							Try
-								FileIO.Delete(child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-								TestDelete(child, config)
-							End Try
+
+							FileIO.Delete(child)
+
 						End If
 					End If
 				Next
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -2676,23 +2534,17 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("computecache") Or
 						 child.ToLower.Contains("glcache") Then
-							Try
-								FileIO.Delete(child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-								TestDelete(child, config)
-							End Try
+
+							FileIO.Delete(child)
+
 						End If
 					End If
 				Next
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -2722,21 +2574,17 @@ Public Class frmMain
 							 (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
-								Try
-									FileIO.Delete(child)
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-								End Try
+
+								FileIO.Delete(child)
+
 							End If
 						End If
 					Next
 					Try
 						If Directory.GetDirectories(filePath).Length = 0 Then
-							Try
-								FileIO.Delete(filePath)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-							End Try
+
+							FileIO.Delete(filePath)
+
 						Else
 							For Each data As String In Directory.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -2759,23 +2607,17 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("updatus") Or _
 					 (child.ToLower.Contains("grid") AndAlso config.RemoveGFE) Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
-					Try
-						FileIO.Delete(filePath)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-						TestDelete(filePath, config)
-					End Try
+
+					FileIO.Delete(filePath)
+
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -2803,22 +2645,16 @@ Public Class frmMain
 					 (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					TestDelete(filePath, config)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -2834,23 +2670,17 @@ Public Class frmMain
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("3d vision") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
-					Try
-						FileIO.Delete(filePath)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-						TestDelete(filePath, config)
-					End Try
+
+					FileIO.Delete(filePath)
+
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -2891,14 +2721,8 @@ Public Class frmMain
 					   child.ToLower.Contains("nvgsync") Or
 					   child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 
+						FileIO.Delete(child)
 
-						Try
-							'FileIO.Delete(child)
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
 					End If
 					If child.ToLower.Contains("installer2") Then
 						For Each child2 As String In Directory.GetDirectories(child)
@@ -2930,23 +2754,17 @@ Public Class frmMain
 								   child2.ToLower.Contains("nvplugin") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("hdaudio.driver") Then
 
-									Try
-										FileIO.Delete(child2)
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-										TestDelete(child2, config)
-									End Try
+
+									FileIO.Delete(child2)
+
 								End If
 							End If
 						Next
 
 						If Directory.GetDirectories(child).Length = 0 Then
-							Try
-								FileIO.Delete(child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-								TestDelete(child, config)
-							End Try
+
+							FileIO.Delete(child)
+
 						Else
 							For Each data As String In Directory.GetDirectories(child)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -2957,12 +2775,9 @@ Public Class frmMain
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					TestDelete(filePath, config)
-				End Try
+
+				FileIO.Delete(filePath)
+
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -2975,20 +2790,18 @@ Public Class frmMain
 			filePath = Environment.GetFolderPath _
 			 (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
 			If Directory.Exists(filePath) Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-				End Try
+
+				FileIO.Delete(filePath)
+
 			End If
 		End If
 
 		If config.RemoveVulkan Then
 			filePath = config.Paths.ProgramFiles + "VulkanRT"
 			If Directory.Exists(filePath) Then
-				Try
-					FileIO.Delete(filePath)
-				Catch ex As Exception
-				End Try
+
+				FileIO.Delete(filePath)
+
 			End If
 		End If
 
@@ -3013,22 +2826,16 @@ Public Class frmMain
 						 child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
 						 child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 							If removephysx Then
-								Try
-									FileIO.Delete(child)
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-									TestDelete(child, config)
-								End Try
+
+								FileIO.Delete(child)
+
 							Else
 								If child.ToLower.Contains("physx") Then
 									'do nothing
 								Else
-									Try
-										FileIO.Delete(child)
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-										TestDelete(child, config)
-									End Try
+
+									FileIO.Delete(child)
+
 								End If
 							End If
 						End If
@@ -3036,12 +2843,9 @@ Public Class frmMain
 				Next
 
 				If Directory.GetDirectories(filePath).Length = 0 Then
-					Try
-						FileIO.Delete(filePath)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-						TestDelete(filePath, config)
-					End Try
+
+					FileIO.Delete(filePath)
+
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
 						Application.Log.AddMessage("Remaining folders found " + " : " + data)
@@ -3057,10 +2861,9 @@ Public Class frmMain
 				filePath = Environment.GetFolderPath _
 				 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
 				If Directory.Exists(filePath) Then
-					Try
-						FileIO.Delete(filePath)
-					Catch ex As Exception
-					End Try
+
+					FileIO.Delete(filePath)
+
 				End If
 			End If
 		End If
@@ -3069,10 +2872,9 @@ Public Class frmMain
 			If IntPtr.Size = 8 Then
 				filePath = Application.Paths.ProgramFilesx86 + "VulkanRT"
 				If Directory.Exists(filePath) Then
-					Try
-						FileIO.Delete(filePath)
-					Catch ex As Exception
-					End Try
+
+					FileIO.Delete(filePath)
+
 				End If
 			End If
 		End If
@@ -3086,10 +2888,9 @@ Public Class frmMain
 		Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
 		For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
-				Try
-					deletefile(files(i))
-				Catch ex As Exception
-				End Try
+
+				FileIO.Delete(files(i))
+
 			End If
 		Next
 
@@ -3097,10 +2898,9 @@ Public Class frmMain
 		files = IO.Directory.GetFiles(filePath + "\", "nvhdagenco*.*")
 		For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
-				Try
-					deletefile(files(i))
-				Catch ex As Exception
-				End Try
+
+				FileIO.Delete(files(i))
+
 			End If
 		Next
 
@@ -3115,23 +2915,17 @@ Public Class frmMain
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("nv_cache") Then
-						Try
-							FileIO.Delete(child)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(child, config)
-						End Try
+
+						FileIO.Delete(child)
+
 					End If
 				End If
 			Next
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
-					Try
-						FileIO.Delete(filePath)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-						TestDelete(filePath, config)
-					End Try
+
+					FileIO.Delete(filePath)
+
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -3154,23 +2948,17 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("nv_cache") Or
 						 child.ToLower.Contains("displaydriver") Then
-							Try
-								FileIO.Delete(child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-								TestDelete(child, config)
-							End Try
+
+							FileIO.Delete(child)
+
 						End If
 					End If
 				Next
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -3189,23 +2977,17 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE Or _
 						   child.ToLower.Contains("displaydriver") Then
-							Try
-								FileIO.Delete(child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-								TestDelete(child, config)
-							End Try
+
+							FileIO.Delete(child)
+
 						End If
 					End If
 				Next
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -3223,23 +3005,17 @@ Public Class frmMain
 				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("nv_cache") Then
-							Try
-								FileIO.Delete(child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-								TestDelete(child, config)
-							End Try
+
+							FileIO.Delete(child)
+
 						End If
 					End If
 				Next
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
-						Try
-							FileIO.Delete(filePath)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-							TestDelete(filePath, config)
-						End Try
+
+						FileIO.Delete(filePath)
+
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -3264,23 +3040,17 @@ Public Class frmMain
 								For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 									If IsNullOrWhitespace(child) = False Then
 										If child.ToLower.Contains("nv_cache") Then
-											Try
-												FileIO.Delete(child)
-											Catch ex As Exception
-												Application.Log.AddException(ex)
-												TestDelete(child, config)
-											End Try
+
+											FileIO.Delete(child)
+
 										End If
 									End If
 								Next
 
 								If Directory.GetDirectories(filePath).Length = 0 Then
-									Try
-										FileIO.Delete(filePath)
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-										TestDelete(filePath, config)
-									End Try
+
+									FileIO.Delete(filePath)
+
 								Else
 									For Each data As String In Directory.GetDirectories(filePath)
 										Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
@@ -3311,12 +3081,9 @@ Public Class frmMain
 						 child.ToLower.Contains("gridservice") Or
 						 child.ToLower.Contains("shadowplay") Or
 						   child.ToLower.Contains("nvidia.gfe") Then
-							Try
-								FileIO.Delete(child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-								TestDelete(child, config)
-							End Try
+
+							FileIO.Delete(child)
+
 						End If
 					End If
 				Next
@@ -4842,7 +4609,7 @@ Public Class frmMain
 		For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
 				Try
-					deletefile(files(i))
+					FileIO.delete(files(i))
 				Catch ex As Exception
 				End Try
 			End If
@@ -7563,7 +7330,7 @@ Public Class frmMain
 
 				If Not oem.IsValid Then
 					info.Add("This inf entry is corrupted or invalid.")
-					'	deletefile(oem.FileName)  ' DOUBLE CHECK THIS before uncommentting
+					'	FileIO.delete(oem.FileName)  ' DOUBLE CHECK THIS before uncommentting
 				End If
 
 				info.Add(KvP.Empty)
@@ -7893,15 +7660,8 @@ Public Class frmMain
 		CleanupEngine.RemoveSharedDlls(directory)
 	End Sub
 
-	Private Sub deletefile(ByVal file As String)
-		CleanupEngine.deletefile(file)
-	End Sub
-
 	Private Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
 		CleanupEngine.deletevalue(value1, value2)
-	End Sub
-	Private Sub TestDelete(ByVal folder As String, config As ThreadSettings)
-		CleanupEngine.TestDelete(folder, config)
 	End Sub
 
 	Private Sub amdenvironementpath(ByVal filepath As String)
