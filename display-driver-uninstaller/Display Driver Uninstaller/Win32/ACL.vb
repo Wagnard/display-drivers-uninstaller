@@ -191,68 +191,6 @@ Namespace Win32
 
 #Region "Enums"
 
-			Private Enum SE_OBJECT_TYPE As UInt32
-				''' <summary>Unknown object type.</summary>
-				SE_UNKNOWN_OBJECT_TYPE
-
-				''' <summary>Indicates a file or directory. 
-				''' The name string that identifies a file or directory object can be in one of the following formats:
-				''' 
-				''' - A relative path, such as FileName.dat or ..\FileName
-				''' - An absolute path, such as FileName.dat, C:\DirectoryName\FileName.dat, or G:\RemoteDirectoryName\FileName.dat.
-				''' - A UNC name, such as \\ComputerName\ShareName\FileName.dat.</summary>
-				SE_FILE_OBJECT
-
-				''' <summary>Indicates a Windows service. 
-				''' A service object can be a local service, such as ServiceName, or a remote service, such as \\ComputerName\ServiceName.</summary>
-				SE_SERVICE
-
-				''' <summary>Indicates a printer.
-				''' A printer object can be a local printer, such as PrinterName, or a remote printer, such as \\ComputerName\PrinterName.</summary>
-				SE_PRINTER
-
-				''' <summary>Indicates a registry key. 
-				''' A registry key object can be in the local registry, such as CLASSES_ROOT\SomePath or in a remote registry,
-				''' such as \\ComputerName\CLASSES_ROOT\SomePath.
-				''' 
-				''' The names of registry keys must use the following literal strings to identify the predefined registry keys:
-				''' "CLASSES_ROOT", "CURRENT_USER", "MACHINE", and "USERS".</summary>
-				SE_REGISTRY_KEY
-
-				''' <summary>Indicates a network share.
-				''' A share object can be local, such as ShareName, or remote, such as \\ComputerName\ShareName.</summary>
-				SE_LMSHARE
-
-				''' <summary>Indicates a local kernel object.
-				''' The GetSecurityInfo and SetSecurityInfo functions support all types of kernel objects. 
-				''' The GetNamedSecurityInfo and SetNamedSecurityInfo functions work only with the following kernel objects: 
-				''' semaphore, event, mutex, waitable timer, and file mapping.</summary>
-				SE_KERNEL_OBJECT
-
-				''' <summary>Indicates a window station or desktop object on the local computer.
-				''' You cannot use GetNamedSecurityInfo and SetNamedSecurityInfo with these objects
-				''' because the names of window stations or desktops are not unique.</summary>
-				SE_WINDOW_OBJECT
-
-				''' <summary>Indicates a directory service object or a property set or property of a directory service object.
-				''' The name string for a directory service object must be in X.500 form, for example:
-				'''
-				''' CN=SomeObject,OU=ou2,OU=ou1,DC=DomainName,DC=CompanyName,DC=com,O=internet</summary>
-				SE_DS_OBJECT
-
-				''' <summary>Indicates a directory service object and all of its property sets and properties. </summary>
-				SE_DS_OBJECT_ALL
-
-				''' <summary>Indicates a provider-defined object.</summary>
-				SE_PROVIDER_DEFINED_OBJECT
-
-				''' <summary>Indicates a WMI object.</summary>
-				SE_WMIGUID_OBJECT
-
-				''' <summary>Indicates an object for a registry entry under WOW64. </summary>
-				SE_REGISTRY_WOW64_32KEY
-			End Enum
-
 			<Flags()>
 			Private Enum TOKENS As UInt32
 				READ_CONTROL = &H20000UI
@@ -323,6 +261,47 @@ Namespace Win32
 
 				''' <summary></summary>
 				USED_FOR_ACCESS = &H80000000UI
+			End Enum
+
+			<Flags()>
+			Friend Enum SECURITY_INFORMATION As UInt32
+				''' <summary>The owner identifier of the object is being referenced.</summary>
+				OWNER_SECURITY_INFORMATION = &H1UI
+
+				''' <summary>The primary group identifier of the object is being referenced.</summary>
+				GROUP_SECURITY_INFORMATION = &H2UI
+
+				''' <summary>The DACL of the object is being referenced.</summary>
+				DACL_SECURITY_INFORMATION = &H4UI
+
+				''' <summary>The SACL of the object is being referenced.</summary>
+				SACL_SECURITY_INFORMATION = &H8UI
+
+				''' <summary>The mandatory integrity label is being referenced.</summary>
+				LABEL_SECURITY_INFORMATION = &H10UI
+
+				''' <summary>The SACL inherits access control entries (ACEs) from the parent object.</summary>
+				UNPROTECTED_SACL_SECURITY_INFORMATION
+
+				''' <summary>The DACL inherits ACEs from the parent object.</summary>
+				UNPROTECTED_DACL_SECURITY_INFORMATION
+
+				''' <summary>The SACL cannot inherit ACEs.</summary>
+				PROTECTED_SACL_SECURITY_INFORMATION
+
+				''' <summary>The DACL cannot inherit ACEs.</summary>
+				PROTECTED_DACL_SECURITY_INFORMATION
+
+				''' <summary>A SYSTEM_RESOURCE_ATTRIBUTE_ACE (section 2.4.4.15) is being referenced.</summary>
+				''' <remarks>https://msdn.microsoft.com/en-us/library/hh877837.aspx</remarks>
+				ATTRIBUTE_SECURITY_INFORMATION
+
+				''' <summary>A SYSTEM_SCOPED_POLICY_ID_ACE (section 2.4.4.16) is being referenced.</summary>
+				''' <remarks>https://msdn.microsoft.com/en-us/library/hh877846.aspx</remarks>
+				SCOPE_SECURITY_INFORMATION
+
+				''' <summary>The security descriptor is being accessed for use in a backup operation.</summary>
+				BACKUP_SECURITY_INFORMATION
 			End Enum
 
 #End Region
@@ -467,27 +446,105 @@ Namespace Win32
 
 #Region "Enums"
 
+			Private Enum SE_OBJECT_TYPE As UInt32
+				''' <summary>Unknown object type.</summary>
+				SE_UNKNOWN_OBJECT_TYPE
+
+				''' <summary>Indicates a file or directory. 
+				''' The name string that identifies a file or directory object can be in one of the following formats:
+				''' 
+				''' - A relative path, such as FileName.dat or ..\FileName
+				''' - An absolute path, such as FileName.dat, C:\DirectoryName\FileName.dat, or G:\RemoteDirectoryName\FileName.dat.
+				''' - A UNC name, such as \\ComputerName\ShareName\FileName.dat.</summary>
+				SE_FILE_OBJECT
+
+				''' <summary>Indicates a Windows service. 
+				''' A service object can be a local service, such as ServiceName, or a remote service, such as \\ComputerName\ServiceName.</summary>
+				SE_SERVICE
+
+				''' <summary>Indicates a printer.
+				''' A printer object can be a local printer, such as PrinterName, or a remote printer, such as \\ComputerName\PrinterName.</summary>
+				SE_PRINTER
+
+				''' <summary>Indicates a registry key. 
+				''' A registry key object can be in the local registry, such as CLASSES_ROOT\SomePath or in a remote registry,
+				''' such as \\ComputerName\CLASSES_ROOT\SomePath.
+				''' 
+				''' The names of registry keys must use the following literal strings to identify the predefined registry keys:
+				''' "CLASSES_ROOT", "CURRENT_USER", "MACHINE", and "USERS".</summary>
+				SE_REGISTRY_KEY
+
+				''' <summary>Indicates a network share.
+				''' A share object can be local, such as ShareName, or remote, such as \\ComputerName\ShareName.</summary>
+				SE_LMSHARE
+
+				''' <summary>Indicates a local kernel object.
+				''' The GetSecurityInfo and SetSecurityInfo functions support all types of kernel objects. 
+				''' The GetNamedSecurityInfo and SetNamedSecurityInfo functions work only with the following kernel objects: 
+				''' semaphore, event, mutex, waitable timer, and file mapping.</summary>
+				SE_KERNEL_OBJECT
+
+				''' <summary>Indicates a window station or desktop object on the local computer.
+				''' You cannot use GetNamedSecurityInfo and SetNamedSecurityInfo with these objects
+				''' because the names of window stations or desktops are not unique.</summary>
+				SE_WINDOW_OBJECT
+
+				''' <summary>Indicates a directory service object or a property set or property of a directory service object.
+				''' The name string for a directory service object must be in X.500 form, for example:
+				'''
+				''' CN=SomeObject,OU=ou2,OU=ou1,DC=DomainName,DC=CompanyName,DC=com,O=internet</summary>
+				SE_DS_OBJECT
+
+				''' <summary>Indicates a directory service object and all of its property sets and properties. </summary>
+				SE_DS_OBJECT_ALL
+
+				''' <summary>Indicates a provider-defined object.</summary>
+				SE_PROVIDER_DEFINED_OBJECT
+
+				''' <summary>Indicates a WMI object.</summary>
+				SE_WMIGUID_OBJECT
+
+				''' <summary>Indicates an object for a registry entry under WOW64. </summary>
+				SE_REGISTRY_WOW64_32KEY
+			End Enum
+
+			Private Enum FILE_OPEN As UInt32
+				CREATE_NEW = 1
+				CREATE_ALWAYS = 2
+				OPEN_EXISTING = 3
+				OPEN_ALWAYS = 4
+				TRUNCATE_EXISTING = 5
+			End Enum
+
 			<Flags()>
-			Private Enum SECURITY_INFORMATION As UInt32
-				OWNER = &H1UI
-				GROUP = &H2UI
-				DACL = &H4UI
-				SACL = &H8UI
-				LABEL = &H10UI
-				ATTRIBUTE = &H20UI
-				SCOPE = &H40UI
-				BACKUP = &H10000UI
-				UNPROTECTED_SAC = &H10000000UI
-				UNPROTECTED_DACL = &H20000000UI
-				PROTECTED_SACL = &H40000000UI
-				PROTECTED_DACL = &H80000000UI
+			Private Enum FILE_RIGHTS As UInt32
+				FILE_READ_ATTRIBUTES = &H80UI
+
+				DELETE = &H10000UI
+				READ_CONTROL = &H20000UI
+				WRITE_DAC = &H40000UI
+				WRITE_OWNER = &H80000UI
+				SYNCHRONIZE = &H100000UI
+
+				STANDARD_RIGHTS_READ = READ_CONTROL
+				STANDARD_RIGHTS_WRITE = READ_CONTROL
+				STANDARD_RIGHTS_EXECUTE = READ_CONTROL
+				STANDARD_RIGHTS_REQUIRED = &HF0000UI
+				STANDARD_RIGHTS_ALL = &H1F0000UI
+			End Enum
+
+			Private Enum FILE_SHARE As UInt32
+				NONE = &H0UI
+				READ = &H1UI
+				WRITE = &H2UI
+				DELETE = &H4UI
 			End Enum
 
 #End Region
 
 #Region "P/Invoke"
 
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 			Private Function GetFileSecurity(
    <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
    <[In](), [Optional]()> ByVal RequestedInformation As SECURITY_INFORMATION,
@@ -496,14 +553,76 @@ Namespace Win32
    <[Out]()> ByRef lpnLengthNeeded As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
 			End Function
 
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 			Private Function SetFileSecurity(
    <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
    <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
    <[In]()> ByVal pSecurityDescriptor() As Byte) As <MarshalAs(UnmanagedType.Bool)> Boolean
 			End Function
 
+			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Function GetSecurityInfo(
+   <[In]()> ByVal handle As IntPtr,
+   <[In]()> ByVal ObjectType As SE_OBJECT_TYPE,
+   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
+   <[Out](), [Optional]()> ByRef psidOwner As IntPtr,
+   <[Out](), [Optional]()> ByRef psidGroup As IntPtr,
+   <[Out](), [Optional]()> ByRef pDacl As IntPtr,
+   <[Out](), [Optional]()> ByRef pSacl As IntPtr,
+   <[Out](), [Optional]()> ByRef ppSecurityDescriptor As IntPtr) As UInt32
+			End Function
+
+			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Function SetSecurityInfo(
+   <[In]()> ByVal handle As IntPtr,
+   <[In]()> ByVal ObjectType As SE_OBJECT_TYPE,
+   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
+   <[In](), [Optional]()> ByVal psidOwner As IntPtr,
+   <[In](), [Optional]()> ByVal psidGroup As IntPtr,
+   <[In](), [Optional]()> ByVal pDacl As IntPtr,
+   <[In](), [Optional]()> ByVal pSacl As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
+
+			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Function ConvertSidToStringSid(
+   <[In]()> ByVal Sid As IntPtr,
+   <[Out]()> ByRef StringSid As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
+
+			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Function ConvertStringSidToSid(
+   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal Sid As String,
+   <[Out]()> ByRef StringSid As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
+
+
+
+			<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Function CreateFile(
+   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
+   <[In]()> ByVal dwDesiredAccess As FILE_RIGHTS,
+   <[In]()> ByVal dwShareMode As FILE_SHARE,
+   <[In](), [Optional]()> ByVal lpSecurityAttribute As IntPtr,
+   <[In]()> ByVal dwCreationDisposition As FILE_OPEN,
+   <[In]()> ByVal dwFlagsAndAttributes As UInt32,
+   <[In](), [Optional]()> ByVal hTemplateFile As IntPtr) As IntPtr
+			End Function
+
+			<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Function CloseHandle(
+   <[In]()> ByVal hObject As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
+
+			<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Function LocalFree(
+   <[In]()> ByVal hMem As IntPtr) As IntPtr
+			End Function
+
 #End Region
+
+			Sub New()
+				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
+			End Sub
 
 			' Adds an ACL entry on the specified directory for the specified account.
 			Public Sub AddDirectorySecurity(ByVal path As String, ByVal Rights As FileSystemRights, ByVal ControlType As AccessControlType)
@@ -585,60 +704,80 @@ Namespace Win32
 			End Sub
 
 
+			' path = File or Dir, delete = Path (dir or file) going to be deleted?
+			Public Function FixFileSecurity(ByVal path As String, ByVal delete As Boolean) As Boolean
+				If Not delete Then
+					Return False	' Do not change rights if not going to delete it. yet.
+				End If
 
-			' NEED TO FIX, 260+ PATHS => WIN API
-			Public Sub AddFileSecurity(ByVal path As String, ByVal rights As FileSystemRights)
-				'Dim bSecurity(0) As Byte
-				'Dim requiredSize As UInt32 = 0UI
-				'Dim errCode As UInt32 = 0UI
+				Dim errCode As UInt32 = 0UI
+				Dim ptrFile As IntPtr = IntPtr.Zero
 
-				'If Not path.StartsWith(FileIO.UNC_PREFIX) Then
-				'	path = FileIO.UNC_PREFIX & path
-				'End If
+				Try
+					ptrFile = CreateFile(path, FILE_RIGHTS.READ_CONTROL Or FILE_RIGHTS.FILE_READ_ATTRIBUTES, FILE_SHARE.NONE, IntPtr.Zero, FILE_OPEN.OPEN_EXISTING, FileIO.FILE_ATTRIBUTES.NORMAL Or FileIO.FILE_ATTRIBUTES.FLAG_BACKUP_SEMANTICS Or FileIO.FILE_ATTRIBUTES.FLAG_OPEN_REPARSE_POINT, IntPtr.Zero)
 
-				'If Not GetFileSecurity(path, SECURITY_INFORMATION.OWNER, bSecurity, GetUInt32(bSecurity.Length), requiredSize) Then
-				'	errCode = GetLastWin32ErrorU()
+					errCode = GetLastWin32ErrorU()
 
-				'	If errCode = Errors.ACCESS_DENIED Then
-				'		Dim fileSecurity As New FileSecurity()
+					If errCode <> 0UI Then
+						Throw New Win32Exception(GetInt32(errCode))
+					End If
 
-				'		fileSecurity.SetAccessRuleProtection(False, True)
+					Dim ptrOwner As IntPtr = IntPtr.Zero
+					Dim ptrGroup As IntPtr = IntPtr.Zero
+					Dim ptrDACL As IntPtr = IntPtr.Zero
+					Dim ptrSACL As IntPtr = IntPtr.Zero
+					Dim ptrSecurity As IntPtr = IntPtr.Zero
 
+					Try
+						errCode = GetSecurityInfo(ptrFile, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION Or SECURITY_INFORMATION.BACKUP_SECURITY_INFORMATION, ptrOwner, ptrGroup, ptrDACL, ptrSACL, ptrSecurity)
 
-				'		Dim newSecurity() As Byte = fileSecurity.GetSecurityDescriptorBinaryForm()
+						If errCode <> 0UI Then
+							Throw New Win32Exception(GetInt32(errCode))
+						End If
 
-				'		If Not SetFileSecurity(path, SECURITY_INFORMATION.OWNER, newSecurity) Then
-				'			errCode = GetLastWin32ErrorU()
+						Dim ptrOwnerStr As IntPtr = IntPtr.Zero
+						Dim strOwner As String
 
-				'			If requiredSize = 0 OrElse errCode <> Errors.INSUFFICIENT_BUFFER Then
-				'				Throw New Win32Exception(GetInt32(errCode))
-				'			End If
-				'		End If
-				'	Else
-				'		Throw New Win32Exception(GetInt32(errCode))
-				'	End If
-				'End If
+						Try
+							If Not ConvertSidToStringSid(ptrOwner, ptrOwnerStr) Then
+								Throw New Win32Exception(GetLastWin32Error())
+							End If
 
-				'errCode = GetLastWin32ErrorU()
+							strOwner = Marshal.PtrToStringUni(ptrOwnerStr)
+						Finally
+							If ptrOwnerStr <> IntPtr.Zero Then
+								Marshal.FreeHGlobal(ptrOwnerStr)
+							End If
+						End Try
 
-				'If requiredSize = 0 OrElse errCode <> Errors.INSUFFICIENT_BUFFER Then
-				'	Throw New Win32Exception(GetInt32(errCode))
-				'End If
+						strOwner = _sidSystem.ToString()
 
-				'errCode = 0UI
-				'ReDim bSecurity(GetInt32(requiredSize) - 1)
+						Try
+							If Not ConvertStringSidToSid(strOwner, ptrOwnerStr) Then
+								Throw New Win32Exception(GetLastWin32Error())
+							End If
 
-				'GetFileSecurity(path, SECURITY_INFORMATION.OWNER And SECURITY_INFORMATION.DACL, bSecurity, GetUInt32(bSecurity.Length), requiredSize)
+							If Not SetSecurityInfo(ptrFile, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION, ptrOwnerStr, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero) Then
+								Throw New Win32Exception(GetLastWin32Error())
+							End If
 
-				'If errCode <> 0UI Then
-				'	Throw New Win32Exception(GetInt32(errCode))
-				'End If
-			End Sub
-
-			' NEED TO FIX, 260+ PATHS => WIN API
-			Public Sub AddDirSecurity(ByVal path As String, ByVal rights As FileSystemRights)
-		
-			End Sub
+							Return True
+						Finally
+							If ptrOwnerStr <> IntPtr.Zero Then
+								Marshal.FreeHGlobal(ptrOwnerStr)
+							End If
+						End Try
+					Finally
+						If ptrSecurity <> IntPtr.Zero Then
+							LocalFree(ptrSecurity)
+						End If
+					End Try
+				Finally
+					If ptrFile <> IntPtr.Zero Then
+						CloseHandle(ptrFile)
+					End If
+				End Try
+			End Function
 
 		End Module
 
@@ -659,47 +798,6 @@ Namespace Win32
 #End Region
 
 #Region "Enums"
-
-			<Flags()>
-			Private Enum SECURITY_INFORMATION As UInt32
-				''' <summary>The owner identifier of the object is being referenced.</summary>
-				OWNER_SECURITY_INFORMATION = &H1UI
-
-				''' <summary>The primary group identifier of the object is being referenced.</summary>
-				GROUP_SECURITY_INFORMATION = &H2UI
-
-				''' <summary>The DACL of the object is being referenced.</summary>
-				DACL_SECURITY_INFORMATION = &H4UI
-
-				''' <summary>The SACL of the object is being referenced.</summary>
-				SACL_SECURITY_INFORMATION = &H8UI
-
-				''' <summary>The mandatory integrity label is being referenced.</summary>
-				LABEL_SECURITY_INFORMATION = &H10UI
-
-				''' <summary>The SACL inherits access control entries (ACEs) from the parent object.</summary>
-				UNPROTECTED_SACL_SECURITY_INFORMATION
-
-				''' <summary>The DACL inherits ACEs from the parent object.</summary>
-				UNPROTECTED_DACL_SECURITY_INFORMATION
-
-				''' <summary>The SACL cannot inherit ACEs.</summary>
-				PROTECTED_SACL_SECURITY_INFORMATION
-
-				''' <summary>The DACL cannot inherit ACEs.</summary>
-				PROTECTED_DACL_SECURITY_INFORMATION
-
-				''' <summary>A SYSTEM_RESOURCE_ATTRIBUTE_ACE (section 2.4.4.15) is being referenced.</summary>
-				''' <remarks>https://msdn.microsoft.com/en-us/library/hh877837.aspx</remarks>
-				ATTRIBUTE_SECURITY_INFORMATION
-
-				''' <summary>A SYSTEM_SCOPED_POLICY_ID_ACE (section 2.4.4.16) is being referenced.</summary>
-				''' <remarks>https://msdn.microsoft.com/en-us/library/hh877846.aspx</remarks>
-				SCOPE_SECURITY_INFORMATION
-
-				''' <summary>The security descriptor is being accessed for use in a backup operation.</summary>
-				BACKUP_SECURITY_INFORMATION
-			End Enum
 
 			<Flags()>
 			Private Enum REGSAM As UInt32

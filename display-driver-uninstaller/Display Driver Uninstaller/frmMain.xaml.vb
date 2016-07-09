@@ -7986,34 +7986,53 @@ Public Class frmMain
 
 	Private Sub restoreMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles restoreMenuItem.Click
 		Dim testDir As String = "E:\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should"
-		Dim testFileShort As String = "E:\PROGRA~1\NVIDIA~1\INSTAL~1\NVNODE~1.{23\NODE_M~1\socket.io\NODE_M~1\SOCKET~1.IO-\NODE_M~1\ENGINE~1.IO-\NODE_M~1\ENGINE~1.IO-\NODE_M~1\BASE64~1\lib\ddu\wagnard\does\this\work\I\think\it\should\test\test.txt"
+		Dim testDirBrokenACL As String = "E:\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should\test"
+		Dim testFileShortPath As String = "E:\PROGRA~1\NVIDIA~1\INSTAL~1\NVNODE~1.{23\NODE_M~1\socket.io\NODE_M~1\SOCKET~1.IO-\NODE_M~1\ENGINE~1.IO-\NODE_M~1\ENGINE~1.IO-\NODE_M~1\BASE64~1\lib\ddu\wagnard\does\this\work\I\think\it\should\test\test.txt"
 
 		' 288 chars, feel free to test ;P
 		' Btw, change drive letter if you try!
 
 		Try
 			'	FileIO.CreateDir(testDir)			' Create dir for testing!
-
-			'	FileIO.Delete(testFileShort)		' Delete file with short path
+			'	FileIO.Delete(testFileShortPath)	' Delete file with short path
 			'	FileIO.Delete(testDir)				' FileIO.Delete deletes both, is it Dir or File
+
+			FileIO.Delete(testDirBrokenACL)
+
+			' <PathTooLongException>
+			'ACL.AddDirectorySecurity(testDirBrokenACL, FileSystemRights.Delete, AccessControlType.Allow)
+
+
+			'High Resolution Date & Time:	08/07/2016 22:01:53.4099397
+			'Event Class:	File System
+			'Operation:	CreateFile
+			'Result:	SUCCESS
+			'Path:	C:\ddu\TEST.txt
+			'TID:	720
+			'Duration:	0.0000070
+
+			'Desired Access:	Read Attributes, Read Control, Synchronize
+			'Disposition:	Open
+			'Options:	Synchronous IO Non-Alert, Open For Backup, Open Reparse Point
+			'Attributes:	n/a
+			'ShareMode:	None
+			'AllocationSize:	n/a
+			'OpenResult:	Opened
 
 
 			' Testing
-			Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
+			'Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
 
-			Dim files As List(Of String) = FileIO.GetFiles("C:\", "*", True)
-
+			'Dim files As List(Of String) = FileIO.GetFiles("C:\", "*", True)
 			'Dim files As List(Of String) = FileIO.GetDirectories("C:\", "*", True)
 			'Dim fileCount As Int32 = FileIO.CountFiles("C:\", "*", True)
 
-			sw.Stop()
+			'sw.Stop()
 
-			Dim ts As TimeSpan = sw.Elapsed
-
+			'Dim ts As TimeSpan = sw.Elapsed
 
 			'MessageBox.Show("CountFiles: " & CountFiles.ToString() & Environment.NewLine & "Time: " & ts.ToString())
-
-			MessageBox.Show("GetFiles: " & files.Count.ToString() & Environment.NewLine & "Time: " & ts.ToString())
+			'MessageBox.Show("GetFiles: " & files.Count.ToString() & Environment.NewLine & "Time: " & ts.ToString())
 
 		Catch ex As Exception
 			MessageBox.Show(ex.Message, "FileIO Failure!")
