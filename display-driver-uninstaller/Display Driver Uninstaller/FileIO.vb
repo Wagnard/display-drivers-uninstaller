@@ -364,7 +364,7 @@ Public Class FileIO
 
 				If isDir Then		' fileName is directory
 					If RemoveDirectory(newFileName) Then
-						Application.Log.AddMessage("Directory deleted!", "Path", fileName)
+						Application.Log.AddMessage(fileName, "Status", "Directory deleted!")
 						Return
 					End If
 
@@ -399,7 +399,7 @@ Public Class FileIO
 						End While
 
 						If RemoveDirectory(newFileName) Then
-							Application.Log.AddMessage("Directory deleted!", "Path", fileName)
+							Application.Log.AddMessage(fileName, "Status", "Directory deleted!")
 							Return
 						Else
 							Throw New Win32Exception(GetLastWin32Error)
@@ -409,7 +409,7 @@ Public Class FileIO
 					End If
 				Else				' fileName is file
 					If DeleteFile(newFileName) Then
-						Application.Log.AddMessage("File deleted!", "Path", fileName)
+						Application.Log.AddMessage(fileName, "Status", "File deleted!")
 						Return
 					End If
 				End If
