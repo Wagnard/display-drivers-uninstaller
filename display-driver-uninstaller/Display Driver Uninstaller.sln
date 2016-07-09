@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Display Driver Uninstaller", "Display Driver Uninstaller\Display Driver Uninstaller.vbproj", "{C2CAA02A-13BD-4131-AA5F-4EF80F0C16B2}"
 EndProject
