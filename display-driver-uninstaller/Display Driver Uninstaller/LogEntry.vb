@@ -9,7 +9,7 @@ Public Enum LogType
 End Enum
 
 Public Class KvP
-	Public Shared Empty As KvP = New KvP(vbTab)
+	Public Shared Empty As KvP = New KvP(" ")
 	Public ReadOnly Property HasKey As Boolean
 		Get
 			Return String.IsNullOrEmpty(Key) = False

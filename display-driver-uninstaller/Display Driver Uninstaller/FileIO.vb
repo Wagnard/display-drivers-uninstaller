@@ -238,7 +238,7 @@ Public Class FileIO
 
 	<DllImport("kernel32", CharSet:=CharSet.Unicode, SetLastError:=True)>
 	Private Shared Function FindFirstFile(
-   <[In]()> ByVal pFileName As String,
+   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pFileName As String,
    <[Out]()> ByRef lpFindFileData As WIN32_FIND_DATA) As IntPtr
 	End Function
 
@@ -305,6 +305,18 @@ Public Class FileIO
 		DeleteInternal(fileName, False)
 	End Sub
 
+	Public Shared Function ExistsFile(ByVal fileName As String) As Boolean
+		Dim isDir As Boolean = True
+
+		Return (Exists(fileName, isDir) AndAlso Not isDir)
+	End Function
+
+	Public Shared Function ExistsDir(ByVal fileName As String) As Boolean
+		Dim isDir As Boolean = False
+
+		Return (Exists(fileName, isDir) AndAlso isDir)
+	End Function
+
 	Public Shared Function CountFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = True) As Int32
 		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
 			wildCard = "*"
@@ -313,12 +325,20 @@ Public Class FileIO
 		Return GetFileCount(directory, wildCard, searchSubDirs)
 	End Function
 
+	Public Shared Function CountDirectories(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = True) As Int32
+		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
+			wildCard = "*"
+		End If
+
+		Return GetDirCount(directory, wildCard, searchSubDirs)
+	End Function
+
 	Public Shared Function GetFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
 		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
 			wildCard = "*"
 		End If
 
-		Return GetFileNames(directory, wildCard, searchSubDirs, False)
+		Return GetFileNames(directory, wildCard, searchSubDirs, False, False, False)
 	End Function
 
 	Public Shared Function GetDirectories(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
@@ -326,36 +346,40 @@ Public Class FileIO
 			wildCard = "*"
 		End If
 
-		Return GetDirNames(directory, wildCard, searchSubDirs, False)
+		Return GetDirNames(directory, wildCard, searchSubDirs, False, False, False)
 	End Function
 
 
 
-	Private Shared Sub DeleteInternal(ByVal fileName As String, ByVal fixAcl As Boolean)
+	Private Shared Sub DeleteInternal(ByVal fileName As String, ByVal fixedAcl As Boolean)
 		If IsNullOrWhitespace(fileName) Then
 			Return
 		End If
 
 		Dim errCode As UInt32 = 0UI
 		Dim isDir As Boolean = False
-		Dim newFileName As String = If(fileName.StartsWith(UNC_PREFIX), fileName, UNC_PREFIX & fileName)
+		Dim uncFileName As String = If(fileName.StartsWith(UNC_PREFIX), fileName, UNC_PREFIX & fileName)
+
+		If fileName.StartsWith(UNC_PREFIX) Then
+			fileName = fileName.Substring(UNC_PREFIX.Length)
+		End If
 
 		Try
-			errCode = SetAttributes(newFileName, FILE_ATTRIBUTES.NORMAL, isDir)		' restores attributes, checks does it exist, check is dir or file
+			errCode = SetAttributes(uncFileName, FILE_ATTRIBUTES.NORMAL, isDir)		' restores attributes, checks does it exist, check is dir or file
 
 			If errCode <> Errors.ACCESS_DENIED Then
 				If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
-					newFileName = GetLongPath(fileName)		' Check if was short path
+					uncFileName = GetLongPath(fileName)		' Check if was short path
 
-					If newFileName Is Nothing Then
+					If uncFileName Is Nothing Then
 						Return			' Wasn't short path... Just doesn't exist
 					End If
 
-					If Not newFileName.StartsWith(UNC_PREFIX) Then
-						newFileName = UNC_PREFIX & newFileName
+					If Not uncFileName.StartsWith(UNC_PREFIX) Then
+						uncFileName = UNC_PREFIX & uncFileName
 					End If
 
-					errCode = SetAttributes(newFileName, FILE_ATTRIBUTES.NORMAL, isDir)
+					errCode = SetAttributes(uncFileName, FILE_ATTRIBUTES.NORMAL, isDir)
 
 					If errCode <> 0UI Then
 						Throw New Win32Exception(GetInt32(errCode))
@@ -363,21 +387,23 @@ Public Class FileIO
 				End If
 
 				If isDir Then		' fileName is directory
-					If RemoveDirectory(newFileName) Then
-						Application.Log.AddMessage(fileName, "Status", "Directory deleted!")
+					If RemoveDirectory(uncFileName) Then
+						Application.Log.AddMessage(String.Concat("Deleted directory:", CRLF, fileName))
 						Return
 					End If
 
 					errCode = GetLastWin32ErrorU()
 
 					If errCode = Errors.DIR_NOT_EMPTY Then
-						Dim files As List(Of String) = GetFiles(newFileName, "*", True)
+						Dim files As List(Of String) = GetFilesToDeleteInternal(uncFileName, "*", True, True, False)
 
 						For i As Int32 = files.Count - 1 To 0 Step -1
 							Delete(files(i))
 						Next
 
-						files = GetDirectories(newFileName, "*", True)
+						System.Threading.Thread.Sleep(10)		' Windows is slow... takes bit time to files be deleted.
+
+						files = GetFilesToDeleteInternal(uncFileName, "*", True, False, False)
 
 						For i As Int32 = files.Count - 1 To 0 Step -1
 							Delete(files(i))
@@ -388,7 +414,7 @@ Public Class FileIO
 						Dim waits As Int32 = 0
 
 						While waits < 100						 'MAX 10 sec to wait Windows remove all files. ( 100 * 100ms)
-							If GetFileCount(newFileName, "*", True) > 0 Then
+							If GetFileCount(uncFileName, "*", True) > 0 Then
 								waits += 1
 								System.Threading.Thread.Sleep(100)
 							Else
@@ -398,8 +424,8 @@ Public Class FileIO
 							waits += 1
 						End While
 
-						If RemoveDirectory(newFileName) Then
-							Application.Log.AddMessage(fileName, "Status", "Directory deleted!")
+						If RemoveDirectory(uncFileName) Then
+							Application.Log.AddMessage(String.Concat("Deleted directory:", CRLF, fileName))
 							Return
 						Else
 							Throw New Win32Exception(GetLastWin32Error)
@@ -408,8 +434,8 @@ Public Class FileIO
 						Throw New Win32Exception(GetInt32(errCode))
 					End If
 				Else				' fileName is file
-					If DeleteFile(newFileName) Then
-						Application.Log.AddMessage(fileName, "Status", "File deleted!")
+					If DeleteFile(uncFileName) Then
+						Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, fileName))
 						Return
 					End If
 				End If
@@ -420,17 +446,22 @@ Public Class FileIO
 			End If
 
 			' ACCESS_DENIED
-			If Not fixAcl Then
+			If Not fixedAcl Then
 				Dim logEntry As LogEntry = Application.Log.CreateEntry()
 				logEntry.Type = LogType.Warning
-				logEntry.Message = "Couldn't delete file, access denied! Attempting to fix path's permissions."
+				logEntry.Message = String.Format("Couldn't delete path, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, fileName)
 				logEntry.Add("fileName", fileName)
 
 				Dim success As Boolean
 				Try
-					success = ACL.FixFileSecurity(newFileName, True)
+					success = ACL.FixFileSecurity(uncFileName, True, logEntry)
 				Finally
 					logEntry.Add("Fixed", If(success, "Yes", "No"))
+
+					If Not success Then
+						logEntry.Type = LogType.Error
+					End If
+
 					Application.Log.Add(logEntry)
 				End Try
 
@@ -446,54 +477,75 @@ Public Class FileIO
 				Case Errors.FILE_NOT_FOUND, Errors.PATH_NOT_FOUND
 					Return
 				Case Else
-					If Not fixAcl AndAlso errCode = Errors.ACCESS_DENIED Then
+					If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
 						DeleteInternal(fileName, True)
 					Else
-						Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, "Couldn't delete file!")
+						Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, String.Concat("Couldn't delete path!", CRLF, fileName))
 						logEntry.Type = LogType.Error
 						logEntry.Add("fileName", fileName)
-						logEntry.Add("fixAcl", fixAcl.ToString())
+						logEntry.Add("fixedAcl", fixedAcl.ToString())
 
 						Application.Log.Add(logEntry)
 					End If
 			End Select
 		Catch ex As Exception
-			Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, "Couldn't delete file!")
+			Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, String.Concat("Couldn't delete path!", CRLF, fileName))
 			logEntry.Type = LogType.Error
 			logEntry.Add("fileName", fileName)
-			logEntry.Add("fixAcl", fixAcl.ToString())
+			logEntry.Add("fixedAcl", fixedAcl.ToString())
 
 			Application.Log.Add(logEntry)
 		End Try
 	End Sub
 
-	Private Shared Function GetFilesInternal(ByVal fileName As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal searchFiles As Boolean, ByVal fixAcl As Boolean) As List(Of String)
-		GetFilesInternal = New List(Of String)(0)
+	Private Shared Function Exists(ByVal fileName As String, ByRef isDirectory As Boolean) As Boolean
+		If Not fileName.StartsWith(UNC_PREFIX) Then
+			fileName = UNC_PREFIX & fileName
+		End If
+
+		Dim fileAttr As UInt32 = GetAttributes(fileName, isDirectory)
+
+		If fileAttr = Errors.FILE_NOT_FOUND Then
+			Return False
+		End If
+
+		Return True
+	End Function
+
+	Private Shared Function GetFilesToDeleteInternal(ByVal fileName As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal searchFiles As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
+		GetFilesToDeleteInternal = New List(Of String)(0)
 
 		If IsNullOrWhitespace(fileName) Then
-			Return GetFilesInternal
+			Return GetFilesToDeleteInternal
 		End If
 
 		Dim errCode As UInt32 = 0UI
 		Dim isDir As Boolean = False
-		Dim newFileName As String = If(fileName.StartsWith(UNC_PREFIX), fileName, UNC_PREFIX & fileName)
+		Dim uncFileName As String
+
+		If fileName.StartsWith(UNC_PREFIX) Then
+			uncFileName = fileName
+			fileName = fileName.Substring(UNC_PREFIX.Length)
+		Else
+			uncFileName = UNC_PREFIX & fileName
+		End If
 
 		Try
-			errCode = GetAttributes(newFileName, isDir)		   ' checks does it exist, check is dir or file
+			errCode = GetAttributes(uncFileName, isDir)		   ' checks does it exist, check is dir or file
 
 			If errCode <> Errors.ACCESS_DENIED Then
 				If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
-					newFileName = GetLongPath(fileName)			' Check if was short path
+					uncFileName = GetLongPath(fileName)			' Check if was short path
 
-					If newFileName Is Nothing Then
-						Return GetFilesInternal					' Wasn't short path... Just doesn't exist
+					If uncFileName Is Nothing Then
+						Return GetFilesToDeleteInternal					' Wasn't short path... Just doesn't exist
 					End If
 
-					errCode = GetAttributes(newFileName, isDir)
+					errCode = GetAttributes(uncFileName, isDir)
 
 					If errCode <> 0UI Then
 						If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
-							Return GetFilesInternal
+							Return GetFilesToDeleteInternal
 						End If
 
 						Throw New Win32Exception(GetInt32(errCode))
@@ -505,17 +557,33 @@ Public Class FileIO
 				End If
 
 				If searchFiles Then
-					Return GetFileNames(newFileName, wildCard, searchSubDirs, True)
+					Return GetFileNames(uncFileName, wildCard, searchSubDirs, True, True, False)
 				Else
-					Return GetDirNames(newFileName, wildCard, searchSubDirs, True)
+					Return GetDirNames(uncFileName, wildCard, searchSubDirs, True, True, False)
 				End If
 			End If
 
 			' ACCESS_DENIED
-			If Not fixAcl Then
-				ACL.FixFileSecurity(newFileName, False)
+			If Not fixedAcl Then
+				Dim logEntry As LogEntry = Application.Log.CreateEntry()
+				logEntry.Type = LogType.Warning
+				logEntry.Message = String.Format("Couldn't find {0}, access denied! Attempting to fix path's permissions.{1}{2}", If(searchFiles, "files", "directories"), CRLF, fileName)
+				logEntry.Add("fileName", fileName)
 
-				Return GetFilesInternal(fileName, wildCard, searchSubDirs, searchFiles, True)	'Retry
+				Dim success As Boolean
+				Try
+					success = ACL.FixFileSecurity(uncFileName, False, logEntry)
+				Finally
+					logEntry.Add("Fixed", If(success, "Yes", "No"))
+
+					If Not success Then
+						logEntry.Type = LogType.Error
+					End If
+
+					Application.Log.Add(logEntry)
+				End Try
+
+				Return GetFilesToDeleteInternal(fileName, wildCard, searchSubDirs, searchFiles, True)	'Retry
 			Else
 				Throw New Win32Exception(GetInt32(errCode))
 			End If
@@ -524,92 +592,69 @@ Public Class FileIO
 
 			Select Case errCode
 				Case Errors.FILE_NOT_FOUND, Errors.PATH_NOT_FOUND
-					Return GetFilesInternal
+					Return GetFilesToDeleteInternal
 				Case Else
-					If Not fixAcl AndAlso errCode = Errors.ACCESS_DENIED Then
-						GetFilesInternal(fileName, wildCard, searchSubDirs, searchFiles, True)
+					If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
+						GetFilesToDeleteInternal(fileName, wildCard, searchSubDirs, searchFiles, True)
 					Else
-						Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, "Couldn't delete file!")
+						Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, String.Format("Error! Couldn't find {0}!{1}{2}", If(searchFiles, "files", "directories"), CRLF, fileName))
 						logEntry.Type = LogType.Error
 						logEntry.Add("fileName", fileName)
-						logEntry.Add("fixAcl", fixAcl.ToString())
+						logEntry.Add("wildCard", wildCard)
+						logEntry.Add("searchSubDirs", searchSubDirs.ToString())
+						logEntry.Add("searchFiles", searchFiles.ToString())
+						logEntry.Add("fixedAcl", fixedAcl.ToString())
 
 						Application.Log.Add(logEntry)
 					End If
 			End Select
 		Catch ex As Exception
-			Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, "Couldn't delete file!")
+			Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, String.Format("Error! Couldn't find {0}!{1}{2}", If(searchFiles, "files", "directories"), CRLF, fileName))
 			logEntry.Type = LogType.Error
 			logEntry.Add("fileName", fileName)
+			logEntry.Add("wildCard", wildCard)
+			logEntry.Add("searchSubDirs", searchSubDirs.ToString())
+			logEntry.Add("searchFiles", searchFiles.ToString())
+			logEntry.Add("fixedAcl", fixedAcl.ToString())
 
 			Application.Log.Add(logEntry)
 		End Try
 	End Function
 
 	Private Shared Function GetFileCount(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean) As Int32
-		Dim findData As New WIN32_FIND_DATA
-		Dim findHandle As IntPtr
-		Dim count As Int32 = 0
-
-		If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
-		If Not directory.StartsWith(UNC_PREFIX) Then directory = UNC_PREFIX & directory
-
-		Dim findDir As String
-		Dim dirs As Queue(Of String)
-
-		If searchSubDirs Then
-			dirs = New Queue(Of String)(GetDirNames(directory, "*", True, True))
-			dirs.Enqueue(directory)
-		Else
-			dirs = New Queue(Of String)(New String() {directory})
-		End If
-
-		Try
-			While dirs.Count > 0
-				findDir = dirs.Dequeue()
-
-				If Not findDir.EndsWith(DIR_CHAR) Then findDir &= DIR_CHAR
-
-				findHandle = FindFirstFile(findDir & wildCard, findData)
-
-				If findHandle <> INVALID_HANDLE Then
-					Do
-						If findData.cFileName <> "." AndAlso findData.cFileName <> ".." AndAlso (findData.dwFileAttributes And FileAttributes.Directory) <> FileAttributes.Directory Then
-							count += 1
-						End If
-					Loop While FindNextFile(findHandle, findData)
-
-					FindClose(findHandle)
-				End If
-			End While
-		Catch ex As Exception
-			Application.Log.AddException(ex)
-		Finally
-			If findHandle <> INVALID_HANDLE Then
-				FindClose(findHandle)
-			End If
-		End Try
-
-		Return count
+		Return GetFileNames(directory, wildCard, searchSubDirs, True, False, False).Count
 	End Function
 
-	Private Shared Function GetFileNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean) As List(Of String)
+	Private Shared Function GetDirCount(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean) As Int32
+		Return GetDirNames(directory, wildCard, searchSubDirs, True, False, False).Count
+	End Function
+
+
+
+	Private Shared Function GetFileNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
 		Dim fileNames As New List(Of String)(100)
 		Dim findData As New WIN32_FIND_DATA
 		Dim findHandle As IntPtr
+		Dim uncDirectory As String
 
 		Try
-		If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
-		If Not directory.StartsWith(UNC_PREFIX) Then directory = UNC_PREFIX & directory
+			If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
 
-		Dim findDir As String
-		Dim dirs As Queue(Of String)
+			If directory.StartsWith(UNC_PREFIX) Then
+				uncDirectory = directory
+				directory = directory.Substring(UNC_PREFIX.Length)
+			Else
+				uncDirectory = UNC_PREFIX & directory
+			End If
+
+			Dim findDir As String
+			Dim dirs As Queue(Of String)
 
 			If searchSubDirs Then
-				dirs = New Queue(Of String)(GetDirNames(directory, "*", True, True))
-				dirs.Enqueue(directory)
+				dirs = New Queue(Of String)(GetDirNames(uncDirectory, "*", True, True, writeAccess, fixedAcl))
+				dirs.Enqueue(uncDirectory)
 			Else
-				dirs = New Queue(Of String)(New String() {directory})
+				dirs = New Queue(Of String)(New String() {uncDirectory})
 			End If
 
 			While dirs.Count > 0
@@ -631,10 +676,46 @@ Public Class FileIO
 					Loop While FindNextFile(findHandle, findData)
 
 					FindClose(findHandle)
+				Else
+					Dim errCode As UInt32 = GetLastWin32ErrorU()
+
+					If errCode <> Errors.FILE_NOT_FOUND AndAlso errCode <> Errors.PATH_NOT_FOUND Then
+						If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
+							Dim logEntry As LogEntry = Application.Log.CreateEntry()
+							logEntry.Type = LogType.Warning
+							logEntry.Message = String.Format("Couldn't find files, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, directory)
+							logEntry.Add("directory", directory)
+
+							Dim success As Boolean
+							Try
+								success = ACL.FixFileSecurity(uncDirectory, writeAccess, logEntry)
+							Finally
+								logEntry.Add("Fixed", If(success, "Yes", "No"))
+
+								If Not success Then
+									logEntry.Type = LogType.Error
+								End If
+
+								Application.Log.Add(logEntry)
+							End Try
+
+							Return GetFileNames(directory, wildCard, searchSubDirs, unicodePaths, writeAccess, True)
+						Else
+							Throw New Win32Exception(GetInt32(errCode))
+						End If
+					End If
 				End If
 			End While
 		Catch ex As Exception
-			Application.Log.AddException(ex)
+			Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, "Couldn't find files!")
+			logEntry.Type = LogType.Error
+			logEntry.Add("directory", directory)
+			logEntry.Add("wildCard", wildCard)
+			logEntry.Add("searchSubDirs", searchSubDirs.ToString())
+			logEntry.Add("unicodePaths", unicodePaths.ToString())
+			logEntry.Add("fixedAcl", fixedAcl.ToString())
+
+			Application.Log.Add(logEntry)
 		Finally
 			If findHandle <> INVALID_HANDLE Then
 				FindClose(findHandle)
@@ -644,18 +725,25 @@ Public Class FileIO
 		Return fileNames
 	End Function
 
-	Private Shared Function GetDirNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean) As List(Of String)
+	Private Shared Function GetDirNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
 		Dim dirNames As New List(Of String)(100)
 		Dim findData As New WIN32_FIND_DATA
 		Dim findHandle As New IntPtr
+		Dim uncDirectory As String
 
 		Try
-		If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
-		If Not directory.StartsWith(UNC_PREFIX) Then directory = UNC_PREFIX & directory
+			If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
 
-		Dim findDir As String
-		Dim dirs As Queue(Of String) = New Queue(Of String)(1000)
-		dirs.Enqueue(directory)
+			If directory.StartsWith(UNC_PREFIX) Then
+				uncDirectory = directory
+				directory = directory.Substring(UNC_PREFIX.Length)
+			Else
+				uncDirectory = UNC_PREFIX & directory
+			End If
+
+			Dim findDir As String
+			Dim dirs As Queue(Of String) = New Queue(Of String)(1000)
+			dirs.Enqueue(uncDirectory)
 
 			While dirs.Count > 0
 				findDir = dirs.Dequeue()
@@ -672,16 +760,52 @@ Public Class FileIO
 							End If
 
 							If searchSubDirs Then
-								dirs.Enqueue(findDir & findData.cFileName & Path.DirectorySeparatorChar)
+								dirs.Enqueue(findDir & findData.cFileName & DIR_CHAR)
 							End If
 						End If
 					Loop While (FindNextFile(findHandle, findData))
 
 					FindClose(findHandle)
+				Else
+					Dim errCode As UInt32 = GetLastWin32ErrorU()
+
+					If errCode <> Errors.FILE_NOT_FOUND AndAlso errCode <> Errors.PATH_NOT_FOUND Then
+						If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
+							Dim logEntry As LogEntry = Application.Log.CreateEntry()
+							logEntry.Type = LogType.Warning
+							logEntry.Message = String.Format("Couldn't find directories, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, directory)
+							logEntry.Add("directory", directory)
+
+							Dim success As Boolean
+							Try
+								success = ACL.FixFileSecurity(uncDirectory, writeAccess, logEntry)
+							Finally
+								logEntry.Add("Fixed", If(success, "Yes", "No"))
+
+								If Not success Then
+									logEntry.Type = LogType.Error
+								End If
+
+								Application.Log.Add(logEntry)
+							End Try
+
+							Return GetDirNames(directory, wildCard, searchSubDirs, unicodePaths, writeAccess, True)
+						Else
+							Throw New Win32Exception(GetInt32(errCode))
+						End If
+					End If
 				End If
 			End While
 		Catch ex As Exception
-			Application.Log.AddException(ex)
+			Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, "Couldn't find directories!")
+			logEntry.Type = LogType.Error
+			logEntry.Add("directory", directory)
+			logEntry.Add("wildCard", wildCard)
+			logEntry.Add("searchSubDirs", searchSubDirs.ToString())
+			logEntry.Add("unicodePaths", unicodePaths.ToString())
+			logEntry.Add("fixedAcl", fixedAcl.ToString())
+
+			Application.Log.Add(logEntry)
 		Finally
 			If findHandle <> INVALID_HANDLE Then
 				FindClose(findHandle)
@@ -690,6 +814,8 @@ Public Class FileIO
 
 		Return dirNames
 	End Function
+
+
 
 	Private Shared Function GetLongPath(ByVal path As String) As String
 		Dim sb As New StringBuilder

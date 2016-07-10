@@ -7757,42 +7757,41 @@ Public Class frmMain
 			'	FileIO.Delete(testFileShortPath)	' Delete file with short path
 			'	FileIO.Delete(testDir)				' FileIO.Delete deletes both, is it Dir or File
 
-			FileIO.Delete(testDirBrokenACL)
 
-			' <PathTooLongException>
-			'ACL.AddDirectorySecurity(testDirBrokenACL, FileSystemRights.Delete, AccessControlType.Allow)
+			'Dim files As List(Of String) = FileIO.GetFiles("E:\_temp\test\", "*", True)
+			'MessageBox.Show(String.Join(Environment.NewLine, files.ToArray()))
 
-
-			'High Resolution Date & Time:	08/07/2016 22:01:53.4099397
-			'Event Class:	File System
-			'Operation:	CreateFile
-			'Result:	SUCCESS
-			'Path:	C:\ddu\TEST.txt
-			'TID:	720
-			'Duration:	0.0000070
-
-			'Desired Access:	Read Attributes, Read Control, Synchronize
-			'Disposition:	Open
-			'Options:	Synchronous IO Non-Alert, Open For Backup, Open Reparse Point
-			'Attributes:	n/a
-			'ShareMode:	None
-			'AllocationSize:	n/a
-			'OpenResult:	Opened
+			FileIO.CreateDir("E:\_temp\test\more test\Some long paths\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should")
 
 
-			' Testing
-			'Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
+			FileIO.Delete("E:\_temp\test\")
+
+
+
+			' Multiline TEST
+			'Dim logEntry As LogEntry = Application.Log.CreateEntry()
+
+			'logEntry.Message =
+			' "|" & vbTab & "Testing Multiline" & vbTab & vbTab & vbTab & vbTab & "|" & Environment.NewLine &
+			' "|" & vbTab & vbTab & "Second Line" & vbTab & vbTab & vbTab & "|" & Environment.NewLine &
+			' "|" & vbTab & vbTab & vbTab & "Third Line" & vbTab & vbTab & "|" & Environment.NewLine &
+			' "|" & vbTab & vbTab & vbTab & vbTab & "Fourth Line" & vbTab & "|"
+
+			'logEntry.Add(New KvP("Numbers", String.Join(Environment.NewLine, New String() {"1", "2", "3", "4", "5", "6"})))
+
+
+
+			'Application.Log.Add(logEntry)
+
+			'Dim path As String = "E:\_temp\test"
+			'MessageBox.Show("ExistsDir: " & FileIO.ExistsDir(path).ToString() & Environment.NewLine & "ExistsFile: " & FileIO.ExistsFile(path).ToString())
 
 			'Dim files As List(Of String) = FileIO.GetFiles("C:\", "*", True)
-			'Dim files As List(Of String) = FileIO.GetDirectories("C:\", "*", True)
+			'Dim dirs As List(Of String) = FileIO.GetDirectories("C:\", "*", True)
 			'Dim fileCount As Int32 = FileIO.CountFiles("C:\", "*", True)
+			'Dim dirCount As Int32 = FileIO.CountDirectories("C:\", "*", True)
 
-			'sw.Stop()
-
-			'Dim ts As TimeSpan = sw.Elapsed
-
-			'MessageBox.Show("CountFiles: " & CountFiles.ToString() & Environment.NewLine & "Time: " & ts.ToString())
-			'MessageBox.Show("GetFiles: " & files.Count.ToString() & Environment.NewLine & "Time: " & ts.ToString())
+			'MessageBox.Show("Dirs: " & dirs.Count.ToString() & " -> " & dirCount.ToString() & vbCrLf & "Files: " & files.Count.ToString() & " -> " & fileCount.ToString())
 
 		Catch ex As Exception
 			MessageBox.Show(ex.Message, "FileIO Failure!")

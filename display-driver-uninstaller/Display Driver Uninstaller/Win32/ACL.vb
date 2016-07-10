@@ -552,22 +552,6 @@ Namespace Win32
 #Region "P/Invoke"
 
 			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function GetFileSecurity(
-   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
-   <[In](), [Optional]()> ByVal RequestedInformation As SECURITY_INFORMATION,
-   <[Out](), [Optional]()> ByVal pSecurityDescriptor() As Byte,
-   <[In]()> ByVal nLength As UInt32,
-   <[Out]()> ByRef lpnLengthNeeded As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function SetFileSecurity(
-   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
-   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
-   <[In]()> ByVal pSecurityDescriptor() As Byte) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 			Private Function GetSecurityInfo(
    <[In]()> ByVal handle As IntPtr,
    <[In]()> ByVal ObjectType As SE_OBJECT_TYPE,
@@ -602,7 +586,16 @@ Namespace Win32
    <[Out]()> ByRef StringSid As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 			End Function
 
-
+			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Private Function LookupAccountSid(
+   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpSystemName As String,
+   <[In]()> ByVal lpSid As IntPtr,
+   <[Out](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpName As Text.StringBuilder,
+   <[In](), [Out]()> ByRef cchName As UInt32,
+   <[Out](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpReferencedDomainName As Text.StringBuilder,
+   <[In](), [Out]()> ByRef cchReferencedDomainName As UInt32,
+   <[Out]()> ByRef peUse As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
 
 			<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 			Private Function CreateFile(
@@ -713,17 +706,18 @@ Namespace Win32
 			End Sub
 
 
-			' path = File or Dir, delete = Path (dir or file) going to be deleted?
-			Public Function FixFileSecurity(ByVal path As String, ByVal delete As Boolean) As Boolean
-				If Not delete Then
-					Return False	' Do not change rights if not going to delete it. yet.
+			' path = File or Dir, deleteRights = Path (dir or file) going to be deleted?
+			Friend Function FixFileSecurity(ByVal uncPath As String, ByVal deleteRights As Boolean, ByRef logEntry As LogEntry) As Boolean
+				If Not deleteRights Then
+					Return False	' Do not change rights if not going to delete it. NEED TO FIX...
 				End If
 
+				Dim logEvents As Boolean = logEntry IsNot Nothing
 				Dim errCode As UInt32 = 0UI
 				Dim ptrFile As IntPtr = IntPtr.Zero
 
 				Try
-					ptrFile = CreateFile(path, FILE_RIGHTS.READ_CONTROL Or FILE_RIGHTS.FILE_READ_ATTRIBUTES, FILE_SHARE.NONE, IntPtr.Zero, FILE_OPEN.OPEN_EXISTING, FileIO.FILE_ATTRIBUTES.NORMAL Or FileIO.FILE_ATTRIBUTES.FLAG_BACKUP_SEMANTICS Or FileIO.FILE_ATTRIBUTES.FLAG_OPEN_REPARSE_POINT, IntPtr.Zero)
+					ptrFile = CreateFile(uncPath, FILE_RIGHTS.READ_CONTROL Or FILE_RIGHTS.FILE_READ_ATTRIBUTES, FILE_SHARE.NONE, IntPtr.Zero, FILE_OPEN.OPEN_EXISTING, FileIO.FILE_ATTRIBUTES.NORMAL Or FileIO.FILE_ATTRIBUTES.FLAG_BACKUP_SEMANTICS Or FileIO.FILE_ATTRIBUTES.FLAG_OPEN_REPARSE_POINT, IntPtr.Zero)
 
 					errCode = GetLastWin32ErrorU()
 
@@ -751,35 +745,64 @@ Namespace Win32
 						Dim ptrOwnerStr As IntPtr = IntPtr.Zero
 						Dim strOwner As String
 
-						Try
-							If Not ConvertSidToStringSid(ptrOwner, ptrOwnerStr) Then
-								Throw New Win32Exception(GetLastWin32Error())
-							End If
+						If logEvents Then		' Log current Owner
+							Try
+								If Not ConvertSidToStringSid(ptrOwner, ptrOwnerStr) Then
+									Throw New Win32Exception(GetLastWin32Error())
+								End If
 
-							strOwner = Marshal.PtrToStringUni(ptrOwnerStr)
-						Finally
-							If ptrOwnerStr <> IntPtr.Zero Then
-								Marshal.FreeHGlobal(ptrOwnerStr)
-							End If
-						End Try
+								strOwner = Marshal.PtrToStringUni(ptrOwnerStr)
+								logEntry.Add("OwnerSID", strOwner)
 
-						strOwner = _sidSystem.ToString()
+								Dim sbName As New Text.StringBuilder(260)
+								Dim sbDomain As New Text.StringBuilder(260)
+								Dim sizeName As UInt32 = GetUInt32(sbName.Capacity)
+								Dim sizeDomain As UInt32 = GetUInt32(sbName.Capacity)
 
-						Try
-							If Not ConvertStringSidToSid(strOwner, ptrOwnerStr) Then
-								Throw New Win32Exception(GetLastWin32Error())
-							End If
+								If Not LookupAccountSid(Nothing, ptrOwner, sbName, sizeName, sbDomain, sizeDomain, 0UI) Then
+									Throw New Win32Exception(GetLastWin32Error())
+								End If
 
-							If Not SetSecurityInfo(ptrFile, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION, ptrOwnerStr, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero) Then
-								Throw New Win32Exception(GetLastWin32Error())
-							End If
+								logEntry.Add("OwnerDomain", sbDomain.ToString())
+								logEntry.Add("OwnerName", sbName.ToString())
+							Catch ex As Win32Exception
+								logEntry.Add("Couldn't find current path's Owner!")
+							Finally
+								If ptrOwnerStr <> IntPtr.Zero Then
+									Marshal.FreeHGlobal(ptrOwnerStr)
+								End If
+							End Try
+						End If
 
-							Return True
-						Finally
-							If ptrOwnerStr <> IntPtr.Zero Then
-								Marshal.FreeHGlobal(ptrOwnerStr)
-							End If
-						End Try
+						If deleteRights Then
+							strOwner = _sidSystem.ToString()
+
+							Try
+								If Not ConvertStringSidToSid(strOwner, ptrOwnerStr) Then
+									Throw New Win32Exception(GetLastWin32Error())
+								End If
+
+								If Not SetSecurityInfo(ptrFile, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION, ptrOwnerStr, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero) Then
+									Throw New Win32Exception(GetLastWin32Error())
+								End If
+
+								Return True
+							Finally
+								If ptrOwnerStr <> IntPtr.Zero Then
+									Marshal.FreeHGlobal(ptrOwnerStr)
+								End If
+							End Try
+						Else
+
+							' WORK IN PROGRESS
+							' 
+							' GetFiles / GetDirectories fails in some scenarios
+							' ... Forgot to check for Error code if no files "found" 
+							' => ACCESS_DENIED => No files
+							' => No files "found" => Directory can't be removed (contains files which couldn't find)
+
+							Return False
+						End If
 					Finally
 						If ptrSecurity <> IntPtr.Zero Then
 							LocalFree(ptrSecurity)
