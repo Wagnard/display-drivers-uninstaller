@@ -221,9 +221,9 @@ Public Class frmMain
 					End If
 				End If
 					'check if the oem was removed to process to the pnplockdownfile if necessary
-					If win8higher AndAlso (Not System.IO.File.Exists(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
-						CleanupEngine.prePnplockdownfiles(catalog)
-					End If
+				If win8higher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
+					CleanupEngine.prePnplockdownfiles(catalog)
+				End If
 			Next
 		Else
 			For Each oem As Inf In GetOemInfList(Application.Paths.WinDir & "inf\")
@@ -275,7 +275,7 @@ Public Class frmMain
 				UpdateTextMethod(reply2)
 				Application.Log.AddMessage(reply2)
 				'check if the oem was removed to process to the pnplockdownfile if necessary
-				If win8higher AndAlso (Not System.IO.File.Exists(Environment.GetEnvironmentVariable("windir") & "\inf\" + oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
+				If win8higher AndAlso (Not FileIO.ExistsFile(Environment.GetEnvironmentVariable("windir") & "\inf\" + oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
 					CleanupEngine.prePnplockdownfiles(catalog)
 				End If
 			Next
@@ -362,7 +362,7 @@ Public Class frmMain
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
@@ -390,10 +390,9 @@ Public Class frmMain
 		End If
 
 
-
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\ATI"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("cim") Then
@@ -418,7 +417,7 @@ Public Class frmMain
 
 		filePath = Environment.GetFolderPath _
 		  (Environment.SpecialFolder.ProgramFiles) + "\Common Files" + "\ATI Technologies"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("multimedia") Then
@@ -442,7 +441,7 @@ Public Class frmMain
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD APP"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 
 			FileIO.Delete(filePath)
 
@@ -452,7 +451,7 @@ Public Class frmMain
 
 			filePath = Environment.GetFolderPath _
 			  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 
 				FileIO.Delete(filePath)
 
@@ -460,7 +459,7 @@ Public Class frmMain
 
 			filePath = Environment.GetFolderPath _
 			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 				Try
 					For Each child As String In Directory.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
@@ -501,7 +500,7 @@ Public Class frmMain
 
 			filePath = Environment.GetFolderPath _
 			   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 
 				FileIO.Delete(filePath)
 
@@ -509,7 +508,7 @@ Public Class frmMain
 
 			filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 
 				FileIO.Delete(filePath)
 
@@ -517,7 +516,7 @@ Public Class frmMain
 
 			filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoFirefox"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 
 				FileIO.Delete(filePath)
 
@@ -525,7 +524,7 @@ Public Class frmMain
 
 			filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoChrome"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 
 				FileIO.Delete(filePath)
 
@@ -533,7 +532,7 @@ Public Class frmMain
 
 			filePath = Environment.GetFolderPath _
 			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 				For Each child As String In Directory.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("multimedia") Then
@@ -562,7 +561,7 @@ Public Class frmMain
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 
 			FileIO.Delete(filePath)
 
@@ -571,7 +570,7 @@ Public Class frmMain
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 
 			FileIO.Delete(filePath)
 
@@ -579,7 +578,7 @@ Public Class frmMain
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\ATI"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ace") Then
@@ -603,7 +602,7 @@ Public Class frmMain
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\AMD"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("kdb") Or _
@@ -631,7 +630,7 @@ Public Class frmMain
 			If winxp Then
 				filePath = filepaths + "\Application Data\ATI"
 			End If
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 				Try
 					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
@@ -662,7 +661,7 @@ Public Class frmMain
 			If winxp Then
 				filePath = filepaths + "\Local Settings\Application Data\ATI"
 			End If
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 				Try
 					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
@@ -692,7 +691,7 @@ Public Class frmMain
 			If winxp Then
 				filePath = filepaths + "\Local Settings\Application Data\AMD"
 			End If
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 				Try
 					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
@@ -727,7 +726,7 @@ Public Class frmMain
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("amdkmpfd") Or
@@ -758,7 +757,7 @@ Public Class frmMain
 
 		filePath = Environment.GetFolderPath _
 		  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
@@ -786,7 +785,7 @@ Public Class frmMain
 
 
 		filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_64"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.EndsWith("\mom") Or
@@ -819,7 +818,7 @@ Public Class frmMain
 		End If
 
 		filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\GAC_MSIL"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.EndsWith("\mom") Or
@@ -2464,7 +2463,7 @@ Public Class frmMain
 		Next
 
 		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath) + "\Public\Pictures\NVIDIA Corporation"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 			If filePath IsNot Nothing Then
 				For Each child As String In Directory.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
@@ -2694,7 +2693,7 @@ Public Class frmMain
 
 		filePath = Environment.GetFolderPath _
 		(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
-		If Directory.Exists(filePath) Then
+		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("control panel client") Or
@@ -2789,7 +2788,7 @@ Public Class frmMain
 		If config.RemoveVulkan Then
 			filePath = Environment.GetFolderPath _
 			 (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 
 				FileIO.Delete(filePath)
 
@@ -2798,7 +2797,7 @@ Public Class frmMain
 
 		If config.RemoveVulkan Then
 			filePath = config.Paths.ProgramFiles + "VulkanRT"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 
 				FileIO.Delete(filePath)
 
@@ -2808,7 +2807,7 @@ Public Class frmMain
 		If IntPtr.Size = 8 Then
 			filePath = Environment.GetFolderPath _
 			  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 				For Each child As String In Directory.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("3d vision") Or
@@ -2860,7 +2859,7 @@ Public Class frmMain
 			If IntPtr.Size = 8 Then
 				filePath = Environment.GetFolderPath _
 				 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
-				If Directory.Exists(filePath) Then
+				If FileIO.ExistsDir(filePath) Then
 
 					FileIO.Delete(filePath)
 
@@ -2871,7 +2870,7 @@ Public Class frmMain
 		If config.RemoveVulkan Then
 			If IntPtr.Size = 8 Then
 				filePath = Application.Paths.ProgramFilesx86 + "VulkanRT"
-				If Directory.Exists(filePath) Then
+				If FileIO.ExistsDir(filePath) Then
 
 					FileIO.Delete(filePath)
 
@@ -3036,7 +3035,7 @@ Public Class frmMain
 						If Not IsNullOrWhitespace(childs) Then
 							filePath = childs + "\AC\Temp\NVIDIA Corporation"
 
-							If Directory.Exists(filePath) Then
+							If FileIO.ExistsDir(filePath) Then
 								For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 									If IsNullOrWhitespace(child) = False Then
 										If child.ToLower.Contains("nv_cache") Then
@@ -3069,7 +3068,7 @@ Public Class frmMain
 		'Cleaning the GFE 2.0.1 and earlier assemblies.
 		If config.RemoveGFE Then
 			filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_32"
-			If Directory.Exists(filePath) Then
+			If FileIO.ExistsDir(filePath) Then
 				For Each child As String In Directory.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("gfexperience") Or
@@ -5660,7 +5659,7 @@ Public Class frmMain
 					End If
 
 					If archIs64 = True Then
-						If Not File.Exists(Application.Paths.AppBase & "x64\ddudr.exe") Then
+						If Not FileIO.ExistsFile(Application.Paths.AppBase & "x64\ddudr.exe") Then
 							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 
 							btnCleanRestart.IsEnabled = False
@@ -5669,7 +5668,7 @@ Public Class frmMain
 							Exit Sub
 						End If
 					ElseIf archIs64 = False Then
-						If Not File.Exists(Application.Paths.AppBase & "x86\ddudr.exe") Then
+						If Not FileIO.ExistsFile(Application.Paths.AppBase & "x86\ddudr.exe") Then
 							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 
 							btnCleanRestart.IsEnabled = False
@@ -7531,7 +7530,7 @@ Public Class frmMain
 
 	Private Sub ExtractEnglishLangFile(ByVal fileName As String, ByVal langEng As Languages.LanguageOption)
 		Using stream As Stream = Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml"))
-			If File.Exists(fileName) Then
+			If FileIO.ExistsFile(fileName) Then
 				Using fsEnglish As FileStream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.None)
 					If CompareStreams(stream, fsEnglish) Then
 						Return
