@@ -85,7 +85,10 @@ Public Class frmMain
 				If Not MyIdentity.IsSystem Then	 'we dont want to open a webpage when the app is under "System" user.
 					Select Case MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text1"), Application.Settings.AppName, MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
 						Case MessageBoxResult.Yes
-							process.Start("http://www.wagnardmobile.com")
+							Using process As Process = New Process()
+								process.Start("http://www.wagnardmobile.com")
+							End Using
+
 							closeapp = True
 							closeddu()
 							Exit Sub
@@ -131,14 +134,6 @@ Public Class frmMain
 				' request = System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion2.txt")
 				' request.Timeout = 2500
 				' response = request.GetResponse()
-			End Try
-
-
-
-			Try
-				response = request.GetResponse()
-			Catch ex As Exception
-				Return 3
 			End Try
 
 			Dim newestVersionStr As String = Nothing
@@ -1639,32 +1634,27 @@ Public Class frmMain
 								Catch ex As Exception
 								End Try
 							End If
+
 							If child.ToLower.Contains("install") Then
 								'here we check the install path location in case CCC is not installed on the system drive.  A kill to explorer must be made
 								'to help cleaning in normal mode.
 								If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
 									Application.Log.AddMessage("Killing Explorer.exe")
-									Dim appproc = process.GetProcessesByName("explorer")
-									For i As Integer = 0 To appproc.Length - 1
-										appproc(i).Kill()
-									Next i
+									KillProcess("explorer")
 								End If
+
 								Using regkey2 As RegistryKey = regkey.OpenSubKey(child, True)
 									If regkey2 IsNot Nothing Then
 										If Not IsNullOrWhitespace(regkey2.GetValue("InstallDir", String.Empty).ToString) Then
 
 											filePath = regkey2.GetValue("InstallDir", String.Empty).ToString
-											If Not IsNullOrWhitespace(filePath) AndAlso My.Computer.FileSystem.DirectoryExists(filePath) Then
+
+											If Not IsNullOrWhitespace(filePath) AndAlso FileIO.ExistsDir(filePath) Then
 												For Each childf As String In Directory.GetDirectories(filePath)
-													If IsNullOrWhitespace(childf) = False Then
-														If childf.ToLower.Contains("ati.ace") Or
-														childf.ToLower.Contains("cnext") Or
-														childf.ToLower.Contains("amdkmpfd") Or
-														childf.ToLower.Contains("cim") Then
+													If IsNullOrWhitespace(childf) Then Continue For
 
-															FileIO.Delete(childf)
-
-														End If
+													If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
+														FileIO.Delete(childf)
 													End If
 												Next
 												If Directory.GetDirectories(filePath).Length = 0 Then
@@ -1803,15 +1793,9 @@ Public Class frmMain
 									'to help cleaning in normal mode.
 									If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
 										Application.Log.AddMessage("Killing Explorer.exe")
-										Dim appproc = process.GetProcessesByName("explorer")
-										For i As Integer = 0 To appproc.Length - 1
-											Try
-												appproc(i).Kill()
-											Catch ex As Exception
-												Application.Log.AddException(ex)
-											End Try
-										Next i
+										KillProcess("explorer")
 									End If
+
 									Using regkey2 As RegistryKey = regkey.OpenSubKey(child, True)
 										If regkey2 IsNot Nothing Then
 											If Not IsNullOrWhitespace(regkey2.GetValue("InstallDir", String.Empty).ToString) Then
@@ -1900,8 +1884,7 @@ Public Class frmMain
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
 
-							Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
-							  ("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
+							Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
 
 								If subregkey IsNot Nothing Then
 									If IsNullOrWhitespace(CStr(subregkey.GetValue("DisplayName"))) = False Then
@@ -2213,22 +2196,27 @@ Public Class frmMain
 
 	Private Sub rebuildcountercache()
 		Application.Log.AddMessage("Rebuilding the Perf.Counter cache X2")
+
 		Try
-
 			For i = 0 To 1
-				processinfo.FileName = "lodctr"
-				processinfo.Arguments = "/R"
-				processinfo.WindowStyle = ProcessWindowStyle.Hidden
-				processinfo.UseShellExecute = False
-				processinfo.CreateNoWindow = True
-				processinfo.RedirectStandardOutput = True
+				Using process As Process = New Process() With
+				  {
+				   .StartInfo = New ProcessStartInfo("lodctr") With
+				   {
+					.Arguments = "/R",
+					.WindowStyle = ProcessWindowStyle.Hidden,
+					.UseShellExecute = False,
+					.CreateNoWindow = True,
+					.RedirectStandardOutput = True
+				   }
+				  }
 
-				process.StartInfo = processinfo
-				process.Start()
-				reply2 = process.StandardOutput.ReadToEnd
-				process.StandardOutput.Close()
-				process.Close()
-				Application.Log.AddMessage(reply2)
+					process.Start()
+
+					Application.Log.AddMessage(process.StandardOutput.ReadToEnd())
+
+					process.Close()
+				End Using	' Dispose() !
 			Next
 
 		Catch ex As Exception
@@ -4996,43 +4984,52 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Private Sub restartcomputer()
+	Private Sub RestartComputer()
 		Application.Log.AddMessage("Restarting Computer ")
 
 		Application.SaveData()
 
-		process.Start(New ProcessStartInfo("shutdown", "/r /t 0") With
+		Using process As Process = New Process() With
 		  {
-		   .WindowStyle = ProcessWindowStyle.Hidden,
-		   .UseShellExecute = True,
-		   .CreateNoWindow = True,
-		   .RedirectStandardOutput = False
+		   .StartInfo = New ProcessStartInfo("shutdown", "/r /t 0") With
+		   {
+			.WindowStyle = ProcessWindowStyle.Hidden,
+			.UseShellExecute = True,
+			.CreateNoWindow = True,
+			.RedirectStandardOutput = False
+		   }
 		  }
-		 )
-		process.WaitForExit()
-		process.Close()
+
+			process.Start()
+			process.WaitForExit()
+			process.Close()
+		End Using
 
 		closeddu()
 	End Sub
 
-	Private Sub shutdowncomputer()
+	Private Sub ShutdownComputer()
 		Application.Log.AddMessage("Shutdown Computer ")
 
 		Application.SaveData()
 
 		preventclose = False
 
-		process.Start(New ProcessStartInfo("shutdown", "/s /t 0") With
-		  {
+		Using process As Process = New Process() With
+		{
+		  .StartInfo = New ProcessStartInfo("shutdown", "/s /t 0") With
+		   {
 		   .WindowStyle = ProcessWindowStyle.Hidden,
 		   .UseShellExecute = True,
 		   .CreateNoWindow = True,
 		   .RedirectStandardOutput = False
+		   }
 		  }
-		 )
 
-		process.WaitForExit()
-		process.Close()
+			process.Start()
+			process.WaitForExit()
+			process.Close()
+		End Using
 
 		closeddu()
 	End Sub
@@ -5044,27 +5041,28 @@ Public Class frmMain
 			Application.Log.AddMessage("Scanning for new device...")
 			SetupAPI.ReScanDevices()
 		Else
-			Dim scan As New ProcessStartInfo
-			scan.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-			scan.Arguments = "rescan"
-			scan.UseShellExecute = False
-			scan.CreateNoWindow = True
-			scan.RedirectStandardOutput = False
-
-
 			UpdateTextMethod(UpdateTextTranslated(8))
 			Application.Log.AddMessage("Scanning for new device...")
-			Dim proc4 As New Process
-			proc4.StartInfo = scan
-			proc4.Start()
-			proc4.WaitForExit()
-			proc4.Close()
+
+			Using process As Process = New Process() With
+			{
+			.StartInfo = New ProcessStartInfo(baseDir & "\" & ddudrfolder & "\ddudr.exe", "rescan") With
+			 {
+			  .UseShellExecute = False,
+			  .CreateNoWindow = True,
+			  .RedirectStandardOutput = False
+			 }
+			}
+
+				process.Start()
+				process.WaitForExit()
+				process.Close()
+			End Using
+
 			System.Threading.Thread.Sleep(2000)
+
 			If Not safemode Then
-				Dim appproc = process.GetProcessesByName("explorer")
-				For i As Integer = 0 To appproc.Length - 1
-					appproc(i).Kill()
-				Next i
+				KillProcess("explorer")
 			End If
 		End If
 
@@ -6538,23 +6536,25 @@ Public Class frmMain
 								Application.Log.AddMessage("-" & vendid & "- NVIDIA SHIELD Wireless Controller Trackpad found")
 
 
-								processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-								processinfo.Arguments = "remove =MOUSE " & Chr(34) & vendid & Chr(34)
-								processinfo.UseShellExecute = False
-								processinfo.CreateNoWindow = True
-								processinfo.RedirectStandardOutput = True
-								process.StartInfo = processinfo
+								Using process As Process = New Process() With
+								 {
+								  .StartInfo = New ProcessStartInfo(baseDir & "\" & ddudrfolder & "\ddudr.exe", "remove =MOUSE " & Chr(34) & vendid & Chr(34)) With
+								  {
+								   .UseShellExecute = False,
+								   .CreateNoWindow = True,
+								   .RedirectStandardOutput = True
+								  }
+								}
 
-								process.Start()
-								reply2 = process.StandardOutput.ReadToEnd
-								process.StandardOutput.Close()
-								process.Close()
-								'process.WaitForExit()
+									process.Start()
 
-								Application.Log.AddMessage(reply2)
+									Application.Log.AddMessage(process.StandardOutput.ReadToEnd)
 
-
+									process.Close()
+									'process.WaitForExit()
+								End Using		' Dispose() !
 							End If
+
 							card1 = reply.IndexOf("HID\", card1 + 1)
 
 						End While
@@ -6578,31 +6578,36 @@ Public Class frmMain
 
 													For Each child2 As String In subregkey.GetSubKeyNames
 														If Not IsNullOrWhitespace(child2) Then
-															If subregkey.OpenSubKey(child2) Is Nothing Then
-																Continue For
-															End If
+															Using regkey2 As RegistryKey = subregkey.OpenSubKey(child)
+																If regkey2 Is Nothing Then Continue For
 
-															If Not IsNullOrWhitespace(CStr(subregkey.OpenSubKey(child2).GetValue("DeviceDesc"))) AndAlso
-															   subregkey.OpenSubKey(child2).GetValue("DeviceDesc").ToString.ToLower.Contains("nvidia virtual audio device") Then
+																Dim value As String = regkey2.GetValue("DeviceDesc", String.Empty).ToString()
 
-																vendid = child & "\" & child2
-
-																processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-																processinfo.Arguments = "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)
-																processinfo.UseShellExecute = False
-																processinfo.CreateNoWindow = True
-																processinfo.RedirectStandardOutput = True
-																process.StartInfo = processinfo
-
-																process.Start()
-																reply2 = process.StandardOutput.ReadToEnd
-																process.StandardOutput.Close()
-																process.Close()
-																'process.WaitForExit()
-																Application.Log.AddMessage(reply2)
+																If Not IsNullOrWhitespace(value) AndAlso StrContainsAny(value, True, "nvidia virtual audio device") Then
+																	vendid = child & "\" & child2
 
 
-															End If
+																	Using process As Process = New Process() With
+																	 {
+																	  .StartInfo = New ProcessStartInfo(baseDir & "\" & ddudrfolder & "\ddudr.exe", "remove " & Chr(34) & "@ROOT\" & vendid & Chr(34)) With
+																	  {
+																	   .UseShellExecute = False,
+																	   .CreateNoWindow = True,
+																	   .RedirectStandardOutput = True
+																	  }
+																	 }
+
+																		process.Start()
+
+																		Application.Log.AddMessage(process.StandardOutput.ReadToEnd)
+
+																		process.Close()
+																		'process.WaitForExit()
+
+
+																	End Using		' Dispose() !
+																End If
+															End Using
 														End If
 													Next
 												End If
@@ -6628,31 +6633,40 @@ Public Class frmMain
 						Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\SWD\MMDEVAPI")
 							If regkey IsNot Nothing Then
 								For Each child As String In regkey.GetSubKeyNames
-									If Not IsNullOrWhitespace(child) Then
+									If IsNullOrWhitespace(child) Then Continue For
 
-										If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
-										   (regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia virtual audio device") AndAlso removegfe) Or
-										   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("nvidia high definition audio") Then
+									Using regkey2 As RegistryKey = regkey.OpenSubKey(child)
+										If regkey2 IsNot Nothing Then
 
-											vendid = child
+											Dim value As String = regkey2.GetValue("FriendlyName", String.Empty).ToString()
 
-											processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-											processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
-											processinfo.UseShellExecute = False
-											processinfo.CreateNoWindow = True
-											processinfo.RedirectStandardOutput = True
-											process.StartInfo = processinfo
+											If Not IsNullOrWhitespace(value) AndAlso
+											 ((StrContainsAny(value, True, "nvidia virtual audio device") AndAlso removegfe) Or
+											StrContainsAny(value, True, "nvidia high definition audio")) Then
 
-											process.Start()
-											reply2 = process.StandardOutput.ReadToEnd
-											process.StandardOutput.Close()
-											process.Close()
-											'process.WaitForExit()
-											Application.Log.AddMessage(reply2)
+												vendid = child
 
 
+												Using process As Process = New Process() With
+												   {
+												 .StartInfo = New ProcessStartInfo(baseDir & "\" & ddudrfolder & "\ddudr.exe", "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)) With
+												 {
+												  .UseShellExecute = False,
+												  .CreateNoWindow = True,
+												  .RedirectStandardOutput = True
+												 }
+												   }
+
+													process.Start()
+
+													Application.Log.AddMessage(process.StandardOutput.ReadToEnd)
+
+													process.Close()
+													'process.WaitForExit()
+												End Using		' Dispose() !
+											End If
 										End If
-									End If
+									End Using
 								Next
 							End If
 						End Using
@@ -6686,28 +6700,37 @@ Public Class frmMain
 								For Each child As String In regkey.GetSubKeyNames
 									If Not IsNullOrWhitespace(child) Then
 
-										If Not IsNullOrWhitespace(CStr(regkey.OpenSubKey(child).GetValue("FriendlyName"))) AndAlso
-										   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("amd high definition audio device") Or
-										   regkey.OpenSubKey(child).GetValue("FriendlyName").ToString.ToLower.Contains("digital audio (hdmi) (high definition audio device)") Then
+										Using regkey2 As RegistryKey = regkey.OpenSubKey(child)
+											If regkey2 IsNot Nothing Then
+												Dim value As String = regkey2.GetValue("FriendlyName", String.Empty).ToString()
 
-											vendid = child
+												If Not IsNullOrWhitespace(value) AndAlso
+												 (StrContainsAny(value, True, "amd high definition audio device") Or
+												 StrContainsAny(value, True, "digital audio (hdmi) (high definition audio device)")) Then
 
-											processinfo.FileName = baseDir & "\" & ddudrfolder & "\ddudr.exe"
-											processinfo.Arguments = "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)
-											processinfo.UseShellExecute = False
-											processinfo.CreateNoWindow = True
-											processinfo.RedirectStandardOutput = True
-											process.StartInfo = processinfo
+													vendid = child
 
-											process.Start()
-											reply2 = process.StandardOutput.ReadToEnd
-											process.StandardOutput.Close()
-											process.Close()
-											'process.WaitForExit()
-											Application.Log.AddMessage(reply2)
+													Using process As Process = New Process() With
+													  {
+													  .StartInfo = New ProcessStartInfo(baseDir & "\" & ddudrfolder & "\ddudr.exe", "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)) With
+													   {
+														.UseShellExecute = False,
+														.CreateNoWindow = True,
+														.RedirectStandardOutput = True
+													   }
+													  }
 
+														process.Start()
 
-										End If
+														Application.Log.AddMessage(process.StandardOutput.ReadToEnd)
+
+														process.Close()
+														'process.WaitForExit()
+
+													End Using		' Dispose() !
+												End If
+											End If
+										End Using
 									End If
 								Next
 							End If
@@ -7072,11 +7095,11 @@ Public Class frmMain
 			End If
 
 			If reboot Then
-				restartcomputer()
+				RestartComputer()
 			End If
 
 			If shutdown Then
-				shutdowncomputer()
+				ShutdownComputer()
 			End If
 
 		Catch ex As Exception
@@ -7272,20 +7295,10 @@ Public Class frmMain
 			Loop
 
 			If restart Then
-				Application.Log.AddMessage("Restarting Computer ")
-				processinfo.FileName = "shutdown"
-				processinfo.Arguments = "/r /t 0"
-				processinfo.WindowStyle = ProcessWindowStyle.Hidden
-				processinfo.UseShellExecute = True
-				processinfo.CreateNoWindow = True
-				processinfo.RedirectStandardOutput = False
+				Application.Log.AddMessage("Restarting Computer")
 
-				process.StartInfo = processinfo
-				process.Start()
-				process.WaitForExit()
-				process.Close()
+				RestartComputer()
 
-				closeddu()
 				Exit Sub
 			End If
 
@@ -7760,11 +7773,10 @@ Public Class frmMain
 			'Dim files As List(Of String) = FileIO.GetFiles("E:\_temp\test\", "*", True)
 			'MessageBox.Show(String.Join(Environment.NewLine, files.ToArray()))
 
-			FileIO.CreateDir("E:\_temp\test\more test\Some long paths\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should")
+			'FileIO.CreateDir("E:\_temp\test\more test\Some long paths\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should")
 
-
-			FileIO.Delete("E:\_temp\test\")
-
+			'FileIO.Delete("E:\_temp\test\")
+			ShutdownComputer()
 
 
 			' Multiline TEST
