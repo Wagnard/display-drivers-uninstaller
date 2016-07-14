@@ -3323,7 +3323,7 @@ Public Class frmMain
 												wantedvalue = regkey.GetValue(child, String.Empty).ToString()
 												If IsNullOrWhitespace(wantedvalue) Then Continue For
 
-												If StrContainsAny(wantedvalue, True, "nvstreamsrv", "nvidia network service", "nvidia update core") Then
+												If StrContainsAny(wantedvalue, True, "nvstreamsrv", "nvidia network service", "nvidia update core", "NvContainer") Then
 													Try
 														deletevalue(regkey, child)
 													Catch ex As Exception
@@ -4094,7 +4094,7 @@ Public Class frmMain
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetValueNames()
 								If Not IsNullOrWhitespace(child) Then
-									If child.ToLower.Contains("gfexperience.exe") AndAlso removegfe Then
+									If StrContainsAny(child, True, "gfexperience.exe", "GeForce Experience.exe") AndAlso removegfe Then
 										deletevalue(regkey, child)
 									End If
 								End If
