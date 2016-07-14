@@ -2690,6 +2690,7 @@ Public Class frmMain
 					   child.ToLower.Contains("drs") Or
 					   child.ToLower.Contains("nvsmi") Or
 					   child.ToLower.Contains("opencl") Or
+					   child.ToLower.Contains("ansel") Or
 					   child.ToLower.Contains("3d vision") Or
 					   child.ToLower.Contains("led visualizer") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("netservice") AndAlso config.RemoveGFE Or
@@ -2719,6 +2720,7 @@ Public Class frmMain
 								   child2.ToLower.Contains("display.driver") Or
 								   child2.ToLower.Contains("display.optimus") Or
 								   child2.ToLower.Contains("msvcruntime") Or
+								   child2.ToLower.Contains("ansel.") Or
 								   child2.ToLower.Contains("display.gfexperience") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("osc.") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("osclib.") AndAlso config.RemoveGFE Or
@@ -2962,7 +2964,8 @@ Public Class frmMain
 			Try
 				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
-						If child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE Or _
+						If (child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("gfe") AndAlso config.RemoveGFE) Or
 						   child.ToLower.Contains("displaydriver") Then
 
 							FileIO.Delete(child)
@@ -6749,7 +6752,7 @@ Public Class frmMain
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
-							If StrContainsAny(d.HardwareIDs(0), True, "root\iwdbus") Then  'May need to confirm this one.
+							If d.HardwareIDs(0) IsNot Nothing AndAlso StrContainsAny(d.HardwareIDs(0), True, "root\iwdbus") Then  'Workaround for a bug report we got.
 								SetupAPI.UninstallDevice(d)
 							End If
 						Next
@@ -7598,6 +7601,7 @@ Public Class frmMain
 								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.nview") Or
 								   child2.ToLower.Contains("display.nvwmi") Or
+								   child2.ToLower.Contains("ansel.") Or
 								   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE Or
