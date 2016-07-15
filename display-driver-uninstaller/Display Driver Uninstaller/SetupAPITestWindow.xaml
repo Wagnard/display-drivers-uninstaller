@@ -38,8 +38,15 @@
                     <TextBlock FontWeight="Bold" Text="Device ID:    " />
                     <TextBlock Text="{Binding Path=DeviceID, Mode=OneWay}" />
                 </DockPanel>
+				
+				<TextBlock />
 
-                <TextBlock />
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="DevInst:    " />
+					<TextBlock Text="{Binding Path=DevInstID, Mode=OneWay}" />
+				</DockPanel>
+				
+				<TextBlock />
 
                 <DockPanel LastChildFill="true">
                     <TextBlock FontWeight="Bold" Text="Install State:    " />

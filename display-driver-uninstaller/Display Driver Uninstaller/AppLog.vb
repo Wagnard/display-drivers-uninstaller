@@ -460,7 +460,7 @@ Public Class AppLog
 
 		If otherData IsNot Nothing AndAlso otherData.Length > 0 Then
 			For Each text As String In otherData
-				logEntry.Values.Add(New KvP(text))
+				logEntry.Add(text)
 			Next
 		End If
 

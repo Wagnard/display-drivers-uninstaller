@@ -6752,7 +6752,7 @@ Public Class frmMain
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
-							If d.HardwareIDs IsNot Nothing AndAlso StrContainsAny(d.HardwareIDs(0), True, "root\iwdbus") Then  'Workaround for a bug report we got.
+							If d.HasHardwareID AndAlso StrContainsAny(d.HardwareIDs(0), True, "root\iwdbus") Then  'Workaround for a bug report we got.
 								SetupAPI.UninstallDevice(d)
 							End If
 						Next
@@ -7780,7 +7780,6 @@ Public Class frmMain
 			'FileIO.CreateDir("E:\_temp\test\more test\Some long paths\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should")
 
 			'FileIO.Delete("E:\_temp\test\")
-			'ShutdownComputer()
 
 			' Multiline TEST
 			'Dim logEntry As LogEntry = Application.Log.CreateEntry()
@@ -7792,9 +7791,6 @@ Public Class frmMain
 			' "|" & vbTab & vbTab & vbTab & vbTab & "Fourth Line" & vbTab & "|"
 
 			'logEntry.Add(New KvP("Numbers", String.Join(Environment.NewLine, New String() {"1", "2", "3", "4", "5", "6"})))
-
-
-
 			'Application.Log.Add(logEntry)
 
 			'Dim path As String = "E:\_temp\test"

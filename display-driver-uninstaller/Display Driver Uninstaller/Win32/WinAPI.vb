@@ -107,13 +107,13 @@ Namespace Win32
 
 #Region "P/Invokes"
 
-		<DllImport("kernel32.dll", CharSet:=CharSet.Ansi, SetLastError:=True)>
+		<DllImport("Kernel32.dll", CharSet:=CharSet.Ansi, SetLastError:=True)>
 		Private Shared Function GetBinaryType(
    <[In](), MarshalAs(UnmanagedType.LPStr)> ByVal lpApplicationName As String,
    <[Out]()> ByRef lpBinaryType As BinaryType) As <MarshalAs(UnmanagedType.Bool)> Boolean
 		End Function
 
-		<DllImport("shell32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+		<DllImport("shell32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function SHGetFolderPath(
   ByVal hwndOwner As IntPtr,
   ByVal nFolder As Int32,
@@ -122,22 +122,22 @@ Namespace Win32
   ByVal pszPath As StringBuilder) As Int32
 		End Function
 
-		<DllImport("kernel32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+		<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function WTSGetActiveConsoleSessionId() As UInt32
 		End Function
 
-		<DllImport("Wtsapi32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+		<DllImport("Wtsapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function WTSQueryUserToken(
   <[In]()> ByVal SessionId As UInt32,
   <[Out]()> ByRef phToken As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 		End Function
 
-		<DllImport("kernel32.dll", EntryPoint:="CloseHandle", SetLastError:=True)>
+		<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CloseHandle(
   <[In]()> ByVal hObject As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 		End Function
 
-		<DllImport("Advapi32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+		<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CreateProcessAsUser(
   <[In](), [Optional]()> ByVal hToken As IntPtr,
   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpApplicationName As String,
@@ -151,9 +151,6 @@ Namespace Win32
   <[In]()> ByVal lpStartupInfo As IntPtr,
   <Out()> ByVal lpProcessInformation As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 		End Function
-
-
-
 
 #End Region
 
@@ -217,6 +214,7 @@ Namespace Win32
 				End If
 			End Try
 		End Sub
+
 #End Region
 
 	End Class

@@ -9,7 +9,7 @@ Public Enum LogType
 End Enum
 
 Public Class KvP
-	Public Shared Empty As KvP = New KvP(" ")
+	Public Shared Empty As KvP = New KvP(Nothing, "")
 	Public ReadOnly Property HasKey As Boolean
 		Get
 			Return String.IsNullOrEmpty(Key) = False
@@ -22,20 +22,23 @@ Public Class KvP
 	End Property
 	Public ReadOnly Property HasAnyValue As Boolean
 		Get
-			Return HasKey Or HasValue
+			Return HasKey OrElse HasValue
 		End Get
 	End Property
 	Public Property [Key] As String
 	Public Property [Value] As String
+	Public Property Separator As String
 
-	Public Sub New(ByRef key As String, ByRef value As String)
+	Public Sub New(ByVal separator As String, ByVal key As String, ByVal value As String)
 		Me.Key = key
 		Me.Value = value
+		Me.Separator = separator
 	End Sub
 
-	Public Sub New(ByRef value As String)
+	Public Sub New(ByVal separator As String, ByVal value As String)
 		Me.Key = Nothing
 		Me.Value = value
+		Me.Separator = Separator
 	End Sub
 End Class
 
@@ -72,6 +75,10 @@ Public Class LogEntry
 			Return m_separator
 		End Get
 		Set(value As String)
+			If m_separator = value Then
+				Return
+			End If
+
 			m_separator = value
 			OnPropertyChanged("Separator")
 		End Set
@@ -81,6 +88,10 @@ Public Class LogEntry
 			Return m_type
 		End Get
 		Set(value As LogType)
+			If m_type = value Then
+				Return
+			End If
+
 			m_type = value
 			OnPropertyChanged("Type")
 		End Set
@@ -90,6 +101,10 @@ Public Class LogEntry
 			Return m_time
 		End Get
 		Set(value As DateTime)
+			If m_time = value Then
+				Return
+			End If
+
 			m_time = value
 			OnPropertyChanged("Type")
 		End Set
@@ -99,6 +114,10 @@ Public Class LogEntry
 			Return m_message
 		End Get
 		Set(value As String)
+			If m_message = value Then
+				Return
+			End If
+
 			m_message = value
 			OnPropertyChanged("Message")
 		End Set
@@ -177,7 +196,7 @@ Public Class LogEntry
 	End Sub
 
 	Public Sub Add(ByVal value As String)
-		Values.Add(New KvP(value))
+		Values.Add(New KvP(m_separator, value))
 		HasValues = True
 		HasAnyData = True
 
@@ -185,7 +204,7 @@ Public Class LogEntry
 	End Sub
 
 	Public Sub Add(ByVal key As String, ByVal value As String)
-		Values.Add(New KvP(key, value))
+		Values.Add(New KvP(m_separator, key, value))
 		HasValues = True
 		HasAnyData = True
 
@@ -194,70 +213,82 @@ Public Class LogEntry
 
 	Public Sub AddDevices(ByVal ParamArray devices As Win32.SetupAPI.Device())
 		For Each d As Win32.SetupAPI.Device In devices
-			Values.Add(New KvP("Description", If(Not IsNullOrWhitespace(d.Description), d.Description, "-")))
-			Values.Add(New KvP("ClassName", If(Not IsNullOrWhitespace(d.ClassName), d.ClassName, "-")))
-			Values.Add(New KvP("DeviceID", If(Not IsNullOrWhitespace(d.DeviceID), d.DeviceID, "-")))
-			Values.Add(New KvP("DevInst", d.devInst.ToString()))
-			Values.Add(New KvP("SiblingDevices", If(d.SiblingDevices Is Nothing, "0", d.SiblingDevices.Length.ToString())))
+			Add("Description", If(Not IsNullOrWhitespace(d.Description), d.Description, "-"))
+			Add("ClassName", If(Not IsNullOrWhitespace(d.ClassName), d.ClassName, "-"))
+			Add("DeviceID", If(Not IsNullOrWhitespace(d.DeviceID), d.DeviceID, "-"))
+			Add("DevInst", d.devInst.ToString())
+			Add("SiblingDevices", If(d.SiblingDevices Is Nothing, "0", d.SiblingDevices.Length.ToString()))
+			Add(KvP.Empty)
 
-			If d.HardwareIDs IsNot Nothing Then
-				Values.Add(New KvP("HardwareIDs", String.Join(Environment.NewLine, d.HardwareIDs)))
-
-				If d.HardwareIDs.Length > 1 Then Values.Add(KvP.Empty)
-			Else : Values.Add(New KvP("HardwareIDs", "<empty>"))
-			End If
-
-			If d.ConfigFlags IsNot Nothing Then
-				Values.Add(New KvP("ConfigFlags", String.Join(Environment.NewLine, d.ConfigFlags)))
-
-				If d.ConfigFlags.Length > 1 Then Values.Add(KvP.Empty)
-			Else : Values.Add(New KvP("ConfigFlags", "<empty>"))
-			End If
-
-			If d.DevStatus IsNot Nothing Then
-				Values.Add(New KvP("DevStatus", String.Join(Environment.NewLine, d.DevStatus)))
-
-				If d.DevStatus.Length > 1 Then Values.Add(KvP.Empty)
-			Else : Values.Add(New KvP("DevStatus", "<empty>"))
-			End If
-
-			If d.DevProblems IsNot Nothing Then
-				Values.Add(New KvP("DevProblems", String.Join(Environment.NewLine, d.DevProblems)))
-
-				If d.DevProblems.Length > 1 Then Values.Add(KvP.Empty)
-			Else : Values.Add(New KvP("DevProblems", "<empty>"))
-			End If
-
-			If d.DriverInfo IsNot Nothing AndAlso d.DriverInfo.Length > 0 Then
-				Values.Add(New KvP("Driver Details"))
-
-				For Each drvInfo As Win32.SetupAPI.DriverInfo In d.DriverInfo
-					Values.Add(New KvP("  Description", If(Not IsNullOrWhitespace(drvInfo.Description), drvInfo.Description, "-")))
-					Values.Add(New KvP("  Manufacturer", If(Not IsNullOrWhitespace(drvInfo.MfgName), drvInfo.MfgName, "-")))
-					Values.Add(New KvP("  Provider", If(Not IsNullOrWhitespace(drvInfo.ProviderName), drvInfo.ProviderName, "-")))
-					Values.Add(New KvP("  DriverDate", drvInfo.DriverDate.ToString()))
-					Values.Add(New KvP("  DriverVersion", If(Not IsNullOrWhitespace(drvInfo.DriverVersion), drvInfo.DriverVersion, "-")))
-
-					If drvInfo.InfFile IsNot Nothing Then
-						Values.Add(New KvP("  InfFile", If(Not IsNullOrWhitespace(drvInfo.InfFile.FileName), drvInfo.InfFile.FileName, "-")))
-						Values.Add(New KvP("     InstallDate", drvInfo.InfFile.InstallDate.ToShortDateString()))
-						Values.Add(New KvP("     Class", If(Not IsNullOrWhitespace(drvInfo.InfFile.Class), drvInfo.InfFile.Class, "-")))
-						Values.Add(New KvP("     Provider", If(Not IsNullOrWhitespace(drvInfo.InfFile.Provider), drvInfo.InfFile.Provider, "-")))
-					End If
-
-					Values.Add(New KvP("---"))
-				Next
-			Else
-				Values.Add(New KvP("<No Driver Details>"))
+			If d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+				Add("HardwareIDs", String.Join(Environment.NewLine, d.HardwareIDs))
+			Else : Add("HardwareIDs", "<empty>")
 			End If
 
 			Values.Add(KvP.Empty)
-		Next
 
-		If Values.Count > 0 Then
-			HasValues = True
-			HasAnyData = True
-		End If
+			If d.ConfigFlags IsNot Nothing AndAlso d.ConfigFlags.Length > 0 Then
+				Add("ConfigFlags", String.Join(Environment.NewLine, d.ConfigFlags))
+			Else : Add("ConfigFlags", "<empty>")
+			End If
+
+			Values.Add(KvP.Empty)
+
+			If d.DevStatus IsNot Nothing AndAlso d.DevStatus.Length > 0 Then
+				Add("DevStatus", String.Join(Environment.NewLine, d.DevStatus))
+			Else : Add("DevStatus", "<empty>")
+			End If
+
+
+			Values.Add(KvP.Empty)
+
+			If d.DevProblems IsNot Nothing AndAlso d.DevProblems.Length > 0 Then
+				Add("DevProblems", String.Join(Environment.NewLine, d.DevProblems))
+			Else : Add("DevProblems", "<empty>")
+			End If
+
+			Values.Add(KvP.Empty)
+
+			If d.OemInfs IsNot Nothing AndAlso d.OemInfs.Length > 0 Then
+				Dim oems(d.OemInfs.Length - 1) As String
+				Dim p As Int32 = 0
+
+				For Each oem As Inf In d.OemInfs
+					oems(p) = oem.FileName
+					p += 1
+				Next
+
+				Add("OemInfs", String.Join(Environment.NewLine, oems))
+			Else : Add("OemInfs", "<empty>")
+			End If
+
+			Values.Add(KvP.Empty)
+
+			If d.DriverInfo IsNot Nothing AndAlso d.DriverInfo.Length > 0 Then
+				Add("Driver Details")
+
+				For Each drvInfo As Win32.SetupAPI.DriverInfo In d.DriverInfo
+					Add("  Description", If(Not IsNullOrWhitespace(drvInfo.Description), drvInfo.Description, "-"))
+					Add("  Manufacturer", If(Not IsNullOrWhitespace(drvInfo.MfgName), drvInfo.MfgName, "-"))
+					Add("  Provider", If(Not IsNullOrWhitespace(drvInfo.ProviderName), drvInfo.ProviderName, "-"))
+					Add("  DriverDate", drvInfo.DriverDate.ToString())
+					Add("  DriverVersion", If(Not IsNullOrWhitespace(drvInfo.DriverVersion), drvInfo.DriverVersion, "-"))
+
+					If drvInfo.InfFile IsNot Nothing Then
+						Add("  InfFile", If(Not IsNullOrWhitespace(drvInfo.InfFile.FileName), drvInfo.InfFile.FileName, "-"))
+						Add("     InstallDate", drvInfo.InfFile.InstallDate.ToShortDateString())
+						Add("     Class", If(Not IsNullOrWhitespace(drvInfo.InfFile.Class), drvInfo.InfFile.Class, "-"))
+						Add("     Provider", If(Not IsNullOrWhitespace(drvInfo.InfFile.Provider), drvInfo.InfFile.Provider, "-"))
+					End If
+
+					Add("---")
+				Next
+			Else
+				Add("<No Driver Details>")
+			End If
+
+			Add(KvP.Empty)
+		Next
 
 		OnPropertyChanged("Values")
 	End Sub
@@ -284,12 +315,9 @@ Public Class LogEntry
 			If win32Ex IsNot Nothing Then
 				Dim errCode As UInt32 = Win32.GetUInt32(win32Ex.NativeErrorCode)
 
-				m_values.Add(New KvP("Win32_Message", win32Ex.Message))
-				m_values.Add(New KvP("Win32_ErrorCode", String.Format("{0} (0x{1:X})", errCode.ToString(), errCode)))
-				m_values.Add(KvP.Empty)
-
-				HasValues = True
-				HasAnyData = True
+				Add("Win32_Message", win32Ex.Message)
+				Add("Win32_ErrorCode", String.Format("{0} (0x{1:X})", errCode.ToString(), errCode))
+				Add(KvP.Empty)
 			End If
 		ElseIf TypeOf (ex) Is Runtime.InteropServices.COMException Then
 			Dim comEx As Runtime.InteropServices.COMException = TryCast(ex, Runtime.InteropServices.COMException)
@@ -297,12 +325,9 @@ Public Class LogEntry
 			If comEx IsNot Nothing Then
 				Dim errCode As UInt32 = Win32.GetUInt32(comEx.ErrorCode)
 
-				m_values.Add(New KvP("COM_Message", comEx.Message))
-				m_values.Add(New KvP("COM_ErrorCode", String.Format("{0} (0x{1:X})", errCode.ToString(), errCode)))
-				m_values.Add(KvP.Empty)
-
-				HasValues = True
-				HasAnyData = True
+				Add("COM_Message", comEx.Message)
+				Add("COM_ErrorCode", String.Format("{0} (0x{1:X})", errCode.ToString(), errCode))
+				Add(KvP.Empty)
 			End If
 		End If
 
