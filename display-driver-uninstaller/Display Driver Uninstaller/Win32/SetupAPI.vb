@@ -1398,6 +1398,7 @@ Namespace Win32
 				Dim desc As String = Nothing
 				Dim className As String = Nothing
 				Dim match As Boolean = False
+				Dim devInst As UInt32 = 0UI
 
 				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
 					CheckWin32Error(Not infoSet.IsInvalid)
@@ -1483,21 +1484,22 @@ Namespace Win32
 							End If
 
 							If match Then
-								If (hardwareIds Is Nothing) Then hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
-								If (lowerfilters Is Nothing) Then lowerfilters = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.LOWERFILTERS)
-								If (friendlyname Is Nothing) Then friendlyname = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.FRIENDLYNAME)
-								If (desc Is Nothing) Then desc = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC)
-								If (className Is Nothing) Then className = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASS)
+								If Is64 Then
+									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+								Else
+									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+								End If
 
 								Dim d As Device = New Device() With
 								{
+								 .devInst = devInst,
 								 .Description = desc,
 								 .ClassName = className,
 								 .HardwareIDs = hardwareIds,
 								 .LowerFilters = lowerfilters,
 								 .FriendlyName = friendlyname
 								}
-
+							
 								GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d)
 								GetDriverDetails(infoSet, ptrDevInfo.Ptr, d)
 								GetDeviceExtendedDetails(ptrDevInfo.Ptr, d)
@@ -2226,15 +2228,32 @@ Namespace Win32
 					File.SetAttributes(oem.FileName, attrs And Not FileAttributes.ReadOnly)
 				End If
 
+
+				' work in progess...
+				'
+				'If SetupUninstallOEMInf(infName, If(force, SetupUOInfFlags.SUOI_FORCEDELETE, SetupUOInfFlags.NONE), IntPtr.Zero) Then
+				'	logInfs.Add(oem.FileName, "Uninstalled!")
+				'Else
+				'	Dim errcode As UInt32 = GetLastWin32ErrorU()
+
+				'	If errcode <> 0UI Then	
+				'		&HE000023DUI
+				'	End If
+
+				'	logInfs.Add(oem.FileName, "Uninstalling failed!")
+				'	logInfs.AddException(New Win32Exception(GetLastWin32Error()), False)
+				'End If
+			
+
 				If force Then
-					If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.SUOI_FORCEDELETE), IntPtr.Zero) Then
+					If SetupUninstallOEMInf(infName, SetupUOInfFlags.SUOI_FORCEDELETE, IntPtr.Zero) Then
 						logInfs.Add(oem.FileName, "Uninstalled!")
 					Else
 						logInfs.Add(oem.FileName, "Uninstalling failed!")
 						logInfs.AddException(New Win32Exception(GetLastWin32Error()), False)
 					End If
 				Else
-					If SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.NONE), IntPtr.Zero) Then
+					If SetupUninstallOEMInf(infName, SetupUOInfFlags.NONE, IntPtr.Zero) Then
 						logInfs.Add(oem.FileName, "Uninstalled!")
 					Else
 						Dim errcode As Int32 = GetLastWin32Error()

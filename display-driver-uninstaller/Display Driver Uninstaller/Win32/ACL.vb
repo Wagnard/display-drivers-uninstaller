@@ -431,7 +431,7 @@ Namespace Win32
 					Next
 
 				Catch ex As Exception
-					ShowException(ex)
+					Application.Log.AddException(ex, "Adjusting process's priviliges failed!")
 				Finally
 					If ptrToken <> IntPtr.Zero Then
 						CloseHandle(ptrToken)

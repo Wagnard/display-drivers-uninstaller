@@ -194,10 +194,11 @@ Public Class LogEntry
 
 	Public Sub AddDevices(ByVal ParamArray devices As Win32.SetupAPI.Device())
 		For Each d As Win32.SetupAPI.Device In devices
-			Values.Add(New KvP("Description", d.Description))
-			Values.Add(New KvP("ClassName", d.ClassName))
-			Values.Add(New KvP("DeviceID", d.DeviceID))
-			Values.Add(New KvP("SiblingDevices", If(d.SiblingDevices Is Nothing, "<empty>", d.SiblingDevices.Length.ToString())))
+			Values.Add(New KvP("Description", If(Not IsNullOrWhitespace(d.Description), d.Description, "-")))
+			Values.Add(New KvP("ClassName", If(Not IsNullOrWhitespace(d.ClassName), d.ClassName, "-")))
+			Values.Add(New KvP("DeviceID", If(Not IsNullOrWhitespace(d.DeviceID), d.DeviceID, "-")))
+			Values.Add(New KvP("DevInst", d.devInst.ToString()))
+			Values.Add(New KvP("SiblingDevices", If(d.SiblingDevices Is Nothing, "0", d.SiblingDevices.Length.ToString())))
 
 			If d.HardwareIDs IsNot Nothing Then
 				Values.Add(New KvP("HardwareIDs", String.Join(Environment.NewLine, d.HardwareIDs)))
@@ -227,7 +228,7 @@ Public Class LogEntry
 			Else : Values.Add(New KvP("DevProblems", "<empty>"))
 			End If
 
-			If d.DriverInfo IsNot Nothing Then
+			If d.DriverInfo IsNot Nothing AndAlso d.DriverInfo.Length > 0 Then
 				Values.Add(New KvP("Driver Details"))
 
 				For Each drvInfo As Win32.SetupAPI.DriverInfo In d.DriverInfo
@@ -246,6 +247,8 @@ Public Class LogEntry
 
 					Values.Add(New KvP("---"))
 				Next
+			Else
+				Values.Add(New KvP("<No Driver Details>"))
 			End If
 
 			Values.Add(KvP.Empty)
@@ -279,8 +282,10 @@ Public Class LogEntry
 			Dim win32Ex As Win32Exception = TryCast(ex, Win32Exception)
 
 			If win32Ex IsNot Nothing Then
+				Dim errCode As UInt32 = Win32.GetUInt32(win32Ex.NativeErrorCode)
+
 				m_values.Add(New KvP("Win32_Message", win32Ex.Message))
-				m_values.Add(New KvP("Win32_ErrorCode", Win32.GetUInt32(win32Ex.NativeErrorCode).ToString()))
+				m_values.Add(New KvP("Win32_ErrorCode", String.Format("{0} (0x{1:X})", errCode.ToString(), errCode)))
 				m_values.Add(KvP.Empty)
 
 				HasValues = True
@@ -290,8 +295,10 @@ Public Class LogEntry
 			Dim comEx As Runtime.InteropServices.COMException = TryCast(ex, Runtime.InteropServices.COMException)
 
 			If comEx IsNot Nothing Then
+				Dim errCode As UInt32 = Win32.GetUInt32(comEx.ErrorCode)
+
 				m_values.Add(New KvP("COM_Message", comEx.Message))
-				m_values.Add(New KvP("COM_ErrorCode", Win32.GetUInt32(comEx.ErrorCode).ToString()))
+				m_values.Add(New KvP("COM_ErrorCode", String.Format("{0} (0x{1:X})", errCode.ToString(), errCode)))
 				m_values.Add(KvP.Empty)
 
 				HasValues = True
