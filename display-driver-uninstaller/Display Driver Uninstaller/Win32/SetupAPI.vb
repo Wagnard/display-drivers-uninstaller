@@ -895,28 +895,108 @@ Namespace Win32
 
 		<Flags()>
 		Private Enum DN As UInteger
+			''' <summary>Was enumerated by ROOT</summary>
 			ROOT_ENUMERATED = &H1UI
+
+			''' <summary>Has Register_Device_Driver</summary>
 			DRIVER_LOADED = &H2UI
+
+			''' <summary>Has Register_Enumerator</summary>
 			ENUM_LOADED = &H4UI
+
+			''' <summary>Is currently configured</summary>
 			STARTED = &H8UI
+
+			''' <summary>Manually installed</summary>
 			MANUAL = &H10UI
+
+			''' <summary>May need reenumeration</summary>
 			NEED_TO_ENUM = &H20UI
+
+			''' <summary>Has received a config</summary>
 			NOT_FIRST_TIME = &H40UI
+
+			''' <summary>Enum generates hardware ID</summary>
 			HARDWARE_ENUM = &H80UI
+
+			''' <summary>Lied about can reconfig once</summary>
 			LIAR = &H100UI
+
+			''' <summary>Not CM_Create_DevNode lately</summary>
 			HAS_MARK = &H200UI
+
+			''' <summary>Need device installer</summary>
 			HAS_PROBLEM = &H400UI
+
+			''' <summary>Is filtered</summary>
 			FILTERED = &H800UI
+
+			''' <summary>Has been moved</summary>
 			MOVED = &H1000UI
+
+			''' <summary>Can be rebalanced</summary>
 			DISABLEABLE = &H2000UI
+
+			''' <summary>Can be removed</summary>
 			REMOVABLE = &H4000UI
+
+			''' <summary>Has a private problem</summary>
 			PRIVATE_PROBLEM = &H8000UI
+
+			''' <summary>Multi function parent</summary>
 			MF_PARENT = &H10000UI
+
+			''' <summary>Multi function child</summary>
 			MF_CHILD = &H20000UI
+
+			''' <summary>Devnode is being removed</summary>
 			WILL_BE_REMOVED = &H40000UI
+
+			''' <summary>Has received a config enumerate</summary>
+			NOT_FIRST_TIMEE = &H80000UI
+
+			''' <summary>When child is stopped, free resources</summary>
+			STOP_FREE_RES = &H100000UI
+
+			''' <summary>Don't skip during rebalance</summary>
+			REBAL_CANDIDATE = &H200000UI
+
+			''' <summary>This devnode's log_confs do not have same resources</summary>
+			BAD_PARTIAL = &H400000UI
+
+			''' <summary>This devnode's is an NT enumerator</summary>
+			NT_ENUMERATOR = &H800000UI
+
+			''' <summary>This devnode's is an NT driver</summary>
+			NT_DRIVER = &H1000000UI
+
+			''' <summary>Devnode need lock resume processing</summary>
+			NEEDS_LOCKING = &H2000000UI
+
+			''' <summary>Devnode can be the wakeup device</summary>
+			ARM_WAKEUP = &H4000000UI
+
+			''' <summary>APM aware enumerator</summary>
+			APM_ENUMERATOR = &H8000000UI
+
+			''' <summary>APM aware driver</summary>
+			APM_DRIVER = &H10000000UI
+
+			''' <summary>Silent install</summary>
+			SILENT_INSTALL = &H20000000UI
+
+			''' <summary>No show in device manager</summary>
+			NO_SHOW_IN_DM = &H40000000UI
+
+			''' <summary>Had a problem during preassignment of boot log conf</summary>
+			BOOT_LOG_PROB = &H80000000UI
 		End Enum
 
+		''' <summary>MSDN: Device Manager Error Messages</summary>
+		''' <remarks>https://msdn.microsoft.com/en-us/library/windows/hardware/ff541422(v=vs.85).aspx</remarks>
 		Private Enum CM_PROB As UInteger
+			OK = &H0UI
+
 			''' <summary>There is a device on the system for which there is no ConfigFlags registry entry.
 			''' This means no driver is installed. Typically this means an INF file could not be found.</summary>
 			NOT_CONFIGURED = &H1UI
@@ -927,9 +1007,15 @@ Namespace Win32
 			OUT_OF_MEMORY = &H3UI
 
 			ENTRY_IS_WRONG_TYPE = &H4UI
+
 			LACKED_ARBITRATOR = &H5UI
+
+			''' <summary>Boot config conflict</summary>
 			BOOT_CONFIG_CONFLICT = &H6UI
+
 			FAILED_FILTER = &H7UI
+
+			''' <summary>Devloader not found</summary>
 			DEVLOADER_NOT_FOUND = &H8UI
 
 			''' <summary>Invalid device IDs have been detected.</summary>
@@ -954,6 +1040,7 @@ Namespace Win32
 			''' <summary>The device is only partially configured.</summary>
 			PARTIAL_LOG_CONF = &H10UI
 
+			''' <summary>Unknown res type</summary>
 			UNKNOWN_RESOURCE = &H11UI
 
 			''' <summary>Drivers must be reinstalled.</summary>
@@ -962,6 +1049,7 @@ Namespace Win32
 			''' <summary>A registry problem was detected.</summary>
 			REGISTRY = &H13UI
 
+			''' <summary>WINDOWS 95 ONLY</summary>
 			VXDLDR = &H14UI
 
 			''' <summary>The system will remove the device.</summary>
@@ -970,14 +1058,17 @@ Namespace Win32
 			''' <summary>The device is disabled.</summary>
 			DISABLED = &H16UI
 
-
+			''' <summary>Devloader not ready</summary>
 			DEVLOADER_NOT_READY = &H17UI
 
 			''' <summary>The device does not seem to be present.</summary>
 			DEVICE_NOT_THERE = &H18UI
 
 			MOVED = &H19UI
+
 			TOO_EARLY = &H1AUI
+
+			''' <summary>No valid log config</summary>
 			NO_VALID_LOG_CONF = &H1BUI
 
 			''' <summary>The device's drivers are not installed.</summary>
@@ -986,6 +1077,7 @@ Namespace Win32
 			''' <summary>The device is disabled.</summary>
 			HARDWARE_DISABLED = &H1DUI
 
+			''' <summary>Can't share IRQ</summary>
 			CANT_SHARE_IRQ = &H1EUI
 
 			''' <summary>A driver's attempt to add a device failed.</summary>
@@ -1387,7 +1479,7 @@ Namespace Win32
 
 #Region "Functions"
 
-		Public Shared Function TEST_GetDevices(ByVal filter As String, ByVal text As String) As List(Of Device)
+		Public Shared Function TEST_GetDevices(ByVal filter As String, ByVal text As String, ByVal includeSiblings As Boolean) As List(Of Device)
 			Dim Devices As List(Of Device) = New List(Of Device)(500)
 
 			Try
@@ -1499,15 +1591,31 @@ Namespace Win32
 								 .LowerFilters = lowerfilters,
 								 .FriendlyName = friendlyname
 								}
-							
-								GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d)
+
+								GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d, True)
 								GetDriverDetails(infoSet, ptrDevInfo.Ptr, d)
-								GetDeviceExtendedDetails(ptrDevInfo.Ptr, d)
+								GetDeviceStatus(ptrDevInfo.Ptr, d)
 
 								Devices.Add(d)
 							End If
 
 						End While
+
+						If Devices IsNot Nothing Then
+							If Devices.Count > 0 Then
+								If includeSiblings Then
+									For Each dev As Device In Devices
+										GetSiblings(dev)
+
+										If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
+											UpdateDevicesByID(dev.SiblingDevices)
+										End If
+									Next
+								End If
+
+								UpdateDevicesByID(Devices)
+							End If
+						End If
 					Finally
 						If ptrDevInfo IsNot Nothing Then
 
@@ -1523,139 +1631,6 @@ Namespace Win32
 
 			Return Nothing
 		End Function
-
-		Public Shared Sub TEST_RemoveDevice(ByVal hardwareIDFilter As String)
-			If Not IsAdmin Then
-				Throw New SecurityException("Admin priviliges required!")
-			End If
-
-			If String.IsNullOrEmpty(hardwareIDFilter) Then
-				MessageBox.Show("Empty Hardware ID Filter!")
-				Return
-			End If
-
-			Try
-				Dim nullGuid As Guid = Guid.Empty
-				Dim hardwareIds(0) As String
-				Dim found As Boolean = False
-				Dim device As Device = Nothing
-
-				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
-					CheckWin32Error(Not infoSet.IsInvalid)
-
-					Dim ptrDevInfo As StructPtr = Nothing
-					Try
-						If Is64 Then
-							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
-						Else
-							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
-						End If
-
-						Dim i As UInt32 = 0UI
-
-						While True
-							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
-								If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
-									Exit While
-								Else
-									CheckWin32Error(False)
-								End If
-							End If
-
-							i += 1UI
-
-							hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
-
-							If hardwareIds Is Nothing Then
-								Continue While
-							End If
-
-							For Each hdID As String In hardwareIds
-								If hdID.IndexOf(hardwareIDFilter, StringComparison.OrdinalIgnoreCase) <> -1 Then
-									device = New Device() With
-									{
-									 .Description = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC),
-									 .ClassGuid = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASSGUID),
-									 .CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS),
-									 .HardwareIDs = hardwareIds
-									}
-
-									GetDriverDetails(infoSet, ptrDevInfo.Ptr, device)
-
-									Dim msgResult As MessageBoxResult = MessageBox.Show(
-									 String.Format("Are you sure you want to remove device:{2}{2}{3}{0}\r\n\r\nHardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab),
-									 "Warning!",
-									 MessageBoxButton.YesNoCancel,
-									 MessageBoxImage.Warning)
-
-									If msgResult = MessageBoxResult.Yes Then
-										found = True
-										Exit For
-									ElseIf (msgResult = MessageBoxResult.No) Then
-										Exit For
-									Else
-										Return
-									End If
-								End If
-							Next
-
-							If found Then
-								Exit While
-							End If
-						End While
-
-						If Not found OrElse device Is Nothing Then
-							Return
-						End If
-
-						If MessageBox.Show(String.Format("CONFIRM!!!{2}{2}Are you sure you want to remove device:{2}{2}{3}{0}\r\n\r\nHardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab),
-						 "Warning!",
-						 MessageBoxButton.YesNo,
-						 MessageBoxImage.Warning) <> MessageBoxResult.Yes Then
-							Return
-						End If
-
-						If device.OemInfs IsNot Nothing Then
-							For Each inf As Inf In device.OemInfs
-								If Not File.Exists(inf.FileName) Then
-									Continue For
-								End If
-
-								Dim infName As String = Path.GetFileName(inf.FileName)
-
-								If CheckIsOemInf(infName) Then
-									Dim attrs As FileAttributes = File.GetAttributes(inf.FileName)
-
-									If (attrs And FileAttributes.ReadOnly) = FileAttributes.ReadOnly Then
-										File.SetAttributes(inf.FileName, attrs And Not FileAttributes.ReadOnly)
-									End If
-
-									CheckWin32Error(SetupUninstallOEMInf(infName, CUInt(SetupUOInfFlags.SUOI_FORCEDELETE), IntPtr.Zero))
-								Else
-									MessageBox.Show(String.Format("Inf isn't Oem's, skipping Inf uninstall for '{0}' !", inf), "Device removal", MessageBoxButton.OK, MessageBoxImage.Information)
-								End If
-							Next
-						End If
-
-						CheckWin32Error(SetupDiCallClassInstaller(CUInt(DIF.REMOVE), infoSet, ptrDevInfo.Ptr))
-
-						If RebootRequired(infoSet, ptrDevInfo.Ptr) Then
-							If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", CRLF), "Device removed!", MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
-								Reboot()
-							End If
-						Else
-							MessageBox.Show(String.Format("Reboot not required!{0}NOTE: Windows XP doesn't 'set' reboot flag even if reboot required", "Device removed!", CRLF))
-						End If
-					Finally
-						If ptrDevInfo IsNot Nothing Then
-							ptrDevInfo.Dispose()
-						End If
-					End Try
-				End Using
-			Catch ex As Exception
-				ShowException(ex)
-			End Try
-		End Sub
 
 		Public Shared Sub TEST_EnableDevice(ByVal hardwareIDFilter As String, ByVal enable As Boolean)
 			If Not IsAdmin Then
@@ -1712,7 +1687,7 @@ Namespace Win32
 									 .HardwareIDs = hardwareIds
 									}
 
-									GetDeviceDetails(infoSet, ptrDevInfo.Ptr, device)
+									GetDeviceDetails(infoSet, ptrDevInfo.Ptr, device, True)
 
 									Dim msgResult As MessageBoxResult = MessageBox.Show(
 									   String.Format("Are you sure you want to {0} device:{3}{3}{4}{1}\r\n\r\nHardware IDs{3}{3}{4}{2}", If(enable, "enable", "disable"), device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab),
@@ -1814,135 +1789,6 @@ Namespace Win32
 			End Try
 		End Sub
 
-		Public Shared Sub TEST_UpdateDevice(ByVal device As Device, ByVal infFile As String, Optional ByVal force As Boolean = False)
-			If String.IsNullOrEmpty(infFile) OrElse Not File.Exists(infFile) Then
-				Throw New ArgumentException("Empty infFile or infFile doesn't exists!", "infFile")
-				Return
-			End If
-
-			If device.HardwareIDs Is Nothing OrElse device.HardwareIDs.Length = 0 OrElse String.IsNullOrEmpty(device.HardwareIDs(0)) Then
-				Throw New ArgumentException("Empty Hardware ID Filter!", "hardwareIDFilter")
-				Return
-			End If
-
-			Try
-				Dim nullGuid As Guid = Guid.Empty
-				Dim hardwareIds(0) As String
-				Dim found As Boolean = False
-				Dim dev As Device = Nothing
-
-				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, CUInt(DIGCF.ALLCLASSES))
-					CheckWin32Error(Not infoSet.IsInvalid)
-
-					Dim ptrDevInfo As StructPtr = Nothing
-					Try
-						If Is64 Then
-							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
-						Else
-							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
-						End If
-
-						Dim i As UInt32 = 0UI
-
-						While True
-							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
-								If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
-									Exit While
-								Else
-									CheckWin32Error(False)
-								End If
-							End If
-
-							i += 1UI
-							hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
-
-							If hardwareIds Is Nothing Then
-								Continue While
-							End If
-
-							For Each hdID As String In hardwareIds
-								If hdID.IndexOf(device.HardwareIDs(0), StringComparison.OrdinalIgnoreCase) <> -1 Then
-									dev = New Device() With
-									 {
-									  .Description = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC),
-									  .ClassGuid = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASSGUID),
-									  .CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS),
-									  .HardwareIDs = hardwareIds
-									 }
-
-									GetDeviceDetails(infoSet, ptrDevInfo.Ptr, device)
-
-									Dim msgResult As MessageBoxResult = MessageBox.Show(
-									   String.Format("Are you sure you want to update device:{2}{2}{3}{0}{2}Inf file: {2}{2}{3}{4}{2}Hardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab, infFile),
-									 "Warning!",
-									 MessageBoxButton.YesNoCancel,
-									 MessageBoxImage.Warning)
-
-									If msgResult = MessageBoxResult.Yes Then
-										found = True
-										Exit For
-									ElseIf (msgResult = MessageBoxResult.No) Then
-										Exit For
-									Else
-										Return
-									End If
-								End If
-							Next
-
-							If found Then
-								Exit While
-							End If
-						End While
-
-						If Not found OrElse device Is Nothing Then
-							Return
-						End If
-
-						If MessageBox.Show(String.Format("CONFIRM!!!{2}{2}Are you sure you want to update device:{2}{2}{3}{0}{2}Inf file: {2}{2}{3}{4}{2}Hardware IDs{2}{2}{3}{1}", device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab, infFile),
-						   "Warning!",
-						 MessageBoxButton.YesNo,
-						 MessageBoxImage.Warning) <> MessageBoxResult.Yes Then
-
-							Return
-						End If
-
-						If force Then
-							Dim requiresReboot As Boolean
-							If Not UpdateDriverForPlugAndPlayDevices(IntPtr.Zero, device.HardwareIDs(0), infFile, CUInt(INSTALLFLAG.FORCE), requiresReboot) Then
-								MessageBox.Show("The function found a match for the HardwareId value, but the specified driver was not a better match" + CRLF + "than the current driver and the caller did not specify the INSTALLFLAG_FORCE flag.")
-								Return
-							Else
-								CheckWin32Error(False)
-							End If
-						Else
-							Dim requiresReboot As Boolean
-							If Not UpdateDriverForPlugAndPlayDevices(IntPtr.Zero, device.HardwareIDs(0), infFile, CUInt(INSTALLFLAG.NULL), requiresReboot) Then
-								MessageBox.Show("The function found a match for the HardwareId value, but the specified driver was not a better match" + CRLF + "than the current driver and the caller did not specify the INSTALLFLAG_FORCE flag.")
-								Return
-							Else
-								CheckWin32Error(False)
-							End If
-
-							If requiresReboot Then
-								If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", CRLF), "Device removed!", MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
-									Reboot()
-								End If
-							Else
-								MessageBox.Show(String.Format("Reboot not required!{0}NOTE: Windows XP doesn't 'set' reboot flag even if reboot required", CRLF), "Device removed!")
-							End If
-						End If
-					Finally
-						If ptrDevInfo IsNot Nothing Then
-							ptrDevInfo.Dispose()
-						End If
-					End Try
-				End Using
-			Catch ex As Exception
-				ShowException(ex)
-			End Try
-		End Sub
-
-
 
 
 		' REVERSED FOR CLEANING FROM CODE
@@ -2029,7 +1875,7 @@ Namespace Win32
 
 							If Devices.Count > 0 Then
 								logEntry.Add(KvP.Empty)
-								logEntry.AddDevices(Devices.ToArray())
+								logEntry.AddDevices(False, Devices.ToArray())
 							End If
 
 							Application.Log.Add(logEntry)
@@ -2063,7 +1909,7 @@ Namespace Win32
 
 				Dim logEntry As LogEntry = Application.Log.CreateEntry()
 				logEntry.Message = String.Concat("Beginning of uninstalling device:", CRLF, ">> ", device.Description)
-				logEntry.AddDevices(device)
+				logEntry.AddDevices(True, device)
 
 				Application.Log.Add(logEntry)
 
@@ -2125,9 +1971,7 @@ Namespace Win32
 									Continue For
 								End If
 
-								If CheckIsOemInf(Path.GetFileName(inf.FileName)) Then 'Useless check since only OEM infs are added, but just incase ( see: GetDriverDetails )
-									RemoveInf(inf, True)
-								End If
+								RemoveInf(inf, True)
 							Next
 						End If
 
@@ -2346,7 +2190,7 @@ Namespace Win32
 		End Sub
 
 
-
+	
 		Private Shared Sub UpdateDevicesByID(ByVal devList As IEnumerable(Of Device))
 			Try
 				Dim nullGuid As Guid = Guid.Empty
@@ -2385,9 +2229,9 @@ Namespace Win32
 
 							For Each sDev As Device In devList
 								If sDev.devInst = devInst Then
-									GetDeviceDetails(infoSet, ptrDevInfo.Ptr, sDev)
+									GetDeviceDetails(infoSet, ptrDevInfo.Ptr, sDev, False)
 									GetDriverDetails(infoSet, ptrDevInfo.Ptr, sDev)
-									GetDeviceExtendedDetails(ptrDevInfo.Ptr, sDev)
+									GetDeviceStatus(ptrDevInfo.Ptr, sDev)
 
 									devInst = 0UI
 									Continue While
@@ -2503,22 +2347,31 @@ Namespace Win32
 			End Try
 		End Function
 
-		Private Shared Sub GetDeviceDetails(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr, ByVal device As Device)
-			If device.DeviceID Is Nothing Then device.DeviceID = GetDeviceID(device.devInst)
-			If device.ClassName Is Nothing Then device.ClassName = GetStringProperty(infoSet, ptrDevInfo, SPDRP.CLASS)
-			If device.ClassGuid Is Nothing Then device.ClassGuid = GetStringProperty(infoSet, ptrDevInfo, SPDRP.CLASSGUID)
-			If device.Description Is Nothing Then device.Description = GetStringProperty(infoSet, ptrDevInfo, SPDRP.DEVICEDESC)
-			If device.FriendlyName Is Nothing Then device.FriendlyName = GetStringProperty(infoSet, ptrDevInfo, SPDRP.FRIENDLYNAME)
-			If device.HardwareIDs Is Nothing Then device.HardwareIDs = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.HARDWAREID)
-			If device.CompatibleIDs Is Nothing Then device.CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.COMPATIBLEIDS)
-			If device.InstallState Is Nothing Then device.InstallState = GetDescription(DirectCast(GetUInt32Property(infoSet, ptrDevInfo, SPDRP.INSTALL_STATE), DEVICE_INSTALL_STATE))
-			If device.LowerFilters Is Nothing Then device.LowerFilters = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.LOWERFILTERS)
-			If device.Capabilities Is Nothing Then device.Capabilities = ToStringArray(Of CM_DEVCAP)(DirectCast(GetUInt32Property(infoSet, ptrDevInfo, SPDRP.CAPABILITIES), CM_DEVCAP))
-			If device.InstallFlags Is Nothing Then device.InstallFlags = ToStringArray(Of DI)(DirectCast(GetInstallParamsFlags(infoSet, ptrDevInfo), DI))
-			If device.ConfigFlags Is Nothing Then device.ConfigFlags = ToStringArray(Of CONFIGFLAGS)(DirectCast(GetUInt32Property(infoSet, ptrDevInfo, SPDRP.CONFIGFLAGS), CONFIGFLAGS))
+		Private Shared Sub GetDeviceDetails(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr, ByVal device As Device, Optional ByVal forceUpdate As Boolean = True)
+			If Not forceUpdate AndAlso device.devDetails Then
+				Return
+			End If
+
+			With device
+				.DeviceID = GetDeviceID(device.devInst)
+				.ClassName = GetStringProperty(infoSet, ptrDevInfo, SPDRP.CLASS)
+				.ClassGuid = GetStringProperty(infoSet, ptrDevInfo, SPDRP.CLASSGUID)
+				.Description = GetStringProperty(infoSet, ptrDevInfo, SPDRP.DEVICEDESC)
+				.FriendlyName = GetStringProperty(infoSet, ptrDevInfo, SPDRP.FRIENDLYNAME)
+				.HardwareIDs = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.HARDWAREID)
+				.CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.COMPATIBLEIDS)
+				.LowerFilters = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.LOWERFILTERS)
+
+				.InstallState = GetUInt32Property(infoSet, ptrDevInfo, SPDRP.INSTALL_STATE)
+				.InstallFlags = GetInstallParamsFlags(infoSet, ptrDevInfo)
+				.Capabilities = GetUInt32Property(infoSet, ptrDevInfo, SPDRP.CAPABILITIES)
+				.ConfigFlags = GetUInt32Property(infoSet, ptrDevInfo, SPDRP.CONFIGFLAGS)
+
+				.devDetails = True
+			End With
 		End Sub
 
-		Private Shared Sub GetDeviceExtendedDetails(ByVal ptrDevInfo As IntPtr, ByVal device As Device)
+		Private Shared Sub GetDeviceStatus(ByVal ptrDevInfo As IntPtr, ByVal device As Device)
 			If device.devInst = 0UI Then
 				If (Is64) Then
 					device.devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
@@ -2532,18 +2385,21 @@ Namespace Win32
 			Dim pulStatus As UInt32 = 0UI
 			Dim pulProblemNumber As UInt32 = 0UI
 
-			Dim result2 As CR = DirectCast(CM_Get_DevNode_Status(pulStatus, pulProblemNumber, device.devInst, 0UI), CR)
+			Dim result As UInt32 = CM_Get_DevNode_Status(pulStatus, pulProblemNumber, device.devInst, 0UI)
 
-			If result2 = CR.SUCCESS Then
-				device.DevStatus = ToStringArray(Of DN)(DirectCast(pulStatus, DN))
-
-				If (pulStatus And DN.HAS_PROBLEM) = DN.HAS_PROBLEM Then
-					device.DevProblems = ToStringArray(Of CM_PROB)(DirectCast(pulProblemNumber, CM_PROB))
-				Else
-					device.DevProblems = Nothing
+			If result = CR.SUCCESS Then
+				If (pulStatus And DN.HAS_PROBLEM) <> DN.HAS_PROBLEM Then
+					pulProblemNumber = 0UI
 				End If
 
-			ElseIf result2 = CR.NO_SUCH_DEVINST Then
+				device.DevStatus = pulStatus
+				device.DevProblem = pulProblemNumber
+			ElseIf result = CR.NO_SUCH_DEVINST Then
+				device.DevStatus = 0UI
+				device.DevProblem = 0UI
+
+				device.DevProblemStr = "CR_NO_SUCH_DEVINST (Device doesn't exist)"
+				device.DevStatusStr = New String() {device.DevProblemStr}
 			Else
 				CheckWin32Error(False)
 			End If
@@ -2890,6 +2746,7 @@ Namespace Win32
 
 		Public Class Device
 			Friend devInst As UInt32
+			Friend devDetails As Boolean = False
 
 			Private _hasHardwareID As Boolean = False
 			Private _hardwareIDs As String()
@@ -2902,12 +2759,21 @@ Namespace Win32
 			Private _deviceID As String
 			Private _driverInfo As DriverInfo()
 			Private _siblingDevices() As Device
-			Private _installState As String
-			Private _installFlags As String()
-			Private _capabilities As String()
-			Private _configFlags As String()
-			Private _devProblems As String()
-			Private _devStatus As String()
+
+			Private _installStateStr As String = Nothing
+			Private _installFlagsStr As String() = Nothing
+			Private _capabilitiesStr As String() = Nothing
+			Private _configFlagsStr As String() = Nothing
+			Private _devProblemStr As String = Nothing
+			Private _devStatusStr As String() = Nothing
+
+			Private _installState As UInt32
+			Private _installFlags As UInt32
+			Private _capabilities As UInt32
+			Private _configFlags As UInt32
+			Private _devProblem As UInt32
+			Private _devStatus As UInt32
+
 			Private _oemInfs As Inf()
 
 			Public ReadOnly Property HasHardwareID As Boolean
@@ -3007,54 +2873,122 @@ Namespace Win32
 					_siblingDevices = value
 				End Set
 			End Property
-			Public Property InstallState As String
+
+
+			Public ReadOnly Property InstallStateStr As String
+				Get
+					If _installStateStr Is Nothing Then
+						_installStateStr = String.Format(ENUM_FORMAT, If([Enum].IsDefined(GetType(DEVICE_INSTALL_STATE), _installState), DirectCast(_installState, DEVICE_INSTALL_STATE).ToString(), "UNKNOWN"), _installState)
+					End If
+
+					Return _installStateStr
+				End Get
+			End Property
+			Public Property InstallState As UInt32
 				Get
 					Return _installState
 				End Get
-				Friend Set(value As String)
+				Friend Set(value As UInt32)
 					_installState = value
 				End Set
 			End Property
-			Public Property InstallFlags As String()
+
+			Public ReadOnly Property InstallFlagsStr As String()
+				Get
+					If _installFlagsStr Is Nothing Then
+						_installFlagsStr = ToStringArray(Of INSTALLFLAG)(_installFlags, "<empty>")
+					End If
+
+					Return _installFlagsStr
+				End Get
+			End Property
+			Public Property InstallFlags As UInt32
 				Get
 					Return _installFlags
 				End Get
-				Friend Set(value As String())
+				Friend Set(value As UInt32)
 					_installFlags = value
 				End Set
 			End Property
-			Public Property Capabilities As String()
+
+			Public ReadOnly Property CapabilitiesStr As String()
+				Get
+					If _capabilitiesStr Is Nothing Then
+						_capabilitiesStr = ToStringArray(Of CM_DEVCAP)(_capabilities, "<empty>")
+					End If
+
+					Return _capabilitiesStr
+				End Get
+			End Property
+			Public Property Capabilities As UInt32
 				Get
 					Return _capabilities
 				End Get
-				Friend Set(value As String())
+				Friend Set(value As UInt32)
 					_capabilities = value
 				End Set
 			End Property
-			Public Property ConfigFlags As String()
+
+			Public ReadOnly Property ConfigFlagsStr As String()
+				Get
+					If _configFlagsStr Is Nothing Then
+						_configFlagsStr = ToStringArray(Of CONFIGFLAGS)(_configFlags, "<empty>")
+					End If
+
+					Return _configFlagsStr
+				End Get
+			End Property
+			Public Property ConfigFlags As UInt32
 				Get
 					Return _configFlags
 				End Get
-				Friend Set(value As String())
+				Friend Set(value As UInt32)
 					_configFlags = value
 				End Set
 			End Property
-			Public Property DevProblems As String()
+
+			Public Property DevProblemStr As String
 				Get
-					Return _devProblems
+					If _devProblemStr Is Nothing Then
+						_devProblemStr = String.Format(ENUM_FORMAT, If([Enum].IsDefined(GetType(CM_PROB), _devProblem), DirectCast(_devProblem, CM_PROB).ToString(), "UNKNOWN"), _devProblem)
+					End If
+
+					Return _devProblemStr
 				End Get
-				Friend Set(value As String())
-					_devProblems = value
+				Set(value As String)
+					_devProblemStr = value
 				End Set
 			End Property
-			Public Property DevStatus As String()
+			Public Property DevProblem As UInt32
+				Get
+					Return _devProblem
+				End Get
+				Set(value As UInt32)
+					_devProblem = value
+				End Set
+			End Property
+
+			Public Property DevStatusStr As String()
+				Get
+					If _devStatusStr Is Nothing Then
+						_devStatusStr = ToStringArray(Of DN)(_devStatus, "<empty>")
+					End If
+
+					Return _devStatusStr
+				End Get
+				Set(value As String())
+					_devStatusStr = value
+				End Set
+			End Property
+			Public Property DevStatus As UInt32
 				Get
 					Return _devStatus
 				End Get
-				Friend Set(value As String())
+				Friend Set(value As UInt32)
 					_devStatus = value
 				End Set
 			End Property
+
 			Public Property OemInfs As Inf()
 				Get
 					Return _oemInfs

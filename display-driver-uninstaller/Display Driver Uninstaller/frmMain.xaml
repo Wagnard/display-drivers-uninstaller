@@ -90,10 +90,9 @@
 			</MenuItem>
 
 			<MenuItem x:Name="TestMenuItem" Header="TESTING" Visibility="{Binding IsDebug, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
-				<MenuItem x:Name="RegMenuItem" Header="Reg (test3)" />
 				<MenuItem x:Name="checkXMLMenuItem" Header="Check language files for errors" />
 				<MenuItem x:Name="SetupAPIMenuItem" Header="SetupAPI" />
-				<MenuItem x:Name="restoreMenuItem" Header="Generic test" />
+				<MenuItem x:Name="testingMenuItem" Header="Generic test" />
 			</MenuItem>
 		</Menu>
 

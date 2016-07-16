@@ -50,29 +50,22 @@
 
                 <DockPanel LastChildFill="true">
                     <TextBlock FontWeight="Bold" Text="Install State:    " />
-                    <TextBlock Text="{Binding Path=InstallState, Mode=OneWay}" />
+					<TextBlock Text="{Binding Path=InstallStateStr, Mode=OneWay}" />
                 </DockPanel>
 
-                <TextBlock />
+				<TextBlock />
+
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="Dev Problem:    " />
+					<TextBlock Text="{Binding Path=DevProblemStr, Mode=OneWay}" />
+				</DockPanel>
+				
+				<TextBlock />
 
                 <StackPanel>
                     <TextBlock FontWeight="Bold" Text="Dev Status:    " />
 
-                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding DevStatus}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-
-                <TextBlock />
-
-                <StackPanel>
-                    <TextBlock FontWeight="Bold" Text="Dev Problems:    " />
-
-                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding DevProblems}">
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding DevStatusStr}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}"/>
@@ -86,7 +79,7 @@
                 <StackPanel>
                     <TextBlock FontWeight="Bold" Text="Install Flags:    " />
 
-                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding InstallFlags}">
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding InstallFlagsStr}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}"/>
@@ -100,7 +93,7 @@
                 <StackPanel>
                     <TextBlock FontWeight="Bold" Text="Capabilities:    " />
 
-                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding Capabilities}">
+                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding CapabilitiesStr}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}"/>
@@ -114,7 +107,7 @@
                 <StackPanel>
                     <TextBlock FontWeight="Bold" Text="Config Flags:    " />
 
-                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding ConfigFlags}">
+                    <ItemsControl Margin="20,0,0,0" ItemsSource="{Binding ConfigFlagsStr}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}"/>
@@ -385,10 +378,9 @@
             <Button Content="disable" Height="23" Name="btnDisable" Width="75" Click="btnDisable_Click" />
             <Button Content="enable" Height="23" Name="btnEnable" Width="75" Click="btnEnable_Click" />
             <Button Content="remove" Height="23" Name="btnRemove" Width="75" Click="btnRemove_Click" />
-            <Button Content="update" Height="23" Name="btnUpdate" Width="75" Margin="10,10,0,10" />
-            <Button Content="DevMltk Test" Height="23" Name="btnTestDev" Width="82" />
+            <Button Content="update inf" Height="23" Name="btnUpdate" Width="75" Margin="10,10,0,10" />
 			<Button Content="ReScan devices" Height="23" Name="Button1" Width="89" />
-			<Button Content="TEST" Height="23" Name="btnTest" Width="50" />
+			<CheckBox Content="Inlcude Siblings" Height="16" Name="chbSearchSiblings" />
 		</StackPanel>
 
         <DockPanel Grid.Row="1">

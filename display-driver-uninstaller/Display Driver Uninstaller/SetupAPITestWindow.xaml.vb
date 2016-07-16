@@ -49,10 +49,10 @@ Public Class SetupAPITestWindow
             Return
         Else
             Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
-            If d Is Nothing OrElse d.HardwareIDs Is Nothing OrElse d.HardwareIDs.Length <= 0 Then
-                MessageBox.Show("Selected device doesn't contain Hardware ID!")
-                Return
-            End If
+			If d Is Nothing OrElse Not d.HasHardwareID Then
+				MessageBox.Show("Selected device doesn't contain Hardware ID!")
+				Return
+			End If
         End If
 
         SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device).HardwareIDs(0), False)
@@ -64,10 +64,10 @@ Public Class SetupAPITestWindow
             Return
         Else
             Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
-            If d Is Nothing OrElse d.HardwareIDs Is Nothing OrElse d.HardwareIDs.Length <= 0 Then
-                MessageBox.Show("Selected device doesn't contain Hardware ID!")
-                Return
-            End If
+			If d Is Nothing OrElse Not d.HasHardwareID Then
+				MessageBox.Show("Selected device doesn't contain Hardware ID!")
+				Return
+			End If
         End If
 
         SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device).HardwareIDs(0), True)
@@ -79,13 +79,14 @@ Public Class SetupAPITestWindow
             Return
         Else
             Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
-            If d Is Nothing OrElse d.HardwareIDs Is Nothing OrElse d.HardwareIDs.Length <= 0 Then
-                MessageBox.Show("Selected device doesn't contain Hardware ID!")
-                Return
-            End If
+
+			If d Is Nothing OrElse Not d.HasHardwareID Then
+				MessageBox.Show("Selected device doesn't contain Hardware ID!")
+				Return
+			End If
         End If
 
-        SetupAPI.TEST_RemoveDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device).HardwareIDs(0))
+		SetupAPI.UninstallDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device))
     End Sub
 
     Private Sub btnFindDevs_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
@@ -99,7 +100,7 @@ Public Class SetupAPITestWindow
             cbFilterDev.SelectedIndex = 0
         End If
 
-        Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text)
+		Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False))
 
         If found.Count > 0 Then
             For Each d As SetupAPI.Device In found
@@ -381,80 +382,20 @@ Public Class SetupAPITestWindow
 
         Dim result As Boolean? = ofd.ShowDialog(Me)
 
-        If result IsNot Nothing AndAlso result.Value Then
-			SetupAPI.TEST_UpdateDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device), ofd.FileName)
-        End If
-    End Sub
+		If result IsNot Nothing AndAlso result.Value Then
+			Dim dev As SetupAPI.Device = DirectCast(listBox1.SelectedItem, SetupAPI.Device)
 
-    Private Sub btnTestDev_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnTestDev.Click
-        If Devices.Count > 0 Then
-            Devices.Clear()
-        End If
-	
-        lblDevicesDev.Content = "Devices: 0"
+			Dim msgResult As MessageBoxResult = MessageBox.Show("Force update INF?" & CRLF & "Device: " & dev.Description & CRLF & "INF: " & ofd.FileName, "Update INF", MessageBoxButton.YesNoCancel)
 
-        If cbFilterDev.SelectedItem Is Nothing Then
-            cbFilterDev.SelectedIndex = 0
-        End If
-
-		Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices(tbFilterDev.Text)
-
-        If found.Count > 0 Then
-            For Each d As SetupAPI.Device In found
-                Devices.Add(d)
-            Next
-
-            lblDevicesDev.Content = String.Format("Devices: {0}", Devices.Count)
-            UpdateFilter()
-
-            MessageBox.Show(String.Format("{0} devices found!", Devices.Count))
-        Else
-            MessageBox.Show("Devices not found!")
-        End If
+			If msgResult = MessageBoxResult.Yes Then
+				SetupAPI.UpdateDeviceInf(dev, ofd.FileName, True)
+			ElseIf msgResult = MessageBoxResult.No Then
+				SetupAPI.UpdateDeviceInf(dev, ofd.FileName, False)
+			End If
+		End If
     End Sub
 
 	Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
 		SetupAPI.ReScanDevices()
-	End Sub
-
-	Private Sub btnTest_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnTest.Click
-		'Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", vendidexpected)
-		'Dim found2 As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected)
-
-		'If found.Count > 0 AndAlso found2.Count > 0 Then
-		'	For Each SystemDevice As SetupAPI.Device In found
-		'		For Each Sibling In SystemDevice.SiblingDevices
-		'			For Each DisplayD As SetupAPI.Device In found2
-		'				If SystemDevice.LowerFilters IsNot Nothing AndAlso StrContainsAny(SystemDevice.LowerFilters(0), True, "amdkmafd") Then
-		'					If StrContainsAny(Sibling.DeviceID, True, DisplayD.DeviceID) Then
-		'						MsgBox("Device to remove: " + SystemDevice.Description + " from sibling " + Sibling.Description + Sibling.DeviceID)
-		'						Win32.SetupAPI.UninstallDevice(SystemDevice)
-		'					End If
-		'				End If
-		'			Next
-		'		Next
-		'	Next
-		'End If
-
-		'Dim vendidexpected As String = "VEN_10DE"
-		Dim vendidexpected As String = "VEN_1002"
-		Dim displays As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected)
-
-		For Each sysDevice As SetupAPI.Device In SetupAPI.GetDevices("system", vendidexpected)
-			If sysDevice.LowerFilters Is Nothing Then
-				Continue For
-			End If
-
-			If StrContainsAny(sysDevice.LowerFilters(0), True, "amdkmafd") Then
-				For Each display As SetupAPI.Device In displays
-					For Each sysSibling As SetupAPI.Device In sysDevice.SiblingDevices
-						If StrContainsAny(sysSibling.DeviceID, True, display.DeviceID) Then
-							MsgBox("Device to remove: " + sysSibling.Description + " from " + Environment.NewLine & sysDevice.Description & Environment.NewLine & sysDevice.DeviceID)
-						End If
-					Next
-				Next
-			End If
-		Next
-
 	End Sub
 End Class

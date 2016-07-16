@@ -8,6 +8,7 @@ Namespace Win32
 	Friend Module Win32Native
 
 #Region "Consts"
+		Friend Const ENUM_FORMAT As String = "{0} (0x{1})"
 
 		Friend Const LINE_LEN As Int32 = 256
 		Friend Const MAX_LEN As Int32 = 260
@@ -117,20 +118,49 @@ Namespace Win32
 #Region "Functions"
 
 		' <Extension()>
-		Public Function ToStringArray(Of T)(ByVal e As [Enum]) As String()
+		'Public Function ToStringArray(Of T)(ByVal e As [Enum]) As String()
+		'	Dim eNames As List(Of String) = New List(Of String)(10)
+		'	Dim flags As UInt32 = Convert.ToUInt32(e)
+		'	Dim flags2 As UInt32 = flags
+
+		'	If flags = 0UI Then
+		'		Return Nothing
+		'	End If
+
+		'	For Each value As T In [Enum].GetValues(GetType(T))
+		'		Dim bit As UInt32 = Convert.ToUInt32(value)
+
+		'		If (flags And bit) = bit Then
+		'			eNames.Add(value.ToString())
+		'			flags2 = flags2 And bit
+		'		End If
+		'	Next
+
+		'	Return eNames.ToArray()
+		'End Function
+
+		' <Extension()>
+		Public Function ToStringArray(Of T)(ByVal flags As UInt32, Optional ByVal [default] As String = "OK") As String()
 			Dim eNames As List(Of String) = New List(Of String)(10)
-			Dim flags As UInt32 = Convert.ToUInt32(e)
+			Dim type As Type = GetType(T)
 
 			If flags = 0UI Then
-				Return Nothing
+				Return New String() {[default]}
 			End If
 
-			For Each value As T In [Enum].GetValues(GetType(T))
-				Dim bit As UInt32 = Convert.ToUInt32(value)
+			Dim bit As UInt32 = 1UI
+			Dim size As Int32 = Marshal.SizeOf(flags)
 
+			For i As Int32 = (size * 8 - 1) To 0 Step -1
 				If (flags And bit) = bit Then
-					eNames.Add(value.ToString())
+					If [Enum].IsDefined(type, bit) Then
+						eNames.Add(String.Format(ENUM_FORMAT, [Enum].GetName(type, bit), bit.ToString("X2").TrimStart("0"c)))
+					Else
+						eNames.Add(String.Format(ENUM_FORMAT, "UNKNOWN", bit.ToString("X2").TrimStart("0"c)))
+					End If
 				End If
+
+				bit <<= 1
 			Next
 
 			Return eNames.ToArray()

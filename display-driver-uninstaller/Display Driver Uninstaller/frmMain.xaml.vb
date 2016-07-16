@@ -6064,10 +6064,7 @@ Public Class frmMain
 							For Each Sibling In SystemDevice.SiblingDevices
 								If SystemDevice.LowerFilters IsNot Nothing AndAlso StrContainsAny(SystemDevice.LowerFilters(0), True, "amdkmafd") Then
 									If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
-										Dim logEntry As LogEntry = Application.Log.CreateEntry()
-										logEntry.Message = "Removing AMD HD Audio Bus (amdkmafd)"
-										logEntry.AddDevices(SystemDevice)
-										Application.Log.Add(logEntry)
+										Application.Log.AddMessage("Removing AMD HD Audio Bus (amdkmafd)")
 
 										Win32.SetupAPI.UninstallDevice(SystemDevice)
 									End If
@@ -7756,30 +7753,27 @@ Public Class frmMain
 		'end system environement patch cleanup
 	End Sub
 
-	Private Sub RegMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles RegMenuItem.Click
-		MessageBox.Show(If(ACL.Registry.FixRights("HKEY_LOCAL_MACHINE\SOFTWARE\ATI"), "Fix'd!", "Fix failed"), "Test", MessageBoxButton.OK, MessageBoxImage.Information)
-	End Sub
-
-	Private Sub restoreMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles restoreMenuItem.Click
+	Private Sub testingMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles testingMenuItem.Click
 		Dim testDir As String = "E:\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should"
-		Dim testDirBrokenACL As String = "E:\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should\test"
 		Dim testFileShortPath As String = "E:\PROGRA~1\NVIDIA~1\INSTAL~1\NVNODE~1.{23\NODE_M~1\socket.io\NODE_M~1\SOCKET~1.IO-\NODE_M~1\ENGINE~1.IO-\NODE_M~1\ENGINE~1.IO-\NODE_M~1\BASE64~1\lib\ddu\wagnard\does\this\work\I\think\it\should\test\test.txt"
-
 		' 288 chars, feel free to test ;P
 		' Btw, change drive letter if you try!
 
 		Try
-			'	FileIO.CreateDir(testDir)			' Create dir for testing!
-			'	FileIO.Delete(testFileShortPath)	' Delete file with short path
-			'	FileIO.Delete(testDir)				' FileIO.Delete deletes both, is it Dir or File
+			'	FileIO.CreateDir(testDir)							' Create dir for testing!
+			'	FileIO.Delete(testFileShortPath)					' Delete file with short path
+			'	FileIO.Delete(testDir)								' FileIO.Delete deletes both, is it Dir or File
+			'	FileIO.ExistsDir(testDir)							' Dir exists?
+			'	FileIO.ExistsFile(testFileShortPath)				' File exists?
+			'	FileIO.GetFiles("E:\_temp\test\", "*", True)		' Get files
+			'	FileIO.GetDirectories("E:\_temp\test\", "*", True)	' Get directories
 
-
-			'Dim files As List(Of String) = FileIO.GetFiles("E:\_temp\test\", "*", True)
-			'MessageBox.Show(String.Join(Environment.NewLine, files.ToArray()))
-
-			'FileIO.CreateDir("E:\_temp\test\more test\Some long paths\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should")
-
-			'FileIO.Delete("E:\_temp\test\")
+			'TEST
+			'For Each d As SetupAPI.Device In SetupAPI.GetDevices("display")
+			'	If MessageBox.Show("Uninstall: " & d.Description, "?", MessageBoxButton.YesNo, MessageBoxImage.Stop) = MessageBoxResult.Yes Then
+			'		SetupAPI.UninstallDevice(d)
+			'	End If
+			'Next
 
 			' Multiline TEST
 			'Dim logEntry As LogEntry = Application.Log.CreateEntry()
@@ -7792,17 +7786,6 @@ Public Class frmMain
 
 			'logEntry.Add(New KvP("Numbers", String.Join(Environment.NewLine, New String() {"1", "2", "3", "4", "5", "6"})))
 			'Application.Log.Add(logEntry)
-
-			'Dim path As String = "E:\_temp\test"
-			'MessageBox.Show("ExistsDir: " & FileIO.ExistsDir(path).ToString() & Environment.NewLine & "ExistsFile: " & FileIO.ExistsFile(path).ToString())
-
-			'Dim files As List(Of String) = FileIO.GetFiles("C:\", "*", True)
-			'Dim dirs As List(Of String) = FileIO.GetDirectories("C:\", "*", True)
-			'Dim fileCount As Int32 = FileIO.CountFiles("C:\", "*", True)
-			'Dim dirCount As Int32 = FileIO.CountDirectories("C:\", "*", True)
-
-			'MessageBox.Show("Dirs: " & dirs.Count.ToString() & " -> " & dirCount.ToString() & vbCrLf & "Files: " & files.Count.ToString() & " -> " & fileCount.ToString())
-
 		Catch ex As Exception
 			MessageBox.Show(ex.Message, "FileIO Failure!")
 		End Try

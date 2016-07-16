@@ -211,12 +211,15 @@ Public Class LogEntry
 		OnPropertyChanged("Values")
 	End Sub
 
-	Public Sub AddDevices(ByVal ParamArray devices As Win32.SetupAPI.Device())
+	Public Sub AddDevices(ByVal extendedDetails As Boolean, ByVal ParamArray devices As Win32.SetupAPI.Device())
 		For Each d As Win32.SetupAPI.Device In devices
 			Add("Description", If(Not IsNullOrWhitespace(d.Description), d.Description, "-"))
 			Add("ClassName", If(Not IsNullOrWhitespace(d.ClassName), d.ClassName, "-"))
+			Add(KvP.Empty)
 			Add("DeviceID", If(Not IsNullOrWhitespace(d.DeviceID), d.DeviceID, "-"))
 			Add("DevInst", d.devInst.ToString())
+			Add("InstallState", If(Not IsNullOrWhitespace(d.InstallStateStr), d.InstallStateStr, "-"))
+			Add(KvP.Empty)
 			Add("SiblingDevices", If(d.SiblingDevices Is Nothing, "0", d.SiblingDevices.Length.ToString()))
 			Add(KvP.Empty)
 
@@ -227,27 +230,47 @@ Public Class LogEntry
 
 			Values.Add(KvP.Empty)
 
-			If d.ConfigFlags IsNot Nothing AndAlso d.ConfigFlags.Length > 0 Then
-				Add("ConfigFlags", String.Join(Environment.NewLine, d.ConfigFlags))
-			Else : Add("ConfigFlags", "<empty>")
+
+			If d.CompatibleIDs IsNot Nothing AndAlso d.CompatibleIDs.Length > 0 Then
+				Add("CompatibleIDs", String.Join(Environment.NewLine, d.CompatibleIDs))
+			Else : Add("CompatibleIDs", "<empty>")
 			End If
 
 			Values.Add(KvP.Empty)
 
-			If d.DevStatus IsNot Nothing AndAlso d.DevStatus.Length > 0 Then
-				Add("DevStatus", String.Join(Environment.NewLine, d.DevStatus))
+			Add("DevProblem", If(Not IsNullOrWhitespace(d.DevProblemStr), d.DevProblemStr, "-"))
+
+			Values.Add(KvP.Empty)
+
+			If d.DevStatusStr IsNot Nothing AndAlso d.DevStatusStr.Length > 0 Then
+				Add("DevStatus", String.Join(Environment.NewLine, d.DevStatusStr))
 			Else : Add("DevStatus", "<empty>")
 			End If
 
-
 			Values.Add(KvP.Empty)
 
-			If d.DevProblems IsNot Nothing AndAlso d.DevProblems.Length > 0 Then
-				Add("DevProblems", String.Join(Environment.NewLine, d.DevProblems))
-			Else : Add("DevProblems", "<empty>")
+			If extendedDetails Then
+				If d.InstallFlagsStr IsNot Nothing AndAlso d.InstallFlagsStr.Length > 0 Then
+					Add("InstallFlags", String.Join(Environment.NewLine, d.InstallFlagsStr))
+				Else : Add("InstallFlags", "<empty>")
+				End If
+
+				Values.Add(KvP.Empty)
+
+				If d.ConfigFlagsStr IsNot Nothing AndAlso d.ConfigFlagsStr.Length > 0 Then
+					Add("ConfigFlags", String.Join(Environment.NewLine, d.ConfigFlagsStr))
+				Else : Add("ConfigFlags", "<empty>")
+				End If
+
+				Values.Add(KvP.Empty)
+
+				If d.CapabilitiesStr IsNot Nothing AndAlso d.CapabilitiesStr.Length > 0 Then
+					Add("Capabilities", String.Join(Environment.NewLine, d.CapabilitiesStr))
+				Else : Add("Capabilities", "<empty>")
+				End If
+
+				Values.Add(KvP.Empty)
 			End If
-
-			Values.Add(KvP.Empty)
 
 			If d.OemInfs IsNot Nothing AndAlso d.OemInfs.Length > 0 Then
 				Dim oems(d.OemInfs.Length - 1) As String
@@ -264,29 +287,32 @@ Public Class LogEntry
 
 			Values.Add(KvP.Empty)
 
-			If d.DriverInfo IsNot Nothing AndAlso d.DriverInfo.Length > 0 Then
-				Add("Driver Details")
+			If extendedDetails Then
+				If d.DriverInfo IsNot Nothing AndAlso d.DriverInfo.Length > 0 Then
+					Add("Driver Details")
 
-				For Each drvInfo As Win32.SetupAPI.DriverInfo In d.DriverInfo
-					Add("  Description", If(Not IsNullOrWhitespace(drvInfo.Description), drvInfo.Description, "-"))
-					Add("  Manufacturer", If(Not IsNullOrWhitespace(drvInfo.MfgName), drvInfo.MfgName, "-"))
-					Add("  Provider", If(Not IsNullOrWhitespace(drvInfo.ProviderName), drvInfo.ProviderName, "-"))
-					Add("  DriverDate", drvInfo.DriverDate.ToString())
-					Add("  DriverVersion", If(Not IsNullOrWhitespace(drvInfo.DriverVersion), drvInfo.DriverVersion, "-"))
+					For Each drvInfo As Win32.SetupAPI.DriverInfo In d.DriverInfo
+						Add("> Description", If(Not IsNullOrWhitespace(drvInfo.Description), drvInfo.Description, "-"))
+						Add("> Manufacturer", If(Not IsNullOrWhitespace(drvInfo.MfgName), drvInfo.MfgName, "-"))
+						Add("> Provider", If(Not IsNullOrWhitespace(drvInfo.ProviderName), drvInfo.ProviderName, "-"))
+						Add("> DriverDate", drvInfo.DriverDate.ToString())
+						Add("> DriverVersion", If(Not IsNullOrWhitespace(drvInfo.DriverVersion), drvInfo.DriverVersion, "-"))
 
-					If drvInfo.InfFile IsNot Nothing Then
-						Add("  InfFile", If(Not IsNullOrWhitespace(drvInfo.InfFile.FileName), drvInfo.InfFile.FileName, "-"))
-						Add("     InstallDate", drvInfo.InfFile.InstallDate.ToShortDateString())
-						Add("     Class", If(Not IsNullOrWhitespace(drvInfo.InfFile.Class), drvInfo.InfFile.Class, "-"))
-						Add("     Provider", If(Not IsNullOrWhitespace(drvInfo.InfFile.Provider), drvInfo.InfFile.Provider, "-"))
-					End If
+						If drvInfo.InfFile IsNot Nothing Then
+							Add("> InfFile", If(Not IsNullOrWhitespace(drvInfo.InfFile.FileName), drvInfo.InfFile.FileName, "-"))
+							Add(">>   InstallDate", drvInfo.InfFile.InstallDate.ToShortDateString())
+							Add(">>   Class", If(Not IsNullOrWhitespace(drvInfo.InfFile.Class), drvInfo.InfFile.Class, "-"))
+							Add(">>   Provider", If(Not IsNullOrWhitespace(drvInfo.InfFile.Provider), drvInfo.InfFile.Provider, "-"))
+						End If
 
-					Add("---")
-				Next
-			Else
-				Add("<No Driver Details>")
+						Add(">")
+					Next
+				Else
+					Add("<No Driver Details>")
+				End If
 			End If
 
+			Add("---")
 			Add(KvP.Empty)
 		Next
 
