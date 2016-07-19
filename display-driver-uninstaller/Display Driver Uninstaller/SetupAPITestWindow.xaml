@@ -75,8 +75,15 @@
                 </StackPanel>
 
                 <TextBlock />
-                
-                <StackPanel>
+
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="RebootRequired:    " />
+					<TextBlock Text="{Binding Path=RebootRequired, Mode=OneWay}" />
+				</DockPanel>
+
+				<TextBlock />
+
+				<StackPanel>
                     <TextBlock FontWeight="Bold" Text="Install Flags:    " />
 
 					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding InstallFlagsStr}">
@@ -380,7 +387,7 @@
             <Button Content="remove" Height="23" Name="btnRemove" Width="75" Click="btnRemove_Click" />
             <Button Content="update inf" Height="23" Name="btnUpdate" Width="75" Margin="10,10,0,10" />
 			<Button Content="ReScan devices" Height="23" Name="Button1" Width="89" />
-			<CheckBox Content="Inlcude Siblings" Height="16" Name="chbSearchSiblings" />
+			<CheckBox Content="Include Siblings" Height="16" Name="chbSearchSiblings" />
 		</StackPanel>
 
         <DockPanel Grid.Row="1">

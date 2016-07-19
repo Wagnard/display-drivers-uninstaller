@@ -249,6 +249,10 @@ Public Class LogEntry
 
 			Values.Add(KvP.Empty)
 
+			Add("RebootRequired", If(d.RebootRequired, "Yes", "No"))
+
+			Values.Add(KvP.Empty)
+
 			If extendedDetails Then
 				If d.InstallFlagsStr IsNot Nothing AndAlso d.InstallFlagsStr.Length > 0 Then
 					Add("InstallFlags", String.Join(Environment.NewLine, d.InstallFlagsStr))
@@ -320,30 +324,29 @@ Public Class LogEntry
 	End Sub
 
 	Public Sub AddException(ByRef ex As Exception, Optional ByVal overrideMessage As Boolean = True)
-		If ex IsNot Nothing AndAlso (overrideMessage OrElse IsNullOrWhitespace(Message)) Then
-			Message = ex.Message.Trim()
-		End If
-
-		HasAnyData = True
-
 		Type = LogType.Error
 		Time = DateTime.Now
 
 		m_exData.Clear()
-		m_exData.Add("Message", If(String.IsNullOrEmpty(ex.Message), "Unknown", ex.Message))
-		m_exData.Add("TargetSite", If(ex.TargetSite IsNot Nothing AndAlso Not String.IsNullOrEmpty(ex.TargetSite.Name), ex.TargetSite.Name, "Unknown"))
-		m_exData.Add("Source", If(String.IsNullOrEmpty(ex.Source), "Unknown", ex.Source))
-		m_exData.Add("StackTrace", If(String.IsNullOrEmpty(ex.StackTrace), "Unknown", ex.StackTrace))
 
 		If TypeOf (ex) Is Win32Exception Then
 			Dim win32Ex As Win32Exception = TryCast(ex, Win32Exception)
 
 			If win32Ex IsNot Nothing Then
 				Dim errCode As UInt32 = Win32.GetUInt32(win32Ex.NativeErrorCode)
+				Dim msg As String
 
-				Add("Win32_Message", win32Ex.Message)
-				Add("Win32_ErrorCode", String.Format("{0} (0x{1:X})", errCode.ToString(), errCode))
-				Add(KvP.Empty)
+				If Not StrContainsAny(win32Ex.Message, True, "Unknown error") Then
+					msg = win32Ex.Message
+				Else : msg = Win32.GetErrorEnum(errCode)
+				End If
+
+				m_exData.Add("Win32_Message", msg)
+				m_exData.Add("Win32_ErrorCode", String.Format("{0} (0x{1:X})", win32Ex.NativeErrorCode.ToString(), errCode))
+
+				If overrideMessage OrElse IsNullOrWhitespace(Message) Then
+					Message = msg.Trim()
+				End If
 			End If
 		ElseIf TypeOf (ex) Is Runtime.InteropServices.COMException Then
 			Dim comEx As Runtime.InteropServices.COMException = TryCast(ex, Runtime.InteropServices.COMException)
@@ -351,12 +354,28 @@ Public Class LogEntry
 			If comEx IsNot Nothing Then
 				Dim errCode As UInt32 = Win32.GetUInt32(comEx.ErrorCode)
 
-				Add("COM_Message", comEx.Message)
-				Add("COM_ErrorCode", String.Format("{0} (0x{1:X})", errCode.ToString(), errCode))
-				Add(KvP.Empty)
+				m_exData.Add("COM_Message", comEx.Message)
+				m_exData.Add("COM_ErrorCode", String.Format("{0} (0x{1:X})", comEx.ErrorCode.ToString(), errCode))
+
+				If overrideMessage OrElse IsNullOrWhitespace(Message) Then
+					Message = comEx.Message.Trim()
+				End If
+			End If
+		Else
+			If ex IsNot Nothing Then
+				If Not String.IsNullOrEmpty(ex.Message) Then m_exData.Add("Message", ex.Message)
+
+				If overrideMessage OrElse IsNullOrWhitespace(Message) Then
+					Message = ex.Message.Trim()
+				End If
 			End If
 		End If
 
+		If ex.TargetSite IsNot Nothing AndAlso Not String.IsNullOrEmpty(ex.TargetSite.Name) Then m_exData.Add("TargetSite", ex.TargetSite.Name)
+		If Not String.IsNullOrEmpty(ex.Source) Then m_exData.Add("Source", ex.Source)
+		If Not String.IsNullOrEmpty(ex.StackTrace) Then m_exData.Add("StackTrace", ex.StackTrace)
+
+		HasAnyData = True
 		HasException = True
 	End Sub
 

@@ -100,7 +100,23 @@ Public Class SetupAPITestWindow
             cbFilterDev.SelectedIndex = 0
         End If
 
-		Dim found As List(Of SetupAPI.Device) = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False))
+#If DEBUG Then
+		Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
+#End If
+
+		Dim found As List(Of SetupAPI.Device)
+
+		If cbFilterDev.SelectedIndex = 0 Then
+			found = SetupAPI.GetDevices(tbFilterDev.Text, Nothing, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False))
+		Else
+			found = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False))
+		End If
+
+#If DEBUG Then
+		sw.Stop()
+		MessageBox.Show("Time: " & sw.Elapsed.ToString())
+#End If
+
 
         If found.Count > 0 Then
             For Each d As SetupAPI.Device In found
@@ -108,7 +124,8 @@ Public Class SetupAPITestWindow
             Next
 
             lblDevicesDev.Content = String.Format("Devices: {0}", Devices.Count)
-            UpdateFilter()
+			UpdateFilter()
+
             MessageBox.Show(String.Format("{0} devices found!", Devices.Count))
         Else
             MessageBox.Show("Devices not found!")

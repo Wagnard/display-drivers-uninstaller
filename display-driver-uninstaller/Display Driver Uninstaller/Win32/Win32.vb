@@ -193,16 +193,19 @@ Namespace Win32
 			Return (New EvilInteger() With {.UInt32 = int}).Int32
 		End Function
 
+		Friend Function GetErrorEnum(ByVal errCode As UInt32) As String
+			If [Enum].IsDefined(GetType(Errors), errCode) Then
+				Return String.Format(ENUM_FORMAT, "ERROR_" & DirectCast(errCode, Errors).ToString(), errCode.ToString("X2").PadLeft(4, "8"c))
+			Else
+				Return String.Format(ENUM_FORMAT, "Unknown error", errCode.ToString("X2").PadLeft(4, "8"c))
+			End If
+		End Function
+
 		Friend Sub ShowException(ByVal ex As Exception)
 			If TypeOf (ex) Is Win32Exception Then
 				Dim e As UInt32 = GetUInt32(DirectCast(ex, Win32Exception).NativeErrorCode)
-				Dim detailMsg As String = Nothing
-
-				If GetErrorMessage(e, detailMsg) Then
-					MessageBox.Show(String.Format("{0}{2}{2}Error code: {1}{2}{3}{2}{2}{4}", detailMsg, e.ToString(), CRLF, ex.Message, ex.StackTrace), "Win32Exception!")
-				Else
-					MessageBox.Show(String.Format("Error code: {0}{1}{2}{1}{1}{3}", e.ToString(), CRLF, ex.Message, ex.StackTrace), "Win32Exception!")
-				End If
+		
+				MessageBox.Show(String.Format("Error code: {0}{1}{2}{1}{1}{3}", e.ToString(), CRLF, ex.Message, ex.StackTrace), "Win32Exception!")
 			Else
 				MessageBox.Show(ex.Message & CRLF & CRLF & If(ex.TargetSite IsNot Nothing, ex.TargetSite.Name, "<null>") & CRLF & CRLF & ex.Source & CRLF & CRLF & ex.StackTrace, "Exception!")
 			End If
@@ -220,20 +223,6 @@ Namespace Win32
 
 		Friend Function GetLastWin32ErrorU() As UInt32
 			Return GetUInt32(Marshal.GetLastWin32Error())
-		End Function
-
-		Friend Function GetErrorMessage(ByVal errCode As UInt32, ByRef message As String) As Boolean
-			Select Case errCode
-				Case Errors.ACCESS_DENIED
-					message = "You have no rights... run as Admin!"
-					Return True
-				Case Errors.NO_SUCH_DEVINST
-					message = "Device doesn't exists!"
-					Return True
-				Case Else
-					message = String.Empty
-					Return False
-			End Select
 		End Function
 
 #End Region
