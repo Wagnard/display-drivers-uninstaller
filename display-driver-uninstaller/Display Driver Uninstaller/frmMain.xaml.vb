@@ -1665,7 +1665,7 @@ Public Class frmMain
 												If Not Directory.Exists(filePath) Then
 													'here we will do a special environement path cleanup as there is chances that the installation is
 													'somewhere else.
-													amdenvironementpath(filePath)
+													AmdEnvironementPath(filePath)
 												End If
 											End If
 										End If
@@ -1673,7 +1673,7 @@ Public Class frmMain
 											If IsNullOrWhitespace(child2) Then Continue For
 
 											If StrContainsAny(child2, True, "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages",
-												  "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo") Then
+											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo") Then
 												Try
 													deletesubregkey(regkey2, child2)
 												Catch ex As Exception
@@ -1828,7 +1828,7 @@ Public Class frmMain
 												If IsNullOrWhitespace(child2) Then Continue For
 
 												If StrContainsAny(child2, True, "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "packages",
-													  "wirelessdisplay", "hydravision", "dndtranscoding64", "avivo", "steadyvideo") Then
+												   "wirelessdisplay", "hydravision", "dndtranscoding64", "avivo", "steadyvideo") Then
 													Try
 														deletesubregkey(regkey2, child2)
 													Catch ex As Exception
@@ -2208,11 +2208,11 @@ Public Class frmMain
 				  {
 				   .StartInfo = New ProcessStartInfo("lodctr") With
 				   {
-					.Arguments = "/R",
-					.WindowStyle = ProcessWindowStyle.Hidden,
-					.UseShellExecute = False,
-					.CreateNoWindow = True,
-					.RedirectStandardOutput = True
+				 .Arguments = "/R",
+				 .WindowStyle = ProcessWindowStyle.Hidden,
+				 .UseShellExecute = False,
+				 .CreateNoWindow = True,
+				 .RedirectStandardOutput = True
 				   }
 				  }
 
@@ -2970,7 +2970,7 @@ Public Class frmMain
 				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If (child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("gfe") AndAlso config.RemoveGFE) Or
+						  (child.ToLower.Contains("gfe") AndAlso config.RemoveGFE) Or
 						   child.ToLower.Contains("displaydriver") Then
 
 							Delete(child)
@@ -5001,10 +5001,10 @@ Public Class frmMain
 		  {
 		   .StartInfo = New ProcessStartInfo("shutdown", "/r /t 0") With
 		   {
-			.WindowStyle = ProcessWindowStyle.Hidden,
-			.UseShellExecute = True,
-			.CreateNoWindow = True,
-			.RedirectStandardOutput = False
+		 .WindowStyle = ProcessWindowStyle.Hidden,
+		 .UseShellExecute = True,
+		 .CreateNoWindow = True,
+		 .RedirectStandardOutput = False
 		   }
 		  }
 
@@ -6719,9 +6719,9 @@ Public Class frmMain
 													  {
 													  .StartInfo = New ProcessStartInfo(baseDir & "\" & ddudrfolder & "\ddudr.exe", "remove " & Chr(34) & "@SWD\MMDEVAPI\" & vendid & Chr(34)) With
 													   {
-														.UseShellExecute = False,
-														.CreateNoWindow = True,
-														.RedirectStandardOutput = True
+													 .UseShellExecute = False,
+													 .CreateNoWindow = True,
+													 .RedirectStandardOutput = True
 													   }
 													  }
 
@@ -7156,7 +7156,7 @@ Public Class frmMain
 
 							Using subRegkey As RegistryKey = regkey.OpenSubKey(child)
 								If subRegkey IsNot Nothing Then
-									Dim regValue As String = subRegkey.GetValue("Device Description", String.Empty).ToString
+									Dim regValue As String = subRegkey.GetValue("Device Description", String.Empty).ToString()
 
 									If Not IsNullOrWhitespace(regValue) Then
 										UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
@@ -7167,7 +7167,7 @@ Public Class frmMain
 											regValue = HexToString(GetREG_BINARY(subRegkey, "DriverDesc").Replace("00", ""))
 
 										Else
-											regValue = subRegkey.GetValue("DriverDesc", String.Empty).ToString
+											regValue = subRegkey.GetValue("DriverDesc", String.Empty).ToString()
 										End If
 
 										UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
@@ -7175,7 +7175,7 @@ Public Class frmMain
 
 									End If
 
-									regValue = CStr(subRegkey.GetValue("MatchingDeviceId"))
+									regValue = subRegkey.GetValue("MatchingDeviceId", String.Empty).ToString()
 
 									If Not IsNullOrWhitespace(regValue) Then
 										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(13), regValue))
@@ -7183,68 +7183,56 @@ Public Class frmMain
 									End If
 
 									Try
-										regValue = CStr(subRegkey.GetValue("HardwareInformation.BiosString"))
+										If subRegkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
+											regValue = HexToString(GetREG_BINARY(subRegkey, "HardwareInformation.BiosString").Replace("00", ""))
 
-										If Not IsNullOrWhitespace(regValue) Then
-											If subRegkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
-												regValue = HexToString(GetREG_BINARY(subRegkey, "HardwareInformation.BiosString").Replace("00", ""))
+											UpdateTextMethod(String.Format("Vbios: {0}", regValue))
+											If firstLaunch Then info.Add("Vbios", regValue)
+										Else
+											regValue = subRegkey.GetValue("HardwareInformation.BiosString", String.Empty).ToString()
 
-												UpdateTextMethod(String.Format("Vbios: {0}", regValue))
-												If firstLaunch Then info.Add("Vbios", regValue)
-											Else
-												regValue = CStr(subRegkey.GetValue("HardwareInformation.BiosString"))
+											Dim sb As New StringBuilder(30)
+											Dim values() As String = regValue.Split(New String() {" ", "."}, StringSplitOptions.None)
 
-												' Devmltk; missed last char (no dot at end)
-												' regvalue	=	"Version 84.0.36.0.7"
-												' after		=	"Version 84.00.36.00.7"
-												' Should	=	"Version 84.00.36.00.07"
-												'For i As Integer = 0 To 9
-												'	'this is a little fix to correctly show the vbios version info
-												'	regValue = regValue.Replace("." & i.ToString & ".", ".0" & i.ToString & ".")
-												'Next
+											For i As Int32 = 0 To values.Length - 1
+												If i = values.Length - 1 Then		'Last
+													sb.Append(values(i).PadLeft(2, "0"c))
+												ElseIf i > 0 Then
+													sb.AppendFormat("{0}.", values(i).PadLeft(2, "0"c))
+												Else
+													sb.AppendFormat("{0} ", values(i))
+												End If
+											Next
+											regValue = sb.ToString()
 
-												Dim sb As New StringBuilder(30)
-												Dim values() As String = regValue.Split(New String() {" ", "."}, StringSplitOptions.None)
-
-												For i As Int32 = 0 To values.Length - 1
-													If i = values.Length - 1 Then		'Last
-														sb.Append(values(i).PadLeft(2, "0"c))
-													ElseIf i > 0 Then
-														sb.AppendFormat("{0}.", values(i).PadLeft(2, "0"c))
-													Else
-														sb.AppendFormat("{0} ", values(i))
-													End If
-												Next
-												regValue = sb.ToString()
-
-												UpdateTextMethod(String.Format("Vbios: {0}", regValue))
-												If firstLaunch Then info.Add("Vbios", regValue)
-											End If
+											UpdateTextMethod(String.Format("Vbios: {0}", regValue))
+											If firstLaunch Then info.Add("Vbios", regValue)
 										End If
 									Catch ex As Exception
 									End Try
 
-									regValue = CStr(subRegkey.GetValue("DriverVersion"))
+									regValue = subRegkey.GetValue("DriverVersion", String.Empty).ToString()
 
 									If Not IsNullOrWhitespace(regValue) Then
 										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(14), regValue))
 										If firstLaunch Then info.Add("Detected Driver(s) Version(s)", regValue)
 									End If
 
-									regValue = CStr(subRegkey.GetValue("InfPath"))
+									regValue = subRegkey.GetValue("InfPath", String.Empty).ToString()
 
 									If Not IsNullOrWhitespace(regValue) Then
 										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(15), regValue))
 										If firstLaunch Then info.Add("INF name", regValue)
 									End If
 
-									regValue = CStr(subRegkey.GetValue("InfSection"))
+									regValue = subRegkey.GetValue("InfSection", String.Empty).ToString()
 
 									If Not IsNullOrWhitespace(regValue) Then
 										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(16), regValue))
 										If firstLaunch Then info.Add("INF section", regValue)
 									End If
 								End If
+
 								UpdateTextMethod("--------------")
 								If firstLaunch Then info.Add(KvP.Empty)
 							End Using
@@ -7301,8 +7289,6 @@ Public Class frmMain
 			Loop
 
 			If restart Then
-				Application.Log.AddMessage("Restarting Computer")
-
 				RestartComputer()
 
 				Exit Sub
@@ -7683,66 +7669,107 @@ Public Class frmMain
 		CleanupEngine.RemoveSharedDlls(filename)
 	End Sub
 
-	Private Sub amdenvironementpath(ByVal filepath As String)
-		Dim wantedvalue As String = Nothing
+	Private Sub AmdEnvironementPath(ByVal filepath As String)
+		Dim valuesToFind() As String = New String() {
+		 filepath & "\amd app\bin\x86_64",
+		 filepath & "\amd app\bin\x86",
+		 filepath & "\ati.ace\core-static"
+		}
+
+		CleanEnvironementPath(valuesToFind)
+	End Sub
+
+	' "Universal" solution, can be used for Nvidia/Intel too
+	Private Sub CleanEnvironementPath(ByVal valuesToRemove() As String)
+		Dim value As String = Nothing
+
+		Dim paths() As String = Nothing
+		Dim newPaths As List(Of String)
+		Dim removedPaths As List(Of String)
 
 		'--------------------------------
 		'System environement path cleanup
 		'--------------------------------
 
-		Application.Log.AddMessage("System environement cleanUP")
-		filepath = filepath.ToLower
+		Dim logEntry As LogEntry = Application.Log.CreateEntry()
+		logEntry.Message = "System Environment Path cleanUP"
+
 		Try
-			Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM", False)
+			Using subregkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM", False)
 				If subregkey IsNot Nothing Then
 					For Each child2 As String In subregkey.GetSubKeyNames()
-						If child2.ToLower.Contains("controlset") Then
+						If StrContainsAny(child2, True, "controlset") Then
 
-							Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
+							Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
 								If regkey IsNot Nothing Then
 									For Each child As String In regkey.GetValueNames()
-										If IsNullOrWhitespace(child) = False Then
-											If child.Contains("Path") Then
-												If IsNullOrWhitespace(CStr(regkey.GetValue(child))) = False Then
-													wantedvalue = regkey.GetValue(child).ToString.ToLower
-													Try
-														Select Case True
-															Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86_64")
-																wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86_64", "")
-																regkey.SetValue(child, wantedvalue)
+										If IsNullOrWhitespace(child) Then Continue For
 
-															Case wantedvalue.Contains(filepath & "\amd app\bin\x86_64;")
-																wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86_64;", "")
-																regkey.SetValue(child, wantedvalue)
+										If child.Equals("Path", StringComparison.OrdinalIgnoreCase) Then
+											value = regkey.GetValue(child, String.Empty).ToString()
 
-															Case wantedvalue.Contains(";" + filepath & "\amd app\bin\x86")
-																wantedvalue = wantedvalue.Replace(";" + filepath & "\amd app\bin\x86", "")
-																regkey.SetValue(child, wantedvalue)
+											If Not IsNullOrWhitespace(value) Then
+												paths = If(value.Contains(";"), value.Split(New Char() {";"c}, StringSplitOptions.None), New String() {value})
 
-															Case wantedvalue.Contains(filepath & "\amd app\bin\x86;")
-																wantedvalue = wantedvalue.Replace(filepath & "\amd app\bin\x86;", "")
-																regkey.SetValue(child, wantedvalue)
+												newPaths = New List(Of String)(paths.Length)
+												removedPaths = New List(Of String)(paths.Length)
 
-															Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
-																wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
-																regkey.SetValue(child, wantedvalue)
+												For Each p As String In paths
+													If Not StrContainsAny(p, True, valuesToRemove) Then	'StrContainsAny(..) checks p and each valuesToRemove for empty/null
+														newPaths.Add(p)
+													Else
+														removedPaths.Add(p)
+													End If
+												Next
+											
+												logEntry.Add(child2, String.Join(Environment.NewLine, paths))
+												logEntry.Add(KvP.Empty)
 
-															Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
-																wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
-																regkey.SetValue(child, wantedvalue)
+												If removedPaths.Count > 0 Then	'Change regkey's value only if modified
+													regkey.SetValue(child, String.Join(";", newPaths.ToArray()))
 
-															Case wantedvalue.Contains(";" + filepath & "\ati.ace\core-static")
-																wantedvalue = wantedvalue.Replace(";" + filepath & "\ati.ace\core-static", "")
-																regkey.SetValue(child, wantedvalue)
-
-															Case wantedvalue.Contains(filepath & "\ati.ace\core-static;")
-																wantedvalue = wantedvalue.Replace(filepath & "\ati.ace\core-static;", "")
-																regkey.SetValue(child, wantedvalue)
-
-														End Select
-													Catch ex As Exception
-													End Try
+													logEntry.Add(">> Removed", String.Join(Environment.NewLine, removedPaths.ToArray()))	'Log removed values
+												Else
+													logEntry.Add(">> Not modified")
 												End If
+
+												logEntry.Add(KvP.Empty)
+												logEntry.Add(KvP.Empty)
+
+												'	Select Case True
+												'		Case value.Contains(";" + filepath & "\amd app\bin\x86_64")
+												'			value = value.Replace(";" + filepath & "\amd app\bin\x86_64", "")
+												'			regkey.SetValue(child, value)
+
+												'		Case value.Contains(filepath & "\amd app\bin\x86_64;")
+												'			value = value.Replace(filepath & "\amd app\bin\x86_64;", "")
+												'			regkey.SetValue(child, value)
+
+												'		Case value.Contains(";" + filepath & "\amd app\bin\x86")
+												'			value = value.Replace(";" + filepath & "\amd app\bin\x86", "")
+												'			regkey.SetValue(child, value)
+
+												'		Case value.Contains(filepath & "\amd app\bin\x86;")
+												'			value = value.Replace(filepath & "\amd app\bin\x86;", "")
+												'			regkey.SetValue(child, value)
+
+												'		Case value.Contains(";" + filepath & "\ati.ace\core-static")
+												'			value = value.Replace(";" + filepath & "\ati.ace\core-static", "")
+												'			regkey.SetValue(child, value)
+
+												'		Case value.Contains(filepath & "\ati.ace\core-static;")
+												'			value = value.Replace(filepath & "\ati.ace\core-static;", "")
+												'			regkey.SetValue(child, value)
+
+												'		Case value.Contains(";" + filepath & "\ati.ace\core-static")
+												'			value = value.Replace(";" + filepath & "\ati.ace\core-static", "")
+												'			regkey.SetValue(child, value)
+
+												'		Case value.Contains(filepath & "\ati.ace\core-static;")
+												'			value = value.Replace(filepath & "\ati.ace\core-static;", "")
+												'			regkey.SetValue(child, value)
+
+												'	End Select
 											End If
 										End If
 									Next
@@ -7752,8 +7779,13 @@ Public Class frmMain
 					Next
 				End If
 			End Using
+
+			logEntry.Message &= Environment.NewLine & ">> Completed!"
 		Catch ex As Exception
-			Application.Log.AddException(ex)
+			logEntry.Message &= Environment.NewLine & ">> Failed!"
+			logEntry.AddException(ex, False)
+		Finally
+			Application.Log.Add(logEntry)
 		End Try
 
 		'end system environement patch cleanup
@@ -7781,6 +7813,7 @@ Public Class frmMain
 			'	End If
 			'Next
 
+			AmdEnvironementPath("")
 			' Multiline TEST
 			'Dim logEntry As LogEntry = Application.Log.CreateEntry()
 

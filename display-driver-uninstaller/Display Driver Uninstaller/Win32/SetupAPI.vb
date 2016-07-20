@@ -26,6 +26,7 @@ Namespace Win32
 
 
 #Region "Enums"
+
 		<Flags()>
 		Private Enum INSTALLFLAG As UInteger
 			''' <summary>Not used.</summary>
@@ -1236,6 +1237,7 @@ Namespace Win32
 #End Region
 
 #Region "Structures_SetupAPI_X86"
+
 		<StructLayout(LayoutKind.Sequential, Pack:=1, CharSet:=CharSet.Unicode)>
 		Private Structure SP_DEVINFO_DATA_X86
 			Public cbSize As UInt32
@@ -1305,10 +1307,10 @@ Namespace Win32
 			Public DriverPath As String
 		End Structure
 
-
 #End Region
 
-#Region "P/Invoke"
+#Region "P/Invoke CfgMgr32"
+
 		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CM_Get_Parent(
  <[Out]()> ByRef pdnDevInst As UInt32,
@@ -1339,6 +1341,13 @@ Namespace Win32
 		End Function
 
 		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+		Private Shared Function CM_Get_Device_ID_Size(
+  <[Out]()> ByRef pulLen As UInt32,
+  <[In]()> ByVal dnDevInst As UInt32,
+  <[In]()> ByVal ulFlags As UInt32) As UInt32
+		End Function
+
+		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CM_Get_DevNode_Status(
   <[Out]()> ByRef pulStatus As UInt32,
   <[Out]()> ByRef pulProblemNumber As UInt32,
@@ -1359,7 +1368,9 @@ Namespace Win32
    <[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
 
+#End Region
 
+#Region "P/Invoke SetupAPI"
 
 		<DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function SetupDiClassGuidsFromName(
@@ -1502,10 +1513,14 @@ Namespace Win32
 				Dim desc As String = Nothing
 				Dim className As String = Nothing
 				Dim match As Boolean = False
+
+				Dim errCode As UInt32 = 0UI
 				Dim devInst As UInt32 = 0UI
 
 				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
-					CheckWin32Error(Not infoSet.IsInvalid)
+					If infoSet.IsInvalid Then
+						Throw New Win32Exception()
+					End If
 
 					Dim ptrDevInfo As StructPtr = Nothing
 					Try
@@ -1519,10 +1534,12 @@ Namespace Win32
 
 						While True
 							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
-								If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
+								errCode = GetLastWin32ErrorU()
+
+								If errCode = Errors.NO_MORE_ITEMS Then
 									Exit While
 								Else
-									CheckWin32Error(False)
+									Throw New Win32Exception(GetInt32(errCode))
 								End If
 							End If
 
@@ -1630,7 +1647,6 @@ Namespace Win32
 						End If
 					Finally
 						If ptrDevInfo IsNot Nothing Then
-
 							ptrDevInfo.Dispose()
 						End If
 					End Try
@@ -1663,7 +1679,9 @@ Namespace Win32
 				Dim errCode As UInt32 = 0UI
 
 				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
-					CheckWin32Error(Not infoSet.IsInvalid)
+					If infoSet.IsInvalid Then
+						Throw New Win32Exception()
+					End If
 
 					Dim ptrDevInfo As StructPtr = Nothing
 					Try
@@ -1847,7 +1865,9 @@ Namespace Win32
 				Dim typeDevInfo As Type = If(Is64, GetType(SP_DEVINFO_DATA_X64), GetType(SP_DEVINFO_DATA_X86))
 
 				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
-					CheckWin32Error(Not infoSet.IsInvalid)
+					If infoSet.IsInvalid Then
+						Throw New Win32Exception()
+					End If
 
 					Dim ptrDevInfo As StructPtr = Nothing
 					Try
@@ -1861,13 +1881,16 @@ Namespace Win32
 						Dim device As Device = Nothing
 						Dim devClass As String = Nothing
 						Dim devInst As UInt32
+						Dim errCode As UInt32 = 0UI
 
 						While True
 							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
-								If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
+								errCode = GetLastWin32ErrorU()
+
+								If errCode = Errors.NO_MORE_ITEMS Then
 									Exit While
 								Else
-									CheckWin32Error(False)
+									Throw New Win32Exception(GetInt32(errCode))
 								End If
 							End If
 
@@ -1961,11 +1984,15 @@ Namespace Win32
 				Dim nullGuid As Guid = Guid.Empty
 				Dim hardwareIds(0) As String
 				Dim found As Boolean = False
-		
+				Dim errCode As UInt32
+
 				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
-					CheckWin32Error(Not infoSet.IsInvalid)
+					If infoSet.IsInvalid Then
+						Throw New Win32Exception()
+					End If
 
 					Dim ptrDevInfo As StructPtr = Nothing
+
 					Try
 						If Is64 Then
 							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
@@ -1977,10 +2004,12 @@ Namespace Win32
 
 						While True
 							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
-								If GetLastWin32ErrorU() = Errors.NO_MORE_ITEMS Then
+								errCode = GetLastWin32ErrorU()
+
+								If errCode = Errors.NO_MORE_ITEMS Then
 									Exit While
 								Else
-									CheckWin32Error(False)
+									Throw New Win32Exception(GetInt32(errCode))
 								End If
 							End If
 
@@ -1993,7 +2022,7 @@ Namespace Win32
 
 							For Each hwID As String In hardwareIds
 								If hwID.Equals(device.HardwareIDs(0), StringComparison.OrdinalIgnoreCase) Then
-									GetDriverDetails(infoSet, ptrDevInfo.Ptr, device) ' Updating DriverDetails (if changed during app running time)
+									GetDriverDetails(infoSet, ptrDevInfo.Ptr, device) ' Updating DriverDetails if changed during app running time (Oem infs)
 									found = True
 									Exit For
 								End If
@@ -2135,7 +2164,9 @@ Namespace Win32
 				Dim errCode As UInt32 = 0UI
 
 				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
-					CheckWin32Error(Not infoSet.IsInvalid)
+					If infoSet.IsInvalid Then
+						Throw New Win32Exception()
+					End If
 
 					Dim ptrDevInfo As StructPtr = Nothing
 					Try
@@ -2274,9 +2305,12 @@ Namespace Win32
 				Dim typeDevInfo As Type = If(Is64, GetType(SP_DEVINFO_DATA_X64), GetType(SP_DEVINFO_DATA_X86))
 
 				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
-					CheckWin32Error(Not infoSet.IsInvalid)
+					If infoSet.IsInvalid Then
+						Throw New Win32Exception()
+					End If
 
 					Dim ptrDevInfo As StructPtr = Nothing
+
 					Try
 						If Is64 Then
 							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(typeDevInfo))})
@@ -2346,7 +2380,10 @@ Namespace Win32
 				End Select
 			End If
 
-			CheckWin32Error(SetupDiGetDeviceRegistryProperty(infoSet, ptrDevInfo, [property], regType, bytes, GetUInt32(bytes.Length), requiredSize))
+			If Not SetupDiGetDeviceRegistryProperty(infoSet, ptrDevInfo, [property], regType, bytes, GetUInt32(bytes.Length), requiredSize) Then
+				Throw New Win32Exception()
+			End If
+
 			size = GetInt32(requiredSize)
 
 			Return True
@@ -2475,12 +2512,14 @@ Namespace Win32
 
 				device.DevStatus = pulStatus
 				device.DevProblem = pulProblemNumber
+
 			ElseIf result = CR.NO_SUCH_DEVINST Then
 				device.DevStatus = 0UI
 				device.DevProblem = 0UI
 
 				device.DevProblemStr = "CR_NO_SUCH_DEVINST (Device doesn't exist)"
 				device.DevStatusStr = New String() {device.DevProblemStr}
+
 			Else
 				Throw New Win32Exception()
 			End If
@@ -2644,22 +2683,28 @@ Namespace Win32
 		End Sub
 
 		Private Shared Function GetDeviceID(ByVal devInst As UInt32) As String
-			Dim result As UInt32
-			Dim deviceID As New StringBuilder(MAX_LEN)
+			Dim result As UInt32 = 0UI
+			Dim reqSize As UInt32 = 0UI
 
-			While True
-				result = CM_Get_Device_ID(devInst, deviceID, GetUInt32(deviceID.Capacity), 0UI)
+			If CM_Get_Device_ID_Size(reqSize, devInst, 0UI) <> CR.SUCCESS Then
+				Throw New Win32Exception()
+			End If
 
-				If result = CR.BUFFER_SMALL Then
-					deviceID.EnsureCapacity(deviceID.Capacity * 2)
-				ElseIf result = CR.SUCCESS Then
-					Return deviceID.ToString()
-				Else
-					Throw New Win32Exception()
-				End If
-			End While
+			If reqSize = 0UI Then
+				Throw New Win32Exception(GetInt32(Errors.NO_SUCH_DEVINST))
+			End If
 
-			Return Nothing
+			reqSize += 2UI	'terminating NULL
+
+			Dim deviceID As New StringBuilder(GetInt32(reqSize))
+
+			result = CM_Get_Device_ID(devInst, deviceID, reqSize, 0UI)
+
+			If result <> CR.SUCCESS Then
+				Throw New Win32Exception()
+			End If
+
+			Return deviceID.ToString()
 		End Function
 
 		Private Shared Sub GetSiblings(ByVal device As Device)
@@ -2726,6 +2771,8 @@ Namespace Win32
 					End If
 				ElseIf result = CR.NO_SUCH_DEVINST Then
 					Return
+				Else
+					Throw New Win32Exception()
 				End If
 			Catch ex As Exception
 				Application.Log.AddException(ex, "Getting device's siblings has failed!")
@@ -2771,12 +2818,7 @@ Namespace Win32
 		End Function
 
 		Private Shared Function FileTimeToDateTime(ByVal time As System.Runtime.InteropServices.ComTypes.FILETIME) As DateTime
-			Dim high As UInt64 = CType(time.dwHighDateTime, UInt64)
-			Dim low As UInt32 = GetUInt32(time.dwLowDateTime)
-
-			Dim FILETIME As Int64 = CLng(((high << 32) + low))
-
-			Return DateTime.FromFileTimeUtc(FILETIME)
+			Return DateTime.FromFileTimeUtc(CLng((CType(time.dwHighDateTime, UInt64) << 32) + GetUInt32(time.dwLowDateTime)))
 		End Function
 
 #End Region
@@ -3071,7 +3113,7 @@ Namespace Win32
 			End Sub
 
 			Public Overrides Function ToString() As String
-				Return String.Format("{0} - (dev: {1})", Description, devInst.ToString())
+				Return String.Format("{0} - (dev: {1})", _description, devInst.ToString())
 			End Function
 		End Class
 
@@ -3154,6 +3196,9 @@ Namespace Win32
 				_compatibleIDs = Nothing
 			End Sub
 
+			Public Overrides Function ToString() As String
+				Return String.Format("{0} - (inf: {1})", _description, If(_infFile IsNot Nothing AndAlso Not IsNullOrWhitespace(_infFile.FileName), Path.GetFileName(_infFile.FileName), "<empty>"))
+			End Function
 		End Class
 
 #End Region

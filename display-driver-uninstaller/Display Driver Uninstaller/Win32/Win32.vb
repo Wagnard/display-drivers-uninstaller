@@ -118,28 +118,6 @@ Namespace Win32
 #Region "Functions"
 
 		' <Extension()>
-		'Public Function ToStringArray(Of T)(ByVal e As [Enum]) As String()
-		'	Dim eNames As List(Of String) = New List(Of String)(10)
-		'	Dim flags As UInt32 = Convert.ToUInt32(e)
-		'	Dim flags2 As UInt32 = flags
-
-		'	If flags = 0UI Then
-		'		Return Nothing
-		'	End If
-
-		'	For Each value As T In [Enum].GetValues(GetType(T))
-		'		Dim bit As UInt32 = Convert.ToUInt32(value)
-
-		'		If (flags And bit) = bit Then
-		'			eNames.Add(value.ToString())
-		'			flags2 = flags2 And bit
-		'		End If
-		'	Next
-
-		'	Return eNames.ToArray()
-		'End Function
-
-		' <Extension()>
 		Public Function ToStringArray(Of T)(ByVal flags As UInt32, Optional ByVal [default] As String = "OK") As String()
 			Dim eNames As List(Of String) = New List(Of String)(10)
 			Dim type As Type = GetType(T)
@@ -208,12 +186,6 @@ Namespace Win32
 				MessageBox.Show(String.Format("Error code: {0}{1}{2}{1}{1}{3}", e.ToString(), CRLF, ex.Message, ex.StackTrace), "Win32Exception!")
 			Else
 				MessageBox.Show(ex.Message & CRLF & CRLF & If(ex.TargetSite IsNot Nothing, ex.TargetSite.Name, "<null>") & CRLF & CRLF & ex.Source & CRLF & CRLF & ex.StackTrace, "Exception!")
-			End If
-		End Sub
-
-		Friend Sub CheckWin32Error(ByVal success As Boolean)
-			If Not success Then
-				Throw New Win32Exception()
 			End If
 		End Sub
 
