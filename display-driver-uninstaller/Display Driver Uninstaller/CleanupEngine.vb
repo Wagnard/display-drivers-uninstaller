@@ -32,52 +32,10 @@ Public Class CleanupEngine
 		End If
 	End Sub
 
-	Public Function openregkey(ByVal location As RegistryKey, ByVal key As String, ByVal write As Boolean) As RegistryKey
-		Dim regkey As RegistryKey = Nothing
 
-		Try
-			regkey = location.OpenSubKey(key, write)
 
-		Catch ex As UnauthorizedAccessException
-			ACL.Addregistrysecurity(location, key, RegistryRights.FullControl, AccessControlType.Allow)
-
-			' TODO: Not sure if this works.
-			' on exception OpenSubKey returns Nothing ( regkey = Nothing ) => Return nothing
-			' Thought not used anywhere.. yet
-
-			Return regkey
-		End Try
-
-		Return regkey
-	End Function
-
-	Public Sub deletedirectory(ByVal directorypath As String)
-		Dim fixacls As Boolean = False
-
-		If Not IsNullOrWhitespace(directorypath) AndAlso Directory.Exists(directorypath) Then
-			Try
-				System.IO.Directory.Delete(directorypath, True)
-
-				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
-			Catch ex As UnauthorizedAccessException
-				Application.Log.AddWarningMessage("Failed to remove " + directorypath + " Will try to set ACLs permission and try again.")
-				fixacls = True
-			End Try
-
-			'If exists, it means we need to modify it's ACls.
-			If fixacls AndAlso Directory.Exists(directorypath) Then
-				ACL.AddDirectorySecurity(directorypath, FileSystemRights.FullControl, AccessControlType.Allow)
-
-				System.IO.Directory.Delete(directorypath, True)
-
-				Application.Log.AddMessage(directorypath + " - " + UpdateTextMethodmessagefn(39))
-			End If
-			RemoveSharedDlls(directorypath)
-		End If
-
-	End Sub
 	Public Sub RemoveSharedDlls(ByVal directorypath As String)
-		If Not IsNullOrWhitespace(directorypath) AndAlso Not Directory.Exists(directorypath) Then
+		If Not IsNullOrWhitespace(directorypath) AndAlso Not FileIO.ExistsDir(directorypath) Then
 			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetValueNames
@@ -99,7 +57,7 @@ Public Class CleanupEngine
 					For Each child As String In regkey.GetValueNames
 						If IsNullOrWhitespace(child) Then Continue For
 
-						If StrContainsAny(child, True, directorypath & "\") Then
+						If StrContainsAny(child, True, directorypath) Then
 							Try
 								deletevalue(regkey, child)
 							Catch ex As Exception
@@ -116,7 +74,7 @@ Public Class CleanupEngine
 						For Each child As String In regkey.GetValueNames
 							If IsNullOrWhitespace(child) Then Continue For
 
-							If StrContainsAny(child, True, directorypath & "\") Then
+							If StrContainsAny(child, True, directorypath) Then
 								Try
 									deletevalue(regkey, child)
 								Catch ex As Exception
@@ -464,7 +422,7 @@ Public Class CleanupEngine
 															If IsNullOrWhitespace(file) Then Continue For
 
 															If StrContainsAny(file, True, ".msi") Then
-																FileIO.delete(file)
+																Delete(file)
 															End If
 														Catch ex As Exception
 														End Try
@@ -1730,18 +1688,18 @@ Public Class CleanupEngine
 				filePath = System.Environment.SystemDirectory
 
 				Try
-					FileIO.delete(filePath & "\" & driverFile)
+					Delete(filePath & "\" & driverFile)
 				Catch ex As Exception
 				End Try
 
 				Try
-					FileIO.delete(filePath & "\Drivers\" & driverFile)
+					Delete(filePath & "\Drivers\" & driverFile)
 				Catch ex As Exception
 				End Try
 
 				If winxp Then
 					Try
-						FileIO.delete(filePath & "\Drivers\dllcache\" & driverFile)
+						Delete(filePath & "\Drivers\dllcache\" & driverFile)
 					Catch ex As Exception
 					End Try
 				End If
@@ -1759,7 +1717,7 @@ Public Class CleanupEngine
 
 					If StrContainsAny(child, True, driverFile) Then
 						Try
-							FileIO.delete(child)
+							Delete(child)
 						Catch ex As Exception
 						End Try
 					End If
@@ -1800,19 +1758,19 @@ Public Class CleanupEngine
 
 						If StrContainsAny(child, True, driverFile) Then
 							Try
-								FileIO.delete(child)
+								Delete(child)
 							Catch ex As Exception
 							End Try
 						End If
 					Next
 
 					Try
-						FileIO.delete(winPath & "\Drivers\" & driverFile)
+						Delete(winPath & "\Drivers\" & driverFile)
 					Catch ex As Exception
 					End Try
 
 					Try
-						FileIO.delete(winPath & "\" & driverFile)
+						Delete(winPath & "\" & driverFile)
 					Catch ex As Exception
 					End Try
 				End If
@@ -1944,5 +1902,10 @@ Public Class CleanupEngine
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
+	End Sub
+
+	Private Sub delete(ByVal filename As String)
+		FileIO.Delete(filename)
+		RemoveSharedDlls(filename)
 	End Sub
 End Class

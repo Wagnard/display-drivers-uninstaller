@@ -331,7 +331,7 @@ Public Class frmMain
 		If config.RemoveAMDDirs Then
 			filePath = sysdrv + "\AMD"
 
-			FileIO.Delete(filePath)
+			Delete(filePath)
 
 		End If
 
@@ -344,13 +344,13 @@ Public Class frmMain
 
 		filePath = Environment.GetEnvironmentVariable("windir")
 		Try
-			FileIO.delete(filePath + "\atiogl.xml")
+			Delete(filePath + "\atiogl.xml")
 		Catch ex As Exception
 		End Try
 
 		filePath = Environment.GetEnvironmentVariable("windir")
 		Try
-			FileIO.delete(filePath + "\ativpsrm.bin")
+			Delete(filePath + "\ativpsrm.bin")
 		Catch ex As Exception
 		End Try
 
@@ -367,14 +367,14 @@ Public Class frmMain
 					   child.ToLower.EndsWith("\px") Or
 					   child.ToLower.Contains("hydravision") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -392,14 +392,14 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("cim") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -417,14 +417,14 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("multimedia") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -438,7 +438,7 @@ Public Class frmMain
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD APP"
 		If FileIO.ExistsDir(filePath) Then
 
-			FileIO.Delete(filePath)
+			Delete(filePath)
 
 		End If
 
@@ -448,7 +448,7 @@ Public Class frmMain
 			  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
 			If FileIO.ExistsDir(filePath) Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			End If
 
@@ -464,14 +464,14 @@ Public Class frmMain
 							 child.ToLower.EndsWith("\px") Or
 							 child.ToLower.Contains("hydravision") Then
 
-								FileIO.Delete(child)
+								Delete(child)
 
 							End If
 						End If
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -488,7 +488,7 @@ Public Class frmMain
 			For i As Integer = 0 To files.Length - 1
 				If Not IsNullOrWhitespace(files(i)) Then
 
-					FileIO.Delete(files(i))
+					Delete(files(i))
 
 				End If
 			Next
@@ -497,7 +497,7 @@ Public Class frmMain
 			   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
 			If FileIO.ExistsDir(filePath) Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			End If
 
@@ -505,7 +505,7 @@ Public Class frmMain
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
 			If FileIO.ExistsDir(filePath) Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			End If
 
@@ -513,7 +513,7 @@ Public Class frmMain
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoFirefox"
 			If FileIO.ExistsDir(filePath) Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			End If
 
@@ -521,7 +521,7 @@ Public Class frmMain
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoChrome"
 			If FileIO.ExistsDir(filePath) Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			End If
 
@@ -532,7 +532,7 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("multimedia") Then
 
-							FileIO.Delete(child)
+							Delete(child)
 
 						End If
 					End If
@@ -540,7 +540,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -558,7 +558,7 @@ Public Class frmMain
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
 		If FileIO.ExistsDir(filePath) Then
 
-			FileIO.Delete(filePath)
+			Delete(filePath)
 
 		End If
 
@@ -567,7 +567,7 @@ Public Class frmMain
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
 		If FileIO.ExistsDir(filePath) Then
 
-			FileIO.Delete(filePath)
+			Delete(filePath)
 
 		End If
 
@@ -578,14 +578,14 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ace") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -603,14 +603,14 @@ Public Class frmMain
 					If child.ToLower.Contains("kdb") Or _
 					   child.ToLower.Contains("fuel") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -631,14 +631,14 @@ Public Class frmMain
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ace") Then
 
-								FileIO.Delete(child)
+								Delete(child)
 
 							End If
 						End If
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -662,14 +662,14 @@ Public Class frmMain
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ace") Then
 
-								FileIO.Delete(child)
+								Delete(child)
 
 							End If
 						End If
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -695,14 +695,14 @@ Public Class frmMain
 							 removedxcache AndAlso child.ToLower.Contains("dxcache") Or _
 							 removedxcache AndAlso child.ToLower.Contains("glcache") Then
 
-								FileIO.Delete(child)
+								Delete(child)
 
 							End If
 						End If
 					Next
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -730,7 +730,7 @@ Public Class frmMain
 					 child.ToLower.Contains("920dec42-4ca5-4d1d-9487-67be645cddfc") Or
 					   child.ToLower.Contains("cim") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
@@ -738,7 +738,7 @@ Public Class frmMain
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
 
-					FileIO.Delete(filePath)
+					Delete(filePath)
 
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -759,14 +759,14 @@ Public Class frmMain
 					If child.ToLower.Contains("ati.ace") Or _
 					   child.ToLower.Contains("cnext") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -805,7 +805,7 @@ Public Class frmMain
 					 child.ToLower.Contains("\atixclib") Or
 					   child.ToLower.Contains("\dem.") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
@@ -839,7 +839,7 @@ Public Class frmMain
 					 child.ToLower.Contains("\atixclib") Or
 					 child.ToLower.Contains("\dem.") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
@@ -1654,13 +1654,18 @@ Public Class frmMain
 													If IsNullOrWhitespace(childf) Then Continue For
 
 													If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
-														FileIO.Delete(childf)
+														Delete(childf)
 													End If
 												Next
 												If Directory.GetDirectories(filePath).Length = 0 Then
 
-													FileIO.Delete(filePath)
+													Delete(filePath)
 
+												End If
+												If Not Directory.Exists(filePath) Then
+													'here we will do a special environement path cleanup as there is chances that the installation is
+													'somewhere else.
+													amdenvironementpath(filePath)
 												End If
 											End If
 										End If
@@ -1807,13 +1812,13 @@ Public Class frmMain
 
 														If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
 
-															FileIO.Delete(childf)
+															Delete(childf)
 
 														End If
 													Next
 													If Directory.GetDirectories(filePath).Length = 0 Then
 
-														FileIO.Delete(filePath)
+														Delete(filePath)
 
 													End If
 												End If
@@ -2324,7 +2329,7 @@ Public Class frmMain
 				For i As Integer = 0 To files.Length - 1
 					If Not IsNullOrWhitespace(files(i)) Then
 						Try
-							FileIO.delete(files(i))
+							Delete(files(i))
 						Catch ex As Exception
 						End Try
 					End If
@@ -2334,7 +2339,7 @@ Public Class frmMain
 				For i As Integer = 0 To files.Length - 1
 					If Not IsNullOrWhitespace(files(i)) Then
 						Try
-							FileIO.delete(files(i))
+							Delete(files(i))
 						Catch ex As Exception
 						End Try
 					End If
@@ -2348,7 +2353,7 @@ Public Class frmMain
 					For i As Integer = 0 To files.Length - 1
 						If Not IsNullOrWhitespace(files(i)) Then
 							Try
-								FileIO.delete(files(i))
+								Delete(files(i))
 							Catch ex As Exception
 							End Try
 						End If
@@ -2358,7 +2363,7 @@ Public Class frmMain
 					For i As Integer = 0 To files.Length - 1
 						If Not IsNullOrWhitespace(files(i)) Then
 							Try
-								FileIO.delete(files(i))
+								Delete(files(i))
 							Catch ex As Exception
 							End Try
 						End If
@@ -2424,7 +2429,7 @@ Public Class frmMain
 		If config.RemoveNvidiaDirs = True Then
 			filePath = sysdrv + "\NVIDIA"
 
-			FileIO.Delete(filePath)
+			Delete(filePath)
 
 
 		End If
@@ -2435,16 +2440,16 @@ Public Class frmMain
 			If IsNullOrWhitespace(child) = False Then
 				If child.ToLower.Contains("updatususer") Then
 
-					FileIO.Delete(child)
+					Delete(child)
 
-					FileIO.Delete(child)
+					Delete(child)
 
 
 					'Yes we do it 2 times. This will workaround a problem on junction/sybolic/hard link
 					'(Will have to see if this is this valid. This was on old driver pre 300.xx I beleive :/ )
-					FileIO.Delete(child)
+					Delete(child)
 
-					FileIO.Delete(child)
+					Delete(child)
 
 				End If
 			End If
@@ -2457,7 +2462,7 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "3d vision experience") Then
 
-							FileIO.Delete(child)
+							Delete(child)
 
 						End If
 					End If
@@ -2465,7 +2470,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -2492,7 +2497,7 @@ Public Class frmMain
 						 (child.ToLower.Contains("nvgs") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Then
 
-							FileIO.Delete(child)
+							Delete(child)
 
 						End If
 					End If
@@ -2500,7 +2505,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -2522,7 +2527,7 @@ Public Class frmMain
 						If child.ToLower.Contains("computecache") Or
 						 child.ToLower.Contains("glcache") Then
 
-							FileIO.Delete(child)
+							Delete(child)
 
 						End If
 					End If
@@ -2530,7 +2535,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -2562,7 +2567,7 @@ Public Class frmMain
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
 
-								FileIO.Delete(child)
+								Delete(child)
 
 							End If
 						End If
@@ -2570,7 +2575,7 @@ Public Class frmMain
 					Try
 						If Directory.GetDirectories(filePath).Length = 0 Then
 
-							FileIO.Delete(filePath)
+							Delete(filePath)
 
 						Else
 							For Each data As String In Directory.GetDirectories(filePath)
@@ -2595,7 +2600,7 @@ Public Class frmMain
 					If child.ToLower.Contains("updatus") Or _
 					 (child.ToLower.Contains("grid") AndAlso config.RemoveGFE) Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
@@ -2603,7 +2608,7 @@ Public Class frmMain
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
 
-					FileIO.Delete(filePath)
+					Delete(filePath)
 
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -2633,14 +2638,14 @@ Public Class frmMain
 					 (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -2658,7 +2663,7 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("3d vision") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
@@ -2666,7 +2671,7 @@ Public Class frmMain
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
 
-					FileIO.Delete(filePath)
+					Delete(filePath)
 
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -2709,7 +2714,7 @@ Public Class frmMain
 					   child.ToLower.Contains("nvgsync") Or
 					   child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 					If child.ToLower.Contains("installer2") Then
@@ -2744,7 +2749,7 @@ Public Class frmMain
 								   child2.ToLower.Contains("hdaudio.driver") Then
 
 
-									FileIO.Delete(child2)
+									Delete(child2)
 
 								End If
 							End If
@@ -2752,7 +2757,7 @@ Public Class frmMain
 
 						If Directory.GetDirectories(child).Length = 0 Then
 
-							FileIO.Delete(child)
+							Delete(child)
 
 						Else
 							For Each data As String In Directory.GetDirectories(child)
@@ -2765,7 +2770,7 @@ Public Class frmMain
 			Next
 			If Directory.GetDirectories(filePath).Length = 0 Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
@@ -2780,7 +2785,7 @@ Public Class frmMain
 			 (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
 			If FileIO.ExistsDir(filePath) Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			End If
 		End If
@@ -2789,7 +2794,7 @@ Public Class frmMain
 			filePath = config.Paths.ProgramFiles + "VulkanRT"
 			If FileIO.ExistsDir(filePath) Then
 
-				FileIO.Delete(filePath)
+				Delete(filePath)
 
 			End If
 		End If
@@ -2816,14 +2821,14 @@ Public Class frmMain
 						 child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 							If removephysx Then
 
-								FileIO.Delete(child)
+								Delete(child)
 
 							Else
 								If child.ToLower.Contains("physx") Then
 									'do nothing
 								Else
 
-									FileIO.Delete(child)
+									Delete(child)
 
 								End If
 							End If
@@ -2833,7 +2838,7 @@ Public Class frmMain
 
 				If Directory.GetDirectories(filePath).Length = 0 Then
 
-					FileIO.Delete(filePath)
+					Delete(filePath)
 
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -2851,7 +2856,7 @@ Public Class frmMain
 				 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
 				If FileIO.ExistsDir(filePath) Then
 
-					FileIO.Delete(filePath)
+					Delete(filePath)
 
 				End If
 			End If
@@ -2862,7 +2867,7 @@ Public Class frmMain
 				filePath = Application.Paths.ProgramFilesx86 + "VulkanRT"
 				If FileIO.ExistsDir(filePath) Then
 
-					FileIO.Delete(filePath)
+					Delete(filePath)
 
 				End If
 			End If
@@ -2878,7 +2883,7 @@ Public Class frmMain
 		For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
 
-				FileIO.Delete(files(i))
+				Delete(files(i))
 
 			End If
 		Next
@@ -2888,14 +2893,14 @@ Public Class frmMain
 		For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
 
-				FileIO.Delete(files(i))
+				Delete(files(i))
 
 			End If
 		Next
 
 		filePath = Environment.GetEnvironmentVariable("windir")
 		Try
-			FileIO.Delete(filePath + "\Help\nvcpl")
+			Delete(filePath + "\Help\nvcpl")
 		Catch ex As Exception
 		End Try
 
@@ -2905,7 +2910,7 @@ Public Class frmMain
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("nv_cache") Then
 
-						FileIO.Delete(child)
+						Delete(child)
 
 					End If
 				End If
@@ -2913,7 +2918,7 @@ Public Class frmMain
 			Try
 				If Directory.GetDirectories(filePath).Length = 0 Then
 
-					FileIO.Delete(filePath)
+					Delete(filePath)
 
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
@@ -2938,7 +2943,7 @@ Public Class frmMain
 						If child.ToLower.Contains("nv_cache") Or
 						 child.ToLower.Contains("displaydriver") Then
 
-							FileIO.Delete(child)
+							Delete(child)
 
 						End If
 					End If
@@ -2946,7 +2951,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -2968,7 +2973,7 @@ Public Class frmMain
 							 (child.ToLower.Contains("gfe") AndAlso config.RemoveGFE) Or
 						   child.ToLower.Contains("displaydriver") Then
 
-							FileIO.Delete(child)
+							Delete(child)
 
 						End If
 					End If
@@ -2976,7 +2981,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -2996,7 +3001,7 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("nv_cache") Then
 
-							FileIO.Delete(child)
+							Delete(child)
 
 						End If
 					End If
@@ -3004,7 +3009,7 @@ Public Class frmMain
 				Try
 					If Directory.GetDirectories(filePath).Length = 0 Then
 
-						FileIO.Delete(filePath)
+						Delete(filePath)
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
@@ -3031,7 +3036,7 @@ Public Class frmMain
 									If IsNullOrWhitespace(child) = False Then
 										If child.ToLower.Contains("nv_cache") Then
 
-											FileIO.Delete(child)
+											Delete(child)
 
 										End If
 									End If
@@ -3039,7 +3044,7 @@ Public Class frmMain
 
 								If Directory.GetDirectories(filePath).Length = 0 Then
 
-									FileIO.Delete(filePath)
+									Delete(filePath)
 
 								Else
 									For Each data As String In Directory.GetDirectories(filePath)
@@ -3072,7 +3077,7 @@ Public Class frmMain
 						 child.ToLower.Contains("shadowplay") Or
 						   child.ToLower.Contains("nvidia.gfe") Then
 
-							FileIO.Delete(child)
+							Delete(child)
 
 						End If
 					End If
@@ -4599,7 +4604,7 @@ Public Class frmMain
 		For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
 				Try
-					FileIO.delete(files(i))
+					Delete(files(i))
 				Catch ex As Exception
 				End Try
 			End If
@@ -7342,7 +7347,7 @@ Public Class frmMain
 
 				If Not oem.IsValid Then
 					info.Add("This inf entry is corrupted or invalid.")
-					'	FileIO.delete(oem.FileName)  ' DOUBLE CHECK THIS before uncommentting
+					'	Delete(oem.FileName)  ' DOUBLE CHECK THIS before uncommentting
 				End If
 
 				info.Add(KvP.Empty)
@@ -7611,7 +7616,7 @@ Public Class frmMain
 								   child2.ToLower.Contains("shield") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("hdaudio.driver") Then
 									Try
-										FileIO.Delete(child2)
+										Delete(child2)
 									Catch ex As Exception
 									End Try
 								End If
@@ -7620,7 +7625,7 @@ Public Class frmMain
 
 						If Directory.GetDirectories(child).Length = 0 Then
 							Try
-								FileIO.Delete(child)
+								Delete(child)
 							Catch ex As Exception
 							End Try
 						End If
@@ -7669,12 +7674,12 @@ Public Class frmMain
 		CleanupEngine.deletesubregkey(value1, value2)
 	End Sub
 
-	Private Sub RemoveSharedDlls(ByVal directory As String)
-		CleanupEngine.RemoveSharedDlls(directory)
-	End Sub
-
 	Private Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
 		CleanupEngine.deletevalue(value1, value2)
+	End Sub
+	Private Sub delete(ByVal filename As String)
+		FileIO.Delete(filename)
+		CleanupEngine.RemoveSharedDlls(filename)
 	End Sub
 
 	Private Sub amdenvironementpath(ByVal filepath As String)
@@ -7761,8 +7766,8 @@ Public Class frmMain
 
 		Try
 			'	FileIO.CreateDir(testDir)							' Create dir for testing!
-			'	FileIO.Delete(testFileShortPath)					' Delete file with short path
-			'	FileIO.Delete(testDir)								' FileIO.Delete deletes both, is it Dir or File
+			'	Delete(testFileShortPath)					' Delete file with short path
+			'	Delete(testDir)								' Delete deletes both, is it Dir or File
 			'	FileIO.ExistsDir(testDir)							' Dir exists?
 			'	FileIO.ExistsFile(testFileShortPath)				' File exists?
 			'	FileIO.GetFiles("E:\_temp\test\", "*", True)		' Get files
