@@ -7156,22 +7156,23 @@ Public Class frmMain
 
 							Using subRegkey As RegistryKey = regkey.OpenSubKey(child)
 								If subRegkey IsNot Nothing Then
-									Dim regValue As String = CStr(subRegkey.GetValue("Device Description"))
+									Dim regValue As String = subRegkey.GetValue("Device Description", String.Empty).ToString
 
 									If Not IsNullOrWhitespace(regValue) Then
 										UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
 										If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
 									Else
-										regValue = CStr(subRegkey.GetValue("DriverDesc"))
 
-										If Not IsNullOrWhitespace(regValue) Then
-											If subRegkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
-												regValue = HexToString(GetREG_BINARY(regValue, "DriverDesc").Replace("00", ""))
-											End If
+										If subRegkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
+											regValue = HexToString(GetREG_BINARY(subRegkey, "DriverDesc").Replace("00", ""))
 
-											UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
-											If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
+										Else
+											regValue = subRegkey.GetValue("DriverDesc", String.Empty).ToString
 										End If
+
+										UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
+										If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
+
 									End If
 
 									regValue = CStr(subRegkey.GetValue("MatchingDeviceId"))
@@ -7186,7 +7187,7 @@ Public Class frmMain
 
 										If Not IsNullOrWhitespace(regValue) Then
 											If subRegkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
-												regValue = HexToString(GetREG_BINARY(subRegkey.ToString, "HardwareInformation.BiosString").Replace("00", ""))
+												regValue = HexToString(GetREG_BINARY(subRegkey, "HardwareInformation.BiosString").Replace("00", ""))
 
 												UpdateTextMethod(String.Format("Vbios: {0}", regValue))
 												If firstLaunch Then info.Add("Vbios", regValue)
@@ -7646,8 +7647,8 @@ Public Class frmMain
 		End If
 	End Sub
 
-	Public Function GetREG_BINARY(ByVal Path As String, ByVal Value As String) As String
-		Dim Data() As Byte = CType(Microsoft.Win32.Registry.GetValue(Path, Value, Nothing), Byte())
+	Public Function GetREG_BINARY(ByVal Path As RegistryKey, ByVal Value As String) As String
+		Dim Data() As Byte = CType(Microsoft.Win32.Registry.GetValue(Path.ToString, Value, Nothing), Byte())
 
 		If Data Is Nothing Then Return "N/A"
 
