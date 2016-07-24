@@ -8,10 +8,6 @@ Public Class CleanupEngine
 		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1))
 	End Function
 
-	Private Sub updatetextmethod(strmessage As String)
-		'updatetextmethod(strmessage)
-	End Sub
-
 	Public Sub deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String)
 		Dim fixregacls As Boolean = False
 
@@ -379,8 +375,6 @@ Public Class CleanupEngine
 		Dim wantedvalue As String = Nothing
 		Dim removephysx As Boolean = config.RemovePhysX
 
-		updatetextmethod(UpdateTextMethodmessagefn(29))
-
 		Try
 			Application.Log.AddMessage("-Starting S-1-5-xx region cleanUP")
 			Dim file As String
@@ -422,7 +416,7 @@ Public Class CleanupEngine
 															If IsNullOrWhitespace(file) Then Continue For
 
 															If StrContainsAny(file, True, ".msi") Then
-																Delete(file)
+																delete(file)
 															End If
 														Catch ex As Exception
 														End Try
@@ -520,14 +514,14 @@ Public Class CleanupEngine
 					Next
 				End If
 			End Using
-			updatetextmethod(UpdateTextMethodmessagefn(30))
+
 			Application.Log.AddMessage("-End of S-1-5-xx region cleanUP")
 		Catch ex As Exception
 			MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text6"))
 			Application.Log.AddException(ex)
 		End Try
 
-		updatetextmethod(UpdateTextMethodmessagefn(31))
+
 		Try
 			Dim folder As String
 			Using regkey As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey _
@@ -619,14 +613,12 @@ Public Class CleanupEngine
 					Next
 				End If
 			End Using
-			updatetextmethod(UpdateTextMethodmessagefn(32))
+
 		Catch ex As Exception
 			MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text6"))
 			Application.Log.AddException(ex)
 		End Try
 
-
-		updatetextmethod(UpdateTextMethodmessagefn(33))
 
 		Try
 			Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey _
@@ -692,13 +684,13 @@ Public Class CleanupEngine
 					Next
 				End If
 			End Using
-			updatetextmethod(UpdateTextMethodmessagefn(34))
+
 		Catch ex As Exception
 			MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text6"))
 			Application.Log.AddException(ex)
 		End Try
 
-		updatetextmethod(UpdateTextMethodmessagefn(35))
+
 		Try
 			For Each users As String In My.Computer.Registry.Users.GetSubKeyNames()
 				If IsNullOrWhitespace(users) Then Continue For
@@ -768,7 +760,7 @@ Public Class CleanupEngine
 					End If
 				End Using
 			Next
-			updatetextmethod(UpdateTextMethodmessagefn(36))
+
 		Catch ex As Exception
 			MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text6"))
 			Application.Log.AddException(ex)
@@ -779,7 +771,7 @@ Public Class CleanupEngine
 	Public Sub cleanserviceprocess(ByVal services As String())
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 
-		updatetextmethod(UpdateTextMethodmessagefn(37))
+
 		Application.Log.AddMessage("Cleaning Process/Services...")
 
 		Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Services", False)
@@ -801,7 +793,7 @@ Public Class CleanupEngine
 
 								Dim processstopservice As New Process
 								processstopservice.StartInfo = stopservice
-								updatetextmethod("Stopping service : " & service)
+
 								Application.Log.AddMessage("Stopping service : " & service)
 								processstopservice.Start()
 								processstopservice.WaitForExit()
@@ -810,7 +802,7 @@ Public Class CleanupEngine
 								stopservice.Arguments = " /Csc delete " & Chr(34) & service & Chr(34)
 
 								processstopservice.StartInfo = stopservice
-								updatetextmethod("Trying to Deleting service : " & service)
+
 								Application.Log.AddMessage("Trying to Deleting service : " & service)
 								processstopservice.Start()
 								processstopservice.WaitForExit()
@@ -825,10 +817,10 @@ Public Class CleanupEngine
 								'Verify that the service was indeed removed.
 								Using regkey3 As RegistryKey = regkey.OpenSubKey(service, False)
 									If regkey3 IsNot Nothing Then
-										updatetextmethod("Failed to remove the service.")
+
 										Application.Log.AddMessage("Failed to remove the service.")
 									Else
-										updatetextmethod("Service removed.")
+
 										Application.Log.AddMessage("Service removed.")
 									End If
 								End Using
@@ -841,7 +833,7 @@ Public Class CleanupEngine
 			End If
 		End Using
 
-		updatetextmethod(UpdateTextMethodmessagefn(38))
+
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
 
 		'-------------

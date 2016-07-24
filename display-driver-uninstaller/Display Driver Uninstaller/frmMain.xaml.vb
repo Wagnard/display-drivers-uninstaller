@@ -168,7 +168,7 @@ Public Class frmMain
 	Private Sub cleandriverstore(ByVal config As ThreadSettings)
 		Dim catalog As String = ""
 		Dim CurrentProvider As String = ""
-		UpdateTextMethod("-Executing Driver Store cleanUP(finding OEM step)...")
+		UpdateTextMethod("Executing Driver Store cleanUP(finding OEM step)...")
 		Application.Log.AddMessage("Executing Driver Store cleanUP(Find OEM)...")
 		'Check the driver from the driver store  ( oemxx.inf)
 
@@ -276,7 +276,7 @@ Public Class frmMain
 			Next
 		End If
 
-		UpdateTextMethod("-Driver Store cleanUP complete.")
+		UpdateTextMethod("Driver Store cleanUP complete.")
 
 		Application.Log.AddMessage("Driver Store CleanUP Complete.")
 
@@ -6058,12 +6058,45 @@ Public Class frmMain
 					If found.Count > 0 Then
 						For Each SystemDevice As SetupAPI.Device In found
 							For Each Sibling In SystemDevice.SiblingDevices
-								If SystemDevice.LowerFilters IsNot Nothing AndAlso StrContainsAny(SystemDevice.LowerFilters(0), True, "amdkmafd") Then
-									If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
-										Application.Log.AddMessage("Removing AMD HD Audio Bus (amdkmafd)")
+								If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
+									Application.Log.AddMessage("Removing AMD HD Audio Bus (amdkmafd)")
 
-										Win32.SetupAPI.UninstallDevice(SystemDevice)
-									End If
+									Win32.SetupAPI.UninstallDevice(SystemDevice)
+
+									'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
+									Try
+										donotremoveamdhdaudiobusfiles = False
+										Using subregkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+											If subregkey IsNot Nothing Then
+												For Each child2 As String In subregkey.GetSubKeyNames()
+													If IsNullOrWhitespace(child2) Then Continue For
+
+													If StrContainsAny(child2, True, "ven_1002") Then
+														Using regkey3 As RegistryKey = subregkey.OpenSubKey(child2)
+															For Each child3 As String In regkey3.GetSubKeyNames()
+																If IsNullOrWhitespace(child3) Then Continue For
+
+																array = CType(regkey3.OpenSubKey(child3).GetValue("LowerFilters", String.Empty), String())
+																If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+																	For Each entry As String In array
+																		If IsNullOrWhitespace(entry) Then Continue For
+
+																		If StrContainsAny(entry, True, "amdkmafd") Then
+																			Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
+																			donotremoveamdhdaudiobusfiles = True
+																		End If
+																	Next
+																End If
+															Next
+														End Using
+													End If
+												Next
+											End If
+										End Using
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+
 								End If
 							Next
 						Next
@@ -7546,9 +7579,9 @@ Public Class frmMain
 		If Not lbLog.Dispatcher.CheckAccess() Then
 			Dispatcher.Invoke(Sub() UpdateTextMethod(strMessage))
 		Else
-			lbLog.Items.Add(strMessage)
-			lbLog.Items.MoveCurrentToLast()
-			lbLog.ScrollIntoView(lbLog.Items.CurrentItem)
+			lbLog.Items.Add(DateTime.Now.ToString("HH:mm:ss") + " - " + strMessage)
+			lbLog.SelectedIndex = lbLog.Items.Count - 1
+			lbLog.ScrollIntoView(lbLog.SelectedItem)
 		End If
 	End Sub
 
