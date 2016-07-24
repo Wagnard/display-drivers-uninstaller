@@ -214,6 +214,7 @@ Public Class LogEntry
 	Public Sub AddDevices(ByVal extendedDetails As Boolean, ByVal ParamArray devices As Win32.SetupAPI.Device())
 		For Each d As Win32.SetupAPI.Device In devices
 			Add("Description", If(Not IsNullOrWhitespace(d.Description), d.Description, "-"))
+			Add("FriendlyName", If(Not IsNullOrWhitespace(d.FriendlyName), d.FriendlyName, "-"))
 			Add("ClassName", If(Not IsNullOrWhitespace(d.ClassName), d.ClassName, "-"))
 			Add(KvP.Empty)
 			Add("DeviceID", If(Not IsNullOrWhitespace(d.DeviceID), d.DeviceID, "-"))

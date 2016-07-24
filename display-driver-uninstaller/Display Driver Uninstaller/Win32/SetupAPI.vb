@@ -1660,13 +1660,13 @@ Namespace Win32
 			Return Nothing
 		End Function
 
-		Public Shared Sub TEST_EnableDevice(ByVal hardwareIDFilter As String, ByVal enable As Boolean)
+		Public Shared Sub TEST_EnableDevice(ByVal device As Device, ByVal enable As Boolean)
 			If Not IsAdmin Then
 				Throw New SecurityException("Admin priviliges required!")
 			End If
 
-			If String.IsNullOrEmpty(hardwareIDFilter) Then
-				MessageBox.Show("Empty Hardware ID Filter!")
+			If device.devInst = 0UI Then
+				MessageBox.Show("Empty devInst!")
 				Return
 			End If
 
@@ -1674,7 +1674,7 @@ Namespace Win32
 				Dim nullGuid As Guid = Guid.Empty
 				Dim hardwareIds(0) As String
 				Dim found As Boolean = False
-				Dim device As Device = Nothing
+				Dim d As Device = Nothing
 				Dim devInst As UInt32 = 0UI
 				Dim errCode As UInt32 = 0UI
 
@@ -1705,62 +1705,61 @@ Namespace Win32
 							End If
 
 							i += 1UI
-							hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
 
-							If hardwareIds Is Nothing Then
-								Continue While
+							If Is64 Then
+								devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+							Else
+								devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
 							End If
 
-							For Each hdID As String In hardwareIds
-								If hdID.IndexOf(hardwareIDFilter, StringComparison.OrdinalIgnoreCase) <> -1 Then
-									If Is64 Then
-										devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
-									Else
-										devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
-									End If
 
-
-									device = New Device() With
-									{
-									 .devInst = devInst,
-									 .Description = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC),
-									 .ClassGuid = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASSGUID),
-									 .CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS),
-									 .HardwareIDs = hardwareIds
-									}
-
-									GetDeviceDetails(infoSet, ptrDevInfo.Ptr, device, True)
-
-									Dim msgResult As MessageBoxResult = MessageBox.Show(
-									   String.Format("Are you sure you want to {0} device:{3}{3}{4}{1}{3}{3}Hardware IDs{3}{3}{4}{2}", If(enable, "enable", "disable"), device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab),
-									  "Warning!",
-									  MessageBoxButton.YesNoCancel,
-									  MessageBoxImage.Warning)
-
-									If msgResult = MessageBoxResult.Yes Then
-										found = True
-										Exit For
-									ElseIf (msgResult = MessageBoxResult.No) Then
-										Exit For
-									Else
-										Return
-									End If
+							If devInst = device.devInst Then
+								If Is64 Then
+									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+								Else
+									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
 								End If
-							Next
+
+
+								d = New Device() With
+								{
+								 .devInst = devInst,
+								 .Description = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC),
+								 .ClassGuid = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASSGUID),
+								 .CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS)
+								}
+
+								GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d, True)
+
+								Dim msgResult As MessageBoxResult = MessageBox.Show(
+								   String.Format("Are you sure you want to {0} device (devInst: {5}):{3}{3}{4}{1}{3}{3}Hardware IDs{3}{3}{4}{2}", If(enable, "enable", "disable"), d.Description, String.Join(CRLF & vbTab, d.HardwareIDs), CRLF, vbTab, d.devInst),
+								  "Warning!",
+								  MessageBoxButton.YesNoCancel,
+								  MessageBoxImage.Warning)
+
+								If msgResult = MessageBoxResult.Yes Then
+									found = True
+								ElseIf msgResult = MessageBoxResult.No Then
+									found = False
+								Else
+									Return
+								End If
+							End If
+
 
 							If found Then
 								Exit While
 							End If
 						End While
 
-						If Not found OrElse device Is Nothing Then
+						If Not found OrElse d Is Nothing Then
 							Return
 						End If
 
-						If MessageBox.Show(String.Format("CONFIRM!!!{3}Are you sure you want to {0} device:{3}{3}{4}{1}{3}{3}Hardware IDs{3}{3}{4}{2}", If(enable, "enable", "disable"), device.Description, String.Join(CRLF & vbTab, device.HardwareIDs), CRLF, vbTab),
-						   "Warning!",
-						   MessageBoxButton.YesNo,
-						   MessageBoxImage.Warning) <> MessageBoxResult.Yes Then
+						If MessageBox.Show(String.Format("CONFIRM!!!{3}Are you sure you want to {0} device (devInst: {5}):{3}{3}{4}{1}{3}{3}Hardware IDs{3}{3}{4}{2}", If(enable, "enable", "disable"), d.Description, String.Join(CRLF & vbTab, d.HardwareIDs), CRLF, vbTab, d.devInst),
+						"Warning!",
+						MessageBoxButton.YesNo,
+						MessageBoxImage.Warning) <> MessageBoxResult.Yes Then
 
 							Return
 						End If
@@ -1812,7 +1811,7 @@ Namespace Win32
 								Throw New Win32Exception()
 							End If
 
-							If RebootRequired(infoSet, ptrDevInfo.Ptr, device) Then
+							If RebootRequired(infoSet, ptrDevInfo.Ptr, d) Then
 								If MessageBox.Show(String.Format("Reboot required!{0}Reboot now?", CRLF), "Device removed!", MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
 									Using p As Process = New Process() With
 									   {
@@ -2050,7 +2049,8 @@ Namespace Win32
 
 						Dim logStatus As LogEntry = Application.Log.CreateEntry()
 						logStatus.Message = "Uninstalling device..."
-						logStatus.Add("Description", device.Description)
+						logStatus.Add("Description", If(IsNullOrWhitespace(device.Description), "<empty>", device.Description))
+						logStatus.Add("FriendlyName", If(IsNullOrWhitespace(device.FriendlyName), "<empty>", device.FriendlyName))
 						logStatus.Add("DeviceID", device.DeviceID)
 						logStatus.Add("DevInst", device.devInst.ToString())
 						logStatus.Add("HardwareID", String.Join(CRLF, device.HardwareIDs))

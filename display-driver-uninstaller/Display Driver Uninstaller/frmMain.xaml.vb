@@ -215,7 +215,7 @@ Public Class frmMain
 						End If
 					End If
 				End If
-					'check if the oem was removed to process to the pnplockdownfile if necessary
+				'check if the oem was removed to process to the pnplockdownfile if necessary
 				If win8higher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
 					CleanupEngine.prePnplockdownfiles(catalog)
 				End If
@@ -1113,7 +1113,7 @@ Public Class frmMain
 
 		'end of decom?
 		Using regkey As RegistryKey = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" &
-			 "Display\shellex\PropertySheetHandlers", True)
+		  "Display\shellex\PropertySheetHandlers", True)
 			Try
 				deletesubregkey(regkey, "ATIACE")
 			Catch ex As Exception
@@ -5575,9 +5575,6 @@ Public Class frmMain
 						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
 							regSubKey.SetValue("", "Service")
 						End Using
-
-						'regkey.CreateSubKey("PAexec")
-						'regkey.OpenSubKey("Paexec", True).SetValue("", "Service")
 					End Using
 				Catch ex As Exception
 					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAexec!")
@@ -5588,28 +5585,22 @@ Public Class frmMain
 						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
 							regSubKey.SetValue("", "Service")
 						End Using
-
-						'regkey.CreateSubKey("PAexec")
-						'regkey.OpenSubKey("Paexec", True).SetValue("", "Service")
 					End Using
 				Catch ex As Exception
 					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for PAexec!")
 				End Try
 				'End If
 
-				'read config file
 
 				If closeapp Then
 					Exit Sub
 				End If
-
 
 				'----------------------
 				'check computer/os info
 				'----------------------
 
 				Dim archIs64 As Boolean
-
 
 				Application.Settings.SelectedGPU = GPUVendor.Nvidia
 

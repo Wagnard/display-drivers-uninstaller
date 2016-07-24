@@ -138,7 +138,7 @@ Class Application
 		' Loading UI
 
 		Try
-			Dim mainWindow As frmMain = New frmMain()
+			Dim mainWindow As frmMain = New frmMain() With {.DataContext = Data}
 			AddHandler mainWindow.Closed, AddressOf AppClose
 
 			'	Launching frmMain, triggers Events

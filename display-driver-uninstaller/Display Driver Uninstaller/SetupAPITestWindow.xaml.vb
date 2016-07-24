@@ -55,7 +55,7 @@ Public Class SetupAPITestWindow
 			End If
         End If
 
-        SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device).HardwareIDs(0), False)
+		SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device), False)
     End Sub
 
     Private Sub btnEnable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
@@ -70,7 +70,7 @@ Public Class SetupAPITestWindow
 			End If
         End If
 
-        SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device).HardwareIDs(0), True)
+		SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device), True)
     End Sub
 
     Private Sub btnRemove_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
