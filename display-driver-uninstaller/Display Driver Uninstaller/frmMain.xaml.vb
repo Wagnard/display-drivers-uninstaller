@@ -129,11 +129,6 @@ Public Class frmMain
 				response = request.GetResponse()
 			Catch ex As Exception
 				Return 3
-
-				' >>> Link seems to be dead <<<
-				' request = System.Net.HttpWebRequest.Create("http://archive.sunet.se/pub/games/PC/guru3d/ddu/currentversion2.txt")
-				' request.Timeout = 2500
-				' response = request.GetResponse()
 			End Try
 
 			Dim newestVersionStr As String = Nothing
@@ -5958,6 +5953,7 @@ Public Class frmMain
 
 				trd.Start()
 			End If
+			Checkupdates2()
 		Catch ex As Exception
 			Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try
