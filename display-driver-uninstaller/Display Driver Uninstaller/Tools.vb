@@ -1,12 +1,14 @@
-﻿Imports System.IO
+﻿Imports System.ComponentModel
+Imports System.IO
 Imports System.Text
-Imports System.Security.Cryptography
+Imports System.Reflection
 Imports System.Runtime.InteropServices
+Imports System.Security.Cryptography
+
+Imports System.Windows.Forms
 
 Imports Microsoft.Win32
 Imports Display_Driver_Uninstaller.Win32
-Imports System.Reflection
-Imports System.ComponentModel
 
 Public Module Tools
 	' 9 = vbTAB --- 10 = vbLF --- 11 = vbVerticalTab --- 12 = vbFormFeed --- 13 = vbCR --- 32 = SPACE
@@ -186,5 +188,58 @@ Public Module Tools
 			Return WinAPI.IsAdmin
 		End Get
 	End Property
+
+
+
+
+	Public Sub AdjustWindow(ByRef window As Window)
+		Dim parent As Window = window.Owner
+
+		If parent Is Nothing Then
+			Return
+		End If
+
+		With window
+			.SizeToContent = SizeToContent.Manual
+			.WindowState = parent.WindowState
+
+			.Width = parent.ActualWidth
+			.Height = parent.ActualHeight
+
+			.Top = parent.Top
+			.Left = parent.Left
+
+			AddHandler window.StateChanged, AddressOf StateChanged
+		End With
+
+	End Sub
+
+	Private Sub StateChanged(ByVal sender As Object, ByVal e As System.EventArgs)
+		Dim window As Window = TryCast(sender, Window)
+
+		If window IsNot Nothing Then
+			If window.WindowState <> WindowState.Maximized Then
+				If window.Top < 0D Then window.Top = 0D
+				If window.Left < 0D Then window.Left = 0D
+
+				' Screen.FromHandle for Multimonitor setups. Otherwise it gets Primary screens size and not where application is (eg. second monitor)
+				' Not sure what happens if maximized to over more than one screen thought..
+				' WorkingArea Excludes Taskbars height if visible. Covers taskbar if set auto hide.
+				Dim workArea As System.Drawing.Rectangle = System.Windows.Forms.Screen.FromHandle(New Interop.WindowInteropHelper(window).Handle).WorkingArea
+				Dim newW As Double = CDbl(workArea.Width)
+				Dim newH As Double = CDbl(workArea.Height)
+
+				' ActualWidth goes over screen Width if maximized (Win7, ~16px)
+				If window.ActualWidth > newW AndAlso window.Width > newW Then
+					window.Width = newW
+				End If
+
+				' ActualHeight goes over screen Height if maximized (Win7, ~16px)
+				If window.ActualHeight > newH AndAlso window.Height > newH Then
+					window.Height = newH
+				End If
+			End If
+		End If
+	End Sub
 
 End Module

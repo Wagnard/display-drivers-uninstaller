@@ -5286,13 +5286,15 @@ Public Class frmMain
 	End Sub
 
 
+
 	Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
-		If cbLanguage.SelectedItem IsNot Nothing Then
-			InitLanguage(False, DirectCast(cbLanguage.SelectedItem, Languages.LanguageOption))
+		If Application.Settings.SelectedLanguage IsNot Nothing Then
+			Languages.Load(Application.Settings.SelectedLanguage)
+			Languages.TranslateForm(Me)
+
+			GetGPUDetails(False)
 		End If
 	End Sub
-
-
 
 	Private Sub imgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
 		WinAPI.OpenVisitLink(" -visitdonate")
@@ -5380,20 +5382,9 @@ Public Class frmMain
 		End If
 
 		Try
-			Dim defaultLang As Languages.LanguageOption = Languages.DefaultEng
-			Dim foundLangs As List(Of Languages.LanguageOption) = Languages.ScanFolderForLang(Application.Paths.Language)
-
-			foundLangs.Add(defaultLang)
-			foundLangs.Sort(Function(x, y) x.DisplayText.CompareTo(y.DisplayText))
-
-			For Each lang As Languages.LanguageOption In foundLangs
-				Application.Settings.LanguageOptions.Add(lang)
-			Next
-
-			Application.Settings.Load()
 			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
 
-			InitLanguage(True)
+			Languages.TranslateForm(Me)
 
 			Dim isElevated As Boolean = principal.IsInRole(WindowsBuiltInRole.Administrator)
 
@@ -7487,78 +7478,6 @@ Public Class frmMain
 
 		Return False
 	End Function
-
-	Private Sub InitLanguage(ByVal firstLaunch As Boolean, Optional ByVal changeTo As Languages.LanguageOption = Nothing)
-		'TODO: InitLanguage (just comment for quick find)
-
-		If firstLaunch Then
-			Languages.Load()		'default = english
-
-			ExtractEnglishLangFile(Application.Paths.Language & "English.xml", Languages.DefaultEng)
-
-			'Dim systemLang As String = Globalization.CultureInfo.InstalledUICulture.Name	'en-US, en-GB, fr-FR
-			Dim systemlang = PreferredUILanguages()
-			Dim lastUsedLang As Languages.LanguageOption = Nothing
-			Dim nativeLang As Languages.LanguageOption = Nothing
-
-			For Each item As Languages.LanguageOption In Application.Settings.LanguageOptions
-				If lastUsedLang Is Nothing AndAlso item.Equals(Application.Settings.SelectedLanguage) Then
-					lastUsedLang = item
-				End If
-
-				If nativeLang Is Nothing AndAlso systemlang.Equals(item.ISOLanguage, StringComparison.OrdinalIgnoreCase) Then
-					nativeLang = item		'take native on hold incase last used language not found (avoid multiple loops)
-				End If
-			Next
-
-			If lastUsedLang IsNot Nothing Then
-				Application.Settings.SelectedLanguage = lastUsedLang
-			Else
-				If nativeLang IsNot Nothing Then
-					Application.Settings.SelectedLanguage = nativeLang				'couldn't find last used, using native lang
-				Else
-					Application.Settings.SelectedLanguage = Languages.DefaultEng	'couldn't find last used nor native lang, using default (English)
-				End If
-			End If
-
-			Languages.TranslateForm(Me, False)
-
-		Else
-			If changeTo IsNot Nothing AndAlso Not changeTo.Equals(Languages.Current) Then
-				Languages.Load(changeTo)
-				Languages.TranslateForm(Me)
-
-				GetGPUDetails(False)
-			End If
-		End If
-	End Sub
-
-	Private Sub ExtractEnglishLangFile(ByVal fileName As String, ByVal langEng As Languages.LanguageOption)
-		Using stream As Stream = Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(String.Format("{0}.{1}", GetType(Languages).Namespace, "English.xml"))
-			If FileIO.ExistsFile(fileName) Then
-				Using fsEnglish As FileStream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.None)
-					If CompareStreams(stream, fsEnglish) Then
-						Return
-					End If
-				End Using
-			End If
-
-			stream.Position = 0L
-
-			Using sr As New StreamReader(stream, Encoding.UTF8, True)
-				Using sw As New StreamWriter(fileName, False, Encoding.UTF8)
-					While (sr.Peek() <> -1)
-						sw.WriteLine(sr.ReadLine())
-					End While
-
-					sw.Flush()
-					sw.Close()
-				End Using
-
-				sr.Close()
-			End Using
-		End Using
-	End Sub
 
 	Public Function UpdateTextTranslated(ByVal number As Integer) As String
 		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1))

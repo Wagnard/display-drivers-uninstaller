@@ -471,7 +471,7 @@ Public Class FileIO
 				Throw New Win32Exception(GetInt32(errCode))
 			End If
 		Catch ex As Win32Exception
-			errCode = GetUInt32(ex.ErrorCode)
+			errCode = GetUInt32(ex.NativeErrorCode)
 
 			Select Case errCode
 				Case Errors.FILE_NOT_FOUND, Errors.PATH_NOT_FOUND

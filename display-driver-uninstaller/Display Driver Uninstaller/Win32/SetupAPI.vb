@@ -3058,7 +3058,7 @@ Namespace Win32
 			Public Property DevProblemStr As String
 				Get
 					If _devProblemStr Is Nothing Then
-						_devProblemStr = String.Format(ENUM_FORMAT, If([Enum].IsDefined(GetType(CM_PROB), _devProblem), DirectCast(_devProblem, CM_PROB).ToString(), "UNKNOWN"), _devProblem)
+						_devProblemStr = String.Format(ENUM_FORMAT, If([Enum].IsDefined(GetType(CM_PROB), _devProblem), DirectCast(_devProblem, CM_PROB).ToString(), "UNKNOWN"), _devProblem.ToString("X2"))
 					End If
 
 					Return _devProblemStr

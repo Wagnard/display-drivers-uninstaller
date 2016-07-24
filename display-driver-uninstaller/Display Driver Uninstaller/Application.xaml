@@ -1,8 +1,7 @@
 ﻿<Application x:Class="Application"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    StartupUri="frmMain.xaml"
-    ShutdownMode="OnMainWindowClose">
+    ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
         
     </Application.Resources>

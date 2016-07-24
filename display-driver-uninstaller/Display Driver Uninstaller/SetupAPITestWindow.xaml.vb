@@ -230,20 +230,33 @@ Public Class SetupAPITestWindow
             Return
         End If
 
-        Dim sb As New StringBuilder()
-		sb.AppendLine("Description: " + device.Description)
-		If device.FriendlyName IsNot Nothing AndAlso device.FriendlyName.Length > 0 Then
-			sb.AppendLine("FriendlyName:")
+		Dim sb As New StringBuilder()
 
-			For Each cid As String In device.FriendlyName
-				sb.AppendLine(vbTab + cid)
+		sb.AppendLine("Description: " & If(IsNullOrWhitespace(device.Description), "<empty", device.Description))
+		sb.AppendLine("FriendlyName: " & If(IsNullOrWhitespace(device.FriendlyName), "<empty", device.FriendlyName))
+		sb.AppendLine("ClassName: " & If(IsNullOrWhitespace(device.ClassName), "<empty", device.ClassName))
+		sb.AppendLine("ClassGuid: " & If(IsNullOrWhitespace(device.ClassGuid), "<empty", device.ClassGuid))
+
+		sb.AppendLine("InstallState: " & If(IsNullOrWhitespace(device.InstallStateStr), device.InstallState.ToString(), device.InstallStateStr))
+
+		sb.AppendLine("RebootRequired: " & If(device.RebootRequired, "Yes", "No"))
+
+		sb.AppendLine("DevInstID: " & device.DevInstID.ToString())
+		sb.AppendLine("DevProblemStr: " & If(IsNullOrWhitespace(device.DevProblemStr), device.DevProblem.ToString(), device.DevProblemStr))
+
+		If device.DevStatusStr IsNot Nothing AndAlso device.DevStatusStr.Length > 0 Then
+			sb.AppendLine("DevStatusStr:")
+
+			For Each s As String In device.DevStatusStr
+				sb.AppendLine(vbTab + s)
 			Next
 
 			sb.AppendLine(String.Empty)
 		Else
-			sb.AppendLine("FriendlyName: <null>")
+			sb.AppendLine("DevStatusStr: <empty>")
 		End If
-        sb.AppendLine("ClassGuid: " + device.ClassGuid)
+
+		sb.AppendLine("RebootRequired: " & If(device.RebootRequired, "Yes", "No"))
 
 		If device.OemInfs IsNot Nothing AndAlso device.OemInfs.Length > 0 Then
 			sb.AppendLine("OemInfs:")
@@ -257,7 +270,7 @@ Public Class SetupAPITestWindow
 
 			sb.AppendLine(String.Empty)
 		Else
-			sb.AppendLine("OemInfs: <null>")
+			sb.AppendLine("OemInfs: <empty>")
 		End If
 
 
@@ -270,7 +283,7 @@ Public Class SetupAPITestWindow
 
 			sb.AppendLine(String.Empty)
 		Else
-			sb.AppendLine("Hardware IDs: <null>")
+			sb.AppendLine("Hardware IDs: <empty>")
 		End If
 
 		If device.CompatibleIDs IsNot Nothing AndAlso device.CompatibleIDs.Length > 0 Then
@@ -282,7 +295,7 @@ Public Class SetupAPITestWindow
 
 			sb.AppendLine(String.Empty)
 		Else
-			sb.AppendLine("Compatible IDs: <null>")
+			sb.AppendLine("Compatible IDs: <empty>")
 		End If
 
 		If device.LowerFilters IsNot Nothing AndAlso device.LowerFilters.Length > 0 Then
@@ -294,7 +307,46 @@ Public Class SetupAPITestWindow
 
 			sb.AppendLine(String.Empty)
 		Else
-			sb.AppendLine("LowerFilters: <null>")
+			sb.AppendLine("LowerFilters: <empty>")
+		End If
+
+
+		If device.CapabilitiesStr IsNot Nothing AndAlso device.CapabilitiesStr.Length > 0 Then
+			sb.AppendLine("Capabilities:")
+
+			For Each s As String In device.CapabilitiesStr
+				sb.AppendLine(vbTab + s)
+			Next
+
+			sb.AppendLine(String.Empty)
+		Else
+			sb.AppendLine("Capabilities: <empty>")
+		End If
+
+
+		If device.ConfigFlagsStr IsNot Nothing AndAlso device.ConfigFlagsStr.Length > 0 Then
+			sb.AppendLine("ConfigFlags:")
+
+			For Each s As String In device.ConfigFlagsStr
+				sb.AppendLine(vbTab + s)
+			Next
+
+			sb.AppendLine(String.Empty)
+		Else
+			sb.AppendLine("Capabilities: <empty>")
+		End If
+
+
+		If device.InstallFlagsStr IsNot Nothing AndAlso device.InstallFlagsStr.Length > 0 Then
+			sb.AppendLine("InstallFlags:")
+
+			For Each s As String In device.InstallFlagsStr
+				sb.AppendLine(vbTab + s)
+			Next
+
+			sb.AppendLine(String.Empty)
+		Else
+			sb.AppendLine("InstallFlags: <empty>")
 		End If
 
 
@@ -324,7 +376,7 @@ Public Class SetupAPITestWindow
 				sb.AppendLine(String.Empty)
 			Next
 		Else
-			sb.AppendLine("Driver(s) details: <null>")
+			sb.AppendLine("Driver(s) details: <empty>")
 		End If
 
 
