@@ -202,7 +202,7 @@ Public Class Data
 	Private m_settings As AppSettings
 	Private m_paths As AppPaths
 	Private m_log As AppLog
-	Private m_debug As Boolean = True
+	Private m_debug As Boolean = System.Diagnostics.Debugger.IsAttached
 
 	Public Property IsDebug As Boolean
 		Get

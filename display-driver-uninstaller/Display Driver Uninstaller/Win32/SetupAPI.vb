@@ -1714,13 +1714,6 @@ Namespace Win32
 
 
 							If devInst = device.devInst Then
-								If Is64 Then
-									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
-								Else
-									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
-								End If
-
-
 								d = New Device() With
 								{
 								 .devInst = devInst,
@@ -1984,6 +1977,7 @@ Namespace Win32
 				Dim hardwareIds(0) As String
 				Dim found As Boolean = False
 				Dim errCode As UInt32
+				Dim devInst As UInt32 = 0UI
 
 				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
 					If infoSet.IsInvalid Then
@@ -2013,19 +2007,17 @@ Namespace Win32
 							End If
 
 							i += 1UI
-							hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.HARDWAREID)
 
-							If hardwareIds Is Nothing Then
-								Continue While
+							If Is64 Then
+								devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+							Else
+								devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
 							End If
 
-							For Each hwID As String In hardwareIds
-								If hwID.Equals(device.HardwareIDs(0), StringComparison.OrdinalIgnoreCase) Then
-									GetDriverDetails(infoSet, ptrDevInfo.Ptr, device) ' Updating DriverDetails if changed during app running time (Oem infs)
-									found = True
-									Exit For
-								End If
-							Next
+							If devInst = device.devInst Then
+								GetDriverDetails(infoSet, ptrDevInfo.Ptr, device) ' Updating DriverDetails if changed during app running time (Oem infs)
+								found = True
+							End If
 
 							If found Then
 								Exit While
