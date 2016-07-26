@@ -141,6 +141,13 @@ Public Class frmLog
 
 				newLog.Clear()
 				newLog = Nothing
+
+				If lbLog.Items.Count > 0 Then
+					SelectEntry(DirectCast(lbLog.Items(0), LogEntry))
+					UpdateScrollPosition(lbLog)
+				Else
+					SelectEntry(_nullLogEntry)
+				End If
 			End If
 		End Using
 	End Sub
@@ -157,6 +164,8 @@ Public Class frmLog
 		Else
 			tabControl.SelectedIndex = 2
 		End If
+
+		UpdateScrollPosition(GetCurrentListBox())
 	End Sub
 
 	Public Sub New()
@@ -225,16 +234,6 @@ Public Class frmLog
 		If Not SelectedEntry.Equals(logEntry) Then
 			SelectedEntry.IsSelected = False
 			SelectedEntry = logEntry
-
-			If lbLog.Items.Count > 0 Then
-				Dim vsp As VirtualizingStackPanel =
-				 TryCast(GetType(ItemsControl).InvokeMember("_itemsHost",
-				 BindingFlags.Instance Or BindingFlags.GetField Or BindingFlags.NonPublic, Nothing, lbLog, Nothing), VirtualizingStackPanel)
-
-				If vsp IsNot Nothing Then
-					vsp.SetVerticalOffset(vsp.ScrollOwner.ScrollableHeight * 0.0 / lbLog.Items.Count)
-				End If
-			End If
 		End If
 	End Sub
 
@@ -330,4 +329,34 @@ Public Class frmLog
 			CopyMessage()
 		End If
 	End Sub
+
+	Private Sub tabControl_SelectionChanged(sender As System.Object, e As System.Windows.Controls.SelectionChangedEventArgs) Handles tabControl.SelectionChanged
+		UpdateScrollPosition(GetCurrentListBox())
+	End Sub
+
+	Private Function GetCurrentListBox() As ListBox
+		Dim page As TabItem = TryCast(tabControl.SelectedItem, TabItem)
+		If page Is Nothing Then
+			Return Nothing
+		End If
+
+		Return TryCast(page.Content, ListBox)
+	End Function
+
+	Private Sub UpdateScrollPosition(ByRef lb As ListBox)
+		If lb Is Nothing Then
+			Return
+		End If
+
+		If lb.Items.Count > 0 Then
+			Dim vsp As VirtualizingStackPanel =
+			 TryCast(GetType(ItemsControl).InvokeMember("_itemsHost",
+			 BindingFlags.Instance Or BindingFlags.GetField Or BindingFlags.NonPublic, Nothing, lb, Nothing), VirtualizingStackPanel)
+
+			If vsp IsNot Nothing Then
+				vsp.SetVerticalOffset(vsp.ScrollOwner.ScrollableHeight * 0.0 / lb.Items.Count)
+			End If
+		End If
+	End Sub
+
 End Class

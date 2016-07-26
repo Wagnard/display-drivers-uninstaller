@@ -5987,8 +5987,6 @@ Public Class frmMain
 				Application.Log.AddException(ex)
 			End Try
 		End If
-
-		Application.SaveData()
 	End Sub
 
 
@@ -7752,7 +7750,9 @@ Public Class frmMain
 			'	End If
 			'Next
 
-			AmdEnvironementPath("")
+			For i As Int32 = 0 To 1000
+				Application.Log.AddException(New ComponentModel.Win32Exception(32), "TEST: Message" & i.ToString())
+			Next
 			' Multiline TEST
 			'Dim logEntry As LogEntry = Application.Log.CreateEntry()
 

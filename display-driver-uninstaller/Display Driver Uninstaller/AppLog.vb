@@ -142,7 +142,7 @@ Public Class AppLog
 		End If
 	End Sub
 	Private Sub SaveLog(ByVal fileName As String)
-		If String.IsNullOrEmpty(fileName) Then
+		If String.IsNullOrEmpty(fileName) OrElse LogEntries Is Nothing OrElse LogEntries.Count = 0 Then
 			Return
 		End If
 

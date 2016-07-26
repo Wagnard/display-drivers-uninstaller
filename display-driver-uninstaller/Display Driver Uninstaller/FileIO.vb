@@ -466,6 +466,7 @@ Public Class FileIO
 				End Try
 
 				DeleteInternal(fileName, True)	'Retry
+
 				Return
 			Else
 				Throw New Win32Exception(GetInt32(errCode))
@@ -480,7 +481,14 @@ Public Class FileIO
 					If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
 						DeleteInternal(fileName, True)
 					Else
-						Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, String.Concat("Couldn't delete path!", CRLF, fileName))
+						Dim logEntry As LogEntry = Application.Log.CreateEntry(ex)
+
+						If errCode = Errors.SHARING_VIOLATION Then
+							logEntry.Message = String.Concat("Couldn't delete path! File is used by another process!", CRLF, fileName)
+						Else
+							logEntry.Message = String.Concat("Couldn't delete path!", CRLF, fileName)
+						End If
+
 						logEntry.Type = LogType.Error
 						logEntry.Add("fileName", fileName)
 						logEntry.Add("fixedAcl", fixedAcl.ToString())
@@ -873,6 +881,8 @@ Public Class FileIO
 	End Function
 
 #End Region
+
+
 
 End Class
 

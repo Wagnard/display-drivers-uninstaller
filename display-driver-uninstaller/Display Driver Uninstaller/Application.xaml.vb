@@ -130,10 +130,14 @@ Class Application
 		End Using
 	End Sub
 
+
 	Private Sub AppStart()
-		'Here is change to anything which doesn't require UI
+		' Here is chance to anything which doesn't require UI
+		' Settings & Language already set
 
 		' ....
+
+
 
 		' Loading UI
 

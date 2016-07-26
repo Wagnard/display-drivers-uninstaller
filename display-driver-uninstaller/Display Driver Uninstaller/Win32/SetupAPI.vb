@@ -2016,10 +2016,8 @@ Namespace Win32
 
 							If devInst = device.devInst Then
 								GetDriverDetails(infoSet, ptrDevInfo.Ptr, device) ' Updating DriverDetails if changed during app running time (Oem infs)
-								found = True
-							End If
 
-							If found Then
+								found = True
 								Exit While
 							End If
 						End While

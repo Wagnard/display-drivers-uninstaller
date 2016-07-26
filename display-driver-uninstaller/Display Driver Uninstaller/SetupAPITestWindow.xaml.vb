@@ -232,10 +232,11 @@ Public Class SetupAPITestWindow
 
 		Dim sb As New StringBuilder()
 
-		sb.AppendLine("Description: " & If(IsNullOrWhitespace(device.Description), "<empty", device.Description))
-		sb.AppendLine("FriendlyName: " & If(IsNullOrWhitespace(device.FriendlyName), "<empty", device.FriendlyName))
-		sb.AppendLine("ClassName: " & If(IsNullOrWhitespace(device.ClassName), "<empty", device.ClassName))
-		sb.AppendLine("ClassGuid: " & If(IsNullOrWhitespace(device.ClassGuid), "<empty", device.ClassGuid))
+		sb.AppendLine("Description: " & If(IsNullOrWhitespace(device.Description), "<empty>", device.Description))
+		sb.AppendLine("FriendlyName: " & If(IsNullOrWhitespace(device.FriendlyName), "<empty>", device.FriendlyName))
+		sb.AppendLine("ClassName: " & If(IsNullOrWhitespace(device.ClassName), "<empty>", device.ClassName))
+		sb.AppendLine("ClassGuid: " & If(IsNullOrWhitespace(device.ClassGuid), "<empty>", device.ClassGuid))
+		sb.AppendLine("DeviceID: " & If(IsNullOrWhitespace(device.DeviceID), "<empty>", device.DeviceID))
 
 		sb.AppendLine("InstallState: " & If(IsNullOrWhitespace(device.InstallStateStr), device.InstallState.ToString(), device.InstallStateStr))
 
