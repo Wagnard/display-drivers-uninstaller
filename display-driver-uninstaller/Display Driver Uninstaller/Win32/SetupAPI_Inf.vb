@@ -101,7 +101,7 @@ Namespace Win32
 
 				If (_handle = INVALID_HANDLE) Then
 					GetLastError()
-					_lastMessage = String.Format("Error opening file '{0}',{3}Bad line = {1},{3}Message = ""{2}""", FilePath, errorLineNumber, LastMessage, CRLF)
+					_lastMessage = String.Format("Error opening file '{0}'{3}Bad line = {1}{3}Message = ""{2}""", FilePath, errorLineNumber, LastMessage, CRLF)
 				Else
 					ResetError()
 					errorLineNumber = 0UI
@@ -129,7 +129,7 @@ Namespace Win32
 
 				If Not SetupFindFirstLine(_handle, section, key, sectionContext) Then
 					GetLastError()
-					_lastMessage = String.Format("Error finding key '{0}' in section '{1}' of file '{2}',{4}Message = ""{3}""", If(key, "<null>"), section, FilePath, LastMessage, CRLF)
+					_lastMessage = String.Format("Error finding key '{0}' in section '{1}' of file '{2}'{4}Message = ""{3}""", If(key, "<null>"), section, FilePath, LastMessage, CRLF)
 				Else
 					ResetError()
 					retval = New PrivateSection(sectionContext, section, _file)
@@ -223,7 +223,7 @@ Namespace Win32
 
 					If (InternalGetLineText(msg, lineText) <> 0) Then lineText = "<unknown>"
 
-					_lastMessage = String.Format("Error reading string value from field {0} of line '{1}'{5}in section [{2}] in file '{3}',{5}Message = ""{4}""", fieldNum, lineText, Section, FilePath, LastMessage, CRLF)
+					_lastMessage = String.Format("Error reading string value from field {0} of line '{1}'{5}in section [{2}] in file '{3}'{5}Message = ""{4}""", fieldNum, lineText, Section, FilePath, LastMessage, CRLF)
 				Else
 					strVal = builder.ToString()
 				End If

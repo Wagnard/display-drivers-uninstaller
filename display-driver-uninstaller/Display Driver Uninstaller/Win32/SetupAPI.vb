@@ -22,6 +22,8 @@ Namespace Win32
 		Shared Sub New()
 			Is64 = WinAPI.Is64
 			IsAdmin = WinAPI.IsAdmin
+
+			ACL.AddPriviliges(ACL.SE.LOAD_DRIVER_NAME)
 		End Sub
 
 
@@ -2266,8 +2268,6 @@ Namespace Win32
 			Dim devInstRoot As UInt32
 
 			Try
-				ACL.AddPriviliges(ACL.SE.LOAD_DRIVER_NAME)
-
 				result = CM_Locate_DevNode(devInstRoot, Nothing, CM_LOCATE.DEVNODE_NORMAL Or CM_LOCATE.DEVNODE_PHANTOM)
 
 				If result = CR.SUCCESS Then

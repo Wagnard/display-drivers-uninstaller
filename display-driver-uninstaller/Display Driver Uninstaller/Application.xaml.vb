@@ -5,6 +5,8 @@ Imports System.Windows
 Imports System.Windows.Markup
 Imports System.Text
 
+Imports Display_Driver_Uninstaller.Win32
+
 Class Application
 	' Application-level events, such as Startup, Exit, and DispatcherUnhandledException
 	' can be handled in this file.
@@ -132,11 +134,16 @@ Class Application
 
 
 	Private Sub AppStart()
+		' These are only needed to set ONCE during App lifetime
+		If Tools.UserHasAdmin Then
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
+		End If
+
+
 		' Here is chance to anything which doesn't require UI
 		' Settings & Language already set
 
 		' ....
-
 
 
 		' Loading UI

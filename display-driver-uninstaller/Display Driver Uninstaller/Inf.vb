@@ -69,9 +69,11 @@ Public Class Inf
 					Dim logEntry As LogEntry = Application.Log.CreateEntry()
 
 					logEntry.Type = LogType.Warning
-					logEntry.Message = "Invalid inf file!"
+					logEntry.Message = String.Concat("Invalid inf file!", CRLF, ">> ", Path.GetFileName(_fileName))
+
 					logEntry.Add("infFile", _fileName)
-					logEntry.Add("Win32_ErrorCode", infFile.LastError.ToString())
+					logEntry.Add(KvP.Empty)
+					logEntry.Add("Win32_ErrorCode", String.Format("{0} (0x{1:X})", infFile.LastError.ToString(), infFile.LastError))
 					logEntry.Add("Win32_Message", infFile.LastMessage)
 
 					Application.Log.Add(logEntry)

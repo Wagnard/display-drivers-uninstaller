@@ -454,7 +454,7 @@ Public Class FileIO
 
 				Dim success As Boolean
 				Try
-					success = ACL.FixFileSecurity(uncFileName, True, logEntry)
+					success = ACL.FixFileSecurity(uncFileName, logEntry)
 				Finally
 					logEntry.Add("Fixed", If(success, "Yes", "No"))
 
@@ -580,7 +580,7 @@ Public Class FileIO
 
 				Dim success As Boolean
 				Try
-					success = ACL.FixFileSecurity(uncFileName, False, logEntry)
+					success = ACL.FixFileSecurity(uncFileName, logEntry)
 				Finally
 					logEntry.Add("Fixed", If(success, "Yes", "No"))
 
@@ -687,16 +687,24 @@ Public Class FileIO
 				Else
 					Dim errCode As UInt32 = GetLastWin32ErrorU()
 
-					If errCode <> Errors.FILE_NOT_FOUND AndAlso errCode <> Errors.PATH_NOT_FOUND Then
-						If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
+					If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
+						Return fileNames
+					End If
+
+					If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
+						If writeAccess Then
 							Dim logEntry As LogEntry = Application.Log.CreateEntry()
 							logEntry.Type = LogType.Warning
-							logEntry.Message = String.Format("Couldn't find files, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, directory)
 							logEntry.Add("directory", directory)
 
+							logEntry.Message = String.Format("Couldn't find files, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, directory)
+
 							Dim success As Boolean
+
 							Try
-								success = ACL.FixFileSecurity(uncDirectory, writeAccess, logEntry)
+								success = ACL.FixFileSecurity(uncDirectory, logEntry)
+							Catch ex As Exception When TypeOf (ex) Is Win32Exception
+								logEntry.AddException(ex, False)
 							Finally
 								logEntry.Add("Fixed", If(success, "Yes", "No"))
 
@@ -709,8 +717,10 @@ Public Class FileIO
 
 							Return GetFileNames(directory, wildCard, searchSubDirs, unicodePaths, writeAccess, True)
 						Else
-							Throw New Win32Exception(GetInt32(errCode))
+							Application.Log.AddWarningMessage("Couldn't find files, access denied!{0}{1}", CRLF, directory)
 						End If
+					Else
+						Throw New Win32Exception(GetInt32(errCode))
 					End If
 				End If
 			End While
@@ -777,16 +787,21 @@ Public Class FileIO
 				Else
 					Dim errCode As UInt32 = GetLastWin32ErrorU()
 
-					If errCode <> Errors.FILE_NOT_FOUND AndAlso errCode <> Errors.PATH_NOT_FOUND Then
-						If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
+					If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
+						Return dirNames
+					End If
+
+					If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
+						If writeAccess Then
 							Dim logEntry As LogEntry = Application.Log.CreateEntry()
 							logEntry.Type = LogType.Warning
 							logEntry.Message = String.Format("Couldn't find directories, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, directory)
 							logEntry.Add("directory", directory)
 
 							Dim success As Boolean
+
 							Try
-								success = ACL.FixFileSecurity(uncDirectory, writeAccess, logEntry)
+								success = ACL.FixFileSecurity(uncDirectory, logEntry)
 							Finally
 								logEntry.Add("Fixed", If(success, "Yes", "No"))
 
@@ -799,8 +814,10 @@ Public Class FileIO
 
 							Return GetDirNames(directory, wildCard, searchSubDirs, unicodePaths, writeAccess, True)
 						Else
-							Throw New Win32Exception(GetInt32(errCode))
+							Application.Log.AddWarningMessage("Couldn't find directories, access denied!{0}{1}", CRLF, directory)
 						End If
+					Else
+						Throw New Win32Exception(GetInt32(errCode))
 					End If
 				End If
 			End While

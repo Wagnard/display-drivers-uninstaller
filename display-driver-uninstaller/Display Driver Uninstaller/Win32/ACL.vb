@@ -332,6 +332,7 @@ Namespace Win32
 #End Region
 
 #Region "P/Invoke"
+
 			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 			Private Function AdjustTokenPrivileges(
    <[In]()> ByVal TokenHandle As IntPtr,
@@ -345,7 +346,7 @@ Namespace Win32
 			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 			Private Function OpenProcessToken(
    <[In]()> ByVal ProcessHandle As IntPtr,
-   <[In]()> ByVal DesiredAccess As UInt32,
+   <[In]()> ByVal DesiredAccess As TOKENS,
    <[Out]()> ByRef TokenHandle As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 			End Function
 
@@ -374,10 +375,6 @@ Namespace Win32
 
 #Region "Functions"
 
-			Sub New()
-				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
-			End Sub
-
 			Public Sub AddPriviliges(ByVal ParamArray priviliges() As String)
 				AdjustToken(True, GetCurrentProcess(), priviliges)
 			End Sub
@@ -390,9 +387,7 @@ Namespace Win32
 				Dim ptrToken As IntPtr = IntPtr.Zero
 
 				Try
-					Dim success As Boolean = OpenProcessToken(ptrProcess, TOKENS.ADJUST_PRIVILEGES Or TOKENS.QUERY, ptrToken)
-
-					If Not success Then
+					If Not OpenProcessToken(ptrProcess, TOKENS.ADJUST_PRIVILEGES Or TOKENS.QUERY, ptrToken) Then
 						Throw New Win32Exception()
 					End If
 
@@ -538,6 +533,13 @@ Namespace Win32
 				STANDARD_RIGHTS_EXECUTE = READ_CONTROL
 				STANDARD_RIGHTS_REQUIRED = &HF0000UI
 				STANDARD_RIGHTS_ALL = &H1F0000UI
+
+				ACCESS_SYSTEM_SECURITY = &H1000000UI	' + SE_SECURITY_NAME => SACL
+
+				GENERIC_ALL = &H10000000UI
+				GENERIC_EXECUTE = &H20000000UI
+				GENERIC_WRITE = &H40000000UI
+				GENERIC_READ = &H80000000UI
 			End Enum
 
 			Private Enum FILE_SHARE As UInt32
@@ -622,10 +624,6 @@ Namespace Win32
 
 #Region "Functions"
 
-			Sub New()
-				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
-			End Sub
-
 			' Adds an ACL entry on the specified directory for the specified account.
 			Public Sub AddDirectorySecurity(ByVal path As String, ByVal Rights As FileSystemRights, ByVal ControlType As AccessControlType)
 				' Create a new DirectoryInfoobject.
@@ -636,8 +634,7 @@ Namespace Win32
 				' current security settings.
 				'Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
 				'Activate necessary admin privileges to make changes without NTFS perms
-				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
-
+			
 				'Create a new acl from scratch.
 				'Dim newacl As New System.Security.AccessControl.DirectorySecurity()
 				Dim newacl As System.Security.AccessControl.DirectorySecurity = Directory.GetAccessControl(path, AccessControlSections.Owner)
@@ -666,8 +663,7 @@ Namespace Win32
 				Dim rs As New RegistrySecurity()
 				Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
 
-				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
-
+			
 				'Dim originalsid = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions).GetAccessControl.GetOwner(GetType(System.Security.Principal.SecurityIdentifier))
 				'MsgBox(originalsid.ToString)
 				Using subkey As RegistryKey = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.TakeOwnership)
@@ -706,18 +702,17 @@ Namespace Win32
 			End Sub
 
 
-			' path = File or Dir, deleteRights = Path (dir or file) going to be deleted?
-			Friend Function FixFileSecurity(ByVal uncPath As String, ByVal deleteRights As Boolean, ByRef logEntry As LogEntry) As Boolean
-				If Not deleteRights Then
-					Return False	' Do not change rights if not going to delete it. NEED TO FIX...
-				End If
-
-				Dim logEvents As Boolean = logEntry IsNot Nothing
+			' path = File or Dir
+			Friend Function FixFileSecurity(ByVal uncPath As String, ByRef logEntry As LogEntry) As Boolean
 				Dim errCode As UInt32 = 0UI
 				Dim ptrFile As IntPtr = IntPtr.Zero
 
+				Dim ownerChanged As Boolean = False
+				Dim newOwner As SecurityIdentifier = _sidSystem
+				Dim previousOwner As String = Nothing
+		
 				Try
-					ptrFile = CreateFile(uncPath, FILE_RIGHTS.READ_CONTROL Or FILE_RIGHTS.FILE_READ_ATTRIBUTES, FILE_SHARE.NONE, IntPtr.Zero, FILE_OPEN.OPEN_EXISTING, FileIO.FILE_ATTRIBUTES.NORMAL Or FileIO.FILE_ATTRIBUTES.FLAG_BACKUP_SEMANTICS Or FileIO.FILE_ATTRIBUTES.FLAG_OPEN_REPARSE_POINT, IntPtr.Zero)
+					ptrFile = CreateFile(uncPath, FILE_RIGHTS.READ_CONTROL Or FILE_RIGHTS.FILE_READ_ATTRIBUTES Or FILE_RIGHTS.WRITE_OWNER, FILE_SHARE.NONE, IntPtr.Zero, FILE_OPEN.OPEN_EXISTING, FileIO.FILE_ATTRIBUTES.NORMAL Or FileIO.FILE_ATTRIBUTES.FLAG_BACKUP_SEMANTICS Or FileIO.FILE_ATTRIBUTES.FLAG_OPEN_REPARSE_POINT, IntPtr.Zero)
 
 					errCode = GetLastWin32ErrorU()
 
@@ -729,88 +724,121 @@ Namespace Win32
 						Throw New Win32Exception(GetInt32(errCode))
 					End If
 
-					Dim ptrOwner As IntPtr = IntPtr.Zero
-					Dim ptrGroup As IntPtr = IntPtr.Zero
-					Dim ptrDACL As IntPtr = IntPtr.Zero
-					Dim ptrSACL As IntPtr = IntPtr.Zero
-					Dim ptrSecurity As IntPtr = IntPtr.Zero
+					Try
+						ownerChanged = SetPathOwner(ptrFile, newOwner.Value, logEntry, previousOwner)
+					Catch ex As Exception
+						ownerChanged = False
+						Throw ex
+					Finally
+						If logEntry IsNot Nothing Then
+							If ownerChanged Then
+								logEntry.Add("> Owner is successfully set to System Account!")
+							Else
+								logEntry.Type = LogType.Error
+								logEntry.Add("> Failed to set owner to System account!")
+							End If
+						End If
+					End Try
+
+					Return True
+				Finally
+					If ptrFile <> IntPtr.Zero Then
+						CloseHandle(ptrFile)
+					End If
+				End Try
+			End Function
+
+			Private Function SetPathOwner(ByVal ptrFile As IntPtr, ByVal newOwnerSID As String, ByRef logEntry As LogEntry, ByRef previousOwnerSID As String) As Boolean
+				Dim ptrOwner As IntPtr = IntPtr.Zero
+				Dim ptrGroup As IntPtr = IntPtr.Zero
+				Dim ptrDACL As IntPtr = IntPtr.Zero
+				Dim ptrSACL As IntPtr = IntPtr.Zero
+				Dim ptrSecurity As IntPtr = IntPtr.Zero
+				Dim ptrOwnerStr As IntPtr = IntPtr.Zero
+				Dim errCode As UInt32 = 0UI
+
+				Dim logEvents As Boolean = (logEntry IsNot Nothing)
+
+				Try
+					errCode = GetSecurityInfo(ptrFile,
+					  SE_OBJECT_TYPE.SE_FILE_OBJECT,
+					  SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION Or SECURITY_INFORMATION.BACKUP_SECURITY_INFORMATION,
+					  ptrOwner,
+					  ptrGroup,
+					  ptrDACL,
+					  ptrSACL,
+					  ptrSecurity)
+
+					If errCode <> 0UI Then
+						Throw New Win32Exception(GetInt32(errCode))
+					End If
+
 
 					Try
-						errCode = GetSecurityInfo(ptrFile, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION Or SECURITY_INFORMATION.BACKUP_SECURITY_INFORMATION, ptrOwner, ptrGroup, ptrDACL, ptrSACL, ptrSecurity)
+						If Not ConvertSidToStringSid(ptrOwner, ptrOwnerStr) Then
+							Throw New Win32Exception()
+						End If
+
+						previousOwnerSID = Marshal.PtrToStringUni(ptrOwnerStr)
+
+						If logEvents Then		' Log current Owner
+							logEntry.Add(KvP.Empty)
+							logEntry.Add("Current Owner")
+							logEntry.Add("  SID", previousOwnerSID)
+
+							Dim sbName As New Text.StringBuilder(260)
+							Dim sbDomain As New Text.StringBuilder(260)
+							Dim sizeName As UInt32 = GetUInt32(sbName.Capacity)
+							Dim sizeDomain As UInt32 = GetUInt32(sbName.Capacity)
+
+							If Not LookupAccountSid(Nothing, ptrOwner, sbName, sizeName, sbDomain, sizeDomain, 0UI) Then
+								Throw New Win32Exception()
+							End If
+
+							logEntry.Add("  Domain", sbDomain.ToString())
+							logEntry.Add("  Name", sbName.ToString())
+							logEntry.Add(KvP.Empty)
+						End If
+					Catch ex As Win32Exception
+						logEntry.Add("> Couldn't find current path's Owner!")
+					Finally
+						If ptrOwnerStr <> IntPtr.Zero Then
+							Marshal.FreeHGlobal(ptrOwnerStr)
+						End If
+					End Try
+
+					If logEvents AndAlso Not IsNullOrWhitespace(previousOwnerSID) AndAlso previousOwnerSID = newOwnerSID Then
+						logEntry.Add("> Owner is already set to System Account!")
+						Return True
+					End If
+
+					If Not ConvertStringSidToSid(newOwnerSID, ptrOwnerStr) Then
+						Throw New Win32Exception()
+					End If
+
+					If Not SetSecurityInfo(ptrFile,
+					  SE_OBJECT_TYPE.SE_FILE_OBJECT,
+					  SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION,
+					  ptrOwnerStr,
+					  IntPtr.Zero,
+					  IntPtr.Zero,
+					  IntPtr.Zero) Then
+
+						errCode = GetLastWin32ErrorU()
 
 						If errCode <> 0UI Then
 							Throw New Win32Exception(GetInt32(errCode))
 						End If
+					End If
 
-						Dim ptrOwnerStr As IntPtr = IntPtr.Zero
-						Dim strOwner As String
-
-						If logEvents Then		' Log current Owner
-							Try
-								If Not ConvertSidToStringSid(ptrOwner, ptrOwnerStr) Then
-									Throw New Win32Exception(GetLastWin32Error())
-								End If
-
-								strOwner = Marshal.PtrToStringUni(ptrOwnerStr)
-								logEntry.Add("OwnerSID", strOwner)
-
-								Dim sbName As New Text.StringBuilder(260)
-								Dim sbDomain As New Text.StringBuilder(260)
-								Dim sizeName As UInt32 = GetUInt32(sbName.Capacity)
-								Dim sizeDomain As UInt32 = GetUInt32(sbName.Capacity)
-
-								If Not LookupAccountSid(Nothing, ptrOwner, sbName, sizeName, sbDomain, sizeDomain, 0UI) Then
-									Throw New Win32Exception(GetLastWin32Error())
-								End If
-
-								logEntry.Add("OwnerDomain", sbDomain.ToString())
-								logEntry.Add("OwnerName", sbName.ToString())
-							Catch ex As Win32Exception
-								logEntry.Add("Couldn't find current path's Owner!")
-							Finally
-								If ptrOwnerStr <> IntPtr.Zero Then
-									Marshal.FreeHGlobal(ptrOwnerStr)
-								End If
-							End Try
-						End If
-
-						If deleteRights Then
-							strOwner = _sidSystem.ToString()
-
-							Try
-								If Not ConvertStringSidToSid(strOwner, ptrOwnerStr) Then
-									Throw New Win32Exception(GetLastWin32Error())
-								End If
-
-								If Not SetSecurityInfo(ptrFile, SE_OBJECT_TYPE.SE_FILE_OBJECT, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION, ptrOwnerStr, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero) Then
-									Throw New Win32Exception(GetLastWin32Error())
-								End If
-
-								Return True
-							Finally
-								If ptrOwnerStr <> IntPtr.Zero Then
-									Marshal.FreeHGlobal(ptrOwnerStr)
-								End If
-							End Try
-						Else
-
-							' WORK IN PROGRESS
-							' 
-							' GetFiles / GetDirectories fails in some scenarios
-							' ... Forgot to check for Error code if no files "found" 
-							' => ACCESS_DENIED => No files
-							' => No files "found" => Directory can't be removed (contains files which couldn't find)
-
-							Return False
-						End If
-					Finally
-						If ptrSecurity <> IntPtr.Zero Then
-							LocalFree(ptrSecurity)
-						End If
-					End Try
+					Return True
 				Finally
-					If ptrFile <> IntPtr.Zero Then
-						CloseHandle(ptrFile)
+					If ptrOwnerStr <> IntPtr.Zero Then
+						Marshal.FreeHGlobal(ptrOwnerStr)
+					End If
+
+					If ptrSecurity <> IntPtr.Zero Then
+						LocalFree(ptrSecurity)
 					End If
 				End Try
 			End Function
@@ -979,10 +1007,6 @@ Namespace Win32
 #End Region
 
 #Region "Functions"
-
-			Shared Sub New()
-				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
-			End Sub
 
 			''' <summary>
 			''' Close key before using this and reopen after. Otherwise changes may not be applied!

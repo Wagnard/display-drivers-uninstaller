@@ -7158,6 +7158,22 @@ Public Class frmMain
 			info.Add("DDU Version", Application.Settings.AppVersion.ToString())
 			info.Add("OS", Application.Settings.WinVersionText)
 			info.Add("Architecture", If(Application.Settings.WinIs64, "x64", "x86"))
+
+			Try
+				Dim windowsPrincipal As WindowsPrincipal = New WindowsPrincipal(WindowsIdentity.GetCurrent())
+				If WindowsIdentity.GetCurrent().IsSystem Then
+					info.Add("UserRights", "System")
+				ElseIf windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator) Then
+					info.Add("UserRights", "Admin")
+				ElseIf windowsPrincipal.IsInRole(WindowsBuiltInRole.User) Then
+					info.Add("UserRights", "User")
+				Else
+					info.Add("UserRights", "Unknown")
+				End If
+			Catch ex As Exception
+				info.Add("UserRights", "Unknown")
+			End Try
+
 			info.Add(KvP.Empty)
 		End If
 
@@ -7664,7 +7680,7 @@ Public Class frmMain
 														removedPaths.Add(p)
 													End If
 												Next
-											
+
 												logEntry.Add(child2, String.Join(Environment.NewLine, paths))
 												logEntry.Add(KvP.Empty)
 
