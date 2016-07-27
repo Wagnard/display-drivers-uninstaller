@@ -151,6 +151,7 @@ Public Class frmMain
 			If newestVersion <= applicationversion Then
 				Return 1
 			Else
+				Application.Settings.UpdateAvail = True
 				Return 2
 			End If
 
@@ -5288,6 +5289,11 @@ Public Class frmMain
 			Languages.TranslateForm(Me)
 
 			GetGPUDetails(False)
+			If Application.Settings.UpdateAvail Then
+				lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text3")
+			Else
+				lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text2")
+			End If
 		End If
 	End Sub
 
@@ -5953,7 +5959,7 @@ Public Class frmMain
 
 				trd.Start()
 			End If
-			Checkupdates2()
+
 		Catch ex As Exception
 			Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try

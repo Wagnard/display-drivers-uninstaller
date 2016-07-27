@@ -54,6 +54,7 @@ Public Class AppSettings
 	Private m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
 	Private m_gpuSelected As DependencyProperty = Reg("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
 	Private m_langSelected As DependencyProperty = Reg("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
+	Private m_updateAvail As DependencyProperty = Reg("UpdateAvail", GetType(Boolean), GetType(AppSettings), False)
 
 	Private m_winVersion As DependencyProperty = Reg("WinVersion", GetType(OSVersion), GetType(AppSettings), OSVersion.Unknown)
 	Private m_winVersionText As DependencyProperty = Reg("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
@@ -161,6 +162,15 @@ Public Class AppSettings
 		End Get
 		Set(value As Languages.LanguageOption)
 			SetValue(m_langSelected, value)
+		End Set
+	End Property
+
+	Public Property UpdateAvail As Boolean
+		Get
+			Return CBool(GetValue(m_updateAvail))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_updateAvail, value)
 		End Set
 	End Property
 
