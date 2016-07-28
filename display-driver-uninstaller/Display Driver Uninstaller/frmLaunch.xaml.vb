@@ -28,5 +28,9 @@
 			tb.Text = Languages.GetTranslation(Me.Name, btnAccept.Name, If(cbBootOption.SelectedIndex = 0, "Text", "Text2"))
 		End If
 	End Sub
+
+	Private Sub frmLaunch_ContentRendered(sender As Object, e As EventArgs) Handles MyBase.ContentRendered
+		Me.Topmost = False
+	End Sub
 End Class
 

@@ -39,7 +39,7 @@ Public Module Tools
 
 	Public Function PreferredUILanguages() As String
 		Try
-			Using regkey As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey("Control Panel\Desktop", False)
+			Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Control Panel\Desktop", False)
 				If regkey IsNot Nothing Then
 					Dim wantedValue As String() = CType(regkey.GetValue("PreferredUILanguages"), String())
 
@@ -52,7 +52,7 @@ Public Module Tools
 					' DevMltk: Don't have PreferredUILanguages.. but have:
 					' HKEY_CURRENT_USER\Control Panel\Desktop\MuiCached => MachinePreferredUILanguages (REG_MULTI_SZ)
 
-					Using regkey2 As RegistryKey = My.Computer.Registry.CurrentUser.OpenSubKey("Control Panel\Desktop\MuiCached", False)
+					Using regkey2 As RegistryKey = Registry.CurrentUser.OpenSubKey("Control Panel\Desktop\MuiCached", False)
 						If regkey2 IsNot Nothing Then
 							Dim wantedValue As String() = CType(regkey.GetValue("MachinePreferredUILanguages"), String())
 
