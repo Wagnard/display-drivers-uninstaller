@@ -43,8 +43,7 @@
 						<CheckBox x:Name="lblUseRoamingCfg" IsChecked="{Binding UseRoamingConfig, Converter={StaticResource NulBoolToBool}}" Content="lblUseRoamingCfg" />
 						<CheckBox x:Name="lblCheckUpdates" IsChecked="{Binding CheckUpdates, Converter={StaticResource NulBoolToBool}}" Content="lblCheckUpdates" />
 						<CheckBox x:Name="lblVulkan" IsChecked="{Binding RemoveVulkan, Converter={StaticResource NulBoolToBool}}" Content="lblVulkan" />
-						<CheckBox x:Name="lblUseSetupAPI" IsChecked="{Binding UseSetupAPI, Converter={StaticResource NulBoolToBool}}" Content="lblUseSetupAPI" />
-						<CheckBox x:Name="lblOffer" IsChecked="{Binding ShowOffer, Converter={StaticResource NulBoolToBool}}" Content="lblOffer" />
+                        <CheckBox x:Name="lblOffer" IsChecked="{Binding ShowOffer, Converter={StaticResource NulBoolToBool}}" Content="lblOffer" />
 					</UniformGrid>
 				</DockPanel>
 

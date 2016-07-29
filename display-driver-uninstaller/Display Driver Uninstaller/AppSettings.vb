@@ -87,7 +87,6 @@ Public Class AppSettings
 	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
 	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
 	Private m_removevulkan As DependencyProperty = Reg("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
-	Private m_UseSetupAPI As DependencyProperty = Reg("UseSetupAPI", GetType(Boolean), GetType(AppSettings), True)
 	Private m_showoffer As DependencyProperty = Reg("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
 
 	' Visit links
@@ -305,14 +304,6 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property UseSetupAPI As Boolean
-		Get
-			Return CBool(GetValue(m_UseSetupAPI))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_UseSetupAPI, value)
-		End Set
-	End Property
 	Public Property ShowOffer As Boolean
 		Get
 			Return CBool(GetValue(m_showoffer))
@@ -454,36 +445,36 @@ Public Class AppSettings
 
 			Arguments = String.Join(" ", ArgumentsArray)
 
-			For i As Int32 = 0 To args.Length - 1
-				If StrContainsAny(args(i), True, "donate") Then
+			For Each Argument As String In args
+				If StrContainsAny(Argument, True, "donate") Then
 					VisitDonate = True
 					hasLink = True
 
-				ElseIf StrContainsAny(args(i), True, "svn") Then
+				ElseIf StrContainsAny(Argument, True, "svn") Then
 					VisitSVN = True
 					hasLink = True
 
-				ElseIf StrContainsAny(args(i), True, "guru3dnvidia") Then
+				ElseIf StrContainsAny(Argument, True, "guru3dnvidia") Then
 					VisitGuru3DNvidia = True
 					hasLink = True
 
-				ElseIf StrContainsAny(args(i), True, "guru3damd") Then
+				ElseIf StrContainsAny(Argument, True, "guru3damd") Then
 					VisitGuru3DAMD = True
 					hasLink = True
 
-				ElseIf StrContainsAny(args(i), True, "dduhome") Then
+				ElseIf StrContainsAny(Argument, True, "dduhome") Then
 					VisitDDUHome = True
 					hasLink = True
 
-				ElseIf StrContainsAny(args(i), True, "geforce") Then
+				ElseIf StrContainsAny(Argument, True, "geforce") Then
 					VisitGeforce = True
 					hasLink = True
 
-				ElseIf StrContainsAny(args(i), True, "visitoffer") Then
+				ElseIf StrContainsAny(Argument, True, "visitoffer") Then
 					VisitOffer = True
 					hasLink = True
 
-				ElseIf StrContainsAny(args(i), True, "5648674614687") Then
+				ElseIf StrContainsAny(Argument, True, "5648674614687") Then
 					Application.Data.IsDebug = True
 				End If
 			Next
@@ -546,7 +537,6 @@ Public Class AppSettings
 						.WriteElementString("CreateRestorePoint", CreateRestorePoint.ToString())
 						.WriteElementString("SaveLogs", SaveLogs.ToString())
 						.WriteElementString("RemoveVulkan", RemoveVulkan.ToString())
-						.WriteElementString("UseSetupAPI", UseSetupAPI.ToString())
 						.WriteElementString("ShowOffer", ShowOffer.ToString())
 						.WriteElementString("GoodSite", GoodSite.ToString())
 
@@ -696,9 +686,6 @@ Public Class AppSettings
 
 							Case "removevulkan"
 								RemoveVulkan = Boolean.Parse(KvP.Value)
-
-							Case "usesetupapi"
-								UseSetupAPI = Boolean.Parse(KvP.Value)
 
 							Case "showoffer"
 								ShowOffer = Boolean.Parse(KvP.Value)

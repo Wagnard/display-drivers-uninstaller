@@ -195,11 +195,6 @@
     <Resource Include="Resources\nvidia_logo.png" />
     <Resource Include="Resources\paexec.exe" />
     <Resource Include="Resources\btn_donate_LG.gif" />
-    <Resource Include="Resources\ddudr.exe" />
-    <Resource Include="Resources\xp64\ddudr.exe" />
-    <Resource Include="Resources\xp32\ddudr.exe" />
-    <Resource Include="Resources\x86\ddudr.exe" />
-    <Resource Include="Resources\x64\ddudr.exe" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\DDU.ico" />

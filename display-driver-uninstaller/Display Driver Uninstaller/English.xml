@@ -148,13 +148,13 @@
 			<Text20>Cleanup started...</Text20>
 			<Text21>Uninstalling</Text21>
 			<Text22>driver</Text22>
-			<Text23>Executing DDUDR remove, please wait (can take a few minutes)</Text23>
+			<Text23>Executing SetupAPI remove, please wait (can take a few minutes)</Text23>
 			<Text24>GPU(s) removed from Device Manager.</Text24>
-			<Text25>Executing DDUDR Remove Audio controller.</Text25>
+			<Text25>Executing SetupAPI Remove Audio controller.</Text25>
 			<Text26>HD audio adapters Removed!</Text26>
 			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
 			<Text28>Monitors and Hidden monitors removed!</Text28>
-			<Text29>DDUDR remove complete</Text29>
+			<Text29>SetupAPI remove complete</Text29>
 			<Text30>Starting S-1-5-xx region cleanup</Text30>
 			<Text31>End of S-1-5-xx region cleanup</Text31>
 			<Text32>Begin Classesroot ,installer\products cleanup</Text32>
@@ -237,10 +237,6 @@
 			<Text>Remove Vulkan Runtime</Text>
 			<Tooltip>Not recommended if you have two different GPUs capable of using the Vulkan API.</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>Use SetupAPI</Text>
-			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON) for removing drivers.</Tooltip>
-		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">

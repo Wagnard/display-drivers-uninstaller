@@ -16,7 +16,7 @@ Class Application
 	Private Const URL_DDUHOME As String = "http://www.wagnardmobile.com"
 	Private Const URL_GURU3D_AMD As String = "http://forums.guru3d.com/showthread.php?t=379505"
 	Private Const URL_GURU3D_NVIDIA As String = "http://forums.guru3d.com/showthread.php?t=379506"
-	Private Const URL_GEFROCE As String = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
+	Private Const URL_GEFORCE As String = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
 	Private Const URL_SVN As String = "https://github.com/Wagnard/display-drivers-uninstaller"
 	Private Const URL_OFFER As String = "https://www.driverdr.com/lp/update-display-drivers.html"
 
@@ -262,7 +262,7 @@ Class Application
 
 
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				If ExtractPAExec() Then				' Extract DDUDR and PAExec to \x64 or \x86 dir
+				If ExtractPAExec() Then				' Extract PAExec to \x64 or \x86 dir
 					If LaunchAsSystem() Then		' Launched as System, close this instance, True = close, false = continue
 						Me.Shutdown(0)
 						Exit Sub
@@ -300,7 +300,7 @@ Class Application
 		ElseIf Application.Settings.VisitGuru3DAMD Then
 			webAddress = URL_GURU3D_AMD
 		ElseIf Application.Settings.VisitGeforce Then
-			webAddress = URL_GEFROCE
+			webAddress = URL_GEFORCE
 		ElseIf Application.Settings.VisitDDUHome Then
 			webAddress = URL_DDUHOME
 		ElseIf Application.Settings.VisitSVN Then
@@ -383,27 +383,7 @@ Class Application
 
 			Application.Paths.CreateDirectories(dir)
 
-
-			If Settings.WinIs64 Then
-				If isWinXP Then		' XP64
-					File.WriteAllBytes(dir & "ddudr.exe", My.Resources.ddudrxp64)
-				Else				' all other 64 bits
-					File.WriteAllBytes(dir & "ddudr.exe", My.Resources.ddudr64)
-				End If
-			Else
-				If isWinXP Then		' XP32
-					File.WriteAllBytes(dir & "ddudr.exe", My.Resources.ddudrxp32)
-				Else				' all other 32 bits
-					File.WriteAllBytes(dir & "ddudr.exe", My.Resources.ddudr32)
-				End If
-			End If
-
 			File.WriteAllBytes(dir & "paexec.exe", My.Resources.paexec)
-
-			If Not FileIO.ExistsFile(dir & "ddudr.exe") Then
-				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
-				Return False
-			End If
 
 			If Not FileIO.ExistsFile(dir & "paexec.exe") Then
 				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text15"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
@@ -412,7 +392,7 @@ Class Application
 
 			Return True
 		Catch ex As Exception
-			Application.Log.AddException(ex, "Extracting ddudr and PAEexec failed!")
+			Application.Log.AddException(ex, "Extracting PAEexec failed!")
 			Return False
 		End Try
 	End Function
