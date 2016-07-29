@@ -186,6 +186,26 @@ Namespace Converters
     End Class
 
 
+	Public Class EnumToTextConverter
+		Implements IValueConverter
+
+		Public Function Convert(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
+			If TypeOf (value) Is UpdateStatus Then
+				If [Enum].IsDefined(GetType(UpdateStatus), value) Then
+					Dim status As UpdateStatus = DirectCast(value, UpdateStatus)
+
+					Return Languages.GetTranslation("frmMain", "lblUpdate", String.Format("Text{0}", If(status = UpdateStatus.NotChecked, String.Empty, CInt(status).ToString())))
+				End If
+			End If
+
+			Return String.Empty
+		End Function
+
+		Public Function ConvertBack(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.ConvertBack
+			Throw New NotImplementedException("IsNotNullConverter::ConvertBack")
+		End Function
+	End Class
+
     Public Class BooleanToVisibilityConverter
         Inherits BooleanConverter(Of Visibility)
     End Class

@@ -202,14 +202,14 @@ Namespace Win32
 				Using ptrProcessInfo As Win32.StructPtr = New StructPtr(New PROCESS_INFORMATION)
 					Using ptrStartInfo As Win32.StructPtr = New StructPtr(New STARTUPINFOW)
 						If Not CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, arg, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, ptrStartInfo.Ptr, ptrProcessInfo.Ptr) Then
-							Throw New System.ComponentModel.Win32Exception(Win32.GetLastWin32Error)
+							Throw New Win32Exception()
 						End If
 					End Using
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Opening visit link failed")
+				Application.Log.AddException(ex, "Opening visit link failed!")
 			Finally
-				If Not UserTokenHandle = IntPtr.Zero Then
+				If UserTokenHandle <> IntPtr.Zero Then
 					CloseHandle(UserTokenHandle)
 				End If
 			End Try

@@ -66,61 +66,18 @@ Public Class frmMain
 	Public ddudrfolder As String
 	Public Shared donotremoveamdhdaudiobusfiles As Boolean = True
 
+	Private Sub CheckUpdatesThread(ByVal currentVersion As Version)
+		Dim status As UpdateStatus = UpdateStatus.NotChecked
 
-
-	Private Sub Checkupdates2()
-		If Not Me.Dispatcher.CheckAccess() Then
-			Dispatcher.Invoke(Sub() Checkupdates2())
-		Else
-			lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text")
-
-			Dim updates As Integer = HasUpdates()
-
-			If updates = 1 Then
-				lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text2")
-
-			ElseIf updates = 2 Then
-				lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text3")
-
-				If Not MyIdentity.IsSystem Then	 'we dont want to open a webpage when the app is under "System" user.
-					Select Case MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text1"), Application.Settings.AppName, MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
-						Case MessageBoxResult.Yes
-							Using process As Process = New Process()
-								process.Start("http://www.wagnardmobile.com")
-							End Using
-
-							closeapp = True
-							closeddu()
-							Exit Sub
-						Case MessageBoxResult.No
-							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text2"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
-						Case MessageBoxResult.Cancel
-							closeapp = True
-							closeddu()
-							Exit Sub
-					End Select
-
+		Try
+			Try
+				If Not My.Computer.Network.IsAvailable Then
+					status = UpdateStatus.Error
+					Return
 				End If
+			Catch ex As Exception
+			End Try
 
-			ElseIf updates = 3 Then
-				lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text4")
-			End If
-		End If
-	End Sub
-
-	Private Function HasUpdates() As Integer
-		If Application.Data.IsDebug Then
-			Return 3
-		End If
-
-		Try
-			If Not My.Computer.Network.IsAvailable Then
-				Return 3
-			End If
-		Catch ex As Exception
-		End Try
-
-		Try
 			Dim response As System.Net.WebResponse = Nothing
 			Dim request As System.Net.WebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt")
 			request.Timeout = 2500
@@ -128,7 +85,8 @@ Public Class frmMain
 			Try
 				response = request.GetResponse()
 			Catch ex As Exception
-				Return 3
+				status = UpdateStatus.Error
+				Return
 			End Try
 
 			Dim newestVersionStr As String = Nothing
@@ -143,23 +101,70 @@ Public Class frmMain
 
 			If IsNullOrWhitespace(newestVersionStr) OrElse
 			   Not Int32.TryParse(newestVersionStr.Replace(".", ""), newestVersion) OrElse
-			   Not Int32.TryParse(Application.Settings.AppVersion.ToString().Replace(".", ""), applicationversion) Then
+			   Not Int32.TryParse(currentVersion.ToString().Replace(".", ""), applicationversion) Then
 
-				Return 3
+				status = UpdateStatus.Error
+				Return
 			End If
 
 			If newestVersion <= applicationversion Then
-				Return 1
+				status = UpdateStatus.NoUpdates
 			Else
-				Application.Settings.UpdateAvail = True
-				Return 2
+				status = UpdateStatus.UpdateAvailable
 			End If
 
 		Catch ex As Exception
 			Application.Log.AddWarning(ex, "Checking updates failed!")
-			Return 3
+			status = UpdateStatus.Error
+		Finally
+			Update(status)
 		End Try
-	End Function
+	End Sub
+
+	Private Sub Update(ByVal status As UpdateStatus)
+		If Not Dispatcher.CheckAccess() Then
+			Dispatcher.Invoke(Sub() Update(status))
+		Else
+			Application.Settings.UpdateAvailable = status
+
+			If status = UpdateStatus.UpdateAvailable Then
+				If Not Application.Settings.ShowSafeModeMsg Then
+					Return
+				End If
+
+				Select Case MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text1"), "Display Driver Uninstaller", MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
+					Case MessageBoxResult.Yes
+						WinAPI.OpenVisitLink(" -dduhome")
+
+						Me.Close()
+						Return
+
+					Case MessageBoxResult.No
+						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text2"), "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Information)
+				End Select
+			End If
+		End If
+	End Sub
+
+	Private Sub CheckUpdates()
+		Try
+			If Application.Data.IsDebug Then
+				Application.Settings.UpdateAvailable = UpdateStatus.Error
+			Else
+				Dim currentVersion As Version = Application.Settings.AppVersion
+				Dim trd As Thread = New Thread(Sub() CheckUpdatesThread(currentVersion)) With
+				  {
+				  .CurrentCulture = New Globalization.CultureInfo("en-US"),
+				  .CurrentUICulture = New Globalization.CultureInfo("en-US"),
+				  .IsBackground = True
+				  }
+
+				trd.Start()
+			End If
+		Catch ex As Exception
+			Application.Log.AddException(ex, "Failed to start UpdateCheck thread!")
+		End Try
+	End Sub
 
 	Private Sub cleandriverstore(ByVal config As ThreadSettings)
 		Dim catalog As String = ""
@@ -5138,59 +5143,6 @@ Public Class frmMain
 		End Try
 	End Function
 
-	Private Sub restartinsafemode(Optional ByVal withNetwork As Boolean = False)
-
-		SystemRestore()	'we try to do a system restore if allowed before going into safemode.
-		Application.Log.AddMessage("Restarting in safemode")
-
-
-		Me.Topmost = False
-
-		Dim setbootconf As New ProcessStartInfo("bcdedit")
-
-		If withNetwork Then
-			setbootconf.Arguments = "/set safeboot network"
-		Else
-			setbootconf.Arguments = "/set safeboot minimal"
-		End If
-
-		setbootconf.UseShellExecute = False
-		setbootconf.CreateNoWindow = True
-		setbootconf.RedirectStandardOutput = False
-
-		Dim processstopservice As New Process
-		processstopservice.StartInfo = setbootconf
-		processstopservice.Start()
-		processstopservice.WaitForExit()
-		processstopservice.Close()
-
-		Try
-			Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-				If regkey IsNot Nothing Then
-					regkey.SetValue("*" + Application.Settings.AppName, System.Reflection.Assembly.GetExecutingAssembly().Location)
-					regkey.SetValue("*UndoSM", "BCDEDIT /deletevalue safeboot")
-				End If
-			End Using
-		Catch ex As Exception
-			Application.Log.AddException(ex)
-		End Try
-
-
-		processinfo.FileName = "shutdown"
-		processinfo.Arguments = "/r /t 0"
-		processinfo.WindowStyle = ProcessWindowStyle.Hidden
-		processinfo.UseShellExecute = True
-		processinfo.CreateNoWindow = True
-		processinfo.RedirectStandardOutput = False
-
-		process.StartInfo = processinfo
-		process.Start()
-		process.WaitForExit()
-		process.Close()
-
-		closeddu()
-	End Sub
-
 	Private Sub closeddu()
 		If Not Dispatcher.CheckAccess() Then
 			Dispatcher.Invoke(Sub() closeddu())
@@ -5289,11 +5241,6 @@ Public Class frmMain
 			Languages.TranslateForm(Me)
 
 			GetGPUDetails(False)
-			If Application.Settings.UpdateAvail Then
-				lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text3")
-			Else
-				lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", "Text2")
-			End If
 		End If
 	End Sub
 
@@ -5371,151 +5318,19 @@ Public Class frmMain
 		WinAPI.OpenVisitLink(" -visitoffer")
 	End Sub
 
-
-
-	Private Sub frmMain_Sourceinitialized(sender As Object, e As EventArgs) Handles MyBase.SourceInitialized
-		Me.WindowState = Windows.WindowState.Minimized
+	Private Sub frmLaunch_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
+		Languages.TranslateForm(Me, False)
 	End Sub
 
-	Private Sub frmMain_Loaded(sender As Object, e As RoutedEventArgs)
-		If Me.DataContext Is Nothing Then
-			Me.DataContext = Application.Data
-		End If
+	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
+		Me.Topmost = False
 
 		Try
 			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
 
-			Languages.TranslateForm(Me)
+			CheckUpdates()
 
-			Dim isElevated As Boolean = principal.IsInRole(WindowsBuiltInRole.Administrator)
-
-			If Application.Settings.CheckUpdates AndAlso isElevated Then
-				Me.Topmost = True
-				Checkupdates2()
-
-				Me.Topmost = False
-
-				If closeapp Then
-					Exit Sub
-				End If
-			End If
-
-			If Application.Settings.ArgumentsArray IsNot Nothing AndAlso Application.Settings.ArgumentsArray.Length > 0 AndAlso Not isElevated Then
-				For Each arg As String In Application.Settings.ArgumentsArray
-					If StrContainsAny(arg, True, "donate", "svn", "guru3dnvidia", "guru3damd", "dduhome", "geforce", "visitoffer") Then
-						Try
-							System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile, arg) With {.Verb = "runas"})
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-
-						Application.Current.Shutdown()
-						Exit Sub
-					End If
-				Next
-			Else
-
-			End If
-
-			'we check if the donate/guru3dnvidia/gugu3damd/geforce/dduhome is trigger here directly.
-
-			Dim webAddress As String = Nothing
-
-			If Application.Settings.VisitDonate Then
-				webAddress = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-
-			ElseIf Application.Settings.VisitGuru3DNvidia Then
-				webAddress = "http://forums.guru3d.com/showthread.php?t=379506"
-
-			ElseIf Application.Settings.VisitGuru3DAMD Then
-				webAddress = "http://forums.guru3d.com/showthread.php?t=379505"
-
-			ElseIf Application.Settings.VisitGeforce Then
-				webAddress = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
-
-			ElseIf Application.Settings.VisitDDUHome Then
-				webAddress = "http://www.wagnardmobile.com"
-
-			ElseIf Application.Settings.VisitSVN Then
-				webAddress = "https://github.com/Wagnard/display-drivers-uninstaller"
-
-			ElseIf Application.Settings.VisitOffer Then
-				webAddress = "https://www.driverdr.com/lp/update-display-drivers.html"
-			End If
-
-			If Not IsNullOrWhitespace(webAddress) Then
-
-				Dim process As Process = New Process() With
-				 {
-				  .StartInfo = New ProcessStartInfo(webAddress, Nothing) With
-				  {
-				   .UseShellExecute = True,
-				   .CreateNoWindow = True,
-				   .RedirectStandardOutput = False
-				  }
-				 }
-
-				process.Start()
-				'Do not put WaitForExit here. It will cause error and prevent DDU to exit.
-				process.Close()
-				closeddu()
-				Exit Sub
-			End If
-
-			If Not Application.Data.IsDebug Then
-
-				If Not isElevated Then
-					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text3"), Application.Settings.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-					'closeddu()
-					' Restart program and run as admin
-					Try
-						System.Diagnostics.Process.Start(New ProcessStartInfo(Application.Paths.AppExeFile) With {.Verb = "runas"})
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-
-					Application.Current.Shutdown()
-					Exit Sub
-				End If
-			End If
-
-			'second, we check on what we are running and set variables accordingly (os, architecture)
-			Dim versionFound As Boolean = False
-			Dim regOSValue As String = Nothing
-
-			Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
-				If regkey IsNot Nothing Then
-					regOSValue = CStr(regkey.GetValue("CurrentVersion"))
-
-					If Not IsNullOrWhitespace(regOSValue) Then
-						Try
-							For Each os As [Enum] In [Enum].GetValues(GetType(OSVersion))
-								If GetDescription(os).Equals(regOSValue) Then
-									Application.Settings.WinVersion = DirectCast(os, OSVersion)
-									versionFound = (Application.Settings.WinVersion <> OSVersion.Unknown)
-									Exit For
-								End If
-							Next
-						Catch ex As Exception
-							versionFound = False
-						End Try
-					End If
-				End If
-			End Using
-
-			If Not versionFound Then		' Double check
-				Select Case regOSValue
-					Case "5.1" : Application.Settings.WinVersion = OSVersion.WinXP
-					Case "5.2" : Application.Settings.WinVersion = OSVersion.WinXPPro_Server2003
-					Case "6.0" : Application.Settings.WinVersion = OSVersion.WinVista
-					Case "6.1" : Application.Settings.WinVersion = OSVersion.Win7
-					Case "6.2" : Application.Settings.WinVersion = OSVersion.Win8
-					Case "6.3" : Application.Settings.WinVersion = OSVersion.Win81
-					Case "6.4", "10", "10.0" : Application.Settings.WinVersion = OSVersion.Win10
-					Case Else : Application.Settings.WinVersion = OSVersion.Unknown
-				End Select
-			End If
-
+			'lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", String.Format("Text{0}", If(Application.Settings.UpdateAvailable = UpdateStatus.NotChecked, String.Empty, CInt(Application.Settings.UpdateAvailable).ToString())))
 
 			' https://msdn.microsoft.com/en-us/library/windows/desktop/ms724832%28v=vs.85%29.aspx
 
@@ -5601,73 +5416,6 @@ Public Class frmMain
 				'check computer/os info
 				'----------------------
 
-				Dim archIs64 As Boolean
-
-				Application.Settings.SelectedGPU = GPUVendor.Nvidia
-
-				If IntPtr.Size = 8 Then
-					archIs64 = True
-					Application.Paths.CreateDirectories(Application.Paths.AppBase & "\x64")
-
-				ElseIf IntPtr.Size = 4 Then
-					archIs64 = False
-					Application.Paths.CreateDirectories(Application.Paths.AppBase & "\x86")
-				End If
-
-
-				Application.Settings.WinIs64 = archIs64
-
-
-				ddudrfolder = If(archIs64, "x64", "x86")
-
-				If Not identity.IsSystem Then
-					If archIs64 Then
-						Try
-							If winxp Then  'XP64
-								File.WriteAllBytes(Application.Paths.AppBase & "x64\ddudr.exe", My.Resources.ddudrxp64)
-							Else
-								File.WriteAllBytes(Application.Paths.AppBase & "x64\ddudr.exe", My.Resources.ddudr64)
-							End If
-
-							File.WriteAllBytes(Application.Paths.AppBase & "x64\paexec.exe", My.Resources.paexec)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-					Else
-						Try
-							If winxp Then  'XP32
-								System.IO.File.WriteAllBytes(Application.Paths.AppBase & "x86\ddudr.exe", My.Resources.ddudrxp32)
-							Else 'all other 32 bits
-								System.IO.File.WriteAllBytes(Application.Paths.AppBase & "x86\ddudr.exe", My.Resources.ddudr32)
-							End If
-
-							System.IO.File.WriteAllBytes(Application.Paths.AppBase & "x86\paexec.exe", My.Resources.paexec)
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-					End If
-
-					If archIs64 = True Then
-						If Not FileIO.ExistsFile(Application.Paths.AppBase & "x64\ddudr.exe") Then
-							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
-
-							btnCleanRestart.IsEnabled = False
-							btnClean.IsEnabled = False
-							btnCleanShutdown.IsEnabled = False
-							Exit Sub
-						End If
-					ElseIf archIs64 = False Then
-						If Not FileIO.ExistsFile(Application.Paths.AppBase & "x86\ddudr.exe") Then
-							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
-
-							btnCleanRestart.IsEnabled = False
-							btnClean.IsEnabled = False
-							btnCleanShutdown.IsEnabled = False
-							Exit Sub
-						End If
-					End If
-				End If
-
 				'processing arguments
 
 				'arg = String.Join(" ", arguments, 1, arguments.Length - 1)
@@ -5745,141 +5493,6 @@ Public Class frmMain
 					Exit Sub
 				End If
 
-				Me.Topmost = True
-
-
-				'here I check if the process is running on system user account. if not, make it so.
-				If Not MyIdentity.IsSystem Then
-					'This code checks to see which mode Windows has booted up in.
-					Dim processstopservice As New Process
-					Select Case System.Windows.Forms.SystemInformation.BootMode
-						Case WinForm.BootMode.FailSafeWithNetwork, WinForm.BootMode.FailSafe
-							'The computer was booted using only the basic files and drivers.
-							'This is the same as Safe Mode
-							safemode = True
-							Me.WindowState = Windows.WindowState.Normal
-							If winxp = False Then
-								Dim setbcdedit As New ProcessStartInfo
-								setbcdedit.FileName = "cmd.exe"
-								setbcdedit.Arguments = " /CBCDEDIT /deletevalue safeboot"
-								setbcdedit.UseShellExecute = False
-								setbcdedit.CreateNoWindow = True
-								setbcdedit.RedirectStandardOutput = False
-
-								processstopservice.StartInfo = setbcdedit
-								processstopservice.Start()
-								processstopservice.WaitForExit()
-								processstopservice.Close()
-							End If
-						Case WinForm.BootMode.Normal
-							safemode = False
-
-							If winxp = False AndAlso isElevated Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
-								If restart Then	 'restart command line argument
-									restartinsafemode()
-									Exit Sub
-								Else
-									If Application.Settings.ShowSafeModeMsg = True Then
-										If Not silent Then
-											Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
-											Dim frmSafeBoot As New frmLaunch
-
-											With frmSafeBoot
-												.DataContext = Me.DataContext
-												.Topmost = True
-												.ShowInTaskbar = False
-												.Owner = Me
-											End With
-
-
-
-											' frmMain could be Invisible from start and shown AFTER all "processing"
-											' (WPF renders UI too fast which cause 'flash' before frmLaunch on start)
-
-											Dim launch As Boolean? = frmSafeBoot.ShowDialog()
-
-											If launch IsNot Nothing AndAlso launch Then
-												bootOption = frmSafeBoot.selection
-											End If
-
-											Select Case bootOption
-												Case 0 'normal
-													Exit Select
-												Case 1 'SafeMode
-													restartinsafemode(False)
-													Exit Sub
-												Case 2 'SafeMode with network
-													restartinsafemode(True)
-													Exit Sub
-												Case Else '-1 = Close
-													Me.Topmost = False
-													closeddu()
-													Exit Sub
-											End Select
-										End If
-									End If
-								End If
-							End If
-					End Select
-
-					Topmost = False
-
-					If Not Application.Data.IsDebug Then
-
-						Dim stopservice As New ProcessStartInfo
-						stopservice.FileName = "cmd.exe"
-						stopservice.Arguments = " /Csc stop PAExec"
-						stopservice.UseShellExecute = False
-						stopservice.CreateNoWindow = True
-						stopservice.RedirectStandardOutput = False
-
-						processstopservice.StartInfo = stopservice
-						processstopservice.Start()
-						processstopservice.WaitForExit()
-						processstopservice.Close()
-						System.Threading.Thread.Sleep(10)
-
-						stopservice.Arguments = " /Csc delete PAExec"
-
-						processstopservice.StartInfo = stopservice
-						processstopservice.Start()
-						processstopservice.WaitForExit()
-						processstopservice.Close()
-
-						stopservice.Arguments = " /Csc interrogate PAExec"
-						processstopservice.StartInfo = stopservice
-						processstopservice.Start()
-						processstopservice.WaitForExit()
-						processstopservice.Close()
-
-						processinfo.FileName = baseDir & "\" & ddudrfolder & "\paexec.exe"
-						processinfo.Arguments = "-noname -i -s " & Chr(34) & baseDir & "\" & System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" & Chr(34) + Application.Settings.Arguments
-						processinfo.UseShellExecute = False
-						processinfo.CreateNoWindow = True
-						processinfo.RedirectStandardOutput = False
-
-						process.StartInfo = processinfo
-						process.Start()
-						'Do not add waitforexit here or DDU(current user)will not close
-						process.Close()
-
-						closeddu()
-						Exit Sub
-					Else
-						Me.WindowState = Windows.WindowState.Normal
-					End If
-				Else
-					Select Case System.Windows.Forms.SystemInformation.BootMode
-						Case Forms.BootMode.FailSafe
-							safemode = True
-						Case Forms.BootMode.FailSafeWithNetwork
-							safemode = True
-						Case Forms.BootMode.Normal
-							safemode = False
-					End Select
-					Me.WindowState = Windows.WindowState.Normal
-				End If
-
 				GetGPUDetails(True)
 
 				' ----------------------------------------------------------------------------
@@ -5944,8 +5557,6 @@ Public Class frmMain
 				Exit Sub
 			End Try
 
-			Topmost = False
-
 			EnableControls(True)
 
 			If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
@@ -5958,16 +5569,9 @@ Public Class frmMain
 
 				trd.Start()
 			End If
-
 		Catch ex As Exception
 			Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try
-	End Sub
-
-	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
-		If silent Then
-			Me.Hide()
-		End If
 	End Sub
 
 	Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
@@ -7770,10 +7374,10 @@ Public Class frmMain
 			'		SetupAPI.UninstallDevice(d)
 			'	End If
 			'Next
-
-			For i As Int32 = 0 To 1000
-				Application.Log.AddException(New ComponentModel.Win32Exception(32), "TEST: Message" & i.ToString())
-			Next
+			MessageBox.Show(Application.Settings.UpdateAvailable.ToString())
+			'For i As Int32 = 0 To 1000
+			'	Application.Log.AddException(New ComponentModel.Win32Exception(32), "TEST: Message" & i.ToString())
+			'Next
 			' Multiline TEST
 			'Dim logEntry As LogEntry = Application.Log.CreateEntry()
 

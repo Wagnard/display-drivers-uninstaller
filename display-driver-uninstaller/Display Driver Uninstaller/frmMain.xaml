@@ -9,13 +9,13 @@
 
 	Title="{Binding Settings.AppName, Mode=OneWay}"
 	Height="600" Width="800"
-	MinHeight="540" MinWidth="640" ResizeMode="CanResize" Loaded="frmMain_Loaded"
-	Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico"
+	MinHeight="540" MinWidth="640" ResizeMode="CanResize" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico"
 	Visibility="Visible" WindowStartupLocation="CenterScreen" d:DesignHeight="550" d:DesignWidth="640">
 
 	<Window.Resources>
 		<conv:BooleanToVisibilityConverter x:Key="BoolToVisibility" TrueValue="Visible" FalseValue="Collapsed" />
 		<conv:BooleanToString x:Key="BoolToStr" TrueValue="x64" FalseValue="x86" />
+		<conv:EnumToTextConverter x:Key="EnumToText" />
 
 		<ImageBrush x:Key="logoAMD" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/amd_logo.png" Stretch="Uniform" AlignmentY="Bottom" />
 		<ImageBrush x:Key="logoNvidia" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/nvidia_logo.png" Stretch="Uniform" AlignmentY="Bottom" />
@@ -111,7 +111,7 @@
 		<DockPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="3" Margin="10,0">
 			<DockPanel DockPanel.Dock="Bottom" Grid.Row="1" Grid.Column="3" >
 				<ComboBox Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedItem="{Binding Settings.SelectedGPU, Mode=TwoWay}" DockPanel.Dock="Top" />
-				<Label Name="lblSelectedGPU" Content="Selected GPU: " DockPanel.Dock="Top" FontWeight="Bold" VerticalAlignment="Center" />
+				<Label Name="lblSelectedGPU" Content="lblSelectedGPU" DockPanel.Dock="Top" FontWeight="Bold" VerticalAlignment="Center" />
 			</DockPanel>
 
 			<Border DockPanel.Dock="Bottom" Margin="0,0,0,10">
@@ -161,7 +161,7 @@
 
 		<DockPanel LastChildFill="True" Margin="10" Grid.Row="5" Grid.Column="3">
 			<StackPanel DockPanel.Dock="Bottom">
-				<Label x:Name="lblLanguage" Content="Selected language" FontWeight="Bold" />
+				<Label x:Name="lblLanguage" Content="lblLanguage" FontWeight="Bold" />
 				<ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" SelectedItem="{Binding Settings.SelectedLanguage, Mode=TwoWay}" DisplayMemberPath="DisplayText" VerticalAlignment="Top" Height="22" IsReadOnly="True" />
 			</StackPanel>
 
@@ -188,7 +188,7 @@
 			</ListBox.ItemContainerStyle>
 		</ListBox>
 
-		<Label x:Name="lblUpdate" Content="lblUpdate" Grid.Row="6" Grid.ColumnSpan="2" />
+		<Label Name="lblUpdate" Content="{Binding Settings.UpdateAvailable, Mode=OneWay, Converter={StaticResource EnumToText}}" Grid.Row="6" Grid.ColumnSpan="2" />
 
 		<Border Grid.Row="7" Grid.ColumnSpan="4" Margin="0,10,0,0" Background="#28000000">
 			<Grid HorizontalAlignment="Center">

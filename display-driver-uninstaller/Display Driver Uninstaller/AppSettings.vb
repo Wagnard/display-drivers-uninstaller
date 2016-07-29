@@ -4,13 +4,20 @@ Imports System.Windows
 Imports System.Reflection
 Imports System.Collections.ObjectModel
 
-Public Enum GPUVendor
+Public Enum GPUVendor As Int32
 	Nvidia
 	AMD
 	Intel
 End Enum
 
-Public Enum OSVersion
+Public Enum UpdateStatus As Int32
+	NotChecked = 1
+	NoUpdates = 2
+	UpdateAvailable = 3
+	[Error] = 4
+End Enum
+
+Public Enum OSVersion As Int32
 	''' <summary> [ 0.0 ] - Unsupported OS</summary>
 	<ComponentModel.Description("0.0")>
 	Unknown = 0
@@ -54,34 +61,34 @@ Public Class AppSettings
 	Private m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
 	Private m_gpuSelected As DependencyProperty = Reg("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
 	Private m_langSelected As DependencyProperty = Reg("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
-	Private m_updateAvail As DependencyProperty = Reg("UpdateAvail", GetType(Boolean), GetType(AppSettings), False)
+	Private m_updateAvailable As DependencyProperty = Reg("UpdateAvailable", GetType(UpdateStatus), GetType(AppSettings), UpdateStatus.NotChecked)
 
 	Private m_winVersion As DependencyProperty = Reg("WinVersion", GetType(OSVersion), GetType(AppSettings), OSVersion.Unknown)
 	Private m_winVersionText As DependencyProperty = Reg("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
 	Private m_winIs64 As DependencyProperty = Reg("WinIs64", GetType(Boolean), GetType(AppSettings), False)
 
 	' Removals
-    Private m_remMonitors As DependencyProperty = Reg("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remMonitors As DependencyProperty = Reg("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
 
-    Private m_remCrimsonCache As DependencyProperty = Reg("RemoveCrimsonCache", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remCrimsonCache As DependencyProperty = Reg("RemoveCrimsonCache", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remAMDDirs As DependencyProperty = Reg("RemoveAMDDirs", GetType(Boolean), GetType(AppSettings), False)
-    Private m_remAMDAudioBus As DependencyProperty = Reg("RemoveAMDAudioBus", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remAMDAudioBus As DependencyProperty = Reg("RemoveAMDAudioBus", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remAMDKMPFD As DependencyProperty = Reg("RemoveAMDKMPFD", GetType(Boolean), GetType(AppSettings), True)
 
 	Private m_remNvidiaDirs As DependencyProperty = Reg("RemoveNvidiaDirs", GetType(Boolean), GetType(AppSettings), False)
-    Private m_remPhysX As DependencyProperty = Reg("RemovePhysX", GetType(Boolean), GetType(AppSettings), True)
-    Private m_rem3DtvPlay As DependencyProperty = Reg("Remove3DTVPlay", GetType(Boolean), GetType(AppSettings), True)
-    Private m_remGFE As DependencyProperty = Reg("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remPhysX As DependencyProperty = Reg("RemovePhysX", GetType(Boolean), GetType(AppSettings), True)
+	Private m_rem3DtvPlay As DependencyProperty = Reg("Remove3DTVPlay", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remGFE As DependencyProperty = Reg("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
 
 	' Settings
 	Private m_showSafeModeMsg As DependencyProperty = Reg("ShowSafeModeMsg", GetType(Boolean), GetType(AppSettings), True)
 	Private m_UseRoamingCfg As DependencyProperty = Reg("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
-    Private m_CheckUpdates As DependencyProperty = Reg("CheckUpdates", GetType(Boolean), GetType(AppSettings), True)
+	Private m_CheckUpdates As DependencyProperty = Reg("CheckUpdates", GetType(Boolean), GetType(AppSettings), True)
 	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
 	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
 	Private m_removevulkan As DependencyProperty = Reg("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
 	Private m_UseSetupAPI As DependencyProperty = Reg("UseSetupAPI", GetType(Boolean), GetType(AppSettings), True)
-    Private m_showoffer As DependencyProperty = Reg("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
+	Private m_showoffer As DependencyProperty = Reg("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
 
 	' Visit links
 	Private m_goodsite As DependencyProperty = Reg("GoodSite", GetType(Boolean), GetType(AppSettings), False)
@@ -91,8 +98,8 @@ Public Class AppSettings
 	Private m_visitGuru3DNvidia As DependencyProperty = Reg("VisitGuru3DNvidia", GetType(Boolean), GetType(AppSettings), False)
 	Private m_visitGuru3DAMD As DependencyProperty = Reg("VisitGuru3DAMD", GetType(Boolean), GetType(AppSettings), False)
 	Private m_visitDDUHome As DependencyProperty = Reg("VisitDDUHome", GetType(Boolean), GetType(AppSettings), False)
-    Private m_visitGeforce As DependencyProperty = Reg("VisitGeforce", GetType(Boolean), GetType(AppSettings), False)
-    Private m_visitOffer As DependencyProperty = Reg("VisitOffer", GetType(Boolean), GetType(AppSettings), False)
+	Private m_visitGeforce As DependencyProperty = Reg("VisitGeforce", GetType(Boolean), GetType(AppSettings), False)
+	Private m_visitOffer As DependencyProperty = Reg("VisitOffer", GetType(Boolean), GetType(AppSettings), False)
 
 	Private m_arguments As DependencyProperty = Reg("Arguments", GetType(String), GetType(AppSettings), String.Empty)
 	Private m_argumentsArray As DependencyProperty = Reg("ArgumentsArray", GetType(String()), GetType(AppSettings), Nothing)
@@ -165,12 +172,12 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property UpdateAvail As Boolean
+	Public Property UpdateAvailable As UpdateStatus
 		Get
-			Return CBool(GetValue(m_updateAvail))
+			Return DirectCast(GetValue(m_updateAvailable), UpdateStatus)
 		End Get
-		Set(value As Boolean)
-			SetValue(m_updateAvail, value)
+		Set(value As UpdateStatus)
+			SetValue(m_updateAvailable, value)
 		End Set
 	End Property
 
@@ -265,14 +272,14 @@ Public Class AppSettings
 			SetValue(m_UseRoamingCfg, value)
 		End Set
 	End Property
-    Public Property CheckUpdates As Boolean
-        Get
-            Return CBool(GetValue(m_CheckUpdates))
-        End Get
-        Set(value As Boolean)
-            SetValue(m_CheckUpdates, value)
-        End Set
-    End Property
+	Public Property CheckUpdates As Boolean
+		Get
+			Return CBool(GetValue(m_CheckUpdates))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_CheckUpdates, value)
+		End Set
+	End Property
 	Public Property CreateRestorePoint As Boolean
 		Get
 			Return CBool(GetValue(m_createRestorePoint))
@@ -305,15 +312,15 @@ Public Class AppSettings
 		Set(value As Boolean)
 			SetValue(m_UseSetupAPI, value)
 		End Set
-    End Property
-    Public Property ShowOffer As Boolean
-        Get
-            Return CBool(GetValue(m_showoffer))
-        End Get
-        Set(value As Boolean)
-            SetValue(m_showoffer, value)
-        End Set
-    End Property
+	End Property
+	Public Property ShowOffer As Boolean
+		Get
+			Return CBool(GetValue(m_showoffer))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_showoffer, value)
+		End Set
+	End Property
 
 	Public Property GoodSite As Boolean
 		Get
@@ -371,15 +378,15 @@ Public Class AppSettings
 		Set(value As Boolean)
 			SetValue(m_visitGeforce, value)
 		End Set
-    End Property
-    Public Property VisitOffer As Boolean
-        Get
-            Return CBool(GetValue(m_visitOffer))
-        End Get
-        Set(value As Boolean)
-            SetValue(m_visitOffer, value)
-        End Set
-    End Property
+	End Property
+	Public Property VisitOffer As Boolean
+		Get
+			Return CBool(GetValue(m_visitOffer))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_visitOffer, value)
+		End Set
+	End Property
 	Public Property Arguments As String
 		Get
 			Return CStr(GetValue(m_arguments))
@@ -438,37 +445,43 @@ Public Class AppSettings
 			Load(Path.Combine(Application.Paths.Settings, "Settings.xml"))
 			UseRoamingConfig = False
 		End If
+	End Sub
 
-
-		Dim args As String() = Environment.GetCommandLineArgs()
-
-		If args.Length > 1 Then
-			ReDim ArgumentsArray(args.Length - 2)
-			Array.Copy(args, 1, ArgumentsArray, 0, args.Length - 1)
+	Public Sub LoadArgs(ByVal args() As String, ByRef hasLink As Boolean)
+		If args IsNot Nothing AndAlso args.Length > 0 Then
+			ReDim ArgumentsArray(args.Length - 1)
+			Array.Copy(args, 0, ArgumentsArray, 0, args.Length)
 
 			Arguments = String.Join(" ", ArgumentsArray)
 
-			For i As Int32 = 1 To args.Length - 1
+			For i As Int32 = 0 To args.Length - 1
 				If StrContainsAny(args(i), True, "donate") Then
 					VisitDonate = True
+					hasLink = True
 
 				ElseIf StrContainsAny(args(i), True, "svn") Then
 					VisitSVN = True
+					hasLink = True
 
 				ElseIf StrContainsAny(args(i), True, "guru3dnvidia") Then
 					VisitGuru3DNvidia = True
+					hasLink = True
 
 				ElseIf StrContainsAny(args(i), True, "guru3damd") Then
 					VisitGuru3DAMD = True
+					hasLink = True
 
 				ElseIf StrContainsAny(args(i), True, "dduhome") Then
 					VisitDDUHome = True
+					hasLink = True
 
 				ElseIf StrContainsAny(args(i), True, "geforce") Then
 					VisitGeforce = True
+					hasLink = True
 
 				ElseIf StrContainsAny(args(i), True, "visitoffer") Then
 					VisitOffer = True
+					hasLink = True
 
 				ElseIf StrContainsAny(args(i), True, "5648674614687") Then
 					Application.Data.IsDebug = True
@@ -477,7 +490,6 @@ Public Class AppSettings
 		Else
 			Arguments = String.Empty
 		End If
-
 	End Sub
 
 	Private Sub Save(ByVal fileName As String)
@@ -517,7 +529,7 @@ Public Class AppSettings
 						.WriteAttributeString("Version", String.Format("{0}.{1}.{2}.{3}", v.Major, v.Minor, v.Build, v.Revision))
 						.WriteStartElement("Settings")
 
-						.WriteElementString("SelectedLanguage", SelectedLanguage.ISOLanguage)
+						.WriteElementString("SelectedLanguage", If(SelectedLanguage IsNot Nothing, SelectedLanguage.ISOLanguage, Languages.DefaultEngISO))
 
 						.WriteElementString("RemoveMonitors", RemoveMonitors.ToString())
 						.WriteElementString("RemoveCrimsonCache", RemoveCrimsonCache.ToString())
@@ -530,13 +542,13 @@ Public Class AppSettings
 						.WriteElementString("RemoveGFE", RemoveGFE.ToString())
 						.WriteElementString("ShowSafeModeMsg", ShowSafeModeMsg.ToString())
 						.WriteElementString("UseRoamingConfig", UseRoamingConfig.ToString())
-                        .WriteElementString("CheckUpdates", CheckUpdates.ToString())
+						.WriteElementString("CheckUpdates", CheckUpdates.ToString())
 						.WriteElementString("CreateRestorePoint", CreateRestorePoint.ToString())
 						.WriteElementString("SaveLogs", SaveLogs.ToString())
 						.WriteElementString("RemoveVulkan", RemoveVulkan.ToString())
-                        .WriteElementString("UseSetupAPI", UseSetupAPI.ToString())
-                        .WriteElementString("ShowOffer", ShowOffer.ToString())
-                        .WriteElementString("GoodSite", GoodSite.ToString())
+						.WriteElementString("UseSetupAPI", UseSetupAPI.ToString())
+						.WriteElementString("ShowOffer", ShowOffer.ToString())
+						.WriteElementString("GoodSite", GoodSite.ToString())
 
 						.WriteEndElement()
 
@@ -549,7 +561,6 @@ Public Class AppSettings
 					sw.Close()
 				End Using
 			End Using
-
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
@@ -562,6 +573,10 @@ Public Class AppSettings
 
 		Try
 			Using fs As Stream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.None)
+				If fs.Length <= 3L Then
+					Return False
+				End If
+
 				Using sr As New StreamReader(fs, System.Text.Encoding.UTF8, True)
 					Dim settings As New XmlReaderSettings With
 					 {
@@ -670,8 +685,8 @@ Public Class AppSettings
 							Case "useroamingconfig"
 								UseRoamingConfig = Boolean.Parse(KvP.Value)
 
-                            Case "checkupdates"
-                                CheckUpdates = Boolean.Parse(KvP.Value)
+							Case "checkupdates"
+								CheckUpdates = Boolean.Parse(KvP.Value)
 
 							Case "createrestorepoint"
 								CreateRestorePoint = Boolean.Parse(KvP.Value)
@@ -683,10 +698,10 @@ Public Class AppSettings
 								RemoveVulkan = Boolean.Parse(KvP.Value)
 
 							Case "usesetupapi"
-                                UseSetupAPI = Boolean.Parse(KvP.Value)
+								UseSetupAPI = Boolean.Parse(KvP.Value)
 
-                            Case "showoffer"
-                                ShowOffer = Boolean.Parse(KvP.Value)
+							Case "showoffer"
+								ShowOffer = Boolean.Parse(KvP.Value)
 
 							Case "goodsite"
 								GoodSite = Boolean.Parse(KvP.Value)
@@ -704,4 +719,5 @@ Public Class AppSettings
 			Return False
 		End Try
 	End Function
+
 End Class

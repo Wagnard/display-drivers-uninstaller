@@ -1,7 +1,7 @@
 ﻿<Window x:Name="frmLaunch" x:Class="frmLaunch"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	Title="frmLaunch" Height="400" Width="500" ShowInTaskbar="False" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+	Title="frmLaunch" Height="400" Width="500" ShowInTaskbar="True" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico">
 
 	<Grid>
 		<Grid.ColumnDefinitions>

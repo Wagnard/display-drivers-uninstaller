@@ -295,6 +295,9 @@ notFound:
 
 		If TypeOf (ctrl) Is ComboBox Then				'ComboBox
 			Dim cb As ComboBox = DirectCast(ctrl, ComboBox)
+
+			If UpdatedBinding(cb, ComboBox.ItemsSourceProperty) Then Return
+
 			Dim items As List(Of String) = GetTranslationList(window, cb.Name, "Item")
 
 			If items IsNot Nothing AndAlso items.Count > 0 Then
@@ -305,6 +308,9 @@ notFound:
 
 		ElseIf TypeOf (ctrl) Is ContentControl Then		'control has '.Content' property ( label, button )
 			Dim contentCtrl As ContentControl = DirectCast(ctrl, ContentControl)
+
+			If UpdatedBinding(contentCtrl, ContentControl.ContentProperty) Then Return
+
 			text = GetTranslation(window, contentCtrl.Name, "Text")
 
 			If Not String.IsNullOrEmpty(text) Then
@@ -326,6 +332,8 @@ notFound:
 		ElseIf TypeOf (ctrl) Is MenuItem Then			'MenuItem
 			Dim menuCtrl As MenuItem = DirectCast(ctrl, MenuItem)
 
+			If UpdatedBinding(menuCtrl, MenuItem.HeaderProperty) Then Return
+
 			text = GetTranslation(window, menuCtrl.Name, "Text")
 
 			If Not String.IsNullOrEmpty(text) Then
@@ -340,6 +348,8 @@ notFound:
 		ElseIf TypeOf (ctrl) Is TextBlock Then			'TextBlock
 			Dim tb As TextBlock = DirectCast(ctrl, TextBlock)
 
+			If UpdatedBinding(tb, TextBlock.TextProperty) Then Return
+
 			text = GetTranslation(window, tb.Name, "Text")
 
 			If Not String.IsNullOrEmpty(text) Then
@@ -352,8 +362,20 @@ notFound:
 				tb.ToolTip = tooltipText
 			End If
 		End If
-
 	End Sub
+
+	Private Shared Function UpdatedBinding(ByVal dObj As DependencyObject, ByVal dProp As DependencyProperty) As Boolean
+		If dObj IsNot Nothing AndAlso dProp IsNot Nothing AndAlso BindingOperations.IsDataBound(dObj, dProp) Then
+			Dim bindingExp As BindingExpression = BindingOperations.GetBindingExpression(dObj, dProp)
+
+			If bindingExp IsNot Nothing Then
+				bindingExp.UpdateTarget()
+				Return True
+			End If
+		End If
+
+		Return False
+	End Function
 
 	Private Shared Function LoadFile(ByVal langFile As String) As Stream
 		If (langFile.Equals(DefaultEngISO, StringComparison.OrdinalIgnoreCase)) Then

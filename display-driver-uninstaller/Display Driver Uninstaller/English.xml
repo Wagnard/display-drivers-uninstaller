@@ -122,6 +122,7 @@
 			<Text12>You are not in Safe Mode. It is highly recommended that you reboot into Safe Mode to avoid possible issues. Reboot into Safe Mode now?</Text12>
 			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>There is a pending reboot, please reboot before using DDU</Text14>
+			<Text15>Unable to find PAExec. Please refer to the log.</Text15>
 		</Messages>
 		
 		<UpdateLog>

@@ -98,6 +98,7 @@ Namespace Win32
 			DIR_NOT_EMPTY = 145UI
 			NO_MORE_ITEMS = 259UI
 			NOT_ALL_ASSIGNED = &H514		' AdjustToken, privilige already assigned
+			CANCELLED = 1223UI
 			INVALID_USER_BUFFER = 1784UI	' Invalid buffer (size or structure doesn't match)
 			INVALID_FILE_ATTRIBUTES = &HFFFFFFFFUI
 		End Enum

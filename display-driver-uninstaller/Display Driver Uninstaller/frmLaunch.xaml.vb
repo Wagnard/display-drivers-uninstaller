@@ -15,9 +15,11 @@
 		Me.Close()
 	End Sub
 
-	Private Sub frmLaunch_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
-		Me.Visibility = Windows.Visibility.Visible
+	Private Sub frmLaunch_ContentRendered(sender As Object, e As System.EventArgs) Handles Me.ContentRendered
+		Me.Topmost = False
+	End Sub
 
+	Private Sub frmLaunch_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
         Languages.TranslateForm(Me)
 	End Sub
 
@@ -29,8 +31,5 @@
 		End If
 	End Sub
 
-	Private Sub frmLaunch_ContentRendered(sender As Object, e As EventArgs) Handles MyBase.ContentRendered
-		Me.Topmost = False
-	End Sub
 End Class
 
