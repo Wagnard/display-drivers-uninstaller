@@ -128,7 +128,7 @@ Public Class AppSettings
 			Return DirectCast(GetValue(m_winVersion), OSVersion)
 		End Get
 		Set(value As OSVersion)
-			SetValue(m_winVersion, value)
+			UpdateWinText(value)
 		End Set
 	End Property
 	Public Property WinVersionText As String
@@ -405,6 +405,44 @@ Public Class AppSettings
 			Return DependencyProperty.Register(s, t, c, New PropertyMetadata(m))
 		End If
 	End Function
+
+	Private Sub UpdateWinText(ByVal version As OSVersion)
+		If WinVersion = version Then
+			Return
+		End If
+
+		' https://msdn.microsoft.com/en-us/library/windows/desktop/ms724832%28v=vs.85%29.aspx
+
+		Select Case version
+			Case OSVersion.WinXP : Application.Settings.WinVersionText = "Windows XP"
+			Case OSVersion.WinXPPro_Server2003 : Application.Settings.WinVersionText = "Windows XP (x64) or Server 2003"
+			Case OSVersion.WinVista : Application.Settings.WinVersionText = "Windows Vista or Server 2008"
+			Case OSVersion.Win7 : Application.Settings.WinVersionText = "Windows 7 or Server 2008R2"
+			Case OSVersion.Win8 : Application.Settings.WinVersionText = "Windows 8 or Server 2012"
+			Case OSVersion.Win81
+				Application.Settings.WinVersionText = "Windows 8.1"
+
+				Using regkey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
+					If regkey IsNot Nothing Then
+						Dim regValue As String = regkey.GetValue("CurrentMajorVersionNumber", String.Empty).ToString()
+
+						If Not IsNullOrWhitespace(regValue) AndAlso regValue.Equals("10") Then
+							version = OSVersion.Win10
+							Application.Settings.WinVersionText = "Windows 10"
+						End If
+					End If
+				End Using
+
+			Case OSVersion.Win10
+				Application.Settings.WinVersionText = "Windows 10"
+
+			Case Else
+				Application.Settings.WinVersionText = "Unsupported OS"
+				Application.Log.AddWarningMessage("Unsupported OS.")
+		End Select
+
+		SetValue(m_winVersion, version)
+	End Sub
 
 	Public Sub New()
 		m_languageOptions = New ObservableCollection(Of Languages.LanguageOption)()

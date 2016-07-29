@@ -7,6 +7,7 @@ Imports System.Text
 
 Imports Display_Driver_Uninstaller.Win32
 Imports System.Security.Principal
+Imports Microsoft.Win32
 
 Class Application
 
@@ -22,6 +23,7 @@ Class Application
 
 #End Region
 
+	Private Shared m_dispatcher As Threading.Dispatcher
 	Private Shared m_isDataSaved As Boolean = False
 	Private Shared m_Data As Data
 
@@ -55,6 +57,7 @@ Class Application
 
 	Public Sub New()
 		m_Data = New Data()
+		m_dispatcher = Me.Dispatcher
 
 		'ALL Exceptions are shown in English
 		Thread.CurrentThread.CurrentCulture = New CultureInfo("en-US")
@@ -65,11 +68,15 @@ Class Application
 	End Sub
 
 	Public Shared Sub SaveData()
-		If Not m_isDataSaved Then
-			Settings.Save()
-			Log.SaveToFile()
+		If Not m_dispatcher.CheckAccess() Then
+			m_dispatcher.Invoke(Sub() SaveData())
+		Else
+			If Not m_isDataSaved Then
+				Settings.Save()
+				Log.SaveToFile()
 
-			m_isDataSaved = True
+				m_isDataSaved = True
+			End If
 		End If
 	End Sub
 
@@ -173,6 +180,10 @@ Class Application
 			'	-> frmMain_Loaded				(UI elements loaded, but not rendered)
 			'	-> frmMain_ContentRendered		(UI is completely ready for use, dimensions of each control aligned etc.)
 
+			If Settings.WinVersion = OSVersion.Unknown Then
+				mainWindow.EnableControls(False)
+			End If
+
 			mainWindow.Show()
 
 		Catch ex As Exception
@@ -190,8 +201,26 @@ Class Application
 		Try
 			' frmMain is already closed here
 
-			SaveData()
+			If Not WindowsIdentity.GetCurrent().IsSystem AndAlso Forms.SystemInformation.BootMode <> Forms.BootMode.Normal Then
+				Try
+					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+						regkey.DeleteSubKeyTree("PAexec")
+					End Using
+				Catch ex As Exception
+					Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PAExec)!")
+				End Try
 
+				Try
+					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+						regkey.DeleteSubKeyTree("PAexec")
+					End Using
+				Catch ex As Exception
+					Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (PAExec)!")
+				End Try
+			End If
+
+
+			SaveData()
 		Finally
 			Me.Shutdown(0)	' Close application
 		End Try
@@ -257,9 +286,8 @@ Class Application
 
 
 			' Useful on next steps
-			Settings.WinVersion = GetOSVersion()
+			GetOSVersion()
 			Settings.WinIs64 = (IntPtr.Size = 8)
-
 
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
 				If ExtractPAExec() Then				' Extract PAExec to \x64 or \x86 dir
@@ -333,13 +361,13 @@ Class Application
 		Return False
 	End Function
 
-	Private Function GetOSVersion() As OSVersion
+	Private Sub GetOSVersion()
 		'second, we check on what we are running and set variables accordingly (os, architecture)
 		Dim versionFound As Boolean = False
 		Dim regOSValue As String = Nothing
-		Dim osVersion As OSVersion = osVersion.Unknown
+		Dim version As OSVersion = OSVersion.Unknown
 
-		Using regkey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
+		Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
 			If regkey IsNot Nothing Then
 				regOSValue = regkey.GetValue("CurrentVersion", String.Empty).ToString()
 
@@ -347,8 +375,8 @@ Class Application
 					Try
 						For Each os As [Enum] In [Enum].GetValues(GetType(OSVersion))
 							If GetDescription(os).Equals(regOSValue) Then
-								osVersion = DirectCast(os, OSVersion)
-								versionFound = (osVersion <> osVersion.Unknown)
+								version = DirectCast(os, OSVersion)
+								versionFound = (version <> OSVersion.Unknown)
 								Exit For
 							End If
 						Next
@@ -361,38 +389,37 @@ Class Application
 
 		If Not versionFound Then		' Double check for Unknown
 			Select Case regOSValue
-				Case "5.1" : osVersion = osVersion.WinXP
-				Case "5.2" : osVersion = osVersion.WinXPPro_Server2003
-				Case "6.0" : osVersion = osVersion.WinVista
-				Case "6.1" : osVersion = osVersion.Win7
-				Case "6.2" : osVersion = osVersion.Win8
-				Case "6.3" : osVersion = osVersion.Win81
-				Case "6.4", "10", "10.0" : osVersion = osVersion.Win10
-				Case Else : osVersion = osVersion.Unknown
+				Case "5.1" : version = OSVersion.WinXP
+				Case "5.2" : version = OSVersion.WinXPPro_Server2003
+				Case "6.0" : version = OSVersion.WinVista
+				Case "6.1" : version = OSVersion.Win7
+				Case "6.2" : version = OSVersion.Win8
+				Case "6.3" : version = OSVersion.Win81
+				Case "6.4", "10", "10.0" : version = OSVersion.Win10
+				Case Else : version = OSVersion.Unknown
 			End Select
 		End If
 
-		Return osVersion
-	End Function
+		Application.Settings.WinVersion = version
+	End Sub
 
 	Private Function ExtractPAExec() As Boolean
 		Try
 			Dim isWinXP As Boolean = (Settings.WinVersion = OSVersion.WinXP Or Settings.WinVersion = OSVersion.WinXPPro_Server2003)
 			Dim dir As String = Paths.AppBase & If(Settings.WinIs64, "x64\", "x86\")
 
-
 			Application.Paths.CreateDirectories(dir)
 
 			File.WriteAllBytes(dir & "paexec.exe", My.Resources.paexec)
 
 			If Not FileIO.ExistsFile(dir & "paexec.exe") Then
-				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text15"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 				Return False
 			End If
 
 			Return True
 		Catch ex As Exception
-			Application.Log.AddException(ex, "Extracting PAEexec failed!")
+			Application.Log.AddException(ex, "Extracting PAExec failed!")
 			Return False
 		End Try
 	End Function
@@ -427,9 +454,13 @@ Class Application
 				End If
 
 			Case System.Windows.Forms.BootMode.Normal
-				If Not isWinXP AndAlso Tools.UserHasAdmin Then 'added iselevated so this will not try to boot into safe mode/boot menu without admin rights, as even with the admin check on startup it was for some reason still trying to gain registry access and throwing an exception --probably because there's no return
+				' added iselevated so this will not try to boot into safe mode/boot menu without admin rights,
+				' as even with the admin check on startup it was for some reason still trying to gain registry access 
+				' and throwing an exception --probably because there's no return
+
+				If Not isWinXP AndAlso Tools.UserHasAdmin Then
 					If Settings.ShowSafeModeMsg = True Then
-						Dim bootOption As Integer = -1 '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
+						Dim bootOption As Integer = -1				'-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
 						Dim frmSafeBoot As New frmLaunch With {.DataContext = Data, .Topmost = True}
 
 
@@ -442,14 +473,16 @@ Class Application
 						Select Case bootOption
 							Case 0 'normal
 								Exit Select
+
 							Case 1 'SafeMode
-								RestartToSafemode(False)
-								Return True
+								Return RestartToSafemode(False)
+
 							Case 2 'SafeMode with network
-								RestartToSafemode(True)
-								Return True
+								Return RestartToSafemode(True)
+
 							Case Else '-1 = Close
 								Return True
+
 						End Select
 					End If
 				End If
@@ -502,54 +535,149 @@ Class Application
 		Return True
 	End Function
 
-	Private Sub RestartToSafemode(ByVal withNetwork As Boolean)
-		'SystemRestore()	'we try to do a system restore if allowed before going into safemode.
-		'Application.Log.AddMessage("Restarting in safemode")
+	Private Function RestartToSafemode(ByVal withNetwork As Boolean) As Boolean
+		Try
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+					Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
+						regSubKey.SetValue("", "Service")
+					End Using
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAexec!")
+				Return False
+			End Try
+
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+					Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
+						regSubKey.SetValue("", "Service")
+					End Using
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for PAexec!")
+				Return False
+			End Try
+
+			SystemRestore(Nothing) 'we try to do a system restore if allowed before going into safemode.
+			Application.Log.AddMessage("Restarting in safemode")
 
 
-		'Dim setbootconf As New ProcessStartInfo("bcdedit")
 
-		'If withNetwork Then
-		'	setbootconf.Arguments = "/set safeboot network"
-		'Else
-		'	setbootconf.Arguments = "/set safeboot minimal"
-		'End If
+			Using process As Process = New Process() With
+			  {
+			   .StartInfo = New ProcessStartInfo("bcdedit", If(withNetwork, "/set safeboot network", "/set safeboot minimal")) With
+			   {
+			 .UseShellExecute = False,
+			 .CreateNoWindow = True,
+			 .RedirectStandardOutput = False
+			   }
+			  }
 
-		'setbootconf.UseShellExecute = False
-		'setbootconf.CreateNoWindow = True
-		'setbootconf.RedirectStandardOutput = False
+				process.Start()
+				process.WaitForExit()
+				process.Close()
+			End Using
 
-		'Dim processstopservice As New Process
-		'processstopservice.StartInfo = setbootconf
-		'processstopservice.Start()
-		'processstopservice.WaitForExit()
-		'processstopservice.Close()
-
-		'Try
-		'	Using regkey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
-		'		If regkey IsNot Nothing Then
-		'			regkey.SetValue("*" + Application.Settings.AppName, System.Reflection.Assembly.GetExecutingAssembly().Location)
-		'			regkey.SetValue("*UndoSM", "BCDEDIT /deletevalue safeboot")
-		'		End If
-		'	End Using
-		'Catch ex As Exception
-		'	Application.Log.AddException(ex)
-		'End Try
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
+					If regkey IsNot Nothing Then
+						regkey.SetValue("*" + Settings.AppName, Paths.AppExeFile)
+						regkey.SetValue("*UndoSM", "BCDEDIT /deletevalue safeboot")
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
 
 
-		'processinfo.FileName = "shutdown"
-		'processinfo.Arguments = "/r /t 0"
-		'processinfo.WindowStyle = ProcessWindowStyle.Hidden
-		'processinfo.UseShellExecute = True
-		'processinfo.CreateNoWindow = True
-		'processinfo.RedirectStandardOutput = False
+			RestartComputer()
 
-		'process.StartInfo = processinfo
-		'process.Start()
-		'process.WaitForExit()
-		'process.Close()
+			Return True
+		Catch ex As Exception
+			Log.AddException(ex, "Failed to reboot into Safemode!")
+			Return False
+		End Try
+	End Function
 
-		'closeddu()
+	Public Shared Sub RestartComputer()
+		If Not m_dispatcher.CheckAccess() Then
+			m_dispatcher.Invoke(Sub() RestartComputer())
+		Else
+			Application.Log.AddMessage("Restarting Computer ")
+			Application.SaveData()
+
+			Using process As Process = New Process() With
+			  {
+			   .StartInfo = New ProcessStartInfo("shutdown", "/r /t 0") With
+			   {
+			 .WindowStyle = ProcessWindowStyle.Hidden,
+			 .UseShellExecute = True,
+			 .CreateNoWindow = True,
+			 .RedirectStandardOutput = False
+			   }
+			  }
+
+				process.Start()
+				process.WaitForExit()
+				process.Close()
+			End Using
+		End If
+	End Sub
+
+	Public Shared Sub ShutdownComputer()
+		If Not m_dispatcher.CheckAccess() Then
+			m_dispatcher.Invoke(Sub() ShutdownComputer())
+		Else
+			Application.Log.AddMessage("Shutdown Computer ")
+			Application.SaveData()
+
+			Using process As Process = New Process() With
+			{
+			  .StartInfo = New ProcessStartInfo("shutdown", "/s /t 0") With
+			   {
+			   .WindowStyle = ProcessWindowStyle.Hidden,
+			   .UseShellExecute = True,
+			   .CreateNoWindow = True,
+			   .RedirectStandardOutput = False
+			   }
+			  }
+
+				process.Start()
+				process.WaitForExit()
+				process.Close()
+			End Using
+		End If
+	End Sub
+
+	Public Shared Sub SystemRestore(ByVal owner As Window)
+		If Not m_dispatcher.CheckAccess() Then
+			m_dispatcher.Invoke(Sub() SystemRestore(owner))
+		Else
+			If Application.Settings.CreateRestorePoint AndAlso Forms.SystemInformation.BootMode = Forms.BootMode.Normal Then
+				Dim frmSystemRestore As New frmSystemRestore With
+				 {
+				  .ResizeMode = ResizeMode.NoResize,
+				  .WindowStyle = WindowStyle.ToolWindow
+				 }
+
+				If owner IsNot Nothing Then
+					With frmSystemRestore
+						.WindowStartupLocation = WindowStartupLocation.CenterOwner
+						.Background = owner.Background
+						.Owner = owner
+						.DataContext = owner.DataContext
+					End With
+				Else
+					With frmSystemRestore
+						.WindowStartupLocation = WindowStartupLocation.CenterScreen
+						.DataContext = Data
+					End With
+				End If
+
+				frmSystemRestore.ShowDialog()
+			End If
+		End If
 	End Sub
 
 	' Launching application, Event order

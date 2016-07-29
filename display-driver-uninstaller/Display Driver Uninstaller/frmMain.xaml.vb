@@ -4931,56 +4931,6 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Private Sub RestartComputer()
-		Application.Log.AddMessage("Restarting Computer ")
-
-		Application.SaveData()
-
-		Using process As Process = New Process() With
-		  {
-		   .StartInfo = New ProcessStartInfo("shutdown", "/r /t 0") With
-		   {
-		 .WindowStyle = ProcessWindowStyle.Hidden,
-		 .UseShellExecute = True,
-		 .CreateNoWindow = True,
-		 .RedirectStandardOutput = False
-		   }
-		  }
-
-			process.Start()
-			process.WaitForExit()
-			process.Close()
-		End Using
-
-		closeddu()
-	End Sub
-
-	Private Sub ShutdownComputer()
-		Application.Log.AddMessage("Shutdown Computer ")
-
-		Application.SaveData()
-
-		preventclose = False
-
-		Using process As Process = New Process() With
-		{
-		  .StartInfo = New ProcessStartInfo("shutdown", "/s /t 0") With
-		   {
-		   .WindowStyle = ProcessWindowStyle.Hidden,
-		   .UseShellExecute = True,
-		   .CreateNoWindow = True,
-		   .RedirectStandardOutput = False
-		   }
-		  }
-
-			process.Start()
-			process.WaitForExit()
-			process.Close()
-		End Using
-
-		closeddu()
-	End Sub
-
 	Private Sub rescan()
 
 		'Scan for new devices...
@@ -5244,82 +5194,8 @@ Public Class frmMain
 
 			CheckUpdates()
 
-			'lblUpdate.Content = Languages.GetTranslation("frmMain", "lblUpdate", String.Format("Text{0}", If(Application.Settings.UpdateAvailable = UpdateStatus.NotChecked, String.Empty, CInt(Application.Settings.UpdateAvailable).ToString())))
-
-			' https://msdn.microsoft.com/en-us/library/windows/desktop/ms724832%28v=vs.85%29.aspx
-
-			Select Case Application.Settings.WinVersion
-				Case OSVersion.WinXP
-					Application.Settings.WinVersionText = "Windows XP"
-					winxp = True
-
-				Case OSVersion.WinXPPro_Server2003
-					Application.Settings.WinVersionText = "Windows XP (x64) or Server 2003"
-					winxp = True
-
-				Case OSVersion.WinVista
-					Application.Settings.WinVersionText = "Windows Vista or Server 2008"
-
-				Case OSVersion.Win7
-					Application.Settings.WinVersionText = "Windows 7 or Server 2008R2"
-
-				Case OSVersion.Win8
-					Application.Settings.WinVersionText = "Windows 8 or Server 2012"
-					win8higher = True
-
-				Case OSVersion.Win81
-					Application.Settings.WinVersionText = "Windows 8.1"
-					win8higher = True
-
-					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
-						If regkey IsNot Nothing Then
-							Dim regValue As String = CStr(regkey.GetValue("CurrentMajorVersionNumber"))
-
-							If Not IsNullOrWhitespace(regValue) AndAlso regValue.Equals("10") Then
-								Application.Settings.WinVersion = OSVersion.Win10
-								Application.Settings.WinVersionText = "Windows 10"
-								win10 = True
-							End If
-						End If
-					End Using
-
-				Case OSVersion.Win10
-					Application.Settings.WinVersionText = "Windows 10"
-					win8higher = True
-					win10 = True
-
-				Case Else
-					Application.Settings.WinVersionText = "Unsupported OS"
-					Application.Log.AddMessage("Unsupported OS.")
-
-					EnableControls(False)
-			End Select
-
-
+	
 			Try
-				'allow Paexec to run in safemode
-
-				'  If BootMode.FailSafe Or BootMode.FailSafeWithNetwork Then ' we do this in safemode because of some Antivirus....(Kaspersky)
-				Try
-					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
-							regSubKey.SetValue("", "Service")
-						End Using
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAexec!")
-				End Try
-
-				Try
-					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
-							regSubKey.SetValue("", "Service")
-						End Using
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for PAexec!")
-				End Try
-				'End If
 
 				'We check if there are any reboot from windows update pending. and if so we quit.
 				If WinUpdatePending() Then
@@ -5328,12 +5204,12 @@ Public Class frmMain
 					Exit Sub
 				End If
 
-				GetGPUDetails(True)
-
 				' ----------------------------------------------------------------------------
 				' Trying to get the installed GPU info 
 				' (These list the one that are at least installed with minimal driver support)
 				' ----------------------------------------------------------------------------
+
+				GetGPUDetails(True)
 
 				Application.Settings.SelectedGPU = GPUIdentify()
 
@@ -5392,8 +5268,6 @@ Public Class frmMain
 				Exit Sub
 			End Try
 
-			EnableControls(True)
-
 			If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
 				Dim trd As Thread = New Thread(AddressOf ThreadTask) With
 				{
@@ -5413,23 +5287,6 @@ Public Class frmMain
 		If preventclose Then
 			e.Cancel = True
 			Exit Sub
-		End If
-
-		If MyIdentity.IsSystem AndAlso safemode Then
-			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-					regkey.DeleteSubKeyTree("PAexec")
-				End Using
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			End Try
-			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-					regkey.DeleteSubKeyTree("PAexec")
-				End Using
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			End Try
 		End If
 	End Sub
 
@@ -5857,11 +5714,11 @@ Public Class frmMain
 			End If
 
 			If reboot Then
-				RestartComputer()
+				Application.RestartComputer()
 			End If
 
 			If shutdown Then
-				ShutdownComputer()
+				Application.ShutdownComputer()
 			End If
 
 		Catch ex As Exception
@@ -6022,13 +5879,13 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Private Sub EnableControls(ByVal enabled As Boolean)
+	Public Sub EnableControls(ByVal enabled As Boolean)
 		'	Me.IsEnabled = enabled
 
 		cbSelectedGPU.IsEnabled = enabled
 		ButtonsPanel.IsEnabled = enabled
 		btnWuRestore.IsEnabled = enabled
-		MenuStrip1.IsEnabled = enabled
+		'	MenuStrip1.IsEnabled = enabled
 	End Sub
 
 	Private Sub ThreadTask()
@@ -6062,7 +5919,7 @@ Public Class frmMain
 			Loop
 
 			If restart Then
-				RestartComputer()
+				Application.RestartComputer()
 
 				Exit Sub
 			End If
@@ -6513,7 +6370,18 @@ Public Class frmMain
 			'		SetupAPI.UninstallDevice(d)
 			'	End If
 			'Next
-			MessageBox.Show(Application.Settings.UpdateAvailable.ToString())
+			If MessageBox.Show("Restart PC using Thread? (testing for CrossThreads)", "Restart?", MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
+				Dim trd As Thread = New Thread(AddressOf Application.ShutdownComputer) With
+				{
+				 .CurrentCulture = New Globalization.CultureInfo("en-US"),
+				 .CurrentUICulture = New Globalization.CultureInfo("en-US"),
+				 .IsBackground = True
+				}
+
+				trd.Start()
+			End If
+
+
 			'For i As Int32 = 0 To 1000
 			'	Application.Log.AddException(New ComponentModel.Win32Exception(32), "TEST: Message" & i.ToString())
 			'Next
