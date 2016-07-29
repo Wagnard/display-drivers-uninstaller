@@ -6370,16 +6370,40 @@ Public Class frmMain
 			'		SetupAPI.UninstallDevice(d)
 			'	End If
 			'Next
-			If MessageBox.Show("Restart PC using Thread? (testing for CrossThreads)", "Restart?", MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
-				Dim trd As Thread = New Thread(AddressOf Application.ShutdownComputer) With
-				{
-				 .CurrentCulture = New Globalization.CultureInfo("en-US"),
-				 .CurrentUICulture = New Globalization.CultureInfo("en-US"),
-				 .IsBackground = True
-				}
+			'If MessageBox.Show("Restart PC using Thread? (testing for CrossThreads)", "Restart?", MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
+			'	Dim trd As Thread = New Thread(AddressOf Application.ShutdownComputer) With
+			'	{
+			'	 .CurrentCulture = New Globalization.CultureInfo("en-US"),
+			'	 .CurrentUICulture = New Globalization.CultureInfo("en-US"),
+			'	 .IsBackground = True
+			'	}
 
-				trd.Start()
-			End If
+			'	trd.Start()
+			'End If
+
+            'Try
+            '	Dim count As Int32 = 0
+            '             For i As Int32 = 0 To 1000
+            '                 Dim t As Thread = New Thread(AddressOf Test) With
+            '                  {
+            '                   .CurrentCulture = New Globalization.CultureInfo("en-US"),
+            '                   .CurrentUICulture = New Globalization.CultureInfo("en-US"),
+            '                   .IsBackground = True
+            '                  }
+
+            '                 t.Start()
+            '                 count += 1
+            '             Next
+
+            '	While Interlocked.Read(THREADS) < count
+            '		Thread.Sleep(100)
+            '	End While
+
+            'Catch ex As Exception
+            '	MessageBox.Show(ex.Message)
+            'End Try
+
+            '         MessageBox.Show("DONE!")
 
 
 			'For i As Int32 = 0 To 1000
@@ -6399,6 +6423,35 @@ Public Class frmMain
 		Catch ex As Exception
 			MessageBox.Show(ex.Message, "FileIO Failure!")
 		End Try
+	End Sub
+
+	Private THREADS As Int64 = 0L
+
+	Private Sub Test()
+		Try
+			For x As Int32 = 0 To 1000
+				Dim rnd As Int32 = New Random().Next(0, 5)
+
+				Select Case rnd
+					Case 0
+						Application.Log.Add(Application.Log.CreateEntry(Nothing, "TESTING MESSAGE"))
+					Case 1
+						Application.Log.AddException(New ComponentModel.Win32Exception(32), "Win32 error 32")
+					Case 2
+						Application.Log.AddWarning(New Exception("File doesnt exists! TEST"))
+					Case 3
+						Application.Log.AddMessage("Test message")
+					Case 4
+						Application.Log.AddWarningMessage("Test message")
+					Case Else
+
+						Thread.Sleep(1)
+				End Select
+			Next
+		Finally
+			Interlocked.Increment(THREADS)
+		End Try
+
 	End Sub
 
 	Private Sub checkXMLMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles checkXMLMenuItem.Click

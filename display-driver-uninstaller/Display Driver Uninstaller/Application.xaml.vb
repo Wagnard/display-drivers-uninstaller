@@ -201,10 +201,12 @@ Class Application
 		Try
 			' frmMain is already closed here
 
-			If Not WindowsIdentity.GetCurrent().IsSystem AndAlso Forms.SystemInformation.BootMode <> Forms.BootMode.Normal Then
+			If WindowsIdentity.GetCurrent().IsSystem AndAlso Forms.SystemInformation.BootMode <> Forms.BootMode.Normal Then
 				Try
 					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-						regkey.DeleteSubKeyTree("PAexec")
+						If regkey IsNot Nothing Then
+							regkey.DeleteSubKeyTree("PAexec")
+						End If
 					End Using
 				Catch ex As Exception
 					Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PAExec)!")
@@ -212,13 +214,14 @@ Class Application
 
 				Try
 					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-						regkey.DeleteSubKeyTree("PAexec")
+						If regkey IsNot Nothing Then
+							regkey.DeleteSubKeyTree("PAexec")
+						End If
 					End Using
 				Catch ex As Exception
 					Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (PAExec)!")
 				End Try
 			End If
-
 
 			SaveData()
 		Finally
@@ -410,12 +413,55 @@ Class Application
 
 			Application.Paths.CreateDirectories(dir)
 
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+					If regkey IsNot Nothing Then
+						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
+							regSubKey.SetValue("", "Service")
+						End Using
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAExec!")
+				Return False
+			End Try
+
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+					If regkey IsNot Nothing Then
+						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
+							regSubKey.SetValue("", "Service")
+						End Using
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for PAExec!")
+				Return False
+			End Try
+
+
+
+			Try
+				If FileIO.ExistsFile(dir & "paexec.exe") Then
+					Using ms As MemoryStream = New MemoryStream(My.Resources.paexec)
+						Using fs As FileStream = File.OpenRead(dir & "paexec.exe")
+							If Tools.CompareStreams(ms, fs) Then
+								Return True		' paexec.exe already exists and checksum(MD5) matches
+							End If
+						End Using
+					End Using
+				End If
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Checking for existing PAExec failed!")
+			End Try
+
 			File.WriteAllBytes(dir & "paexec.exe", My.Resources.paexec)
 
 			If Not FileIO.ExistsFile(dir & "paexec.exe") Then
 				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 				Return False
 			End If
+
 
 			Return True
 		Catch ex As Exception
@@ -429,7 +475,6 @@ Class Application
 		'This code checks to see which mode Windows has booted up in.
 
 		Dim isWinXP As Boolean = (Settings.WinVersion = OSVersion.WinXP Or Settings.WinVersion = OSVersion.WinXPPro_Server2003)
-		Dim processstopservice As New Process
 
 		Select Case System.Windows.Forms.SystemInformation.BootMode
 			Case System.Windows.Forms.BootMode.FailSafeWithNetwork, System.Windows.Forms.BootMode.FailSafe
@@ -514,7 +559,7 @@ Class Application
 
 		Using process As Process = New Process() With
 		  {
-		   .StartInfo = New ProcessStartInfo(Paths.AppBase & If(Settings.WinIs64, "x64\", "x86\") & "paexec.exe", "-noname -i -s " & Chr(34) & Paths.AppExeFile & Chr(34) + Settings.Arguments) With
+		   .StartInfo = New ProcessStartInfo(Paths.AppBase & If(Settings.WinIs64, "x64\", "x86\") & "paexec.exe", "-noname -i -s " & Chr(34) & Paths.AppExeFile & Chr(34) + " " & Settings.Arguments) With
 		   {
 		 .UseShellExecute = False,
 		 .CreateNoWindow = True,
@@ -524,12 +569,11 @@ Class Application
 
 			Try
 				process.Start()
+				process.Close()
 			Catch ex As Exception
 				Log.AddException(ex, "(PAExec) Failed to start process as System user!")
 				Return False
 			End Try
-
-			process.Close()
 		End Using
 
 		Return True
@@ -537,28 +581,6 @@ Class Application
 
 	Private Function RestartToSafemode(ByVal withNetwork As Boolean) As Boolean
 		Try
-			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-					Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
-						regSubKey.SetValue("", "Service")
-					End Using
-				End Using
-			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAexec!")
-				Return False
-			End Try
-
-			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-					Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
-						regSubKey.SetValue("", "Service")
-					End Using
-				End Using
-			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for PAexec!")
-				Return False
-			End Try
-
 			SystemRestore(Nothing) 'we try to do a system restore if allowed before going into safemode.
 			Application.Log.AddMessage("Restarting in safemode")
 
