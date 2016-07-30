@@ -12,7 +12,7 @@ Public Class frmLog
 
 	Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
-	Private ReadOnly _nullLogEntry As LogEntry = LogEntry.Create()
+	Private ReadOnly _nullLogEntry As New LogEntry()
 	Private _selectedEntry As LogEntry = Nothing
 	Private _listEvents As Boolean = True
 	Private _listWarnings As Boolean = True

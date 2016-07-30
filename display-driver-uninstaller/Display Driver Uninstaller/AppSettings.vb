@@ -513,7 +513,7 @@ Public Class AppSettings
 					hasLink = True
 
 				ElseIf StrContainsAny(Argument, True, "5648674614687") Then
-					Application.Data.IsDebug = True
+                    Application.IsDebug = True
 				End If
 			Next
 		Else

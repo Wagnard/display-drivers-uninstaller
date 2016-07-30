@@ -146,7 +146,7 @@ Public Class frmMain
 
 	Private Sub CheckUpdates()
 		Try
-			If Application.Data.IsDebug Then
+			If Application.IsDebug Then
 				Application.Settings.UpdateAvailable = UpdateStatus.Error
 			Else
 				Dim currentVersion As Version = Application.Settings.AppVersion
@@ -5194,7 +5194,7 @@ Public Class frmMain
 
 			CheckUpdates()
 
-	
+
 			Try
 
 				'We check if there are any reboot from windows update pending. and if so we quit.
@@ -5751,8 +5751,7 @@ Public Class frmMain
 		Dim info As LogEntry = Nothing
 
 		If firstLaunch Then
-			info = LogEntry.Create()
-
+			info = New LogEntry()
 			info.Message = "System Information"
 			info.Add("DDU Version", Application.Settings.AppVersion.ToString())
 			info.Add("OS", Application.Settings.WinVersionText)
@@ -5951,7 +5950,7 @@ Public Class frmMain
 	End Sub
 
 	Private Sub GetOemInfo()
-		Dim info As LogEntry = LogEntry.Create()
+		Dim info As New LogEntry()
 		info.Type = LogType.Event
 		info.Separator = " = "
 		info.Message = "The following third-party driver packages are installed on this computer"
@@ -6222,7 +6221,7 @@ Public Class frmMain
 	Private Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
 		CleanupEngine.deletevalue(value1, value2)
 	End Sub
-	Private Sub delete(ByVal filename As String)
+	Private Sub Delete(ByVal filename As String)
 		FileIO.Delete(filename)
 		CleanupEngine.RemoveSharedDlls(filename)
 	End Sub
@@ -6381,29 +6380,14 @@ Public Class frmMain
 			'	trd.Start()
 			'End If
 
-            'Try
-            '	Dim count As Int32 = 0
-            '             For i As Int32 = 0 To 1000
-            '                 Dim t As Thread = New Thread(AddressOf Test) With
-            '                  {
-            '                   .CurrentCulture = New Globalization.CultureInfo("en-US"),
-            '                   .CurrentUICulture = New Globalization.CultureInfo("en-US"),
-            '                   .IsBackground = True
-            '                  }
-
-            '                 t.Start()
-            '                 count += 1
-            '             Next
-
-            '	While Interlocked.Read(THREADS) < count
-            '		Thread.Sleep(100)
-            '	End While
-
-            'Catch ex As Exception
-            '	MessageBox.Show(ex.Message)
-            'End Try
-
-            '         MessageBox.Show("DONE!")
+			Dim t As Thread = New Thread(AddressOf Waiter) With
+			{
+			.CurrentCulture = New Globalization.CultureInfo("en-US"),
+			.CurrentUICulture = New Globalization.CultureInfo("en-US"),
+			.IsBackground = True,
+			.Name = "Waiter"
+			}
+			t.Start()
 
 
 			'For i As Int32 = 0 To 1000
@@ -6426,11 +6410,61 @@ Public Class frmMain
 	End Sub
 
 	Private THREADS As Int64 = 0L
+	Private Sub Waiter()
+		If Application.Log.LogEntries.Count < 5 Then
+			Dim THREADS_TO_LAUNCH As Int32 = 100
+
+			Try
+				Application.Log.AddMessage("Launching " & THREADS_TO_LAUNCH.ToString() & " threads in 5 seconds..")
+
+				Thread.Sleep(5000)
+
+				Dim count As Int32 = 0
+
+				For i As Int32 = 1 To THREADS_TO_LAUNCH
+					Dim t As Thread = New Thread(AddressOf Test) With
+					 {
+					  .CurrentCulture = New Globalization.CultureInfo("en-US"),
+					  .CurrentUICulture = New Globalization.CultureInfo("en-US"),
+					  .IsBackground = True,
+					  .Name = "logThread_" & i.ToString()
+					 }
+
+					t.Start()
+					count += 1
+				Next
+
+				Dim current As Int64 = Interlocked.Read(THREADS)
+
+				While Interlocked.Read(THREADS) < count
+					Thread.Sleep(100)
+					current = Interlocked.Read(THREADS)
+				End While
+
+			Catch ex As Exception
+				MessageBox.Show(ex.Message)
+			End Try
+		End If
+
+		MessageBox.Show("OPERATION COMPLETE" & CRLF & "LogEntries still queued? " & If(Not Application.Log.IsQueueEmpty, "Yes", "No"))
+
+		While Not Application.Log.IsQueueEmpty
+			Thread.Sleep(100)
+		End While
+
+		Application.Log.Clear()
+
+		MessageBox.Show("QUEUE EMPTY!")
+	End Sub
 
 	Private Sub Test()
 		Try
-			For x As Int32 = 0 To 1000
-				Dim rnd As Int32 = New Random().Next(0, 5)
+			For x As Int32 = 1 To 1000
+				Dim rnd As Int32 = New Random(x).Next(0, 10)
+
+				'Dim logE As LogEntry = New LogEntry() With {.Message = "TESTING!"}
+
+				'Application.Log.Add(logE)
 
 				Select Case rnd
 					Case 0
@@ -6443,10 +6477,19 @@ Public Class frmMain
 						Application.Log.AddMessage("Test message")
 					Case 4
 						Application.Log.AddWarningMessage("Test message")
+					Case 5
+						Application.Log.Clear()
+					Case 6
+						Dim list = Application.Log.LogEntries
+					Case 7
+						Dim count = Application.Log.LogEntries.Count
+					Case 8
+						Application.Log.AddExceptionWithValues(New ComponentModel.Win32Exception(5), "Test value", "Test value 2", "Test value 3")
 					Case Else
-
-						Thread.Sleep(1)
+						Thread.Sleep(15)
 				End Select
+
+				Thread.Sleep(10)
 			Next
 		Finally
 			Interlocked.Increment(THREADS)

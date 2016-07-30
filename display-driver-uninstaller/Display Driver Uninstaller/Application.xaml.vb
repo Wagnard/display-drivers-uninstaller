@@ -23,6 +23,16 @@ Class Application
 
 #End Region
 
+	Private Shared m_isDebug As Boolean = System.Diagnostics.Debugger.IsAttached
+	Public Shared Property IsDebug As Boolean
+		Get
+			Return m_isDebug
+		End Get
+		Set(value As Boolean)
+			m_isDebug = value
+		End Set
+	End Property
+
 	Private Shared m_dispatcher As Threading.Dispatcher
 	Private Shared m_isDataSaved As Boolean = False
 	Private Shared m_Data As Data
@@ -534,7 +544,7 @@ Class Application
 		End Select
 
 
-		If Application.Data.IsDebug Then
+		If Application.IsDebug Then
 			Return False
 		End If
 
@@ -734,15 +744,11 @@ Public Class Data
 	Private m_settings As AppSettings
 	Private m_paths As AppPaths
 	Private m_log As AppLog
-	Private m_debug As Boolean = System.Diagnostics.Debugger.IsAttached
 
-	Public Property IsDebug As Boolean
+	Public ReadOnly Property IsDebug As Boolean
 		Get
-			Return m_debug
+			Return Application.IsDebug
 		End Get
-		Set(value As Boolean)
-			m_debug = value
-		End Set
 	End Property
 
 	Public ReadOnly Property Settings As AppSettings

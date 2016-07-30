@@ -46,10 +46,6 @@ Public Class LogEntry
 	Implements INotifyPropertyChanged
 	Implements IDisposable
 
-	Public Shared Function Create() As LogEntry
-		Return Application.Log.CreateEntry()
-	End Function
-
 	Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
 	Private _disposed As Boolean

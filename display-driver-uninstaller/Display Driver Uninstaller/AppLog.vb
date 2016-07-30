@@ -5,6 +5,7 @@ Imports System.Reflection
 Imports System.Collections.ObjectModel
 Imports System.Collections.Specialized
 Imports System.ComponentModel
+Imports System.Threading
 
 Public Class AppLog
     Inherits Control
@@ -14,6 +15,18 @@ Public Class AppLog
 
     Private m_threadlock As Object = "No can do!"
     Private m_logEntries As New ObservableCollection(Of LogEntry)
+    Private m_dispatcher As Threading.Dispatcher
+    Private m_countQueued As Int64 = 0L
+    Private m_countAdded As Int64 = 0L
+
+    Public Sub New()
+        m_dispatcher = Threading.Dispatcher.CurrentDispatcher
+    End Sub
+
+    Protected Overloads Sub OnPropertyChanged(ByVal name As String)
+        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(name))
+    End Sub
+
 
     Public Property LogEntries As ObservableCollection(Of LogEntry)
         Get
@@ -29,91 +42,71 @@ Public Class AppLog
         End Set
     End Property
 
+    Public Sub Add(ByVal log As LogEntry)
+        Me.AddEntry(log)
+    End Sub
+
+    Public Sub AddMessage(ByVal message As String, Optional ByVal key As String = Nothing, Optional ByVal value As String = Nothing)
+        Me.AddMessageEntry(message, key, value, LogType.Event)
+    End Sub
+
+    Public Sub AddWarningMessage(ByVal message As String, Optional ByVal key As String = Nothing, Optional ByVal value As String = Nothing)
+        Me.AddMessageEntry(message, key, value, LogType.Warning)
+    End Sub
+
+    Public Sub AddWarning(ByVal Ex As Exception, Optional ByVal message As String = Nothing)
+        Me.AddExceptionEntry(Ex, message, LogType.Warning)
+    End Sub
+
+    Public Sub AddException(ByVal Ex As Exception, Optional ByVal message As String = Nothing)
+         Me.AddExceptionEntry(Ex, message, LogType.Error)
+    End Sub
+
+    Public Sub AddExceptionWithValues(ByVal Ex As Exception, ParamArray otherData As String())
+        Me.AddExceptionParams(Ex, otherData)
+    End Sub
+
+    Public Function CreateEntry(Optional ByVal Ex As Exception = Nothing, Optional ByVal message As String = Nothing) As LogEntry
+        Dim logEntry As New LogEntry()
+
+        If Not IsNullOrWhitespace(message) Then
+            logEntry.Message = message
+        End If
+
+        If Ex IsNot Nothing Then
+            logEntry.AddException(Ex, False)
+        End If
+
+        Return logEntry
+    End Function
+
     Public Sub Clear()
-        If Not Me.Dispatcher.CheckAccess() Then
-            Me.Dispatcher.Invoke(New ClearLogDelegate(AddressOf Me.ClearLog))
+        If Not m_dispatcher.CheckAccess() Then
+            m_dispatcher.BeginInvoke(New ClearLogDelegate(AddressOf Me.ClearLog))
         Else
             Me.ClearLog()
         End If
     End Sub
 
-    Public Sub Add(ByVal log As LogEntry)
-        If Not Me.Dispatcher.CheckAccess() Then
-            Me.Dispatcher.Invoke(New AddEntryDelegate(AddressOf Me.AddEntry), log)
-        Else
-            Me.AddEntry(log)
-        End If
-    End Sub
-
-    Public Sub AddMessage(ByVal message As String, Optional ByVal key As String = Nothing, Optional ByVal value As String = Nothing)
-        If Not Me.Dispatcher.CheckAccess() Then
-            Me.Dispatcher.Invoke(New AddMessageEntryDelegate(AddressOf Me.AddMessageEntry), message, key, value, LogType.Event)
-        Else
-            Me.AddMessageEntry(message, key, value, LogType.Event)
-        End If
-    End Sub
-
-    Public Sub AddWarningMessage(ByVal message As String, Optional ByVal key As String = Nothing, Optional ByVal value As String = Nothing)
-        If Not Me.Dispatcher.CheckAccess() Then
-            Me.Dispatcher.Invoke(New AddMessageEntryDelegate(AddressOf Me.AddMessageEntry), message, key, value, LogType.Warning)
-        Else
-            Me.AddMessageEntry(message, key, value, LogType.Warning)
-        End If
-    End Sub
-
-    Public Sub AddWarning(ByVal Ex As Exception, Optional ByVal message As String = Nothing)
-        If Not Me.Dispatcher.CheckAccess() Then
-            Me.Dispatcher.Invoke(New AddWarningEntryDelegate(AddressOf Me.AddWarningEntry), Ex, message)
-        Else
-            Me.AddWarningEntry(Ex, message)
-        End If
-    End Sub
-
-    Public Sub AddException(ByVal Ex As Exception, Optional ByVal message As String = Nothing)
-        If Not Me.Dispatcher.CheckAccess() Then
-            Me.Dispatcher.Invoke(New AddExceptionEntryDelegate(AddressOf Me.AddExceptionEntry), Ex, message)
-        Else
-            Me.AddExceptionEntry(Ex, message)
-        End If
-    End Sub
-
-    Public Sub AddExceptionWithValues(ByVal Ex As Exception, ParamArray otherData As String())
-        If Not Me.Dispatcher.CheckAccess() Then
-            Me.Dispatcher.Invoke(New AddExceptionParamsEntry(AddressOf Me.AddExceptionParams), Ex, otherData)
-        Else
-            Me.AddExceptionParams(Ex, otherData)
-        End If
-    End Sub
-
-    Public Function CreateEntry(Optional ByVal Ex As Exception = Nothing, Optional ByVal message As String = Nothing) As LogEntry
-        If Not Me.Dispatcher.CheckAccess() Then
-            Return DirectCast(Me.Dispatcher.Invoke(New CreateLogEntryDelegate(AddressOf Me.CreateLogEntry), Ex, message), LogEntry)
-        Else
-            Return Me.CreateLogEntry(Ex, message)
-        End If
-    End Function
-
     Public Sub SaveToFile()
-        If Not Me.Dispatcher.CheckAccess() Then
-            Me.Dispatcher.Invoke(New SaveLogDelegate(AddressOf Me.SaveLog))
+        If Not m_dispatcher.CheckAccess() Then
+            m_dispatcher.BeginInvoke(New SaveLogDelegate(AddressOf Me.SaveLog))
         Else
             Me.SaveLog()
         End If
-
     End Sub
 
     Public Sub OpenFromFile(ByVal fileName As String)
-        If Not Me.Dispatcher.CheckAccess() Then
-            Me.Dispatcher.Invoke(New OpenLogDelegate(AddressOf Me.OpenLog), fileName)
+        If Not m_dispatcher.CheckAccess() Then
+            m_dispatcher.BeginInvoke(New OpenLogDelegate(AddressOf Me.OpenLog), fileName)
         Else
             Me.OpenLog(fileName)
         End If
     End Sub
 
-    Protected Overloads Sub OnPropertyChanged(ByVal name As String)
-        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(name))
-    End Sub
-
+    Public Function IsQueueEmpty() As Boolean
+        Return Interlocked.Read(m_countQueued) <= Interlocked.Read(m_countAdded)
+    End Function
 
 
     Private Delegate Sub SaveLogDelegate()
@@ -126,6 +119,7 @@ Public Class AppLog
             End If
         End SyncLock
     End Sub
+
     Private Sub SaveLog(ByVal fileName As String)
         If String.IsNullOrEmpty(fileName) OrElse LogEntries Is Nothing OrElse LogEntries.Count = 0 Then
             Return
@@ -157,11 +151,7 @@ Public Class AppLog
                         .WriteAttributeString("Version", String.Format("{0}.{1}.{2}.{3}", v.Major, v.Minor, v.Build, v.Revision))
                         .WriteStartElement("LogEntries")
 
-                        Dim hours As Int32
-
                         For Each log As LogEntry In LogEntries
-                            hours = log.Time.Subtract(log.Time.ToUniversalTime()).Hours
-
                             .WriteStartElement(log.Type.ToString())
 
                             .WriteStartElement("Time")
@@ -232,12 +222,12 @@ Public Class AppLog
             End Using
 
         Catch ex As Exception
-            AddExceptionEntry(ex, "Saving log failed!")
+            AddException(ex, "Saving log failed!")
         End Try
     End Sub
 
     Private Delegate Sub OpenLogDelegate(ByVal fileName As String)
-    Public Sub OpenLog(ByVal fileName As String)
+    Private Sub OpenLog(ByVal fileName As String)
         SyncLock m_threadlock
             If String.IsNullOrEmpty(fileName) OrElse Not File.Exists(fileName) Then
                 Return
@@ -291,7 +281,7 @@ Public Class AppLog
                         Int32.TryParse(verStr(3), vRevision)
                         Dim ver As Version = New Version(vMajor, vMinor, vBuild, vRevision)
 
-                        Dim newEntry As LogEntry = LogEntry.Create()
+                        Dim newEntry As New LogEntry()
                         Dim name As String
                         Dim value As String = String.Empty
                         Dim key As String = String.Empty
@@ -301,7 +291,7 @@ Public Class AppLog
 
                         Do While reader.Read()
                             If reader.NodeType = XmlNodeType.Element Then
-                                newEntry = LogEntry.Create()
+                                newEntry = New LogEntry()
                                 newEntry.Type = CType([Enum].Parse(GetType(LogType), reader.Name), LogType)
 
                                 name = reader.Name
@@ -400,98 +390,85 @@ Public Class AppLog
                     End Using
                 End Using
             Catch ex As Exception
-                AddExceptionEntry(ex, "Opening log failed!")
+                AddException(ex, "Opening log failed!")
             End Try
         End SyncLock
     End Sub
 
-    Private Delegate Function CreateLogEntryDelegate(ByVal Ex As Exception, ByVal message As String) As LogEntry
-    Private Function CreateLogEntry(ByVal Ex As Exception, ByVal message As String) As LogEntry
-        SyncLock m_threadlock
-            Dim logEntry As New LogEntry()
+    Private Delegate Sub AddExceptionEntryDelegate(ByVal Ex As Exception, ByVal message As String, ByVal type As LogType)
+    Private Sub AddExceptionEntry(ByVal Ex As Exception, ByVal message As String, ByVal type As LogType)
+        Dim logEntry As New LogEntry() With
+        {
+            .Message = message,
+            .Type = type
+        }
 
-            If Not IsNullOrWhitespace(message) Then
-                logEntry.Message = message
-            End If
+        logEntry.AddException(Ex, False)
 
-            If Ex IsNot Nothing Then
-                logEntry.AddException(Ex, False)
-            End If
-
-            Return logEntry
-        End SyncLock
-    End Function
-
-    Private Delegate Sub AddWarningEntryDelegate(ByVal Ex As Exception, ByVal message As String)
-    Private Sub AddWarningEntry(ByVal Ex As Exception, ByVal message As String)
-        SyncLock m_threadlock
-            Dim logEntry As LogEntry = logEntry.Create()
-
-            logEntry.Message = message
-            logEntry.AddException(Ex, False)
-            logEntry.Type = LogType.Warning
-
-            AddEntry(logEntry)
-        End SyncLock
-    End Sub
-
-    Private Delegate Sub AddExceptionEntryDelegate(ByVal Ex As Exception, ByVal message As String)
-    Private Sub AddExceptionEntry(ByVal Ex As Exception, ByVal message As String)
-        SyncLock m_threadlock
-            Dim logEntry As LogEntry = logEntry.Create()
-            logEntry.Message = message
-            logEntry.AddException(Ex, False)
-
-            AddEntry(logEntry)
-        End SyncLock
+        AddEntry(logEntry)
     End Sub
 
     Private Delegate Sub AddExceptionParamsEntry(ByVal Ex As Exception, otherData As String())
     Private Sub AddExceptionParams(ByVal Ex As Exception, ParamArray otherData As String())
-        SyncLock m_threadlock
-            Dim logEntry As LogEntry = logEntry.Create()
-            logEntry.AddException(Ex)
+        Dim logEntry As New LogEntry()
+        logEntry.AddException(Ex)
 
-            If otherData IsNot Nothing AndAlso otherData.Length > 0 Then
-                For Each text As String In otherData
-                    logEntry.Add(text)
-                Next
-            End If
+        If otherData IsNot Nothing AndAlso otherData.Length > 0 Then
+            For Each text As String In otherData
+                logEntry.Add(text)
+            Next
+        End If
 
-            logEntry.Time = DateTime.Now
-            AddEntry(logEntry)
-        End SyncLock
+        logEntry.Time = DateTime.Now
+        AddEntry(logEntry)
     End Sub
 
     Private Delegate Sub AddMessageEntryDelegate(ByVal message As String, ByVal key As String, ByVal value As String, ByVal type As LogType)
     Private Sub AddMessageEntry(ByVal message As String, ByVal key As String, ByVal value As String, ByVal type As LogType)
-        SyncLock m_threadlock
-            Dim logEntry As LogEntry = logEntry.Create()
+        Dim logEntry As New LogEntry()
 
-            logEntry.Type = type
-            logEntry.Message = message
-            logEntry.Time = DateTime.Now
+        logEntry.Type = type
+        logEntry.Message = message
+        logEntry.Time = DateTime.Now
 
-            If key IsNot Nothing Then
-                If value IsNot Nothing Then
-                    logEntry.Add(key, value)
-                Else : logEntry.Add(key)
-                End If
+        If key IsNot Nothing Then
+            If value IsNot Nothing Then
+                logEntry.Add(key, value)
+            Else : logEntry.Add(key)
             End If
+        End If
 
-            AddEntry(logEntry)
-        End SyncLock
+        AddEntry(logEntry)
     End Sub
 
     Private Delegate Sub AddEntryDelegate(ByVal log As LogEntry)
     Private Sub AddEntry(ByVal log As LogEntry)
+        If Application.IsDebug Then log.Message = "ThreadID: " & Thread.CurrentThread.ManagedThreadId.ToString() & " - " & log.Message
+
+        If Not m_dispatcher.CheckAccess() Then
+            Queue(New AddEntryFinalDelegate(AddressOf Me.AddEntryFinal), log)
+        Else
+            AddEntryFinal(log)
+        End If
+    End Sub
+
+    Private Delegate Sub AddEntryFinalDelegate(ByVal log As LogEntry)
+    Private Sub AddEntryFinal(ByVal log As LogEntry)
         SyncLock m_threadlock
-            m_logEntries.Add(log)
+            Try
+              m_logEntries.Add(log)
+            Finally
+                Interlocked.Increment(m_countAdded)
+            End Try
         End SyncLock
     End Sub
 
     Private Delegate Sub ClearLogDelegate()
     Private Sub ClearLog()
+        If Not IsQueueEmpty() Then
+            Return
+        End If
+
         SyncLock m_threadlock
             For Each e As LogEntry In m_logEntries
                 e.Dispose()
@@ -504,6 +481,11 @@ Public Class AppLog
 
             OnPropertyChanged("LogEntries")
         End SyncLock
+    End Sub
+
+    Private Sub Queue(ByVal method As [Delegate], ByVal ParamArray args() As Object)
+        Interlocked.Increment(m_countQueued)
+        m_dispatcher.BeginInvoke(method, args)
     End Sub
 
 End Class
