@@ -242,4 +242,22 @@ Public Module Tools
 		End If
 	End Sub
 
+	Friend Function RegDP(ByVal s As String, ByVal t As Type, ByVal c As Type, ByVal m As Object) As DependencyProperty
+		If TypeOf (m) Is FrameworkPropertyMetadata Then
+			Return DependencyProperty.Register(s, t, c, DirectCast(m, FrameworkPropertyMetadata))
+		Else
+			Return DependencyProperty.Register(s, t, c, New PropertyMetadata(m))
+		End If
+	End Function
+
+	''' <summary>Alias for MessageBox.Show(message) as defaults settings: only 'OK' button + 'Information' image</summary>
+	Public Function MsgBox(ByVal message As String, Optional ByVal buttons As MessageBoxButton = MessageBoxButton.OK, Optional ByVal image As MessageBoxImage = MessageBoxImage.Information) As MessageBoxResult
+		Return System.Windows.MessageBox.Show(message, Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+	End Function
+
+	''' <summary>Alias for MessageBox.Show(message, title) as defaults settings: only 'OK' button + 'Information' image</summary>
+	Public Function MsgBox(ByVal message As String, ByVal title As String, Optional ByVal buttons As MessageBoxButton = MessageBoxButton.OK, Optional ByVal image As MessageBoxImage = MessageBoxImage.Information) As MessageBoxResult
+		Return System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information)
+	End Function
+
 End Module

@@ -1,12 +1,14 @@
 ﻿Imports System.Reflection
 
 Public Class ThreadSettings
+	Public Property Success As Boolean = False
+	Public Property PreventClose As Boolean = False
 
 	Public Property Paths As New AppPaths(False)
-    Public Property SelectedGPU As GPUVendor
+	Public Property Args As New AppLaunchOptions()
+
+	Public Property SelectedGPU As GPUVendor
     Public Property AppName As String
-	Public Property DoShutdown As Boolean
-	Public Property DoReboot As Boolean
 
 	Public Property RemoveMonitors As Boolean
 	Public Property RemoveCrimsonCache As Boolean
@@ -49,6 +51,7 @@ Public Class ThreadSettings
 	Public Sub New()
 		PropertyCopy(Application.Paths, Me.Paths)
 		PropertyCopy(Application.Settings, Me)
+		PropertyCopy(Application.LaunchOptions, Me.Args)
 	End Sub
 
 	Private Sub PropertyCopy(ByVal fromObj As Object, toObj As Object)

@@ -151,6 +151,8 @@ Public Class AppLog
                         .WriteAttributeString("Version", String.Format("{0}.{1}.{2}.{3}", v.Major, v.Minor, v.Build, v.Revision))
                         .WriteStartElement("LogEntries")
 
+						m_logEntries.Add(New LogEntry() With {.Message = ">> Successfully saved log to file!"})
+
                         For Each log As LogEntry In LogEntries
                             .WriteStartElement(log.Type.ToString())
 
@@ -380,7 +382,7 @@ Public Class AppLog
                                     End If
                                 Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
 
-                                LogEntries.Add(newEntry)
+								AddEntryFinal(newEntry)
                             End If
                         Loop
 
@@ -455,12 +457,10 @@ Public Class AppLog
     Private Delegate Sub AddEntryFinalDelegate(ByVal log As LogEntry)
     Private Sub AddEntryFinal(ByVal log As LogEntry)
         SyncLock m_threadlock
-            Try
-              m_logEntries.Add(log)
-            Finally
-                Interlocked.Increment(m_countAdded)
-            End Try
-        End SyncLock
+			log.ID = Interlocked.Increment(m_countAdded)
+
+			m_logEntries.Add(log)
+		End SyncLock
     End Sub
 
     Private Delegate Sub ClearLogDelegate()

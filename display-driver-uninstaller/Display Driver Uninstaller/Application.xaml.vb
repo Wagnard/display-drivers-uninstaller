@@ -42,6 +42,11 @@ Class Application
 			Return m_Data
 		End Get
 	End Property
+	Public Shared ReadOnly Property LaunchOptions As AppLaunchOptions
+		Get
+			Return m_Data.LaunchOptions
+		End Get
+	End Property
 	Public Shared ReadOnly Property Settings As AppSettings
 		Get
 			Return m_Data.Settings
@@ -178,12 +183,16 @@ Class Application
 		End Try
 	End Sub
 
+
+
 	Private Sub LaunchMainWindow()
 		' >>> Loading UI <<<
 
 		Try
-			Dim mainWindow As frmMain = New frmMain() With {.DataContext = Data, .Topmost = True}
-			AddHandler mainWindow.Closed, AddressOf AppClose
+			Dim window As frmMain = New frmMain() With {.DataContext = Data, .Topmost = True}
+
+			AddHandler window.Closing, AddressOf AppClosing
+			AddHandler window.Closed, AddressOf AppClose
 
 			'	Launching frmMain, triggers Events
 			'	-> frmMain_Initialized
@@ -191,11 +200,17 @@ Class Application
 			'	-> frmMain_ContentRendered		(UI is completely ready for use, dimensions of each control aligned etc.)
 
 			If Settings.WinVersion = OSVersion.Unknown Then
-				mainWindow.EnableControls(False)
+				window.EnableControls(False)
 			End If
 
-			mainWindow.Show()
+			If LaunchOptions.HasCleanArg AndAlso LaunchOptions.Silent Then
+				window.Visibility = Visibility.Hidden
+				window.WindowState = WindowState.Minimized
+			End If
 
+			window.Show()
+
+			MainWindow = window
 		Catch ex As Exception
 			MessageBox.Show("Launching Main Window failed!" & CRLF &
 			 CRLF &
@@ -204,6 +219,23 @@ Class Application
 			 ex.StackTrace, "DDU", MessageBoxButton.OK, MessageBoxImage.Error)
 
 			Me.Shutdown(0)
+		End Try
+	End Sub
+
+	Private Sub AppClosing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
+		Try
+			If frmMain.workThread IsNot Nothing Then					' workThread running, cleaning in progress!
+				' Should take few milliseconds...	
+				If frmMain.workThread.IsAlive Then Thread.Sleep(200)
+				If frmMain.workThread.IsAlive Then Thread.Sleep(2000)
+
+				' workThread still running!
+				If frmMain.workThread.IsAlive Then
+					e.Cancel = True
+					Exit Sub
+				End If
+			End If
+		Catch ex As Exception
 		End Try
 	End Sub
 
@@ -235,11 +267,15 @@ Class Application
 
 			SaveData()
 		Finally
-			Me.Shutdown(0)	' Close application
+			Me.Shutdown(0)	' Close application completely
 		End Try
 	End Sub
 
 	Private Sub Application_Startup(sender As Object, e As System.Windows.StartupEventArgs) Handles Me.Startup
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			MessageBox.Show("Attach debugger!")
+		End If
+
 		Try
 			' Launch as Admin if not
 			If Not Tools.UserHasAdmin Then
@@ -263,9 +299,8 @@ Class Application
 			End If
 
 
-			' Check commandline args
-			Dim hasLinkArg As Boolean = False
-			Settings.LoadArgs(e.Args, hasLinkArg)
+			' Process commandline args
+			LaunchOptions.LoadArgs(e.Args)
 
 
 			' Processing links before launching UI 
@@ -274,7 +309,7 @@ Class Application
 			' -> Faster link opening
 
 			Try
-				If hasLinkArg Then
+				If LaunchOptions.HasLinkArg Then
 					If ProcessLinks() Then		' Link found and opened?
 						Me.Shutdown(0)			' Skip loading if link is opened
 						Exit Sub
@@ -331,22 +366,24 @@ Class Application
 		End Try
 	End Sub
 
+
+
 	Private Function ProcessLinks() As Boolean
 		Dim webAddress As String = Nothing
 
-		If Application.Settings.VisitDonate Then
+		If Application.LaunchOptions.VisitDonate Then
 			webAddress = URL_DONATE
-		ElseIf Application.Settings.VisitGuru3DNvidia Then
+		ElseIf Application.LaunchOptions.VisitGuru3DNvidia Then
 			webAddress = URL_GURU3D_NVIDIA
-		ElseIf Application.Settings.VisitGuru3DAMD Then
+		ElseIf Application.LaunchOptions.VisitGuru3DAMD Then
 			webAddress = URL_GURU3D_AMD
-		ElseIf Application.Settings.VisitGeforce Then
+		ElseIf Application.LaunchOptions.VisitGeforce Then
 			webAddress = URL_GEFORCE
-		ElseIf Application.Settings.VisitDDUHome Then
+		ElseIf Application.LaunchOptions.VisitDDUHome Then
 			webAddress = URL_DDUHOME
-		ElseIf Application.Settings.VisitSVN Then
+		ElseIf Application.LaunchOptions.VisitSVN Then
 			webAddress = URL_SVN
-		ElseIf Application.Settings.VisitOffer Then
+		ElseIf Application.LaunchOptions.VisitOffer Then
 			webAddress = URL_OFFER
 		End If
 
@@ -514,6 +551,10 @@ Class Application
 				' and throwing an exception --probably because there's no return
 
 				If Not isWinXP AndAlso Tools.UserHasAdmin Then
+					If LaunchOptions.NoSafeModeMsg Then
+						Exit Select
+					End If
+
 					If Settings.ShowSafeModeMsg = True Then
 						Dim bootOption As Integer = -1				'-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
 						Dim frmSafeBoot As New frmLaunch With {.DataContext = Data, .Topmost = True}
@@ -543,7 +584,6 @@ Class Application
 				End If
 		End Select
 
-
 		If Application.IsDebug Then
 			Return False
 		End If
@@ -569,7 +609,7 @@ Class Application
 
 		Using process As Process = New Process() With
 		  {
-		   .StartInfo = New ProcessStartInfo(Paths.AppBase & If(Settings.WinIs64, "x64\", "x86\") & "paexec.exe", "-noname -i -s " & Chr(34) & Paths.AppExeFile & Chr(34) + " " & Settings.Arguments) With
+		   .StartInfo = New ProcessStartInfo(Paths.AppBase & If(Settings.WinIs64, "x64\", "x86\") & "paexec.exe", "-noname -i -s " & Chr(34) & Paths.AppExeFile & Chr(34) + " " & LaunchOptions.Arguments) With
 		   {
 		 .UseShellExecute = False,
 		 .CreateNoWindow = True,
@@ -726,21 +766,8 @@ Class Application
 
 End Class
 
-Public Module Generic
-
-	''' <summary>Alias for MessageBox.Show(message) as defaults settings: only 'OK' button + 'Information' image</summary>
-	Public Function MsgBox(ByVal message As String, Optional ByVal buttons As MessageBoxButton = MessageBoxButton.OK, Optional ByVal image As MessageBoxImage = MessageBoxImage.Information) As MessageBoxResult
-		Return MessageBox.Show(message, Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
-	End Function
-
-	''' <summary>Alias for MessageBox.Show(message, title) as defaults settings: only 'OK' button + 'Information' image</summary>
-	Public Function MsgBox(ByVal message As String, ByVal title As String, Optional ByVal buttons As MessageBoxButton = MessageBoxButton.OK, Optional ByVal image As MessageBoxImage = MessageBoxImage.Information) As MessageBoxResult
-		Return MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information)
-	End Function
-
-End Module
-
 Public Class Data
+	Private m_launchOptions As AppLaunchOptions
 	Private m_settings As AppSettings
 	Private m_paths As AppPaths
 	Private m_log As AppLog
@@ -751,6 +778,11 @@ Public Class Data
 		End Get
 	End Property
 
+	Public ReadOnly Property LaunchOptions As AppLaunchOptions
+		Get
+			Return m_launchOptions
+		End Get
+	End Property
 	Public ReadOnly Property Settings As AppSettings
 		Get
 			Return m_settings
@@ -768,6 +800,7 @@ Public Class Data
 	End Property
 
 	Public Sub New()
+		m_launchOptions = New AppLaunchOptions
 		m_settings = New AppSettings
 		m_paths = New AppPaths
 		m_log = New AppLog

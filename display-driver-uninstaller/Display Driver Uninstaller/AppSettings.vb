@@ -56,53 +56,41 @@ Public Class AppSettings
 	Inherits DependencyObject
 
 #Region "Private Fields"
-	Private m_appname As DependencyProperty = Reg("AppName", GetType(String), GetType(AppSettings), "Display Driver Uninstaller")
-	Private m_appversion As DependencyProperty = Reg("AppVersion", GetType(Version), GetType(AppSettings), New Version(0, 0, 0, 0))
+	Private m_appname As DependencyProperty = RegDP("AppName", GetType(String), GetType(AppSettings), "Display Driver Uninstaller")
+	Private m_appversion As DependencyProperty = RegDP("AppVersion", GetType(Version), GetType(AppSettings), New Version(0, 0, 0, 0))
 	Private m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
-	Private m_gpuSelected As DependencyProperty = Reg("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
-	Private m_langSelected As DependencyProperty = Reg("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
-	Private m_updateAvailable As DependencyProperty = Reg("UpdateAvailable", GetType(UpdateStatus), GetType(AppSettings), UpdateStatus.NotChecked)
+	Private m_gpuSelected As DependencyProperty = RegDP("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
+	Private m_langSelected As DependencyProperty = RegDP("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
+	Private m_updateAvailable As DependencyProperty = RegDP("UpdateAvailable", GetType(UpdateStatus), GetType(AppSettings), UpdateStatus.NotChecked)
 
-	Private m_winVersion As DependencyProperty = Reg("WinVersion", GetType(OSVersion), GetType(AppSettings), OSVersion.Unknown)
-	Private m_winVersionText As DependencyProperty = Reg("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
-	Private m_winIs64 As DependencyProperty = Reg("WinIs64", GetType(Boolean), GetType(AppSettings), False)
+	Private m_winVersion As DependencyProperty = RegDP("WinVersion", GetType(OSVersion), GetType(AppSettings), OSVersion.Unknown)
+	Private m_winVersionText As DependencyProperty = RegDP("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
+	Private m_winIs64 As DependencyProperty = RegDP("WinIs64", GetType(Boolean), GetType(AppSettings), False)
 
 	' Removals
-	Private m_remMonitors As DependencyProperty = Reg("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remMonitors As DependencyProperty = RegDP("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
 
-	Private m_remCrimsonCache As DependencyProperty = Reg("RemoveCrimsonCache", GetType(Boolean), GetType(AppSettings), True)
-	Private m_remAMDDirs As DependencyProperty = Reg("RemoveAMDDirs", GetType(Boolean), GetType(AppSettings), False)
-	Private m_remAMDAudioBus As DependencyProperty = Reg("RemoveAMDAudioBus", GetType(Boolean), GetType(AppSettings), True)
-	Private m_remAMDKMPFD As DependencyProperty = Reg("RemoveAMDKMPFD", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remCrimsonCache As DependencyProperty = RegDP("RemoveCrimsonCache", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remAMDDirs As DependencyProperty = RegDP("RemoveAMDDirs", GetType(Boolean), GetType(AppSettings), False)
+	Private m_remAMDAudioBus As DependencyProperty = RegDP("RemoveAMDAudioBus", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remAMDKMPFD As DependencyProperty = RegDP("RemoveAMDKMPFD", GetType(Boolean), GetType(AppSettings), True)
 
-	Private m_remNvidiaDirs As DependencyProperty = Reg("RemoveNvidiaDirs", GetType(Boolean), GetType(AppSettings), False)
-	Private m_remPhysX As DependencyProperty = Reg("RemovePhysX", GetType(Boolean), GetType(AppSettings), True)
-	Private m_rem3DtvPlay As DependencyProperty = Reg("Remove3DTVPlay", GetType(Boolean), GetType(AppSettings), True)
-	Private m_remGFE As DependencyProperty = Reg("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remNvidiaDirs As DependencyProperty = RegDP("RemoveNvidiaDirs", GetType(Boolean), GetType(AppSettings), False)
+	Private m_remPhysX As DependencyProperty = RegDP("RemovePhysX", GetType(Boolean), GetType(AppSettings), True)
+	Private m_rem3DtvPlay As DependencyProperty = RegDP("Remove3DTVPlay", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remGFE As DependencyProperty = RegDP("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
 
 	' Settings
-	Private m_showSafeModeMsg As DependencyProperty = Reg("ShowSafeModeMsg", GetType(Boolean), GetType(AppSettings), True)
-	Private m_UseRoamingCfg As DependencyProperty = Reg("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
-	Private m_CheckUpdates As DependencyProperty = Reg("CheckUpdates", GetType(Boolean), GetType(AppSettings), True)
-	Private m_createRestorePoint As DependencyProperty = Reg("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
-	Private m_saveLogs As DependencyProperty = Reg("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
-	Private m_removevulkan As DependencyProperty = Reg("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
-	Private m_showoffer As DependencyProperty = Reg("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
+	Private m_showSafeModeMsg As DependencyProperty = RegDP("ShowSafeModeMsg", GetType(Boolean), GetType(AppSettings), True)
+	Private m_UseRoamingCfg As DependencyProperty = RegDP("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
+	Private m_CheckUpdates As DependencyProperty = RegDP("CheckUpdates", GetType(Boolean), GetType(AppSettings), True)
+	Private m_createRestorePoint As DependencyProperty = RegDP("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
+	Private m_saveLogs As DependencyProperty = RegDP("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
+	Private m_removevulkan As DependencyProperty = RegDP("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
+	Private m_showoffer As DependencyProperty = RegDP("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
 
 	' Visit links
-	Private m_goodsite As DependencyProperty = Reg("GoodSite", GetType(Boolean), GetType(AppSettings), False)
-
-	Private m_visitDonate As DependencyProperty = Reg("VisitDonate", GetType(Boolean), GetType(AppSettings), False)
-	Private m_visitSVN As DependencyProperty = Reg("VisitSVN", GetType(Boolean), GetType(AppSettings), False)
-	Private m_visitGuru3DNvidia As DependencyProperty = Reg("VisitGuru3DNvidia", GetType(Boolean), GetType(AppSettings), False)
-	Private m_visitGuru3DAMD As DependencyProperty = Reg("VisitGuru3DAMD", GetType(Boolean), GetType(AppSettings), False)
-	Private m_visitDDUHome As DependencyProperty = Reg("VisitDDUHome", GetType(Boolean), GetType(AppSettings), False)
-	Private m_visitGeforce As DependencyProperty = Reg("VisitGeforce", GetType(Boolean), GetType(AppSettings), False)
-	Private m_visitOffer As DependencyProperty = Reg("VisitOffer", GetType(Boolean), GetType(AppSettings), False)
-
-	Private m_arguments As DependencyProperty = Reg("Arguments", GetType(String), GetType(AppSettings), String.Empty)
-	Private m_argumentsArray As DependencyProperty = Reg("ArgumentsArray", GetType(String()), GetType(AppSettings), Nothing)
-
+	Private m_goodsite As DependencyProperty = RegDP("GoodSite", GetType(Boolean), GetType(AppSettings), False)
 #End Region
 
 #Region "Public Properties"
@@ -322,89 +310,7 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property VisitDonate As Boolean
-		Get
-			Return CBool(GetValue(m_visitDonate))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_visitDonate, value)
-		End Set
-	End Property
-	Public Property VisitSVN As Boolean
-		Get
-			Return CBool(GetValue(m_visitSVN))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_visitSVN, value)
-		End Set
-	End Property
-	Public Property VisitGuru3DNvidia As Boolean
-		Get
-			Return CBool(GetValue(m_visitGuru3DNvidia))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_visitGuru3DNvidia, value)
-		End Set
-	End Property
-	Public Property VisitGuru3DAMD As Boolean
-		Get
-			Return CBool(GetValue(m_visitGuru3DAMD))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_visitGuru3DAMD, value)
-		End Set
-	End Property
-	Public Property VisitDDUHome As Boolean
-		Get
-			Return CBool(GetValue(m_visitDDUHome))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_visitDDUHome, value)
-		End Set
-	End Property
-	Public Property VisitGeforce As Boolean
-		Get
-			Return CBool(GetValue(m_visitGeforce))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_visitGeforce, value)
-		End Set
-	End Property
-	Public Property VisitOffer As Boolean
-		Get
-			Return CBool(GetValue(m_visitOffer))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_visitOffer, value)
-		End Set
-	End Property
-	Public Property Arguments As String
-		Get
-			Return CStr(GetValue(m_arguments))
-		End Get
-		Set(value As String)
-			SetValue(m_arguments, value)
-		End Set
-	End Property
-	Public Property ArgumentsArray As String()
-		Get
-			Return DirectCast(GetValue(m_argumentsArray), String())
-		End Get
-		Set(value As String())
-			SetValue(m_argumentsArray, value)
-		End Set
-	End Property
-
 #End Region
-
-	Friend Shared Function Reg(ByVal s As String, ByVal t As Type, ByVal c As Type, ByVal m As Object) As DependencyProperty
-		' Register values for 'Binding' (just shorthand, Don't need to undestand)
-		If TypeOf (m) Is FrameworkPropertyMetadata Then
-			Return DependencyProperty.Register(s, t, c, CType(m, FrameworkPropertyMetadata))
-		Else
-			Return DependencyProperty.Register(s, t, c, New PropertyMetadata(m))
-		End If
-	End Function
 
 	Private Sub UpdateWinText(ByVal version As OSVersion)
 		If WinVersion = version Then
@@ -473,51 +379,6 @@ Public Class AppSettings
 		Else
 			Load(Path.Combine(Application.Paths.Settings, "Settings.xml"))
 			UseRoamingConfig = False
-		End If
-	End Sub
-
-	Public Sub LoadArgs(ByVal args() As String, ByRef hasLink As Boolean)
-		If args IsNot Nothing AndAlso args.Length > 0 Then
-			ReDim ArgumentsArray(args.Length - 1)
-			Array.Copy(args, 0, ArgumentsArray, 0, args.Length)
-
-			Arguments = String.Join(" ", ArgumentsArray)
-
-			For Each Argument As String In args
-				If StrContainsAny(Argument, True, "donate") Then
-					VisitDonate = True
-					hasLink = True
-
-				ElseIf StrContainsAny(Argument, True, "svn") Then
-					VisitSVN = True
-					hasLink = True
-
-				ElseIf StrContainsAny(Argument, True, "guru3dnvidia") Then
-					VisitGuru3DNvidia = True
-					hasLink = True
-
-				ElseIf StrContainsAny(Argument, True, "guru3damd") Then
-					VisitGuru3DAMD = True
-					hasLink = True
-
-				ElseIf StrContainsAny(Argument, True, "dduhome") Then
-					VisitDDUHome = True
-					hasLink = True
-
-				ElseIf StrContainsAny(Argument, True, "geforce") Then
-					VisitGeforce = True
-					hasLink = True
-
-				ElseIf StrContainsAny(Argument, True, "visitoffer") Then
-					VisitOffer = True
-					hasLink = True
-
-				ElseIf StrContainsAny(Argument, True, "5648674614687") Then
-                    Application.IsDebug = True
-				End If
-			Next
-		Else
-			Arguments = String.Empty
 		End If
 	End Sub
 

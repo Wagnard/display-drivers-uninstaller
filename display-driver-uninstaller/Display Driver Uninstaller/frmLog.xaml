@@ -79,17 +79,16 @@
 							   Grid.Column="0" 
 							   VerticalAlignment="Center" 
 							   Foreground="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrush}, UpdateSourceTrigger=PropertyChanged}" 
-							   FontWeight="Bold"
-							   Text=""
+							   FontWeight="Bold" >
+						<TextBlock.Text>
+							<MultiBinding StringFormat="[ {0} - {1} ]" Mode="OneWay">
+								<Binding Path="ID" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
+								<Binding Path="Type" Mode="OneWay" UpdateSourceTrigger="PropertyChanged" />
+							</MultiBinding>
+						</TextBlock.Text>
+					</TextBlock>
+				
 
-							   Visibility="{Binding IsSelected, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" />
-
-					<TextBlock Grid.Row="0" 
-							   Grid.Column="0" 
-							   VerticalAlignment="Center" 
-							   Foreground="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrush}, UpdateSourceTrigger=PropertyChanged}" 
-							   FontWeight="Bold"
-							   Text="{Binding Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat='[ {0} ]'}" />
 				</TextBlock>
 
 				<TextBlock Margin="10,0,0,0" 

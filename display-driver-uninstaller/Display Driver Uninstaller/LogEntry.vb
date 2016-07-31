@@ -165,6 +165,7 @@ Public Class LogEntry
 		End Set
 	End Property
 
+	Public Property ID As Int64 = 0
 
 	''' <summary>DO NOT USE unless on STA Thread (MainThread)</summary>
 	Friend Sub New(Optional ByRef Ex As Exception = Nothing)

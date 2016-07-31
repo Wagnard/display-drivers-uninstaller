@@ -30,38 +30,26 @@ Imports WinForm = System.Windows.Forms
 Imports Display_Driver_Uninstaller.Win32
 
 Public Class frmMain
-	Private WithEvents BackgroundWorker1 As New System.ComponentModel.BackgroundWorker
+	Friend Shared cleaningThread As Thread = Nothing
+	Friend Shared workThread As Thread = Nothing
 
-	Dim backgroundworkcomplete As Boolean = True
-
-	Dim silent As Boolean = False
-	Dim argcleanamd As Boolean = False
-	Dim argcleanintel As Boolean = False
-	Dim argcleannvidia As Boolean = False
-	Dim nbclean As Integer = 0
-	Dim restart As Boolean = False
-	Dim MyIdentity As WindowsIdentity = WindowsIdentity.GetCurrent()
 	Dim identity As WindowsIdentity = WindowsIdentity.GetCurrent()
 	Dim principal As WindowsPrincipal = New WindowsPrincipal(identity)
 	Dim processinfo As New ProcessStartInfo
 	Dim process As New Process
 
-	Dim reboot As Boolean = False
-	Dim shutdown As Boolean = False
 	Public Shared baseDir As String = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
 	Public Shared win8higher As Boolean = False
 	Public win10 As Boolean = False
 	Public Shared winxp As Boolean = False
-	Dim stopme As Boolean = False
 
 	Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
 	Dim reply As String = Nothing
 	Dim reply2 As String = Nothing
 
-	Dim safemode As Boolean = False
 	Dim CleanupEngine As New CleanupEngine
 	Dim enduro As Boolean = False
-	Public Shared preventclose As Boolean = False
+
 	Public Shared donotremoveamdhdaudiobusfiles As Boolean = True
 
 	Private Sub CheckUpdatesThread(ByVal currentVersion As Version)
@@ -4307,18 +4295,20 @@ Public Class frmMain
 				If Not IsNullOrWhitespace(child) Then
 					If child.ToLower.Contains("s-1-5") Then
 						Using regkey As RegistryKey = Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
-							Try
-								deletesubregkey(regkey, "Global")
-								If regkey.SubKeyCount = 0 Then
-									Using regkey2 As RegistryKey = Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE", True)
-										Try
-											deletesubregkey(regkey2, "NVIDIA Corporation")
-										Catch ex As Exception
-										End Try
-									End Using
-								End If
-							Catch ex As Exception
-							End Try
+							If regkey IsNot Nothing Then
+								Try
+									deletesubregkey(regkey, "Global")
+									If regkey.SubKeyCount = 0 Then
+										Using regkey2 As RegistryKey = Registry.Users.OpenSubKey(child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE", True)
+											Try
+												deletesubregkey(regkey2, "NVIDIA Corporation")
+											Catch ex As Exception
+											End Try
+										End Using
+									End If
+								Catch ex As Exception
+								End Try
+							End If
 						End Using
 					End If
 				End If
@@ -4931,16 +4921,6 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Private Sub rescan()
-
-		'Scan for new devices...
-
-		Application.Log.AddMessage("Scanning for new device...")
-		SetupAPI.ReScanDevices()
-
-
-	End Sub
-
 	Private Function WinUpdatePending() As Boolean
 		Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
 			Return (regkey IsNot Nothing)
@@ -5007,97 +4987,68 @@ Public Class frmMain
 		End Try
 	End Function
 
-	Private Sub closeddu()
+	Private Sub CloseDDU()
 		If Not Dispatcher.CheckAccess() Then
-			Dispatcher.Invoke(Sub() closeddu())
+			Dispatcher.BeginInvoke(Sub() CloseDDU())
 		Else
 			Try
-				preventclose = False
-
-				' Me.Close()
-				Application.Current.MainWindow.Close()
-
+				Me.Close()
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
 		End If
 	End Sub
 
+
+
 #Region "frmMain Controls"
 
 	Private Sub btnCleanRestart_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanRestart.Click
-
-		If Not CBool(Application.Settings.GoodSite) Then
+		If Not Application.Settings.GoodSite Then
 			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
 			Application.Settings.GoodSite = True
 		End If
 
-		EnableControls(False)
+		Dim config As New ThreadSettings()
+		config.Args.Shutdown = False
+		config.Args.Restart = True
 
-		EnableDriverSearch(False)
-		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-		KillGPUStatsProcesses()
-		'this shouldn't be slow, so it isn't on a thread/background worker
-
-		reboot = True
-		SystemRestore()
-		BackgroundWorker1.RunWorkerAsync(
-		 New ThreadSettings() With {
-		   .DoShutdown = False,
-		   .DoReboot = True})
+		PreCleaning(config)
+		StartThread(config)
 	End Sub
 
 	Private Sub btnClean_Click(sender As Object, e As RoutedEventArgs) Handles btnClean.Click
 
-		If Not CBool(Application.Settings.GoodSite) Then
+		If Not Application.Settings.GoodSite Then
 			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
 			Application.Settings.GoodSite = True
 		End If
 
-		EnableControls(False)
+		Dim config As New ThreadSettings()
+		config.Args.Shutdown = False
+		config.Args.Restart = False
 
-		EnableDriverSearch(False)
-		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-		KillGPUStatsProcesses()
-		'this shouldn't be slow, so it isn't on a thread/background worker
-
-		reboot = False
-		shutdown = False
-		SystemRestore()
-		BackgroundWorker1.RunWorkerAsync(
-		 New ThreadSettings() With {
-		   .DoShutdown = False,
-		   .DoReboot = False})
-
+		PreCleaning(config)
+		StartThread(config)
 	End Sub
 
 	Private Sub btnCleanShutdown_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanShutdown.Click
-		If Not CBool(Application.Settings.GoodSite) Then
+		If Not Application.Settings.GoodSite Then
 			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
 			Application.Settings.GoodSite = True
 		End If
 
-		EnableControls(False)
+		Dim config As New ThreadSettings()
+		config.Args.Shutdown = True
+		config.Args.Restart = False
 
-		EnableDriverSearch(False)
-		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-		KillGPUStatsProcesses()
-		'this shouldn't be slow, so it isn't on a thread/background worker
-
-		reboot = False
-		shutdown = True
-		SystemRestore()
-		BackgroundWorker1.RunWorkerAsync(
-		 New ThreadSettings() With {
-		   .DoShutdown = True,
-		   .DoReboot = False})
+		PreCleaning(config)
+		StartThread(config)
 	End Sub
 
 	Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
 		EnableDriverSearch(True)
 	End Sub
-
-
 
 	Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
 		If Application.Settings.SelectedLanguage IsNot Nothing Then
@@ -5182,6 +5133,10 @@ Public Class frmMain
 		WinAPI.OpenVisitLink(" -visitoffer")
 	End Sub
 
+#End Region
+
+#Region "frmMain Events"
+
 	Private Sub frmMain_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
 		Languages.TranslateForm(Me, False)
 	End Sub
@@ -5194,89 +5149,94 @@ Public Class frmMain
 
 			CheckUpdates()
 
-
 			Try
 
 				'We check if there are any reboot from windows update pending. and if so we quit.
 				If WinUpdatePending() Then
 					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
-					closeddu()
+					CloseDDU()
 					Exit Sub
 				End If
 
-				' ----------------------------------------------------------------------------
-				' Trying to get the installed GPU info 
-				' (These list the one that are at least installed with minimal driver support)
-				' ----------------------------------------------------------------------------
-
-				GetGPUDetails(True)
-
-				Application.Settings.SelectedGPU = GPUIdentify()
-
-				' -------------------------------------
-				' Check if this is an AMD Enduro system
-				' -------------------------------------
-				Try
-					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
-						If regkey IsNot Nothing Then
-							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) Then Continue For
-
-								If StrContainsAny(child, True, "ven_8086") Then
-									Try
-										Using subRegKey As RegistryKey = regkey.OpenSubKey(child)
-											For Each childs As String In subRegKey.GetSubKeyNames()
-												If IsNullOrWhitespace(childs) Then Continue For
-
-												Using childRegKey As RegistryKey = subRegKey.OpenSubKey(childs)
-													Dim regValue As String = CStr(childRegKey.GetValue("Service"))
-
-													If Not IsNullOrWhitespace(regValue) AndAlso StrContainsAny(regValue, True, "amdkmdap") Then
-														enduro = True
-														UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
-													End If
-												End Using
-											Next
-										End Using
-									Catch ex As Exception
-										Continue For
-									End Try
-								End If
-							Next
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
-
-				If MyIdentity.IsSystem Then
-					Select Case WinForm.SystemInformation.BootMode
-						Case WinForm.BootMode.FailSafe
-							Application.Log.AddMessage("We are in Safe Mode")
-						Case WinForm.BootMode.FailSafeWithNetwork
-							Application.Log.AddMessage("We are in Safe Mode with Networking")
-						Case WinForm.BootMode.Normal
-							Application.Log.AddMessage("We are not in Safe Mode")
-					End Select
-				End If
-
-				GetOemInfo()
-
 			Catch ex As Exception
 				Application.Log.AddException(ex)
-				closeddu()
+				CloseDDU()
 				Exit Sub
 			End Try
 
-			If argcleanamd Or argcleannvidia Or argcleanintel Or restart Or silent Then
-				Dim trd As Thread = New Thread(AddressOf ThreadTask) With
-				{
+
+			' ----------------------------------------------------------------------------
+			' Trying to get the installed GPU info 
+			' (These list the one that are at least installed with minimal driver support)
+			' ----------------------------------------------------------------------------
+
+			GetGPUDetails(True)
+
+			Application.Settings.SelectedGPU = GPUIdentify()
+
+			' -------------------------------------
+			' Check if this is an AMD Enduro system
+			' -------------------------------------
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(child) Then Continue For
+
+							If StrContainsAny(child, True, "ven_8086") Then
+								Try
+									Using subRegKey As RegistryKey = regkey.OpenSubKey(child)
+										For Each childs As String In subRegKey.GetSubKeyNames()
+											If IsNullOrWhitespace(childs) Then Continue For
+
+											Using childRegKey As RegistryKey = subRegKey.OpenSubKey(childs)
+												Dim regValue As String = CStr(childRegKey.GetValue("Service"))
+
+												If Not IsNullOrWhitespace(regValue) AndAlso StrContainsAny(regValue, True, "amdkmdap") Then
+													enduro = True
+													UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
+												End If
+											End Using
+										Next
+									End Using
+								Catch ex As Exception
+									Continue For
+								End Try
+							End If
+						Next
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
+
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				Select Case WinForm.SystemInformation.BootMode
+					Case WinForm.BootMode.FailSafe
+						Application.Log.AddMessage("We are in Safe Mode")
+					Case WinForm.BootMode.FailSafeWithNetwork
+						Application.Log.AddMessage("We are in Safe Mode with Networking")
+					Case WinForm.BootMode.Normal
+						Application.Log.AddMessage("We are not in Safe Mode")
+				End Select
+			End If
+
+			GetOemInfo()
+
+
+
+			If Application.LaunchOptions.HasCleanArg Then
+				Dim config As New ThreadSettings
+
+				workThread = New Thread(Sub() ThreadTask(config)) With
+				   {
 				 .CurrentCulture = New Globalization.CultureInfo("en-US"),
 				 .CurrentUICulture = New Globalization.CultureInfo("en-US"),
+				 .Name = "workThread",
 				 .IsBackground = True
-				}
+				   }
 
-				trd.Start()
+				workThread.Start()
 			End If
 		Catch ex As Exception
 			Application.Log.AddException(ex, "frmMain loading caused error!")
@@ -5284,18 +5244,25 @@ Public Class frmMain
 	End Sub
 
 	Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
-		If preventclose Then
-			e.Cancel = True
-			Exit Sub
-		End If
+		Try
+			If cleaningThread IsNot Nothing AndAlso cleaningThread.IsAlive Then
+				e.Cancel = True
+				Exit Sub
+			End If
+		Catch ex As Exception
+		End Try
 	End Sub
 
+#End Region
 
+#Region "Cleaning Threads"
 
-	Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
-		Dim config As ThreadSettings = TryCast(e.Argument, ThreadSettings)
-
+	Private Sub CleaningThread_Work(ByVal config As ThreadSettings)
 		Try
+			If config Is Nothing Then
+				Throw New ArgumentNullException("config", "Null ThreadSettings in CleaningWorker as e.Argument!")
+			End If
+
 			Dim card1 As Integer = Nothing
 			Dim vendid As String = ""
 			Dim vendidexpected As String = ""
@@ -5304,22 +5271,10 @@ Public Class frmMain
 
 			UpdateTextMethod(UpdateTextTranslated(19))
 
-			preventclose = True
-
-			' Application.Settings is created on MainThread = crossthread
-			' Instead: use config.SelectedGPU  <-- Thread safe (actually, combobox1value not needed anymore)
-			' If you need any properties,  ThreadSettings.vb <-- just put new Propery line there and assign at btnClean / btnCleanShutdown / btnCleanRestart
-
-			'combobox1value = config.SelectedGPU.ToString()
-
-
 			Select Case config.SelectedGPU
-				Case GPUVendor.Nvidia
-					vendidexpected = "VEN_10DE"
-				Case GPUVendor.AMD
-					vendidexpected = "VEN_1002"
-				Case GPUVendor.Intel
-					vendidexpected = "VEN_8086"
+				Case GPUVendor.Nvidia : vendidexpected = "VEN_10DE"
+				Case GPUVendor.AMD : vendidexpected = "VEN_1002"
+				Case GPUVendor.Intel : vendidexpected = "VEN_8086"
 			End Select
 
 
@@ -5606,7 +5561,7 @@ Public Class frmMain
 				End Try
 
 				'We now try to remove the service AMDPMPFD if its lowerfilter is not found
-				If reboot Or shutdown Then
+				If config.Args.Restart Or config.Args.Shutdown Then
 					If Not checkamdkmpfd() Then
 						CleanupEngine.cleanserviceprocess({"amdkmpfd"})
 					End If
@@ -5620,14 +5575,7 @@ Public Class frmMain
 				If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
 					Application.Log.AddMessage("Killing Explorer.exe")
 
-					Dim appproc = process.GetProcessesByName("explorer")
-					For i As Integer = 0 To appproc.Length - 1
-						Try
-							appproc(i).Kill()
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-					Next i
+					KillProcess("explorer")
 				End If
 
 				cleanamdfolders(config)
@@ -5658,10 +5606,7 @@ Public Class frmMain
 				If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
 					Application.Log.AddMessage("Killing Explorer.exe")
 
-					Dim appproc = process.GetProcessesByName("explorer")
-					For i As Integer = 0 To appproc.Length - 1
-						appproc(i).Kill()
-					Next i
+					KillProcess("explorer")
 				End If
 
 				cleanintelfolders()
@@ -5670,64 +5615,172 @@ Public Class frmMain
 			cleandriverstore(config)
 			fixregistrydriverstore()
 			'rebuildcountercache()
+
+			config.Success = True
 		Catch ex As Exception
 			Application.Log.AddException(ex)
-			MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
-			stopme = True
+			config.Success = False
+		Finally
+			CleaningThread_Completed(config)
 		End Try
 	End Sub
 
-	Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As System.Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorker1.RunWorkerCompleted
-		'Scan for new hardware to not let users into a non working state.
+	Private Sub CleaningThread_Completed(ByVal config As ThreadSettings)
 		Try
+			Application.Log.AddMessage("Clean uninstall completed!" & CRLF & ">> GPU: " & config.SelectedGPU.ToString())
 
-			If stopme = True Then
+			If Not config.Success Then
+				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), "Error!", MessageBoxButton.OK, MessageBoxImage.Error)
 
+				'Scan for new hardware to not let users into a non working state.
 				SetupAPI.ReScanDevices()
-				closeddu()
+
+				CloseDDU()
 				Exit Sub
-
 			End If
-
-
-			'For command line arguement to know if there is more cleans to be done.
-
-			preventclose = False
-			backgroundworkcomplete = True
 
 			UpdateTextMethod(UpdateTextTranslated(9))
 
-			Application.Log.AddMessage("Clean uninstall completed!")
+			If config.PreventClose Then
+				Exit Sub
+			End If
 
-
-			If Not shutdown Then
-				rescan()
+			If Not config.Args.Shutdown Then
+				SetupAPI.ReScanDevices()
 			End If
 
 			EnableControls(True)
 
-			If nbclean < 2 And Not silent And Not reboot And Not shutdown Then
-				If MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text10"), Application.Settings.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
-					closeddu()
+			If Not config.Args.Silent And Not config.Args.Restart And Not config.Args.Shutdown Then
+				If MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
+					CloseDDU()
 					Exit Sub
 				End If
 			End If
 
-			If reboot Then
+			If config.Args.Restart Then
 				Application.RestartComputer()
+				Exit Sub
 			End If
 
-			If shutdown Then
+			If config.Args.Shutdown Then
 				Application.ShutdownComputer()
+				Exit Sub
 			End If
-
 		Catch ex As Exception
-			preventclose = False
 			Application.Log.AddException(ex)
 		End Try
 	End Sub
 
+	Private Sub ThreadTask(ByVal config As ThreadSettings)
+		Try
+			config.PreventClose = True
+
+			PreCleaning(config)
+
+			If config.Args.HasCleanArg Then
+				If config.Args.CleanAmd Then
+					config.Success = False
+					config.SelectedGPU = GPUVendor.AMD
+
+					StartThread(config)
+
+					While cleaningThread.IsAlive
+						Thread.Sleep(200)
+					End While
+				End If
+
+
+				If config.Args.CleanNvidia Then
+					config.Success = False
+					config.SelectedGPU = GPUVendor.Nvidia
+
+					StartThread(config)
+
+					While cleaningThread.IsAlive
+						Thread.Sleep(200)
+					End While
+				End If
+
+				If config.Args.CleanIntel Then
+					config.Success = False
+					config.SelectedGPU = GPUVendor.Intel
+
+					StartThread(config)
+
+					While cleaningThread.IsAlive
+						Thread.Sleep(200)
+					End While
+				End If
+			End If
+
+			If config.Args.Restart Then
+				Application.RestartComputer()
+				Exit Sub
+			End If
+
+			If config.Args.Shutdown Then
+				Application.ShutdownComputer()
+				Exit Sub
+			End If
+
+			If config.Args.Silent Then
+				CloseDDU()
+			Else
+				If MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
+					CloseDDU()
+					Exit Sub
+				End If
+			End If
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		Finally
+			EnableControls(True)
+		End Try
+	End Sub
+
+	Private Sub PreCleaning(ByVal config As ThreadSettings)
+		If Not Me.Dispatcher.CheckAccess() Then
+			Me.Dispatcher.BeginInvoke(Sub() PreCleaning(config))
+		Else
+			EnableControls(False)
+
+			EnableDriverSearch(False)
+
+			'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
+			KillGPUStatsProcesses()
+			'this shouldn't be slow, so it isn't on a thread/background worker
+
+			SystemRestore()
+		End If
+	End Sub
+
+	Private Sub StartThread(ByVal config As ThreadSettings)
+		Try
+			If cleaningThread IsNot Nothing AndAlso cleaningThread.IsAlive Then
+				Throw New ArgumentException("cleaningThread", "Thread already exists and is busy!")
+			End If
+
+			cleaningThread = New Thread(Sub() CleaningThread_Work(config)) With
+			  {
+			   .CurrentCulture = New Globalization.CultureInfo("en-US"),
+			   .CurrentUICulture = New Globalization.CultureInfo("en-US"),
+			   .Name = "CleaningThread",
+			   .IsBackground = True
+			  }
+
+			cleaningThread.Start()
+
+		Catch ex As Exception
+			cleaningThread = Nothing
+			Application.Log.AddException(ex, "Launching cleaning thread failed!")
+		End Try
+	End Sub
+
 #End Region
+
+
+
 
 	Private Sub ShowAboutWindow(ByVal frmType As Int32)
 		Dim frmAbout As New frmAbout With
@@ -5771,6 +5824,12 @@ Public Class frmMain
 			Catch ex As Exception
 				info.Add("UserRights", "Unknown")
 			End Try
+
+			If Application.LaunchOptions.ArgumentsArray IsNot Nothing AndAlso Application.LaunchOptions.ArgumentsArray.Length > 0 Then
+				info.Add("Arguments", String.Join(Environment.NewLine, Application.LaunchOptions.ArgumentsArray))
+			Else
+				info.Add("Arguments", "<empty>")
+			End If
 
 			info.Add(KvP.Empty)
 		End If
@@ -5879,57 +5938,26 @@ Public Class frmMain
 	End Sub
 
 	Public Sub EnableControls(ByVal enabled As Boolean)
-		'	Me.IsEnabled = enabled
+		If Not Me.Dispatcher.CheckAccess() Then
+			Me.Dispatcher.BeginInvoke(Sub() EnableControls(enabled))
+		Else
+			'	Me.IsEnabled = enabled
 
-		cbSelectedGPU.IsEnabled = enabled
-		ButtonsPanel.IsEnabled = enabled
-		btnWuRestore.IsEnabled = enabled
-		'	MenuStrip1.IsEnabled = enabled
+			Dim uiContent As UIElement = TryCast(Me.Content, UIElement)
+
+			If uiContent IsNot Nothing Then
+				uiContent.IsEnabled = enabled
+			Else
+				cbLanguage.IsEnabled = enabled			'Selecting this at runtime maybe not good idea.. ;)
+				cbSelectedGPU.IsEnabled = enabled
+				ButtonsPanel.IsEnabled = enabled
+				btnWuRestore.IsEnabled = enabled
+				MenuStrip1.IsEnabled = enabled
+			End If
+
+		End If
 	End Sub
 
-	Private Sub ThreadTask()
-
-		Try
-			If argcleanamd Then
-				backgroundworkcomplete = False
-				cleananddonothing("AMD")
-			End If
-
-			Do Until backgroundworkcomplete
-				System.Threading.Thread.Sleep(10)
-			Loop
-
-			If argcleannvidia Then
-				backgroundworkcomplete = False
-				cleananddonothing("NVIDIA")
-			End If
-
-			Do Until backgroundworkcomplete
-				System.Threading.Thread.Sleep(10)
-			Loop
-
-			If argcleanintel Then
-				backgroundworkcomplete = False
-				cleananddonothing("INTEL")
-			End If
-
-			Do Until backgroundworkcomplete
-				System.Threading.Thread.Sleep(10)
-			Loop
-
-			If restart Then
-				Application.RestartComputer()
-
-				Exit Sub
-			End If
-
-			If silent And (Not restart) Then
-				closeddu()
-			End If
-		Catch ex As Exception
-			Application.Log.AddException(ex)
-		End Try
-	End Sub
 
 	Private Sub SystemRestore()
 		If Application.Settings.CreateRestorePoint AndAlso System.Windows.Forms.SystemInformation.BootMode = Forms.BootMode.Normal Then
@@ -6007,19 +6035,6 @@ Public Class frmMain
 		  "RTSSHooksLoader",
 		  "EncoderServer",
 		  "nvidiaInspector")
-	End Sub
-
-	Private Sub cleananddonothing(ByVal gpu As String)
-		reboot = False
-		shutdown = False
-		BackgroundWorker1.RunWorkerAsync()
-	End Sub
-
-	Private Sub cleanandandreboot(ByVal gpu As String)
-		reboot = True
-		shutdown = False
-		BackgroundWorker1.RunWorkerAsync()
-
 	End Sub
 
 	Private Sub EnableDriverSearch(ByVal enable As Boolean)
@@ -6369,26 +6384,6 @@ Public Class frmMain
 			'		SetupAPI.UninstallDevice(d)
 			'	End If
 			'Next
-			'If MessageBox.Show("Restart PC using Thread? (testing for CrossThreads)", "Restart?", MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
-			'	Dim trd As Thread = New Thread(AddressOf Application.ShutdownComputer) With
-			'	{
-			'	 .CurrentCulture = New Globalization.CultureInfo("en-US"),
-			'	 .CurrentUICulture = New Globalization.CultureInfo("en-US"),
-			'	 .IsBackground = True
-			'	}
-
-			'	trd.Start()
-			'End If
-
-			Dim t As Thread = New Thread(AddressOf Waiter) With
-			{
-			.CurrentCulture = New Globalization.CultureInfo("en-US"),
-			.CurrentUICulture = New Globalization.CultureInfo("en-US"),
-			.IsBackground = True,
-			.Name = "Waiter"
-			}
-			t.Start()
-
 
 			'For i As Int32 = 0 To 1000
 			'	Application.Log.AddException(New ComponentModel.Win32Exception(32), "TEST: Message" & i.ToString())

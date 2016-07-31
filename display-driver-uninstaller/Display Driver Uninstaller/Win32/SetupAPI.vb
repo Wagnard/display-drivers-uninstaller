@@ -2268,6 +2268,8 @@ Namespace Win32
 			Dim devInstRoot As UInt32
 
 			Try
+				Application.Log.AddMessage("Scanning for new devices...")
+
 				result = CM_Locate_DevNode(devInstRoot, Nothing, CM_LOCATE.DEVNODE_NORMAL Or CM_LOCATE.DEVNODE_PHANTOM)
 
 				If result = CR.SUCCESS Then
