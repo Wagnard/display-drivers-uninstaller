@@ -5,7 +5,6 @@ Public Class AppLaunchOptions
 	Public Property Arguments As String = Nothing
 	Public Property ArgumentsArray As String() = Nothing
 
-	' Remember to update HasCleanArg and LoadArgs() !
 	Public Property Silent As Boolean = False
 	Public Property Shutdown As Boolean = False
 	Public Property Restart As Boolean = False
@@ -15,30 +14,36 @@ Public Class AppLaunchOptions
 	Public Property CleanAmd As Boolean = False
 	Public Property CleanIntel As Boolean = False
 
-	'All arguments which result launching separate cleaning thread!
+	Public Property RemoveMonitors As Boolean = False
+
+	Public Property RemoveCrimsonCache As Boolean = False
+	Public Property RemoveAMDDirs As Boolean = False
+	Public Property RemoveAMDAudioBus As Boolean = False
+	Public Property RemoveAMDKMPFD As Boolean = False
+
+	Public Property RemoveNvidiaDirs As Boolean = False
+	Public Property RemovePhysX As Boolean = False
+	Public Property Remove3DTVPlay As Boolean = False
+	Public Property RemoveGFE As Boolean = False
+
+	Public Property RemoveVulkan As Boolean = False
+
 	Public ReadOnly Property HasCleanArg As Boolean
 		Get
-			If CleanNvidia OrElse
-			 CleanAmd OrElse
-			 CleanIntel Then
-
-				Return True
-			End If
-
-			Return False
+			Return (CleanNvidia OrElse CleanAmd OrElse CleanIntel)
 		End Get
 	End Property
 
-
+#Region "Visit links"
 
 	' Remember to update HasLinkArg and LoadArgs() !
-	Public Property VisitDonate As Boolean = False
-	Public Property VisitSVN As Boolean = False
-	Public Property VisitGuru3DNvidia As Boolean = False
-	Public Property VisitGuru3DAMD As Boolean = False
-	Public Property VisitDDUHome As Boolean = False
-	Public Property VisitGeforce As Boolean = False
-	Public Property VisitOffer As Boolean = False
+	Public VisitDonate As Boolean = False
+	Public VisitSVN As Boolean = False
+	Public VisitGuru3DNvidia As Boolean = False
+	Public VisitGuru3DAMD As Boolean = False
+	Public VisitDDUHome As Boolean = False
+	Public VisitGeforce As Boolean = False
+	Public VisitOffer As Boolean = False
 
 	Public ReadOnly Property HasLinkArg As Boolean
 		Get
@@ -56,6 +61,8 @@ Public Class AppLaunchOptions
 			Return False
 		End Get
 	End Property
+
+#End Region
 
 	Public Sub LoadArgs(ByVal args() As String)
 		If args IsNot Nothing AndAlso args.Length > 0 Then
@@ -82,10 +89,17 @@ Public Class AppLaunchOptions
 					Case StrContainsAny(Argument, True, "-CleanNvidia") : CleanNvidia = True
 					Case StrContainsAny(Argument, True, "-CleanAmd") : CleanAmd = True
 					Case StrContainsAny(Argument, True, "-CleanIntel") : CleanIntel = True
+
+
+						'	TODO: Add cmdline args for those RemoveXXXX properties
+						'	Case StrContainsAny(Argument, True, "-RemNvidiaDirs") : RemoveNvidiaDirs = True
+
+						'	ALSO: change default values for those RemoveXXXX properties if needed
+						'	They are used if launched with cmdLine 'CleanNvidia', 'CleanAmd' or 'CleanIntel'
 				End Select
 			Next
 		Else
-			Arguments = String.Empty
+			Arguments = Nothing
 		End If
 	End Sub
 

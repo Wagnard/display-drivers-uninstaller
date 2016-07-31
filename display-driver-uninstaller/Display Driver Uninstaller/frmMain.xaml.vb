@@ -5009,9 +5009,9 @@ Public Class frmMain
 			Application.Settings.GoodSite = True
 		End If
 
-		Dim config As New ThreadSettings()
-		config.Args.Shutdown = False
-		config.Args.Restart = True
+		Dim config As New ThreadSettings(False)
+		config.Shutdown = False
+		config.Restart = True
 
 		PreCleaning(config)
 		StartThread(config)
@@ -5024,9 +5024,9 @@ Public Class frmMain
 			Application.Settings.GoodSite = True
 		End If
 
-		Dim config As New ThreadSettings()
-		config.Args.Shutdown = False
-		config.Args.Restart = False
+		Dim config As New ThreadSettings(False)
+		config.Shutdown = False
+		config.Restart = False
 
 		PreCleaning(config)
 		StartThread(config)
@@ -5038,9 +5038,9 @@ Public Class frmMain
 			Application.Settings.GoodSite = True
 		End If
 
-		Dim config As New ThreadSettings()
-		config.Args.Shutdown = True
-		config.Args.Restart = False
+		Dim config As New ThreadSettings(False)
+		config.Shutdown = True
+		config.Restart = False
 
 		PreCleaning(config)
 		StartThread(config)
@@ -5147,22 +5147,24 @@ Public Class frmMain
 		Try
 			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
 
-			CheckUpdates()
+			If Not Application.LaunchOptions.Silent Then
+				CheckUpdates()
 
-			Try
+				Try
 
-				'We check if there are any reboot from windows update pending. and if so we quit.
-				If WinUpdatePending() Then
-					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
+					'We check if there are any reboot from windows update pending. and if so we quit.
+					If WinUpdatePending() Then
+						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
+						CloseDDU()
+						Exit Sub
+					End If
+
+				Catch ex As Exception
+					Application.Log.AddException(ex)
 					CloseDDU()
 					Exit Sub
-				End If
-
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-				CloseDDU()
-				Exit Sub
-			End Try
+				End Try
+			End If
 
 
 			' ----------------------------------------------------------------------------
@@ -5224,17 +5226,16 @@ Public Class frmMain
 			GetOemInfo()
 
 
-
 			If Application.LaunchOptions.HasCleanArg Then
-				Dim config As New ThreadSettings
+				Dim config As New ThreadSettings(True)
 
 				workThread = New Thread(Sub() ThreadTask(config)) With
-				   {
+				{
 				 .CurrentCulture = New Globalization.CultureInfo("en-US"),
 				 .CurrentUICulture = New Globalization.CultureInfo("en-US"),
 				 .Name = "workThread",
 				 .IsBackground = True
-				   }
+				}
 
 				workThread.Start()
 			End If
@@ -5561,7 +5562,7 @@ Public Class frmMain
 				End Try
 
 				'We now try to remove the service AMDPMPFD if its lowerfilter is not found
-				If config.Args.Restart Or config.Args.Shutdown Then
+				If config.Restart Or config.Shutdown Then
 					If Not checkamdkmpfd() Then
 						CleanupEngine.cleanserviceprocess({"amdkmpfd"})
 					End If
@@ -5645,25 +5646,25 @@ Public Class frmMain
 				Exit Sub
 			End If
 
-			If Not config.Args.Shutdown Then
+			If Not config.Shutdown Then
 				SetupAPI.ReScanDevices()
 			End If
 
 			EnableControls(True)
 
-			If Not config.Args.Silent And Not config.Args.Restart And Not config.Args.Shutdown Then
+			If Not config.Silent And Not config.Restart And Not config.Shutdown Then
 				If MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
 					CloseDDU()
 					Exit Sub
 				End If
 			End If
 
-			If config.Args.Restart Then
+			If config.Restart Then
 				Application.RestartComputer()
 				Exit Sub
 			End If
 
-			If config.Args.Shutdown Then
+			If config.Shutdown Then
 				Application.ShutdownComputer()
 				Exit Sub
 			End If
@@ -5678,8 +5679,8 @@ Public Class frmMain
 
 			PreCleaning(config)
 
-			If config.Args.HasCleanArg Then
-				If config.Args.CleanAmd Then
+			If config.HasCleanArg Then
+				If config.CleanAmd Then
 					config.Success = False
 					config.SelectedGPU = GPUVendor.AMD
 
@@ -5691,7 +5692,7 @@ Public Class frmMain
 				End If
 
 
-				If config.Args.CleanNvidia Then
+				If config.CleanNvidia Then
 					config.Success = False
 					config.SelectedGPU = GPUVendor.Nvidia
 
@@ -5702,7 +5703,7 @@ Public Class frmMain
 					End While
 				End If
 
-				If config.Args.CleanIntel Then
+				If config.CleanIntel Then
 					config.Success = False
 					config.SelectedGPU = GPUVendor.Intel
 
@@ -5714,17 +5715,17 @@ Public Class frmMain
 				End If
 			End If
 
-			If config.Args.Restart Then
+			If config.Restart Then
 				Application.RestartComputer()
 				Exit Sub
 			End If
 
-			If config.Args.Shutdown Then
+			If config.Shutdown Then
 				Application.ShutdownComputer()
 				Exit Sub
 			End If
 
-			If config.Args.Silent Then
+			If config.Silent Then
 				CloseDDU()
 			Else
 				If MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
@@ -5757,6 +5758,16 @@ Public Class frmMain
 
 	Private Sub StartThread(ByVal config As ThreadSettings)
 		Try
+			If System.Diagnostics.Debugger.IsAttached Then			'TODO: remove when tested
+				Dim logEntry As New LogEntry() With {.Message = "Used settings for cleaning!"}
+
+				For Each p As PropertyInfo In config.GetType().GetProperties(BindingFlags.Public Or BindingFlags.Instance)
+					logEntry.Add(p.Name, If(p.GetValue(config, Nothing) IsNot Nothing, p.GetValue(config, Nothing).ToString(), "-"))
+				Next
+
+				Application.Log.Add(logEntry)
+			End If
+
 			If cleaningThread IsNot Nothing AndAlso cleaningThread.IsAlive Then
 				Throw New ArgumentException("cleaningThread", "Thread already exists and is busy!")
 			End If
@@ -5957,7 +5968,6 @@ Public Class frmMain
 
 		End If
 	End Sub
-
 
 	Private Sub SystemRestore()
 		If Application.Settings.CreateRestorePoint AndAlso System.Windows.Forms.SystemInformation.BootMode = Forms.BootMode.Normal Then

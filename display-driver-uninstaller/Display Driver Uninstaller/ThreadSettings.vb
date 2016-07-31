@@ -1,33 +1,14 @@
 ﻿Imports System.Reflection
 
 Public Class ThreadSettings
+	Inherits AppLaunchOptions
+
+	Public Property Paths As New AppPaths(False)
 	Public Property Success As Boolean = False
 	Public Property PreventClose As Boolean = False
 
-	Public Property Paths As New AppPaths(False)
-	Public Property Args As New AppLaunchOptions()
-
 	Public Property SelectedGPU As GPUVendor
-    Public Property AppName As String
-
-	Public Property RemoveMonitors As Boolean
-	Public Property RemoveCrimsonCache As Boolean
-	Public Property RemoveAMDDirs As Boolean
-	Public Property RemoveAMDAudioBus As Boolean
-	Public Property RemoveAMDKMPFD As Boolean
-
-	Public Property RemoveNvidiaDirs As Boolean
-	Public Property RemovePhysX As Boolean
-	Public Property Remove3DTVPlay As Boolean
-	Public Property RemoveGFE As Boolean
-
-	Public Property ShowSafeModeMsg As Boolean
-	Public Property UseRoamingConfig As Boolean
-	Public Property DontCheckUpdates As Boolean
-	Public Property CreateRestorePoint As Boolean
-	Public Property SaveLogs As Boolean
-	Public Property RemoveVulkan As Boolean
-	Public Property UseSetupAPI As Boolean
+	Public Property AppName As String
 
 	Public Property WinVersion As OSVersion
 	Public Property WinIs64 As Boolean
@@ -48,10 +29,13 @@ Public Class ThreadSettings
 		End Get
 	End Property
 
-	Public Sub New()
+	Public Sub New(Optional ByVal fromCmdLineArgs As Boolean = False)
 		PropertyCopy(Application.Paths, Me.Paths)
 		PropertyCopy(Application.Settings, Me)
-		PropertyCopy(Application.LaunchOptions, Me.Args)
+
+		If fromCmdLineArgs Then
+			PropertyCopy(Application.LaunchOptions, Me)		' Use cmdline args
+		End If
 	End Sub
 
 	Private Sub PropertyCopy(ByVal fromObj As Object, toObj As Object)
