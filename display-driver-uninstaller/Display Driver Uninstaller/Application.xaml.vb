@@ -216,7 +216,7 @@ Class Application
 			 CRLF &
 			 ex.Message & CRLF &
 			 CRLF &
-			 ex.StackTrace, "DDU", MessageBoxButton.OK, MessageBoxImage.Error)
+			 ex.StackTrace, "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly)
 
 			Me.Shutdown(0)
 		End Try
@@ -272,9 +272,9 @@ Class Application
 	End Sub
 
 	Private Sub Application_Startup(sender As Object, e As System.Windows.StartupEventArgs) Handles Me.Startup
-		If WindowsIdentity.GetCurrent().IsSystem Then
-			MessageBox.Show("Attach debugger!")
-		End If
+		'If WindowsIdentity.GetCurrent().IsSystem Then
+		'	MessageBox.Show("Attach debugger!")		' for Debugging System process
+		'End If
 
 		Try
 			' Launch as Admin if not
@@ -290,7 +290,7 @@ Class Application
 							msg = String.Format("Administrator rights are required to use application.{0}{0}{1}", CRLF, msg)
 						End If
 
-						MessageBox.Show(msg, "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+						MessageBox.Show(msg, "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Exclamation, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly)
 					End Try
 
 					Me.Shutdown(0)
