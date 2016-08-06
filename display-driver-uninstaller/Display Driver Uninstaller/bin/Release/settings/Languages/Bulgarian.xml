@@ -12,7 +12,7 @@
 				(силно препоръчително)
 			</Text>
 			<Tooltip>
-				Деинсталира текущия и всички предишно инсталирани драйвери, след което рестартира компютъра.
+				Деинсталира текущия и всички предишно инсталирани драйвъри, след което рестартира компютъра.
 				(силно препоръчително)
 			</Tooltip>
 		</btnCleanRestart>
@@ -22,7 +22,7 @@
 				(може да доведе до проблеми като черен екран)
 			</Text>
 			<Tooltip>
-				Деинсталира текущия и всички предишно инсталирани драйвери, но не рестартира компютъра.
+				Деинсталира текущия и всички предишно инсталирани драйвъри, но не рестартира компютъра.
 				(може да причини някои проблеми като черен екран)
 			</Tooltip>
 		</btnClean>
@@ -32,14 +32,14 @@
 				(ако инсталирате нова видео карта)
 			</Text>
 			<Tooltip>
-				Деинсталира текущия и всички предишно инсталирани драйвери и изключва компютъра, без повторно сканиране.
+				Деинсталира текущия и всички предишно инсталирани драйвъри и изключва компютъра, без повторно сканиране.
 				(за инсталиране на нова видео карта)
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
 			<Text>
 				Задай автоматичната инсталация на
-				драйвери в Windows по подразбиране
+				драйвъри в Windows по подразбиране
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
@@ -52,10 +52,10 @@
 			<Text>Дневник</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Изберете графичен драйвер</Text>
+			<Text>Изберете графичен драйвър</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Selected language</Text>
+			<Text>Избран език</Text>
 		</lblLanguage>
 		
 		<Label9>
@@ -73,45 +73,45 @@
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>Предложения от наши партньори</Text>
+			<Tooltip>Можете да забраните това в менюто с опциите.</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
-			<Text>Options</Text>
+			<Text>Опции</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
-			<Text>Info</Text>
+			<Text>Информация</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>Разширен дневник</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
-			<Text>Links</Text>
+			<Text>Връзки</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>Условия за използване (Узи)</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
-			<Text>About</Text>
+			<Text>Относно</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>Преводачи</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visit official DDU Website</Text>
+			<Text>Отвори официалната страница на DDU</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Visit SVN Website</Text>
+			<Text>Отвори SVN страницата</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
+			<Text>Отвори темата за NVIDIA в Guru3d</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
+			<Text>Отвори темата за AMD в Guru3d</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Visit Geforce Thread</Text>
+			<Text>Отвори темата за Geforce</Text>
 		</VisitGeforceMenuItem>
 		
 		<Messages>
@@ -123,16 +123,16 @@
 			<Text6>Появи се проблем в един от модулите. Изпратете Вашите DDU дневници на разработчика.</Text6>
 			<Text7>DDU засече, че разполагате с лаптоп с AMD превключваща видео карта (Enduro или подобен). DDU все още не е съвместим/тестван с Enduro системи. Използвате го на Ваш риск.</Text7>
 			<Text8>DDU засече, че НЕ сте в безопасен режим (Safe Mode). За по-добро почистване без проблеми се препоръчва да рестартирате в безопасен режим..</Text8>
-			<Text9>DDU промени настройка, която предотвратява драйвери да бъдат автоматично изтегляни от Windows Update. Можете да върнете настройката по подразбиране, ако желаете, но СЛЕД инсталацията на новия драйвер.</Text9>
+			<Text9>DDU промени настройка, която предотвратява драйвъри да бъдат автоматично изтегляни от Windows Update. Можете да върнете настройката по подразбиране, ако желаете, но СЛЕД инсталацията на новия драйвър.</Text9>
 			<Text10>Почистването завърши! Желаете ли да затворите програмата?</Text10>
 			<Text11>Готово!</Text11>
 			<Text12>Не сте в безопасен режим (Safe Mode). Силно се препоръчва да рестартирате в безопасен режим, за да избегнете възможни проблеми. Искате ли да рестартирате в безопасен режим сега?</Text12>
-			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
-			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
+			<Text13>Ето какво трябва да изберете на синия екран за възстановяване: Отстраняване на неизправности -&gt; Разширени опции -&gt; Настройки за стартиране.</Text13>
+			<Text14>Има рестартиране, което е на изчакване. Моля, рестартирайте, преди да използвате DDU.</Text14>
 		</Messages>
 		
 		<UpdateLog>
-			<Text1>Почистване на хранилището за драйвери (изтриване на OEM)...</Text1>
+			<Text1>Почистване на хранилището за драйвъри (изтриване на OEM)...</Text1>
 			<Text2>Почистване на директория...</Text2>
 			<Text3>Почистване на ключове в системния регистър (може да отнеме 1-2 минути)...</Text3>
 			<Text4>Почистване на потребителски акаунт UpdatusUser, ако е наличен...</Text4>
@@ -146,14 +146,14 @@
 			<Text12>ГП №</Text12>
 			<Text13>Открит</Text13>
 			<Text14>DeviceId на ГП</Text14>
-			<Text15>Открита(и) версия(и) на драйвер(и)</Text15>
+			<Text15>Открита(и) версия(и) на драйвър(и)</Text15>
 			<Text16>INF</Text16>
 			<Text17>Секция в INF</Text17>
 			<Text18>ГП не е инсталиран коректно</Text18>
 			<Text19>Изтриване на някои специални папки. Може да отнеме известно време.</Text19>
 			<Text20>Започнато е почистване.</Text20>
 			<Text21>Деинсталиране</Text21>
-			<Text22>Драйвер</Text22>
+			<Text22>Драйвър</Text22>
 			<Text23>DDUDR премахване. Моля, изчакайте, може да отнеме няколко минути.</Text23>
 			<Text24>ГП премахнат(и) от диспечера на устройства.</Text24>
 			<Text25>DDUDR премахване на аудио контролер.</Text25>
@@ -179,177 +179,177 @@
 	
 	<frmOptions Text="Options">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Затвори</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>Показвай предложения от нашите партньори</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Specific Options</Text>
+			<Text>Специфични опции за NVIDIA</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Specific Options</Text>
+			<Text>Специфични опции за AMD</Text>
 		</lblAmdspecific>
 		<lblGeneral>
-			<Text>General Options</Text>
+			<Text>Общи опции</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Премахни папката с драйвери „C:\nVidia“ (НЕ се препоръчва)</Text>
+			<Text>Премахвай папката с драйвъри „C:\nVidia“ (НЕпрепоръчително)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Дневници в пътя за стартиране (силно се препоръчва)</Text>
+			<Text>Дневници в пътя за стартиране (силно препоръчително)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
-			<Text>Премахни PhysX</Text>
+			<Text>Премахвай PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
-			<Text>Премахни 3DTV Play</Text>
+			<Text>Премахвай 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
-			<Text>Създай точка за възстановяване (ако е възможно)</Text>
+			<Text>Създавай точка за възстановяване (ако е възможно)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Премахни налични и неналични монитори (препоръчва се)</Text>
+			<Text>Премахвай налични и неналични монитори (препоръчително)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Премахни AMD Audio Bus</Text>
+			<Text>Премахвай AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Премахни папката с драйвери „C:\AMD“ (НЕ се препоръчва)</Text>
+			<Text>Премахвай папката с драйвъри „C:\AMD“ (НЕпрепоръчително)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Enable Windows 8+ Direct Safe Mode.</Text>
+			<Text>Разреши директен безопасен режим за Windows 8 и следваши</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Show Safe Mode message box on startup</Text>
+			<Text>Показвай съобщение за безопасен режим при стартиране</Text>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Store config file in roaming folder</Text>
+			<Text>Съхранявай конфигурационния файл в папка roaming</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+			<Text>Автоматично проверявай за актуализации на DDU при стартиране (препоръчително)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Remove Geforce Experience (GFE)</Text>
+			<Text>Премахвай Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>Remove AMD Crimson Shader Cache folder</Text>
+			<Text>Премахвай папката с кеша на шейдъри на AMD Crimson</Text>
 			<Tooltip>
-				Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.
-				Also recommended if you are switching to another brand like nVidia.
+				Препоръчително, ако има графични аномалии (проблеми със скоростта и изображението) причинени от повредена информация за кешираните шейдъри.
+				Също препоръчително, ако преминавате от един производител на друг (например NVIDIA).
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Remove Vulkan Runtime</Text>
-			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+			<Text>Премахвай средата за изпълнение (runtime) на Vulkan</Text>
+			<Tooltip>Не се препоръчва, ако разполагате с две различни видео карти, способни да използват Vulkan интерфейса.</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Use SetupAPI *Experimental*</Text>
-			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+			<Text>Използвай SetupAPI *Експериментално*</Text>
+			<Tooltip>Използване на SetupAPI вместо отделния инструмент DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
-			<Text>Launch</Text>
+			<Text>Стартирай</Text>
 			<Text2>
-				Reboot to
-				Safe Mode
+				Рестартирай в
+				безопасен режим
 			</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Затвори</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>Режим на стартиране</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				You are not in safe mode. It is highly recommended
-				reboot into Safe Mode to avoid possible issues.
+				Не сте в безопасен режим. Силно се препоръчва да
+				преминете в, за да избегнете евентуални проблеми.
 			</Text>
 		</lblNotSafeMode>
 		<lblWin10Warn>
 			<Text>
-				Important note for Windows 10 users:
-				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Важна забележка за потребители на Windows 10:
+				Ще е необходима ПАРОЛАТА Ви за Windows 10! (ПИН НЕ функционира в безопасен режим)
+				Затворете програмата, ако сте я забравили или не я знаете!
 			</Text>
 		</lblWin10Warn>
 		<cbBootOption>
-			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
-			<Item3>Safe Mode With Networking</Item3>
+			<Item1>Нормален</Item1>
+			<Item2>Безопасен режим (препоръчително)</Item2>
+			<Item3>Безопасен режим с мрежа</Item3>
 		</cbBootOption>
 	</frmLaunch>
 	
 	<frmLog Text="Extended log">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Затвори</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Open log</Text>
+			<Text>Отваряне на дневник</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
-			<Text>Options</Text>
+			<Text>Опции</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>Разрешено копиране</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>Filters</Text>
+			<Text>Филтри</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>Показвай събития</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>Показвай предупреждения</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>Показвай грешки</Text>
 		</errorsMenuItem>
 	</frmLog>
 
 	<frmSystemRestore Text="System Restore">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>Опит за създаване на точка на възстановяване.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
 	<frmAbout Text="About">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Затвори</Text>
 		</btnClose>
 		<btnAbout>
-			<Text>About</Text>
+			<Text>Относно</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>Условия за използване (Узи)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>Преводачи</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>Големи благодарности на следните преводачи, както и на онези, които не са споменати!</Text>
 		</lblTranslators>
 	</frmAbout>
 
 	<Misc>
 		<About>
 			<Text>
-				Display Driver Uninstaller (DDU) / Чистачът е създаден за видео (ГП) драйвери. (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Чистачът е създаден за видео (ГП) драйвъри. (NVIDIA/AMD)
 
-				Програмата премахва видео драйвера на графичния процесор от диспечера на устройства (device manager)
-				и премахва текущия и всички инсталирани преди него драйвери от хранилището за драйвери на Windows,
+				Програмата премахва видео драйвъра на графичния процесор от диспечера на устройства (device manager)
+				и премахва текущия и всички инсталирани преди него драйвъри от хранилището за драйвъри на Windows,
 				заедно с всичките им прилежащи услуги.
 
 				Ефектът след използване на този инструмент ще е много сходен до състоянието на Windows след „прясна инсталация“.
 
 				Този инструмент действа доста като „Driver Sweeper“*, но включва и всичко споменато по-горе.
 
-				Ако имате някакви проблеми с инсталиране на по-стар или по-нов драйвер, опитайте този инструмент,
+				Ако имате някакви проблеми с инсталиране на по-стар или по-нов драйвър, опитайте този инструмент,
 				защото може да помогне в тази насока.
 
 				ПРЕПОРЪЧИТЕЛНА УПОТРЕБА:
@@ -360,7 +360,7 @@
 
 				- Създайте архив на системата или точка на възстановяване, въпреки че използването на инструмента би трябвало да е доста безопасно.
 
-				- Ако имате или сте имали проблем с драйвер и този инструмент ви е помогнал, моля, споделете Вашите резултати.
+				- Ако имате или сте имали проблем с драйвър и този инструмент ви е помогнал, моля, споделете Вашите резултати.
 
 				Имайте предвид, че NVIDIA, AMD и Microsoft не могат да бъдат отговорни за щети, нанесени на Вас или Вашия компютър,
 				и не са по никакъв начин съдружници на DDU или неговите създатели.
@@ -391,7 +391,7 @@
 			<Text>
 				Display Driver Uninstaller ("DDU") ПОТРЕБИТЕЛСКО СПОРАЗУМЕНИЕ
 
-				Превръщате се в потребител на DDU ("Потребител"), като използвате програмата. Това споразумение влиза в сила в момента, в който използвате програмата, за да премахнете драйвер.
+				Превръщате се в потребител на DDU ("Потребител"), като използвате програмата. Това споразумение влиза в сила в момента, в който използвате програмата, за да премахнете драйвър.
 
 				Използвайки DDU Вие се съгласявате да не обвинявате DDU или неговите създатели и съдружници в повреждане или оказване на негативен ефект върху Вашия компютър.
 
@@ -402,8 +402,8 @@
 	
 	<LanguageTranslators>
 		<Translator>
-			<User></User>
-			<Details></Details>
+			<User>Night_Raven</User>
+			<Details>SoftVisia.com</Details>
 			<LastUpdate></LastUpdate>
 		</Translator>
 	</LanguageTranslators>
