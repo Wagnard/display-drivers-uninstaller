@@ -262,13 +262,13 @@
 				안전 모드로 리부트하는 게 좋습니다.
 			</Text>
 		</lblNotSafeMode>
-		<lblWin10Warn>
+		<lblWinPasswordWarn>
 			<Text>
-				Windows 10 사용자를 위한 중요한 사항:
-				Windows 10 '비밀번호'가 필요합니다! (PIN (은)는 안전 모드에서 작동 안 함)
+				Windows 8/8.1/10 사용자를 위한 중요한 사항:
+				Windows '비밀번호'가 필요합니다! (PIN (은)는 안전 모드에서 작동 안 함)
 				까먹었거나 알지 못한다면, 즉시 끝내세요!
 			</Text>
-		</lblWin10Warn>
+		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>일반</Item1>
 			<Item2>안전 모드 (권장)</Item2>

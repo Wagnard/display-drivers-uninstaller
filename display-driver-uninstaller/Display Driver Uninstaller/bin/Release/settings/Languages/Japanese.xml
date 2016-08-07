@@ -253,13 +253,13 @@
 				不具合を回避するためにセーフモードで再起動することを強く推奨します。
 			</Text>
     </lblNotSafeMode>
-    <lblWin10Warn>
+    <lblWinPasswordWarn>
       <Text>
-				Windows 10 ユーザーへの重要な注意:
-				Windows 10 の「パスワード」が必要です!(PINがセーフモードで動作しないため)
+				Windows 8/8.1/10 ユーザーへの重要な注意:
+				Windows の「パスワード」が必要です!(PINがセーフモードで動作しないため)
 				パスワードを覚えていない場合すぐに終了してください!
 			</Text>
-    </lblWin10Warn>
+    </lblWinPasswordWarn>
     <cbBootOption>
       <Item1>通常モード</Item1>
       <Item2>セーフモード(推奨)</Item2>

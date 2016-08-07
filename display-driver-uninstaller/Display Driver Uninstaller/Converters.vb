@@ -92,7 +92,32 @@ Namespace Converters
 		End Function
 
 		Public Function ConvertBack(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.ConvertBack
-			Throw New NotImplementedException("LogTypeIsType::ConvertBack")
+			Throw New NotImplementedException("ValueEquals::ConvertBack")
+		End Function
+	End Class
+
+	Public Class ValueEqualsOrGreater
+		Implements IValueConverter
+
+		Public Property Reversed As Boolean = False
+
+		Public Function Convert(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.Convert
+			Try
+				If value IsNot Nothing AndAlso parameter IsNot Nothing AndAlso value.GetType() Is parameter.GetType() AndAlso TypeOf (value) Is [Enum] Then
+					Dim v As Int32 = System.Convert.ToInt32(DirectCast(value, [Enum]))
+					Dim param As Int32 = System.Convert.ToInt32(DirectCast(parameter, [Enum]))
+
+					Return If(Reversed, v < param, v >= param)
+				End If
+
+				Return If(Reversed, True, False)
+			Catch ex As Exception
+				Return False
+			End Try
+		End Function
+
+		Public Function ConvertBack(value As Object, targetType As System.Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements System.Windows.Data.IValueConverter.ConvertBack
+			Throw New NotImplementedException("ValueEqualsOrGreater::ConvertBack")
 		End Function
 	End Class
 

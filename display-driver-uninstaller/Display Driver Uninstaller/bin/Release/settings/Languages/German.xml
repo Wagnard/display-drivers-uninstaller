@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="de-DE" Text="German">
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -270,13 +270,13 @@
 				vermeiden, wird ein Neustart im abgesicherten Modus ausdrücklich empfohlen.
 			</Text>
 		</lblNotSafeMode>
-		<lblWin10Warn>
+		<lblWinPasswordWarn>
 			<Text>
-				Wichtiger Hinweis für Windows 10 Benutzer:
-				Ihr Windows 10 "KENNWORT" wird benötigt! (PIN reicht hierfür NICHT aus)
+				Wichtiger Hinweis für Windows 8/8.1/10 Benutzer:
+				Ihr Windows "KENNWORT" wird benötigt! (PIN reicht hierfür NICHT aus)
 				Beenden Sie DDU sofort, falls Sie dieses verloren oder vergessen haben!
 			</Text>
-		</lblWin10Warn>
+		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Abgesicherter Modus (Empfohlen)</Item2>

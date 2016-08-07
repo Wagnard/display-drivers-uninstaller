@@ -35,6 +35,7 @@ Class Application
 
 	Private Shared m_dispatcher As Threading.Dispatcher
 	Private Shared m_isDataSaved As Boolean = False
+	Private Shared m_allowSaveData As Boolean = False
 	Private Shared m_Data As Data
 
 	Public Shared ReadOnly Property Data As Data
@@ -63,13 +64,6 @@ Class Application
 		End Get
 	End Property
 
-	Private Sub App_DispatcherUnhandledException(ByVal sender As Object, ByVal e As Windows.Threading.DispatcherUnhandledExceptionEventArgs) Handles Me.DispatcherUnhandledException
-		'TODO: CRITICAL FAILURES ARE HANDLED HERE
-
-
-		e.Handled = True 'Close the app
-	End Sub
-
 	Public Sub New()
 		m_Data = New Data()
 		m_dispatcher = Me.Dispatcher
@@ -86,7 +80,7 @@ Class Application
 		If Not m_dispatcher.CheckAccess() Then
 			m_dispatcher.Invoke(Sub() SaveData())
 		Else
-			If Not m_isDataSaved Then
+			If Not m_isDataSaved AndAlso m_allowSaveData Then
 				Settings.Save()
 				Log.SaveToFile()
 
@@ -187,7 +181,6 @@ Class Application
 
 	Private Sub LaunchMainWindow()
 		' >>> Loading UI <<<
-
 		Try
 			Dim window As frmMain = New frmMain() With {.DataContext = Data, .Topmost = True}
 
@@ -208,10 +201,15 @@ Class Application
 				window.WindowState = WindowState.Minimized
 			End If
 
+			m_allowSaveData = True
+
 			window.Show()
 
 			MainWindow = window
 		Catch ex As Exception
+			Log.AddException(ex, "Some part of window loading failed!" & CRLF & ">> LaunchMainWindow()")
+			Log.SaveToFile()
+
 			MessageBox.Show("Launching Main Window failed!" & CRLF &
 			 CRLF &
 			 ex.Message & CRLF &
@@ -236,6 +234,7 @@ Class Application
 				End If
 			End If
 		Catch ex As Exception
+			e.Cancel = True			' frmMain.workThread may be null after checking
 		End Try
 	End Sub
 
@@ -319,7 +318,6 @@ Class Application
 				Application.Log.AddException(ex, "Parsing arguments failed!" & CRLF & ">> Application_Startup()")
 			End Try
 
-
 			' Load default language (English) + Find language files from folder
 			InitLanguages()
 
@@ -353,17 +351,19 @@ Class Application
 			Catch ex As Exception
 				Application.Log.AddException(ex, "AddPriviliges failed!" & CRLF & ">> AppStart()")
 			End Try
-
 		Catch ex As Exception
 			Log.AddException(ex, "Some part of application startup failed!" & CRLF & ">> Application_Startup()")
 			Log.SaveToFile()	' Save to file
-		Finally
-			' Application launch even if anything fails:
-			' > Default settings
-			' > Only English language available and selected
 
-			LaunchMainWindow()
+			MessageBox.Show("Launching Application failed!" & CRLF &
+			 "A problem occurred in one of the module, send your DDU logs to the developer." & CRLF &
+			   CRLF &
+			   ex.Message, "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly)
+
+			Me.Shutdown(0)
 		End Try
+
+		LaunchMainWindow()
 	End Sub
 
 

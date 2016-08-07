@@ -274,13 +274,13 @@
 				käynnistää uudelleen vikasietotilaan
 			</Text>
 		</lblNotSafeMode>
-		<lblWin10Warn>
+		<lblWinPasswordWarn>
 			<Text>
-				Huomio Windows 10 käyttäjät:
+				Huomio Windows 8/8.1/10 käyttäjät:
 				Sinun käyttäjäsi salasana vaaditaan vikasietotilassa! (PIN koodia ei voi käyttää)
 				Sulje ohjelma heti jos olet kadottanut salasanasi tai et tiedä sitä!
 			</Text>
-		</lblWin10Warn>
+		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>Normaali</Item1>
 			<Item2>Vikasietotila (Suositeltavaa)</Item2>

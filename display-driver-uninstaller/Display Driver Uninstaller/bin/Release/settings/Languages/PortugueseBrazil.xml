@@ -269,13 +269,13 @@
 				reiniciar em modo seguro para evitar problemas.
 			</Text>
 		</lblNotSafeMode>
-		<lblWin10Warn>
+		<lblWinPasswordWarn>
 			<Text>
-				Important note for Windows 10 users:
-				Your Windows 10 "PASSWORD" is required! (PIN is NOT working in safe mode)
+				Important note for Windows 8/8.1/10 users:
+				Your Windows "PASSWORD" is required! (PIN is NOT working in safe mode)
 				Quit Immediately if you lost or don't know it!
 			</Text>
-		</lblWin10Warn>
+		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Modo Seguro (Recomendado)</Item2>

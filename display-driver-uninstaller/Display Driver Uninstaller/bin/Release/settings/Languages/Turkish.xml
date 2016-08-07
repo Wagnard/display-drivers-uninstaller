@@ -261,13 +261,13 @@
 				Olası sorunları önlemek için güvenli modda yeniden başlatın.
 			</Text>
 		</lblNotSafeMode>
-		<lblWin10Warn>
+		<lblWinPasswordWarn>
 			<Text>
-				Windows 10 kullanıcıları için önemli not:
-				Windows 10 "ŞİFRE" gereklidir. (PIN güvenli modda çalışmıyor)
+				Windows 8/8.1/10 kullanıcıları için önemli not:
+				Windows "ŞİFRE" gereklidir. (PIN güvenli modda çalışmıyor)
 				Ne yaptığınızı bilmiyorsanız çıkın.
 			</Text>
-		</lblWin10Warn>
+		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
 			<Item2>Güvenli Mod (Tavsiye Edilen)</Item2>

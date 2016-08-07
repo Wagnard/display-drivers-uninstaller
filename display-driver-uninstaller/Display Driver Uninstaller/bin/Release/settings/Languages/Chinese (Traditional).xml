@@ -268,13 +268,13 @@
 				避免可能出現的問題。
 			</Text>
 		</lblNotSafeMode>
-		<lblWin10Warn>
+		<lblWinPasswordWarn>
 			<Text>
-				Windows 10 使用者重要注意事項:
-				需要您的 Windows 10「密碼」!(PIN 在安全模式下無法運作)
+				Windows 8/8.1/10 使用者重要注意事項:
+				需要您的 Windows 「密碼」!(PIN 在安全模式下無法運作)
 				如果您遺失或不知道請立即結束!
 			</Text>
-		</lblWin10Warn>
+		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>正常模式</Item1>
 			<Item2>安全模式(建議選項)</Item2>

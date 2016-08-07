@@ -6,9 +6,9 @@
 	Title="frmLaunch" Height="400" Width="500" ShowInTaskbar="True" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico">
 
 	<Window.Resources>
-		<conv:ValueEquals x:Key="ValueEquals" />
+		<conv:ValueEqualsOrGreater x:Key="ValueEqualsOrGreater" />
 		<conv:BooleanToVisibilityConverter x:Key="BoolToVis" TrueValue="Visible" FalseValue="Collapsed" />
-		<conv:CombiningConverter x:Key="ValueToVis" Converter1="{StaticResource ValueEquals}" Converter2="{StaticResource BoolToVis}" />
+		<conv:CombiningConverter x:Key="ValueToVis" Converter1="{StaticResource ValueEqualsOrGreater}" Converter2="{StaticResource BoolToVis}" />
 	</Window.Resources>
 	
 	<Grid>
@@ -34,8 +34,8 @@
 		</DockPanel>
 		<DockPanel Grid.Row="2" Grid.ColumnSpan="2">
 			<Label DockPanel.Dock="Top" Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="3" Margin="6" Foreground="Black" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center" />
-			<Label DockPanel.Dock="Top" Name="lblWin10Warn" Content="lblWin10Warn" Grid.Row="3" Margin="6" Foreground="#FFEB0000" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center"
-				   Visibility="{Binding Path=Settings.WinVersion, Mode=OneWay, Converter={StaticResource ValueToVis}, ConverterParameter={x:Static local:OSVersion.Win10}}"/>
+			<Label DockPanel.Dock="Top" Name="lblWinPasswordWarn" Content="lblWinPasswordWarn" Grid.Row="3" Margin="6" Foreground="#FFEB0000" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center"
+				   Visibility="{Binding Path=Settings.WinVersion, Mode=OneWay, Converter={StaticResource ValueToVis}, ConverterParameter={x:Static local:OSVersion.Win8}}"/>
 		</DockPanel>
 
 		<Border Grid.Row="3" BorderBrush="Black" BorderThickness="1" Margin="-1,0,-1,-1" Grid.ColumnSpan="2">

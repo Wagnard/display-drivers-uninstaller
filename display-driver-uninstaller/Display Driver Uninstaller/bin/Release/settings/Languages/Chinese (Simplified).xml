@@ -250,13 +250,13 @@
 				以避免可能出现的任何问题。
 			</Text>
 		</lblNotSafeMode>
-		<lblWin10Warn>
+		<lblWinPasswordWarn>
 			<Text>
-				给 Windows 10 用户的重要提示：
+				给 Windows 8/8.1/10 用户的重要提示：
 				       您需要知道您的 Windows 账户密码！（PIN 在安全模式下【无法】使用）
 				如果您忘记的话请立即关闭本软件！
 			</Text>
-		</lblWin10Warn>
+		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>正常模式（当前模式）</Item1>
 			<Item2>安全模式【推荐】</Item2>
