@@ -5244,11 +5244,17 @@ Public Class frmMain
 			Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try
 
-		Dim regtest As MyRegistry = MyRegistry.OpenSubKey(RegistryHive.LocalMachine, "Software\ATI")
-		If regtest IsNot Nothing Then
-			MsgBox("Working !!")
-		End If
+		Using regtest As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software")
+			If regtest IsNot Nothing Then
+				MsgBox("Working 1")
+			End If
+			Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regtest, "ATI")
+				If regkey2 IsNot Nothing Then
+					MsgBox("Working2")
+				End If
+			End Using
 
+		End Using
 		'End Using
 	End Sub
 
