@@ -5246,11 +5246,11 @@ Public Class frmMain
 
 		Using regtest As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software")
 			If regtest IsNot Nothing Then
-				MsgBox("Working 1")
+
 			End If
 			Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regtest, "ATI")
 				If regkey2 IsNot Nothing Then
-					MsgBox("Working2")
+					MsgBox("Working")
 				End If
 			End Using
 
