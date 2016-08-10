@@ -5239,9 +5239,17 @@ Public Class frmMain
 
 				workThread.Start()
 			End If
+
 		Catch ex As Exception
 			Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try
+
+		Dim regtest As MyRegistry = MyRegistry.OpenSubKey(RegistryHive.LocalMachine, "Software\ATI")
+		If regtest IsNot Nothing Then
+			MsgBox("Working !!")
+		End If
+
+		'End Using
 	End Sub
 
 	Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing

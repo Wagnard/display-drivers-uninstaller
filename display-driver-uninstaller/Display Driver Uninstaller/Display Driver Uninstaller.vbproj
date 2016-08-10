@@ -83,6 +83,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="MyRegistry.vb" />
     <Compile Include="Win32\ACL.vb" />
     <Compile Include="AppLog.vb" />
     <Compile Include="AppPaths.vb" />
