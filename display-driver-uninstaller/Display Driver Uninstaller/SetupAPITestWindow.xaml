@@ -386,6 +386,7 @@
             <Button Content="enable" Height="23" Name="btnEnable" Width="75" Click="btnEnable_Click" />
             <Button Content="remove" Height="23" Name="btnRemove" Width="75" Click="btnRemove_Click" />
             <Button Content="update inf" Height="23" Name="btnUpdate" Width="75" Margin="10,10,0,10" />
+			<Button Content="remove inf" Height="23" Name="btnRemoveInf" Width="75" Margin="10,10,0,10" />
 			<Button Content="ReScan devices" Height="23" Name="Button1" Width="89" />
 			<CheckBox Content="Include Siblings" Height="16" Name="chbSearchSiblings" />
 		</StackPanel>

@@ -273,6 +273,7 @@ Class Application
 	Private Sub Application_Startup(sender As Object, e As System.Windows.StartupEventArgs) Handles Me.Startup
 		'If WindowsIdentity.GetCurrent().IsSystem Then
 		'	MessageBox.Show("Attach debugger!")		' for Debugging System process
+		'	IsDebug = True
 		'End If
 
 		Try

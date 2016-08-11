@@ -11,94 +11,113 @@ Imports System.Windows.Media
 Imports Display_Driver_Uninstaller.Win32
 
 Public Class SetupAPITestWindow
-    Private _devices As ObservableCollection(Of SetupAPI.Device) = New ObservableCollection(Of SetupAPI.Device)
+	Private _devices As ObservableCollection(Of SetupAPI.Device) = New ObservableCollection(Of SetupAPI.Device)
 
-    Public ReadOnly Property Devices As ObservableCollection(Of SetupAPI.Device)
-        Get
-            Return _devices
-        End Get
-    End Property
+	Public ReadOnly Property Devices As ObservableCollection(Of SetupAPI.Device)
+		Get
+			Return _devices
+		End Get
+	End Property
 
-    Private FiltersDev As List(Of String) = New List(Of String)({
-        "Device_ClassName",
-        "Device_Description",
-        "Device_HardwareID"})
-    Private Filters As List(Of String) = New List(Of String)({
-        "Device_Description",
-        "Device_ClassName",
-        "Device_HardwareID",
-        "Device_CompatibleIDs",
-        "Device_ClassGuid",
-        "Driver_Manufacturer",
-        "Driver_Provider",
-        "Driver_InfFileName",
-        "Driver_HardwareID"})
+	Private FiltersDev As List(Of String) = New List(Of String)({
+	 "Device_ClassName",
+	 "Device_Description",
+	 "Device_HardwareID"})
+	Private Filters As List(Of String) = New List(Of String)({
+	 "Device_Description",
+	 "Device_ClassName",
+	 "Device_HardwareID",
+	 "Device_CompatibleIDs",
+	 "Device_ClassGuid",
+	 "Driver_Manufacturer",
+	 "Driver_Provider",
+	 "Driver_InfFileName",
+	 "Driver_HardwareID"})
 
-    Public Sub New()
-        ' This call is required by the designer.
-        InitializeComponent()
+	Public Sub New()
+		' This call is required by the designer.
+		InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-    End Sub
+		' Add any initialization after the InitializeComponent() call.
+	End Sub
 
 
 
-    Private Sub btnDisable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
-        If listBox1.SelectedItem Is Nothing Then
-            MessageBox.Show("No selected device!")
-            Return
-        Else
-            Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
+	Private Sub btnDisable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
+		If listBox1.SelectedItem Is Nothing Then
+			MessageBox.Show("No selected device!")
+			Return
+		Else
+			Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
 			If d Is Nothing OrElse Not d.HasHardwareID Then
 				MessageBox.Show("Selected device doesn't contain Hardware ID!")
 				Return
 			End If
-        End If
+		End If
 
 		SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device), False)
-    End Sub
+	End Sub
 
-    Private Sub btnEnable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
-        If listBox1.SelectedItem Is Nothing Then
-            MessageBox.Show("No selected device!")
-            Return
-        Else
-            Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
+	Private Sub btnEnable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
+		If listBox1.SelectedItem Is Nothing Then
+			MessageBox.Show("No selected device!")
+			Return
+		Else
+			Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
 			If d Is Nothing OrElse Not d.HasHardwareID Then
 				MessageBox.Show("Selected device doesn't contain Hardware ID!")
 				Return
 			End If
-        End If
+		End If
 
 		SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device), True)
-    End Sub
+	End Sub
 
-    Private Sub btnRemove_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
-        If listBox1.SelectedItem Is Nothing Then
-            MessageBox.Show("No selected device!")
-            Return
-        Else
-            Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
+	Private Sub btnRemove_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
+		If listBox1.SelectedItem Is Nothing Then
+			MessageBox.Show("No selected device!")
+			Return
+		Else
+			Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
 
 			If d Is Nothing OrElse Not d.HasHardwareID Then
 				MessageBox.Show("Selected device doesn't contain Hardware ID!")
 				Return
 			End If
-        End If
+		End If
 
 		SetupAPI.UninstallDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device))
-    End Sub
 
-    Private Sub btnFindDevs_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
-        If Devices.Count > 0 Then
-            Devices.Clear()
-        End If
+		MessageBox.Show("Done! Check log for results.")
+	End Sub
 
-        lblDevicesDev.Content = "Devices: 0"
+	Private Sub btnRemoveInf_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnRemoveInf.Click
+		Dim ofd As Microsoft.Win32.OpenFileDialog = New Microsoft.Win32.OpenFileDialog()
 
-        If cbFilterDev.SelectedItem Is Nothing Then
-            cbFilterDev.SelectedIndex = 0
-        End If
+		ofd.InitialDirectory = "C:\Windows\inf"
+		ofd.Filter = "Inf Files (*.inf)|*.inf"
+
+		Dim result As Boolean? = ofd.ShowDialog(Me)
+
+		If result IsNot Nothing AndAlso result.Value Then
+			Dim inf As Inf = New Inf(ofd.FileName)
+
+			If MessageBox.Show("Remove INF?" & CRLF & "Class: " & inf.Class & CRLF & "Provider: " & inf.Provider, inf.FileName, MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
+				SetupAPI.RemoveInf(inf, True)
+			End If
+		End If
+	End Sub
+
+	Private Sub btnFindDevs_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
+		If Devices.Count > 0 Then
+			Devices.Clear()
+		End If
+
+		lblDevicesDev.Content = "Devices: 0"
+
+		If cbFilterDev.SelectedItem Is Nothing Then
+			cbFilterDev.SelectedIndex = 0
+		End If
 
 #If DEBUG Then
 		Dim sw As System.Diagnostics.Stopwatch = System.Diagnostics.Stopwatch.StartNew()
@@ -108,8 +127,10 @@ Public Class SetupAPITestWindow
 
 		If cbFilterDev.SelectedIndex = 0 Then
 			found = SetupAPI.GetDevices(tbFilterDev.Text, Nothing, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False))
-		Else
+		ElseIf cbFilterDev.SelectedItem IsNot Nothing Then
 			found = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False))
+		Else
+			found = New List(Of SetupAPI.Device)(0)
 		End If
 
 #If DEBUG Then
@@ -118,117 +139,117 @@ Public Class SetupAPITestWindow
 #End If
 
 
-        If found.Count > 0 Then
-            For Each d As SetupAPI.Device In found
-                Devices.Add(d)
-            Next
+		If found.Count > 0 Then
+			For Each d As SetupAPI.Device In found
+				Devices.Add(d)
+			Next
 
-            lblDevicesDev.Content = String.Format("Devices: {0}", Devices.Count)
+			lblDevicesDev.Content = String.Format("Devices: {0}", Devices.Count)
 			UpdateFilter()
 
-            MessageBox.Show(String.Format("{0} devices found!", Devices.Count))
-        Else
-            MessageBox.Show("Devices not found!")
-        End If
-    End Sub
+			MessageBox.Show(String.Format("{0} devices found!", Devices.Count))
+		Else
+			MessageBox.Show("Devices not found!")
+		End If
+	End Sub
 
-    Private Sub UpdateFilter()
-        Dim view As ICollectionView = CollectionViewSource.GetDefaultView(listBox1.ItemsSource)
+	Private Sub UpdateFilter()
+		Dim view As ICollectionView = CollectionViewSource.GetDefaultView(listBox1.ItemsSource)
 
-        view.Filter = New Predicate(Of Object)(AddressOf Filter)
+		view.Filter = New Predicate(Of Object)(AddressOf Filter)
 
-        lblDevices.Content = String.Format("Items: {0}", listBox1.Items.Count)
-    End Sub
+		lblDevices.Content = String.Format("Items: {0}", listBox1.Items.Count)
+	End Sub
 
-    Private Function Filter(ByVal obj As Object) As Boolean
-        Dim d As SetupAPI.Device = TryCast(obj, SetupAPI.Device)
+	Private Function Filter(ByVal obj As Object) As Boolean
+		Dim d As SetupAPI.Device = TryCast(obj, SetupAPI.Device)
 
-        If d IsNot Nothing AndAlso cbFilter.SelectedItem IsNot Nothing Then
-            If String.IsNullOrEmpty(tbFilter.Text) Then
-                Return True
-            End If
+		If d IsNot Nothing AndAlso cbFilter.SelectedItem IsNot Nothing Then
+			If String.IsNullOrEmpty(tbFilter.Text) Then
+				Return True
+			End If
 
-            Dim filter__1 As String = cbFilter.SelectedItem.ToString()
-            Dim text As String = tbFilter.Text
+			Dim filter__1 As String = cbFilter.SelectedItem.ToString()
+			Dim text As String = tbFilter.Text
 
-            Select Case filter__1
-                Case "Device_Description"
-                    Return If(Not String.IsNullOrEmpty(d.Description), d.Description.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1, False)
-                Case "Device_ClassName"
-                    Return If(Not String.IsNullOrEmpty(d.ClassName), d.ClassName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1, False)
-                Case "Device_HardwareID"
-                    If d.HardwareIDs IsNot Nothing Then
-                        For Each hdID As String In d.HardwareIDs
-                            If hdID.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-                                Return True
-                            End If
-                        Next
-                    End If
-                    Return False
-                Case "Device_CompatibleIDs"
-                    If d.CompatibleIDs IsNot Nothing Then
-                        For Each cID As String In d.CompatibleIDs
-                            If cID.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-                                Return True
-                            End If
-                        Next
-                    End If
-                    Return False
-                Case "Device_ClassGuid"
-                    Return If(Not String.IsNullOrEmpty(d.ClassGuid), d.ClassGuid.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1, False)
-                Case "Driver_Manufacturer"
-                    If d.DriverInfo IsNot Nothing Then
+			Select Case filter__1
+				Case "Device_Description"
+					Return If(Not String.IsNullOrEmpty(d.Description), d.Description.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1, False)
+				Case "Device_ClassName"
+					Return If(Not String.IsNullOrEmpty(d.ClassName), d.ClassName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1, False)
+				Case "Device_HardwareID"
+					If d.HardwareIDs IsNot Nothing Then
+						For Each hdID As String In d.HardwareIDs
+							If hdID.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+								Return True
+							End If
+						Next
+					End If
+					Return False
+				Case "Device_CompatibleIDs"
+					If d.CompatibleIDs IsNot Nothing Then
+						For Each cID As String In d.CompatibleIDs
+							If cID.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+								Return True
+							End If
+						Next
+					End If
+					Return False
+				Case "Device_ClassGuid"
+					Return If(Not String.IsNullOrEmpty(d.ClassGuid), d.ClassGuid.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1, False)
+				Case "Driver_Manufacturer"
+					If d.DriverInfo IsNot Nothing Then
 						For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
 							If drvInfo.MfgName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
 								Return True
 							End If
 						Next
-                    End If
-                    Return False
-                Case "Driver_Provider"
-                    If d.DriverInfo IsNot Nothing Then
-                        For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
-                            If drvInfo.ProviderName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-                                Return True
-                            End If
-                        Next
-                    End If
-                    Return False
-                Case "Driver_InfFileName"
-                    If d.DriverInfo IsNot Nothing Then
-                        For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
+					End If
+					Return False
+				Case "Driver_Provider"
+					If d.DriverInfo IsNot Nothing Then
+						For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
+							If drvInfo.ProviderName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+								Return True
+							End If
+						Next
+					End If
+					Return False
+				Case "Driver_InfFileName"
+					If d.DriverInfo IsNot Nothing Then
+						For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
 							If drvInfo.InfFile.FileName.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
 								Return True
 							End If
-                        Next
-                    End If
-                    Return False
-                Case "Driver_HardwareID"
-                    If d.DriverInfo IsNot Nothing Then
-                        For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
-                            If drvInfo.HardwareID.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-                                Return True
-                            End If
-                        Next
-                    End If
-                    Return False
-            End Select
-        End If
+						Next
+					End If
+					Return False
+				Case "Driver_HardwareID"
+					If d.DriverInfo IsNot Nothing Then
+						For Each drvInfo As SetupAPI.DriverInfo In d.DriverInfo
+							If drvInfo.HardwareID.IndexOf(tbFilter.Text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+								Return True
+							End If
+						Next
+					End If
+					Return False
+			End Select
+		End If
 
-        Return False
-    End Function
+		Return False
+	End Function
 
-    Private Sub CopyCommand(ByVal sender As Object, e As ExecutedRoutedEventArgs)
-        Dim lb As ListBox = TryCast(sender, ListBox)
+	Private Sub CopyCommand(ByVal sender As Object, e As ExecutedRoutedEventArgs)
+		Dim lb As ListBox = TryCast(sender, ListBox)
 
-        If lb Is Nothing Then
-            Return
-        End If
+		If lb Is Nothing Then
+			Return
+		End If
 
-        Dim device As SetupAPI.Device = TryCast(lb.SelectedItem, SetupAPI.Device)
-        If device Is Nothing Then
-            Return
-        End If
+		Dim device As SetupAPI.Device = TryCast(lb.SelectedItem, SetupAPI.Device)
+		If device Is Nothing Then
+			Return
+		End If
 
 		Dim sb As New StringBuilder()
 
@@ -381,76 +402,72 @@ Public Class SetupAPITestWindow
 		End If
 
 
-        Clipboard.SetText(sb.ToString())
-    End Sub
+		Clipboard.SetText(sb.ToString())
+	End Sub
 
-    Private Sub Window_Loaded(ByVal sender As Object, ByVal e As RoutedEventArgs)
-        cbFilter.ItemsSource = Filters
-        cbFilterDev.ItemsSource = FiltersDev
+	Private Sub Window_Loaded(ByVal sender As Object, ByVal e As RoutedEventArgs)
+		cbFilter.ItemsSource = Filters
+		cbFilterDev.ItemsSource = FiltersDev
 
-        Dim isAdmin As Boolean = Tools.UserHasAdmin
+		Dim isAdmin As Boolean = Tools.UserHasAdmin
 
-        If isAdmin Then
-            MessageBox.Show("Process running as " & (If(Tools.ProcessIs64, "x64", "x86")) & vbCrLf & "Admin? Yes")
-        Else
-            btnDisable.IsEnabled = False
-            btnEnable.IsEnabled = False
-            btnRemove.IsEnabled = False
+		If isAdmin Then
+			MessageBox.Show("Process running as " & (If(Tools.ProcessIs64, "x64", "x86")) & vbCrLf & "Admin? Yes")
+		Else
+			btnDisable.IsEnabled = False
+			btnEnable.IsEnabled = False
+			btnRemove.IsEnabled = False
 
-            MessageBox.Show("Process running as " & (If(Tools.ProcessIs64, "x64", "x86")) & vbCrLf & "Admin? No!" & vbCrLf & vbCrLf & "You can find devices but can't enable/disable/remove!")
-        End If
-    End Sub
+			MessageBox.Show("Process running as " & (If(Tools.ProcessIs64, "x64", "x86")) & vbCrLf & "Admin? No!" & vbCrLf & vbCrLf & "You can find devices but can't enable/disable/remove!")
+		End If
+	End Sub
 
-    Public Shared Function FindVisualChildren(Of T As DependencyObject)(ByVal depObj As DependencyObject) As IEnumerable(Of T)
-        If depObj IsNot Nothing Then
-            Dim childs As List(Of T) = New List(Of T)
+	Public Shared Function FindVisualChildren(Of T As DependencyObject)(ByVal depObj As DependencyObject) As IEnumerable(Of T)
+		If depObj IsNot Nothing Then
+			Dim childs As List(Of T) = New List(Of T)
 
-            For i As Integer = 0 To VisualTreeHelper.GetChildrenCount(depObj) - 1
+			For i As Integer = 0 To VisualTreeHelper.GetChildrenCount(depObj) - 1
 
-                Dim child As DependencyObject = VisualTreeHelper.GetChild(depObj, i)
+				Dim child As DependencyObject = VisualTreeHelper.GetChild(depObj, i)
 
-                If child IsNot Nothing AndAlso TypeOf child Is T Then
-                    childs.Add(DirectCast(child, T))
-                End If
+				If child IsNot Nothing AndAlso TypeOf child Is T Then
+					childs.Add(DirectCast(child, T))
+				End If
 
-                For Each childOfChild As T In FindVisualChildren(Of T)(child)
-                    childs.Add(childOfChild)
-                Next
-            Next
+				For Each childOfChild As T In FindVisualChildren(Of T)(child)
+					childs.Add(childOfChild)
+				Next
+			Next
 
-            Return childs
-        End If
+			Return childs
+		End If
 
-        Return Nothing
-    End Function
+		Return Nothing
+	End Function
 
-    Public Shared Function FindVisualChild(Of childItem As DependencyObject)(ByVal obj As DependencyObject) As childItem
-        For Each child As childItem In FindVisualChildren(Of childItem)(obj)
-            Return child
-        Next
+	Public Shared Function FindVisualChild(Of childItem As DependencyObject)(ByVal obj As DependencyObject) As childItem
+		For Each child As childItem In FindVisualChildren(Of childItem)(obj)
+			Return child
+		Next
 
-        Return Nothing
-    End Function
+		Return Nothing
+	End Function
 
-    Private Sub Button_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
-        UpdateFilter()
-    End Sub
+	Private Sub tbFilter_TextChanged(ByVal sender As Object, ByVal e As TextChangedEventArgs)
+		UpdateFilter()
+	End Sub
 
-    Private Sub tbFilter_TextChanged(ByVal sender As Object, ByVal e As TextChangedEventArgs)
-        UpdateFilter()
-    End Sub
+	Private Sub cbFilter_SelectionChanged(ByVal sender As Object, ByVal e As SelectionChangedEventArgs)
+		UpdateFilter()
+	End Sub
 
-    Private Sub cbFilter_SelectionChanged(ByVal sender As Object, ByVal e As SelectionChangedEventArgs)
-        UpdateFilter()
-    End Sub
+	Private Sub btnUpdate_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnUpdate.Click
+		Dim ofd As Microsoft.Win32.OpenFileDialog = New Microsoft.Win32.OpenFileDialog()
 
-    Private Sub btnUpdate_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnUpdate.Click
-        Dim ofd As Microsoft.Win32.OpenFileDialog = New Microsoft.Win32.OpenFileDialog()
+		ofd.InitialDirectory = "C:\Windows\inf"
+		ofd.Filter = "Inf Files (*.inf)|*.inf"
 
-        ofd.InitialDirectory = "C:\Windows\inf"
-        ofd.Filter = "Inf Files (*.inf)|*.inf"
-
-        Dim result As Boolean? = ofd.ShowDialog(Me)
+		Dim result As Boolean? = ofd.ShowDialog(Me)
 
 		If result IsNot Nothing AndAlso result.Value Then
 			Dim dev As SetupAPI.Device = DirectCast(listBox1.SelectedItem, SetupAPI.Device)
@@ -463,9 +480,10 @@ Public Class SetupAPITestWindow
 				SetupAPI.UpdateDeviceInf(dev, ofd.FileName, False)
 			End If
 		End If
-    End Sub
+	End Sub
 
 	Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
 		SetupAPI.ReScanDevices()
 	End Sub
+
 End Class

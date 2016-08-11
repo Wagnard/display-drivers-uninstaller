@@ -179,8 +179,6 @@ Public Class LogEntry
 
 		If Ex IsNot Nothing Then
 			AddException(Ex)
-		Else
-			Ex = Nothing
 		End If
 	End Sub
 

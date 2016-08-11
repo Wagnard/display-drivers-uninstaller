@@ -11,6 +11,41 @@ Imports Microsoft.Win32
 Namespace Win32
 
 	Namespace ACL
+		Friend Module PInvoke
+			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Friend Function ConvertSidToStringSid(
+   <[In]()> ByVal Sid As IntPtr,
+   <[Out]()> ByRef StringSid As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
+
+			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Friend Function ConvertStringSidToSid(
+   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal Sid As String,
+   <[Out]()> ByRef StringSid As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
+
+			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+			Friend Function LookupAccountSid(
+   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpSystemName As String,
+   <[In]()> ByVal lpSid As IntPtr,
+   <[Out](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpName As Text.StringBuilder,
+   <[In](), [Out]()> ByRef cchName As UInt32,
+   <[Out](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpReferencedDomainName As Text.StringBuilder,
+   <[In](), [Out]()> ByRef cchReferencedDomainName As UInt32,
+   <[Out]()> ByRef peUse As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
+
+			<DllImport("kernel32.dll", SetLastError:=True)>
+			Friend Function LocalFree(
+   <[In]()> ByVal handle As IntPtr) As IntPtr
+			End Function
+
+			<DllImport("kernel32.dll", SetLastError:=True)>
+			Friend Function CloseHandle(
+   <[In]()> ByVal hHandle As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+			End Function
+
+		End Module
 
 		Public Module Priviliges
 
@@ -361,16 +396,6 @@ Namespace Win32
    <[Out]()> ByRef lpLuid As LUID) As <MarshalAs(UnmanagedType.Bool)> Boolean
 			End Function
 
-			<DllImport("kernel32.dll", SetLastError:=True)>
-			Private Function LocalFree(
-   <[In]()> ByVal handle As IntPtr) As IntPtr
-			End Function
-
-			<DllImport("kernel32.dll", SetLastError:=True)>
-			Private Function CloseHandle(
-   <[In]()> ByVal hHandle As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
 #End Region
 
 #Region "Functions"
@@ -576,29 +601,6 @@ Namespace Win32
    <[In](), [Optional]()> ByVal pSacl As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 			End Function
 
-			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function ConvertSidToStringSid(
-   <[In]()> ByVal Sid As IntPtr,
-   <[Out]()> ByRef StringSid As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function ConvertStringSidToSid(
-   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal Sid As String,
-   <[Out]()> ByRef StringSid As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function LookupAccountSid(
-   <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpSystemName As String,
-   <[In]()> ByVal lpSid As IntPtr,
-   <[Out](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpName As Text.StringBuilder,
-   <[In](), [Out]()> ByRef cchName As UInt32,
-   <[Out](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpReferencedDomainName As Text.StringBuilder,
-   <[In](), [Out]()> ByRef cchReferencedDomainName As UInt32,
-   <[Out]()> ByRef peUse As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
 			<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 			Private Function CreateFile(
    <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
@@ -608,16 +610,6 @@ Namespace Win32
    <[In]()> ByVal dwCreationDisposition As FILE_OPEN,
    <[In]()> ByVal dwFlagsAndAttributes As UInt32,
    <[In](), [Optional]()> ByVal hTemplateFile As IntPtr) As IntPtr
-			End Function
-
-			<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function CloseHandle(
-   <[In]()> ByVal hObject As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
-
-			<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function LocalFree(
-   <[In]()> ByVal hMem As IntPtr) As IntPtr
 			End Function
 
 #End Region
@@ -634,7 +626,7 @@ Namespace Win32
 				' current security settings.
 				'Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
 				'Activate necessary admin privileges to make changes without NTFS perms
-			
+
 				'Create a new acl from scratch.
 				'Dim newacl As New System.Security.AccessControl.DirectorySecurity()
 				Dim newacl As System.Security.AccessControl.DirectorySecurity = Directory.GetAccessControl(path, AccessControlSections.Owner)
@@ -663,7 +655,7 @@ Namespace Win32
 				Dim rs As New RegistrySecurity()
 				Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
 
-			
+
 				'Dim originalsid = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions).GetAccessControl.GetOwner(GetType(System.Security.Principal.SecurityIdentifier))
 				'MsgBox(originalsid.ToString)
 				Using subkey As RegistryKey = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.TakeOwnership)
@@ -710,7 +702,7 @@ Namespace Win32
 				Dim ownerChanged As Boolean = False
 				Dim newOwner As SecurityIdentifier = _sidSystem
 				Dim previousOwner As String = Nothing
-		
+
 				Try
 					ptrFile = CreateFile(uncPath, FILE_RIGHTS.READ_CONTROL Or FILE_RIGHTS.FILE_READ_ATTRIBUTES Or FILE_RIGHTS.WRITE_OWNER, FILE_SHARE.NONE, IntPtr.Zero, FILE_OPEN.OPEN_EXISTING, FileIO.FILE_ATTRIBUTES.NORMAL Or FileIO.FILE_ATTRIBUTES.FLAG_BACKUP_SEMANTICS Or FileIO.FILE_ATTRIBUTES.FLAG_OPEN_REPARSE_POINT, IntPtr.Zero)
 
@@ -851,7 +843,7 @@ Namespace Win32
 
 #Region "Consts"
 			'For Testing
-			'Private Shared ReadOnly SYSTEM_ACCOUNT As IdentityReference = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)	
+			'Private Shared ReadOnly SYSTEM_ACCOUNT As IdentityReference = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
 			Private Shared ReadOnly SYSTEM_ACCOUNT As IdentityReference = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
 			Private Shared ReadOnly HKEY_CLASSES_ROOT As IntPtr = New IntPtr(-2147483648)
 			Private Shared ReadOnly HKEY_CURRENT_USER As IntPtr = New IntPtr(-2147483647)
@@ -1016,13 +1008,15 @@ Namespace Win32
 			''' <returns>
 			''' True = OK
 			''' False = couldn't be fix'd or error thrown (added to log)</returns>
-			Public Shared Function FixRights(ByVal fullPath As String) As Boolean
+			Public Shared Function FixRights(ByVal fullPath As String, ByRef logEntry As LogEntry) As Boolean
 				Dim ptrRegKey As IntPtr = IntPtr.Zero
 				Dim retVal As UInt32
 				Dim ownerModified As Boolean = False
+				Dim ownerRightsAdded As Boolean = False
 				Dim rootKey As IntPtr = GetRootKey(fullPath)
 				Dim pathKey As String = fullPath.Substring(fullPath.IndexOf("\"c) + 1)
 				Dim previousOwner As IdentityReference = Nothing
+				Dim logEvents As Boolean = (logEntry IsNot Nothing)
 
 				Try
 					retVal = RegOpenKeyEx(rootKey, pathKey, 0UI, REGSAM.KEY_READ Or REGSAM.KEY_WOW64_64KEY, ptrRegKey)
@@ -1051,16 +1045,53 @@ Namespace Win32
 
 					Dim rs As New RegistrySecurity
 
-
 					retVal = GetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
 					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
 					previousOwner = rs.GetOwner(GetType(SecurityIdentifier))
+
+
+					If logEvents Then		' Log current Owner
+						Dim ptrPreviousOwner As IntPtr = IntPtr.Zero
+
+						Try
+							If Not ConvertStringSidToSid(previousOwner.Value, ptrPreviousOwner) Then
+								Throw New Win32Exception()
+							End If
+
+							logEntry.Add(KvP.Empty)
+							logEntry.Add("Current Owner")
+							logEntry.Add("  SID", previousOwner.Value)
+
+							Dim sbName As New Text.StringBuilder(260)
+							Dim sbDomain As New Text.StringBuilder(260)
+							Dim sizeName As UInt32 = GetUInt32(sbName.Capacity)
+							Dim sizeDomain As UInt32 = GetUInt32(sbName.Capacity)
+
+							If Not LookupAccountSid(Nothing, ptrPreviousOwner, sbName, sizeName, sbDomain, sizeDomain, 0UI) Then
+								Throw New Win32Exception()
+							End If
+
+							logEntry.Add("  Domain", sbDomain.ToString())
+							logEntry.Add("  Name", sbName.ToString())
+							logEntry.Add(KvP.Empty)
+
+						Catch ex As Exception
+							logEntry.Add("> Couldn't find current registry key's owner!")
+						Finally
+							If ptrPreviousOwner <> IntPtr.Zero Then
+								Marshal.FreeHGlobal(ptrPreviousOwner)
+							End If
+						End Try
+					End If
+
 
 					rs.SetOwner(SYSTEM_ACCOUNT)
 					retVal = SetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
 					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
 
 					ownerModified = True
+
+					If logEvents Then logEntry.Add("> Owner is successfully set to System Account!")
 
 					SetAccessRights(ptrRegKey,
 					  New RegistryAccessRule(
@@ -1071,6 +1102,9 @@ Namespace Win32
 					   AccessControlType.Allow)
 					  )
 
+					ownerRightsAdded = True
+
+					If logEvents Then logEntry.Add("> Access rights for System is successfully added!")
 
 					retVal = GetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
 					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
@@ -1079,10 +1113,17 @@ Namespace Win32
 					retVal = SetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
 					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
 
+					If logEvents Then logEntry.Add("> Owner is successfully restored to orginal!")
+
 					ownerModified = False
 					FixRights = True
 				Catch ex As Exception
-					Application.Log.AddException(ex)
+					logEntry.AddException(ex, False)
+
+					If ownerRightsAdded Then
+						Return True
+					End If
+
 					Return False
 				Finally
 					Try
@@ -1099,13 +1140,15 @@ Namespace Win32
 							ownerModified = False
 						End If
 					Catch ex As Exception
-						FixRights = False
-						Application.Log.AddWarningMessage("Registry key's owner changed, but permission couldn't be fixed. Owner wasn't restored!", "fullPath", fullPath)
-					Finally
-						If ptrRegKey <> IntPtr.Zero Then
-							RegCloseKey(ptrRegKey)
+						If logEvents Then
+							logEntry.AddException(ex, False)
+							logEntry.Add("> Owner couldn't be restored!")
 						End If
 					End Try
+
+					If ptrRegKey <> IntPtr.Zero Then
+						RegCloseKey(ptrRegKey)
+					End If
 				End Try
 
 				Return FixRights

@@ -11,7 +11,7 @@ Public Class FileIO
 
 #Region "Consts"
 	Friend Const UNC_PREFIX As String = "\\?\"
-	Private Shared ReadOnly DIR_CHAR As String = Path.DirectorySeparatorChar
+	Friend Shared ReadOnly DIR_CHAR As String = Path.DirectorySeparatorChar
 	Private Shared ReadOnly INVALID_HANDLE As IntPtr = New IntPtr(-1)
 
 #End Region
