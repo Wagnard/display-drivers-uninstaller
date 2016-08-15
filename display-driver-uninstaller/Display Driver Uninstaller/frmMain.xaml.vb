@@ -5239,17 +5239,6 @@ Public Class frmMain
 		Catch ex As Exception
 			Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try
-
-		Using regtest As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE")
-			If regtest IsNot Nothing Then
-				Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regtest, "ATI")
-					If regkey2 IsNot Nothing Then
-						MsgBox("Working")
-					End If
-				End Using
-			End If
-		End Using
-
 	End Sub
 
 	Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
