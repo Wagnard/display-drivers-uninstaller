@@ -403,16 +403,10 @@
 
 	<LanguageTranslators>
 		<Translator>
-			<User>Wagnard</User>
-			<Details>Owner</Details>
-			<LastUpdate>29/05/2016</LastUpdate>
-		</Translator>
-
-		<Translator2>
 			<User>Danfong Hsieh（丹楓）</User>
 			<Details>Chinese Traditional translator 正體中文譯者</Details>
 			<LastUpdate>10/06/2016</LastUpdate>
-		</Translator2>
+		</Translator>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

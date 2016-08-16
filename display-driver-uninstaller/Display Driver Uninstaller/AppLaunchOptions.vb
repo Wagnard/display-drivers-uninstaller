@@ -72,12 +72,12 @@ Public Class AppLaunchOptions
 			For Each Argument As String In args
 				Select Case True
 					Case StrContainsAny(Argument, True, "-5648674614687") : Application.IsDebug = True
-					Case StrContainsAny(Argument, True, "-donate") : VisitDonate = True
-					Case StrContainsAny(Argument, True, "-svn") : VisitSVN = True
-					Case StrContainsAny(Argument, True, "-guru3dnvidia") : VisitGuru3DNvidia = True
-					Case StrContainsAny(Argument, True, "-guru3damd") : VisitGuru3DAMD = True
-					Case StrContainsAny(Argument, True, "-dduhome") : VisitDDUHome = True
-					Case StrContainsAny(Argument, True, "-geforce") : VisitGeforce = True
+					Case StrContainsAny(Argument, True, "-visitdonate") : VisitDonate = True
+					Case StrContainsAny(Argument, True, "-visitsvn") : VisitSVN = True
+					Case StrContainsAny(Argument, True, "-visitguru3dnvidia") : VisitGuru3DNvidia = True
+					Case StrContainsAny(Argument, True, "-visitguru3damd") : VisitGuru3DAMD = True
+					Case StrContainsAny(Argument, True, "-visitdduhome") : VisitDDUHome = True
+					Case StrContainsAny(Argument, True, "-visitgeforce") : VisitGeforce = True
 					Case StrContainsAny(Argument, True, "-visitoffer") : VisitOffer = True
 
 
