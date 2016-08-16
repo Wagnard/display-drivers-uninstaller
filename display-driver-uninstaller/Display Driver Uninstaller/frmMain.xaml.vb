@@ -3584,6 +3584,7 @@ Public Class frmMain
 											 child2.ToLower.Contains("nvidia update core") AndAlso removegfe Or
 											 child2.ToLower.Contains("nvcontrolpanel2") Or
 											 child2.ToLower.Contains("nvcontrolpanel") Or
+											 child2.ToLower.Contains("nvcamera") Or
 											 child2.ToLower.Contains("nvtray") AndAlso removegfe Or
 											 child2.ToLower.Contains("nvcontainer") AndAlso removegfe Or
 											 child2.ToLower.Contains("nvstream") AndAlso removegfe Or
@@ -3968,8 +3969,8 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		Using regkey = Registry.CurrentUser.OpenSubKey _
-		 ("Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
+		Using regkey = MyRegistry.OpenSubKey(Registry.CurrentUser,
+		 "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetValueNames()
 					If Not IsNullOrWhitespace(child) Then
@@ -3982,8 +3983,8 @@ Public Class frmMain
 		End Using
 
 
-		Using regkey = Registry.CurrentUser.OpenSubKey _
-		 ("Software\Microsoft\.NETFramework\SQM\Apps", True)
+		Using regkey = MyRegistry.OpenSubKey(Registry.CurrentUser,
+		 "Software\Microsoft\.NETFramework\SQM\Apps", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
 					If Not IsNullOrWhitespace(child) Then
@@ -5176,7 +5177,7 @@ Public Class frmMain
 			' Check if this is an AMD Enduro system
 			' -------------------------------------
 			Try
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")	'Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) Then Continue For
