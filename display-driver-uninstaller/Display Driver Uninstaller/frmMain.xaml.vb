@@ -39,9 +39,9 @@ Public Class frmMain
 	Dim process As New Process
 
 	Public Shared baseDir As String = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
-	Public Shared win8higher As Boolean = False
-	Public win10 As Boolean = False
-	Public Shared winxp As Boolean = False
+	Public Shared win8higher As Boolean = Application.Settings.WinVersion > OSVersion.Win7
+	Public win10 As Boolean = Application.Settings.WinVersion = OSVersion.Win10
+	Public Shared winxp As Boolean = Application.Settings.WinVersion < OSVersion.WinVista
 
 	Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
 	Dim reply As String = Nothing
