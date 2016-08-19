@@ -2750,6 +2750,7 @@ Public Class frmMain
 						 child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvgsync") Or
 						 child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
+						 child.ToLower.EndsWith("nvtelemetry") AndAlso config.RemovePhysX Or
 						 child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 							If removephysx Then
 
@@ -3041,7 +3042,7 @@ Public Class frmMain
 												If IsNullOrWhitespace(Keyname) Then Continue For
 
 												If StrContainsAny(Keyname, True, "nvstlink.exe", "nvstview.exe", "nvcpluir.dll", "nvcplui.exe") Or
-												 (StrContainsAny(Keyname, True, "gfexperience.exe") AndAlso config.RemoveGFE) Then
+												 (StrContainsAny(Keyname, True, "gfexperience.exe", "nvidia share.exe") AndAlso config.RemoveGFE) Then
 													Try
 														deletevalue(regkey2, Keyname)
 													Catch ex As Exception
@@ -3089,7 +3090,7 @@ Public Class frmMain
 							If IsNullOrWhitespace(Keyname) Then Continue For
 
 							If StrContainsAny(Keyname, True, "nvcplui.exe", "nvstlink.exe", "nvstview.exe", "nvcpluir.dll") Or
-							   (StrContainsAny(Keyname, True, "gfexperience.exe") AndAlso config.RemoveGFE) Then
+							   (StrContainsAny(Keyname, True, "gfexperience.exe", "nvidia share.exe") AndAlso config.RemoveGFE) Then
 								Try
 									deletevalue(regkey, Keyname)
 								Catch ex As Exception
@@ -3631,6 +3632,12 @@ Public Class frmMain
 											Catch ex As Exception
 											End Try
 										End If
+										If StrContainsAny(arrayelement, True, "geforce experience") AndAlso config.RemoveGFE Then
+											Try
+												deletevalue(regkey, child)
+											Catch ex As Exception
+											End Try
+										End If
 									End If
 								Next
 							Next
@@ -3655,7 +3662,7 @@ Public Class frmMain
 						If IsNullOrWhitespace(arrayelement) Then Continue For
 
 						If Not arrayelement = "" Then
-							If StrContainsAny(arrayelement, True, "nvi2.dll", "vulkaninfo", "nvstlink.exe") Then
+							If StrContainsAny(arrayelement, True, "nvi2.dll", "vulkaninfo", "nvstlink.exe", "nvidiastereo") Then
 								Try
 									deletevalue(regkey, child)
 								Catch ex As Exception
@@ -3920,19 +3927,22 @@ Public Class frmMain
 						If IsNullOrWhitespace(child) Then Continue For
 
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-							Try
-								If removephysx Then
-									If IsNullOrWhitespace(regkey2.GetValue("DisplayName", String.Empty).ToString) = False Then
-										If StrContainsAny(regkey2.GetValue("DisplayName", String.Empty).ToString, True, "physx") Then
-											deletesubregkey(regkey, child)
-											Continue For
+							If regkey2 IsNot Nothing Then
+								Try
+									If removephysx Then
+										If IsNullOrWhitespace(regkey2.GetValue("DisplayName", String.Empty).ToString) = False Then
+											If StrContainsAny(regkey2.GetValue("DisplayName", String.Empty).ToString, True, "physx") Then
+												deletesubregkey(regkey, child)
+												Continue For
+											End If
 										End If
 									End If
-								End If
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-							End Try
+								Catch ex As Exception
+									Application.Log.AddException(ex)
+								End Try
+							End If
 						End Using
+
 						If child.ToLower.Contains("display.3dvision") Or
 						 child.ToLower.Contains("3dtv") Or
 						 child.ToLower.Contains("_display.controlpanel") Or
@@ -3954,18 +3964,25 @@ Public Class frmMain
 						 child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
 						 child.ToLower.Contains("_update.core") AndAlso removegfe Or
 						 child.ToLower.Contains("nvidiastereo") Or
+						 child.ToLower.Contains("_ansel") Or
 						 child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
 						 child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
 						 child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Or
-						 child.ToLower.Contains("vulkanrt1.") AndAlso config.RemoveVulkan Then
-							If removephysx = False And child.ToLower.Contains("physx") Then
+						 child.ToLower.Contains("vulkanrt1.") AndAlso config.RemoveVulkan Or
+						 child.ToLower.Contains("_nvnodejs") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_nvbackend") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_nvplugin") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_nvtelemetry") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_nvcontainer") AndAlso config.RemoveGFE Then
+							If removephysx = False AndAlso child.ToLower.Contains("physx") Then
 								Continue For
 							End If
 
-							If config.Remove3DTVPlay = False And child.ToLower.Contains("3dtv") Then
+							If config.Remove3DTVPlay = False AndAlso child.ToLower.Contains("3dtv") Then
 								Continue For
 							End If
 							Try
+
 								deletesubregkey(regkey, child)
 							Catch ex As Exception
 							End Try
@@ -4485,7 +4502,7 @@ Public Class frmMain
 		'Cleaning of some "open with application" related to 3d vision
 		Using regkey As RegistryKey = myregistry.opensubkey(registry.classesroot, "jpsfile\shell\open\command", True)
 			If regkey IsNot Nothing Then
-				If (Not IsNullOrWhitespace(CType(regkey.GetValue(""), String))) AndAlso StrContainsAny(regkey.GetValue("", String.Empty).ToString, True, "nvstview") Then
+				If (Not IsNullOrWhitespace(regkey.GetValue("", String.Empty).ToString)) AndAlso StrContainsAny(regkey.GetValue("", String.Empty).ToString, True, "nvstview") Then
 					Try
 						deletesubregkey(Registry.ClassesRoot, "jpsfile")
 					Catch ex As Exception
@@ -4496,7 +4513,7 @@ Public Class frmMain
 
 		Using regkey As RegistryKey = myregistry.opensubkey(registry.classesroot, "mpofile\shell\open\command", True)
 			If regkey IsNot Nothing Then
-				If (Not IsNullOrWhitespace(CStr(regkey.GetValue("")))) AndAlso StrContainsAny(regkey.GetValue("", String.Empty).ToString, True, "nvstview") Then
+				If (Not IsNullOrWhitespace(regkey.GetValue("", String.Empty).ToString)) AndAlso StrContainsAny(regkey.GetValue("", String.Empty).ToString, True, "nvstview") Then
 					Try
 						deletesubregkey(Registry.ClassesRoot, "mpofile")
 					Catch ex As Exception
@@ -4507,7 +4524,7 @@ Public Class frmMain
 
 		Using regkey As RegistryKey = myregistry.opensubkey(registry.classesroot, "pnsfile\shell\open\command", True)
 			If regkey IsNot Nothing Then
-				If (Not IsNullOrWhitespace(CStr(regkey.GetValue("")))) AndAlso StrContainsAny(regkey.GetValue("", String.Empty).ToString, True, "nvstview") Then
+				If (Not IsNullOrWhitespace(regkey.GetValue("", String.Empty).ToString)) AndAlso StrContainsAny(regkey.GetValue("", String.Empty).ToString, True, "nvstview") Then
 					Try
 						deletesubregkey(Registry.ClassesRoot, "pnsfile")
 					Catch ex As Exception
@@ -4520,6 +4537,35 @@ Public Class frmMain
 			deletesubregkey(Registry.ClassesRoot, ".tvp")  'CrazY_Milojko
 		Catch ex As Exception
 		End Try
+
+		'Task Scheduler cleanUP (Geforce Experience Beta 3.0.3.127)
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames
+					If IsNullOrWhitespace(child) Then Continue For
+					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+						If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
+							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvidia profile updater", "nvidia crash and telemetry", "nvidia nvmode launcher", "nvidia telemetry monitor", "nvidia profile updater") Then
+								deletesubregkey(regkey, child)
+							End If
+						End If
+					End Using
+				Next
+			End If
+		End Using
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree", True)
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames
+					If IsNullOrWhitespace(child) Then Continue For
+
+					If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep") Then
+						deletesubregkey(regkey, child)
+					End If
+
+				Next
+			End If
+		End Using
 
 		UpdateTextMethod("End of Registry Cleaning")
 
