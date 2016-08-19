@@ -2491,6 +2491,8 @@ Public Class frmMain
 							 (child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.EndsWith("\osc") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("nvidia share") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
 
@@ -2638,6 +2640,7 @@ Public Class frmMain
 					   child.ToLower.Contains("nvidia wmi provider") Or
 					   child.ToLower.Contains("gamemonitor") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvgsync") Or
 					   child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 
@@ -2673,6 +2676,8 @@ Public Class frmMain
 								   child2.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvnodejs") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvplugin") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("hdaudio.driver") Then
 
 
@@ -3169,6 +3174,9 @@ Public Class frmMain
 
 		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
 
+		If removegfe Then
+			CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\gfedriverfiles.cfg")) '// add each line as String Array.
+		End If
 		'Cleaning PNPRessources.  'Will fix this later, its not efficent clean at all. (Wagnard)
 		Using regkey As RegistryKey = myregistry.opensubkey(registry.localmachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos", False)
 			If regkey IsNot Nothing Then
