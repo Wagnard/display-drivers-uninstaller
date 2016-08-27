@@ -72,6 +72,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppLaunchOptions.vb" />
+    <Compile Include="CheckUpdate.vb" />
     <Compile Include="CleanupEngine.vb" />
     <Compile Include="FileIO.vb" />
     <Compile Include="frmSystemRestore.xaml.vb">

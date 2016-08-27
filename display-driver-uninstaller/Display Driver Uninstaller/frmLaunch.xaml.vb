@@ -1,4 +1,5 @@
 ﻿Public Class frmLaunch
+
 	Public selection As Integer = -1
 
 	Private Sub btnAccept_Click(sender As Object, e As RoutedEventArgs) Handles btnAccept.Click
@@ -17,10 +18,14 @@
 
 	Private Sub frmLaunch_ContentRendered(sender As Object, e As System.EventArgs) Handles Me.ContentRendered
 		Me.Topmost = False
+		Dim Checkupdate As New CheckUpdate
+		If Application.Settings.CheckUpdates Then
+			Checkupdate.CheckUpdates()
+		End If
 	End Sub
 
 	Private Sub frmLaunch_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
-        Languages.TranslateForm(Me)
+		Languages.TranslateForm(Me)
 	End Sub
 
 	Private Sub cbBootOption_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cbBootOption.SelectionChanged
