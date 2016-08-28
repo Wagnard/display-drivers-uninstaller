@@ -72,17 +72,18 @@ Public Class CheckUpdate
 				If Not Application.Settings.ShowSafeModeMsg Then
 					Return
 				End If
+				If Not Security.Principal.WindowsIdentity.GetCurrent().IsSystem Then
+					Select Case MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text1"), "Display Driver Uninstaller", MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
+						Case MessageBoxResult.Yes
+							WinAPI.OpenVisitLink(" -visitdduhome")
 
-				Select Case MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text1"), "Display Driver Uninstaller", MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
-					Case MessageBoxResult.Yes
-						WinAPI.OpenVisitLink(" -visitdduhome")
+							'Me.Close()
+							Return
 
-						'Me.Close()
-						Return
-
-					Case MessageBoxResult.No
-						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text2"), "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Information)
-				End Select
+						Case MessageBoxResult.No
+							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text2"), "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Information)
+					End Select
+				End If
 			End If
 		End If
 	End Sub

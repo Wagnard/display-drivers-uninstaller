@@ -47,6 +47,7 @@ Public Class frmMain
 	Dim reply As String = Nothing
 	Dim reply2 As String = Nothing
 
+	Dim CheckUpdate As New CheckUpdate
 	Dim CleanupEngine As New CleanupEngine
 	Dim enduro As Boolean = False
 
@@ -5100,7 +5101,7 @@ Public Class frmMain
 
 			If Not Application.LaunchOptions.Silent Then
 
-
+				CheckUpdate.CheckUpdates()
 				Try
 
 					'We check if there are any reboot from windows update pending. and if so we quit.
