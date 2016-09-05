@@ -5249,14 +5249,18 @@ Public Class frmMain
 			'----------------------------------------------
 
 			Try
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", vendidexpected, True)
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "VEN_1002", True)
 				If found.Count > 0 Then
 					For Each SystemDevice As SetupAPI.Device In found
 						For Each Sibling In SystemDevice.SiblingDevices
 							If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
-								Application.Log.AddMessage("Removing AMD HD Audio Bus (amdkmafd)")
+								For Each compatibleid In SystemDevice.CompatibleIDs
+									If StrContainsAny(compatibleid, True, "PCI\CC_0403") Then
+										Application.Log.AddMessage("Removing AMD HD Audio Bus (amdkmafd)")
 
-								Win32.SetupAPI.UninstallDevice(SystemDevice)
+										Win32.SetupAPI.UninstallDevice(SystemDevice)
+									End If
+								Next
 
 								'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
 								Try
