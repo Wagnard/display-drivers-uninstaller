@@ -2201,9 +2201,20 @@ Public Class frmMain
 		End If
 	End Sub
 	Private Sub cleannvidiaserviceprocess(ByVal config As ThreadSettings)
-		CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\services.cfg"))
+
+		If FileIO.ExistsFile(baseDir & "\settings\NVIDIA\services.cfg") Then
+			CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\services.cfg"))
+		Else
+			Microsoft.VisualBasic.MsgBox(baseDir & "\settings\NVIDIA\services.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
+		End If
+
+
 		If config.RemoveGFE Then
-			CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\gfeservice.cfg"))
+			If FileIO.ExistsFile(baseDir & "\settings\NVIDIA\gfeservice.cfg") Then
+				CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\gfeservice.cfg"))
+			End If
+		Else
+			Microsoft.VisualBasic.MsgBox(baseDir & "\settings\NVIDIA\gfeservice.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
 		End If
 
 		'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
@@ -4873,12 +4884,6 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Private Function WinUpdatePending() As Boolean
-		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
-			Return (regkey IsNot Nothing)
-		End Using
-	End Function
-
 	Private Function GPUIdentify() As GPUVendor
 		Dim compatibleIDs() As String
 		Dim isGpu As Boolean
@@ -5102,20 +5107,7 @@ Public Class frmMain
 			If Not Application.LaunchOptions.Silent Then
 
 				CheckUpdate.CheckUpdates()
-				Try
 
-					'We check if there are any reboot from windows update pending. and if so we quit.
-					If WinUpdatePending() Then
-						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
-						CloseDDU()
-						Exit Sub
-					End If
-
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					CloseDDU()
-					Exit Sub
-				End Try
 			End If
 
 

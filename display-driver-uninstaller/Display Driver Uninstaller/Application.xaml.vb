@@ -336,6 +336,21 @@ Class Application
 			GetOSVersion()
 			Settings.WinIs64 = (IntPtr.Size = 8)
 
+			Try
+
+				'We check if there are any reboot from windows update pending. and if so we quit.
+				If WinUpdatePending() Then
+					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
+					Me.Shutdown(0)
+					Exit Sub
+				End If
+
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+				Me.Shutdown(0)
+				Exit Sub
+			End Try
+
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
 				If ExtractPAExec() Then				' Extract PAExec to \x64 or \x86 dir
 					If LaunchAsSystem() Then		' Launched as System, close this instance, True = close, false = continue
@@ -367,7 +382,11 @@ Class Application
 		LaunchMainWindow()
 	End Sub
 
-
+	Private Function WinUpdatePending() As Boolean
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
+			Return (regkey IsNot Nothing)
+		End Using
+	End Function
 
 	Private Function ProcessLinks() As Boolean
 		Dim webAddress As String = Nothing
