@@ -351,6 +351,19 @@ Class Application
 				Exit Sub
 			End Try
 
+			'Verify is there is missing files in DDU\settings folder (only check for 2 atm)
+			If Not FileIO.ExistsFile(Application.Paths.AppBase & "settings\NVIDIA\services.cfg") Then
+				Microsoft.VisualBasic.MsgBox(Application.Paths.AppBase & "settings\NVIDIA\services.cfg does not exist. please reinstall or extract DDU correctly", MsgBoxStyle.Critical)
+				Me.Shutdown(0)
+				Exit Sub
+			End If
+
+			If Not FileIO.ExistsFile(Application.Paths.AppBase & "settings\AMD\services.cfg") Then
+				Microsoft.VisualBasic.MsgBox(Application.Paths.AppBase & "settings\AMD\services.cfg does not exist. please reinstall or extract DDU correctly", MsgBoxStyle.Critical)
+				Me.Shutdown(0)
+				Exit Sub
+			End If
+
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
 				If ExtractPAExec() Then				' Extract PAExec to \x64 or \x86 dir
 					If LaunchAsSystem() Then		' Launched as System, close this instance, True = close, false = continue
