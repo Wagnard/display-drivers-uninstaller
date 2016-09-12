@@ -23,7 +23,7 @@
 			</Text>
 			<Tooltip>
 				Desinstalar los controladores actuales y anteriores, pero no reiniciar el ordenador.
-				(Puede provocar problemas como pantalla en negro, quedarse sin imagen)
+				(Puede provocar problemas como pantalla en negro; quedarse sin imagen)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
@@ -32,7 +32,7 @@
 				(Para instalar una nueva tarjeta gráfica)
 			</Text>
 			<Tooltip>
-				Desinstalar los controladores actuales y anteriores y Apagar el ordenador evitando la instalación automática de los mismos por el S.O.
+				Desinstalar los controladores actuales y anteriores y apagar el ordenador evitando la instalación automática de los mismos por el S.O.
 				(Para instalar una nueva tarjeta gráfica)
 			</Tooltip>
 		</btnCleanShutdown>
@@ -52,7 +52,7 @@
 			<Text>Elija Controlador de Pantalla</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-		  <Text>Selected language</Text>
+		  <Text>Idioma seleccionado</Text>
 		</lblLanguage>
 		
 		<Label9>
@@ -93,7 +93,7 @@
 			<Text>Acerca de</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>Traductores</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visite el sitio web oficial de DDU</Text>
@@ -102,28 +102,28 @@
 			<Text>Visite el sitio web de SVN</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visite el Hilo de NVIDIA en Guru3d</Text>
+			<Text>Visite el hilo de NVIDIA en Guru3d</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Visite el Hilo de AMD en Guru3d</Text>
+			<Text>Visite el hilo de AMD en Guru3d</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Visite el Hilo de Geforce</Text>
+			<Text>Visite el hilo de Geforce</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
 			<Text1>¡Hay actualizaciones disponibles! ¿Desea visitar la web de DDU ahora?</Text1>
 			<Text2>Tenga en cuenta que el soporte en versiones más antiguas es más limitado que en la más reciente. Por favor, pruebe con una versión más nueva antes de reportar errores.</Text2>
-			<Text3>No está ejecutando DDU con privilegios de Administrador. La aplicación se cerrará ahora.</Text3>
+			<Text3>No está ejecutando DDU con privilegios de Administrador. La aplicación se cerrará a continuación.</Text3>
 			<Text4>Imposible encontrar ddudr. Por favor, consulte el registro (log).</Text4>
 			<Text5>Display Driver Uninstaller (DDU) realizará muchas modificaciones en su registro. DDU tratará de crear un punto de Restauración del Sistema automáticamente (modo Normal únicamente).</Text5>
 			<Text6>Ha ocurrido un problema en uno de los módulos, envíe su registro (log) de DDU al desarrollador.</Text6>
 			<Text7>DDU ha detectado que posee un portátil con gráfica “AMD switching” (Enduro o equivalente), DDU no es totalmente compatible / fiable con sistemas Enduro aún. Úselo bajo su propia responsabilidad.</Text7>
-			<Text8>DDU ha detectado que no está en modo Seguro... Para una mejor Limpieza sin conflictos, se recomienda que reinicie en dicho modo.</Text8>
+			<Text8>DDU ha detectado que no está en modo Seguro... Para una mejor limpieza sin conflictos, se recomienda que reinicie en dicho modo.</Text8>
 			<Text9>DDU ha cambiado un parámetro que impide que los controladores se descarguen automáticamente desde Windows Update. Puede revertir dicho cambio si así lo desea, TRAS la instalación de su nuevo controlador.</Text9>
 			<Text10>¡Proceso de limpieza de desinstalación completado! ¿Desea salir ahora?</Text10>
 			<Text11>¡Proceso terminado!</Text11>
-			<Text12>No se encuentra en modo Seguro. Se recomienda encarecidamente reiniciar en dicho modo para evitar conflictos. ¿Desea reiniciar en Modo Seguro ahora?</Text12>
+			<Text12>No se encuentra en Modo Seguro. Se recomienda encarecidamente reiniciar en dicho modo para evitar conflictos. ¿Desea reiniciar en Modo Seguro ahora?</Text12>
 			<Text13>Esto es lo que necesita seleccionar en la pantalla azul de recuperación: Solucionar problemas -&gt; Opciones avanzadas -&gt; Configuración de inicio.</Text13>
 			<Text14>Hay un Reinicio pendiente, reinicie antes de usar DDU por favor</Text14>
 		</Messages>
@@ -246,7 +246,7 @@
 		</lblUseSetupAPI>
 	</frmOptions>
 	
-	<frmLaunch Text="Opción de Arranque">
+	<frmLaunch Text="Opciones de Arranque">
 		<btnAccept>
 			<Text>Arranque</Text>
 			<Text2>
@@ -262,7 +262,7 @@
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				No se encuentra en modo Seguro. Se recomienda
+				No se encuentra en Modo Seguro. Se recomienda
 				encarecidamente reiniciar en dicho modo para evitar conflictos.
 			</Text>
 		</lblNotSafeMode>
@@ -326,10 +326,10 @@
 			<Text>Condiciones de Servicio (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>Traductores</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>¡Agradecimientos especiales a los siguientes traductores así como a los que no están aquí mencionados!</Text>
 		</lblTranslators>
 	</frmAbout>
 

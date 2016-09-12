@@ -38,7 +38,6 @@ Public Class frmMain
 	Dim processinfo As New ProcessStartInfo
 	Dim process As New Process
 
-	Public Shared baseDir As String = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
 	Public Shared win8higher As Boolean = Application.Settings.WinVersion > OSVersion.Win7
 	Public win10 As Boolean = Application.Settings.WinVersion = OSVersion.Win10
 	Public Shared winxp As Boolean = Application.Settings.WinVersion < OSVersion.WinVista
@@ -113,7 +112,7 @@ Public Class frmMain
 	Private Sub cleanamdserviceprocess()
 
 
-		CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\AMD\services.cfg"))	'// add each line as String Array.
+		CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\AMD\services.cfg"))	'// add each line as String Array.
 
 		Dim killpid As New ProcessStartInfo
 		killpid.FileName = "cmd.exe"
@@ -166,7 +165,7 @@ Public Class frmMain
 		'Delete driver files
 		'delete OpenCL
 
-		CleanupEngine.folderscleanup(IO.File.ReadAllLines(baseDir & "\settings\AMD\driverfiles.cfg")) '// add each line as String Array.
+		CleanupEngine.folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")) '// add each line as String Array.
 
 
 
@@ -692,7 +691,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(baseDir & "\settings\AMD\classroot.cfg")) '// add each line as String Array.
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\classroot.cfg"))	'// add each line as String Array.
 
 
 		'-----------------
@@ -701,7 +700,7 @@ Public Class frmMain
 
 
 
-		CleanupEngine.interfaces(IO.File.ReadAllLines(baseDir & "\settings\AMD\interface.cfg"))	'// add each line as String Array.
+		CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\interface.cfg"))	   '// add each line as String Array.
 
 		Application.Log.AddMessage("Instance class cleanUP")
 		Try
@@ -870,7 +869,7 @@ Public Class frmMain
 		Application.Log.AddMessage("AppID and clsidleftover cleanUP")
 		'old dcom 
 
-		CleanupEngine.clsidleftover(IO.File.ReadAllLines(baseDir & "\settings\AMD\clsidleftover.cfg")) '// add each line as String Array.
+		CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\clsidleftover.cfg"))	'// add each line as String Array.
 
 		Application.Log.AddMessage("Record CleanUP")
 
@@ -1100,7 +1099,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(baseDir & "\settings\AMD\driverfiles.cfg"))	'// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg"))	  '// add each line as String Array.
 
 		Try
 
@@ -1709,7 +1708,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Removing known Packages")
 
-		packages = IO.File.ReadAllLines(baseDir & "\settings\AMD\packages.cfg")	'// add each line as String Array.
+		packages = IO.File.ReadAllLines(config.Paths.appbase & "settings\AMD\packages.cfg")	  '// add each line as String Array.
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 			"Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -1748,7 +1747,7 @@ Public Class frmMain
 		End Try
 
 		If IntPtr.Size = 8 Then
-			packages = IO.File.ReadAllLines(baseDir & "\settings\AMD\packages.cfg")	'// add each line as String Array.
+			packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg")	  '// add each line as String Array.
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 				 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -1784,7 +1783,7 @@ Public Class frmMain
 			End Try
 		End If
 
-		CleanupEngine.installer(IO.File.ReadAllLines(baseDir & "\settings\AMD\packages.cfg"), config)
+		CleanupEngine.installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg"), config)
 
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
@@ -2202,19 +2201,19 @@ Public Class frmMain
 	End Sub
 	Private Sub cleannvidiaserviceprocess(ByVal config As ThreadSettings)
 
-		If FileIO.ExistsFile(baseDir & "\settings\NVIDIA\services.cfg") Then
-			CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\services.cfg"))
+		If FileIO.ExistsFile(config.Paths.AppBase & "settings\NVIDIA\services.cfg") Then
+			CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\services.cfg"))
 		Else
-			Microsoft.VisualBasic.MsgBox(baseDir & "\settings\NVIDIA\services.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
+			Microsoft.VisualBasic.MsgBox(config.Paths.AppBase & "settings\NVIDIA\services.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
 		End If
 
 
 		If config.RemoveGFE Then
-			If FileIO.ExistsFile(baseDir & "\settings\NVIDIA\gfeservice.cfg") Then
-				CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\gfeservice.cfg"))
+			If FileIO.ExistsFile(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg") Then
+				CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg"))
 			End If
 		Else
-			Microsoft.VisualBasic.MsgBox(baseDir & "\settings\NVIDIA\gfeservice.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
+			Microsoft.VisualBasic.MsgBox(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
 		End If
 
 		'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
@@ -2718,9 +2717,9 @@ Public Class frmMain
 			End If
 		End If
 
-		CleanupEngine.folderscleanup(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
+		CleanupEngine.folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
 		If config.RemoveGFE Then
-			CleanupEngine.folderscleanup(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\gfedriverfiles.cfg"))	'// add each line as String Array.
+			CleanupEngine.folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg"))	  '// add each line as String Array.
 		End If
 
 		filePath = System.Environment.SystemDirectory
@@ -3036,13 +3035,13 @@ Public Class frmMain
 		'Deleting DCOM object /classroot
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\classroot.cfg")) '// add each line as String Array.
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\classroot.cfg")) '// add each line as String Array.
 
 		'for GFE removal only
 		If removegfe Then
-			CleanupEngine.clsidleftover(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
+			CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
 		Else
-			CleanupEngine.clsidleftover(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
+			CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 		End If
 		'------------------------------
 		'Clean the rebootneeded message
@@ -3075,9 +3074,9 @@ Public Class frmMain
 
 
 		If removegfe Then 'When removing GFE only
-			CleanupEngine.interfaces(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
+			CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
 		Else
-			CleanupEngine.interfaces(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\interface.cfg")) '// add each line as String Array.
+			CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\interface.cfg"))	'// add each line as String Array.
 		End If
 
 		Application.Log.AddMessage("Finished dcom/clsid/appid/typelib/interface cleanup")
@@ -3085,10 +3084,10 @@ Public Class frmMain
 		'end of deleting dcom stuff
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\driverfiles.cfg"))	'// add each line as String Array.
 
 		If removegfe Then
-			CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\gfedriverfiles.cfg")) '// add each line as String Array.
+			CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\gfedriverfiles.cfg")) '// add each line as String Array.
 		End If
 		'Cleaning PNPRessources.  'Will fix this later, its not efficent clean at all. (Wagnard)
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos", False)
@@ -4292,7 +4291,7 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		CleanupEngine.installer(IO.File.ReadAllLines(baseDir & "\settings\NVIDIA\packages.cfg"), config)
+		CleanupEngine.installer(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\packages.cfg"), config)
 
 
 		If config.Remove3DTVPlay Then
@@ -4493,7 +4492,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Cleaning Directory")
 
-		CleanupEngine.folderscleanup(IO.File.ReadAllLines(baseDir & "\settings\INTEL\driverfiles.cfg"))	'// add each line as String Array.
+		CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg"))	  '// add each line as String Array.
 
 		filePath = System.Environment.SystemDirectory
 		Dim files() As String = IO.Directory.GetFiles(filePath + "\", "igfxcoin*.*")
@@ -4510,7 +4509,7 @@ Public Class frmMain
 
 	Private Sub cleanintelserviceprocess()
 
-		CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(baseDir & "\settings\INTEL\services.cfg")) '// add each line as String Array.
+		CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\services.cfg")) '// add each line as String Array.
 
 		KillProcess("IGFXEM")
 	End Sub
@@ -4524,13 +4523,13 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Cleaning registry")
 
-		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(baseDir & "\settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(baseDir & "\settings\INTEL\classroot.cfg")) '// add each line as String Array.
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\classroot.cfg")) '// add each line as String Array.
 
-		CleanupEngine.interfaces(IO.File.ReadAllLines(baseDir & "\settings\INTEL\interface.cfg")) '// add each line as String Array.
+		CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\interface.cfg")) '// add each line as String Array.
 
-		CleanupEngine.clsidleftover(IO.File.ReadAllLines(baseDir & "\settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
+		CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
 
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Intel", True)
@@ -4664,10 +4663,10 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		CleanupEngine.installer(IO.File.ReadAllLines(baseDir & "\settings\INTEL\packages.cfg"), config)
+		CleanupEngine.installer(IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\packages.cfg"), config)
 
 		If IntPtr.Size = 8 Then
-			packages = IO.File.ReadAllLines(baseDir & "\settings\INTEL\packages.cfg") '// add each line as String Array.
+			packages = IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\packages.cfg") '// add each line as String Array.
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
 					If regkey IsNot Nothing Then
@@ -4728,7 +4727,7 @@ Public Class frmMain
 			If win8higher Then
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR", True)
 					If regkey IsNot Nothing Then
-						Dim classroot As String() = IO.File.ReadAllLines(baseDir & "\settings\INTEL\classroot.cfg")
+						Dim classroot As String() = IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\classroot.cfg")
 						For Each child As String In regkey.GetSubKeyNames()
 							If Not IsNullOrWhitespace(child) Then
 								For i As Integer = 0 To classroot.Length - 1
