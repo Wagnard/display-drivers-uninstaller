@@ -409,7 +409,7 @@ Public Class CleanupEngine
 													  Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
 
 
-
+														Application.Log.AddMessage("Removing .msi")
 														'Deleting here the c:\windows\installer entries.
 														Try
 															file = subregkey.GetValue("LocalPackage", String.Empty).ToString
@@ -419,30 +419,31 @@ Public Class CleanupEngine
 																delete(file)
 															End If
 														Catch ex As Exception
+															Application.Log.AddException(ex)
 														End Try
 
 														Try
 															folder = subregkey.GetValue("UninstallString", String.Empty).ToString
-															If IsNullOrWhitespace(folder) Then Continue For
-															If Not StrContainsAny(folder, True, "{") Then Continue For
-															If Not StrContainsAny(folder, True, "}") Then Continue For
+															If Not IsNullOrWhitespace(folder) Then
+																If StrContainsAny(folder, True, "{") AndAlso StrContainsAny(folder, True, "}") Then
 
-															folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
-															TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder, config)
+																	folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
+																	TestDelete(Environment.GetEnvironmentVariable("windir") + "\installer\" + folder, config)
 
-															Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
-																If regkey2 IsNot Nothing Then
+																	Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
+																		If regkey2 IsNot Nothing Then
 
-																	For Each subkeyname As String In regkey2.GetValueNames
-																		If Not IsNullOrWhitespace(subkeyname) Then
-																			If StrContainsAny(subkeyname, True, folder) Then
-																				deletevalue(regkey2, subkeyname)
-																			End If
+																			For Each subkeyname As String In regkey2.GetValueNames
+																				If Not IsNullOrWhitespace(subkeyname) Then
+																					If StrContainsAny(subkeyname, True, folder) Then
+																						deletevalue(regkey2, subkeyname)
+																					End If
+																				End If
+																			Next
 																		End If
-																	Next
+																	End Using
 																End If
-															End Using
-
+															End If
 														Catch ex As Exception
 															Application.Log.AddException(ex)
 														End Try
@@ -470,6 +471,7 @@ Public Class CleanupEngine
 																					Try
 																						deletesubregkey(superregkey, child2)
 																					Catch ex As Exception
+																						Application.Log.AddException(ex)
 																					End Try
 																				End If
 																			Next
@@ -495,6 +497,7 @@ Public Class CleanupEngine
 																					Try
 																						deletesubregkey(superregkey, child2)
 																					Catch ex As Exception
+																						Application.Log.AddException(ex)
 																					End Try
 																				End If
 																			Next
