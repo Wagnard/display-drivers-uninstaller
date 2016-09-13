@@ -2029,16 +2029,6 @@ Namespace Win32
 							Return
 						End If
 
-						If device.OemInfs IsNot Nothing AndAlso device.OemInfs.Length > 0 Then
-							For Each inf As Inf In device.OemInfs
-								If Not inf.FileExists Then
-									Continue For
-								End If
-
-								RemoveInf(inf, True)
-							Next
-						End If
-
 						Dim logStatus As LogEntry = Application.Log.CreateEntry()
 						logStatus.Message = "Uninstalling device..."
 						logStatus.Add("Description", If(IsNullOrWhitespace(device.Description), "<empty>", device.Description))
@@ -2060,6 +2050,15 @@ Namespace Win32
 							logStatus.AddException(New Win32Exception(), False)
 						End If
 
+						If device.OemInfs IsNot Nothing AndAlso device.OemInfs.Length > 0 Then
+							For Each inf As Inf In device.OemInfs
+								If Not inf.FileExists Then
+									Continue For
+								End If
+
+								RemoveInf(inf, True)
+							Next
+						End If
 						Application.Log.Add(logStatus)
 					Finally
 						If ptrDevInfo IsNot Nothing Then

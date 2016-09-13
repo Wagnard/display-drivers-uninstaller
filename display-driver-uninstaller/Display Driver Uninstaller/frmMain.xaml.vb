@@ -65,7 +65,7 @@ Public Class frmMain
 			Case GPUVendor.Nvidia
 				CurrentProvider = "NVIDIA"
 			Case GPUVendor.AMD
-				CurrentProvider = "AdvancedMicroDevices"
+				CurrentProvider = "Advanced Micro Devices"
 			Case GPUVendor.Intel
 				CurrentProvider = "Intel"
 		End Select
@@ -78,6 +78,8 @@ Public Class frmMain
 
 			If StrContainsAny(oem.Provider, True, CurrentProvider) Or
 			   oem.Provider.ToLower.StartsWith("atitech") Or
+			   oem.Provider.ToLower.StartsWith("advancedmicrodevices") Or
+			   oem.Provider.ToLower.StartsWith("ati tech") Or
 			   oem.Provider.ToLower.StartsWith("amd") Then
 
 				'before removing the oem we try to get the original inf name (win8+)
@@ -551,11 +553,7 @@ Public Class frmMain
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If child.ToLower.Contains("amdkmpfd") Or
-					 child.ToLower.Contains("cnext") Or
-					 child.ToLower.Contains("steadyvideo") Or
-					 child.ToLower.Contains("920dec42-4ca5-4d1d-9487-67be645cddfc") Or
-					   child.ToLower.Contains("cim") Then
+					If StrContainsAny(child, True, "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim") Then
 
 						Delete(child)
 
@@ -5246,7 +5244,7 @@ Public Class frmMain
 						For Each Sibling In SystemDevice.SiblingDevices
 							If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
 								For Each compatibleid In SystemDevice.CompatibleIDs
-									If StrContainsAny(compatibleid, True, "PCI\CC_0403") Then
+									If StrContainsAny(compatibleid, True, "PCI\CC_040300") Then
 										Application.Log.AddMessage("Removing AMD HD Audio Bus (amdkmafd)")
 
 										Win32.SetupAPI.UninstallDevice(SystemDevice)
@@ -5266,7 +5264,7 @@ Public Class frmMain
 														For Each child3 As String In regkey3.GetSubKeyNames()
 															If IsNullOrWhitespace(child3) Then Continue For
 
-															array = CType(MyRegistry.OpenSubKey(regkey3, child3).GetValue("LowerFilters", String.Empty), String())
+															array = CType(MyRegistry.OpenSubKey(regkey3, child3).GetValue("LowerFilters", Nothing), String())
 															If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
 																For Each entry As String In array
 																	If IsNullOrWhitespace(entry) Then Continue For
