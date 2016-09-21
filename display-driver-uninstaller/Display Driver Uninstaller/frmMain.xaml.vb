@@ -2021,6 +2021,34 @@ Public Class frmMain
 			End Try
 
 		End If
+		'Task Scheduler cleanUP (AMD Updater)
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames
+					If IsNullOrWhitespace(child) Then Continue For
+					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+						If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
+							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater") Then
+								deletesubregkey(regkey, child)
+							End If
+						End If
+					End Using
+				Next
+			End If
+		End Using
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree", True)
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames
+					If IsNullOrWhitespace(child) Then Continue For
+
+					If StrContainsAny(child, True, "AMD Updater") Then
+						deletesubregkey(regkey, child)
+					End If
+
+				Next
+			End If
+		End Using
 
 	End Sub
 
