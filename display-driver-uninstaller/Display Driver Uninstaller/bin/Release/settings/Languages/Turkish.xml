@@ -12,8 +12,8 @@
 				(Tavsiye Edilen)
 			</Text>
 			<Tooltip>
-				Mevcut ve onceki sürücüleri kaldırın, sonra bilgisayarı yeniden başlatın.
-				(Tavsiye Edilir)
+				Mevcut ve onceki sürücüleri kaldırır, bilgisayarı yeniden başlatmak gerekir.
+				(Tavsiye Edilen)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
@@ -22,27 +22,27 @@
 				(Siyah ekran gibi sorunlara neden olabilir)
 			</Text>
 			<Tooltip>
-				Mevcut ve önceki sürücüleri kaldırın, ancak bilgisayarı yeniden başlatmayın.
+				Mevcut ve önceki sürücüleri kaldırır, bilgisayarı yeniden başlatma gerektirmez.
 				(Siyah ekran gibi sorunlara neden olabilir)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
-				Temizledikten sonra yeniden başlat
-				(Yeni bir grafik kartı yüklemek için).
+				Temizledikten sonra kapat
+				(Yeni bir grafik kartı yüklemek için)
 			</Text>
 			<Tooltip>
-				Mevcut ve önceki sürücüleri kaldırın ve bilgisayarı kapat yeniden tarama yapma
-				(Yeni grafik kartı yüklemek için).
+				Mevcut ve önceki sürücüleri kaldırır, bilgisayarı kapatır.
+				(Yeni grafik kartı yüklemek için)
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnWuRestore>
 			<Text>
-				Windows Otomatik Sürücü yüklemeyi varsayılan olarak ayarla.
+				Windows Otomatik Sürücü yüklemeyi varsayılan olarak ayarla
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Yüklü olan Windows sürümü</Text>
+			<Text>Yüklü olan Windows sürümü:</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** DDU'yu sevdiniz mi? Bağış yaparak daha da gelişmemize yardımcı olabilirsiniz. ***</Text>
@@ -89,7 +89,7 @@
 			<Text>Hakkında</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>Çevirmenler</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Resmi DDU Web Sitesini ziyaret edin.</Text>
@@ -135,9 +135,9 @@
 			<Text8>Eğer mevcutsa nVidia Optimus UpperFilter silme işlemi başlatıldı.</Text8>
 			<Text9>Yeni aygıt için taranıyor...</Text9>
 			<Text10>Temizleme işlemi tamamlandı!</Text10>
-			<Text11>DDU sürümü</Text11>
+			<Text11>DDU Sürümü</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Algılanan:</Text13>
+			<Text13>Algılanan</Text13>
 			<Text14>GPU aygıt kimliği</Text14>
 			<Text15>Algılanan sürücü(ler) sürüm(ler)</Text15>
 			<Text16>INF</Text16>
@@ -146,7 +146,7 @@
 			<Text19>Bazı özel klasörler temizleniyor biraz zaman alabilir...</Text19>
 			<Text20>Temizleme başladı...</Text20>
 			<Text21>Kaldırılıyor..</Text21>
-			<Text22>sürücü</Text22>
+			<Text22>Sürücü</Text22>
 			<Text23>DDUDR kaldırma işlemi yürütülüyor, lütfen bekleyin(birkaç dakika sürebilir)...</Text23>
 			<Text24>GPU(lar) Aygıt yöneticisinden kaldırıldı.</Text24>
 			<Text25>DDUDR yürütülüyor Ses denetleyicisi kaldırılıyor...</Text25>
@@ -172,7 +172,7 @@
 	
 	<frmOptions Text="Seçenekler">
 		<btnClose>
-		  <Text>Çıkış</Text>
+		  <Text>Kapat</Text>
 		</btnClose>
 		<lblOffer>
 		  <Text>Ortakların Tekliflerini Göster</Text>
@@ -236,10 +236,6 @@
 			<Text>Vulkan Runtime Kaldır</Text>
 			<Tooltip>Eğer Vulkan API Kullanan 2 Farklı GPU Yeteneği Varsa Tavsiye edilmez.</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>*Deneysel* SetupAPİ Kullan.</Text>
-			<Tooltip>(DEVCON) yerine SetupAPİ harici aracı DDUDR kullanın.</Tooltip>
-		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Başlatma Seçeneği">
@@ -277,7 +273,7 @@
 	
 	<frmLog Text="Genişletilmiş Günlük">
 		<btnClose>
-			<Text>Çıkış</Text>
+			<Text>Kapat</Text>
 		</btnClose>
 		<btnOpenLog>
 			<Text>Günlüğü Aç</Text>
@@ -312,7 +308,7 @@
 
 	<frmAbout Text="Hakkında">
 		<btnClose>
-			<Text>Çıkış</Text>
+			<Text>Kapat</Text>
 		</btnClose>
 		<btnAbout>
 			<Text>Hakkında</Text>
@@ -321,10 +317,10 @@
 			<Text>Kullanım Koşulları (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>Çevirmenler</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>Ayrıca aşağıda bulunan ve bulunmayan bütün çevirmenlere çok teşekkürler.</Text>
 		</lblTranslators>
 	</frmAbout>
 	
@@ -333,7 +329,7 @@
 			<Text>
 Bu program ne işe yarar?
 
-Eski sürücü sorunlarını ya da daha yeni kuruyorsanız ve yüklenenmeme gibi bir duurumda bu sorunları giderir.
+Eski sürücü sorunlarını ya da daha yeni kuruyorsanız ve yüklenenmeme gibi bir durumda bu sorunları giderir.
 
 ÖNERİLEN KULLANIM:
 
@@ -350,13 +346,16 @@ Sisteminizde herhangi bir hasar veya hata olduğunda sorumlu değildir.
 
 Wagnard tarafından düzenlendi.
 
-CO-Sahibi: Shady7557
+Yazılımcılar: Wagnard, Devmltk, Shady7557
 
-Tester: Dellon132
+Test eden: Dellon132
 
-Logolar: juanchacin
+Logo yapımcı: juanchacin
 
-Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
+-Jackalito'ya AMD 7850'yi bize bağladığındna dolayı çok teşekkürler. 
+-Programımız olan DDU "SetAcl"(http://helgeklein.com/setacl/) özelliği için verdiği izinden dolayı Helge Klein'a teşekkürler.
+-Sorunları çözen ve test eden Gamer1291 (optimus), Octopuss (Amd Enduro), nedooo'ya çok teşekkürler.
+-Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
 
 Çevirmen: murat5038
 </Text>
@@ -378,8 +377,8 @@ DDU'yu kullanarak, NVIDIA ("NVIDIA, GeForce") Advanced Micro Devices ("AMD, Rade
 	<LanguageTranslators>
 		<Translator>
 			<User>murat5038</User>
-			<Details>Translater</Details>
-			<LastUpdate>31/05/2016</LastUpdate>
+			<Details>Kaspersky Turkey Moderator</Details>
+			<LastUpdate>16/09/2016</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
