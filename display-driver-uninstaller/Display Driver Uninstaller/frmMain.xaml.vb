@@ -2244,6 +2244,7 @@ Public Class frmMain
 
 		'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
 		'holding files in the NVIDIA folders sometimes.
+		'10-10-2016 (removed dwm.exe from the list because of issues in win10 IB 14942 Wagnard)
 		Try
 			KillProcess(
 			 "Lcore",
@@ -2251,7 +2252,6 @@ Public Class frmMain
 			 "nvstreamsvc",
 			 "NvTmru",
 			 "nvxdsync",
-			 "dwm",
 			 "WWAHost",
 			 "nvspcaps64",
 			 "nvspcaps",
@@ -5508,12 +5508,13 @@ Public Class frmMain
 				End If
 				UpdateTextMethod(UpdateTextTranslated(27))
 			End If
-			UpdateTextMethod(UpdateTextTranslated(28))
+
 
 			'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont want that
 			'espcially if we are not using an AMD GPU
 
 			If config.RemoveAMDKMPFD Then
+				UpdateTextMethod("Start - Check for AMDKMPFD system device.")
 				Try
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "0a0", False)
 					If found.Count > 0 Then
@@ -5529,16 +5530,21 @@ Public Class frmMain
 							End If
 						Next
 					End If
-
+					UpdateTextMethod("End - Check for AMDKMPFD system device.")
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 				End Try
 
+				UpdateTextMethod(UpdateTextTranslated(28))
+
+
 				'We now try to remove the service AMDPMPFD if its lowerfilter is not found
 				If config.Restart Or config.Shutdown Then
 					If Not checkamdkmpfd() Then
+						UpdateTextMethod("Start - Check for AMDKMPFD service.")
 						CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+						UpdateTextMethod("End - Check for AMDKMPFD service.")
 					End If
 				End If
 			End If
