@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="Cy-sr-SP" Text="Serbian (Cyrilic)">
+<DisplayDriverUninstaller ISO="Cy-sr-SP" Text="Serbian (Cyrillic)">
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
 		for quick guide
@@ -52,7 +52,7 @@
 			<Text>Одабери драјвер за граф.кар.</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Selected language</Text>
+			<Text>Изабрани језик:</Text>
 		</lblLanguage>
 		
 		<Label9>
@@ -70,45 +70,45 @@
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>Понуде од наших партнера</Text>
+			<Tooltip>Ово можете онемогућити у менију: Опције</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
-			<Text>Options</Text>
+			<Text>Опције</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
-			<Text>Info</Text>
+			<Text>Информације</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>Проширени извештај</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
-			<Text>Links</Text>
+			<Text>Линкови</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>Услови коришћења (ToS)</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
-			<Text>About</Text>
+			<Text>О програму</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>Преводиоци</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visit official DDU Website</Text>
+			<Text>Посети официјелни DDU вебсајт</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Visit SVN Website</Text>
+			<Text>Посети SVN вебсајт</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
+			<Text>Посети Guru3d NVIDIA одељак</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
+			<Text>Посети Guru3d AMD одељак</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Visit Geforce Thread</Text>
+			<Text>Посети Geforce одељак</Text>
 		</VisitGeforceMenuItem>
 		
 		<Messages>
@@ -176,16 +176,16 @@
 	
 	<frmOptions Text="Опције">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Затвори</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>Прикажи понуде од наших партнера</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Specific Options</Text>
+			<Text>NVIDIA специфичне опције</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Specific Options</Text>
+			<Text>AMD специфичне опције</Text>
 		</lblAmdspecific>
 		<lblGeneral>
 			<Text>Главне опције</Text>
@@ -224,7 +224,7 @@
 			<Text>Сачувај конфигурациони фајл у роаминг директоријуму (фолдеру)</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+			<Text>Аутоматска претрага нових верзија DDU програма при стартовању (препоручљиво)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Уклони Geforce Experience (GFE)</Text>
@@ -237,99 +237,99 @@
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Remove Vulkan Runtime</Text>
-			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+			<Text>Уклони Vulkan Runtime</Text>
+			<Tooltip>Није препоручљиво уколико имате 2 различите графичке картице које могу да користе Vulkan API.</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Use SetupAPI *Experimental*</Text>
-			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+			<Text>Користи SetupAPI *Експериментално*</Text>
+			<Tooltip>Користи SetupAPI уместо екстерног алата DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
 		<btnAccept>
-			<Text>Launch</Text>
+			<Text>Покрени</Text>
 			<Text2>
-				Reboot to
+				Рестартуј у
 				Safe Mode
 			</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Затвори</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>Опције при покретању</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				You are not in safe mode. It is highly recommended
-				reboot into Safe Mode to avoid possible issues.
+				Нисте у Safe Mode-у. Веома је препоручљиво да
+				рестартујете компјутер у Safe Mode да избегнете евентуалне проблеме.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Important note for Windows 8/8.1/10 users:
-				Your Windows "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Важна напомена за Windows 8/8.1/10 кориснике:
+				Твој Windows "PASSWORD" је неопходан! (PIN не ради у Safe Mode-у!)
+				Изађите одмах уколико нисте сигурни да знате шта радите!
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
-			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
+			<Item1>Нормално</Item1>
+			<Item2>Safe Mode (Препоручљиво)</Item2>
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
 	</frmLaunch>
 	
 	<frmLog Text="Extended log">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Затвори</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Open log</Text>
+			<Text>Отвори извештај</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
-			<Text>Options</Text>
+			<Text>Опције</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>Копирање омогућено</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>Filters</Text>
+			<Text>Филтери</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>Прикажи догађаје</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>Прикажи упозорења</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>Прикажи грешке</Text>
 		</errorsMenuItem>
 	</frmLog>
 
 	<frmSystemRestore Text="System Restore">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>Покушавам да креирам System Restore Point.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
 	<frmAbout Text="About">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Затвори</Text>
 		</btnClose>
 		<btnAbout>
-			<Text>About</Text>
+			<Text>О програму</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>Услови коришћења (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>Преводиоци</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text> Велика захвалност следећим преводиоцима и онима који нису на листи!</Text>
 		</lblTranslators>
 	</frmAbout>
 
@@ -388,9 +388,9 @@
 
 				Хвала свима онима који су своје компјутере током тест-коришћења овог програма изложили ризику (посебна захвалност: Dellon132)
 				.
-				Превод на српски језик (ћирилица): Crazy_Milojko
+				Превод на српски језик (ћирилица): Crazy_Milojko  и  Bricco
 
-				*DDU, његови креатори и остали који су учествовали у креирању програма нису ниукаквој вези са програмом Driver Sweeper или
+				*DDU, његови креатори и остали који су учествовали у креирању програма нису ни у каквој вези са програмом Driver Sweeper или
 				његовим креаторима.
 			</Text>
 		</About>

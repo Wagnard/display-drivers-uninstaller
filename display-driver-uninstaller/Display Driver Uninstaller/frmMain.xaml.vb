@@ -4482,7 +4482,7 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) Then Continue For
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 						If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvidia profile updater", "nvidia crash and telemetry", "nvidia nvmode launcher", "nvidia telemetry monitor", "nvidia profile updater") Then
+							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvidia profile updater", "nvidia crash and telemetry", "nvidia nvnode launcher", "nvidia telemetry monitor", "nvidia profile updater") Then
 								deletesubregkey(regkey, child)
 							End If
 						End If
