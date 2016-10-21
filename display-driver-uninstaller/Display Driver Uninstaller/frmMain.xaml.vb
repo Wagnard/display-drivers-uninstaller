@@ -2237,9 +2237,9 @@ Public Class frmMain
 		If config.RemoveGFE Then
 			If FileIO.ExistsFile(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg") Then
 				CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg"))
-			End If
-		Else
+			Else
 			Microsoft.VisualBasic.MsgBox(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
+			End If
 		End If
 
 		'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
