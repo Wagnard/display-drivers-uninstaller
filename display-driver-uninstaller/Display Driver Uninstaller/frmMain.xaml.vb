@@ -2429,6 +2429,7 @@ Public Class frmMain
 							 (child.ToLower.EndsWith("\osc") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvidia share") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
@@ -2502,6 +2503,7 @@ Public Class frmMain
 					 (child.ToLower.Contains("gfebridges") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvstapisvr") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 
 						Delete(child)
@@ -2687,7 +2689,7 @@ Public Class frmMain
 						 child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvgsync") Or
 						 child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
-						 child.ToLower.EndsWith("nvtelemetry") AndAlso config.RemovePhysX Or
+						 child.ToLower.EndsWith("nvtelemetry") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 							If removephysx Then
 
@@ -3910,6 +3912,7 @@ Public Class frmMain
 						 child.ToLower.Contains("_nvbackend") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvplugin") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvtelemetry") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_nvdisplaycontainer") Or
 						 child.ToLower.Contains("_nvcontainer") AndAlso config.RemoveGFE Then
 							If removephysx = False AndAlso child.ToLower.Contains("physx") Then
 								Continue For
@@ -5331,7 +5334,7 @@ Public Class frmMain
 
 
 			Try
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected)
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected, False)
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
 
@@ -5357,7 +5360,7 @@ Public Class frmMain
 
 
 			Try
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected)
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False)
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
 
@@ -5402,7 +5405,7 @@ Public Class frmMain
 					  "USB\VID_0955&PID_700E&MI_00"}
 
 					'3dVision Removal
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media")
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
@@ -5415,7 +5418,7 @@ Public Class frmMain
 
 
 					'NVIDIA SHIELD Wireless Controller Trackpad
-					found = SetupAPI.GetDevices("mouse")
+					found = SetupAPI.GetDevices("mouse", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If StrContainsAny(d.HardwareIDs(0), True, "hid\vid_0955&pid_7210") Then
@@ -5428,7 +5431,7 @@ Public Class frmMain
 					If config.RemoveGFE Then
 						' NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removal
 
-						found = SetupAPI.GetDevices("media")
+						found = SetupAPI.GetDevices("media", Nothing, False)
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0955&PID_9000") Then
@@ -5440,7 +5443,7 @@ Public Class frmMain
 					End If
 
 					'nVidia AudioEndpoints Removal
-					found = SetupAPI.GetDevices("audioendpoint")
+					found = SetupAPI.GetDevices("audioendpoint", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If StrContainsAny(d.FriendlyName, True, "nvidia virtual audio device", "nvidia high definition audio") Then
@@ -5500,7 +5503,7 @@ Public Class frmMain
 
 			If config.RemoveMonitors Then
 				Application.Log.AddMessage("SetupAPI Remove Monitor started")
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("monitor")
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("monitor", Nothing, False)
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
 						SetupAPI.UninstallDevice(d)
@@ -6152,6 +6155,7 @@ Public Class frmMain
 								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.nview") Or
 								   child2.ToLower.Contains("display.nvwmi") Or
+								   child2.ToLower.Contains("nvdisplaycontainer") Or
 								   child2.ToLower.Contains("ansel.") Or
 								   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
