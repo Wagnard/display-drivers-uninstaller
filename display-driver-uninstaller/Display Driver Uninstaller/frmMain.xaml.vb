@@ -5291,9 +5291,9 @@ Public Class frmMain
 													Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey, child2)
 														For Each child3 As String In regkey3.GetSubKeyNames()
 															If IsNullOrWhitespace(child3) Then Continue For
-
-															array = CType(MyRegistry.OpenSubKey(regkey3, child3).GetValue("LowerFilters", Nothing), String())
-															If (array IsNot Nothing) AndAlso Not (array.Length < 1) Then
+															'need to test more this code. got an error on a friend computer (Wagnard)(Possibly fixed with the trycast)
+															array = TryCast(MyRegistry.OpenSubKey(regkey3, child3).GetValue("LowerFilters"), String())
+															If (array IsNot Nothing) AndAlso array.Length > 0 Then
 																For Each entry As String In array
 																	If IsNullOrWhitespace(entry) Then Continue For
 
