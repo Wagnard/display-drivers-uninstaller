@@ -368,6 +368,7 @@ Public Class FileIO
 			errCode = SetAttributes(uncFileName, FILE_ATTRIBUTES.NORMAL, isDir)		' restores attributes, checks does it exist, check is dir or file
 
 			If errCode <> Errors.ACCESS_DENIED Then
+
 				If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
 					uncFileName = GetLongPath(fileName)		' Check if was short path
 
@@ -437,9 +438,10 @@ Public Class FileIO
 					If DeleteFile(uncFileName) Then
 						Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, fileName))
 						Return
+					Else
+						errCode = GetLastWin32ErrorU()
 					End If
 				End If
-
 				If errCode <> Errors.ACCESS_DENIED AndAlso errCode <> Errors.FILE_NOT_FOUND AndAlso errCode <> Errors.PATH_NOT_FOUND Then
 					Throw New Win32Exception(GetInt32(errCode))
 				End If

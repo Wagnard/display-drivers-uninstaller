@@ -2430,6 +2430,7 @@ Public Class frmMain
 							 (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvidia share") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("nvtmrep") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
