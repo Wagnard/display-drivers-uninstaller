@@ -1706,7 +1706,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Removing known Packages")
 
-		packages = IO.File.ReadAllLines(config.Paths.appbase & "settings\AMD\packages.cfg")	  '// add each line as String Array.
+		packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg")	  '// add each line as String Array.
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 			"Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -2238,7 +2238,7 @@ Public Class frmMain
 			If FileIO.ExistsFile(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg") Then
 				CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg"))
 			Else
-			Microsoft.VisualBasic.MsgBox(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
+				Microsoft.VisualBasic.MsgBox(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
 			End If
 		End If
 
@@ -3064,13 +3064,13 @@ Public Class frmMain
 		'Deleting DCOM object /classroot
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\classroot.cfg")) '// add each line as String Array.
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg")) '// add each line as String Array.
 
 		'for GFE removal only
 		If removegfe Then
-			CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
+			CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
 		Else
-			CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
+			CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 		End If
 		'------------------------------
 		'Clean the rebootneeded message
@@ -3103,9 +3103,9 @@ Public Class frmMain
 
 
 		If removegfe Then 'When removing GFE only
-			CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
+			CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
 		Else
-			CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\interface.cfg"))	'// add each line as String Array.
+			CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interface.cfg"))	'// add each line as String Array.
 		End If
 
 		Application.Log.AddMessage("Finished dcom/clsid/appid/typelib/interface cleanup")
@@ -3113,10 +3113,10 @@ Public Class frmMain
 		'end of deleting dcom stuff
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\driverfiles.cfg"))	'// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg"))	'// add each line as String Array.
 
 		If removegfe Then
-			CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\gfedriverfiles.cfg")) '// add each line as String Array.
+			CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")) '// add each line as String Array.
 		End If
 		'Cleaning PNPRessources.  'Will fix this later, its not efficent clean at all. (Wagnard)
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos", False)
@@ -4321,7 +4321,7 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		CleanupEngine.installer(IO.File.ReadAllLines(config.Paths.appbase & "settings\NVIDIA\packages.cfg"), config)
+		CleanupEngine.installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\packages.cfg"), config)
 
 
 		If config.Remove3DTVPlay Then
@@ -4553,13 +4553,13 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Cleaning registry")
 
-		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\classroot.cfg")) '// add each line as String Array.
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\classroot.cfg")) '// add each line as String Array.
 
-		CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\interface.cfg")) '// add each line as String Array.
+		CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\interface.cfg")) '// add each line as String Array.
 
-		CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
+		CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
 
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Intel", True)
@@ -4693,10 +4693,10 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		CleanupEngine.installer(IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\packages.cfg"), config)
+		CleanupEngine.installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packages.cfg"), config)
 
 		If IntPtr.Size = 8 Then
-			packages = IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\packages.cfg") '// add each line as String Array.
+			packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packages.cfg") '// add each line as String Array.
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
 					If regkey IsNot Nothing Then
@@ -4757,7 +4757,7 @@ Public Class frmMain
 			If win8higher Then
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR", True)
 					If regkey IsNot Nothing Then
-						Dim classroot As String() = IO.File.ReadAllLines(config.Paths.appbase & "settings\INTEL\classroot.cfg")
+						Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\classroot.cfg")
 						For Each child As String In regkey.GetSubKeyNames()
 							If Not IsNullOrWhitespace(child) Then
 								For i As Integer = 0 To classroot.Length - 1
@@ -6358,58 +6358,94 @@ Public Class frmMain
 		'end system environement patch cleanup
 	End Sub
 
+
 	Private Sub testingMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles testingMenuItem.Click
-		Dim testDir As String = "E:\Program Files\NVIDIA Corporation\Installer2\NvNodejs.{238C4CE3-6554-49D2-BD02-88084DB29453}\node_modules\socket.io\node_modules\socket.io-client\node_modules\engine.io-client\node_modules\engine.io-parser\node_modules\base64-arraybuffer\lib\ddu\wagnard\does\this\work\I\think\it\should"
-		Dim testFileShortPath As String = "E:\PROGRA~1\NVIDIA~1\INSTAL~1\NVNODE~1.{23\NODE_M~1\socket.io\NODE_M~1\SOCKET~1.IO-\NODE_M~1\ENGINE~1.IO-\NODE_M~1\ENGINE~1.IO-\NODE_M~1\BASE64~1\lib\ddu\wagnard\does\this\work\I\think\it\should\test\test.txt"
-		' 288 chars, feel free to test ;P
-		' Btw, change drive letter if you try!
+		Dim testfile As String = Application.Paths.AppBase & "TestAssembly.dll"
 
 		Try
-			'	FileIO.CreateDir(testDir)							' Create dir for testing!
-			'	Delete(testFileShortPath)					' Delete file with short path
-			'	Delete(testDir)								' Delete deletes both, is it Dir or File
-			'	FileIO.ExistsDir(testDir)							' Dir exists?
-			'	FileIO.ExistsFile(testFileShortPath)				' File exists?
-			'	FileIO.GetFiles("E:\_temp\test\", "*", True)		' Get files
-			'	FileIO.GetDirectories("E:\_temp\test\", "*", True)	' Get directories
+			' Some fancy function to create DLL file in code programmatically ^^
 
-			'TEST
-			'For Each d As SetupAPI.Device In SetupAPI.GetDevices("display")
-			'	If MessageBox.Show("Uninstall: " & d.Description, "?", MessageBoxButton.YesNo, MessageBoxImage.Stop) = MessageBoxResult.Yes Then
-			'		SetupAPI.UninstallDevice(d)
-			'	End If
-			'Next
+			If Not File.Exists(testfile) Then
+				Dim sbSrc As New StringBuilder()
+				sbSrc.AppendLine("using System;")
+				sbSrc.AppendLine("using System.Collections.Generic;")
+				sbSrc.AppendLine("")
+				sbSrc.AppendLine("namespace TestAssembly")
+				sbSrc.AppendLine("{")
+				sbSrc.AppendLine("	public class MainClass")
+				sbSrc.AppendLine("	{")
+				sbSrc.AppendLine("		public MainClass()")
+				sbSrc.AppendLine("		{")
+				sbSrc.AppendLine("		}")
+				sbSrc.AppendLine("")
+				sbSrc.AppendLine("		public Double Pow(Double d, Double p)")
+				sbSrc.AppendLine("		{")
+				sbSrc.AppendLine("			return Math.Pow(d, p);")
+				sbSrc.AppendLine("		}")
+				sbSrc.AppendLine("	}")
+				sbSrc.AppendLine("}")
 
+				Dim icc As System.CodeDom.Compiler.CodeDomProvider = New Microsoft.CSharp.CSharpCodeProvider()
+				Dim parameters As New CodeDom.Compiler.CompilerParameters() With {.GenerateExecutable = False, .OutputAssembly = testfile, .GenerateInMemory = False}
+				Dim results As CodeDom.Compiler.CompilerResults = icc.CompileAssemblyFromSource(parameters, sbSrc.ToString())
 
-			Dim key As String = "SOFTWARE\ATI"
+				If results.Errors.Count > 0 Then
+					Dim CompErr As CodeDom.Compiler.CompilerError
+					Dim sbError As New StringBuilder
 
-			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, key, True)
-				If regkey IsNot Nothing Then
-					regkey.SetValue("TEST2", "Some other testvalue")
+					For Each CompErr In results.Errors
+						sbError.AppendLine("Line number " & CompErr.Line & ", Error Number: " & CompErr.ErrorNumber & ", '" & CompErr.ErrorText & ";")
+					Next
 
-					MessageBox.Show("Value: " & regkey.GetValue("TEST2", String.Empty).ToString())
+					MessageBox.Show(sbError.ToString(), "Compile Error!")
+					Return
 				Else
-					MessageBox.Show("regkey = Nothing")
+					testfile = results.PathToAssembly
 				End If
-			End Using
+			End If
 
-			'For i As Int32 = 0 To 1000
-			'	Application.Log.AddException(New ComponentModel.Win32Exception(32), "TEST: Message" & i.ToString())
-			'Next
-			' Multiline TEST
-			'Dim logEntry As LogEntry = Application.Log.CreateEntry()
+			Try
+				'Loading DLL from file...
+				Dim assembly As Assembly = assembly.LoadFrom(testfile)
+				Dim t As Type = assembly.GetType("TestAssembly.MainClass")
+				Dim c As Object = Activator.CreateInstance(t, False)
+				Dim arguments() As Object = {50.0, 3.0}
+				Dim retVal As Double = CType(t.GetMethod("Pow", BindingFlags.Public Or BindingFlags.Instance, Nothing, New Type() {GetType(Double), GetType(Double)}, Nothing).Invoke(c, arguments), Double)
 
-			'logEntry.Message =
-			' "|" & vbTab & "Testing Multiline" & vbTab & vbTab & vbTab & vbTab & "|" & Environment.NewLine &
-			' "|" & vbTab & vbTab & "Second Line" & vbTab & vbTab & vbTab & "|" & Environment.NewLine &
-			' "|" & vbTab & vbTab & vbTab & "Third Line" & vbTab & vbTab & "|" & Environment.NewLine &
-			' "|" & vbTab & vbTab & vbTab & vbTab & "Fourth Line" & vbTab & "|"
+				'returns 125000  (50 ^ 3) => DLL is loaded and working (in-use!)
+				MessageBox.Show("50 ^ 3 = " + retVal.ToString())
+			Catch ex As Exception
+				MessageBox.Show(ex.Message)
+			End Try
 
-			'logEntry.Add(New KvP("Numbers", String.Join(Environment.NewLine, New String() {"1", "2", "3", "4", "5", "6"})))
-			'Application.Log.Add(logEntry)
+
+			FileIO.Delete(testfile)		   ' Access Denied errors on log (warning + error)
+
+			' to crash it:
+			' use ACL.vb from previous commit and call this method ( Menu -> TESTING -> Generic test )
+			'
+			'
+			' fails because DLL is loaded and In-use = Access denied! (eg. nvshext.dll) and owner set doesn't help there (it still succesfully set thought!)
+			'
+			' on second run while file is still in-use => Access Denied
+			' Try set owner due access denied error => owner is already set => exit half way function (Owner was set before and no need to set it again)
+			' LocalFree(ptrOwnerStr) got called TWICE (!!!)   after reading and after exiting without setting Owner on finally block = cleaned twice
+			' => crash 0xC0000374
+			'
+			'tl;dr; Can't clean unmanaged object twice.
+
 		Catch ex As Exception
-			MessageBox.Show(ex.Message & CRLF & CRLF & ex.StackTrace, "Testing fails!")
+			Application.Log.AddException(ex)
 		End Try
+
+		MessageBox.Show("Success?" +
+		 CRLF +
+		 "There should be 'Access Denied' exceptions on log (warning + error)" + CRLF +
+		 CRLF +
+		 "Delete file manually after closing DDU... since file is loaded and" + CRLF +
+		 "VB.Net doesn't offer option to Unload it. (not going to use WinAPI just for that..)" + CRLF +
+		 CRLF +
+		 "File location:" + CRLF + testfile)
 	End Sub
 
 	Private Sub checkXMLMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles checkXMLMenuItem.Click

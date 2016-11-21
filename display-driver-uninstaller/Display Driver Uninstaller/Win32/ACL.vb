@@ -795,7 +795,7 @@ Namespace Win32
 						logEntry.Add("> Couldn't find current path's Owner!")
 					Finally
 						If ptrOwnerStr <> IntPtr.Zero Then
-							Marshal.FreeHGlobal(ptrOwnerStr)
+							LocalFree(ptrOwnerStr)
 						End If
 					End Try
 
@@ -804,31 +804,34 @@ Namespace Win32
 						Return True
 					End If
 
-					If Not ConvertStringSidToSid(newOwnerSID, ptrOwnerStr) Then
-						Throw New Win32Exception()
-					End If
-
-					If Not SetSecurityInfo(ptrFile,
-					  SE_OBJECT_TYPE.SE_FILE_OBJECT,
-					  SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION,
-					  ptrOwnerStr,
-					  IntPtr.Zero,
-					  IntPtr.Zero,
-					  IntPtr.Zero) Then
-
-						errCode = GetLastWin32ErrorU()
-
-						If errCode <> 0UI Then
-							Throw New Win32Exception(GetInt32(errCode))
+					Try
+						If Not ConvertStringSidToSid(newOwnerSID, ptrOwnerStr) Then
+							Throw New Win32Exception()
 						End If
-					End If
 
-					Return True
+						If Not SetSecurityInfo(ptrFile,
+						  SE_OBJECT_TYPE.SE_FILE_OBJECT,
+						  SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION,
+						  ptrOwnerStr,
+						  IntPtr.Zero,
+						  IntPtr.Zero,
+						  IntPtr.Zero) Then
+
+							errCode = GetLastWin32ErrorU()
+
+							If errCode <> 0UI Then
+								Throw New Win32Exception(GetInt32(errCode))
+							End If
+						End If
+
+						Return True
+					Finally
+						If ptrOwnerStr <> IntPtr.Zero Then
+							LocalFree(ptrOwnerStr)
+						End If
+					End Try
+
 				Finally
-					If ptrOwnerStr <> IntPtr.Zero Then
-						Marshal.FreeHGlobal(ptrOwnerStr)
-					End If
-
 					If ptrSecurity <> IntPtr.Zero Then
 						LocalFree(ptrSecurity)
 					End If
