@@ -450,7 +450,7 @@ Class Application
 		Dim regOSValue As String = Nothing
 		Dim version As OSVersion = OSVersion.Unknown
 
-		Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
 			If regkey IsNot Nothing Then
 				regOSValue = regkey.GetValue("CurrentVersion", String.Empty).ToString()
 
@@ -494,7 +494,7 @@ Class Application
 			Application.Paths.CreateDirectories(dir)
 
 			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
 					If regkey IsNot Nothing Then
 						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
 							regSubKey.SetValue("", "Service")
@@ -507,7 +507,7 @@ Class Application
 			End Try
 
 			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
 					If regkey IsNot Nothing Then
 						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
 							regSubKey.SetValue("", "Service")

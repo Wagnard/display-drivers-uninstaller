@@ -2050,6 +2050,10 @@ Public Class frmMain
 			End If
 		End Using
 
+		'Killing Explorer.exe to help releasing file that were open.
+		Application.Log.AddMessage("Killing Explorer.exe")
+		KillProcess("explorer")
+
 	End Sub
 
 	Private Sub rebuildcountercache()
@@ -3386,7 +3390,7 @@ Public Class frmMain
 						End Select
 					End If
 				End If
-				If CStr(regkey.GetValue("AppInit_DLLs")) = "" Then
+				If regkey.GetValue("AppInit_DLLs", String.Empty).ToString = "" Then
 					Try
 						regkey.SetValue("LoadAppInit_DLLs", "0", RegistryValueKind.DWord)
 					Catch ex As Exception
@@ -3421,7 +3425,7 @@ Public Class frmMain
 							End Select
 						End If
 					End If
-					If CStr(regkey.GetValue("AppInit_DLLs")) = "" Then
+					If regkey.GetValue("AppInit_DLLs", String.Empty).ToString = "" Then
 						Try
 							regkey.SetValue("LoadAppInit_DLLs", "0", RegistryValueKind.DWord)
 						Catch ex As Exception
@@ -4367,10 +4371,12 @@ Public Class frmMain
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" &
 		  "Display\shellex\PropertySheetHandlers", True)
-			Try
-				deletesubregkey(regkey, "NVIDIA CPL Extension")
-			Catch ex As Exception
-			End Try
+			If regkey IsNot Nothing Then
+				Try
+					deletesubregkey(regkey, "NVIDIA CPL Extension")
+				Catch ex As Exception
+				End Try
+			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Extended Properties", False)
@@ -4379,16 +4385,18 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) Then Continue For
 
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
-						For Each childs As String In regkey2.GetValueNames()
-							If IsNullOrWhitespace(childs) Then Continue For
+						If regkey2 IsNot Nothing Then
+							For Each childs As String In regkey2.GetValueNames()
+								If IsNullOrWhitespace(childs) Then Continue For
 
-							If StrContainsAny(childs, True, "nvcpl.cpl") Then
-								Try
-									deletevalue(regkey2, childs)
-								Catch ex As Exception
-								End Try
-							End If
-						Next
+								If StrContainsAny(childs, True, "nvcpl.cpl") Then
+									Try
+										deletevalue(regkey2, childs)
+									Catch ex As Exception
+									End Try
+								End If
+							Next
+						End If
 					End Using
 				Next
 			End If
@@ -4511,6 +4519,10 @@ Public Class frmMain
 		UpdateTextMethod("End of Registry Cleaning")
 
 		Application.Log.AddMessage("End of Registry Cleaning")
+
+		'Killing Explorer.exe to help releasing file that were open.
+		Application.Log.AddMessage("Killing Explorer.exe")
+		KillProcess("explorer")
 
 	End Sub
 
@@ -4805,6 +4817,9 @@ Public Class frmMain
 		End Try
 
 		UpdateTextMethod(UpdateTextTranslated(6))
+		Application.Log.AddMessage("Killing Explorer.exe")
+
+		KillProcess("explorer")
 	End Sub
 
 	Private Sub checkpcieroot(ByVal config As ThreadSettings)	'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
@@ -5557,29 +5572,12 @@ Public Class frmMain
 				cleanamdserviceprocess()
 				cleanamd(config)
 
-				If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
-					Application.Log.AddMessage("Killing Explorer.exe")
-
-					KillProcess("explorer")
-				End If
-
 				cleanamdfolders(config)
 			End If
 
 			If config.SelectedGPU = GPUVendor.Nvidia Then
 				cleannvidiaserviceprocess(config)
 				cleannvidia(config)
-
-				'If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
-				'	Application.Log.AddMessage("Killing Explorer.exe")
-
-				'	Dim appproc = process.GetProcessesByName("explorer")
-				'	For i As Integer = 0 To appproc.Length - 1
-				'		appproc(i).Kill()
-				'	Next i
-				'End If
-
-
 				cleannvidiafolders(config)
 				checkpcieroot(config)
 			End If
@@ -5587,13 +5585,6 @@ Public Class frmMain
 			If config.SelectedGPU = GPUVendor.Intel Then
 				cleanintelserviceprocess()
 				cleanintel(config)
-
-				If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
-					Application.Log.AddMessage("Killing Explorer.exe")
-
-					KillProcess("explorer")
-				End If
-
 				cleanintelfolders()
 			End If
 
@@ -6041,7 +6032,7 @@ Public Class frmMain
 		If version >= OSVersion.Win7 Then
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
-					Dim regValue As Int32 = CInt(regkey.GetValue("SearchOrderConfig"))
+                    Dim regValue As Int32 = CInt(regkey.GetValue("SearchOrderConfig", Nothing))
 
 					If regkey IsNot Nothing AndAlso regValue <> If(enable, 1, 0) Then
 						regkey.SetValue("SearchOrderConfig", If(enable, 1, 0), RegistryValueKind.DWord)
@@ -6061,7 +6052,7 @@ Public Class frmMain
 		If version >= OSVersion.WinVista AndAlso version < OSVersion.Win7 Then
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-					Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate"))
+                    Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate", Nothing))
 
 					If regkey IsNot Nothing AndAlso regValue <> If(enable, 0, 1) Then
 						regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
