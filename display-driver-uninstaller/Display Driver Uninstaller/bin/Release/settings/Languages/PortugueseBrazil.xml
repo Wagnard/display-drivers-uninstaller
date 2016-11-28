@@ -55,15 +55,8 @@
 			<Text>Selecione o Driver Gráfico</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Selected language</Text>
+			<Text>Idioma selecionado</Text>
 		</lblLanguage>
-		
-		<Label9>
-			<Text>Nota: Qualquer dano ou erros causados ao seu PC é de sua responsabilidade.</Text>
-		</Label9>
-		<Label10>
-			<Text>O uso do DDU em Modo de Segurança é recomendado.</Text>
-		</Label10>
 		
 		<lblUpdate>
 			<Text>Verificando atualizações...</Text>
@@ -73,8 +66,8 @@
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>Ofertas dos nossos parceiros</Text>
+			<Tooltip>Você pode desabilitar isto no menu de opções.</Tooltip>
 		</lblOffer>
 		
 		<OptionsMenuItem>
@@ -84,7 +77,7 @@
 			<Text>Informações</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>Log extendido</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
 			<Text>Links</Text>
@@ -96,7 +89,7 @@
 			<Text>Sobre</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>Trandutores</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visite o site oficial DDU</Text>
@@ -150,7 +143,7 @@
 			<Text16>INF</Text16>
 			<Text17>INF Section</Text17>
 			<Text18>GPU não foi instalada corretamente</Text18>
-			<Text19>Deleting some specials folders, it may take some times...</Text19>
+			<Text19>Excluindo algumas pastas especiais, pode levar algum tempo...</Text19>
 			<Text20>Limpeza iniciada...</Text20>
 			<Text21>Desinstalando</Text21>
 			<Text22>driver</Text22>
@@ -182,7 +175,7 @@
 			<Text>Fechar</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>Mostrar ofertas dos nossos parceiros</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>Opções especificas NVIDIA</Text>
@@ -218,7 +211,7 @@
 			<Text>Remover "C:\AMD" pasta de drivers (não recomendado)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Habilitar Windows 8+ modo seguro direto.</Text>
+			<Text>Remover o driver/filtro AMDKMPFD (O backup é recomendado para chipset AMD)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Mostrar janela de modo seguro quando executar</Text>
@@ -243,10 +236,6 @@
 			<Text>Remover Vulkan Runtime</Text>
 			<Tooltip>Não recomendado se você possui diferentes GPUS com suporte a Vulkan API.</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>Usar SetupAPI *Experimental*</Text>
-			<Tooltip>Usar SetupAPI ao invés da ferramenta DDUDR (DEVCON)</Tooltip>
-		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Launch option">
@@ -271,9 +260,9 @@
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Important note for Windows 8/8.1/10 users:
-				Your Windows "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Nota importante para usuários do Windows 8/8.1/10:
+				Sua "SENHA" do Windows é necessária! (PIN não esta funcionando em modo de segurança)
+				Saia Imediatamente se você a perdeu ou não sabe!
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
@@ -288,33 +277,33 @@
 			<Text>Fechar</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Open log</Text>
+			<Text>Abrir log</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
-			<Text>Options</Text>
+			<Text>Opções</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>Cópia ativada</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>Filters</Text>
+			<Text>Filtros</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>Mostrar eventos</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>Mostrar avisos</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>Mostrar erros</Text>
 		</errorsMenuItem>
 	</frmLog>
 
 	<frmSystemRestore Text="System Restore">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>Tentando criar um ponto de restauração do sistema.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
@@ -329,10 +318,10 @@
 			<Text>Termos de Serviço</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>Tradutores</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>Grandes agradecimentos aos seguintes tradutores e também aqueles que não estão listados!</Text>
 		</lblTranslators>
 	</frmAbout>
 
@@ -366,29 +355,31 @@
 
 				Lembre-se que a NVIDIA, AMD, ou Microsoft não podem ser responsibilizadas por qualquer dano á
 				você ou seu computador e de maneira alguma os afiliados do DDU, ou seus criadores.
-
 				-------------------------------
 
-				Created By Wagnard.
+				Criado por Wagnard.
 
-				Co-owner: Shady7557
+				Programadores: Wagnard, Devmltk, Shady7557
 
-				Tester : Dellon132
+				Testador: Dellon132
 
-				Logos : juanchacin
+				Logos: juanchacin
 
-				Thanks to Helge Klein (http://helgeklein.com/setacl/) : for the permission to use his Program with DDU "SetAcl"
+				Agradecimentos a Jacalito pela doação de uma AMD 7850.
 
-				Huge Thanks for his time for testing: Gamer1291
+				Agradecimentos a Helge Klein (http://helgeklein.com/setacl/) pela permissão para usar seu Programa com DDU "SetAcl"
 
-				Thanks to anyone who put their system at risk. (special thanks to Dellon132)
+				Agradecimentos por seu tempo testando: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (took time debugging with me)
+				Extraordinary (Testing a bug fix)
+
+				Um grande obrigado há todos que colocaram seu sistema em risco. (agradecimento especial para Dellon132)
 
 				*DDU, seus criadores e afiliados não estão afiliados com driver sweeper, ou seus criadores.
 			</Text>
 		</About>
 		<Tos>
 			<Text>
-				Display Driver Uninstaller ("DDU") USER AGREEMENT
+				Display Driver Uninstaller ("DDU") ACORDO DE USUÁRIO
 
 				Você se tornou um usuario do DDU ("Usuario") por ter usado o software DDU. Este acordo tem efeito assim que você utilizar o programa para desinstalação de um driver.
 

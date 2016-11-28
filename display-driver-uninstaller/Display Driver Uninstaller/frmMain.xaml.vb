@@ -2086,11 +2086,12 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Private Sub fixregistrydriverstore()
+	Private Sub fixregistrydriverstore(ByVal config As ThreadSettings)
 		'Windows 8 + only
 		'This should fix driver installation problem reporting that a file is not found.
 		'It is usually caused by Windows somehow losing track of the driver store , This intend to help it a bit.
 		If win8higher Then
+			Dim FilePath As String = Nothing
 			Application.Log.AddMessage("Fixing registry driverstore if necessary")
 			Try
 
@@ -2147,6 +2148,27 @@ Public Class frmMain
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
+
+			'Cleaning of possible left-overs %windir%\system32\driverstore\filerepository
+			Select Case config.SelectedGPU
+				Case GPUVendor.AMD
+					FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
+					If IsNullOrWhitespace(FilePath) = False Then
+						For Each child As String In Directory.GetDirectories(FilePath)
+							If IsNullOrWhitespace(child) = False Then
+								Dim dirinfo As New System.IO.DirectoryInfo(child)
+								If dirinfo.Name.ToLower.StartsWith("c030") Then
+									Try
+										Delete(child)
+									Catch ex As Exception
+									End Try
+								End If
+							End If
+						Next
+					End If
+				Case GPUVendor.Nvidia
+
+			End Select
 		End If
 	End Sub
 	Private Sub CleanVulkan(ByRef config As ThreadSettings)
@@ -2779,161 +2801,188 @@ Public Class frmMain
 		Try
 			Delete(filePath + "\Help\nvcpl")
 		Catch ex As Exception
+			Application.Log.AddException(ex)
 		End Try
 
 		Try
-			filePath = Environment.GetEnvironmentVariable("windir") + "\Temp\NVIDIA Corporation"
+			filePath = Environment.GetEnvironmentVariable("windir") + "\Temp"
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If child.ToLower.Contains("nv_cache") Then
-
+					If StrContainsAny(child, True, "NVIDIA Corporation", "NvidiaLogging") Then
 						Delete(child)
-
 					End If
 				End If
 			Next
-			Try
-				If Directory.GetDirectories(filePath).Length = 0 Then
-
-					Delete(filePath)
-
-				Else
-					For Each data As String In Directory.GetDirectories(filePath)
-						Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
-					Next
-
-				End If
-			Catch ex As Exception
-			End Try
 		Catch ex As Exception
+			Application.Log.AddException(ex)
 		End Try
 
 
 
 		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
 
-			filePath = filepaths + "\AppData\Local\Temp\NVIDIA Corporation"
-
-			Try
-				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-					If IsNullOrWhitespace(child) = False Then
-						If child.ToLower.Contains("nv_cache") Or
-						 child.ToLower.Contains("displaydriver") Then
+			filePath = filepaths + "\AppData\Local\Temp\NvidiaLogging"
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
 
 							Delete(child)
 
 						End If
-					End If
-				Next
-				Try
-					If Directory.GetDirectories(filePath).Length = 0 Then
+					Next
+					Try
+						If Directory.GetDirectories(filePath).Length = 0 Then
 
-						Delete(filePath)
+							Delete(filePath)
 
-					Else
-						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
-						Next
+						Else
+							For Each data As String In Directory.GetDirectories(filePath)
+								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Next
 
-					End If
+						End If
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
 				Catch ex As Exception
+					Application.Log.AddException(ex)
 				End Try
-			Catch ex As Exception
-			End Try
+			End If
+
+			filePath = filepaths + "\AppData\Local\Temp\NVIDIA Corporation"
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							If child.ToLower.Contains("nv_cache") Or
+							 child.ToLower.Contains("displaydriver") Then
+
+								Delete(child)
+
+							End If
+						End If
+					Next
+					Try
+						If Directory.GetDirectories(filePath).Length = 0 Then
+
+							Delete(filePath)
+
+						Else
+							For Each data As String In Directory.GetDirectories(filePath)
+								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Next
+
+						End If
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
+			End If
 
 			filePath = filepaths + "\AppData\Local\Temp\NVIDIA"
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							If (child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE) Or
+							  (child.ToLower.Contains("gfe") AndAlso config.RemoveGFE) Or
+							   child.ToLower.Contains("displaydriver") Then
 
-			Try
-				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-					If IsNullOrWhitespace(child) = False Then
-						If (child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE) Or
-						  (child.ToLower.Contains("gfe") AndAlso config.RemoveGFE) Or
-						   child.ToLower.Contains("displaydriver") Then
+								Delete(child)
 
-							Delete(child)
+							End If
+						End If
+					Next
+					Try
+						If Directory.GetDirectories(filePath).Length = 0 Then
+
+							Delete(filePath)
+
+						Else
+							For Each data As String In Directory.GetDirectories(filePath)
+								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Next
 
 						End If
-					End If
-				Next
-				Try
-					If Directory.GetDirectories(filePath).Length = 0 Then
-
-						Delete(filePath)
-
-					Else
-						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
-						Next
-
-					End If
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
 				Catch ex As Exception
+					Application.Log.AddException(ex)
 				End Try
-			Catch ex As Exception
-			End Try
+			End If
 
 			filePath = filepaths + "\AppData\Local\Temp\Low\NVIDIA Corporation"
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							If child.ToLower.Contains("nv_cache") Then
 
-			Try
-				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-					If IsNullOrWhitespace(child) = False Then
-						If child.ToLower.Contains("nv_cache") Then
+								Delete(child)
 
-							Delete(child)
+							End If
+						End If
+					Next
+					Try
+						If Directory.GetDirectories(filePath).Length = 0 Then
+
+							Delete(filePath)
+
+						Else
+							For Each data As String In Directory.GetDirectories(filePath)
+								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Next
 
 						End If
-					End If
-				Next
-				Try
-					If Directory.GetDirectories(filePath).Length = 0 Then
-
-						Delete(filePath)
-
-					Else
-						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
-						Next
-
-					End If
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
 				Catch ex As Exception
+					Application.Log.AddException(ex)
 				End Try
-			Catch ex As Exception
-			End Try
-
+			End If
 			'windows 8+ only (store apps nv_cache cleanup)
 
 			Try
 				If win8higher Then
 					Dim prefilePath As String = filepaths + "\AppData\Local\Packages"
-					For Each childs As String In My.Computer.FileSystem.GetDirectories(prefilePath)
-						If Not IsNullOrWhitespace(childs) Then
-							filePath = childs + "\AC\Temp\NVIDIA Corporation"
+					If FileIO.ExistsDir(prefilePath) Then
+						For Each childs As String In My.Computer.FileSystem.GetDirectories(prefilePath)
+							If Not IsNullOrWhitespace(childs) Then
+								filePath = childs + "\AC\Temp\NVIDIA Corporation"
 
-							If FileIO.ExistsDir(filePath) Then
-								For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
-									If IsNullOrWhitespace(child) = False Then
-										If child.ToLower.Contains("nv_cache") Then
+								If FileIO.ExistsDir(filePath) Then
+									For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+										If IsNullOrWhitespace(child) = False Then
+											If child.ToLower.Contains("nv_cache") Then
 
-											Delete(child)
+												Delete(child)
 
+											End If
 										End If
-									End If
-								Next
-
-								If Directory.GetDirectories(filePath).Length = 0 Then
-
-									Delete(filePath)
-
-								Else
-									For Each data As String In Directory.GetDirectories(filePath)
-										Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
 									Next
 
+									If Directory.GetDirectories(filePath).Length = 0 Then
+
+										Delete(filePath)
+
+									Else
+										For Each data As String In Directory.GetDirectories(filePath)
+											Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+										Next
+
+									End If
 								End If
 							End If
-						End If
-					Next
+						Next
+					End If
 				End If
 			Catch ex As Exception
+				Application.Log.AddException(ex)
 			End Try
 
 		Next
@@ -5589,7 +5638,7 @@ Public Class frmMain
 			End If
 
 			cleandriverstore(config)
-			fixregistrydriverstore()
+			fixregistrydriverstore(config)
 			'rebuildcountercache()
 
 			config.Success = True
