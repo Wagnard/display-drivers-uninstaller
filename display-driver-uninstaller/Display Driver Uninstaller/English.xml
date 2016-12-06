@@ -36,6 +36,15 @@
 				(For installing a new graphics card)
 			</Tooltip>
 		</btnCleanShutdown>
+    <btnCleanGfeDownloads>
+      <Text>
+        Remove "GeForce Experience" display driver installer cache/files.
+        (Note: Drivers won't be removed)
+      </Text>
+      <Tooltip>
+         This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+      </Tooltip>
+    </btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Set Windows automatic driver

@@ -2167,7 +2167,28 @@ Public Class frmMain
 						Next
 					End If
 				Case GPUVendor.Nvidia
-
+					FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
+					If IsNullOrWhitespace(FilePath) = False Then
+						For Each child As String In Directory.GetDirectories(FilePath)
+							If IsNullOrWhitespace(child) = False Then
+								Dim dirinfo As New System.IO.DirectoryInfo(child)
+								If StrContainsAny(dirinfo.Name, True, "nvstusb.inf", "nvhda.inf", "nv_dispi.inf") Then
+									Try
+										Delete(child)
+									Catch ex As Exception
+									End Try
+								End If
+								If config.RemoveGFE Then
+									If StrContainsAny(dirinfo.Name, True, "nvvad.inf", "nvswcfilter.inf") Then
+										Try
+											Delete(child)
+										Catch ex As Exception
+										End Try
+									End If
+								End If
+							End If
+						Next
+					End If
 			End Select
 		End If
 	End Sub
@@ -2291,7 +2312,44 @@ Public Class frmMain
 		Catch ex As Exception
 		End Try
 	End Sub
+	Private Sub CleanGfeDownload(ByVal config As ThreadSettings)
+		Dim filepath As String = Nothing
+		Application.Log.AddMessage("Starting removal of Geforce Experience downloaded drivers")
+		UpdateTextMethod("Starting removal of Geforce Experience downloaded drivers")
+		Try
+			filepath = Environment.GetFolderPath _
+	 (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation\Downloader"
+			If FileIO.ExistsDir(filepath) Then
+				For Each child As String In My.Computer.FileSystem.GetDirectories(filepath)
+					If IsNullOrWhitespace(child) = False Then
+						If not StrContainsAny(child, True, "config") Then
+							Delete(child)
+						End If
+					End If
+				Next
+			End If
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+		Application.Log.AddMessage("Finished removal of Geforce Experience downloaded drivers")
 
+		filepath = Environment.GetFolderPath _
+		(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation\Installer2"
+		If FileIO.ExistsDir(filepath) Then
+			For Each child As String In My.Computer.FileSystem.GetDirectories(filepath)
+				If IsNullOrWhitespace(child) = False Then
+					Delete(child)
+				End If
+			Next
+		End If
+
+		UpdateTextMethod("Finished removal of Geforce Experience downloaded drivers")
+		If MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
+			CloseDDU()
+			Exit Sub
+		End If
+
+	End Sub
 	Private Sub cleannvidiafolders(ByVal config As ThreadSettings)
 		Dim filePath As String = Nothing
 		Dim removephysx As Boolean = config.RemovePhysX
@@ -5084,7 +5142,7 @@ Public Class frmMain
 
 	Private Sub btnCleanShutdown_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanShutdown.Click
 		If Not Application.Settings.GoodSite Then
-			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardmobile.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
+			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardsoft.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
 			Application.Settings.GoodSite = True
 		End If
 
@@ -5094,6 +5152,19 @@ Public Class frmMain
 
 		PreCleaning(config)
 		StartThread(config)
+	End Sub
+
+	Private Sub btnCleanGfeDownloads_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanGfeDownloads.Click
+		If Not Application.Settings.GoodSite Then
+			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardsoft.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
+			Application.Settings.GoodSite = True
+		End If
+
+		Dim config As New ThreadSettings(False)
+		config.Shutdown = False
+		config.Restart = False
+
+		CleanGfeDownload(config)
 	End Sub
 
 	Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
@@ -6500,5 +6571,16 @@ Public Class frmMain
 		Dim testWindow As New SetupAPITestWindow
 
 		testWindow.ShowDialog()
+	End Sub
+
+	Private Sub cbSelectedGPU_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedGPU.SelectionChanged
+
+		If Application.Settings.SelectedGPU = GPUVendor.Nvidia Then
+			btnCleanGfeDownloads.IsEnabled = True
+			btnCleanGfeDownloads.Visibility = Windows.Visibility.Visible
+		Else
+			btnCleanGfeDownloads.IsEnabled = False
+			btnCleanGfeDownloads.Visibility = Windows.Visibility.Hidden
+		End If
 	End Sub
 End Class
