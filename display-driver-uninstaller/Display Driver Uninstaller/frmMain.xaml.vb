@@ -553,7 +553,7 @@ Public Class frmMain
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In Directory.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim") Then
+					If StrContainsAny(child, True, "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim") Then
 
 						Delete(child)
 
@@ -1429,6 +1429,10 @@ Public Class frmMain
 							deletesubregkey(Registry.LocalMachine, "Software\ATI")
 						Catch ex As Exception
 						End Try
+					Else
+						For Each data As String In regkey.GetSubKeyNames()
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+						Next
 					End If
 				End If
 			End Using
@@ -1441,26 +1445,37 @@ Public Class frmMain
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-							If child.ToLower.Contains("cbt") Then
+							If StrContainsAny(child, True, "cbt") Then
 								Try
 									deletesubregkey(regkey, child)
 								Catch ex As Exception
 								End Try
 							End If
-							If child.ToLower.Contains("ati catalyst control center") Then
+							If StrContainsAny(child, True, "ati catalyst control center") Then
 								Try
 									deletesubregkey(regkey, child)
 								Catch ex As Exception
 								End Try
 							End If
-							If child.ToLower.Contains("cds") Then
+							If StrContainsAny(child, True, "cds") Then
 								Try
 									deletesubregkey(regkey, child)
 								Catch ex As Exception
 								End Try
 							End If
-
-							If child.ToLower.Contains("install") Then
+							If StrContainsAny(child, True, "log") Then
+								Try
+									deletesubregkey(regkey, child)
+								Catch ex As Exception
+								End Try
+							End If
+							If StrContainsAny(child, True, "prw") Then
+								Try
+									deletesubregkey(regkey, child)
+								Catch ex As Exception
+								End Try
+							End If
+							If StrContainsAny(child, True, "install") Then
 								'here we check the install path location in case CCC is not installed on the system drive.  A kill to explorer must be made
 								'to help cleaning in normal mode.
 								If System.Windows.Forms.SystemInformation.BootMode = WinForm.BootMode.Normal Then
@@ -1498,7 +1513,7 @@ Public Class frmMain
 											If IsNullOrWhitespace(child2) Then Continue For
 
 											If StrContainsAny(child2, True, "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages",
-											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo") Then
+											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard") Then
 												Try
 													deletesubregkey(regkey2, child2)
 												Catch ex As Exception
@@ -1516,6 +1531,10 @@ Public Class frmMain
 												deletesubregkey(regkey, child)
 											Catch ex As Exception
 											End Try
+										Else
+											For Each data As String In regkey2.GetSubKeyNames()
+												Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+											Next
 										End If
 									End If
 								End Using
@@ -1527,6 +1546,10 @@ Public Class frmMain
 							deletesubregkey(Registry.LocalMachine, "Software\ATI Technologies")
 						Catch ex As Exception
 						End Try
+					Else
+						For Each data As String In regkey.GetSubKeyNames()
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+						Next
 					End If
 				End If
 			End Using
@@ -1539,10 +1562,7 @@ Public Class frmMain
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-							If child.ToLower.Contains("eeu") Or
-							   child.ToLower.Contains("fuel") Or
-							   child.ToLower.Contains("cn") Or
-							   child.ToLower.Contains("mftvdecoder") Then
+							If StrContainsAny(child, True, "eeu", "fuel", "cn", "chill", "mftvdecoder", "dvr", "gpu") Then
 								Try
 									deletesubregkey(regkey, child)
 								Catch ex As Exception
@@ -1555,6 +1575,30 @@ Public Class frmMain
 							deletesubregkey(Registry.LocalMachine, "Software\AMD")
 						Catch ex As Exception
 						End Try
+					Else
+						For Each data As String In regkey.GetSubKeyNames()
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+						Next
+					End If
+				End If
+			End Using
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+
+		Try
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\AMDDVR", True)
+				If regkey IsNot Nothing Then
+
+					If regkey.SubKeyCount = 0 Then
+						Try
+							deletesubregkey(Registry.LocalMachine, "Software\AMDDVR")
+						Catch ex As Exception
+						End Try
+					Else
+						For Each data As String In regkey.GetSubKeyNames()
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+						Next
 					End If
 				End If
 			End Using
@@ -1582,6 +1626,10 @@ Public Class frmMain
 								deletesubregkey(Registry.LocalMachine, "Software\Wow6432Node\ATI")
 							Catch ex As Exception
 							End Try
+						Else
+							For Each data As String In regkey.GetSubKeyNames()
+								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+							Next
 						End If
 					End If
 				End Using
@@ -1600,6 +1648,10 @@ Public Class frmMain
 						Next
 						If regkey.SubKeyCount = 0 Then
 							deletesubregkey(Registry.LocalMachine, "Software\Wow6432Node\AMD")
+						Else
+							For Each data As String In regkey.GetSubKeyNames()
+								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+							Next
 						End If
 					End If
 				End Using
@@ -1612,7 +1664,7 @@ Public Class frmMain
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) = False Then
-								If child.ToLower.Contains("system wide settings") Then
+								If StrContainsAny(child, True, "system wide settings", "log", "prw") Then
 									Try
 										deletesubregkey(regkey, child)
 									Catch ex As Exception
@@ -1660,11 +1712,15 @@ Public Class frmMain
 													End Try
 												End If
 											Next
-											If MyRegistry.OpenSubKey(regkey, child).SubKeyCount = 0 Then
+											If regkey2.SubKeyCount = 0 Then
 												Try
 													deletesubregkey(regkey, child)
 												Catch ex As Exception
 												End Try
+											Else
+												For Each data As String In regkey2.GetSubKeyNames()
+													Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+												Next
 											End If
 										End If
 									End Using
@@ -1676,6 +1732,10 @@ Public Class frmMain
 								deletesubregkey(Registry.LocalMachine, "Software\Wow6432Node\ATI Technologies")
 							Catch ex As Exception
 							End Try
+						Else
+							For Each data As String In regkey.GetSubKeyNames()
+								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+							Next
 						End If
 					End If
 				End Using
@@ -2157,7 +2217,9 @@ Public Class frmMain
 						For Each child As String In Directory.GetDirectories(FilePath)
 							If IsNullOrWhitespace(child) = False Then
 								Dim dirinfo As New System.IO.DirectoryInfo(child)
-								If dirinfo.Name.ToLower.StartsWith("c030") Then
+								If dirinfo.Name.ToLower.StartsWith("c030") Or
+									StrContainsAny(dirinfo.Name, True, "atihdwt6.inf") Or
+									(Not donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(dirinfo.Name, True, "amdkmafd.inf")) Then
 									Try
 										Delete(child)
 									Catch ex As Exception
@@ -3252,12 +3314,16 @@ Public Class frmMain
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation", False)
 			If regkey IsNot Nothing Then
-				If MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation", False).SubKeyCount = 0 Then
+				If regkey.SubKeyCount = 0 Then
 					Try
 						deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation")
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 					End Try
+				Else
+					For Each data As String In regkey.GetSubKeyNames()
+						Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+					Next
 				End If
 			End If
 		End Using
@@ -3660,6 +3726,10 @@ Public Class frmMain
 												deletesubregkey(regkey, child)
 											Catch ex As Exception
 											End Try
+										Else
+											For Each data As String In regkey2.GetSubKeyNames()
+												Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+											Next
 										End If
 									End Using
 								End If
@@ -3750,6 +3820,10 @@ Public Class frmMain
 									deletesubregkey(regkey, child)
 								Catch ex As Exception
 								End Try
+							Else
+								For Each data As String In regkey2.GetSubKeyNames()
+									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+								Next
 							End If
 						End Using
 					End If
@@ -3822,6 +3896,10 @@ Public Class frmMain
 									deletesubregkey(regkey, child)
 								Catch ex As Exception
 								End Try
+							Else
+								For Each data As String In regkey2.GetSubKeyNames()
+									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+								Next
 							End If
 						End Using
 					End If
@@ -3898,6 +3976,10 @@ Public Class frmMain
 										deletesubregkey(regkey, child)
 									Catch ex As Exception
 									End Try
+								Else
+									For Each data As String In regkey2.GetSubKeyNames()
+										Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+									Next
 								End If
 							End Using
 						End If
@@ -4339,6 +4421,10 @@ Public Class frmMain
 						Catch ex As Exception
 						End Try
 					End Using
+				Else
+					For Each data As String In regkey.GetSubKeyNames()
+						Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+					Next
 				End If
 			End If
 		End Using
@@ -4359,6 +4445,10 @@ Public Class frmMain
 									Catch ex As Exception
 									End Try
 								End Using
+							Else
+								For Each data As String In regkey.GetSubKeyNames()
+									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+								Next
 							End If
 						End If
 					End Using
@@ -4383,6 +4473,10 @@ Public Class frmMain
 											Catch ex As Exception
 											End Try
 										End Using
+									Else
+										For Each data As String In regkey.GetSubKeyNames()
+											Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+										Next
 									End If
 								Catch ex As Exception
 								End Try
@@ -4701,6 +4795,10 @@ Public Class frmMain
 							deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "Software", True), "Intel")
 						Catch ex As Exception
 						End Try
+					Else
+						For Each data As String In regkey.GetSubKeyNames()
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+						Next
 					End If
 				End If
 			End Using
@@ -4728,6 +4826,10 @@ Public Class frmMain
 									deletesubregkey(MyRegistry.OpenSubKey(Registry.Users, users & "\Software", True), "Intel")
 								Catch ex As Exception
 								End Try
+							Else
+								For Each data As String In regkey.GetSubKeyNames()
+									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+								Next
 							End If
 						End If
 					End Using
@@ -4759,6 +4861,10 @@ Public Class frmMain
 								deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node", True), "Intel")
 							Catch ex As Exception
 							End Try
+						Else
+							For Each data As String In regkey.GetSubKeyNames()
+								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+							Next
 						End If
 					End If
 				End Using
@@ -4916,6 +5022,10 @@ Public Class frmMain
 							deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify")
 						Catch ex As Exception
 						End Try
+					Else
+						For Each data As String In regkey.GetSubKeyNames()
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+						Next
 					End If
 				End If
 			End Using
