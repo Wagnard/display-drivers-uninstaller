@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="de-DE" Text="German">
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -37,6 +37,15 @@
 				(Zur Installation einer neuen Grafikkarte)
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+		<Text>
+			"GeForce Experience" Installationscache/-dateien entfernen
+			(Hinweis: Treiber werden nicht entfernt)
+		</Text>
+		<Tooltip>
+			Dies wird hauptsächlich dazu verwendet, um Speicherplatz, durch Entfernen von Dateien, die durch den GFE-/Treiber-Installer nicht entfernt wurden, zu gewinnen
+		</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Setze Treiberinstallation durch
@@ -44,7 +53,7 @@
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Erkanntes Windows:</Text>
+			<Text>Erkanntes Betriebssystem:</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Mögen Sie DDU? Denken Sie über eine Spende nach, dies würde eine zukünftige Entwicklung fördern. ***</Text>
@@ -119,7 +128,7 @@
 			<Text1>Updates sind erhältlich! Möchten Sie jetzt die DDU Webseite besuchen?</Text1>
 			<Text2>Für ältere Versionen besteht eine eingeschränkte Unterstützung. Bitte überprüfen Sie, ob neue Versionen verfügbar sind bevor Sie Fehler melden.</Text2>
 			<Text3>Sie verwenden DDU nicht mit Administratorrechten. Die Anwendung wird nun beendet.</Text3>
-			<Text4>ddur kann nicht gefunden werden. Bitte beachten Sie das Protokoll (Log).</Text4>
+			<Text4>PAExec kann nicht gefunden werden. Bitte beachten Sie das Protokoll (Log).</Text4>
 			<Text5>Display Driver Uninstaller (DDU) verändert Ihre Registry erheblich. DDU wird versuchen, automatisch einen Systemwiederherstellungspunkt zu erstellen (nur normaler Modus).</Text5>
 			<Text6>Ein Problem ist in einem der Module aufgetreten, senden Sie bitte die DDU Protokolle (Logs) an den Entwickler.</Text6>
 			<Text7>DDU hat festgestellt, dass es sich um einen "AMD-Switching-Laptop" handelt (Enduro oder ähnlich), DDU ist derzeit hierfür nicht vollständig kompatibel/mit Enduro Systemen gestest, Benutzung auf eigene Gefahr.</Text7>
@@ -155,13 +164,13 @@
 			<Text20>Säuberung gestartet...</Text20>
 			<Text21>Deinstallation</Text21>
 			<Text22>Treiber</Text22>
-			<Text23>Ausführen der ddudr Entfernung, bitte warten (kann ein paar Minuten dauern)</Text23>
+			<Text23>Ausführen der SetupAPI-Entfernung, bitte warten (kann ein paar Minuten dauern)</Text23>
 			<Text24>GPU(s) vom Gerätemanager entfernt.</Text24>
-			<Text25>Ausführen der ddudr Entfernung Audio controller.</Text25>
+			<Text25>Ausführen der SetupAPI-Audio-Controller-Entfernung.</Text25>
 			<Text26>HD Audio Adapter entfernt!</Text26>
 			<Text27>3D Vision USB Adapter vom Gerätemanager entfernt.</Text27>
 			<Text28>Monitore und versteckte Monitore entfernt!</Text28>
-			<Text29>ddudr Entfernung vollständig</Text29>
+			<Text29>SetupAPI-Entfernung vollständig</Text29>
 			<Text30>Starten der Säuberung der S-1-5-xx Region</Text30>
 			<Text31>Ende der Säuberung der S-1-5-xx Region</Text31>
 			<Text32>Beginn Classesroot ,Installer\Produkt Säuberung</Text32>
@@ -244,10 +253,6 @@
 			<Text>Vulkan Runtime entfernen</Text>
 			<Tooltip>Nicht empfohlen, wenn Sie zwei verschiedene GPUs haben, die die Vulkan API verwenden können</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>SetupAPI verwenden *experimentell*</Text>
-			<Tooltip>SetupAPI anstelle des externen Tools DDUDR (DEVCON) verwenden</Tooltip>
-		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Startoptionen">
@@ -404,7 +409,7 @@
 		<Translator>
 			<User>Daniel</User>
 			<Details>GitHub: danidoedel</Details>
-			<LastUpdate>07/06/2016</LastUpdate>
+			<LastUpdate>09/12/2016</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
