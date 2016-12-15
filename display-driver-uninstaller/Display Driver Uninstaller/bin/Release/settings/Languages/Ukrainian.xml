@@ -37,6 +37,15 @@
 				(для встановлення нової відеокарти)
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Видалити файли "GeForce Experience" з кешу інсталятора драйвера дисплея.
+				(Примітка: драйвери видалено не буде)
+			</Text>
+			<Tooltip>
+				Використовується, в основному, для відновлення якоїсь кількості вільного простору на HDD/SSD, не очищеного інсталятором.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Установити автоматичну інсталяцію
@@ -385,7 +394,7 @@ Display Driver Uninstaller (DDU) — програма для видалення 
 		<Translator>
 			<User>YuriPet</User>
 			<Details>yuripet@gmail.com</Details>
-			<LastUpdate>06/09/2016</LastUpdate>
+			<LastUpdate>09/12/2016</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

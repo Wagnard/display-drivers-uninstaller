@@ -1752,7 +1752,7 @@ Public Class frmMain
 							For Each child As String In regkey.GetValueNames
 								If IsNullOrWhitespace(child) Then Continue For
 
-								If StrContainsAny(child, True, "HydraVisionDesktopManager", "Grid", "HydraVisionMDEngine") Then
+								If StrContainsAny(child, True, "HydraVisionDesktopManager", "Grid", "HydraVisionMDEngine", "AMDDVR") Then
 									deletevalue(regkey, child)
 								End If
 							Next
@@ -2082,30 +2082,40 @@ Public Class frmMain
 
 		End If
 		'Task Scheduler cleanUP (AMD Updater)
-		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
-			If regkey IsNot Nothing Then
-				For Each child As String In regkey.GetSubKeyNames
-					If IsNullOrWhitespace(child) Then Continue For
-					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-						If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater") Then
-								deletesubregkey(regkey, child)
-							End If
-						End If
-					End Using
-				Next
-			End If
-		End Using
+		'Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
+		'	If regkey IsNot Nothing Then
+		'		For Each child As String In regkey.GetSubKeyNames
+		'			If IsNullOrWhitespace(child) Then Continue For
+		'			Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+		'				If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
+		'					If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater") Then
+		'						deletesubregkey(regkey, child)
+		'					End If
+		'				End If
+		'			End Using
+		'		Next
+		'	End If
+		'End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames
 					If IsNullOrWhitespace(child) Then Continue For
-
-					If StrContainsAny(child, True, "AMD Updater") Then
+					If StrContainsAny(child, True, "AMD Updater", "StartCN") Then
+						Try
+							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+								If regkey2 IsNot Nothing Then
+									If Not IsNullOrWhitespace(regkey2.GetValue("Id", String.Empty).ToString) Then
+										wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
+										deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\" & wantedvalue)
+									End If
+								End If
+							End Using
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 						deletesubregkey(regkey, child)
 					End If
-
 				Next
 			End If
 		End Using
@@ -2651,6 +2661,7 @@ Public Class frmMain
 					 (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstapisvr") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 
 						Delete(child)
@@ -2727,6 +2738,7 @@ Public Class frmMain
 					   child.ToLower.Contains("gamemonitor") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvgsync") Or
 					   child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 
@@ -4689,30 +4701,40 @@ Public Class frmMain
 		End Try
 
 		'Task Scheduler cleanUP (Geforce Experience Beta 3.0.3.127)
-		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
-			If regkey IsNot Nothing Then
-				For Each child As String In regkey.GetSubKeyNames
-					If IsNullOrWhitespace(child) Then Continue For
-					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-						If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvidia profile updater", "nvidia crash and telemetry", "nvidia nvnode launcher", "nvidia telemetry monitor", "nvidia profile updater") Then
-								deletesubregkey(regkey, child)
-							End If
-						End If
-					End Using
-				Next
-			End If
-		End Using
+		'Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
+		'	If regkey IsNot Nothing Then
+		'		For Each child As String In regkey.GetSubKeyNames
+		'			If IsNullOrWhitespace(child) Then Continue For
+		'			Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+		'				If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
+		'					If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvidia profile updater", "nvidia crash and telemetry", "nvidia nvnode launcher", "nvidia telemetry monitor", "nvidia profile updater") Then
+		'						deletesubregkey(regkey, child)
+		'					End If
+		'				End If
+		'			End Using
+		'		Next
+		'	End If
+		'End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames
 					If IsNullOrWhitespace(child) Then Continue For
-
-					If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep") Then
+					If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") Then
+						Try
+							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+								If regkey2 IsNot Nothing Then
+									If Not IsNullOrWhitespace(regkey2.GetValue("Id", String.Empty).ToString) Then
+										wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
+										deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\" & wantedvalue)
+									End If
+								End If
+							End Using
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 						deletesubregkey(regkey, child)
 					End If
-
 				Next
 			End If
 		End Using
