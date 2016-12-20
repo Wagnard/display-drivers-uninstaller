@@ -20,7 +20,7 @@ Public Class CheckUpdate
 			End Try
 
 			Dim response As System.Net.WebResponse = Nothing
-			Dim request As System.Net.WebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardmobile.com/DDU/currentversion2.txt")
+			Dim request As System.Net.WebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardsoft.com/DDU/currentversion2.txt")
 			request.Timeout = 2500
 
 			Try
