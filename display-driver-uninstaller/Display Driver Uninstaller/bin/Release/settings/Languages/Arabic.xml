@@ -7,27 +7,36 @@
 
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
-			<Text>تنظيف وإعادة تشغيـــل النظام|(ينصــح بـه بشـدة)
+			<Text>حذف تعريفات البطاقة ومن ثم اعادة تشغيل النظام
 			</Text>
 			<Tooltip>
-				Uninstall the current and previous drivers, then restart the computer.
-				(Highly Recommended)
+				حذف جميع التعريفات المتعلقة بالبطاقة ثم اعادة تشغيل الجهاز
+				(ينصح به بشدة)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
-			<Text>تنظيف لكن بدون إعادة تشغيل|(قد يسبب المشاكل مثل ظهور شاشة سوداء)</Text>
+			<Text>حذف التعريف لكن بدون اعادة تشغيل النظام- قد يسبب المشاكل</Text>
 			<Tooltip>
-				Uninstall the current and previous drivers, but don't restart the computer.
-				(May cause issues like blackscreen)
+				حذف جميع التعريفات المتعلقة بالبطاقة لكن دون اعادة تشغيل النظام
+				(يمكن ان يتسبب بحدوث مشاكل مثل الشاشة السوداء
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
-			<Text>تنظيف وإطفاء الجهاز |(لـتركيب كــرت جديــد)</Text>
+			<Text>حذف جميع تعريفات البطاقة الحالية ومن ثم ايقاف التشغيل</Text>
 			<Tooltip>
-				Uninstall the current and previous drivers and Shutdown the computer with no rescan
-				(For installing a new graphic card)
+				حذف جميع التعريفات المتعلقة بالبطاقة الحالية وإيقاف تشغيل الجهاز تمهيدا لتركيب بطاقة جديدة
+				(استخدم هذا الخيار في حال كنت ترغب بتركيب بطاقة جديدة)
 			</Tooltip>
 		</btnCleanShutdown>
+		    <btnCleanGfeDownloads>
+      <Text>
+        حذف مجلد الكاش الخاص بتعريف بطاقة نفيديا جي-فورس
+        (ملاحظة: لن يتم حذف التعريفات)
+      </Text>
+      <Tooltip>
+         استخدم هذا الخيار لحذف مجلد الكاش من اجل تحرير بعض سعة التخزين
+      </Tooltip>
+    </btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>ارجاع نظام التثبيت التلقائي للتعريفات إلى الوضع الافتراضي</Text>
 		</btnWuRestore>
@@ -35,16 +44,16 @@
 			<Text>نـظام التشغيــل الحالـــي</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>** هـل تحب هذا الأداة ؟ ؛ اذا ما رأيك بالتبـرع لنا. التبرعات تساهم في عملية التطويـر **</Text>
+			<Text>** هل أعجبتك الأداة؟ ؛ اذا ما رأيك بأن تقوم بالتبرع لنا من أجل التطوير</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>التقــريـــر</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>حـدد نـوع الكـرت الخاص بـك</Text>
+			<Text>حدد الشركة المصنعة للبطاقة</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Selected language</Text>
+			<Text>اختيار اللغـة</Text>
 		</lblLanguage>
 		
 		<Label9>
@@ -62,45 +71,45 @@
 		</lblUpdate>
 		
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>عروض من شركائنا</Text>
+			<Tooltip>تستطيع ايقافها من قائمة الخيارات</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
-			<Text>Options</Text>
+			<Text>الخيارات</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
-			<Text>Info</Text>
+			<Text>معلومات</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>تقرير مفصل</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
-			<Text>Links</Text>
+			<Text>الروابط</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>شروط الخدمة (ToS)</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
-			<Text>About</Text>
+			<Text>حول</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>المترجمون</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visit official DDU Website</Text>
+			<Text>زيارة الموقع الرسمي للأداة</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Visit SVN Website</Text>
+			<Text>زيارة موقع SVN/Github</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
+			<Text>زيارة Guru3d NVIDIA Thread</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
+			<Text>زيارة Guru3d AMD Thread</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Visit Geforce Thread</Text>
+			<Text>زيارة Geforce Thread</Text>
 		</VisitGeforceMenuItem>
 		
 		<Messages>
@@ -166,21 +175,21 @@
 		</UpdateLog>
 	</frmMain>
 	
-	<frmOptions Text="Options">
+	<frmOptions Text="الخيارات">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>خروج</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>اظهار قائمة آخر العروض من الشركاء</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Specific Options</Text>
+			<Text>NVIDIA اعدادات متقدمة لكروت</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Specific Options</Text>
+			<Text>AMD اعدادات متقدمة لكروت</Text>
 		</lblAmdspecific>
 		<lblGeneral>
-			<Text>General Options</Text>
+			<Text>خيارات عامة</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
 			<Text>حذف مجلد "C:\nVidia" ? (لا ينصح بهذا الاجراء)</Text>
@@ -210,19 +219,19 @@
 			<Text>حذف تعريف/فلتر AMDKMPFD ( ينصح بعمل نسخ احتياطي في حال استخدام لوحة تحتوي على شريحة من AMD )</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Show Safe Mode message box on startup</Text>
+			<Text>اظهار خيار الدخول للوضع الآمن عند التشغيل</Text>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Store config file in roaming folder</Text>
+			<Text>تخزين الاعدادات في مجلد roaming folder</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Check for DDU updates on startup (Recommended)</Text>
+			<Text>التأكد من وجود تحديث جديد للأداة عند التشغيل</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Remove Geforce Experience (GFE)</Text>
+			<Text>حذف Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>Remove AMD Crimson Shader Cache folder</Text>
+			<Text>حذف مجلد الكاش AMD Crimson Shader</Text>
 			<Tooltip>
 				Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.
 				Also recommended if you are switching to another brand like nVidia.
@@ -238,90 +247,90 @@
 		</lblUseSetupAPI>
 	</frmOptions>
 	
-	<frmLaunch Text="Launch option">
+	<frmLaunch Text="خيارات الدخول">
 		<btnAccept>
-			<Text>Launch</Text>
+			<Text>دخول</Text>
 			<Text2>
-				Reboot to
-				Safe Mode
+				اعادة التشغيل
+				للوضع الآمن
 			</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>خروج</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>خيارات الدخول</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				You are not in safe mode. It is highly recommended
-				reboot into Safe Mode to avoid possible issues.
+				أنت حاليا تستخدم الوضع الاعتيادي للنظام.ينصح 
+				بإعادة التشغيل والدخول للوضع الآمن لتجنب الأخطاء.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Important note for Windows 8/8.1/10 users:
-				Your Windows "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				ملاحظة مهمة لمستخدمي ويندوز 8/8.1/10
+				مفتاح نظام التشغيل مطـلوب! (المفتاح لا يعمل في الوضع الآمن)
+				أغلق الاداة في حال كنت لا تمتلك المفتاح.
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
-			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
-			<Item3>Safe Mode With Networking</Item3>
+			<Item1>عادي</Item1>
+			<Item2>الوضع الآمن-ينصح به بشدة</Item2>
+			<Item3>الوضع الآمن بدون شبكة</Item3>
 		</cbBootOption>
 	</frmLaunch>
 	
-	<frmLog Text="Extended log">
+	<frmLog Text="تقرير مفصل">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>خروج</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Open log</Text>
+			<Text>عرض التقرير</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
-			<Text>Options</Text>
+			<Text>الخيارات</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>تفعيل ميزة النسخ</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>Filters</Text>
+			<Text>فلترة</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>عرض الاحداث</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>عرض التحذيرات</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>عرض الاخطاء</Text>
 		</errorsMenuItem>
 	</frmLog>
 
-	<frmSystemRestore Text="System Restore">
+	<frmSystemRestore Text="استعادة النظام">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>انشاء نقطة استعادة للنظام</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="About">
+	<frmAbout Text="حول">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>خروج</Text>
 		</btnClose>
 		<btnAbout>
-			<Text>About</Text>
+			<Text>حول</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>شروط الخدمة (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>المترجمون</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>جزيل الشكر لكل من ساهم في ترجمة هذه الاداة</Text>
 		</lblTranslators>
 	</frmAbout>
 
@@ -356,7 +365,7 @@
 				NVIDIA , AMD , Microsoft
 				غير مسؤولة نهائيا عن أية اضرار قد تلحق بجهازك جراء استخدام هذه الاداة أو من مصمم الاداة
 				-------------------------------
-
+                
 				هذه الاداة من برمجة Wagnard.
 
 				بالاشتراك مع: Shady757
@@ -364,7 +373,9 @@
 				الاختبار : Dellon132
 
 				تصميم الشعار : juanchacin
-
+                 
+				 الترجمة للعربية: هاشم ورور / الاردن-اربد
+				 
 				الشكر الجزيل لـ
 				Jackalito
 				لتبرعه ببطاقة
