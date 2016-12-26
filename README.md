@@ -36,4 +36,4 @@ Windows XP up to 10 is supported X86/X64 (Windows 10 insider preview is at your 
 
 DOWNLOAD : (note: some anti-virus report false positive sometime.) 
 
-Official download at http://www.wagnardmobile.com
+Official download at http://www.wagnardsoft.com
