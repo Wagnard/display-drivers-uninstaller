@@ -1513,7 +1513,7 @@ Public Class frmMain
 											If IsNullOrWhitespace(child2) Then Continue For
 
 											If StrContainsAny(child2, True, "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages",
-											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard") Then
+											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard", "amd problem report wizard") Then
 												Try
 													deletesubregkey(regkey2, child2)
 												Catch ex As Exception
