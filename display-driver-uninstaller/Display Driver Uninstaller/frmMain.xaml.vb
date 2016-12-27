@@ -207,7 +207,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
-					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
 			End If
@@ -232,7 +232,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
-					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
 			End If
@@ -257,7 +257,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
-					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
 			End If
@@ -304,7 +304,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
 					End If
@@ -373,7 +373,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
 					End If
@@ -418,7 +418,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
-					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
 			End If
@@ -443,7 +443,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
-					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
 			End If
@@ -471,7 +471,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
 					End If
@@ -502,7 +502,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
 					End If
@@ -535,7 +535,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
 					End If
@@ -567,7 +567,7 @@ Public Class frmMain
 
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
-						Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 
 				End If
@@ -595,7 +595,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
-					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
 			End If
@@ -1164,22 +1164,21 @@ Public Class frmMain
 					If subregkey IsNot Nothing Then
 						For Each childs As String In subregkey.GetSubKeyNames()
 							If IsNullOrWhitespace(childs) = False Then
-								If childs.ToLower.Contains("controlset") Then
+								If StrContainsAny(childs, True, "controlset") Then
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 									  "SYSTEM\" & childs & "\Enum\Root")
 										If regkey IsNot Nothing Then
 											For Each child As String In regkey.GetSubKeyNames()
-												If IsNullOrWhitespace(child) = False Then
-													If child.ToLower.Contains("legacy_amdkmdag") Or _
-													 (child.ToLower.Contains("legacy_amdkmpfd") AndAlso config.RemoveAMDKMPFD) Or _
-													 child.ToLower.Contains("legacy_amdacpksd") Then
+												If IsNullOrWhitespace(child) Then Continue For
+												If child.ToLower.Contains("legacy_amdkmdag") Or _
+												 (child.ToLower.Contains("legacy_amdkmpfd") AndAlso config.RemoveAMDKMPFD) Or _
+												 child.ToLower.Contains("legacy_amdacpksd") Then
 
-														Try
-															deletesubregkey(Registry.LocalMachine, "SYSTEM\" & childs & "\Enum\Root\" & child)
-														Catch ex As Exception
-															Application.Log.AddException(ex)
-														End Try
-													End If
+													Try
+														deletesubregkey(Registry.LocalMachine, "SYSTEM\" & childs & "\Enum\Root\" & child)
+													Catch ex As Exception
+														Application.Log.AddException(ex)
+													End Try
 												End If
 											Next
 										End If
@@ -1282,40 +1281,38 @@ Public Class frmMain
 			Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM", False)
 				If subregkey IsNot Nothing Then
 					For Each child2 As String In subregkey.GetSubKeyNames()
-						If IsNullOrWhitespace(child2) = False Then
-							If child2.ToLower.Contains("controlset") Then
-								Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Services\eventlog", True)
-									If regkey IsNot Nothing Then
-										For Each child As String In regkey.GetSubKeyNames()
-											If IsNullOrWhitespace(child) = False Then
-												If child.ToLower.Contains("aceeventlog") Then
-													deletesubregkey(regkey, child)
-												End If
-											End If
-										Next
+						If IsNullOrWhitespace(child2) Then Continue For
+						If StrContainsAny(child2, True, "controlset") Then
+							Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Services\eventlog", True)
+								If regkey IsNot Nothing Then
+									For Each child As String In regkey.GetSubKeyNames()
+										If IsNullOrWhitespace(child) Then Continue For
+										If child.ToLower.Contains("aceeventlog") Then
+											deletesubregkey(regkey, child)
+										End If
+									Next
 
 
-										Try
-											deletesubregkey(regkey, "Application\ATIeRecord")
-										Catch ex As Exception
-										End Try
+									Try
+										deletesubregkey(regkey, "Application\ATIeRecord")
+									Catch ex As Exception
+									End Try
 
-										Try
-											deletesubregkey(regkey, "System\amdkmdag")
-										Catch ex As Exception
-										End Try
+									Try
+										deletesubregkey(regkey, "System\amdkmdag")
+									Catch ex As Exception
+									End Try
 
-										Try
-											deletesubregkey(regkey, "System\amdkmdap")
-										Catch ex As Exception
-										End Try
-									End If
-								End Using
-								Try
-									deletesubregkey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Services\Atierecord")
-								Catch ex As Exception
-								End Try
-							End If
+									Try
+										deletesubregkey(regkey, "System\amdkmdap")
+									Catch ex As Exception
+									End Try
+								End If
+							End Using
+							Try
+								deletesubregkey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Services\Atierecord")
+							Catch ex As Exception
+							End Try
 						End If
 					Next
 				End If
@@ -1431,7 +1428,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
-							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
 				End If
@@ -1533,7 +1530,7 @@ Public Class frmMain
 											End Try
 										Else
 											For Each data As String In regkey2.GetSubKeyNames()
-												Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+												Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 											Next
 										End If
 									End If
@@ -1548,7 +1545,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
-							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
 				End If
@@ -1577,7 +1574,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
-							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
 				End If
@@ -1597,7 +1594,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
-							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
 				End If
@@ -1628,7 +1625,7 @@ Public Class frmMain
 							End Try
 						Else
 							For Each data As String In regkey.GetSubKeyNames()
-								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 							Next
 						End If
 					End If
@@ -1650,7 +1647,7 @@ Public Class frmMain
 							deletesubregkey(Registry.LocalMachine, "Software\Wow6432Node\AMD")
 						Else
 							For Each data As String In regkey.GetSubKeyNames()
-								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 							Next
 						End If
 					End If
@@ -1719,7 +1716,7 @@ Public Class frmMain
 												End Try
 											Else
 												For Each data As String In regkey2.GetSubKeyNames()
-													Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+													Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 												Next
 											End If
 										End If
@@ -1734,7 +1731,7 @@ Public Class frmMain
 							End Try
 						Else
 							For Each data As String In regkey.GetSubKeyNames()
-								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 							Next
 						End If
 					End If
@@ -2178,12 +2175,13 @@ Public Class frmMain
 
 							If child.ToLower.StartsWith("oem") AndAlso child.ToLower.EndsWith(".inf") Then
 								If Not StrContainsAny(infslist, True, child) Then
-									Try
-										deletesubregkey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverPackages\" & MyRegistry.OpenSubKey(regkey, child).GetValue("Active", String.Empty).ToString)
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-									End Try
-
+									If Not IsNullOrWhitespace(MyRegistry.OpenSubKey(regkey, child).GetValue("", String.Empty).ToString) Then
+										Try
+											deletesubregkey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverPackages\" & MyRegistry.OpenSubKey(regkey, child).GetValue("", String.Empty).ToString)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
 									Try
 										deletesubregkey(regkey, child)
 									Catch ex As Exception
@@ -2394,7 +2392,7 @@ Public Class frmMain
 			If FileIO.ExistsDir(filepath) Then
 				For Each child As String In My.Computer.FileSystem.GetDirectories(filepath)
 					If IsNullOrWhitespace(child) = False Then
-						If not StrContainsAny(child, True, "config") Then
+						If Not StrContainsAny(child, True, "config") Then
 							Delete(child)
 						End If
 					End If
@@ -2494,7 +2492,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
 					End If
@@ -2529,7 +2527,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
 					End If
@@ -2559,7 +2557,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In Directory.GetDirectories(filePath)
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
 					End If
@@ -2603,7 +2601,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In Directory.GetDirectories(filePath)
-								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
 						End If
@@ -2636,7 +2634,7 @@ Public Class frmMain
 
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
-						Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 				End If
 			Catch ex As Exception
@@ -2675,7 +2673,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
-					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
 			End If
@@ -2701,7 +2699,7 @@ Public Class frmMain
 
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
-						Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 				End If
 			Catch ex As Exception
@@ -2791,7 +2789,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In Directory.GetDirectories(child)
-								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+								Application.Log.AddWarningMessage("Remaining folders found " + " : " + child + "\ --> " + data)
 							Next
 
 						End If
@@ -2804,7 +2802,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In Directory.GetDirectories(filePath)
-					Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 			End If
 		End If
@@ -2873,7 +2871,7 @@ Public Class frmMain
 
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
-						Application.Log.AddMessage("Remaining folders found " + " : " + data)
+						Application.Log.AddMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 
 				End If
@@ -2970,7 +2968,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In Directory.GetDirectories(filePath)
-								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
 						End If
@@ -3002,7 +3000,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In Directory.GetDirectories(filePath)
-								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
 						End If
@@ -3035,7 +3033,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In Directory.GetDirectories(filePath)
-								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
 						End If
@@ -3066,7 +3064,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In Directory.GetDirectories(filePath)
-								Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
 						End If
@@ -3104,7 +3102,7 @@ Public Class frmMain
 
 									Else
 										For Each data As String In Directory.GetDirectories(filePath)
-											Application.Log.AddWarningMessage("Remaining folders found " + " : " + data)
+											Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 										Next
 
 									End If
@@ -3334,7 +3332,7 @@ Public Class frmMain
 					End Try
 				Else
 					For Each data As String In regkey.GetSubKeyNames()
-						Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+						Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 					Next
 				End If
 			End If
@@ -3740,7 +3738,7 @@ Public Class frmMain
 											End Try
 										Else
 											For Each data As String In regkey2.GetSubKeyNames()
-												Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+												Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 											Next
 										End If
 									End Using
@@ -3834,7 +3832,7 @@ Public Class frmMain
 								End Try
 							Else
 								For Each data As String In regkey2.GetSubKeyNames()
-									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 								Next
 							End If
 						End Using
@@ -3910,7 +3908,7 @@ Public Class frmMain
 								End Try
 							Else
 								For Each data As String In regkey2.GetSubKeyNames()
-									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 								Next
 							End If
 						End Using
@@ -3990,7 +3988,7 @@ Public Class frmMain
 									End Try
 								Else
 									For Each data As String In regkey2.GetSubKeyNames()
-										Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+										Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 									Next
 								End If
 							End Using
@@ -4435,7 +4433,7 @@ Public Class frmMain
 					End Using
 				Else
 					For Each data As String In regkey.GetSubKeyNames()
-						Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+						Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 					Next
 				End If
 			End If
@@ -4459,7 +4457,7 @@ Public Class frmMain
 								End Using
 							Else
 								For Each data As String In regkey.GetSubKeyNames()
-									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 								Next
 							End If
 						End If
@@ -4487,7 +4485,7 @@ Public Class frmMain
 										End Using
 									Else
 										For Each data As String In regkey.GetSubKeyNames()
-											Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+											Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 										Next
 									End If
 								Catch ex As Exception
@@ -4819,7 +4817,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
-							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
 				End If
@@ -4850,7 +4848,7 @@ Public Class frmMain
 								End Try
 							Else
 								For Each data As String In regkey.GetSubKeyNames()
-									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 								Next
 							End If
 						End If
@@ -4885,7 +4883,7 @@ Public Class frmMain
 							End Try
 						Else
 							For Each data As String In regkey.GetSubKeyNames()
-								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 							Next
 						End If
 					End If
@@ -5046,7 +5044,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
-							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + data)
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
 				End If

@@ -11,7 +11,7 @@ Public Class CleanupEngine
 	Public Sub deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String)
 		Dim fixregacls As Boolean = False
 
-		If regkeypath IsNot Nothing AndAlso Not IsNullOrWhitespace(child) Then
+		If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
 			Try
 				regkeypath.DeleteSubKeyTree(child)
 				Application.Log.AddMessage(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn(39))
@@ -20,7 +20,7 @@ Public Class CleanupEngine
 				fixregacls = True
 			End Try
 			'If exists, it means we need to modify it's ACls.
-			If fixregacls AndAlso regkeypath IsNot Nothing Then
+			If fixregacls AndAlso (regkeypath IsNot Nothing) Then
 				ACL.Addregistrysecurity(regkeypath, child, RegistryRights.FullControl, AccessControlType.Allow)
 				regkeypath.DeleteSubKeyTree(child)
 				Application.Log.AddMessage(child + " - " + UpdateTextMethodmessagefn(39))
