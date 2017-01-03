@@ -10,9 +10,18 @@ Public Class CleanupEngine
 
 	Public Sub deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String)
 		Dim fixregacls As Boolean = False
-
 		If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
 			Try
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(regkeypath, child, True)
+					'we do this simply to ensure that the permissions are set to open this registrykey.
+					'or else we will get an argument exception when trying to remove the key if permission are wrong.
+					If regkey IsNot Nothing Then
+						For Each childs As String In regkey.GetSubKeyNames
+							If IsNullOrWhitespace(childs) Then Continue For
+							deletesubregkey(regkey, childs)
+						Next
+					End If
+				End Using
 				regkeypath.DeleteSubKeyTree(child)
 				Application.Log.AddMessage(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn(39))
 			Catch ex As UnauthorizedAccessException

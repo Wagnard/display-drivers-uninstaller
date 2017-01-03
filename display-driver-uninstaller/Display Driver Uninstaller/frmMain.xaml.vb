@@ -3854,7 +3854,7 @@ Public Class frmMain
 						End Try
 
 					End If
-					If child.ToLower.Contains("nvidia corporation") Then
+					If StrContainsAny(child, True, "nvidia corporation") Then
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 							For Each child2 As String In regkey2.GetSubKeyNames()
 								If IsNullOrWhitespace(child2) Then Continue For
@@ -5524,8 +5524,18 @@ Public Class frmMain
 
 
 			'SpeedUP the removal of the NVIDIA adapter due to how the NVIDIA installer work.
+			'Also fix a possible permission problem when removing the driver via SetupAPI
 			If config.SelectedGPU = GPUVendor.Nvidia Then
 				temporarynvidiaspeedup(config)
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "software\nvidia corporation", True)
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames
+							If IsNullOrWhitespace(child) Then Continue For
+							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+							End Using
+						Next
+					End If
+				End Using
 			End If
 
 
