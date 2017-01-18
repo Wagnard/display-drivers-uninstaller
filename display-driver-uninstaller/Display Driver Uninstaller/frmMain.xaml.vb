@@ -1411,14 +1411,12 @@ Public Class frmMain
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-							If child.ToLower.Contains("ace") Or
-							 child.ToLower.Contains("appprofiles") Or
-							   child.ToLower.Contains("install") Then
-								Try
-									deletesubregkey(regkey, child)
-								Catch ex As Exception
-								End Try
-							End If
+                            If StrContainsAny(child, True, "ace", "appprofiles", "A4", "install") Then
+                                Try
+                                    deletesubregkey(regkey, child)
+                                Catch ex As Exception
+                                End Try
+                            End If
 						End If
 					Next
 					If regkey.SubKeyCount = 0 Then
@@ -1442,12 +1440,12 @@ Public Class frmMain
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-							If StrContainsAny(child, True, "cbt") Then
-								Try
-									deletesubregkey(regkey, child)
-								Catch ex As Exception
-								End Try
-							End If
+                            If StrContainsAny(child, True, "cbt") Then
+                                Try
+                                    deletesubregkey(regkey, child)
+                                Catch ex As Exception
+                                End Try
+                            End If
 							If StrContainsAny(child, True, "ati catalyst control center") Then
 								Try
 									deletesubregkey(regkey, child)
@@ -1509,13 +1507,13 @@ Public Class frmMain
 										For Each child2 As String In regkey2.GetSubKeyNames()
 											If IsNullOrWhitespace(child2) Then Continue For
 
-											If StrContainsAny(child2, True, "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages",
-											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard", "amd problem report wizard") Then
-												Try
-													deletesubregkey(regkey2, child2)
-												Catch ex As Exception
-												End Try
-											End If
+                                            If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages",
+                                               "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard", "amd problem report wizard") Then
+                                                Try
+                                                    deletesubregkey(regkey2, child2)
+                                                Catch ex As Exception
+                                                End Try
+                                            End If
 										Next
 										For Each values As String In regkey2.GetValueNames()
 											Try
@@ -1565,7 +1563,15 @@ Public Class frmMain
 								Catch ex As Exception
 								End Try
 							End If
-						End If
+                            If StrContainsAny(child, True, "install") Then  'Just a safety here....
+                                If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+                                    Try
+                                        deletesubregkey(regkey, child)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+                            End If
+                        End If
 					Next
 					If regkey.SubKeyCount = 0 Then
 						Try
@@ -1609,13 +1615,12 @@ Public Class frmMain
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) = False Then
-								If child.ToLower.Contains("ace") Or
-								   child.ToLower.Contains("appprofiles") Then
-									Try
-										deletesubregkey(regkey, child)
-									Catch ex As Exception
-									End Try
-								End If
+                                If StrContainsAny(child, True, "ace", "appprofiles", "A4") Then
+                                    Try
+                                        deletesubregkey(regkey, child)
+                                    Catch ex As Exception
+                                    End Try
+                                End If
 							End If
 						Next
 						If regkey.SubKeyCount = 0 Then
@@ -1701,13 +1706,13 @@ Public Class frmMain
 											For Each child2 As String In regkey2.GetSubKeyNames()
 												If IsNullOrWhitespace(child2) Then Continue For
 
-												If StrContainsAny(child2, True, "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "packages",
-												   "wirelessdisplay", "hydravision", "dndtranscoding64", "avivo", "steadyvideo") Then
-													Try
-														deletesubregkey(regkey2, child2)
-													Catch ex As Exception
-													End Try
-												End If
+                                                If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "packages",
+                                                   "wirelessdisplay", "hydravision", "dndtranscoding64", "avivo", "steadyvideo") Then
+                                                    Try
+                                                        deletesubregkey(regkey2, child2)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
 											Next
 											If regkey2.SubKeyCount = 0 Then
 												Try
