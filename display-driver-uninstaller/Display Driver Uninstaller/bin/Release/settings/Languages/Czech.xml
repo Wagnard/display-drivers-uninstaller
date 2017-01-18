@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="cs-CZ" Text="Czech">
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -8,18 +8,18 @@
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
 			<Text>
-				Clean and restart
-				(Highly Recommended)
+				Odinstalovat ovladače a restartovat PC
+				(Vysoce doporučeno)
 			</Text>
 			<Tooltip>
-				Odinstalovat stávající i předchozí ovladače a restartovat počítač
+				Odinstalovat stávající i předchozí ovladače a restartovat PC
 				(Vysoce doporučeno)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				Clean and DO NOT restart.
-				(May cause issues like blackscreen)
+				Odinstalovat ovladače a NERESTARTOVAT PC
+				(Může způsobit problémy jako zčernání obrazovky atp.)
 			</Text>
 			<Tooltip>
 				Odinstalovat stávající i předchozí ovladače a NERESTARTOVAT PC.
@@ -28,170 +28,175 @@
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
-				Clean and Shutdown
-				(For installing a new graphic card)
+				Odinstalovat ovladače a vypnout PC
+				(Před instalací nové grafické karty)
 			</Text>
 			<Tooltip>
-				Odinstalovat stávající i předchozí ovladače a vypnout počítač bez znovuvyhledání adaptéru.
+				Odinstalovat stávající i předchozí ovladače a vypnout PC bez znovuvyhledání adaptéru.
 				(Před instalací nové grafické karty)
 			</Tooltip>
 		</btnCleanShutdown>
+        <btnCleanGfeDownloads>
+      <Text>
+        Odstranit instalační soubory/cache grafického ovladače "GeForce Experience".
+        (Poznámka: Ovladače nebudou odebrány)
+      </Text>
+      <Tooltip>
+         Toto je většinou používáno pro obnovení místa na HDD/SSD nevyčištěného instalátorem GFE/Ovladače.
+      </Tooltip>
+    </btnCleanGfeDownloads>
 		<btnWuRestore>
-			<Text>Obnovit nastavení instalace ovladačů skrze Windows Update.</Text>
+            <Text>
+                Obnovit výchozí nastavení
+                automatické instalace ovladačů
+            </Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Detekovaná verze Windows</Text>
+			<Text>Detekován operační systém:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** You like DDU? Think about a Donation, it will help further developement. ***</Text>
+			<Text>*** Líbí se vám DDU? Přemýšlejte o finančním daru, který pomůže dalšímu vývoji. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Log</Text>
+			<Text>Protokol</Text>
 		</lblLog>
 		<lblSelectedGPU>
 			<Text>Vyberte grafický ovladač</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Selected language</Text>
+			<Text>Vybraný jazyk</Text>
 		</lblLanguage>
-		
-		<Label9>
-			<Text>Poznámka: Autor nenese zodpovědnost za případné chyby nebo poškození PC.</Text>
-		</Label9>
-		<Label10>
-			<Text>Doporučujeme spouštět DDU v nouzovém režimu.</Text>
-		</Label10>
 		
 		<lblUpdate>
 			<Text>Vyhledávání aktualizací ...</Text>
-			<Text2>No Updates found. Program is up to date.</Text2>
-			<Text3>Updates found! Expect limited support on older versions than the most recent.</Text3>
-			<Text4>Unable to fetch updates!</Text4>
+			<Text2>Aktualizace nenalezeny, program je aktuální.</Text2>
+			<Text3>Aktualizace nalezeny! Očekávejte omezenou podporu starších verzí.</Text3>
+			<Text4>Aktualizace se nepodařilo vyhledat!</Text4>
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>Nabídky od našich partnerů</Text>
+			<Tooltip>Můžete to vypnout v menu 'Možnosti'.</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
-			<Text>Options</Text>
+			<Text>Možnosti</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
-			<Text>Info</Text>
+			<Text>Informace</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>Rozšířený protokol</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
-			<Text>Links</Text>
+			<Text>Odkazy</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>Podmínky služby</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
-			<Text>About</Text>
+			<Text>O programu</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>Překladatelé</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visit official DDU Website</Text>
+			<Text>Navštívit oficiální web DDU</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Visit SVN Website</Text>
+			<Text>Navštivte web SVN</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visit Guru3d NVIDIA Thread</Text>
+			<Text>Navštívit NVIDIA téma na Guru3d</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Visit Guru3d AMD Thread</Text>
+			<Text>Navštívit AMD téma na Guru3d</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Visit Geforce Thread</Text>
+			<Text>Navštívit Geforce téma</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
-			<Text1>Updates are available! Visit DDU website now?</Text1>
-			<Text2>Expect limited support on older versions than the most recent. Please check newer version before reporting bugs.</Text2>
-			<Text3>You are not using DDU with Administrator privileges. The application will now exit.</Text3>
-			<Text4>Unable to find ddudr. Please refer to the log.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) is modifying your registry a lot. DDU will try to automatically create a System Restore point (Normal mode Only).</Text5>
-			<Text6>A problem occured in one of the module, send your DDU logs to the developer.</Text6>
-			<Text7>DDU detected that you have an AMD switching Laptop (Enduro or equivalent), DDU is not yet fully compatible / tested with Enduro systems, Use at your own risk.</Text7>
-			<Text8>DDU has detected that you are NOT in SafeMode... For a better CleanUP without issues, it is recommended that you reboot into safemode.</Text8>
-			<Text9>DDU has changed a setting that prevents drivers to be downloaded automatically with Windows Update. You can set this back to default, if you want AFTER your new driver installation.</Text9>
-			<Text10>Clean uninstall completed! Would you like to exit now?</Text10>
-			<Text11>Done!</Text11>
-			<Text12>You are not in safe mode. It is highly recommended that you reboot into safe mode to avoid possible issues. Reboot into Safe Mode now?</Text12>
-			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
-			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
+			<Text1>Jsou k dispozici aktualizace! Navštívit web DDU nyní?</Text1>
+			<Text2>Starší verze mají oproti těm novým omezenou podporu. Před nahlášením chyb zkontrolujte, zda používáte nejnovější verzi.</Text2>
+			<Text3>Nepoužíváte DDU s oprávněním správce. Aplikace bude nyní ukončena.</Text3>
+			<Text4>Nepodařilo se najít ddudr. Zkontrolujte prosím protokol.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) upravuje registr. DDU se automaticky pokusí vytvořit Bod obnovení systému (Pouze v Normal módu).</Text5>
+			<Text6>V jednom modulu nastal problém, pošlete své DDU protokoly vývojáři.</Text6>
+			<Text7>DDU detekoval přepínací notebook AMD (Enduro či podobný), DDU ještě není plně kompatibilní / otestovaný s Enduro systémy, používejte na vlastní riziko.</Text7>
+			<Text8>DDU detekoval, že NEJSTE v Nouzovém režimu... Pro lepší vyčištění bez chyb je doporučen restart do Nouzového režimu.</Text8>
+			<Text9>DDU změnil nastavení, které nedovoluje stažení ovladačů automaticky přes Windows Update. Toto nastavení můžete vrátit zpátky po instalaci nového ovladače.</Text9>
+			<Text10>Čistá odinstalace dokončena! Chcete nyní odejít?</Text10>
+			<Text11>Hotovo!</Text11>
+			<Text12>Nejste v nouzovém režimu. Je vysoce doporučeno restartovat do nouzového režimu, aby se zabránilo případným problémům... Restartovat do Nouzového režimu nyní?</Text12>
+			<Text13>Musíte vybrat následující věci na modré obrazovce obnovení: Odstranit potíže -&gt; Upřesnit možnosti -&gt; Nastavení spouštění.</Text13>
+			<Text14>Čeká se na restart systému, prosíme, restartujte systém před použitím DDU</Text14>
 		</Messages>
 		
 		<UpdateLog>
-			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
-			<Text2>Cleaning Directory</Text2>
-			<Text3>Cleaning known Regkeys... May take a minute or two.</Text3>
-			<Text4>Cleaning UpdatusUser users account if present.</Text4>
-			<Text5>Cleaning Directory</Text5>
-			<Text6>Starting Registry CleanUP</Text6>
-			<Text7>Finished cleaning Registry</Text7>
-			<Text8>Starting the removal of nVidia Optimus UpperFilter if present.</Text8>
-			<Text9>Scanning for new device...</Text9>
-			<Text10>Clean uninstall completed!</Text10>
-			<Text11>DDU Version</Text11>
-			<Text12>GPU #</Text12>
-			<Text13>Detected</Text13>
-			<Text14>GPU DeviceId</Text14>
-			<Text15>Detected Driver(s) Version(s)</Text15>
-			<Text16>INF</Text16>
-			<Text17>INF Section</Text17>
-			<Text18>GPU not Correctly Installed</Text18>
-			<Text19>Deleting some specials folders, it may take some times...</Text19>
-			<Text20>CleanUP started...</Text20>
-			<Text21>Uninstalling</Text21>
-			<Text22>driver</Text22>
-			<Text23>Executing ddudr Remove , Please wait(can take a few minutes)</Text23>
-			<Text24>GPU(s) Removed from Device Manager.</Text24>
-			<Text25>Executing DDUDR Remove Audio controller.</Text25>
-			<Text26>HD audio adapters Removed !</Text26>
-			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
-			<Text28>Monitors and Hidden monitors removed !</Text28>
-			<Text29>ddudr Remove complete</Text29>
-			<Text30>Starting S-1-5-xx region cleanUP</Text30>
-			<Text31>End of S-1-5-xx region cleanUP</Text31>
-			<Text32>Begin Classesroot ,installer\products cleanup</Text32>
-			<Text33>End Classesroot ,installer\products cleanup</Text33>
-			<Text34>Start localmachine ,installer\products cleanup</Text34>
-			<Text35>End localmachine ,installer\products cleanup</Text35>
-			<Text36>Start currentuser ,installer\products cleanup</Text36>
-			<Text37>End currentuser ,installer\products cleanup</Text37>
-			<Text38>Cleaning process/services...</Text38>
-			<Text39>Process/Services CleanUP Complete</Text39>
-			<Text40>Deleted.</Text40>
-			<Text41>Value removed.</Text41>
-			<Text42>File Deleted.</Text42>
+			      <Text1>Executing Driver Store cleanup (Delete OEM step)...</Text1>
+            <Text2>Cleaning directory</Text2>
+            <Text3>Cleaning known Regkeys... May take a minute or two.</Text3>
+            <Text4>Cleaning UpdatusUser users account if present.</Text4>
+            <Text5>Cleaning directory</Text5>
+            <Text6>Starting Registry cleanup</Text6>
+            <Text7>Finished cleaning Registry</Text7>
+            <Text8>Starting the removal of NVIDIA Optimus UpperFilter if present.</Text8>
+            <Text9>Scanning for new device...</Text9>
+            <Text10>Clean uninstall completed!</Text10>
+            <Text11>DDU Version</Text11>
+            <Text12>GPU #</Text12>
+            <Text13>Detected</Text13>
+            <Text14>GPU DeviceId</Text14>
+            <Text15>Detected Driver(s) Version(s)</Text15>
+            <Text16>INF</Text16>
+            <Text17>INF Section</Text17>
+            <Text18>GPU not correctly installed</Text18>
+            <Text19>Deleting some special folders, it may take some time...</Text19>
+            <Text20>Cleanup started...</Text20>
+            <Text21>Uninstalling</Text21>
+            <Text22>driver</Text22>
+            <Text23>Executing SetupAPI remove, please wait (can take a few minutes)</Text23>
+            <Text24>GPU(s) removed from Device Manager.</Text24>
+            <Text25>Executing SetupAPI Remove Audio controller.</Text25>
+            <Text26>HD audio adapters Removed!</Text26>
+            <Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
+            <Text28>Monitors and Hidden monitors removed!</Text28>
+            <Text29>SetupAPI remove complete</Text29>
+            <Text30>Starting S-1-5-xx region cleanup</Text30>
+            <Text31>End of S-1-5-xx region cleanup</Text31>
+            <Text32>Begin Classesroot ,installer\products cleanup</Text32>
+            <Text33>End Classesroot ,installer\products cleanup</Text33>
+            <Text34>Start localmachine ,installer\products cleanup</Text34>
+            <Text35>End localmachine ,installer\products cleanup</Text35>
+            <Text36>Start currentuser ,installer\products cleanup</Text36>
+            <Text37>End currentuser ,installer\products cleanup</Text37>
+            <Text38>Cleaning process/services...</Text38>
+            <Text39>Process/Services cleanup complete</Text39>
+            <Text40>Deleted.</Text40>
+            <Text41>Value removed.</Text41>
+            <Text42>File deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
 	
-	<frmOptions Text="Options">
+	<frmOptions Text="Možnosti">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Zavřít</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>Zobrazovat Nabídky od našich partnerů</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Specific Options</Text>
+			<Text>Specifické NVIDIA možnosti</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Specific Options</Text>
+			<Text>Specifické AMD možnosti</Text>
 		</lblAmdspecific>
 		<lblGeneral>
-			<Text>General Options</Text>
+			<Text>Obecné možnost</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Remove "C:\nVidia" Drivers folders (NOT recommended)</Text>
+			<Text>Odstranit složky ovladačů v "C:\nVidia" (NEDOPORUČENO)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>Uložit log soubory do složky programu (doporučeno)</Text>
@@ -200,136 +205,132 @@
 			<Text>Odstranit PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
-			<Text>Remove 3DTV Play</Text>
+			<Text>Odstranit 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
-			<Text>Create a System Restore Point (if allowed)</Text>
+			<Text>Vytvořit bod obnovení systému (pokud je to dovoleno)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Odstranit stávající a non- současné monitory (doporučeno)</Text>
+			<Text>Odstranit stávající a minulé monitory (doporučeno)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Remove AMD Audio Bus</Text>
+			<Text>Odstranit AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Remove "C:\AMD" Drivers folders (NOT recommended)</Text>
+			<Text>Odstranit složky ovladačů v "C:\AMD" (NEDOPORUČENO)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Enable Windows 8+ Direct Safe Mode.</Text>
+			<Text>Odstranit ovladač/filtr AMDKMPFD (Pro AMD chipsety je doporučena záloha)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Show Safe Mode message box on startup</Text>
+			<Text>Při spuštění umožnit výběr mezi standartním a nouzovým režimem</Text>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Store config file in roaming folder</Text>
+			<Text>Skladovat konfigurační soubor ve složce roaming</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+			<Text>Automaticky kontrolovat aktualizace DDU při spuštění. (doporučeno)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Remove Geforce Experience (GFE)</Text>
+			<Text>Odstranit Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>Remove AMD Crimson Shader Cache folder</Text>
+			<Text>Odstranit složku AMD Crimson Shader Cache</Text>
 			<Tooltip>
-				Recommended if there is graphicals anomaly (speed or visual corruption) caused by a corrupted shader cache data.
-				Also recommended if you are switching to another brand like nVidia.
+				Doporučeno při grafických anomáliích (rychlostní či vizuální poškození) způsobených poškozenou mezipamětí shaderu.
+				Také je to doporučeno při přechodu k jinému výrobci, například nVidia.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Remove Vulkan Runtime</Text>
-			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+			<Text>Odstranit Vulkan Runtime</Text>
+			<Tooltip>Není doporučeno v případě, že vlastníte 2 odlišné GPu podporující Vulkan API.</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>Use SetupAPI *Experimental*</Text>
-			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
-		</lblUseSetupAPI>
 	</frmOptions>
 	
-	<frmLaunch Text="Launch option">
+	<frmLaunch Text="Možnosti spuštění">
 		<btnAccept>
-			<Text>Launch</Text>
+			<Text>Spustit</Text>
 			<Text2>
-				Reboot to
-				Safe Mode
+				Restartovat do
+				Nouzového režimu
 			</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Zavřít</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Launch option</Text>
+			<Text>Volba spuštění</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				You are not in safe mode. It is highly recommended
-				reboot into Safe Mode to avoid possible issues.
+				Nejste v nouzovém režimu. Důrazně se doporučuje
+				restart do nouzového režimu, aby se předešlo případným problémům.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Important note for Windows 8/8.1/10 users:
-				Your Windows "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Důležitá poznámka pro uživatele Windows 8/8.1/10:
+				Vaše Windows "HESLO" je vyžadováno! (PIN v nouzovém režimu NEFUNGUJE)
+				Pokud jste ho ztratili nebo jej neznáte, okamžitě odejděte!
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
-			<Item1>Normal</Item1>
-			<Item2>Safe Mode (Recommended)</Item2>
-			<Item3>Safe Mode With Networking</Item3>
+			<Item1>Standartní</Item1>
+			<Item2>Nouzový režim (Doporučeno)</Item2>
+			<Item3>Nouzový režim se sítí</Item3>
 		</cbBootOption>
 	</frmLaunch>
 	
-	<frmLog Text="Extended log">
+	<frmLog Text="Rozšířený protokol">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Zavřít</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Open log</Text>
+			<Text>Otevřít protokol</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
-			<Text>Options</Text>
+			<Text>Možnosti</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>Povoleno kopírování</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>Filters</Text>
+			<Text>Filtry</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>Zobrazit eventy</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>Zobrazit varování</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>Zobrazit chyby</Text>
 		</errorsMenuItem>
 	</frmLog>
 
-	<frmSystemRestore Text="System Restore">
+	<frmSystemRestore Text="Obnovení systému">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>Snažím se vytvořit bod obnovení systému.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="About">
+	<frmAbout Text="O programu">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Zavřít</Text>
 		</btnClose>
 		<btnAbout>
-			<Text>About</Text>
+			<Text>O programu</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>Podmínky služby</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>Překladatelé</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>Velké poděkování patří následujícím překladatelům včetně těch, kteří nejsou uvedeni!</Text>
 		</lblTranslators>
 	</frmAbout>
 
@@ -350,8 +351,7 @@
 
 				DOPORUČENÉ POUŽITÍ :
 
-				- Osobně doporučuji před použitím zakázat připojení k internetu, aby služba Windows Update nezačala po
-				odinstalaci ovladače sama, bez potvrzení, ovladač reinstalovat.
+        - Vytvořte zálohu nebo bod obnovení systému. (Ale obvykle by to mělo být bezpečné.)
 
 				- Tento nástroj může být používán v normálním režimu OS, ale pro dosažení maximální stability
 				je nejlepší DDU používat v nouzovém režimu.
@@ -368,34 +368,43 @@
 
 				Vytvořil Wagnard.
 
-				Spoluvlastník: Shady7557
+				Programátoři: Wagnard, Devmltk, Shady7557
 
 				Tester : Dellon132
 
 				Loga : juanchacin
 
+        Velké poděkování patří Jackalito za věnování AMD 7850.
+        
+        Děkuji Helge Klein (http://helgeklein.com/setacl/) za povolení používat jeho program s DDU "SetAcl"
+        
+        Velké poděkování patří následujícím lidem za jejich čas pro testování: Gamer1291 (optimus), Octopuss (Amd Enduro) ,
+        nedooo` (ladění), Extraordinary (Testování opravy) 
+        
 				Díky všem, kteří dávali svůj systém všanc (speciální poděkování patří uživateli Dellon132)
+        
+        *DDU, jeho tvůrci a partneři nejsou žádným způsobem přidruženi s programem s Driver Sweeper, nebo jeho autory.
 			</Text>
 		</About>
 		<Tos>
-			<Text>
-				Display Driver Uninstaller ("DDU") USER AGREEMENT
-
-				You become a user of DDU ("User") by using the DDU software. This Agreement takes effect as soon as you use the program to uninstall a driver.
-
-				By using DDU you agree to not accuse DDU or it's creators, and affiliates, of damaging or negatively affecting your PC.
-
-				By using DDU you acknowledge that NVIDIA ("NVIDIA, GeForce") nor Advanced Micro Devices ("AMD, Radeon") have
-				anything to do with this program, and in no way affiliates of DDU or it's creators.
-			</Text>
+<Text>
+Display Driver Uninstaller ("DDU") USER AGREEMENT
+ 
+You become a user of DDU ("User") by using the DDU software. This Agreement takes effect as soon as you use the program to uninstall a driver.
+ 
+By using DDU you agree to not accuse DDU or its creators, and affiliates, of damaging or negatively affecting your PC.
+ 
+By using DDU you acknowledge that NVIDIA ("NVIDIA, GeForce") nor Advanced Micro Devices ("AMD, Radeon") have
+anything to do with this program, and in no way affiliates of DDU or its creators.
+</Text>
 		</Tos>
 	</Misc>
 
 	<LanguageTranslators>
 		<Translator>
-			<User></User>
-			<Details></Details>
-			<LastUpdate></LastUpdate>
+			<User>Jan Szotkowski</User>
+			<Details>Twitter: @czjohns</Details>
+			<LastUpdate>18.1.2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
