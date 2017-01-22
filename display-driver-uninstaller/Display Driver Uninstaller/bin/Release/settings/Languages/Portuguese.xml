@@ -36,10 +36,19 @@
 				(Para instalação de nova Placa de Video)
 			</Tooltip>
 		</btnCleanShutdown>
+    <btnCleanGfeDownloads>
+      <Text>
+        Remover cache/ficheiros do instalador do controlador "GeForce Experience".
+        (Nota: Os controladores não serão removidos)
+      </Text>
+      <Tooltip>
+         Isto é mais usado para recuperar algum espaço no HDD/SSD não limpo pelo instalador do GFE.
+      </Tooltip>
+    </btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Definir instalação de controlador
-				no Windows Update para padrão.
+				Definir instalação automática de
+				controladores no Windows para padrão
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
@@ -52,9 +61,8 @@
 			<Text>Registo</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Selecione o Controlador Gráfico</Text>
+			<Text>Controlador Gráfico seleccionado</Text>
 		</lblSelectedGPU>
-		
 		<lblLanguage>
 		  <Text>Idioma Seleccionado</Text>
 		</lblLanguage>	
@@ -90,7 +98,7 @@
 			<Text>Acerca</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>Tradutores</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visite a página oficial do DDU</Text>
@@ -148,13 +156,13 @@
 			<Text20>Limpeza iniciada...</Text20>
 			<Text21>Desinstalação</Text21>
 			<Text22>Controlador</Text22>
-			<Text23>A executar a remoção ddudr , Por favor aguarde(pode demorar alguns minutos)</Text23>
+			<Text23>A executar a remoção SetupAPI , por favor aguarde(pode demorar alguns minutos)</Text23>
 			<Text24>GPU(s) Removido(s) do Gestor de Dispositivos.</Text24>
-			<Text25>A Executar Remoção DDUDR do controlador áudio.</Text25>
+			<Text25>A Executar Remoção SetupAPI do controlador áudio.</Text25>
 			<Text26>Adaptadores HD áudio Removidos !</Text26>
 			<Text27>Adaptador USB 3D Vision Removido do Gestor de Dispositivos.</Text27>
 			<Text28>Monitores e monitores Ocultos removidos !</Text28>
-			<Text29>Remoção ddudr concluída</Text29>
+			<Text29>Remoção SetupAPI concluída</Text29>
 			<Text30>Início da limpeza da região S-1-5-xx</Text30>
 			<Text31>Fim da limpeza da região S-1-5-xx</Text31>
 			<Text32>Início da limpeza de instaladores\produtos Classesroot</Text32>
@@ -167,7 +175,7 @@
 			<Text39>Limpeza de Processos/Serviços Concluída</Text39>
 			<Text40>Eliminado.</Text40>
 			<Text41>Valor removido.</Text41>
-			<Text42>Ficheiro Eliminado.</Text42>
+			<Text42>Ficheiro eliminado.</Text42>
 		</UpdateLog>
 	</frmMain>
 	
@@ -188,10 +196,10 @@
 			<Text>Opções Gerais</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Remover pastas de controladores "C:\nVidia" (NÃO recomendado)</Text>
+			<Text>Remover pastas de controladores "C:\NVIDIA" (NÃO recomendado)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Guardar ficheiros de registo no atalho de arranque (Altamente recomendado)</Text>
+			<Text>Guardar ficheiros de registo no caminho de arranque (Altamente recomendado)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Remover PhysX</Text>
@@ -237,15 +245,11 @@
 			<Text>Remover Vulkan Runtime</Text>
 			<Tooltip>Não Recomendado Se Tiver 2 GPUs Diferentes Capazes De Usar o API Vulkan.</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>Usar SetupAPI *Experimental*</Text>
-			<Tooltip>Usar SetupAPI em vez da ferramenta externa DDUDR (DEVCON)</Tooltip>
-		</lblUseSetupAPI>
 	</frmOptions>
 	
 	<frmLaunch Text="Opção de Arranque">
 		<btnAccept>
-			<Text>Arranque</Text>
+			<Text>Iniciar</Text>
 			<Text2>
 				Reiniciar para
 				Modo Segurança
@@ -323,10 +327,10 @@
 			<Text>Termos de Utilização (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>Tradutores</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>Muito obrigado aos seguintes tradutores e também aos que não constam da lista!</Text>
 		</lblTranslators>
 	</frmAbout>
 
@@ -359,12 +363,12 @@ o Modo de Segurança é sempre o melhor.
 que teve ou que tem neste momento, por favor partilhe o seu resultado.
 
 Lembre-se que a NVIDIA, AMD, nem a Microsoft podem ser responsibilizadas por quaisquer danos
-a si ou ao seu computador e não são afiliados do DDU, ou seus criadores.
+causados a si ou ao seu computador e não são afiliados do DDU, ou seus criadores.
 -------------------------------
 
 Criado Por Wagnard.
 
-Programadores: Wagnard, Devmltk, Shady757
+Programadores: Wagnard, Devmltk, Shady7557
 
 Testador : Dellon132
 
@@ -401,7 +405,7 @@ nada a ver com este programa, e não são, de maneira nenhuma, afiliados do DDU 
 		<Translator>
 			<User>Luis Neves</User>
 			<Details>luis.a.neves@sapo.pt</Details>
-			<LastUpdate>31/05/2016</LastUpdate>
+			<LastUpdate>21/01/2017</LastUpdate>
 		</Translator>
 		
 		<Translator2>
