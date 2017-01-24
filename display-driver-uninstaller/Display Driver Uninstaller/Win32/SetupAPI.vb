@@ -1847,7 +1847,137 @@ Namespace Win32
 
 
 
-		' REVERSED FOR CLEANING FROM CODE
+		' RESERVED FOR CLEANING FROM CODE
+
+		Public Shared Function GetDevicesByCHID(ByVal text As String, ByVal includeSiblings As Boolean) As List(Of Device)	'Get devices by Compatible Hardware IDs
+			Dim Devices As List(Of Device) = New List(Of Device)(500)
+
+			Try
+				Dim nullGuid As Guid = Guid.Empty
+				Dim hardwareIds(0) As String
+				Dim lowerfilters(0) As String
+				Dim friendlyname As String
+				Dim desc As String = Nothing
+				Dim className As String = Nothing
+				Dim match As Boolean = False
+
+				Dim errCode As UInt32 = 0UI
+				Dim devInst As UInt32 = 0UI
+
+				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
+					If infoSet.IsInvalid Then
+						Throw New Win32Exception()
+					End If
+
+					Dim ptrDevInfo As StructPtr = Nothing
+					Try
+						If Is64 Then
+							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
+						Else
+							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
+						End If
+
+						Dim i As UInt32 = 0UI
+
+						While True
+							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
+								errCode = GetLastWin32ErrorU()
+
+								If errCode = Errors.NO_MORE_ITEMS Then
+									Exit While
+								Else
+									Throw New Win32Exception(GetInt32(errCode))
+								End If
+							End If
+
+							i += 1UI
+							match = False
+							desc = Nothing
+							className = Nothing
+							hardwareIds = Nothing
+							lowerfilters = Nothing
+							friendlyname = Nothing
+
+							If Not String.IsNullOrEmpty(text) Then
+								hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS)
+								If hardwareIds IsNot Nothing Then
+									For Each hdID As String In hardwareIds
+										If hdID.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+											match = True
+										End If
+									Next
+								End If
+							Else
+								match = True
+							End If
+
+							If match Then
+								If Is64 Then
+									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+								Else
+									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+								End If
+
+								Dim d As Device = New Device() With
+								{
+								 .devInst = devInst,
+								 .Description = desc,
+								 .ClassName = className,
+								 .HardwareIDs = hardwareIds,
+								 .LowerFilters = lowerfilters,
+								 .FriendlyName = friendlyname
+								}
+
+								GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d, True)
+								GetDriverDetails(infoSet, ptrDevInfo.Ptr, d)
+								GetDeviceStatus(ptrDevInfo.Ptr, d)
+
+								Devices.Add(d)
+							End If
+
+						End While
+
+						If Devices IsNot Nothing Then
+							If Devices.Count > 0 Then
+								If includeSiblings Then
+									For Each dev As Device In Devices
+										GetSiblings(dev)
+
+										If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
+											UpdateDevicesByID(dev.SiblingDevices)
+										End If
+									Next
+								End If
+
+								UpdateDevicesByID(Devices)
+							End If
+							Dim logEntry As LogEntry = Application.Log.CreateEntry()
+							logEntry.Message = String.Format("Devices found: {0}", Devices.Count.ToString())
+							logEntry.Add("-> vendorID", If(IsNullOrWhitespace(text), "<empty>", text))
+							logEntry.Add("-> includeSiblings", includeSiblings.ToString())
+
+							If Devices.Count > 0 Then
+								logEntry.Add(KvP.Empty)
+								logEntry.AddDevices(False, Devices.ToArray())
+							End If
+
+							Application.Log.Add(logEntry)
+						End If
+
+						Return Devices
+					Finally
+						If ptrDevInfo IsNot Nothing Then
+							ptrDevInfo.Dispose()
+						End If
+					End Try
+				End Using
+
+			Catch ex As Exception
+				ShowException(ex)
+			End Try
+
+			Return Nothing
+		End Function
 		Public Shared Function GetDevices(ByVal className As String, Optional ByVal vendorID As String = Nothing, Optional ByVal includeSiblings As Boolean = True) As List(Of Device)
 			Try
 				If IsNullOrWhitespace(className) Then

@@ -2625,6 +2625,7 @@ Public Class frmMain
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("updatus") Or _
+						child.ToLower.Contains("shimgen") Or _
 					 (child.ToLower.Contains("grid") AndAlso config.RemoveGFE) Then
 
 						Delete(child)
@@ -2663,6 +2664,7 @@ Public Class frmMain
 					 (child.ToLower.Contains("gfebridges") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstapisvr") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
@@ -2779,6 +2781,7 @@ Public Class frmMain
 								   child2.ToLower.Contains("nvplugin") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvvhci") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("hdaudio.driver") Then
 
 
@@ -5511,15 +5514,16 @@ Public Class frmMain
 			Dim card1 As Integer = Nothing
 			Dim vendid As String = ""
 			Dim vendidexpected As String = ""
+			Dim VendCHIDGPU As String = ""
 			Dim removegfe As Boolean = config.RemoveGFE
 			Dim array() As String
 
 			UpdateTextMethod(UpdateTextTranslated(19))
 
 			Select Case config.SelectedGPU
-				Case GPUVendor.Nvidia : vendidexpected = "VEN_10DE"
-				Case GPUVendor.AMD : vendidexpected = "VEN_1002"
-				Case GPUVendor.Intel : vendidexpected = "VEN_8086"
+				Case GPUVendor.Nvidia : vendidexpected = "VEN_10DE" : VendCHIDGPU = "VEN_10DE&CC_0300"
+				Case GPUVendor.AMD : vendidexpected = "VEN_1002" : VendCHIDGPU = "VEN_1002&CC_0300"
+				Case GPUVendor.Intel : vendidexpected = "VEN_8086" : VendCHIDGPU = "VEN_8086&CC_0380"
 			End Select
 
 
@@ -5606,6 +5610,24 @@ Public Class frmMain
 				Application.Log.AddException(ex)
 			End Try
 
+			'-----------------------
+			'Removing NVVHCI
+			'-----------------------
+			If config.SelectedGPU = GPUVendor.Nvidia AndAlso config.RemoveGFE Then
+				Try
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVVHCI") Then
+								SetupAPI.UninstallDevice(d)
+							End If
+						Next
+						found.Clear()
+					End If
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
+			End If
 
 
 
@@ -5613,14 +5635,11 @@ Public Class frmMain
 			' Removing the videocard
 			' ----------------------
 
-
 			Try
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected, False)
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False)
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
-
 						Win32.SetupAPI.UninstallDevice(d)
-
 					Next
 				End If
 
@@ -5628,6 +5647,22 @@ Public Class frmMain
 				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 				Application.Log.AddException(ex)
 			End Try
+
+
+			'Try
+			'	Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected, False)
+			'	If found.Count > 0 Then
+			'		For Each d As SetupAPI.Device In found
+
+			'			Win32.SetupAPI.UninstallDevice(d)
+
+			'		Next
+			'	End If
+
+			'Catch ex As Exception
+			'	'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+			'	Application.Log.AddException(ex)
+			'End Try
 
 
 			UpdateTextMethod(UpdateTextTranslated(23))
@@ -5721,6 +5756,7 @@ Public Class frmMain
 							Next
 							found.Clear()
 						End If
+
 					End If
 
 					'nVidia AudioEndpoints Removal
