@@ -4807,10 +4807,7 @@ Public Class frmMain
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-							If child.ToLower.Contains("igfx") Or
-							   child.ToLower.Contains("mediasdk") Or
-							   child.ToLower.Contains("opencl") Or
-							   child.ToLower.Contains("intel wireless display") Then
+							If StrContainsAny(child, True, "display", "igd", "gfx", "mediasdk", "opencl", "intel wireless display") Then
 								Try
 									deletesubregkey(regkey, child)
 								Catch ex As Exception
@@ -4873,10 +4870,7 @@ Public Class frmMain
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) = False Then
-								If child.ToLower.Contains("igfx") Or
-								   child.ToLower.Contains("mediasdk") Or
-								   child.ToLower.Contains("opencl") Or
-								   child.ToLower.Contains("intel wireless display") Then
+								If StrContainsAny(child, True, "display", "igd", "gfx", "mediasdk", "opencl", "intel wireless display") Then
 									Try
 										deletesubregkey(regkey, child)
 									Catch ex As Exception
@@ -5521,9 +5515,9 @@ Public Class frmMain
 			UpdateTextMethod(UpdateTextTranslated(19))
 
 			Select Case config.SelectedGPU
-				Case GPUVendor.Nvidia : vendidexpected = "VEN_10DE" : VendCHIDGPU = "VEN_10DE&CC_0300"
-				Case GPUVendor.AMD : vendidexpected = "VEN_1002" : VendCHIDGPU = "VEN_1002&CC_0300"
-				Case GPUVendor.Intel : vendidexpected = "VEN_8086" : VendCHIDGPU = "VEN_8086&CC_0380"
+				Case GPUVendor.Nvidia : vendidexpected = "VEN_10DE" : VendCHIDGPU = "VEN_10DE&CC_03"
+				Case GPUVendor.AMD : vendidexpected = "VEN_1002" : VendCHIDGPU = "VEN_1002&CC_03"
+				Case GPUVendor.Intel : vendidexpected = "VEN_8086" : VendCHIDGPU = "VEN_8086&CC_03"
 			End Select
 
 
@@ -5577,21 +5571,23 @@ Public Class frmMain
 
 												If StrContainsAny(child2, True, "ven_1002") Then
 													Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey, child2)
-														For Each child3 As String In regkey3.GetSubKeyNames()
-															If IsNullOrWhitespace(child3) Then Continue For
-															'need to test more this code. got an error on a friend computer (Wagnard)(Possibly fixed with the trycast)
-															array = TryCast(MyRegistry.OpenSubKey(regkey3, child3).GetValue("LowerFilters"), String())
-															If (array IsNot Nothing) AndAlso array.Length > 0 Then
-																For Each entry As String In array
-																	If IsNullOrWhitespace(entry) Then Continue For
+														If regkey3 IsNot Nothing Then
+															For Each child3 As String In regkey3.GetSubKeyNames()
+																If IsNullOrWhitespace(child3) Then Continue For
+																'need to test more this code. got an error on a friend computer (Wagnard)(Possibly fixed with the trycast)
+																array = TryCast(MyRegistry.OpenSubKey(regkey3, child3).GetValue("LowerFilters"), String())
+																If (array IsNot Nothing) AndAlso array.Length > 0 Then
+																	For Each entry As String In array
+																		If IsNullOrWhitespace(entry) Then Continue For
 
-																	If StrContainsAny(entry, True, "amdkmafd") Then
-																		Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
-																		donotremoveamdhdaudiobusfiles = True
-																	End If
-																Next
-															End If
-														Next
+																		If StrContainsAny(entry, True, "amdkmafd") Then
+																			Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
+																			donotremoveamdhdaudiobusfiles = True
+																		End If
+																	Next
+																End If
+															Next
+														End If
 													End Using
 												End If
 											Next
