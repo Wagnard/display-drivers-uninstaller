@@ -47,9 +47,9 @@
     </btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Set Windows automatic driver
-				installation to default
-			</Text>
+        Set Windows Device Installation settings to Default
+        (automatically install drivers)
+      </Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>Detected operating system:</Text>
@@ -125,12 +125,13 @@
 			<Text6>A problem occurred in one of the module, send your DDU logs to the developer.</Text6>
 			<Text7>DDU detected that you have an AMD switching Laptop (Enduro or equivalent), DDU is not yet fully compatible / tested with Enduro systems. Use at your own risk.</Text7>
 			<Text8>DDU has detected that you are NOT in Safe Mode... For a better cleanup without issues, it is recommended that you reboot into safemode.</Text8>
-			<Text9>DDU has changed a setting that prevents drivers to be downloaded with Windows Update automatically. If you want to set this back to default, you can do that AFTER your new driver installation.</Text9>
+			<Text9>Windows Device Installation Settings have been changed to NOT automatically install drivers.</Text9>
 			<Text10>Clean uninstall completed! Would you like to exit now?</Text10>
-			<Text11>Done!</Text11>
+			<Text11>Windows Device Installation Settings have been changed to automatically install drivers.</Text11>
 			<Text12>You are not in Safe Mode. It is highly recommended that you reboot into Safe Mode to avoid possible issues. Reboot into Safe Mode now?</Text12>
 			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>There is a pending reboot, please reboot before using DDU</Text14>
+      <Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
 		
 		<UpdateLog>

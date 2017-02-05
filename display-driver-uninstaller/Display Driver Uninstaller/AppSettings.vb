@@ -89,8 +89,6 @@ Public Class AppSettings
 	Private m_removevulkan As DependencyProperty = RegDP("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
 	Private m_showoffer As DependencyProperty = RegDP("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
 
-	' Visit links
-	Private m_goodsite As DependencyProperty = RegDP("GoodSite", GetType(Boolean), GetType(AppSettings), False)
 #End Region
 
 #Region "Public Properties"
@@ -301,14 +299,6 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property GoodSite As Boolean
-		Get
-			Return CBool(GetValue(m_goodsite))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_goodsite, value)
-		End Set
-	End Property
 
 #End Region
 
@@ -437,7 +427,6 @@ Public Class AppSettings
 						.WriteElementString("SaveLogs", SaveLogs.ToString())
 						.WriteElementString("RemoveVulkan", RemoveVulkan.ToString())
 						.WriteElementString("ShowOffer", ShowOffer.ToString())
-						.WriteElementString("GoodSite", GoodSite.ToString())
 
 						.WriteEndElement()
 
@@ -589,8 +578,6 @@ Public Class AppSettings
 							Case "showoffer"
 								ShowOffer = Boolean.Parse(KvP.Value)
 
-							Case "goodsite"
-								GoodSite = Boolean.Parse(KvP.Value)
 						End Select
 					Next
 

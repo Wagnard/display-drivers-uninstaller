@@ -2879,7 +2879,7 @@ Public Class frmMain
 
 				Else
 					For Each data As String In Directory.GetDirectories(filePath)
-						Application.Log.AddMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 
 				End If
@@ -5244,10 +5244,6 @@ Public Class frmMain
 #Region "frmMain Controls"
 
 	Private Sub btnCleanRestart_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanRestart.Click
-		If Not Application.Settings.GoodSite Then
-			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardsoft.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
-			Application.Settings.GoodSite = True
-		End If
 
 		Dim config As New ThreadSettings(False)
 		config.Shutdown = False
@@ -5259,11 +5255,6 @@ Public Class frmMain
 
 	Private Sub btnClean_Click(sender As Object, e As RoutedEventArgs) Handles btnClean.Click
 
-		If Not Application.Settings.GoodSite Then
-			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardsoft.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
-			Application.Settings.GoodSite = True
-		End If
-
 		Dim config As New ThreadSettings(False)
 		config.Shutdown = False
 		config.Restart = False
@@ -5273,10 +5264,6 @@ Public Class frmMain
 	End Sub
 
 	Private Sub btnCleanShutdown_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanShutdown.Click
-		If Not Application.Settings.GoodSite Then
-			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardsoft.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
-			Application.Settings.GoodSite = True
-		End If
 
 		Dim config As New ThreadSettings(False)
 		config.Shutdown = True
@@ -5287,10 +5274,6 @@ Public Class frmMain
 	End Sub
 
 	Private Sub btnCleanGfeDownloads_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanGfeDownloads.Click
-		If Not Application.Settings.GoodSite Then
-			MessageBox.Show("A simple 1 time message.... For helping DDU developpement, please always download DDU from its homepage http://www.wagnardsoft.com it really help and will encourage me to continue developping DDU. In the event there is a problem with the main page, feel free to use the Guru3d mirror.")
-			Application.Settings.GoodSite = True
-		End If
 
 		Dim config As New ThreadSettings(False)
 		config.Shutdown = False
@@ -6329,15 +6312,19 @@ Public Class frmMain
 		If version >= OSVersion.Win7 Then
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
-                    Dim regValue As Int32 = CInt(regkey.GetValue("SearchOrderConfig", Nothing))
+					If regkey IsNot Nothing Then
+						Dim regValue As Int32 = CInt(regkey.GetValue("SearchOrderConfig", Nothing))
 
-					If regkey IsNot Nothing AndAlso regValue <> If(enable, 1, 0) Then
-						regkey.SetValue("SearchOrderConfig", If(enable, 1, 0), RegistryValueKind.DWord)
+						If regValue <> If(enable, 1, 0) Then
+							regkey.SetValue("SearchOrderConfig", If(enable, 1, 0), RegistryValueKind.DWord)
 
-						If enable Then
-							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
-						Else
-							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+							If enable Then
+								MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+							Else
+								MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+							End If
+						ElseIf enable <> False Then
+							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
 						End If
 					End If
 				End Using
@@ -6760,4 +6747,5 @@ Public Class frmMain
 			btnCleanGfeDownloads.Visibility = Windows.Visibility.Hidden
 		End If
 	End Sub
+
 End Class

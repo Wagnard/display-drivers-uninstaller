@@ -402,7 +402,7 @@ Public Class FileIO
 							Delete(files(i))
 						Next
 
-						System.Threading.Thread.Sleep(10)		' Windows is slow... takes bit time to files be deleted.
+						'System.Threading.Thread.Sleep(10)		' Windows is slow... takes bit time to files be deleted.
 
 						files = GetFilesToDeleteInternal(uncFileName, "*", True, False, False)
 
@@ -410,18 +410,17 @@ Public Class FileIO
 							Delete(files(i))
 						Next
 
-						System.Threading.Thread.Sleep(10)		' Windows is slow... takes bit time to files be deleted.
+						'System.Threading.Thread.Sleep(10)		' Windows is slow... takes bit time to files be deleted.
 
 						Dim waits As Int32 = 0
 
-						While waits < 100						 'MAX 10 sec to wait Windows remove all files. ( 100 * 100ms)
+						While waits < 30						 'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
 							If GetFileCount(uncFileName, "*", True) > 0 Then
 								waits += 1
 								System.Threading.Thread.Sleep(100)
 							Else
 								Exit While
 							End If
-
 							waits += 1
 						End While
 
