@@ -26,8 +26,8 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>false</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <IncrementalBuild>false</IncrementalBuild>

@@ -23,7 +23,7 @@ Public Class CleanupEngine
 					End If
 				End Using
 				regkeypath.DeleteSubKeyTree(child)
-				Application.Log.AddMessage(regkeypath.ToString + "\" + child + " - " + UpdateTextMethodmessagefn(39))
+				Application.Log.AddMessage(regkeypath.ToString & "\" & child & " - " & UpdateTextMethodmessagefn(39))
 			Catch ex As UnauthorizedAccessException
 				Application.Log.AddWarningMessage("Failed to remove registry subkey " + child + " Will try to set ACLs permission and try again.")
 				fixregacls = True

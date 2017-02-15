@@ -2109,7 +2109,16 @@ Public Class frmMain
 								If regkey2 IsNot Nothing Then
 									If Not IsNullOrWhitespace(regkey2.GetValue("Id", String.Empty).ToString) Then
 										wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
-										deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\" & wantedvalue)
+										Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
+											If regkey3 IsNot Nothing Then
+												For Each child2 As String In regkey3.GetSubKeyNames
+													If IsNullOrWhitespace(child2) Then Continue For
+													If StrContainsAny(wantedvalue, True, child2) Then
+														deletesubregkey(regkey3, child2)
+													End If
+												Next
+											End If
+										End Using
 									End If
 								End If
 							End Using
@@ -3398,7 +3407,6 @@ Public Class frmMain
 
 												wantedvalue = regkey.GetValue(child, String.Empty).ToString()
 												If IsNullOrWhitespace(wantedvalue) Then Continue For
-
 												If StrContainsAny(wantedvalue, True, "nvstreamsrv", "nvidia network service", "nvidia update core", "NvContainer") Then
 													Try
 														deletevalue(regkey, child)
@@ -4731,8 +4739,17 @@ Public Class frmMain
 							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 								If regkey2 IsNot Nothing Then
 									If Not IsNullOrWhitespace(regkey2.GetValue("Id", String.Empty).ToString) Then
-										wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
-										deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\" & wantedvalue)
+										wantedvalue = regkey2.GetValue("Id").ToString
+										Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
+											If regkey3 IsNot Nothing Then
+												For Each child2 As String In regkey3.GetSubKeyNames
+													If IsNullOrWhitespace(child2) Then Continue For
+													If StrContainsAny(wantedvalue, True, child2) Then
+														deletesubregkey(regkey3, child2)
+													End If
+												Next
+											End If
+										End Using
 									End If
 								End If
 							End Using
