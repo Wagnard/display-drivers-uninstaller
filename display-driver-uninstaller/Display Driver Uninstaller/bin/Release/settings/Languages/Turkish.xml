@@ -36,10 +36,19 @@
 				(Yeni grafik kartı yüklemek için)
 			</Tooltip>
 		</btnCleanShutdown>
+    <btnCleanGfeDownloads>
+      <Text>
+         Yüklü olan GeForce Experience önbellek ve kalıntıları kaldır.
+         (Not: Sürücüyü kaldırmaz)
+      </Text>
+      <Tooltip>
+         Bu, HDD/SSD'den GFE/Sürücü yükleyicisinin kaldıramadığı dosyaları kaldırır.
+      </Tooltip>
+    </btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Windows Otomatik Sürücü yüklemeyi varsayılan olarak ayarla
-			</Text>
+        Windows Otomatik Sürücü yüklemeyi varsayılan olarak ayarla
+      </Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>Yüklü olan Windows sürümü:</Text>
@@ -51,9 +60,8 @@
 			<Text>Günlük(Log)</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Grafik Sürücüsünü Seçin</Text>
+			<Text>Seçilen Grafik Sürücü</Text>
 		</lblSelectedGPU>
-
 		<lblLanguage>
 		  <Text>Seçilen Dil</Text>
 		</lblLanguage>
@@ -92,54 +100,55 @@
 			<Text>Çevirmenler</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Resmi DDU Web Sitesini ziyaret edin.</Text>
+			<Text>Resmi DDU Web Sitesini Ziyaret Edin.</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>SVN web sitesini ziyaret edin.</Text>
+			<Text>SVN Web Sitesini Ziyaret Edin.</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Guru3D NVIDIA Konusunu ziyaret edin.</Text>
+			<Text>Guru3D NVIDIA Konusunu Ziyaret Edin.</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Guru3D AMD Konusunu ziyaret edin.</Text>
+			<Text>Guru3D AMD Konusunu Ziyaret Edin.</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Geforce Konusunu ziyaret edin.</Text>
+			<Text>Geforce Konusunu Ziyaret Edin.</Text>
 		</VisitGeforceMenuItem>
 		
 		<Messages>
 			<Text1>Güncellemeler mevcut! Şimdi DDU web sitesini ziyaret etmek ister misin?</Text1>
 			<Text2>En son sürümden daha eski sürümlerde sınırlı destek veriyoruz. Hata bildirmeden önce yeni bir sürüme geçin.</Text2>
 			<Text3>Yönetici ayrıcalıklarına sahip olarak DDU'yu kullanmıyorsunuz. Uygulamadan şimdi çıkılacak.</Text3>
-			<Text4>Ddudr bulunamıyor. Lütfen günlüğe bakın.</Text4>
+			<Text4>PAExec bulunamıyor. Lütfen günlüğe bakın.</Text4>
 			<Text5>Display Driver Uninstaller (DDU) kayıt çok değiştiriyor. DDU otomatik olarak sistem geri yükleme noktası oluşturmaya çalışak. (Normal modda geçerli)</Text5>
 			<Text6>Bir modülün içinde bir hata oluştu, DDU günlüklerinizi geliştiricilere gönderebilirsiniz.</Text6>
 			<Text7>DDU (Enduro veya eşdeğeri) bir AMD Laptop tespit edildi, DDU henüz tam olarak uyumlu değil / Enduro sistemlerinde kullanmak kendi sorumluluğunuzdadır.</Text7>
 			<Text8>DDU'yu güvenli mod içinde çalıştırmadığınız tespit edildi... Daha iyi silme işlemi için güvenli moda girmeniz tavsiye edilir. Yeniden başlatıp güvenli moda girin.</Text8>
-			<Text9>DDU Windows Update ile sürücüleri otomatik olarak indirmeyi engelleyen bir ayar değişti. Sürücüyü daha sonra yüklemek isterseniz varsayılan ayarlara dönebilirsiniz.</Text9>
+			<Text9>Windows aygıt yükleme ayarları değişirildi, sürücüler otomatik yüklenmeyecek</Text9>
 			<Text10>Silme işlemi tamamlandı. Çıkmak istiyor musunuz?</Text10>
-			<Text11>Tamamlandı!</Text11>
+			<Text11>Windows aygıt yükleme ayarları sürücüleri otomatik yüklemek için ayarlandı.</Text11>
 			<Text12>Güvenli modda değil. Güvenli modda olası sorunları önlemek için yeniden başlatmanız önerilir. Şimdi güvenli moda geçilsin mi?</Text12>
 			<Text13>Mavi kurtarma ekranında seçmeniz gereken budur: Troubleshoot(Sorun Giderme) -&gt; advanced options(Gelişmiş Seçenekler) -&gt; startup Settings(Başlangıç Ayarları).</Text13>
 			<Text14>Bekleyen yeniden başlatma var, DDU'yu kullanmadan önce sistemi yeniden başaltınız.</Text14>
+            <Text15>Hiçbir değişiklik yapılmadı. Windows aygıt yükleme ayarları zaten varsayılan olarak ayarlanmış.</Text15>
 		</Messages>
 		
 		<UpdateLog>
-			<Text1>Yürütülen, Sürücü deposu temizleme (OEM sil adımı)</Text1>
+			<Text1>Yürütülen, Sürücü deposu temizleniyor (Adım OEM Sil)...</Text1>
 			<Text2>Dizin temizleniyor</Text2>
 			<Text3>Bilinen reg anahtarları siliniyor... Bir veya iki dakika sürebilir.</Text3>
 			<Text4>Eğer varsa UpdatusUser kullanıcıları temizleniyor.</Text4>
 			<Text5>Dizin temizleniyor</Text5>
 			<Text6>Kayıt defteri temizliği başlatıldı</Text6>
-			<Text7>Kayıt defteri teizliği tamamlandı</Text7>
+			<Text7>Kayıt defteri temizliği tamamlandı</Text7>
 			<Text8>Eğer mevcutsa nVidia Optimus UpperFilter silme işlemi başlatıldı.</Text8>
 			<Text9>Yeni aygıt için taranıyor...</Text9>
 			<Text10>Temizleme işlemi tamamlandı!</Text10>
 			<Text11>DDU Sürümü</Text11>
 			<Text12>GPU #</Text12>
 			<Text13>Algılanan</Text13>
-			<Text14>GPU aygıt kimliği</Text14>
-			<Text15>Algılanan sürücü(ler) sürüm(ler)</Text15>
+			<Text14>GPU Aygıt Kimliği</Text14>
+			<Text15>Algılanan Sürücü(ler) Sürüm(ler)</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF Bölümü</Text17>
 			<Text18>GPU düzgün yüklü değil</Text18>
@@ -147,13 +156,13 @@
 			<Text20>Temizleme başladı...</Text20>
 			<Text21>Kaldırılıyor..</Text21>
 			<Text22>Sürücü</Text22>
-			<Text23>DDUDR kaldırma işlemi yürütülüyor, lütfen bekleyin(birkaç dakika sürebilir)...</Text23>
+			<Text23>SetupAPI kaldırma işlemi yürütülüyor, lütfen bekleyin (Birkaç dakika sürebilir)</Text23>
 			<Text24>GPU(lar) Aygıt yöneticisinden kaldırıldı.</Text24>
-			<Text25>DDUDR yürütülüyor Ses denetleyicisi kaldırılıyor...</Text25>
+			<Text25>SetupAPI yürütülüyor, Ses denetleyicisi kaldırılıyor.</Text25>
 			<Text26>HD ses adaptörleri kaldırıldı!</Text26>
 			<Text27>3D Vision USB Adaptörü Aygıt Yöneticisinden kaldırıldı.</Text27>
 			<Text28>Monitörler ve Gizli monitörler kaldırıldı!</Text28>
-			<Text29>DDUDR kaldırma işlemi tamamlandı.</Text29>
+			<Text29>SetupAPI kaldırma işlemi tamamlandı.</Text29>
 			<Text30>Başlatıldı, S-1-5-xx bölge temizleme...</Text30>
 			<Text31>S-1-5-xx bölge temizliği tamamlandı.</Text31>
 			<Text32>Classesroot, yükleyici ve ürünleri temizleme başlatıldı...</Text32>
@@ -161,7 +170,7 @@
 			<Text34>Başlatıldı, LocalMachine yükleyici ve ürünleri temizleme başlatıldı...</Text34>
 			<Text35>LocalMachine yükleyici ve ürünleri temizleme tamamlandı.</Text35>
 			<Text36>Başlatıldı, varsayılan kullanıcı yükleyici ve ürünleri temizleme başlatıldı...</Text36>
-			<Text37>varsayılan kullanıcı yükleyici ve ürünleri temizleme tamamlandı.</Text37>
+			<Text37>Varsayılan kullanıcı yükleyici ve ürünleri temizleme tamamlandı.</Text37>
 			<Text38>İşlemler ve servisler temizleniyor...</Text38>
 			<Text39>İşlemler ve servisler temizlendi.</Text39>
 			<Text40>Silindi.</Text40>
@@ -187,7 +196,7 @@
 			<Text>Genel Seçenekler</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>C:\NVidia" Sürücü klasörlerini sil (Tavsiye edilmez)</Text>
+			<Text>"C:\NVidia" Sürücü klasörlerini sil (Tavsiye edilmez)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>Önyükleme yolunda günlük dosyalarına kaydet (Tavsiye edilen).</Text>
@@ -208,7 +217,7 @@
 			<Text>AMD Audio Bus'ı Sil.</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>C:\AMD" sürücü klasörlerini sil (Tavsiye edilmez)</Text>
+			<Text>"C:\AMD" Sürücü klasörlerini sil (Tavsiye edilmez)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>AMDKMPFD Sürücü/Filtre sil. (AMD chipset için yedeklemeniz tavsiye edilir)</Text>
@@ -229,12 +238,12 @@
 			<Text>AMD Crimson Shader Önbellek klasörünü sil.</Text>
 			<Tooltip>
 				Shader önbellek veri nedeniyle (hızlı veya görsel bozulma)grafiksel anormal bozukluk varsa tavsiye edilir.
-				Eğer nVıdıa gibi bir marka için de kullanıyorsanız tavsiye edilir.
+				Eğer NVidia gibi bir marka için de kullanıyorsanız tavsiye edilir.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>Vulkan Runtime Kaldır</Text>
-			<Tooltip>Eğer Vulkan API Kullanan 2 Farklı GPU Yeteneği Varsa Tavsiye edilmez.</Tooltip>
+			<Tooltip>Eğer Vulkan API Kullanan 2 Farklı GPU Yeteneği Varsa Tavsiye Edilmez.</Tooltip>
 		</lblVulkan>
 	</frmOptions>
 	
@@ -357,6 +366,8 @@ Logo yapımcı: juanchacin
 -Sorunları çözen ve test eden Gamer1291 (optimus), Octopuss (Amd Enduro), nedooo'ya çok teşekkürler.
 -Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
 
+*DDU, Driver Sweeper yapımcı veya kurucuları ile alakası yoktur.
+
 Çevirmen: murat5038
 </Text>
 		</About>
@@ -378,7 +389,7 @@ DDU'yu kullanarak, NVIDIA ("NVIDIA, GeForce") Advanced Micro Devices ("AMD, Rade
 		<Translator>
 			<User>murat5038</User>
 			<Details>Kaspersky Turkey Moderator</Details>
-			<LastUpdate>16/09/2016</LastUpdate>
+			<LastUpdate>25.02.2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

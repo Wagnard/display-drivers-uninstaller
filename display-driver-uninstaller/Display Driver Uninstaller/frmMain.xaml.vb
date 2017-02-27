@@ -391,7 +391,22 @@ Public Class frmMain
 
 		End If
 
+		filePath = Environment.GetFolderPath _
+		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Problem Report Wizard"
+		If FileIO.ExistsDir(filePath) Then
 
+			Delete(filePath)
+
+		End If
+		
+		filePath = Environment.GetFolderPath _
+		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Settings"
+		If FileIO.ExistsDir(filePath) Then
+
+			Delete(filePath)
+
+		End If
+		
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
 		If FileIO.ExistsDir(filePath) Then
