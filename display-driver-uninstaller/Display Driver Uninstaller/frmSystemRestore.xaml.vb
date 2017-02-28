@@ -1,5 +1,4 @@
-﻿Imports System.Management
-Imports System.Runtime.InteropServices
+﻿Imports System.Runtime.InteropServices
 Imports System.Threading
 Imports Microsoft.Win32
 

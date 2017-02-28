@@ -21,7 +21,6 @@ Imports System.IO
 Imports System.Security.AccessControl
 Imports System.Threading
 Imports System.Security.Principal
-Imports System.Management
 Imports System.Runtime.InteropServices
 Imports System.Reflection
 Imports System.Text
@@ -398,7 +397,7 @@ Public Class frmMain
 			Delete(filePath)
 
 		End If
-		
+
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Settings"
 		If FileIO.ExistsDir(filePath) Then
@@ -406,7 +405,7 @@ Public Class frmMain
 			Delete(filePath)
 
 		End If
-		
+
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
 		If FileIO.ExistsDir(filePath) Then
@@ -1426,12 +1425,12 @@ Public Class frmMain
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-                            If StrContainsAny(child, True, "ace", "appprofiles", "A4", "install") Then
-                                Try
-                                    deletesubregkey(regkey, child)
-                                Catch ex As Exception
-                                End Try
-                            End If
+							If StrContainsAny(child, True, "ace", "appprofiles", "A4", "install") Then
+								Try
+									deletesubregkey(regkey, child)
+								Catch ex As Exception
+								End Try
+							End If
 						End If
 					Next
 					If regkey.SubKeyCount = 0 Then
@@ -1455,12 +1454,12 @@ Public Class frmMain
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-                            If StrContainsAny(child, True, "cbt") Then
-                                Try
-                                    deletesubregkey(regkey, child)
-                                Catch ex As Exception
-                                End Try
-                            End If
+							If StrContainsAny(child, True, "cbt") Then
+								Try
+									deletesubregkey(regkey, child)
+								Catch ex As Exception
+								End Try
+							End If
 							If StrContainsAny(child, True, "ati catalyst control center") Then
 								Try
 									deletesubregkey(regkey, child)
@@ -1522,13 +1521,13 @@ Public Class frmMain
 										For Each child2 As String In regkey2.GetSubKeyNames()
 											If IsNullOrWhitespace(child2) Then Continue For
 
-                                            If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages",
-                                               "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard", "amd problem report wizard") Then
-                                                Try
-                                                    deletesubregkey(regkey2, child2)
-                                                Catch ex As Exception
-                                                End Try
-                                            End If
+											If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages",
+											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard", "amd problem report wizard") Then
+												Try
+													deletesubregkey(regkey2, child2)
+												Catch ex As Exception
+												End Try
+											End If
 										Next
 										For Each values As String In regkey2.GetValueNames()
 											Try
@@ -1578,15 +1577,15 @@ Public Class frmMain
 								Catch ex As Exception
 								End Try
 							End If
-                            If StrContainsAny(child, True, "install") Then  'Just a safety here....
-                                If regkey.OpenSubKey(child).SubKeyCount = 0 Then
-                                    Try
-                                        deletesubregkey(regkey, child)
-                                    Catch ex As Exception
-                                    End Try
-                                End If
-                            End If
-                        End If
+							If StrContainsAny(child, True, "install") Then	'Just a safety here....
+								If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+									Try
+										deletesubregkey(regkey, child)
+									Catch ex As Exception
+									End Try
+								End If
+							End If
+						End If
 					Next
 					If regkey.SubKeyCount = 0 Then
 						Try
@@ -1630,12 +1629,12 @@ Public Class frmMain
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) = False Then
-                                If StrContainsAny(child, True, "ace", "appprofiles", "A4") Then
-                                    Try
-                                        deletesubregkey(regkey, child)
-                                    Catch ex As Exception
-                                    End Try
-                                End If
+								If StrContainsAny(child, True, "ace", "appprofiles", "A4") Then
+									Try
+										deletesubregkey(regkey, child)
+									Catch ex As Exception
+									End Try
+								End If
 							End If
 						Next
 						If regkey.SubKeyCount = 0 Then
@@ -1721,13 +1720,13 @@ Public Class frmMain
 											For Each child2 As String In regkey2.GetSubKeyNames()
 												If IsNullOrWhitespace(child2) Then Continue For
 
-                                                If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "packages",
-                                                   "wirelessdisplay", "hydravision", "dndtranscoding64", "avivo", "steadyvideo") Then
-                                                    Try
-                                                        deletesubregkey(regkey2, child2)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
+												If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "packages",
+												   "wirelessdisplay", "hydravision", "dndtranscoding64", "avivo", "steadyvideo") Then
+													Try
+														deletesubregkey(regkey2, child2)
+													Catch ex As Exception
+													End Try
+												End If
 											Next
 											If regkey2.SubKeyCount = 0 Then
 												Try
@@ -2255,8 +2254,8 @@ Public Class frmMain
 							If IsNullOrWhitespace(child) = False Then
 								Dim dirinfo As New System.IO.DirectoryInfo(child)
 								If dirinfo.Name.ToLower.StartsWith("c030") Or
-									StrContainsAny(dirinfo.Name, True, "atihdwt6.inf") Or
-									(Not donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(dirinfo.Name, True, "amdkmafd.inf")) Then
+								 StrContainsAny(dirinfo.Name, True, "atihdwt6.inf") Or
+								 (Not donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(dirinfo.Name, True, "amdkmafd.inf")) Then
 									Try
 										Delete(child)
 									Catch ex As Exception
@@ -2417,7 +2416,7 @@ Public Class frmMain
 		UpdateTextMethod("Starting removal of Geforce Experience downloaded drivers")
 		Try
 			filepath = Environment.GetFolderPath _
-	 (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation\Downloader"
+			  (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation\Downloader"
 			If FileIO.ExistsDir(filepath) Then
 				For Each child As String In My.Computer.FileSystem.GetDirectories(filepath)
 					If IsNullOrWhitespace(child) = False Then
@@ -2649,7 +2648,7 @@ Public Class frmMain
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("updatus") Or _
-						child.ToLower.Contains("shimgen") Or _
+					 child.ToLower.Contains("shimgen") Or _
 					 (child.ToLower.Contains("grid") AndAlso config.RemoveGFE) Then
 
 						Delete(child)
@@ -6368,7 +6367,7 @@ Public Class frmMain
 		If version >= OSVersion.WinVista AndAlso version < OSVersion.Win7 Then
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-                    Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate", Nothing))
+					Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate", Nothing))
 
 					If regkey IsNot Nothing AndAlso regValue <> If(enable, 0, 1) Then
 						regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
@@ -6665,8 +6664,26 @@ Public Class frmMain
 		'end system environement patch cleanup
 	End Sub
 
+	Private Sub testing2MenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles testingMenuItem.Click
+		' WIP
 
-	Private Sub testingMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles testingMenuItem.Click
+		'If Application.Settings.WinVersion < OSVersion.WinVista Then
+		'	Throw New InvalidOperationException("Only Windows Vista or higher supported! (WIP)")
+		'End If
+
+		'Dim ts As New TaskScheduler.V2.TaskScheduler()
+
+		'ts.Connect(Nothing, Nothing, Nothing, Nothing)
+
+		'Dim folder As TaskScheduler.V2.ITaskFolder = ts.GetFolder("\")
+
+		'For Each task As TaskScheduler.V2.IRegisteredTask In folder.GetTasks(0)
+		'	MessageBox.Show(task.Name)
+		'Next
+
+	End Sub
+
+	Private Sub testingMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs)	'Handles testingMenuItem.Click
 		Dim testfile As String = Application.Paths.AppBase & "TestAssembly.dll"
 
 		Try

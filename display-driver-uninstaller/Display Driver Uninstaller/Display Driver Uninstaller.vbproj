@@ -59,7 +59,6 @@
     <Reference Include="System" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -108,6 +107,10 @@
     <Compile Include="Tools.vb" />
     <Compile Include="Win32\SetupAPI_Inf.vb" />
     <Compile Include="Win32\SystemRestore.vb" />
+    <Compile Include="Win32\TaskScheluder\Native.vb" />
+    <Compile Include="Win32\TaskScheluder\Enums.vb" />
+    <Compile Include="Win32\TaskScheluder\V1.vb" />
+    <Compile Include="Win32\TaskScheluder\V2.vb" />
     <Compile Include="Win32\Win32.vb" />
     <Compile Include="Win32\WinAPI.vb" />
     <Page Include="frmAbout.xaml">
