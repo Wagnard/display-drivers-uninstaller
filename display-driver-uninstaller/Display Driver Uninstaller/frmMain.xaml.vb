@@ -6665,21 +6665,45 @@ Public Class frmMain
 	End Sub
 
 	Private Sub testing2MenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles testingMenuItem.Click
-		' WIP
+		Dim str As String = Nothing
 
-		'If Application.Settings.WinVersion < OSVersion.WinVista Then
-		'	Throw New InvalidOperationException("Only Windows Vista or higher supported! (WIP)")
-		'End If
+		Dim tsc As New TaskSchedulerControl
 
-		'Dim ts As New TaskScheduler.V2.TaskScheduler()
+		Dim sfd As New SaveFileDialog() With
+		{
+		 .Title = "Select file for tasklist output",
+		 .Filter = "Txt files (*.txt)|*.txt",
+		 .FilterIndex = 1,
+		 .AddExtension = True,
+		 .DefaultExt = ".txt"
+		}
 
-		'ts.Connect(Nothing, Nothing, Nothing, Nothing)
+		If sfd.ShowDialog() = True Then
 
-		'Dim folder As TaskScheduler.V2.ITaskFolder = ts.GetFolder("\")
+			Using sw As New StreamWriter(sfd.FileName, False, Encoding.UTF8)
 
-		'For Each task As TaskScheduler.V2.IRegisteredTask In folder.GetTasks(0)
-		'	MessageBox.Show(task.Name)
-		'Next
+				For Each task As TaskScheduler.Version2.IRegisteredTask In tsc.GetAllTasks()
+
+					sw.WriteLine("Name:  ".PadLeft(14, " "c) & task.Name)
+					sw.WriteLine("Path:  ".PadLeft(14, " "c) & task.Path)
+					sw.WriteLine("Enabled:  ".PadLeft(14, " "c) & task.Enabled.ToString())
+					sw.WriteLine("State:  ".PadLeft(14, " "c) & task.State.ToString())
+
+					If task.Definition IsNot Nothing AndAlso task.Definition.RegistrationInfo IsNot Nothing Then
+
+						sw.WriteLine("Author:  ".PadLeft(14, " "c) & task.Definition.RegistrationInfo.Author)
+						sw.WriteLine("Description:  ".PadLeft(14, " "c) & task.Definition.RegistrationInfo.Description)
+
+					End If
+
+					sw.WriteLine("")
+
+				Next
+
+			End Using
+
+		End If
+
 
 	End Sub
 

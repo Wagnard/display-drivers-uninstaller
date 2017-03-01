@@ -314,5 +314,20 @@ Namespace Win32
 			End Sub
 		End Class
 
+		Friend Class SYSTEMTIME
+			Public wYear As UInt16
+			Public wMonth As UInt16
+			Public wDayOfWeek As UInt16
+			Public wDay As UInt16
+			Public wHour As UInt16
+			Public wMinute As UInt16
+			Public wSecond As UInt16
+			Public wMilliseconds As UInt16
+
+			Public Overrides Function ToString() As String
+				Return String.Format("{0}/{1}/{2}  {3}:{4}:{5}", wDay.ToString(), wMonth.ToString(), wYear.ToString(), wHour.ToString(), wMinute.ToString(), wSecond.ToString)
+			End Function
+		End Class
+
 	End Module
 End Namespace
