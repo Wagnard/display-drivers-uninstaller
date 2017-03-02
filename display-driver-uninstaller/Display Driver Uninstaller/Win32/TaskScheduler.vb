@@ -17,6 +17,13 @@ Namespace Win32
 	' Task Scheduler 2.0 Interfaces (Vista ->)
 	' https://msdn.microsoft.com/en-us/library/windows/desktop/aa383600(v=vs.85).aspx
 
+	Public Enum TaskStates
+		Unknown = 0
+		Disabled = 1
+		Queued = 2
+		Ready = 3
+		Running = 4
+	End Enum
 
 	Public Class TaskSchedulerControl
 		Private Const _rootFolder As String = "\"
@@ -24,14 +31,15 @@ Namespace Win32
 
 		Public Sub New()
 			If Application.Settings.WinVersion < OSVersion.WinVista Then
-				Throw New InvalidOperationException("Not supported OS older than Vista! for now...")
+				MessageBox.Show("Not supported OS older than Vista! for now...", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error)
+				Environment.Exit(0)
 			End If
 
 			_taskScheduler = New Version2.TaskScheduler()
 			_taskScheduler.Connect()
 		End Sub
 
-		Friend Function GetAllTasks(Optional ByVal recursive As Boolean = True) As List(Of Version2.IRegisteredTask)
+		Friend Function GetAllTasks(Optional ByVal recursive As Boolean = True) As List(Of Task)
 			Dim folders As New List(Of Version2.ITaskFolder)(10)
 
 			If recursive Then
@@ -40,11 +48,11 @@ Namespace Win32
 				folders.Add(_taskScheduler.GetFolder(_rootFolder))
 			End If
 
-			Dim tasks As New List(Of Version2.IRegisteredTask)(20)
+			Dim tasks As New List(Of Task)(100)
 
 			For Each folder As Version2.ITaskFolder In folders
 				For Each task As Version2.IRegisteredTask In folder.GetTasks(0)
-					tasks.Add(task)
+					tasks.Add(New TaskV2(folder, task))
 				Next
 			Next
 
@@ -62,7 +70,187 @@ Namespace Win32
 		Friend Function GetRunningTasks() As Version2.IRunningTaskCollection
 			Return _taskScheduler.GetRunningTasks(0)
 		End Function
+
 	End Class
+
+	Public MustInherit Class Task
+		Public MustOverride ReadOnly Property Name As String
+		Public MustOverride ReadOnly Property Path As String
+		Public MustOverride ReadOnly Property State As TaskStates
+		Public MustOverride Property Enabled As Boolean
+
+		Public MustOverride ReadOnly Property Author As String
+		Public MustOverride ReadOnly Property Description As String
+
+		Public MustOverride Sub Delete()
+
+		Public MustOverride Sub Start()
+
+		Public MustOverride Sub [Stop]()
+	End Class
+
+	Public Class TaskV2
+		Inherits Task
+
+		Private _taskFolder As Version2.ITaskFolder = Nothing
+		Private _task As Version2.IRegisteredTask = Nothing
+
+		Friend Sub New(ByVal folder As Version2.ITaskFolder, ByVal task As Version2.IRegisteredTask)
+			_taskFolder = folder
+			_task = task
+		End Sub
+
+		Public Overrides ReadOnly Property Name As String
+			Get
+				If _task IsNot Nothing Then
+					Return _task.Name
+				Else
+					Return Nothing
+				End If
+			End Get
+		End Property
+
+		Public Overrides ReadOnly Property Path As String
+			Get
+				If _task IsNot Nothing Then
+					Return _task.Path
+				Else
+					Return Nothing
+				End If
+			End Get
+		End Property
+
+		Public Overrides ReadOnly Property State As TaskStates
+			Get
+				If _task IsNot Nothing AndAlso [Enum].IsDefined(GetType(TaskStates), CInt(_task.State)) Then
+					Return CType(CInt(_task.State), TaskStates)
+				Else
+					Return TaskStates.Unknown
+				End If
+			End Get
+		End Property
+
+		Public Overrides Property Enabled As Boolean
+			Get
+				If _task IsNot Nothing Then
+					Return _task.Enabled
+				Else
+					Return False
+				End If
+			End Get
+			Set(value As Boolean)
+				If _task IsNot Nothing Then
+					_task.Enabled = value
+				End If
+			End Set
+		End Property
+
+		Public Overrides ReadOnly Property Author As String
+			Get
+				If _task IsNot Nothing AndAlso _task.Definition IsNot Nothing AndAlso _task.Definition.RegistrationInfo IsNot Nothing Then
+					Return _task.Definition.RegistrationInfo.Author
+				Else
+					Return Nothing
+				End If
+			End Get
+		End Property
+
+
+		Public Overrides ReadOnly Property Description As String
+			Get
+				If _task IsNot Nothing AndAlso _task.Definition IsNot Nothing AndAlso _task.Definition.RegistrationInfo.Description IsNot Nothing Then
+					Return _task.Definition.RegistrationInfo.Description
+				Else
+					Return Nothing
+				End If
+			End Get
+		End Property
+
+		Public Overrides Sub Delete()
+			[Stop]()
+
+			If _taskFolder IsNot Nothing AndAlso _task IsNot Nothing AndAlso Not String.IsNullOrEmpty(_task.Name) Then
+				_taskFolder.DeleteTask(_task.Name, 0)
+			End If
+		End Sub
+
+		Public Overrides Sub Start()
+			If _task IsNot Nothing AndAlso _task.State <> TASK_STATE.RUNNING Then
+				_task.Run(Nothing)
+			End If
+		End Sub
+
+		Public Overrides Sub [Stop]()
+			If _task IsNot Nothing Then
+				_task.Stop(0)
+			End If
+		End Sub
+
+	End Class
+
+	Public Class TaskV1
+		Inherits Task
+
+		'Private _taskFolder As Version2.ITaskFolder = Nothing
+		'Private _task As Version2.IRegisteredTask = Nothing
+
+		'Friend Sub New(ByVal folder As Version2.ITaskFolder, ByVal task As Version2.IRegisteredTask)
+		'_taskFolder = folder
+		'_task = task
+		'End Sub
+
+		Public Overrides ReadOnly Property Name As String
+			Get
+
+			End Get
+		End Property
+
+		Public Overrides ReadOnly Property Path As String
+			Get
+
+			End Get
+		End Property
+
+		Public Overrides ReadOnly Property State As TaskStates
+			Get
+
+			End Get
+		End Property
+
+		Public Overrides Property Enabled As Boolean
+			Get
+
+			End Get
+			Set(value As Boolean)
+
+			End Set
+		End Property
+
+		Public Overrides ReadOnly Property Author As String
+			Get
+
+			End Get
+		End Property
+
+		Public Overrides ReadOnly Property Description As String
+			Get
+
+			End Get
+		End Property
+
+		Public Overrides Sub Delete()
+			[Stop]()
+		End Sub
+
+		Public Overrides Sub Start()
+		End Sub
+
+		Public Overrides Sub [Stop]()
+		End Sub
+
+	End Class
+
+
 End Namespace
 
 Namespace Win32.TaskScheduler
@@ -206,6 +394,41 @@ Namespace Win32.TaskScheduler.Version1
 		TASKPAGE_SCHEDULE = 1US
 		TASKPAGE_SETTINGS = 2US
 	End Enum
+
+	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa380706(v=vs.85).aspx</remarks>
+	'<Guid("?"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	'Friend Interface IEnumWorkItems
+	'End Interface
+
+	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa381311(v=vs.85).aspx</remarks>
+	'<Guid("?"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	Friend Interface ITask
+		Inherits IScheduledWorkItem
+
+	End Interface
+
+	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa381811(v=vs.85).aspx</remarks>
+	'<Guid("?"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	'Friend Interface ITaskScheduler
+	'End Interface
+
+	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa381864(v=vs.85).aspx</remarks>
+	'<Guid("?"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	'Friend Interface ITaskTrigger
+	'End Interface
+
+	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa381216(v=vs.85).aspx</remarks>
+	'<Guid("?"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	Friend Interface IScheduledWorkItem
+	End Interface
+
+	'<ComImport(), Guid("?"), SuppressUnmanagedCodeSecurity()>
+	'Friend Class CLSID_Ctask
+	'End Class
+
+	'<ComImport(), Guid("?"), SuppressUnmanagedCodeSecurity()>
+	'Friend Class CLSID_CTaskScheduler
+	'End Class
 
 End Namespace
 

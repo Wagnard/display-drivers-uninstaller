@@ -6678,22 +6678,41 @@ Public Class frmMain
 		 .DefaultExt = ".txt"
 		}
 
+		Dim delete As Boolean = (MessageBox.Show("Delete tasks?" & CRLF & "Yes = Ask for delete" & CRLF & "No = Just save to file", "Question", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) = MessageBoxResult.Yes)
+
 		If sfd.ShowDialog() = True Then
 
 			Using sw As New StreamWriter(sfd.FileName, False, Encoding.UTF8)
 
-				For Each task As TaskScheduler.Version2.IRegisteredTask In tsc.GetAllTasks()
+				For Each task As Task In tsc.GetAllTasks()
 
 					sw.WriteLine("Name:  ".PadLeft(14, " "c) & task.Name)
 					sw.WriteLine("Path:  ".PadLeft(14, " "c) & task.Path)
 					sw.WriteLine("Enabled:  ".PadLeft(14, " "c) & task.Enabled.ToString())
 					sw.WriteLine("State:  ".PadLeft(14, " "c) & task.State.ToString())
 
-					If task.Definition IsNot Nothing AndAlso task.Definition.RegistrationInfo IsNot Nothing Then
+					If task.Author IsNot Nothing Then sw.WriteLine("Author:  ".PadLeft(14, " "c) & task.Author)
+					If task.Description IsNot Nothing Then sw.WriteLine("Description:  ".PadLeft(14, " "c) & task.Description)
 
-						sw.WriteLine("Author:  ".PadLeft(14, " "c) & task.Definition.RegistrationInfo.Author)
-						sw.WriteLine("Description:  ".PadLeft(14, " "c) & task.Definition.RegistrationInfo.Description)
+					If delete Then
+						Select Case MessageBox.Show("Task:" & CRLF & task.Name & CRLF & task.Description & CRLF & CRLF & "Delete?", "Delete task?", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation)
+							Case MessageBoxResult.Yes
 
+								'	task.Delete()  ' USE WITH CAUTION! 
+
+								'	task.Enabled = True	   ' enable / disable
+
+								'	If task.State = TaskStates.Running Then	'Start/Stop
+								'		task.Stop()
+								'	Else
+								'		task.Start()
+								'	End If
+
+							Case MessageBoxResult.No
+								Continue For
+							Case MessageBoxResult.Cancel
+								Exit For
+						End Select
 					End If
 
 					sw.WriteLine("")
