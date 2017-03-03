@@ -2978,6 +2978,18 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
+		Try
+			filePath = config.Paths.SystemDrive & "Temp"
+			For Each child As String In Directory.GetDirectories(filePath)
+				If IsNullOrWhitespace(child) = False Then
+					If StrContainsAny(child, True, "NVIDIA") Then
+						Delete(child)
+					End If
+				End If
+			Next
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
 
 
 		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
@@ -4146,6 +4158,7 @@ Public Class frmMain
 						 child.ToLower.Contains("_nvbackend") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvplugin") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvtelemetry") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_nvvhci") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvdisplaycontainer") Or
 						 child.ToLower.Contains("_nvcontainer") AndAlso config.RemoveGFE Then
 							If removephysx = False AndAlso child.ToLower.Contains("physx") Then
