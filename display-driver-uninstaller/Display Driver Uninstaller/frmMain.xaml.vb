@@ -6678,67 +6678,88 @@ Public Class frmMain
 	End Sub
 
 	Private Sub testing2MenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles testingMenuItem.Click
-		Dim str As String = Nothing
 
+		' Example usage
+		Using tsc As New TaskSchedulerControl
+			For Each task As Task In tsc.GetAllTasks()
+				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") Then
 
-		Dim sfd As New SaveFileDialog() With
-		{
-		 .Title = "Select file for tasklist output",
-		 .Filter = "Txt files (*.txt)|*.txt",
-		 .FilterIndex = 1,
-		 .AddExtension = True,
-		 .DefaultExt = ".txt"
-		}
+					' in use, replace ALL text below with just
+					' task.Delete()
 
+					' Below is just for testing
+					Dim sb As New StringBuilder
+					sb.AppendLine("[ Name ]" & CRLF & task.Name & CRLF)
+					sb.AppendLine("[ Path ]" & CRLF & task.Path & CRLF)
+					sb.AppendLine("[ Enabled ]" & CRLF & If(task.Enabled, "Yes", "No") & CRLF)
+					sb.AppendLine("[ State ]" & CRLF & task.State.ToString() & CRLF)
 
+					If task.Author IsNot Nothing Then sb.AppendLine("[ Author ]" & CRLF & task.Author & CRLF)
+					If task.Description IsNot Nothing Then sb.AppendLine("[ Description ]" & CRLF & task.Description & CRLF)
 
-		Dim delete As Boolean = (MessageBox.Show("Delete tasks?" & CRLF & "Yes = Ask for delete" & CRLF & "No = Just save to file", "Question", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) = MessageBoxResult.Yes)
+					If MessageBox.Show(sb.ToString(), "Found!", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) = MessageBoxResult.Cancel Then
+						Exit For
+					End If
 
-		If sfd.ShowDialog() = True Then
+				End If
+			Next
+		End Using
 
-			Using sw As New StreamWriter(sfd.FileName, False, Encoding.UTF8)
+		MessageBox.Show("End of Tasks")
 
-				Using tsc As New TaskSchedulerControl
-					For Each task As Task In tsc.GetAllTasks()
+		' TESTING / LOGGING (FILE)
+		'Dim sfd As New SaveFileDialog() With
+		'{
+		' .Title = "Select file for tasklist output",
+		' .Filter = "Txt files (*.txt)|*.txt",
+		' .FilterIndex = 1,
+		' .AddExtension = True,
+		' .DefaultExt = ".txt"
+		'}
 
-						sw.WriteLine("Name:  ".PadLeft(14, " "c) & task.Name)
-						sw.WriteLine("Path:  ".PadLeft(14, " "c) & task.Path)
-						sw.WriteLine("Enabled:  ".PadLeft(14, " "c) & task.Enabled.ToString())
-						sw.WriteLine("State:  ".PadLeft(14, " "c) & task.State.ToString())
+		'Dim delete As Boolean = (MessageBox.Show("Delete tasks?" & CRLF & "Yes = Ask delete for each task" & CRLF & "No = Just save to file", "Question", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) = MessageBoxResult.Yes)
 
-						If task.Author IsNot Nothing Then sw.WriteLine("Author:  ".PadLeft(14, " "c) & task.Author)
-						If task.Description IsNot Nothing Then sw.WriteLine("Description:  ".PadLeft(14, " "c) & task.Description)
+		'If sfd.ShowDialog() = True Then
 
-						If delete Then
-							Select Case MessageBox.Show("Task:" & CRLF & task.Name & CRLF & task.Description & CRLF & CRLF & "Delete?", "Delete task?", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation)
-								Case MessageBoxResult.Yes
+		'	Using sw As New StreamWriter(sfd.FileName, False, Encoding.UTF8)
 
-									'	task.Delete()  ' USE WITH CAUTION! 
+		'		Using tsc As New TaskSchedulerControl
+		'			For Each task As Task In tsc.GetAllTasks()
 
-									'	task.Enabled = True	   ' enable / disable
+		'				sw.WriteLine("Name:  ".PadLeft(14, " "c) & task.Name)
+		'				sw.WriteLine("Path:  ".PadLeft(14, " "c) & task.Path)
+		'				sw.WriteLine("Enabled:  ".PadLeft(14, " "c) & If(task.Enabled, "Yes", "No"))
+		'				sw.WriteLine("State:  ".PadLeft(14, " "c) & task.State.ToString())
 
-									'	If task.State = TaskStates.Running Then	'Start/Stop
-									'		task.Stop()
-									'	Else
-									'		task.Start()
-									'	End If
+		'				If task.Author IsNot Nothing Then sw.WriteLine("Author:  ".PadLeft(14, " "c) & task.Author)
+		'				If task.Description IsNot Nothing Then sw.WriteLine("Description:  ".PadLeft(14, " "c) & task.Description)
 
-								Case MessageBoxResult.No
-									Continue For
-								Case MessageBoxResult.Cancel
-									Exit For
-							End Select
-						End If
+		'				If delete Then
+		'					Select Case MessageBox.Show("Task:" & CRLF & task.Name & CRLF & task.Description & CRLF & CRLF & "Delete?", "Delete task?", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation)
+		'						Case MessageBoxResult.Yes
+		'							'	task.Delete()  ' USE WITH CAUTION! 
 
-						sw.WriteLine("")
+		'							'	task.Enabled = Not task.Enabled	   ' enable / disable
 
-					Next
-				End Using
-			End Using
+		'							'	If task.State = TaskStates.Running Then	'Start/Stop
+		'							'		task.Stop()
+		'							'	Else
+		'							'		task.Start()
+		'							'	End If
 
-		End If
+		'						Case MessageBoxResult.No
+		'							Continue For
+		'						Case MessageBoxResult.Cancel
+		'							Exit For
+		'					End Select
+		'				End If
 
+		'				sw.WriteLine("")
 
+		'			Next
+		'		End Using
+		'	End Using
+		'End If
 	End Sub
 
 	Private Sub testingMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs)	'Handles testingMenuItem.Click

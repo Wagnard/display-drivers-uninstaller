@@ -30,6 +30,7 @@ Namespace Win32
 	Public Class TaskSchedulerControl
 		Implements IDisposable
 
+		Friend Const MaxWaits As Int32 = 500	  ' 500 * 10ms = 5sec MAX  (takes less than 1 ms usually) || process will stay running after deletion of task if not waited)
 		Private Const _rootFolder As String = "\"
 		Private ReadOnly _useV2 As Boolean = True
 		Friend Shared ReadOnly iTaskGuid As Guid = Marshal.GenerateGuidForType(GetType(Version1.ITask))
@@ -46,6 +47,7 @@ Namespace Win32
 				_taskSchedulerV2.Connect()
 			Else
 				_taskSchedulerV1 = CType(New Version1.CTaskScheduler(), Version1.ITaskScheduler)
+				_taskSchedulerV1.SetTargetComputer(Nothing)
 			End If
 
 		End Sub
@@ -166,6 +168,22 @@ Namespace Win32
 		Public MustOverride Sub Start()
 
 		Public MustOverride Sub [Stop]()
+
+		Protected Sub WaitForTermination()
+			[Stop]()
+
+			Dim waits As Int32 = 0
+
+			While State = TaskStates.Running
+				System.Threading.Thread.Sleep(10)
+
+				waits += 1
+
+				If (waits >= TaskSchedulerControl.MaxWaits) Then
+					Exit While
+				End If
+			End While
+		End Sub
 	End Class
 
 	Public Class TaskV2
@@ -234,7 +252,6 @@ Namespace Win32
 			End Get
 		End Property
 
-
 		Public Overrides ReadOnly Property Description As String
 			Get
 				If _task IsNot Nothing AndAlso _task.Definition IsNot Nothing AndAlso _task.Definition.RegistrationInfo.Description IsNot Nothing Then
@@ -246,9 +263,11 @@ Namespace Win32
 		End Property
 
 		Public Overrides Sub Delete()
-			[Stop]()
-
 			If _taskFolder IsNot Nothing AndAlso _task IsNot Nothing AndAlso Not String.IsNullOrEmpty(_task.Name) Then
+				[Stop]()
+
+				WaitForTermination()
+
 				_taskFolder.DeleteTask(_task.Name, 0)
 			End If
 		End Sub
@@ -280,26 +299,38 @@ Namespace Win32
 
 		Public Overrides ReadOnly Property Name As String
 			Get
-				Dim filePath As String = Nothing
+				If _task IsNot Nothing Then
+					Dim filePath As String = Nothing
 
-				CType(_task, ComTypes.IPersistFile).GetCurFile(filePath)
+					CType(_task, ComTypes.IPersistFile).GetCurFile(filePath)
 
-				Return System.IO.Path.GetFileNameWithoutExtension(filePath)
+					Return System.IO.Path.GetFileNameWithoutExtension(filePath)
+				End If
+
+				Return Nothing
 			End Get
 		End Property
 
 		Public Overrides ReadOnly Property Path As String
 			Get
-				Dim filePath As String = Nothing
+				If _task IsNot Nothing Then
+					Dim filePath As String = Nothing
 
-				CType(_task, ComTypes.IPersistFile).GetCurFile(filePath)
+					CType(_task, ComTypes.IPersistFile).GetCurFile(filePath)
 
-				Return filePath
+					Return filePath
+				End If
+
+				Return Nothing
 			End Get
 		End Property
 
 		Public Overrides ReadOnly Property State As TaskStates
 			Get
+				If _task Is Nothing Then
+					Return TaskStates.Unknown
+				End If
+
 				Dim task As Version1.ITask
 
 				Try
@@ -322,10 +353,10 @@ Namespace Win32
 						Return TaskStates.Queued
 
 					Case Errors.SCHED_S_TASK_HAS_NOT_RUN,
-						Errors.SCHED_S_TASK_NO_MORE_RUNS,
-						Errors.SCHED_S_TASK_NOT_SCHEDULED,
-						Errors.SCHED_S_TASK_TERMINATED,
-						Errors.SCHED_S_TASK_READY
+					 Errors.SCHED_S_TASK_NO_MORE_RUNS,
+					 Errors.SCHED_S_TASK_NOT_SCHEDULED,
+					 Errors.SCHED_S_TASK_TERMINATED,
+					 Errors.SCHED_S_TASK_READY
 						Return TaskStates.Ready
 
 					Case Errors.SCHED_S_TASK_RUNNING
@@ -341,35 +372,61 @@ Namespace Win32
 
 		Public Overrides Property Enabled As Boolean
 			Get
-				Return Not HasFlag(_task.GetFlags(), TASK_FLAG.DISABLED)
+				If _task IsNot Nothing Then
+					Return Not HasFlag(_task.GetFlags(), TASK_FLAG.DISABLED)
+				End If
+
+				Return False
 			End Get
 			Set(value As Boolean)
-				_task.SetFlags(SetFlag(Of TASK_FLAG)(_task.GetFlags(), TASK_FLAG.DISABLED, Not value))
+				If _task IsNot Nothing Then
+					_task.SetFlags(SetFlag(Of TASK_FLAG)(_task.GetFlags(), TASK_FLAG.DISABLED, Not value))
 
-				SaveToFile(Name)
+					SaveToFile(Name)
+				End If
 			End Set
 		End Property
 
 		Public Overrides ReadOnly Property Author As String
 			Get
-				Return If(_task.GetCreator(), Nothing)
+				If _task IsNot Nothing Then
+					Return If(_task.GetCreator(), Nothing)
+				End If
+
+				Return Nothing
 			End Get
 		End Property
 
 		Public Overrides ReadOnly Property Description As String
 			Get
-				Return If(_task.GetComment(), Nothing)
+				If _task IsNot Nothing Then
+					Return If(_task.GetComment(), Nothing)
+				End If
+
+				Return Nothing
 			End Get
 		End Property
 
 		Public Overrides Sub Delete()
-			[Stop]()
+			If _task IsNot Nothing Then
+				[Stop]()
+
+				WaitForTermination()
+
+				_taskScheduler.Delete(Name)
+			End If
 		End Sub
 
 		Public Overrides Sub Start()
+			If _task IsNot Nothing AndAlso State <> TaskStates.Running Then
+				_task.Run()
+			End If
 		End Sub
 
 		Public Overrides Sub [Stop]()
+			If _task IsNot Nothing AndAlso State = TaskStates.Running Then
+				_task.Terminate()
+			End If
 		End Sub
 
 		Friend Shared Function ReActivate(ByVal taskScheduler As ITaskScheduler, ByVal name As String) As ITask
