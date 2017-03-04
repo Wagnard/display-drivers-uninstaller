@@ -5,6 +5,8 @@ Imports System.Runtime.InteropServices
 Imports System.Security
 
 Imports Display_Driver_Uninstaller.Win32.TaskScheduler
+Imports Display_Driver_Uninstaller.Win32.TaskScheduler.Version1
+Imports Display_Driver_Uninstaller.Win32.TaskScheduler.Version2
 
 Namespace Win32
 
@@ -26,35 +28,85 @@ Namespace Win32
 	End Enum
 
 	Public Class TaskSchedulerControl
+		Implements IDisposable
+
 		Private Const _rootFolder As String = "\"
-		Private _taskScheduler As Version2.TaskScheduler = Nothing
+		Private ReadOnly _useV2 As Boolean = True
+		Friend Shared ReadOnly iTaskGuid As Guid = Marshal.GenerateGuidForType(GetType(Version1.ITask))
+
+		Private _disposed As Boolean
+		Private _taskSchedulerV1 As Version1.ITaskScheduler = Nothing
+		Private _taskSchedulerV2 As Version2.TaskScheduler = Nothing
 
 		Public Sub New()
-			If Application.Settings.WinVersion < OSVersion.WinVista Then
-				MessageBox.Show("Not supported OS older than Vista! for now...", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error)
-				Environment.Exit(0)
+			_useV2 = (Application.Settings.WinVersion >= OSVersion.WinVista)
+
+			If _useV2 Then
+				_taskSchedulerV2 = New Version2.TaskScheduler()
+				_taskSchedulerV2.Connect()
+			Else
+				_taskSchedulerV1 = CType(New Version1.CTaskScheduler(), Version1.ITaskScheduler)
 			End If
 
-			_taskScheduler = New Version2.TaskScheduler()
-			_taskScheduler.Connect()
 		End Sub
 
-		Friend Function GetAllTasks(Optional ByVal recursive As Boolean = True) As List(Of Task)
-			Dim folders As New List(Of Version2.ITaskFolder)(10)
-
-			If recursive Then
-				GetFolders(_taskScheduler.GetFolder(_rootFolder), folders)
-			Else
-				folders.Add(_taskScheduler.GetFolder(_rootFolder))
-			End If
-
+		Friend Function GetAllTasks() As List(Of Task)
 			Dim tasks As New List(Of Task)(100)
 
-			For Each folder As Version2.ITaskFolder In folders
-				For Each task As Version2.IRegisteredTask In folder.GetTasks(0)
-					tasks.Add(New TaskV2(folder, task))
+			If _useV2 Then
+				Dim folders As New List(Of Version2.ITaskFolder)(10)
+
+				GetFolders(_taskSchedulerV2.GetFolder(_rootFolder), folders)
+
+				For Each folder As Version2.ITaskFolder In folders
+					For Each task As Version2.IRegisteredTask In folder.GetTasks(0)
+						tasks.Add(New TaskV2(folder, task))
+					Next
 				Next
-			Next
+
+				Return tasks
+			Else
+				Dim task As Version1.ITask
+				Dim ptrJob As IntPtr = IntPtr.Zero
+				Dim i As UInt32 = 0UI
+				Dim errCode As UInt32
+
+				Dim workItems As Version1.IEnumWorkItems = _taskSchedulerV1.Enum()
+
+				If workItems IsNot Nothing Then
+					While True
+						Try
+							errCode = workItems.Next(1UI, ptrJob, i)
+
+							If errCode = 1UI OrElse i <> 1UI Then
+								Exit While
+							End If
+
+							Dim jobName As String = Nothing
+
+							Using coMemStr As Version1.CoTaskMemStr = New Version1.CoTaskMemStr(Marshal.ReadIntPtr(ptrJob))
+								jobName = coMemStr.ToString()
+							End Using
+
+							If jobName.EndsWith(".job", StringComparison.InvariantCultureIgnoreCase) Then
+								jobName = jobName.Substring(0, jobName.Length - 4)
+							End If
+
+
+							task = TaskV1.ReActivate(_taskSchedulerV1, jobName)
+
+							If task IsNot Nothing Then
+								tasks.Add(New TaskV1(_taskSchedulerV1, task))
+							End If
+						Finally
+							If ptrJob <> IntPtr.Zero Then
+								Marshal.FreeCoTaskMem(ptrJob)
+								ptrJob = IntPtr.Zero
+							End If
+						End Try
+					End While
+				End If
+			End If
 
 			Return tasks
 		End Function
@@ -67,9 +119,36 @@ Namespace Win32
 			Next
 		End Sub
 
-		Friend Function GetRunningTasks() As Version2.IRunningTaskCollection
-			Return _taskScheduler.GetRunningTasks(0)
-		End Function
+
+
+		Protected Overridable Sub Dispose(disposing As Boolean)
+			If Not Me._disposed Then
+				If disposing Then
+
+				End If
+
+				If _taskSchedulerV1 IsNot Nothing Then
+					Marshal.ReleaseComObject(_taskSchedulerV1)
+				End If
+
+				If _taskSchedulerV2 IsNot Nothing Then
+					Marshal.ReleaseComObject(_taskSchedulerV2)
+				End If
+			End If
+
+			Me._disposed = True
+		End Sub
+
+		Protected Overrides Sub Finalize()
+			Dispose(False)
+			MyBase.Finalize()
+		End Sub
+
+
+		Public Sub Dispose() Implements IDisposable.Dispose
+			Dispose(True)
+			GC.SuppressFinalize(Me)
+		End Sub
 
 	End Class
 
@@ -191,50 +270,95 @@ Namespace Win32
 	Public Class TaskV1
 		Inherits Task
 
-		'Private _taskFolder As Version2.ITaskFolder = Nothing
-		'Private _task As Version2.IRegisteredTask = Nothing
+		Private _taskScheduler As Version1.ITaskScheduler = Nothing
+		Private _task As Version1.ITask = Nothing
 
-		'Friend Sub New(ByVal folder As Version2.ITaskFolder, ByVal task As Version2.IRegisteredTask)
-		'_taskFolder = folder
-		'_task = task
-		'End Sub
+		Friend Sub New(ByVal taskScheduler As Version1.ITaskScheduler, ByVal task As Version1.ITask)
+			_taskScheduler = taskScheduler
+			_task = task
+		End Sub
 
 		Public Overrides ReadOnly Property Name As String
 			Get
+				Dim filePath As String = Nothing
 
+				CType(_task, ComTypes.IPersistFile).GetCurFile(filePath)
+
+				Return System.IO.Path.GetFileNameWithoutExtension(filePath)
 			End Get
 		End Property
 
 		Public Overrides ReadOnly Property Path As String
 			Get
+				Dim filePath As String = Nothing
 
+				CType(_task, ComTypes.IPersistFile).GetCurFile(filePath)
+
+				Return filePath
 			End Get
 		End Property
 
 		Public Overrides ReadOnly Property State As TaskStates
 			Get
+				Dim task As Version1.ITask
 
+				Try
+					task = _taskScheduler.Activate(Name, TaskSchedulerControl.iTaskGuid)
+				Catch ex As ArgumentException
+					task = _taskScheduler.Activate(Name & ".job", TaskSchedulerControl.iTaskGuid)
+				End Try
+
+				If task IsNot Nothing Then
+					_task = task
+				End If
+
+				Dim status As UInt32 = _task.GetStatus()
+
+				Select Case status
+					Case Errors.SCHED_S_TASK_DISABLED
+						Return TaskStates.Disabled
+
+					Case Errors.SCHED_S_TASK_QUEUED
+						Return TaskStates.Queued
+
+					Case Errors.SCHED_S_TASK_HAS_NOT_RUN,
+						Errors.SCHED_S_TASK_NO_MORE_RUNS,
+						Errors.SCHED_S_TASK_NOT_SCHEDULED,
+						Errors.SCHED_S_TASK_TERMINATED,
+						Errors.SCHED_S_TASK_READY
+						Return TaskStates.Ready
+
+					Case Errors.SCHED_S_TASK_RUNNING
+						Return TaskStates.Running
+
+					Case Errors.SCHED_S_TASK_NO_VALID_TRIGGERS
+						Return TaskStates.Unknown
+					Case Else
+						Return TaskStates.Unknown
+				End Select
 			End Get
 		End Property
 
 		Public Overrides Property Enabled As Boolean
 			Get
-
+				Return Not HasFlag(_task.GetFlags(), TASK_FLAG.DISABLED)
 			End Get
 			Set(value As Boolean)
+				_task.SetFlags(SetFlag(Of TASK_FLAG)(_task.GetFlags(), TASK_FLAG.DISABLED, Not value))
 
+				SaveToFile(Name)
 			End Set
 		End Property
 
 		Public Overrides ReadOnly Property Author As String
 			Get
-
+				Return If(_task.GetCreator(), Nothing)
 			End Get
 		End Property
 
 		Public Overrides ReadOnly Property Description As String
 			Get
-
+				Return If(_task.GetComment(), Nothing)
 			End Get
 		End Property
 
@@ -246,6 +370,51 @@ Namespace Win32
 		End Sub
 
 		Public Overrides Sub [Stop]()
+		End Sub
+
+		Friend Shared Function ReActivate(ByVal taskScheduler As ITaskScheduler, ByVal name As String) As ITask
+			Dim newTask As ITask
+
+			Try
+				newTask = taskScheduler.Activate(name, TaskSchedulerControl.iTaskGuid)
+			Catch ex As ArgumentException
+				newTask = taskScheduler.Activate(name & ".job", TaskSchedulerControl.iTaskGuid)
+			End Try
+
+			If newTask IsNot Nothing Then
+				Return newTask
+			End If
+
+			Return Nothing
+		End Function
+
+		Friend Sub SaveToFile(ByVal fileName As String)
+			If _task IsNot Nothing Then
+				Dim iPersistFile As ComTypes.IPersistFile = CType(_task, ComTypes.IPersistFile)
+
+				If String.IsNullOrEmpty(fileName) OrElse fileName = Name Then
+					Try
+						iPersistFile.Save(Nothing, False)
+						iPersistFile = Nothing
+						Return
+					Catch ex As Exception
+					End Try
+				End If
+
+				Dim curFile As String = Nothing
+				iPersistFile.GetCurFile(curFile)
+
+				If curFile IsNot Nothing Then
+					IO.File.Delete(curFile)
+				End If
+
+				curFile = IO.Path.GetDirectoryName(curFile) + IO.Path.DirectorySeparatorChar.ToString() + fileName + IO.Path.GetExtension(curFile)
+
+				IO.File.Delete(curFile)
+
+				iPersistFile.Save(curFile, True)
+				iPersistFile = Nothing
+			End If
 		End Sub
 
 	End Class
@@ -276,10 +445,6 @@ Namespace Win32.TaskScheduler
 		DISABLE = &H8UI
 		DONT_ADD_PRINCIPAL_ACE = &H10UI
 		IGNORE_REGISTRATION_TRIGGERS = &H20UI
-	End Enum
-
-	Friend Enum TASK_ENUM_FLAGS As UInt32
-		TASK_ENUM_HIDDEN = &H1UI
 	End Enum
 
 	Friend Enum TASK_INSTANCES_POLICY As UInt32
@@ -378,15 +543,18 @@ Namespace Win32.TaskScheduler
 End Namespace
 
 Namespace Win32.TaskScheduler.Version1
+	' GUID @ MSTask.Idl
+	'  mstask.h
+
 	Friend Enum TASK_TRIGGER_TYPE As UInt32
-		ONCE = 0UI
-		DAILY = 1UI
-		WEEKLY = 2UI
-		MONTHLYDATE = 3UI
-		MONTHLYDOW = 4UI
-		ON_IDLE = 5UI
-		AT_SYSTEMSTART = 6UI
-		AT_LOGON = 7UI
+		TIME_TRIGGER_ONCE = 0UI
+		TIME_TRIGGER_DAILY = 1UI
+		TIME_TRIGGER_WEEKLY = 2UI
+		TIME_TRIGGER_MONTHLYDATE = 3UI
+		TIME_TRIGGER_MONTHLYDOW = 4UI
+		EVENT_TRIGGER_ON_IDLE = 5UI
+		EVENT_TRIGGER_AT_SYSTEMSTART = 6UI
+		EVENT_TRIGGER_AT_LOGON = 7UI
 	End Enum
 
 	Friend Enum TASKPAGE As UInt16
@@ -395,40 +563,316 @@ Namespace Win32.TaskScheduler.Version1
 		TASKPAGE_SETTINGS = 2US
 	End Enum
 
+	Friend Enum TASK_FLAG As UInt32
+		INTERACTIVE = &H1UI
+		DELETE_WHEN_DONE = &H2UI
+		DISABLED = &H4UI
+		START_ONLY_IF_IDLE = &H10UI
+		KILL_ON_IDLE_END = &H20UI
+		DONT_START_IF_ON_BATTERIES = &H40UI
+		KILL_IF_GOING_ON_BATTERIES = &H80UI
+		RUN_ONLY_IF_DOCKED = &H100UI
+		HIDDEN = &H200UI
+		RUN_IF_CONNECTED_TO_INTERNET = &H400UI
+		RESTART_ON_IDLE_RESUME = &H800UI
+		SYSTEM_REQUIRED = &H1000UI
+		RUN_ONLY_IF_LOGGED_ON = &H2000UI
+	End Enum
+
+	Friend Enum TASK_TRIGGER_FLAG As UInt16
+		HAS_END_DATE = &H1US
+		KILL_AT_DURATION_END = &H2US
+		DISABLED = &H4US
+	End Enum
+
+	Friend Enum WEEKS As UInt16
+		TASK_FIRST_WEEK = 1US
+		TASK_SECOND_WEEK = 2US
+		TASK_THIRD_WEEK = 3US
+		TASK_FOURTH_WEEK = 4US
+		TASK_LAST_WEEK = 5US
+	End Enum
+
+	Friend Enum DAYS As UInt16
+		TASK_SUNDAY = &H1US
+		TASK_MONDAY = &H2US
+		TASK_TUESDAY = &H4US
+		TASK_WEDNESDAY = &H8US
+		TASK_THURSDAY = &H10US
+		TASK_FRIDAY = &H20US
+		TASK_SATURDAY = &H40US
+	End Enum
+
+	Friend Enum MONTHS As UInt16
+		TASK_JANUARY = &H1US
+		TASK_FEBRUARY = &H2US
+		TASK_MARCH = &H4US
+		TASK_APRIL = &H8US
+		TASK_MAY = &H10US
+		TASK_JUNE = &H20US
+		TASK_JULY = &H40US
+		TASK_AUGUST = &H80US
+		TASK_SEPTEMBER = &H100US
+		TASK_OCTOBER = &H200US
+		TASK_NOVEMBER = &H400US
+		TASK_DECEMBER = &H800US
+	End Enum
+
+	<StructLayout(LayoutKind.Sequential)>
+	Friend Structure DAILY
+		Public DaysInterval As UInt16
+	End Structure
+
+	<StructLayout(LayoutKind.Sequential)>
+	Friend Structure WEEKLY
+		Public WeeksInterval As UInt16
+		Public rgfDaysOfTheWeek As UInt16
+	End Structure
+
+	<StructLayout(LayoutKind.Sequential)>
+	Friend Structure MONTHLYDATE
+		Public rgfDays As UInt32
+		Public rgfMonths As UInt16
+	End Structure
+
+	<StructLayout(LayoutKind.Sequential)>
+	Friend Structure MONTHLYDOW
+		Public wWhichWeek As UInt16
+		Public rgfDaysOfTheWeek As UInt16
+		Public rgfMonths As UInt16
+	End Structure
+
+	<StructLayout(LayoutKind.Sequential)>
+	Friend Structure TASK_TRIGGER
+		Public cbTriggerSize As UInt16
+		Public Reserved1 As UInt16
+		Public wBeginYear As UInt16
+		Public wBeginMonth As UInt16
+		Public wBeginDay As UInt16
+		Public wEndYear As UInt16
+		Public wEndMonth As UInt16
+		Public wEndDay As UInt16
+		Public wStartHour As UInt16
+		Public wStartMinute As UInt16
+		Public MinutesDuration As UInt32
+		Public MinutesInterval As UInt32
+		Public rgFlags As UInt32
+		Public TriggerType As TASK_TRIGGER_TYPE
+		Public Type As UInt16
+		Public Reserved2 As UInt16
+		Public wRandomMinutesInterval As UInt16
+	End Structure
+
+	<StructLayout(LayoutKind.Sequential)>
+	Friend Structure TRIGGER_TYPE_UNION
+		<FieldOffset(0)> Public Daily As DAILY
+		<FieldOffset(0)> Public Weekly As WEEKLY
+		<FieldOffset(0)> Public MonthlyDate As MONTHLYDATE
+		<FieldOffset(0)> Public MonthlyDOW As MONTHLYDOW
+	End Structure
+
 	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa380706(v=vs.85).aspx</remarks>
-	'<Guid("?"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
-	'Friend Interface IEnumWorkItems
-	'End Interface
+	<Guid("148BD528-A2AB-11CE-B11F-00AA00530503"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	Friend Interface IEnumWorkItems
+		<PreserveSig()>
+		Function [Next](<[In]()> ByVal celt As UInt32, <[Out]()> ByRef rgpwszNames As IntPtr, <[Out]()> ByRef pceltFetched As UInt32) As UInt32
+
+		Sub Skip(<[In]()> ByVal pwszComputer As UInt32)
+
+		Sub Reset()
+
+		Function Clone() As <MarshalAs(UnmanagedType.Interface)> IEnumWorkItems
+
+	End Interface
 
 	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa381311(v=vs.85).aspx</remarks>
-	'<Guid("?"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	<Guid("148BD524-A2AB-11CE-B11F-00AA00530503"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
 	Friend Interface ITask
-		Inherits IScheduledWorkItem
+		Function CreateTrigger(<[Out]()> ByRef piNewTrigger As UInt16) As <MarshalAs(UnmanagedType.Interface)> ITaskTrigger
+		Sub DeleteTrigger(<[In]()> ByVal iTrigger As UInt16)
+		Function GetTriggerCount() As <MarshalAs(UnmanagedType.U2)> UInt16
+		Function GetTrigger(<[In]()> ByVal iTrigger As UInt16) As <MarshalAs(UnmanagedType.Interface)> ITaskTrigger
+		Function GetTriggerString(<[In]()> ByVal iTrigger As UInt16) As CoTaskMemStr
 
+		Sub GetRunTimes(
+		   <[In](), MarshalAs(UnmanagedType.Struct)> ByVal pstBegin As SYSTEMTIME,
+		   <[In](), MarshalAs(UnmanagedType.Struct)> ByVal pstEnd As SYSTEMTIME,
+		   <[In](), [Out]()> ByVal pCount As UInt16,
+		   <[In]()> ByVal rgstTaskTimes As IntPtr)
+
+		Function GetNextRunTime() As <MarshalAs(UnmanagedType.Struct)> SYSTEMTIME
+		Sub SetIdleWait(<[In]()> ByVal wIdleMinutes As UInt16, <[In]()> ByVal wDeadlineMinutes As UInt16)
+		Sub GetIdleWait(<[Out]()> ByRef pwIdleMinutes As UInt16, <[Out]()> ByRef pwDeadlineMinutes As UInt16)
+		Sub Run()
+		Sub Terminate()
+		Sub EditWorkItem(<[In]()> ByVal hParent As IntPtr, <[In]()> ByVal dwReserved As UInt32)
+		Function GetMostRecentRunTime() As <MarshalAs(UnmanagedType.Struct)> SYSTEMTIME
+		Function GetStatus() As UInt32
+		Function GetExitCode() As UInt32
+		Sub SetComment(<[In]()> ByVal pwszComment As CoTaskMemStr)
+		Function GetComment() As CoTaskMemStr
+		Sub SetCreator(<[In]()> ByVal pwszCreator As CoTaskMemStr)
+		Function GetCreator() As CoTaskMemStr
+		Sub SetWorkItemData(<[In]()> ByVal cBytes As UInt16, <[In](), MarshalAs(UnmanagedType.LPArray, SizeParamIndex:=0, ArraySubType:=UnmanagedType.U1)> ByVal rgbData As Byte())
+		Sub GetWorkItemData(<[Out]()> ByRef pcBytes As UInt16, <[Out]()> ByRef ppBytes As IntPtr)
+		Sub SetErrorRetryCount(<[In]()> ByVal wRetryCount As UInt16)
+		Function GetErrorRetryCount() As UInt16
+		Sub SetErrorRetryInterval(<[In]()> ByVal wRetryInterval As UInt16)
+		Function GetErrorRetryInterval() As UInt16
+		Sub SetFlags(<[In]()> ByVal dwFlags As TASK_FLAG)
+		Function GetFlags() As TASK_FLAG
+		Sub SetAccountInformation(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszAccountName As String, <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszPassword As String)
+		Function GetAccountInformation() As CoTaskMemStr
+		Sub SetApplicationName(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszApplicationName As String)
+		Function GetApplicationName() As CoTaskMemStr
+		Sub SetParameters(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszParameters As String)
+		Function GetParameters() As CoTaskMemStr
+		Sub SetWorkingDirectory(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszWorkingDirectory As String)
+		Function GetWorkingDirectory() As CoTaskMemStr
+		Sub SetPriority(<[In]()> ByVal dwPriority As UInt32)
+		Function GetPriority() As UInt32
+		Sub SetTaskFlags(<[In]()> ByVal dwFlags As UInt32)
+		Function GetTaskFlags() As UInt32
+		Sub SetMaxRunTime(<[In]()> ByVal dwMaxRunTime As UInt32)
+		Function GetMaxRunTime() As UInt32
 	End Interface
 
 	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa381811(v=vs.85).aspx</remarks>
-	'<Guid("?"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
-	'Friend Interface ITaskScheduler
-	'End Interface
+	<Guid("148BD527-A2AB-11CE-B11F-00AA00530503"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	Friend Interface ITaskScheduler
+		Sub SetTargetComputer(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszComputer As String)
 
-	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa381864(v=vs.85).aspx</remarks>
-	'<Guid("?"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
-	'Friend Interface ITaskTrigger
-	'End Interface
+		Function GetTargetComputer() As CoTaskMemStr
 
-	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa381216(v=vs.85).aspx</remarks>
-	'<Guid("?"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
-	Friend Interface IScheduledWorkItem
+		Function [Enum]() As <MarshalAs(UnmanagedType.Interface)> IEnumWorkItems
+
+		Function Activate(
+		 <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszName As String,
+		 <[In](), MarshalAs(UnmanagedType.LPStruct)> ByVal riid As Guid) As <MarshalAs(UnmanagedType.Interface)> ITask
+
+		Sub Delete(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszName As String)
+
+		Function NewWorkItem(
+		 <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszTaskName As String,
+		 <[In](), MarshalAs(UnmanagedType.LPStruct)> ByVal rclsid As Guid,
+		 <[In](), MarshalAs(UnmanagedType.LPStruct)> ByVal riid As Guid) As <MarshalAs(UnmanagedType.Interface)> ITask
+
+		Sub AddWorkItem(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszTaskName As String, <[In](), MarshalAs(UnmanagedType.Interface)> ByVal pWorkItem As ITask)
+
+		Sub IsOfType(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszName As String, <[In](), MarshalAs(UnmanagedType.LPStruct)> ByVal riid As Guid)
+
 	End Interface
 
-	'<ComImport(), Guid("?"), SuppressUnmanagedCodeSecurity()>
-	'Friend Class CLSID_Ctask
-	'End Class
+	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa381864(v=vs.85).aspx</remarks>
+	<Guid("148BD520-A2AB-11CE-B11F-00AA00530503"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	Friend Interface ITaskTrigger
+		Sub SetTrigger(<[In](), Out(), MarshalAs(UnmanagedType.Struct)> ByRef pTrigger As TASK_TRIGGER)
 
-	'<ComImport(), Guid("?"), SuppressUnmanagedCodeSecurity()>
-	'Friend Class CLSID_CTaskScheduler
-	'End Class
+		Function GetTrigger() As <MarshalAs(UnmanagedType.Struct)> TASK_TRIGGER
+
+		Function GetTriggerString() As CoTaskMemStr
+	End Interface
+
+	''' <remarks></remarks>
+	<Guid("4086658a-cbbb-11cf-b604-00c04fd8d565"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	Friend Interface IProvideTaskPage
+
+	End Interface
+
+	''' <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa381216(v=vs.85).aspx</remarks>
+	<Guid("A6B952F0-A4B1-11D0-997D-00AA006887EC"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), SuppressUnmanagedCodeSecurity()>
+	Friend Interface IScheduledWorkItem
+		Sub CreateTrigger(<[Out]()> ByRef piNewTrigger As UInt16, <[Out](), MarshalAs(UnmanagedType.Interface)> ByRef ppTrigger As ITaskTrigger)
+		Sub DeleteTrigger(<[In]()> ByVal iTrigger As UInt16)
+		Sub GetTriggerCount(<[Out]()> ByRef plCount As UInt16)
+		Sub GetTrigger(<[In]()> ByVal iTrigger As UInt16, <[Out](), MarshalAs(UnmanagedType.Interface)> ByRef ppTrigger As ITaskTrigger)
+		Sub GetTriggerString(<[In]()> ByVal iTrigger As UInt16, <[Out]()> ByRef ppwszTrigger As CoTaskMemStr)
+
+		Sub GetRunTimes(
+		   <[In](), MarshalAs(UnmanagedType.Struct)> ByVal pstBegin As SYSTEMTIME,
+		   <[In](), MarshalAs(UnmanagedType.Struct)> ByVal pstEnd As SYSTEMTIME,
+		   <[In](), [Out]()> ByVal pCount As UInt16,
+		   <[In]()> ByVal rgstTaskTimes As IntPtr)
+
+		Sub GetNextRunTime(<[Out](), MarshalAs(UnmanagedType.Struct)> ByRef pstNextRun As SYSTEMTIME)
+		Sub SetIdleWait(<[In]()> ByVal wIdleMinutes As UInt16, <[In]()> ByVal wDeadlineMinutes As UInt16)
+		Sub GetIdleWait(<[Out]()> ByRef pwIdleMinutes As UInt16, <[Out]()> ByRef pwDeadlineMinutes As UInt16)
+		Sub Run()
+		Sub Terminate()
+		Sub EditWorkItem(<[In]()> ByVal hParent As IntPtr, <[In]()> ByVal dwReserved As UInt32)
+		Sub GetMostRecentRunTime(<[In](), [Out](), MarshalAs(UnmanagedType.Struct)> ByRef pstLastRun As SYSTEMTIME)
+		Sub GetStatus(<[Out]()> ByRef phrStatus As UInt32)
+		Sub GetExitCode(<[Out]()> ByRef pdwExitCode As UInt32)
+		Sub SetComment(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszComment As String)
+		Sub GetComment(<[Out]()> ByVal ppwszComment As CoTaskMemStr)
+		Sub SetCreator(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszCreator As String)
+		Sub GetCreator(<[Out]()> ByVal ppwszCreator As CoTaskMemStr)
+		Sub SetWorkItemData(<[In]()> ByVal cBytes As UInt16, <[In](), MarshalAs(UnmanagedType.LPArray, SizeParamIndex:=0, ArraySubType:=UnmanagedType.U1)> ByVal rgbData As Byte())
+		Sub GetWorkItemData(<[Out]()> ByRef pcBytes As UInt16, <[Out]()> ByRef ppBytes As IntPtr)
+		Sub SetErrorRetryCount(<[In]()> ByVal wRetryCount As UInt16)
+		Sub GetErrorRetryCount(<[Out]()> ByRef pwRetryCount As UInt16)
+		Sub SetErrorRetryInterval(<[In]()> ByVal wRetryInterval As UInt16)
+		Sub GetErrorRetryInterval(<[Out]()> ByRef pwRetryInterval As UInt16)
+		Sub SetFlags(<[In]()> ByVal dwFlags As TASK_FLAG)
+		Sub GetFlags(<[Out]()> ByRef pdwFlags As TASK_FLAG)
+		Sub SetAccountInformation(<[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszAccountName As String, <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pwszPassword As String)
+		Sub GetAccountInformation(<[Out]()> ByVal ppwszAccountName As CoTaskMemStr)
+	End Interface
+
+	<ComImport(), Guid("148BD520-A2AB-11CE-B11F-00AA00530503"), SuppressUnmanagedCodeSecurity()>
+	Friend Class Ctask
+		<MethodImpl(MethodImplOptions.InternalCall)>
+		Public Sub New()
+
+		End Sub
+	End Class
+
+	<ComImport(), Guid("148BD52A-A2AB-11CE-B11F-00AA00530503"), SuppressUnmanagedCodeSecurity()>
+	Friend Class CTaskScheduler
+		<MethodImpl(MethodImplOptions.InternalCall)>
+		Public Sub New()
+
+		End Sub
+	End Class
+
+	Friend Class CoTaskMemStr
+		Inherits SafeHandle
+
+		Public Sub New()
+			MyBase.New(IntPtr.Zero, True)
+		End Sub
+
+		Public Sub New(ByVal handle As IntPtr)
+			MyBase.New(IntPtr.Zero, True)
+
+			SetHandle(handle)
+		End Sub
+
+		Public Sub New(ByVal text As String)
+			MyBase.New(IntPtr.Zero, True)
+
+			SetHandle(Marshal.StringToCoTaskMemUni(text))
+		End Sub
+
+		Public Overrides ReadOnly Property IsInvalid As Boolean
+			Get
+				Return (handle = IntPtr.Zero)
+			End Get
+		End Property
+
+		Protected Overrides Function ReleaseHandle() As Boolean
+			Marshal.FreeCoTaskMem(handle)
+			Return True
+		End Function
+
+		Public Overrides Function ToString() As String
+			Return Marshal.PtrToStringUni(handle)
+		End Function
+
+		Public Shared Widening Operator CType(value As CoTaskMemStr) As String
+			Return value.ToString()
+		End Operator
+	End Class
 
 End Namespace
 

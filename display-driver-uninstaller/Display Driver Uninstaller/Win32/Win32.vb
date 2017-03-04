@@ -221,6 +221,22 @@ Namespace Win32
 			Return (New EvilInteger() With {.UInt32 = int}).Int32
 		End Function
 
+		Friend Function HasFlag(ByVal flags As UInt32, ByVal flag As UInt32) As Boolean
+			Return ((flags And flag) = flag)
+		End Function
+
+		Friend Function SetFlag(Of T)(ByVal flags As [Enum], ByVal flag As UInt32, ByVal value As Boolean) As T
+			Dim flags2 As UInt32 = Convert.ToUInt32(flags)
+
+			If value Then
+				flags2 = flags2 Or flag
+			Else
+				flags2 = flags2 And Not flag
+			End If
+
+			Return CType([Enum].ToObject(GetType(T), flags2), T)
+		End Function
+
 		Friend Function GetErrorEnum(ByVal errCode As UInt32) As String
 			If [Enum].IsDefined(GetType(Errors), errCode) Then
 				Return String.Format(ENUM_FORMAT, "ERROR_" & DirectCast(errCode, Errors).ToString(), errCode.ToString("X2").PadLeft(4, "8"c))
