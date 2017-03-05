@@ -39,8 +39,9 @@ Namespace Win32
 		Private _taskSchedulerV1 As Version1.ITaskScheduler = Nothing
 		Private _taskSchedulerV2 As Version2.TaskScheduler = Nothing
 
-		Public Sub New()
-			_useV2 = (Application.Settings.WinVersion >= OSVersion.WinVista)
+		Public Sub New(ByVal config As ThreadSettings)
+
+			_useV2 = (config.WinVersion >= OSVersion.WinVista)
 
 			If _useV2 Then
 				_taskSchedulerV2 = New Version2.TaskScheduler()
