@@ -2113,37 +2113,66 @@ Public Class frmMain
 		'	End If
 		'End Using
 
-		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree", True)
-			If regkey IsNot Nothing Then
-				For Each child As String In regkey.GetSubKeyNames
-					If IsNullOrWhitespace(child) Then Continue For
-					If StrContainsAny(child, True, "AMD Updater", "StartCN") Then
-						Try
-							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-								If regkey2 IsNot Nothing Then
-									If Not IsNullOrWhitespace(regkey2.GetValue("Id", String.Empty).ToString) Then
-										wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
-										Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
-											If regkey3 IsNot Nothing Then
-												For Each child2 As String In regkey3.GetSubKeyNames
-													If IsNullOrWhitespace(child2) Then Continue For
-													If StrContainsAny(wantedvalue, True, child2) Then
-														deletesubregkey(regkey3, child2)
-													End If
-												Next
-											End If
-										End Using
-									End If
-								End If
-							End Using
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-						deletesubregkey(regkey, child)
-					End If
-				Next
-			End If
+		'Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree", True)
+		'	If regkey IsNot Nothing Then
+		'		For Each child As String In regkey.GetSubKeyNames
+		'			If IsNullOrWhitespace(child) Then Continue For
+		'			If StrContainsAny(child, True, "AMD Updater", "StartCN") Then
+		'				Try
+		'					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+		'						If regkey2 IsNot Nothing Then
+		'							If Not IsNullOrWhitespace(regkey2.GetValue("Id", String.Empty).ToString) Then
+		'								wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
+		'								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
+		'									If regkey3 IsNot Nothing Then
+		'										For Each child2 As String In regkey3.GetSubKeyNames
+		'											If IsNullOrWhitespace(child2) Then Continue For
+		'											If StrContainsAny(wantedvalue, True, child2) Then
+		'												deletesubregkey(regkey3, child2)
+		'											End If
+		'										Next
+		'									End If
+		'								End Using
+		'							End If
+		'						End If
+		'					End Using
+		'				Catch ex As Exception
+		'					Application.Log.AddException(ex)
+		'				End Try
+		'				deletesubregkey(regkey, child)
+		'			End If
+		'		Next
+		'	End If
+		'End Using
+
+		'We need to be sure taskscheduler is running
+		Select Case System.Windows.Forms.SystemInformation.BootMode
+			Case Forms.BootMode.FailSafe
+				CleanupEngine.StartService("Schedule")
+			Case Forms.BootMode.FailSafeWithNetwork
+				CleanupEngine.StartService("Schedule")
+			Case Forms.BootMode.Normal
+				'Usually this service is unning in normal mode, we *could* in the future check all this.
+		End Select
+
+		Using tsc As New TaskSchedulerControl(config)
+			For Each task As Task In tsc.GetAllTasks
+				If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
+					task.Delete()
+					Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
+				End If
+			Next
 		End Using
+
+		Select Case System.Windows.Forms.SystemInformation.BootMode
+			Case Forms.BootMode.FailSafe
+				CleanupEngine.StopService("Schedule")
+			Case Forms.BootMode.FailSafeWithNetwork
+				CleanupEngine.StopService("Schedule")
+			Case Forms.BootMode.Normal
+				'Usually this service is running in normal mode, we don't need to stop it.
+		End Select
+
 
 		'Killing Explorer.exe to help releasing file that were open.
 		Application.Log.AddMessage("Killing Explorer.exe")
@@ -4789,13 +4818,33 @@ Public Class frmMain
 		'	End If
 		'End Using
 
+		'We need to be sure taskscheduler is running
+		Select Case System.Windows.Forms.SystemInformation.BootMode
+			Case Forms.BootMode.FailSafe
+				CleanupEngine.StartService("Schedule")
+			Case Forms.BootMode.FailSafeWithNetwork
+				CleanupEngine.StartService("Schedule")
+			Case Forms.BootMode.Normal
+				'Usually this service is unning in normal mode, we *could* in the future check all this.
+		End Select
+
 		Using tsc As New TaskSchedulerControl(config)
 			For Each task As Task In tsc.GetAllTasks
 				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") Then
 					task.Delete()
+					Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
 				End If
 			Next
 		End Using
+
+		Select Case System.Windows.Forms.SystemInformation.BootMode
+			Case Forms.BootMode.FailSafe
+				CleanupEngine.StopService("Schedule")
+			Case Forms.BootMode.FailSafeWithNetwork
+				CleanupEngine.StopService("Schedule")
+			Case Forms.BootMode.Normal
+				'Usually this service is running in normal mode, we don't need to stop it.
+		End Select
 
 		UpdateTextMethod("End of Registry Cleaning")
 

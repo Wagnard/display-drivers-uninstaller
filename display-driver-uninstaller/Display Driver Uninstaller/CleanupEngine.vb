@@ -902,6 +902,40 @@ Public Class CleanupEngine
 		End Try
 	End Sub
 
+	Public Sub StartService(ByVal service As String)
+		Dim startservice As New ProcessStartInfo
+		startservice.FileName = "cmd.exe"
+		startservice.Arguments = " /Cnet start " & Chr(34) & service & Chr(34)
+		startservice.UseShellExecute = False
+		startservice.CreateNoWindow = True
+		startservice.RedirectStandardOutput = False
+
+		Dim processstopservice As New Process
+		processstopservice.StartInfo = startservice
+
+		Application.Log.AddMessage("Starting service : " & service)
+		processstopservice.Start()
+		processstopservice.WaitForExit()
+		processstopservice.Close()
+	End Sub
+
+	Public Sub StopService(ByVal service As String)
+		Dim startservice As New ProcessStartInfo
+		startservice.FileName = "cmd.exe"
+		startservice.Arguments = " /Cnet stop " & Chr(34) & service & Chr(34)
+		startservice.UseShellExecute = False
+		startservice.CreateNoWindow = True
+		startservice.RedirectStandardOutput = False
+
+		Dim processstopservice As New Process
+		processstopservice.StartInfo = startservice
+
+		Application.Log.AddMessage("Stopping service : " & service)
+		processstopservice.Start()
+		processstopservice.WaitForExit()
+		processstopservice.Close()
+	End Sub
+
 	Public Sub prePnplockdownfiles(ByVal oeminf As String)
 		Dim win8higher = frmMain.win8higher
 		Dim processinfo As New ProcessStartInfo

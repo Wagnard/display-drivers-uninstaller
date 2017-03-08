@@ -241,28 +241,48 @@ Class Application
 	Private Sub AppClose(ByVal sender As Object, ByVal e As System.EventArgs)
 		Try
 			' frmMain is already closed here
+			'Here we remove the modification done by DDU to allow PAEXEC (system impersonalisation tools)
+			'And Task scheduler service (allowing task removal)
 
-			If WindowsIdentity.GetCurrent().IsSystem AndAlso Forms.SystemInformation.BootMode <> Forms.BootMode.Normal Then
-				Try
-					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-						If regkey IsNot Nothing Then
-							regkey.DeleteSubKeyTree("PAexec")
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PAExec)!")
-				End Try
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+					If regkey IsNot Nothing Then
+						regkey.DeleteSubKeyTree("PAexec")
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PAExec)!")
+			End Try
 
-				Try
-					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-						If regkey IsNot Nothing Then
-							regkey.DeleteSubKeyTree("PAexec")
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (PAExec)!")
-				End Try
-			End If
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+					If regkey IsNot Nothing Then
+						regkey.DeleteSubKeyTree("PAexec")
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (PAExec)!")
+			End Try
+
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+					If regkey IsNot Nothing Then
+						regkey.DeleteSubKeyTree("Schedule")
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (Schedule)!")
+			End Try
+
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+					If regkey IsNot Nothing Then
+						regkey.DeleteSubKeyTree("Schedule")
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (Schedule)!")
+			End Try
 
 			SaveData()
 		Finally
@@ -516,6 +536,32 @@ Class Application
 				End Using
 			Catch ex As Exception
 				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for PAExec!")
+				Return False
+			End Try
+
+			Try
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+					If regkey IsNot Nothing Then
+						Using regSubKey As RegistryKey = regkey.CreateSubKey("Schedule", RegistryKeyPermissionCheck.ReadWriteSubTree)
+							regSubKey.SetValue("", "Service")
+						End Using
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for Schedule!")
+				Return False
+			End Try
+
+			Try
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+					If regkey IsNot Nothing Then
+						Using regSubKey As RegistryKey = regkey.CreateSubKey("Schedule", RegistryKeyPermissionCheck.ReadWriteSubTree)
+							regSubKey.SetValue("", "Service")
+						End Using
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for Schedule!")
 				Return False
 			End Try
 
