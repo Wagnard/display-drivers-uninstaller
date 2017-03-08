@@ -800,9 +800,18 @@ Public Class CleanupEngine
 
 								If ServiceInstaller.GetServiceStatus(service) = ServiceState.NotFound Then
 									'Service is not present
-									Application.Log.AddMessage("Service : " & service & " removed.")
 								Else
 									ServiceInstaller.Uninstall(service)
+
+									Dim waits As Int32 = 0
+									While waits < 30						 'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
+										If ServiceInstaller.GetServiceStatus(service) <> ServiceState.NotFound Then
+											waits += 1
+											System.Threading.Thread.Sleep(100)
+										Else
+											Exit While
+										End If
+									End While
 								End If
 
 								'Verify that the service was indeed removed via registry.
