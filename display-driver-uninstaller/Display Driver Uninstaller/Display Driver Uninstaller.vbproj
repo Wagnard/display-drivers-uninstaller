@@ -57,8 +57,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -99,6 +101,7 @@
     </Compile>
     <Compile Include="AppSettings.vb" />
     <Compile Include="LogEntry.vb" />
+    <Compile Include="Win32\ServiceInstaller.vb" />
     <Compile Include="Win32\SetupAPI.vb" />
     <Compile Include="SetupAPITestWindow.xaml.vb">
       <DependentUpon>SetupAPITestWindow.xaml</DependentUpon>
@@ -215,6 +218,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\btn_partner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

@@ -2,6 +2,9 @@
 Imports Microsoft.Win32
 Imports Display_Driver_Uninstaller.Win32
 Imports System.Security.AccessControl
+Imports System.ServiceProcess
+Imports System.Configuration.Install
+
 
 Public Class CleanupEngine
 	Private Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
@@ -795,45 +798,30 @@ Public Class CleanupEngine
 						If regkey2 IsNot Nothing Then
 							If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(service, True, "amdkmafd")) Then
 
-								Dim stopservice As New ProcessStartInfo
-								stopservice.FileName = "cmd.exe"
-								stopservice.Arguments = " /Cnet stop " & Chr(34) & service & Chr(34)
-								stopservice.UseShellExecute = False
-								stopservice.CreateNoWindow = True
-								stopservice.RedirectStandardOutput = False
+								For Each svc As ServiceController In ServiceController.GetServices()
+									Using svc
+										If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
+											ServiceInstaller.Uninstall(svc.ServiceName)
 
+											'Verify that the service was indeed removed.
+											If ServiceInstaller.GetServiceStatus(svc.ServiceName) = ServiceState.NotFound Then
+												Application.Log.AddMessage("Service : " & service & " removed.")
+											Else
+												Application.Log.AddWarningMessage("Failed to remove the service : " & service)
+											End If
 
-								Dim processstopservice As New Process
-								processstopservice.StartInfo = stopservice
+										End If
+									End Using
+								Next
 
-								Application.Log.AddMessage("Stopping service : " & service)
-								processstopservice.Start()
-								processstopservice.WaitForExit()
-								processstopservice.Close()
-
-								stopservice.Arguments = " /Csc delete " & Chr(34) & service & Chr(34)
-
-								processstopservice.StartInfo = stopservice
-
-								Application.Log.AddMessage("Trying to Deleting service : " & service)
-								processstopservice.Start()
-								processstopservice.WaitForExit()
-								processstopservice.Close()
-
-								stopservice.Arguments = " /Csc interrogate " & Chr(34) & service & Chr(34)
-								processstopservice.StartInfo = stopservice
-								processstopservice.Start()
-								processstopservice.WaitForExit()
-								processstopservice.Close()
-
-								'Verify that the service was indeed removed.
+								'Second verify that the service was indeed removed.
 								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
 									If regkey3 IsNot Nothing Then
 
-										Application.Log.AddMessage("Failed to remove the service.")
+										Application.Log.AddWarningMessage("Failed to remove the service : " & service)
 									Else
 
-										Application.Log.AddMessage("Service removed.")
+										Application.Log.AddMessage("Service : " & service & " removed.")
 									End If
 								End Using
 							End If
@@ -903,37 +891,29 @@ Public Class CleanupEngine
 	End Sub
 
 	Public Sub StartService(ByVal service As String)
-		Dim startservice As New ProcessStartInfo
-		startservice.FileName = "cmd.exe"
-		startservice.Arguments = " /Cnet start " & Chr(34) & service & Chr(34)
-		startservice.UseShellExecute = False
-		startservice.CreateNoWindow = True
-		startservice.RedirectStandardOutput = False
 
-		Dim processstopservice As New Process
-		processstopservice.StartInfo = startservice
+		For Each svc As ServiceController In ServiceController.GetServices()
+			Using svc
+				If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
+					svc.Start()
+					svc.WaitForStatus(ServiceControllerStatus.Running)
+				End If
+			End Using
+		Next
 
-		Application.Log.AddMessage("Starting service : " & service)
-		processstopservice.Start()
-		processstopservice.WaitForExit()
-		processstopservice.Close()
 	End Sub
 
 	Public Sub StopService(ByVal service As String)
-		Dim startservice As New ProcessStartInfo
-		startservice.FileName = "cmd.exe"
-		startservice.Arguments = " /Cnet stop " & Chr(34) & service & Chr(34)
-		startservice.UseShellExecute = False
-		startservice.CreateNoWindow = True
-		startservice.RedirectStandardOutput = False
 
-		Dim processstopservice As New Process
-		processstopservice.StartInfo = startservice
+		For Each svc As ServiceController In ServiceController.GetServices()
+			Using svc
+				If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
+					svc.Stop()
+					svc.WaitForStatus(ServiceControllerStatus.Stopped)
+				End If
+			End Using
+		Next
 
-		Application.Log.AddMessage("Stopping service : " & service)
-		processstopservice.Start()
-		processstopservice.WaitForExit()
-		processstopservice.Close()
 	End Sub
 
 	Public Sub prePnplockdownfiles(ByVal oeminf As String)
@@ -1726,18 +1706,18 @@ Public Class CleanupEngine
 				filePath = System.Environment.SystemDirectory
 
 				Try
-					Delete(filePath & "\" & driverFile)
+					delete(filePath & "\" & driverFile)
 				Catch ex As Exception
 				End Try
 
 				Try
-					Delete(filePath & "\Drivers\" & driverFile)
+					delete(filePath & "\Drivers\" & driverFile)
 				Catch ex As Exception
 				End Try
 
 				If winxp Then
 					Try
-						Delete(filePath & "\Drivers\dllcache\" & driverFile)
+						delete(filePath & "\Drivers\dllcache\" & driverFile)
 					Catch ex As Exception
 					End Try
 				End If
@@ -1755,7 +1735,7 @@ Public Class CleanupEngine
 
 					If StrContainsAny(child, True, driverFile) Then
 						Try
-							Delete(child)
+							delete(child)
 						Catch ex As Exception
 						End Try
 					End If
@@ -1796,19 +1776,19 @@ Public Class CleanupEngine
 
 						If StrContainsAny(child, True, driverFile) Then
 							Try
-								Delete(child)
+								delete(child)
 							Catch ex As Exception
 							End Try
 						End If
 					Next
 
 					Try
-						Delete(winPath & "\Drivers\" & driverFile)
+						delete(winPath & "\Drivers\" & driverFile)
 					Catch ex As Exception
 					End Try
 
 					Try
-						Delete(winPath & "\" & driverFile)
+						delete(winPath & "\" & driverFile)
 					Catch ex As Exception
 					End Try
 				End If
