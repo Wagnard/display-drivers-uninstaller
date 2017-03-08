@@ -798,23 +798,14 @@ Public Class CleanupEngine
 						If regkey2 IsNot Nothing Then
 							If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(service, True, "amdkmafd")) Then
 
-								For Each svc As ServiceController In ServiceController.GetServices()
-									Using svc
-										If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
-											ServiceInstaller.Uninstall(svc.ServiceName)
+								If ServiceInstaller.GetServiceStatus(service) = ServiceState.NotFound Then
+									'Service is not present
+									Application.Log.AddMessage("Service : " & service & " removed.")
+								Else
+									ServiceInstaller.Uninstall(service)
+								End If
 
-											'Verify that the service was indeed removed.
-											If ServiceInstaller.GetServiceStatus(svc.ServiceName) = ServiceState.NotFound Then
-												Application.Log.AddMessage("Service : " & service & " removed.")
-											Else
-												Application.Log.AddWarningMessage("Failed to remove the service : " & service)
-											End If
-
-										End If
-									End Using
-								Next
-
-								'Second verify that the service was indeed removed.
+								'Verify that the service was indeed removed via registry.
 								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
 									If regkey3 IsNot Nothing Then
 
