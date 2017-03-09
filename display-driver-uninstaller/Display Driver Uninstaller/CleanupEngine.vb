@@ -896,8 +896,10 @@ Public Class CleanupEngine
 		For Each svc As ServiceController In ServiceController.GetServices()
 			Using svc
 				If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
-					svc.Start()
-					svc.WaitForStatus(ServiceControllerStatus.Running)
+					If svc.Status = ServiceControllerStatus.Stopped Then
+						svc.Start()
+						svc.WaitForStatus(ServiceControllerStatus.Running)
+					End If
 				End If
 			End Using
 		Next
@@ -909,8 +911,10 @@ Public Class CleanupEngine
 		For Each svc As ServiceController In ServiceController.GetServices()
 			Using svc
 				If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
-					svc.Stop()
-					svc.WaitForStatus(ServiceControllerStatus.Stopped)
+					If svc.Status <> ServiceControllerStatus.Stopped Then
+						svc.Stop()
+						svc.WaitForStatus(ServiceControllerStatus.Stopped)
+					End If
 				End If
 			End Using
 		Next
