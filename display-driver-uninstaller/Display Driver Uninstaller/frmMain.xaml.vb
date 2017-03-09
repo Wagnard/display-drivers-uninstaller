@@ -6735,6 +6735,17 @@ Public Class frmMain
 	End Sub
 
 	Private Sub testing2MenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles testingMenuItem.Click
+
+		If ServiceInstaller.ServiceIsInstalled("Schedule") Then
+			MessageBox.Show(ServiceInstaller.GetServiceStatus("Schedule").ToString())
+
+			ServiceInstaller.StopService("Schedule")
+
+			ServiceInstaller.StartService("Schedule")
+		End If
+
+		Return
+
 		Dim config As New ThreadSettings(False)
 		' Example usage
 		Using tsc As New TaskSchedulerControl(config)

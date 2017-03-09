@@ -467,13 +467,13 @@ Public Class CleanupEngine
 														End Try
 
 														Using superregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-													 "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
+														"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
 															If superregkey IsNot Nothing Then
 																For Each child2 As String In superregkey.GetSubKeyNames()
 																	If IsNullOrWhitespace(child2) Then Continue For
 
 																	Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-																"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, False)
+																   "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, False)
 
 																		If subsuperregkey IsNot Nothing Then
 																			For Each wantedstring As String In subsuperregkey.GetValueNames()
@@ -493,13 +493,13 @@ Public Class CleanupEngine
 															End If
 														End Using
 														Using superregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-													 "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
+														"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
 															If superregkey IsNot Nothing Then
 																For Each child2 As String In superregkey.GetSubKeyNames()
 																	If IsNullOrWhitespace(child2) Then Continue For
 
 																	Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-																"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
+																   "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
 
 																		If subsuperregkey IsNot Nothing Then
 																			For Each wantedstring In subsuperregkey.GetValueNames()
@@ -718,7 +718,7 @@ Public Class CleanupEngine
 							If IsNullOrWhitespace(child) Then Continue For
 
 							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users,
-						   users & "\Software\Microsoft\Installer\Products\" & child, False)
+							  users & "\Software\Microsoft\Installer\Products\" & child, False)
 
 								If subregkey IsNot Nothing Then
 									wantedvalue = subregkey.GetValue("ProductName", String.Empty).ToString
@@ -798,14 +798,15 @@ Public Class CleanupEngine
 						If regkey2 IsNot Nothing Then
 							If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(service, True, "amdkmafd")) Then
 
-								If ServiceInstaller.GetServiceStatus(service) = ServiceState.NotFound Then
+								If ServiceInstaller.GetServiceStatus(service) = ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
 									'Service is not present
 								Else
 									ServiceInstaller.Uninstall(service)
 
 									Dim waits As Int32 = 0
+
 									While waits < 30						 'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
-										If ServiceInstaller.GetServiceStatus(service) <> ServiceState.NotFound Then
+										If ServiceInstaller.GetServiceStatus(service) <> ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
 											waits += 1
 											System.Threading.Thread.Sleep(100)
 										Else

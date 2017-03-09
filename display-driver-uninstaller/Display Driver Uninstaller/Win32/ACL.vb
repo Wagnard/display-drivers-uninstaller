@@ -535,7 +535,7 @@ Namespace Win32
 				SE_REGISTRY_WOW64_32KEY
 			End Enum
 
-			Private Enum FILE_OPEN As UInt32
+			Friend Enum FILE_OPEN As UInt32
 				CREATE_NEW = 1
 				CREATE_ALWAYS = 2
 				OPEN_EXISTING = 3
@@ -544,7 +544,7 @@ Namespace Win32
 			End Enum
 
 			<Flags()>
-			Private Enum FILE_RIGHTS As UInt32
+			Friend Enum ACCESS_RIGHTS As UInt32
 				FILE_READ_ATTRIBUTES = &H80UI
 
 				DELETE = &H10000UI
@@ -567,7 +567,7 @@ Namespace Win32
 				GENERIC_READ = &H80000000UI
 			End Enum
 
-			Private Enum FILE_SHARE As UInt32
+			Friend Enum FILE_SHARE As UInt32
 				NONE = &H0UI
 				READ = &H1UI
 				WRITE = &H2UI
@@ -604,7 +604,7 @@ Namespace Win32
 			<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 			Private Function CreateFile(
    <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
-   <[In]()> ByVal dwDesiredAccess As FILE_RIGHTS,
+   <[In]()> ByVal dwDesiredAccess As ACCESS_RIGHTS,
    <[In]()> ByVal dwShareMode As FILE_SHARE,
    <[In](), [Optional]()> ByVal lpSecurityAttribute As IntPtr,
    <[In]()> ByVal dwCreationDisposition As FILE_OPEN,
@@ -704,7 +704,7 @@ Namespace Win32
 				Dim previousOwner As String = Nothing
 
 				Try
-					ptrFile = CreateFile(uncPath, FILE_RIGHTS.READ_CONTROL Or FILE_RIGHTS.FILE_READ_ATTRIBUTES Or FILE_RIGHTS.WRITE_OWNER, FILE_SHARE.NONE, IntPtr.Zero, FILE_OPEN.OPEN_EXISTING, FileIO.FILE_ATTRIBUTES.NORMAL Or FileIO.FILE_ATTRIBUTES.FLAG_BACKUP_SEMANTICS Or FileIO.FILE_ATTRIBUTES.FLAG_OPEN_REPARSE_POINT, IntPtr.Zero)
+					ptrFile = CreateFile(uncPath, ACCESS_RIGHTS.READ_CONTROL Or ACCESS_RIGHTS.FILE_READ_ATTRIBUTES Or ACCESS_RIGHTS.WRITE_OWNER, FILE_SHARE.NONE, IntPtr.Zero, FILE_OPEN.OPEN_EXISTING, FileIO.FILE_ATTRIBUTES.NORMAL Or FileIO.FILE_ATTRIBUTES.FLAG_BACKUP_SEMANTICS Or FileIO.FILE_ATTRIBUTES.FLAG_OPEN_REPARSE_POINT, IntPtr.Zero)
 
 					errCode = GetLastWin32ErrorU()
 

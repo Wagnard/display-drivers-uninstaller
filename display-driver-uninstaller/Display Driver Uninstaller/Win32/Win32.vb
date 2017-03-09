@@ -4,6 +4,12 @@ Imports System.ComponentModel
 Imports System.Runtime.InteropServices
 
 Namespace Win32
+
+#Region "Enums"
+
+
+#End Region
+
 	<ComVisible(False)>
 	Friend Module Win32Native
 
@@ -24,7 +30,7 @@ Namespace Win32
 		Private Const APPLICATION_ERROR_MASK = &H20000000UI
 		Private Const ERROR_SEVERITY_ERROR = &HC0000000UI
 
-		Public Enum [Errors] As UInteger
+		Public Enum [Errors] As UInt32
 			' SetupAPI Errors
 			BAD_INTERFACE_INSTALLSECT = APPLICATION_ERROR_MASK Or ERROR_SEVERITY_ERROR Or &H21DUI
 			BAD_SECTION_NAME_LINE = APPLICATION_ERROR_MASK Or ERROR_SEVERITY_ERROR Or 1UI
@@ -149,6 +155,7 @@ Namespace Win32
 			SCHED_E_TASK_NOT_V1_COMPAT = &H80041327UI		'The task has properties that are not compatible with earlier versions of Windows.		
 			SCHED_E_START_ON_DEMAND = &H80041328UI			'The task settings do not allow the task to start on demand.
 
+			SERVICE_SPECIFIC_ERROR = &H42AUI				'The service has returned a service-specific error code.
 		End Enum
 
 #End Region
@@ -248,7 +255,7 @@ Namespace Win32
 		Friend Sub ShowException(ByVal ex As Exception)
 			If TypeOf (ex) Is Win32Exception Then
 				Dim e As UInt32 = GetUInt32(DirectCast(ex, Win32Exception).NativeErrorCode)
-		
+
 				MessageBox.Show(String.Format("Error code: {0}{1}{2}{1}{1}{3}", e.ToString(), CRLF, ex.Message, ex.StackTrace), "Win32Exception!")
 			Else
 				MessageBox.Show(ex.Message & CRLF & CRLF & If(ex.TargetSite IsNot Nothing, ex.TargetSite.Name, "<null>") & CRLF & CRLF & ex.Source & CRLF & CRLF & ex.StackTrace, "Exception!")
