@@ -311,10 +311,10 @@ Public Class FileIO
 		Return (Exists(fileName, isDir) AndAlso Not isDir)
 	End Function
 
-	Public Shared Function ExistsDir(ByVal fileName As String) As Boolean
+	Public Shared Function ExistsDir(ByVal dirName As String) As Boolean
 		Dim isDir As Boolean = False
 
-		Return (Exists(fileName, isDir) AndAlso isDir)
+		Return (Exists(dirName, isDir) AndAlso isDir)
 	End Function
 
 	Public Shared Function CountFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = True) As Int32

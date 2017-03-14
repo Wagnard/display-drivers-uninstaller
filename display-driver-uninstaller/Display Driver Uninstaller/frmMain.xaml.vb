@@ -3009,13 +3009,15 @@ Public Class frmMain
 
 		Try
 			filePath = config.Paths.SystemDrive & "Temp"
-			For Each child As String In Directory.GetDirectories(filePath)
-				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "NVIDIA") Then
-						Delete(child)
+			If FileIO.ExistsDir(filePath) Then
+				For Each child As String In Directory.GetDirectories(filePath)
+					If IsNullOrWhitespace(child) = False Then
+						If StrContainsAny(child, True, "NVIDIA") Then
+							Delete(child)
+						End If
 					End If
-				End If
-			Next
+				Next
+			End If
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
