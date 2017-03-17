@@ -284,6 +284,16 @@ Class Application
 				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (Schedule)!")
 			End Try
 
+			Try
+				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+					If regkey IsNot Nothing Then
+						regkey.DeleteSubKeyTree("PNP_TDI")
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PNP_TDI)!")
+			End Try
+
 			SaveData()
 		Finally
 			Me.Shutdown(0)	' Close application completely
@@ -565,6 +575,18 @@ Class Application
 				Return False
 			End Try
 
+			Try
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+					If regkey IsNot Nothing Then
+						Using regSubKey As RegistryKey = regkey.CreateSubKey("PNP_TDI", RegistryKeyPermissionCheck.ReadWriteSubTree)
+							regSubKey.SetValue("", "Driver Group")
+						End Using
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for Schedule!")
+				Return False
+			End Try
 
 
 			Try
