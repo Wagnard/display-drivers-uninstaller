@@ -36,6 +36,15 @@
 				(За уградњу/инсталацију нове графичке картице)
 			</Tooltip>
 		</btnCleanShutdown>
+	<btnCleanGfeDownloads>
+      <Text>
+        Уклони "GeForce Experience" display driver инсталационе фајлове/кеш.
+        (Напомена: драјвери неће бити уклоњени!)
+      </Text>
+      <Tooltip>
+         Ово се најчешће користи за брисање непотребних фајлова на HDD-у/SSD-у који нису обрисани од стране GFE/Driver Installer-а.
+      </Tooltip>
+    </btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>Windows аутоматску инсталацију драјвера врати на Default (укључи)</Text>
 		</btnWuRestore>
@@ -66,7 +75,7 @@
 			<Text>Провера да ли постоји новија верзија програма...</Text>
 			<Text2>Не постоји новија верзија програма. Користите тренутно најновију верзију.</Text2>
 			<Text3>Пронађена новија верзија програма! Старије верзије имају ограничену подршку уодносу на новије.</Text3>
-			<Text4>Неуспешан прелазак на нову верзију програма!</Text4>
+			<Text4>Није могуће извришити проверу у потрази за новом верзијом DDU-a!</Text4>
 		</lblUpdate>
 
 		<lblOffer>
@@ -388,7 +397,7 @@
 
 				Хвала свима онима који су своје компјутере током тест-коришћења овог програма изложили ризику (посебна захвалност: Dellon132)
 				.
-				Превод на српски језик (ћирилица): Crazy_Milojko  и  Bricco
+				Превод на српски језик (ћирилица): CrazY_Milojko  и  Bricco
 
 				*DDU, његови креатори и остали који су учествовали у креирању програма нису ни у каквој вези са програмом Driver Sweeper или
 				његовим креаторима.
@@ -409,10 +418,16 @@
 
 	<LanguageTranslators>
 		<Translator>
-			<User></User>
-			<Details></Details>
-			<LastUpdate></LastUpdate>
+			<User>CrazY_Milojko</User>
+			<Details>igor.precep@hotmail.com</Details>
+			<LastUpdate>18/03/2017</LastUpdate>
 		</Translator>
+		
+		<Translator2>
+			<User>Bricco</User>
+			<Details>boris.precep@hotmail.com</Details>
+			<LastUpdate>18/03/2017</LastUpdate>
+		</Translator2>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

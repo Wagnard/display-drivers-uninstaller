@@ -187,7 +187,7 @@ Public Class frmMain
 		 (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
 		If FileIO.ExistsDir(filePath) Then
 
-			For Each child As String In Directory.GetDirectories(filePath)
+			For Each child As String In Fileio.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ati.ace") Or
 					   child.ToLower.Contains("ati catalyst control center") Or
@@ -200,12 +200,12 @@ Public Class frmMain
 					End If
 				End If
 			Next
-			If Directory.GetDirectories(filePath).Length = 0 Then
+			If FileIO.CountDirectories(filePath) = 0 Then
 
 				Delete(filePath)
 
 			Else
-				For Each data As String In Directory.GetDirectories(filePath)
+				For Each data As String In FileIO.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -216,7 +216,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\ATI"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Directory.GetDirectories(filePath)
+			For Each child As String In Fileio.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("cim") Then
 
@@ -225,12 +225,12 @@ Public Class frmMain
 					End If
 				End If
 			Next
-			If Directory.GetDirectories(filePath).Length = 0 Then
+			If FileIO.CountDirectories(filepath) = 0 Then
 
 				Delete(filePath)
 
 			Else
-				For Each data As String In Directory.GetDirectories(filePath)
+				For Each data As String In Fileio.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -241,7 +241,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		  (Environment.SpecialFolder.ProgramFiles) + "\Common Files" + "\ATI Technologies"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Directory.GetDirectories(filePath)
+			For Each child As String In Fileio.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("multimedia") Then
 
@@ -250,12 +250,12 @@ Public Class frmMain
 					End If
 				End If
 			Next
-			If Directory.GetDirectories(filePath).Length = 0 Then
+			If FileIO.CountDirectories(filepath) = 0 Then
 
 				Delete(filePath)
 
 			Else
-				For Each data As String In Directory.GetDirectories(filePath)
+				For Each data As String In Fileio.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -284,7 +284,7 @@ Public Class frmMain
 			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
 			If FileIO.ExistsDir(filePath) Then
 				Try
-					For Each child As String In Directory.GetDirectories(filePath)
+					For Each child As String In Fileio.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ati.ace") Or
 							 child.ToLower.Contains("ati catalyst control center") Or
@@ -297,12 +297,12 @@ Public Class frmMain
 							End If
 						End If
 					Next
-					If Directory.GetDirectories(filePath).Length = 0 Then
+					If FileIO.CountDirectories(filepath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In Directory.GetDirectories(filePath)
+						For Each data As String In Fileio.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -356,7 +356,7 @@ Public Class frmMain
 			filePath = Environment.GetFolderPath _
 			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies"
 			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In Directory.GetDirectories(filePath)
+				For Each child As String In Fileio.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("multimedia") Then
 
@@ -366,12 +366,12 @@ Public Class frmMain
 					End If
 				Next
 				Try
-					If Directory.GetDirectories(filePath).Length = 0 Then
+					If FileIO.CountDirectories(filepath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In Directory.GetDirectories(filePath)
+						For Each data As String In Fileio.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -426,12 +426,12 @@ Public Class frmMain
 					End If
 				End If
 			Next
-			If Directory.GetDirectories(filePath).Length = 0 Then
+			If FileIO.CountDirectories(filepath) = 0 Then
 
 				Delete(filePath)
 
 			Else
-				For Each data As String In Directory.GetDirectories(filePath)
+				For Each data As String In Fileio.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -451,19 +451,19 @@ Public Class frmMain
 					End If
 				End If
 			Next
-			If Directory.GetDirectories(filePath).Length = 0 Then
+			If FileIO.CountDirectories(filepath) = 0 Then
 
 				Delete(filePath)
 
 			Else
-				For Each data As String In Directory.GetDirectories(filePath)
+				For Each data As String In Fileio.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
 			End If
 		End If
 
-		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
+		For Each filepaths As String In Fileio.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
 			filePath = filepaths + "\AppData\Roaming\ATI"
 			If winxp Then
 				filePath = filepaths + "\Application Data\ATI"
@@ -479,12 +479,12 @@ Public Class frmMain
 							End If
 						End If
 					Next
-					If Directory.GetDirectories(filePath).Length = 0 Then
+					If FileIO.CountDirectories(filepath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In Directory.GetDirectories(filePath)
+						For Each data As String In Fileio.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -510,12 +510,12 @@ Public Class frmMain
 							End If
 						End If
 					Next
-					If Directory.GetDirectories(filePath).Length = 0 Then
+					If FileIO.CountDirectories(filepath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In Directory.GetDirectories(filePath)
+						For Each data As String In Fileio.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -543,12 +543,12 @@ Public Class frmMain
 							End If
 						End If
 					Next
-					If Directory.GetDirectories(filePath).Length = 0 Then
+					If FileIO.CountDirectories(filepath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In Directory.GetDirectories(filePath)
+						For Each data As String In Fileio.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -565,7 +565,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Directory.GetDirectories(filePath)
+			For Each child As String In Fileio.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If StrContainsAny(child, True, "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim") Then
 
@@ -575,12 +575,12 @@ Public Class frmMain
 				End If
 			Next
 			Try
-				If Directory.GetDirectories(filePath).Length = 0 Then
+				If FileIO.CountDirectories(filepath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In Directory.GetDirectories(filePath)
+					For Each data As String In Fileio.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 
@@ -593,7 +593,7 @@ Public Class frmMain
 		  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD"
 		If FileIO.ExistsDir(filePath) Then
 
-			For Each child As String In Directory.GetDirectories(filePath)
+			For Each child As String In Fileio.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ati.ace") Or _
 					   child.ToLower.Contains("cnext") Then
@@ -603,12 +603,12 @@ Public Class frmMain
 					End If
 				End If
 			Next
-			If Directory.GetDirectories(filePath).Length = 0 Then
+			If FileIO.CountDirectories(filepath) = 0 Then
 
 				Delete(filePath)
 
 			Else
-				For Each data As String In Directory.GetDirectories(filePath)
+				For Each data As String In Fileio.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -620,7 +620,7 @@ Public Class frmMain
 
 		filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_64"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Directory.GetDirectories(filePath)
+			For Each child As String In Fileio.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.EndsWith("\mom") Or
 					 child.ToLower.Contains("\mom.") Or
@@ -653,7 +653,7 @@ Public Class frmMain
 
 		filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\GAC_MSIL"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Directory.GetDirectories(filePath)
+			For Each child As String In Fileio.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.EndsWith("\mom") Or
 					 child.ToLower.Contains("\mom.") Or
@@ -1499,14 +1499,14 @@ Public Class frmMain
 											filePath = regkey2.GetValue("InstallDir", String.Empty).ToString
 
 											If Not IsNullOrWhitespace(filePath) AndAlso FileIO.ExistsDir(filePath) Then
-												For Each childf As String In Directory.GetDirectories(filePath)
+												For Each childf As String In Fileio.GetDirectories(filePath)
 													If IsNullOrWhitespace(childf) Then Continue For
 
 													If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
 														Delete(childf)
 													End If
 												Next
-												If Directory.GetDirectories(filePath).Length = 0 Then
+												If FileIO.CountDirectories(filepath) = 0 Then
 
 													Delete(filePath)
 
@@ -1700,7 +1700,7 @@ Public Class frmMain
 
 												filePath = regkey2.GetValue("InstallDir", String.Empty).ToString
 												If Not IsNullOrWhitespace(filePath) AndAlso My.Computer.FileSystem.DirectoryExists(filePath) Then
-													For Each childf As String In Directory.GetDirectories(filePath)
+													For Each childf As String In Fileio.GetDirectories(filePath)
 														If IsNullOrWhitespace(childf) Then Continue For
 
 														If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
@@ -1709,7 +1709,7 @@ Public Class frmMain
 
 														End If
 													Next
-													If Directory.GetDirectories(filePath).Length = 0 Then
+													If FileIO.CountDirectories(filepath) = 0 Then
 
 														Delete(filePath)
 
@@ -2145,16 +2145,6 @@ Public Class frmMain
 		'	End If
 		'End Using
 
-		'We need to be sure taskscheduler is running
-		Select Case System.Windows.Forms.SystemInformation.BootMode
-			Case Forms.BootMode.FailSafe
-				CleanupEngine.StartService("Schedule")
-			Case Forms.BootMode.FailSafeWithNetwork
-				CleanupEngine.StartService("Schedule")
-			Case Forms.BootMode.Normal
-				'Usually this service is unning in normal mode, we *could* in the future check all this.
-		End Select
-
 		Using tsc As New TaskSchedulerControl(config)
 			For Each task As Task In tsc.GetAllTasks
 				If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
@@ -2163,16 +2153,6 @@ Public Class frmMain
 				End If
 			Next
 		End Using
-
-		Select Case System.Windows.Forms.SystemInformation.BootMode
-			Case Forms.BootMode.FailSafe
-				CleanupEngine.StopService("Schedule")
-			Case Forms.BootMode.FailSafeWithNetwork
-				CleanupEngine.StopService("Schedule")
-			Case Forms.BootMode.Normal
-				'Usually this service is running in normal mode, we don't need to stop it.
-		End Select
-
 
 		'Killing Explorer.exe to help releasing file that were open.
 		Application.Log.AddMessage("Killing Explorer.exe")
@@ -2279,7 +2259,7 @@ Public Class frmMain
 				Case GPUVendor.AMD
 					FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
 					If IsNullOrWhitespace(FilePath) = False Then
-						For Each child As String In Directory.GetDirectories(FilePath)
+						For Each child As String In Fileio.GetDirectories(FilePath)
 							If IsNullOrWhitespace(child) = False Then
 								Dim dirinfo As New System.IO.DirectoryInfo(child)
 								If dirinfo.Name.ToLower.StartsWith("c030") Or
@@ -2296,7 +2276,7 @@ Public Class frmMain
 				Case GPUVendor.Nvidia
 					FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
 					If IsNullOrWhitespace(FilePath) = False Then
-						For Each child As String In Directory.GetDirectories(FilePath)
+						For Each child As String In Fileio.GetDirectories(FilePath)
 							If IsNullOrWhitespace(child) = False Then
 								Dim dirinfo As New System.IO.DirectoryInfo(child)
 								If StrContainsAny(dirinfo.Name, True, "nvstusb.inf", "nvhda.inf", "nv_dispi.inf") Then
@@ -2511,7 +2491,7 @@ Public Class frmMain
 
 		' here I erase the folders / files of the nvidia GFE / update in users.
 		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath)
-		For Each child As String In Directory.GetDirectories(filePath)
+		For Each child As String In Fileio.GetDirectories(filePath)
 			If IsNullOrWhitespace(child) = False Then
 				If child.ToLower.Contains("updatususer") Then
 
@@ -2533,7 +2513,7 @@ Public Class frmMain
 		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath) + "\Public\Pictures\NVIDIA Corporation"
 		If FileIO.ExistsDir(filePath) Then
 			If filePath IsNot Nothing Then
-				For Each child As String In Directory.GetDirectories(filePath)
+				For Each child As String In Fileio.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "3d vision experience") Then
 
@@ -2543,12 +2523,12 @@ Public Class frmMain
 					End If
 				Next
 				Try
-					If Directory.GetDirectories(filePath).Length = 0 Then
+					If FileIO.CountDirectories(filepath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In Directory.GetDirectories(filePath)
+						For Each data As String In Fileio.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -2558,7 +2538,7 @@ Public Class frmMain
 			End If
 		End If
 
-		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
+		For Each filepaths As String In Fileio.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
 
 			filePath = filepaths + "\AppData\Local\NVIDIA"
 
@@ -2578,12 +2558,12 @@ Public Class frmMain
 					End If
 				Next
 				Try
-					If Directory.GetDirectories(filePath).Length = 0 Then
+					If FileIO.CountDirectories(filepath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In Directory.GetDirectories(filePath)
+						For Each data As String In Fileio.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -2608,12 +2588,12 @@ Public Class frmMain
 					End If
 				Next
 				Try
-					If Directory.GetDirectories(filePath).Length = 0 Then
+					If FileIO.CountDirectories(filepath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In Directory.GetDirectories(filePath)
+						For Each data As String In Fileio.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -2652,12 +2632,12 @@ Public Class frmMain
 						End If
 					Next
 					Try
-						If Directory.GetDirectories(filePath).Length = 0 Then
+						If FileIO.CountDirectories(filepath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In Directory.GetDirectories(filePath)
+							For Each data As String In Fileio.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -2686,12 +2666,12 @@ Public Class frmMain
 				End If
 			Next
 			Try
-				If Directory.GetDirectories(filePath).Length = 0 Then
+				If FileIO.CountDirectories(filepath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In Directory.GetDirectories(filePath)
+					For Each data As String In Fileio.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 				End If
@@ -2726,12 +2706,12 @@ Public Class frmMain
 					End If
 				End If
 			Next
-			If Directory.GetDirectories(filePath).Length = 0 Then
+			If FileIO.CountDirectories(filepath) = 0 Then
 
 				Delete(filePath)
 
 			Else
-				For Each data As String In Directory.GetDirectories(filePath)
+				For Each data As String In Fileio.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -2752,12 +2732,12 @@ Public Class frmMain
 				End If
 			Next
 			Try
-				If Directory.GetDirectories(filePath).Length = 0 Then
+				If FileIO.CountDirectories(filepath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In Directory.GetDirectories(filePath)
+					For Each data As String In Fileio.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 				End If
@@ -2770,7 +2750,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Directory.GetDirectories(filePath)
+			For Each child As String In Fileio.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("control panel client") Or
 					   child.ToLower.Contains("display") Or
@@ -2803,7 +2783,7 @@ Public Class frmMain
 
 					End If
 					If child.ToLower.Contains("installer2") Then
-						For Each child2 As String In Directory.GetDirectories(child)
+						For Each child2 As String In FileIO.GetDirectories(child)
 							If IsNullOrWhitespace(child2) = False Then
 								If child2.ToLower.Contains("display.3dvision") Or
 								   child2.ToLower.Contains("display.controlpanel") Or
@@ -2843,12 +2823,12 @@ Public Class frmMain
 							End If
 						Next
 
-						If Directory.GetDirectories(child).Length = 0 Then
+						If FileIO.CountDirectories(child) = 0 Then
 
 							Delete(child)
 
 						Else
-							For Each data As String In Directory.GetDirectories(child)
+							For Each data As String In Fileio.GetDirectories(child)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + child + "\ --> " + data)
 							Next
 
@@ -2856,12 +2836,12 @@ Public Class frmMain
 					End If
 				End If
 			Next
-			If Directory.GetDirectories(filePath).Length = 0 Then
+			If FileIO.CountDirectories(filepath) = 0 Then
 
 				Delete(filePath)
 
 			Else
-				For Each data As String In Directory.GetDirectories(filePath)
+				For Each data As String In Fileio.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 			End If
@@ -2891,7 +2871,7 @@ Public Class frmMain
 			filePath = Environment.GetFolderPath _
 			  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
 			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In Directory.GetDirectories(filePath)
+				For Each child As String In Fileio.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("3d vision") Or
 						 child.ToLower.Contains("coprocmanager") Or
@@ -2925,12 +2905,12 @@ Public Class frmMain
 					End If
 				Next
 
-				If Directory.GetDirectories(filePath).Length = 0 Then
+				If FileIO.CountDirectories(filepath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In Directory.GetDirectories(filePath)
+					For Each data As String In Fileio.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 
@@ -2996,7 +2976,7 @@ Public Class frmMain
 
 		Try
 			filePath = Environment.GetEnvironmentVariable("windir") + "\Temp"
-			For Each child As String In Directory.GetDirectories(filePath)
+			For Each child As String In Fileio.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If StrContainsAny(child, True, "NVIDIA Corporation", "NvidiaLogging") Then
 						Delete(child)
@@ -3010,7 +2990,7 @@ Public Class frmMain
 		Try
 			filePath = config.Paths.SystemDrive & "Temp"
 			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In Directory.GetDirectories(filePath)
+				For Each child As String In Fileio.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "NVIDIA") Then
 							Delete(child)
@@ -3023,7 +3003,7 @@ Public Class frmMain
 		End Try
 
 
-		For Each filepaths As String In Directory.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
+		For Each filepaths As String In Fileio.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
 
 			filePath = filepaths + "\AppData\Local\Temp\NvidiaLogging"
 			If FileIO.ExistsDir(filePath) Then
@@ -3036,12 +3016,12 @@ Public Class frmMain
 						End If
 					Next
 					Try
-						If Directory.GetDirectories(filePath).Length = 0 Then
+						If FileIO.CountDirectories(filepath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In Directory.GetDirectories(filePath)
+							For Each data As String In Fileio.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3068,12 +3048,12 @@ Public Class frmMain
 						End If
 					Next
 					Try
-						If Directory.GetDirectories(filePath).Length = 0 Then
+						If FileIO.CountDirectories(filepath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In Directory.GetDirectories(filePath)
+							For Each data As String In Fileio.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3101,12 +3081,12 @@ Public Class frmMain
 						End If
 					Next
 					Try
-						If Directory.GetDirectories(filePath).Length = 0 Then
+						If FileIO.CountDirectories(filepath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In Directory.GetDirectories(filePath)
+							For Each data As String In Fileio.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3132,12 +3112,12 @@ Public Class frmMain
 						End If
 					Next
 					Try
-						If Directory.GetDirectories(filePath).Length = 0 Then
+						If FileIO.CountDirectories(filepath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In Directory.GetDirectories(filePath)
+							For Each data As String In Fileio.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3170,12 +3150,12 @@ Public Class frmMain
 										End If
 									Next
 
-									If Directory.GetDirectories(filePath).Length = 0 Then
+									If FileIO.CountDirectories(filepath) = 0 Then
 
 										Delete(filePath)
 
 									Else
-										For Each data As String In Directory.GetDirectories(filePath)
+										For Each data As String In Fileio.GetDirectories(filePath)
 											Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 										Next
 
@@ -3195,7 +3175,7 @@ Public Class frmMain
 		If config.RemoveGFE Then
 			filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_32"
 			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In Directory.GetDirectories(filePath)
+				For Each child As String In Fileio.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("gfexperience") Or
 						 child.ToLower.Contains("nvidia.sett") Or
@@ -4772,64 +4752,6 @@ Public Class frmMain
 		Catch ex As Exception
 		End Try
 
-		'Task Scheduler cleanUP (Geforce Experience Beta 3.0.3.127)
-		'Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
-		'	If regkey IsNot Nothing Then
-		'		For Each child As String In regkey.GetSubKeyNames
-		'			If IsNullOrWhitespace(child) Then Continue For
-		'			Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-		'				If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-		'					If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvidia profile updater", "nvidia crash and telemetry", "nvidia nvnode launcher", "nvidia telemetry monitor", "nvidia profile updater") Then
-		'						deletesubregkey(regkey, child)
-		'					End If
-		'				End If
-		'			End Using
-		'		Next
-		'	End If
-		'End Using
-
-		'Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree", True)
-		'	If regkey IsNot Nothing Then
-		'		For Each child As String In regkey.GetSubKeyNames
-		'			If IsNullOrWhitespace(child) Then Continue For
-		'			If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") Then
-		'				Try
-		'					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-		'						If regkey2 IsNot Nothing Then
-		'							If Not IsNullOrWhitespace(regkey2.GetValue("Id", String.Empty).ToString) Then
-		'								wantedvalue = regkey2.GetValue("Id").ToString
-		'								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
-		'									If regkey3 IsNot Nothing Then
-		'										For Each child2 As String In regkey3.GetSubKeyNames
-		'											If IsNullOrWhitespace(child2) Then Continue For
-		'											If StrContainsAny(wantedvalue, True, child2) Then
-		'												deletesubregkey(regkey3, child2)
-		'											End If
-		'										Next
-		'									End If
-		'								End Using
-		'							End If
-		'						End If
-		'					End Using
-		'				Catch ex As Exception
-		'					Application.Log.AddException(ex)
-		'				End Try
-		'				deletesubregkey(regkey, child)
-		'			End If
-		'		Next
-		'	End If
-		'End Using
-
-		'We need to be sure taskscheduler is running
-		Select Case System.Windows.Forms.SystemInformation.BootMode
-			Case Forms.BootMode.FailSafe
-				CleanupEngine.StartService("Schedule")
-			Case Forms.BootMode.FailSafeWithNetwork
-				CleanupEngine.StartService("Schedule")
-			Case Forms.BootMode.Normal
-				'Usually this service is unning in normal mode, we *could* in the future check all this.
-		End Select
-
 		Using tsc As New TaskSchedulerControl(config)
 			For Each task As Task In tsc.GetAllTasks
 				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") Then
@@ -4838,15 +4760,6 @@ Public Class frmMain
 				End If
 			Next
 		End Using
-
-		Select Case System.Windows.Forms.SystemInformation.BootMode
-			Case Forms.BootMode.FailSafe
-				CleanupEngine.StopService("Schedule")
-			Case Forms.BootMode.FailSafeWithNetwork
-				CleanupEngine.StopService("Schedule")
-			Case Forms.BootMode.Normal
-				'Usually this service is running in normal mode, we don't need to stop it.
-		End Select
 
 		UpdateTextMethod("End of Registry Cleaning")
 
@@ -6519,10 +6432,10 @@ Public Class frmMain
 			filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 
-			For Each child As String In Directory.GetDirectories(filePath)
+			For Each child As String In Fileio.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("installer2") Then
-						For Each child2 As String In Directory.GetDirectories(child)
+						For Each child2 As String In Fileio.GetDirectories(child)
 							If IsNullOrWhitespace(child2) = False Then
 								If child2.ToLower.Contains("display.3dvision") Or
 								   child2.ToLower.Contains("display.controlpanel") Or
@@ -6555,7 +6468,7 @@ Public Class frmMain
 							End If
 						Next
 
-						If Directory.GetDirectories(child).Length = 0 Then
+						If FileIO.CountDirectories(child) = 0 Then
 							Try
 								Delete(child)
 							Catch ex As Exception
