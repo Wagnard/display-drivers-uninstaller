@@ -71,7 +71,7 @@ Class Application
 		'ALL Exceptions are shown in English
 		Thread.CurrentThread.CurrentCulture = New CultureInfo("en-US")
 		Thread.CurrentThread.CurrentUICulture = New CultureInfo("en-US")
-
+        KillGPUStatsProcesses()
 		FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement),
 		   New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
 	End Sub
@@ -177,7 +177,39 @@ Class Application
 		End Try
 	End Sub
 
+    Private Sub KillGPUStatsProcesses()
+        ' Not sure for the x86 one...
+        ' Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
 
+        KillProcess(
+         "MSIAfterburner",
+          "PrecisionX_x64",
+          "PrecisionXServer_x64",
+          "PrecisionX",
+          "PrecisionXServer",
+          "RTSS",
+          "RTSSHooksLoader64",
+          "EncoderServer64",
+          "RTSSHooksLoader",
+          "EncoderServer",
+          "nvidiaInspector")
+    End Sub
+
+    Private Sub KillProcess(ByVal ParamArray processnames As String())
+        For Each processName As String In processnames
+            If String.IsNullOrEmpty(processName) Then
+                Continue For
+            End If
+
+            For Each process As Process In process.GetProcessesByName(processName)
+                Try
+                    process.Kill()
+                Catch ex As Exception
+                    Application.Log.AddExceptionWithValues(ex, "@KillProcess()", String.Concat("ProcessName: ", processName))
+                End Try
+            Next
+        Next
+    End Sub
 
 	Private Sub LaunchMainWindow()
 		' >>> Loading UI <<<
@@ -305,7 +337,7 @@ Class Application
 		'	MessageBox.Show("Attach debugger!")		' for Debugging System process
 		'	IsDebug = True
 		'End If
-
+        KillGPUStatsProcesses()
 		Try
 			' Launch as Admin if not
 			If Not Tools.UserHasAdmin Then
