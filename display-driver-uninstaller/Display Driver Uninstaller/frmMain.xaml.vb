@@ -2145,18 +2145,36 @@ Public Class frmMain
 		'	End If
 		'End Using
 
-		Using tsc As New TaskSchedulerControl(config)
-			For Each task As Task In tsc.GetAllTasks
-				If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
-					task.Delete()
-					Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
-				End If
-			Next
-		End Using
+        Select Case System.Windows.Forms.SystemInformation.BootMode
+            Case Forms.BootMode.FailSafe
+                CleanupEngine.StartService("Schedule")
+            Case Forms.BootMode.FailSafeWithNetwork
+                CleanupEngine.StartService("Schedule")
+            Case Forms.BootMode.Normal
+                'Usually this service is Running in normal mode, we *could* in the future check all this.
+        End Select
 
-		'Killing Explorer.exe to help releasing file that were open.
-		Application.Log.AddMessage("Killing Explorer.exe")
-		KillProcess("explorer")
+        Using tsc As New TaskSchedulerControl(config)
+            For Each task As Task In tsc.GetAllTasks
+                If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
+                    task.Delete()
+                    Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
+                End If
+            Next
+        End Using
+
+        Select Case System.Windows.Forms.SystemInformation.BootMode
+            Case Forms.BootMode.FailSafe
+                CleanupEngine.StopService("Schedule")
+            Case Forms.BootMode.FailSafeWithNetwork
+                CleanupEngine.StopService("Schedule")
+            Case Forms.BootMode.Normal
+                'Usually this service is running in normal mode, we don't need to stop it.
+        End Select
+
+        'Killing Explorer.exe to help releasing file that were open.
+        Application.Log.AddMessage("Killing Explorer.exe")
+        KillProcess("explorer")
 
 	End Sub
 
@@ -2685,25 +2703,28 @@ Public Class frmMain
 		Try
 			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If child.ToLower.Contains("drs") Or
-					 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("netservice") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("crashdumps") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("nvstream") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("downloader") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("gfebridges") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("nvstapisvr") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
-					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
+                    If child.ToLower.Contains("drs") Or
+                     (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("netservice") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("crashdumps") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("nvstream") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("downloader") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("gfebridges") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("nvstapisvr") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("nvstereoinstaller") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("driverdumps") AndAlso config.RemoveGFE) Or
+                     (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 
-						Delete(child)
+                        Delete(child)
 
-					End If
+                    End If
 				End If
 			Next
 			If FileIO.CountDirectories(filepath) = 0 Then
@@ -2785,41 +2806,43 @@ Public Class frmMain
 					If child.ToLower.Contains("installer2") Then
 						For Each child2 As String In FileIO.GetDirectories(child)
 							If IsNullOrWhitespace(child2) = False Then
-								If child2.ToLower.Contains("display.3dvision") Or
-								   child2.ToLower.Contains("display.controlpanel") Or
-								   child2.ToLower.Contains("display.driver") Or
-								   child2.ToLower.Contains("display.optimus") Or
-								   child2.ToLower.Contains("msvcruntime") Or
-								   child2.ToLower.Contains("ansel.") Or
-								   child2.ToLower.Contains("display.gfexperience") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("osc.") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("osclib.") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("display.nvirusb") Or
-								   child2.ToLower.Contains("display.physx") AndAlso config.RemovePhysX Or
-								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("display.gamemonitor") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("network.service") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("miracast.virtualaudio") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("update.core") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("virtualaudio.driver") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("coretemp") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("shield") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("nvnodejs") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("nvplugin") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("nvvhci") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("hdaudio.driver") Then
+                                If child2.ToLower.Contains("display.3dvision") Or
+                                   child2.ToLower.Contains("display.controlpanel") Or
+                                   child2.ToLower.Contains("display.driver") Or
+                                   child2.ToLower.Contains("display.optimus") Or
+                                   child2.ToLower.Contains("msvcruntime") Or
+                                   child2.ToLower.Contains("ansel.") Or
+                                   child2.ToLower.Contains("display.gfexperience") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("osc.") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("osclib.") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("display.nvirusb") Or
+                                   child2.ToLower.Contains("display.physx") AndAlso config.RemovePhysX Or
+                                   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("display.gamemonitor") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("network.service") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("miracast.virtualaudio") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("update.core") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("virtualaudio.driver") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("coretemp") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("shield") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("nvnodejs") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("nvplugin") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("nvdisplaypluginwatchdog") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("nvdisplaysessioncontainer") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("nvvhci") AndAlso config.RemoveGFE Or
+                                   child2.ToLower.Contains("hdaudio.driver") Then
 
 
-									Delete(child2)
+                                    Delete(child2)
 
-								End If
+                                End If
 							End If
 						Next
 
@@ -3923,36 +3946,36 @@ Public Class frmMain
 											For Each child3 As String In regkey3.GetSubKeyNames()
 												If IsNullOrWhitespace(child3) Then Continue For
 
-												If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer") Then
-													'do nothing
-												Else
-													Try
-														deletesubregkey(regkey3, child3)
-													Catch ex As Exception
-													End Try
-												End If
+                                                If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer") Then
+                                                    'do nothing
+                                                Else
+                                                    Try
+                                                        deletesubregkey(regkey3, child3)
+                                                    Catch ex As Exception
+                                                    End Try
+                                                End If
 											Next
 										End Using
 									End If
 								End If
-								If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd") Or
-								(StrContainsAny(child2, True, "installer2", "nvstream", "nvtray", "nvcontainer") AndAlso removegfe) Then
-									If removephysx Then
-										Try
-											deletesubregkey(regkey2, child2)
-										Catch ex As Exception
-										End Try
-									Else
-										If child2.ToLower.Contains("physx") Then
-											'do nothing
-										Else
-											Try
-												deletesubregkey(regkey2, child2)
-											Catch ex As Exception
-											End Try
-										End If
-									End If
-								End If
+                                If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd") Or
+                                (StrContainsAny(child2, True, "installer2", "nvstream", "nvtray", "nvcontainer", "nvdisplay.container") AndAlso removegfe) Then
+                                    If removephysx Then
+                                        Try
+                                            deletesubregkey(regkey2, child2)
+                                        Catch ex As Exception
+                                        End Try
+                                    Else
+                                        If child2.ToLower.Contains("physx") Then
+                                            'do nothing
+                                        Else
+                                            Try
+                                                deletesubregkey(regkey2, child2)
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+                                    End If
+                                End If
 							Next
 							If regkey2.SubKeyCount = 0 Then
 								Try
@@ -4752,6 +4775,15 @@ Public Class frmMain
 		Catch ex As Exception
 		End Try
 
+        Select Case System.Windows.Forms.SystemInformation.BootMode
+            Case Forms.BootMode.FailSafe
+                CleanupEngine.StartService("Schedule")
+            Case Forms.BootMode.FailSafeWithNetwork
+                CleanupEngine.StartService("Schedule")
+            Case Forms.BootMode.Normal
+                'Usually this service is Running in normal mode, we *could* in the future check all this.
+        End Select
+
 		Using tsc As New TaskSchedulerControl(config)
 			For Each task As Task In tsc.GetAllTasks
 				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") Then
@@ -4760,6 +4792,15 @@ Public Class frmMain
 				End If
 			Next
 		End Using
+
+        Select Case System.Windows.Forms.SystemInformation.BootMode
+            Case Forms.BootMode.FailSafe
+                CleanupEngine.StopService("Schedule")
+            Case Forms.BootMode.FailSafeWithNetwork
+                CleanupEngine.StopService("Schedule")
+            Case Forms.BootMode.Normal
+                'Usually this service is running in normal mode, we don't need to stop it.
+        End Select
 
 		UpdateTextMethod("End of Registry Cleaning")
 
