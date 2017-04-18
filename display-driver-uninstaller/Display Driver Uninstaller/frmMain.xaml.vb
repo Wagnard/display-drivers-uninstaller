@@ -187,13 +187,13 @@ Public Class frmMain
 		 (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
 		If FileIO.ExistsDir(filePath) Then
 
-			For Each child As String In Fileio.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ati.ace") Or
-					   child.ToLower.Contains("ati catalyst control center") Or
-					   child.ToLower.Contains("application profiles") Or
-					   child.ToLower.EndsWith("\px") Or
-					   child.ToLower.Contains("hydravision") Then
+				   child.ToLower.Contains("ati catalyst control center") Or
+				   child.ToLower.Contains("application profiles") Or
+				   child.ToLower.EndsWith("\px") Or
+				   child.ToLower.Contains("hydravision") Then
 
 						Delete(child)
 
@@ -208,7 +208,6 @@ Public Class frmMain
 				For Each data As String In FileIO.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
-
 			End If
 		End If
 
@@ -216,7 +215,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\ATI"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Fileio.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("cim") Then
 
@@ -230,7 +229,7 @@ Public Class frmMain
 				Delete(filePath)
 
 			Else
-				For Each data As String In Fileio.GetDirectories(filePath)
+				For Each data As String In FileIO.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -241,7 +240,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		  (Environment.SpecialFolder.ProgramFiles) + "\Common Files" + "\ATI Technologies"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Fileio.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("multimedia") Then
 
@@ -255,7 +254,7 @@ Public Class frmMain
 				Delete(filePath)
 
 			Else
-				For Each data As String In Fileio.GetDirectories(filePath)
+				For Each data As String In FileIO.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -284,7 +283,7 @@ Public Class frmMain
 			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
 			If FileIO.ExistsDir(filePath) Then
 				Try
-					For Each child As String In Fileio.GetDirectories(filePath)
+					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ati.ace") Or
 							 child.ToLower.Contains("ati catalyst control center") Or
@@ -302,7 +301,7 @@ Public Class frmMain
 						Delete(filePath)
 
 					Else
-						For Each data As String In Fileio.GetDirectories(filePath)
+						For Each data As String In FileIO.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -356,7 +355,7 @@ Public Class frmMain
 			filePath = Environment.GetFolderPath _
 			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies"
 			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In Fileio.GetDirectories(filePath)
+				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("multimedia") Then
 
@@ -371,7 +370,7 @@ Public Class frmMain
 						Delete(filePath)
 
 					Else
-						For Each data As String In Fileio.GetDirectories(filePath)
+						For Each data As String In FileIO.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -417,7 +416,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\ATI"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ace") Then
 
@@ -431,7 +430,7 @@ Public Class frmMain
 				Delete(filePath)
 
 			Else
-				For Each data As String In Fileio.GetDirectories(filePath)
+				For Each data As String In FileIO.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -441,7 +440,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\AMD"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("kdb") Or _
 					   child.ToLower.Contains("fuel") Then
@@ -456,21 +455,21 @@ Public Class frmMain
 				Delete(filePath)
 
 			Else
-				For Each data As String In Fileio.GetDirectories(filePath)
+				For Each data As String In FileIO.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
 			End If
 		End If
 
-		For Each filepaths As String In Fileio.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
+		For Each filepaths As String In FileIO.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
 			filePath = filepaths + "\AppData\Roaming\ATI"
 			If winxp Then
 				filePath = filepaths + "\Application Data\ATI"
 			End If
 			If FileIO.ExistsDir(filePath) Then
 				Try
-					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ace") Then
 
@@ -484,7 +483,7 @@ Public Class frmMain
 						Delete(filePath)
 
 					Else
-						For Each data As String In Fileio.GetDirectories(filePath)
+						For Each data As String In FileIO.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -501,7 +500,7 @@ Public Class frmMain
 			End If
 			If FileIO.ExistsDir(filePath) Then
 				Try
-					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("ace") Then
 
@@ -515,7 +514,7 @@ Public Class frmMain
 						Delete(filePath)
 
 					Else
-						For Each data As String In Fileio.GetDirectories(filePath)
+						For Each data As String In FileIO.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -531,7 +530,7 @@ Public Class frmMain
 			End If
 			If FileIO.ExistsDir(filePath) Then
 				Try
-					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("cn") Or
 							 child.ToLower.Contains("fuel") Or _
@@ -548,7 +547,7 @@ Public Class frmMain
 						Delete(filePath)
 
 					Else
-						For Each data As String In Fileio.GetDirectories(filePath)
+						For Each data As String In FileIO.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -565,7 +564,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Fileio.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If StrContainsAny(child, True, "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim") Then
 
@@ -580,7 +579,7 @@ Public Class frmMain
 					Delete(filePath)
 
 				Else
-					For Each data As String In Fileio.GetDirectories(filePath)
+					For Each data As String In FileIO.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 
@@ -593,7 +592,7 @@ Public Class frmMain
 		  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD"
 		If FileIO.ExistsDir(filePath) Then
 
-			For Each child As String In Fileio.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ati.ace") Or _
 					   child.ToLower.Contains("cnext") Then
@@ -608,7 +607,7 @@ Public Class frmMain
 				Delete(filePath)
 
 			Else
-				For Each data As String In Fileio.GetDirectories(filePath)
+				For Each data As String In FileIO.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -620,7 +619,7 @@ Public Class frmMain
 
 		filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_64"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Fileio.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.EndsWith("\mom") Or
 					 child.ToLower.Contains("\mom.") Or
@@ -653,7 +652,7 @@ Public Class frmMain
 
 		filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\GAC_MSIL"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Fileio.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.EndsWith("\mom") Or
 					 child.ToLower.Contains("\mom.") Or
@@ -1499,7 +1498,7 @@ Public Class frmMain
 											filePath = regkey2.GetValue("InstallDir", String.Empty).ToString
 
 											If Not IsNullOrWhitespace(filePath) AndAlso FileIO.ExistsDir(filePath) Then
-												For Each childf As String In Fileio.GetDirectories(filePath)
+												For Each childf As String In FileIO.GetDirectories(filePath)
 													If IsNullOrWhitespace(childf) Then Continue For
 
 													If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
@@ -1699,8 +1698,8 @@ Public Class frmMain
 											If Not IsNullOrWhitespace(regkey2.GetValue("InstallDir", String.Empty).ToString) Then
 
 												filePath = regkey2.GetValue("InstallDir", String.Empty).ToString
-												If Not IsNullOrWhitespace(filePath) AndAlso My.Computer.FileSystem.DirectoryExists(filePath) Then
-													For Each childf As String In Fileio.GetDirectories(filePath)
+												If Not IsNullOrWhitespace(filePath) AndAlso FileIO.ExistsDir(filePath) Then
+													For Each childf As String In FileIO.GetDirectories(filePath)
 														If IsNullOrWhitespace(childf) Then Continue For
 
 														If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
@@ -1709,7 +1708,7 @@ Public Class frmMain
 
 														End If
 													Next
-													If FileIO.CountDirectories(filepath) = 0 Then
+													If FileIO.CountDirectories(filePath) = 0 Then
 
 														Delete(filePath)
 
@@ -2145,36 +2144,36 @@ Public Class frmMain
 		'	End If
 		'End Using
 
-        Select Case System.Windows.Forms.SystemInformation.BootMode
-            Case Forms.BootMode.FailSafe
-                CleanupEngine.StartService("Schedule")
-            Case Forms.BootMode.FailSafeWithNetwork
-                CleanupEngine.StartService("Schedule")
-            Case Forms.BootMode.Normal
-                'Usually this service is Running in normal mode, we *could* in the future check all this.
-        End Select
+		Select Case System.Windows.Forms.SystemInformation.BootMode
+			Case Forms.BootMode.FailSafe
+				StartService("Schedule")
+			Case Forms.BootMode.FailSafeWithNetwork
+				StartService("Schedule")
+			Case Forms.BootMode.Normal
+				'Usually this service is Running in normal mode, we *could* in the future check all this.
+		End Select
 
-        Using tsc As New TaskSchedulerControl(config)
-            For Each task As Task In tsc.GetAllTasks
-                If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
-                    task.Delete()
-                    Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
-                End If
-            Next
-        End Using
+		Using tsc As New TaskSchedulerControl(config)
+			For Each task As Task In tsc.GetAllTasks
+				If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
+					task.Delete()
+					Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
+				End If
+			Next
+		End Using
 
-        Select Case System.Windows.Forms.SystemInformation.BootMode
-            Case Forms.BootMode.FailSafe
-                CleanupEngine.StopService("Schedule")
-            Case Forms.BootMode.FailSafeWithNetwork
-                CleanupEngine.StopService("Schedule")
-            Case Forms.BootMode.Normal
-                'Usually this service is running in normal mode, we don't need to stop it.
-        End Select
+		Select Case System.Windows.Forms.SystemInformation.BootMode
+			Case Forms.BootMode.FailSafe
+				StopService("Schedule")
+			Case Forms.BootMode.FailSafeWithNetwork
+				StopService("Schedule")
+			Case Forms.BootMode.Normal
+				'Usually this service is running in normal mode, we don't need to stop it.
+		End Select
 
-        'Killing Explorer.exe to help releasing file that were open.
-        Application.Log.AddMessage("Killing Explorer.exe")
-        KillProcess("explorer")
+		'Killing Explorer.exe to help releasing file that were open.
+		Application.Log.AddMessage("Killing Explorer.exe")
+		KillProcess("explorer")
 
 	End Sub
 
@@ -2277,7 +2276,7 @@ Public Class frmMain
 				Case GPUVendor.AMD
 					FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
 					If IsNullOrWhitespace(FilePath) = False Then
-						For Each child As String In Fileio.GetDirectories(FilePath)
+						For Each child As String In FileIO.GetDirectories(FilePath)
 							If IsNullOrWhitespace(child) = False Then
 								Dim dirinfo As New System.IO.DirectoryInfo(child)
 								If dirinfo.Name.ToLower.StartsWith("c030") Or
@@ -2294,7 +2293,7 @@ Public Class frmMain
 				Case GPUVendor.Nvidia
 					FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
 					If IsNullOrWhitespace(FilePath) = False Then
-						For Each child As String In Fileio.GetDirectories(FilePath)
+						For Each child As String In FileIO.GetDirectories(FilePath)
 							If IsNullOrWhitespace(child) = False Then
 								Dim dirinfo As New System.IO.DirectoryInfo(child)
 								If StrContainsAny(dirinfo.Name, True, "nvstusb.inf", "nvhda.inf", "nv_dispi.inf") Then
@@ -2445,7 +2444,7 @@ Public Class frmMain
 			filepath = Environment.GetFolderPath _
 			  (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation\Downloader"
 			If FileIO.ExistsDir(filepath) Then
-				For Each child As String In My.Computer.FileSystem.GetDirectories(filepath)
+				For Each child As String In FileIO.GetDirectories(filepath)
 					If IsNullOrWhitespace(child) = False Then
 						If Not StrContainsAny(child, True, "config") Then
 							Delete(child)
@@ -2461,7 +2460,7 @@ Public Class frmMain
 		filepath = Environment.GetFolderPath _
 		(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation\Installer2"
 		If FileIO.ExistsDir(filepath) Then
-			For Each child As String In My.Computer.FileSystem.GetDirectories(filepath)
+			For Each child As String In FileIO.GetDirectories(filepath)
 				If IsNullOrWhitespace(child) = False Then
 					Delete(child)
 				End If
@@ -2509,7 +2508,7 @@ Public Class frmMain
 
 		' here I erase the folders / files of the nvidia GFE / update in users.
 		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath)
-		For Each child As String In Fileio.GetDirectories(filePath)
+		For Each child As String In FileIO.GetDirectories(filePath)
 			If IsNullOrWhitespace(child) = False Then
 				If child.ToLower.Contains("updatususer") Then
 
@@ -2531,7 +2530,7 @@ Public Class frmMain
 		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath) + "\Public\Pictures\NVIDIA Corporation"
 		If FileIO.ExistsDir(filePath) Then
 			If filePath IsNot Nothing Then
-				For Each child As String In Fileio.GetDirectories(filePath)
+				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "3d vision experience") Then
 
@@ -2546,7 +2545,7 @@ Public Class frmMain
 						Delete(filePath)
 
 					Else
-						For Each data As String In Fileio.GetDirectories(filePath)
+						For Each data As String In FileIO.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -2556,13 +2555,13 @@ Public Class frmMain
 			End If
 		End If
 
-		For Each filepaths As String In Fileio.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
+		For Each filepaths As String In FileIO.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
 
 			filePath = filepaths + "\AppData\Local\NVIDIA"
 
 
 			Try
-				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If (child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("nvosc.") AndAlso config.RemoveGFE) Or
@@ -2581,7 +2580,7 @@ Public Class frmMain
 						Delete(filePath)
 
 					Else
-						For Each data As String In Fileio.GetDirectories(filePath)
+						For Each data As String In FileIO.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -2595,7 +2594,7 @@ Public Class frmMain
 			filePath = filepaths + "\AppData\Roaming\NVIDIA"
 
 			Try
-				For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("computecache") Or
 						 child.ToLower.Contains("glcache") Then
@@ -2611,7 +2610,7 @@ Public Class frmMain
 						Delete(filePath)
 
 					Else
-						For Each data As String In Fileio.GetDirectories(filePath)
+						For Each data As String In FileIO.GetDirectories(filePath)
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -2625,7 +2624,7 @@ Public Class frmMain
 			filePath = filepaths + "\AppData\Local\NVIDIA Corporation"
 			If config.RemoveGFE Then
 				Try
-					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
@@ -2655,7 +2654,7 @@ Public Class frmMain
 							Delete(filePath)
 
 						Else
-							For Each data As String In Fileio.GetDirectories(filePath)
+							For Each data As String In FileIO.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -2672,7 +2671,7 @@ Public Class frmMain
 		 (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
 
 		Try
-			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("updatus") Or _
 					 child.ToLower.Contains("shimgen") Or _
@@ -2689,7 +2688,7 @@ Public Class frmMain
 					Delete(filePath)
 
 				Else
-					For Each data As String In Fileio.GetDirectories(filePath)
+					For Each data As String In FileIO.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 				End If
@@ -2701,30 +2700,30 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
 		Try
-			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-                    If child.ToLower.Contains("drs") Or
-                     (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("netservice") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("crashdumps") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("nvstream") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("downloader") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("gfebridges") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("nvstapisvr") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("nvstereoinstaller") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("driverdumps") AndAlso config.RemoveGFE) Or
-                     (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
+					If child.ToLower.Contains("drs") Or
+					 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("netservice") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("crashdumps") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvstream") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("downloader") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("gfebridges") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nview") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvstapisvr") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvstereoinstaller") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("driverdumps") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 
-                        Delete(child)
+						Delete(child)
 
-                    End If
+					End If
 				End If
 			Next
 			If FileIO.CountDirectories(filepath) = 0 Then
@@ -2732,7 +2731,7 @@ Public Class frmMain
 				Delete(filePath)
 
 			Else
-				For Each data As String In Fileio.GetDirectories(filePath)
+				For Each data As String In FileIO.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -2743,7 +2742,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\NVIDIA Corporation"
 		Try
-			For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("3d vision") Then
 
@@ -2758,7 +2757,7 @@ Public Class frmMain
 					Delete(filePath)
 
 				Else
-					For Each data As String In Fileio.GetDirectories(filePath)
+					For Each data As String In FileIO.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 				End If
@@ -2771,7 +2770,7 @@ Public Class frmMain
 		filePath = Environment.GetFolderPath _
 		(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 		If FileIO.ExistsDir(filePath) Then
-			For Each child As String In Fileio.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("control panel client") Or
 					   child.ToLower.Contains("display") Or
@@ -2806,43 +2805,43 @@ Public Class frmMain
 					If child.ToLower.Contains("installer2") Then
 						For Each child2 As String In FileIO.GetDirectories(child)
 							If IsNullOrWhitespace(child2) = False Then
-                                If child2.ToLower.Contains("display.3dvision") Or
-                                   child2.ToLower.Contains("display.controlpanel") Or
-                                   child2.ToLower.Contains("display.driver") Or
-                                   child2.ToLower.Contains("display.optimus") Or
-                                   child2.ToLower.Contains("msvcruntime") Or
-                                   child2.ToLower.Contains("ansel.") Or
-                                   child2.ToLower.Contains("display.gfexperience") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("osc.") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("osclib.") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("display.nvirusb") Or
-                                   child2.ToLower.Contains("display.physx") AndAlso config.RemovePhysX Or
-                                   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("display.gamemonitor") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("network.service") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("miracast.virtualaudio") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("update.core") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("virtualaudio.driver") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("coretemp") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("shield") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("nvnodejs") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("nvplugin") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("nvdisplaypluginwatchdog") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("nvdisplaysessioncontainer") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("nvvhci") AndAlso config.RemoveGFE Or
-                                   child2.ToLower.Contains("hdaudio.driver") Then
+								If child2.ToLower.Contains("display.3dvision") Or
+								   child2.ToLower.Contains("display.controlpanel") Or
+								   child2.ToLower.Contains("display.driver") Or
+								   child2.ToLower.Contains("display.optimus") Or
+								   child2.ToLower.Contains("msvcruntime") Or
+								   child2.ToLower.Contains("ansel.") Or
+								   child2.ToLower.Contains("display.gfexperience") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("osc.") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("osclib.") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("display.nvirusb") Or
+								   child2.ToLower.Contains("display.physx") AndAlso config.RemovePhysX Or
+								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("display.gamemonitor") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("network.service") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("miracast.virtualaudio") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("update.core") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("virtualaudio.driver") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("coretemp") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("shield") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvnodejs") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvplugin") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvdisplaypluginwatchdog") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvdisplaysessioncontainer") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvvhci") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("hdaudio.driver") AndAlso config.RemoveGFE Then
 
 
-                                    Delete(child2)
+									Delete(child2)
 
-                                End If
+								End If
 							End If
 						Next
 
@@ -2851,7 +2850,7 @@ Public Class frmMain
 							Delete(child)
 
 						Else
-							For Each data As String In Fileio.GetDirectories(child)
+							For Each data As String In FileIO.GetDirectories(child)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + child + "\ --> " + data)
 							Next
 
@@ -2864,7 +2863,7 @@ Public Class frmMain
 				Delete(filePath)
 
 			Else
-				For Each data As String In Fileio.GetDirectories(filePath)
+				For Each data As String In FileIO.GetDirectories(filePath)
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 			End If
@@ -2894,7 +2893,7 @@ Public Class frmMain
 			filePath = Environment.GetFolderPath _
 			  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
 			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In Fileio.GetDirectories(filePath)
+				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("3d vision") Or
 						 child.ToLower.Contains("coprocmanager") Or
@@ -2933,7 +2932,7 @@ Public Class frmMain
 					Delete(filePath)
 
 				Else
-					For Each data As String In Fileio.GetDirectories(filePath)
+					For Each data As String In FileIO.GetDirectories(filePath)
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 
@@ -2999,7 +2998,7 @@ Public Class frmMain
 
 		Try
 			filePath = Environment.GetEnvironmentVariable("windir") + "\Temp"
-			For Each child As String In Fileio.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If StrContainsAny(child, True, "NVIDIA Corporation", "NvidiaLogging") Then
 						Delete(child)
@@ -3013,7 +3012,7 @@ Public Class frmMain
 		Try
 			filePath = config.Paths.SystemDrive & "Temp"
 			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In Fileio.GetDirectories(filePath)
+				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "NVIDIA") Then
 							Delete(child)
@@ -3026,12 +3025,12 @@ Public Class frmMain
 		End Try
 
 
-		For Each filepaths As String In Fileio.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
+		For Each filepaths As String In FileIO.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
 
 			filePath = filepaths + "\AppData\Local\Temp\NvidiaLogging"
 			If FileIO.ExistsDir(filePath) Then
 				Try
-					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 
 							Delete(child)
@@ -3044,7 +3043,7 @@ Public Class frmMain
 							Delete(filePath)
 
 						Else
-							For Each data As String In Fileio.GetDirectories(filePath)
+							For Each data As String In FileIO.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3060,7 +3059,7 @@ Public Class frmMain
 			filePath = filepaths + "\AppData\Local\Temp\NVIDIA Corporation"
 			If FileIO.ExistsDir(filePath) Then
 				Try
-					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("nv_cache") Or
 							 child.ToLower.Contains("displaydriver") Then
@@ -3076,7 +3075,7 @@ Public Class frmMain
 							Delete(filePath)
 
 						Else
-							For Each data As String In Fileio.GetDirectories(filePath)
+							For Each data As String In FileIO.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3092,7 +3091,7 @@ Public Class frmMain
 			filePath = filepaths + "\AppData\Local\Temp\NVIDIA"
 			If FileIO.ExistsDir(filePath) Then
 				Try
-					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If (child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE) Or
 							  (child.ToLower.Contains("gfe") AndAlso config.RemoveGFE) Or
@@ -3109,7 +3108,7 @@ Public Class frmMain
 							Delete(filePath)
 
 						Else
-							For Each data As String In Fileio.GetDirectories(filePath)
+							For Each data As String In FileIO.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3125,7 +3124,7 @@ Public Class frmMain
 			filePath = filepaths + "\AppData\Local\Temp\Low\NVIDIA Corporation"
 			If FileIO.ExistsDir(filePath) Then
 				Try
-					For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("nv_cache") Then
 
@@ -3140,7 +3139,7 @@ Public Class frmMain
 							Delete(filePath)
 
 						Else
-							For Each data As String In Fileio.GetDirectories(filePath)
+							For Each data As String In FileIO.GetDirectories(filePath)
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3158,12 +3157,12 @@ Public Class frmMain
 				If win8higher Then
 					Dim prefilePath As String = filepaths + "\AppData\Local\Packages"
 					If FileIO.ExistsDir(prefilePath) Then
-						For Each childs As String In My.Computer.FileSystem.GetDirectories(prefilePath)
+						For Each childs As String In FileIO.GetDirectories(prefilePath)
 							If Not IsNullOrWhitespace(childs) Then
 								filePath = childs + "\AC\Temp\NVIDIA Corporation"
 
 								If FileIO.ExistsDir(filePath) Then
-									For Each child As String In My.Computer.FileSystem.GetDirectories(filePath)
+									For Each child As String In FileIO.GetDirectories(filePath)
 										If IsNullOrWhitespace(child) = False Then
 											If child.ToLower.Contains("nv_cache") Then
 
@@ -3178,7 +3177,7 @@ Public Class frmMain
 										Delete(filePath)
 
 									Else
-										For Each data As String In Fileio.GetDirectories(filePath)
+										For Each data As String In FileIO.GetDirectories(filePath)
 											Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 										Next
 
@@ -3198,7 +3197,7 @@ Public Class frmMain
 		If config.RemoveGFE Then
 			filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_32"
 			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In Fileio.GetDirectories(filePath)
+				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("gfexperience") Or
 						 child.ToLower.Contains("nvidia.sett") Or
@@ -3946,36 +3945,36 @@ Public Class frmMain
 											For Each child3 As String In regkey3.GetSubKeyNames()
 												If IsNullOrWhitespace(child3) Then Continue For
 
-                                                If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer") Then
-                                                    'do nothing
-                                                Else
-                                                    Try
-                                                        deletesubregkey(regkey3, child3)
-                                                    Catch ex As Exception
-                                                    End Try
-                                                End If
+												If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer", "nvUpdate", "nvcontainer") Then
+													'do nothing
+												Else
+													Try
+														deletesubregkey(regkey3, child3)
+													Catch ex As Exception
+													End Try
+												End If
 											Next
 										End Using
 									End If
 								End If
-                                If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd") Or
-                                (StrContainsAny(child2, True, "installer2", "nvstream", "nvtray", "nvcontainer", "nvdisplay.container") AndAlso removegfe) Then
-                                    If removephysx Then
-                                        Try
-                                            deletesubregkey(regkey2, child2)
-                                        Catch ex As Exception
-                                        End Try
-                                    Else
-                                        If child2.ToLower.Contains("physx") Then
-                                            'do nothing
-                                        Else
-                                            Try
-                                                deletesubregkey(regkey2, child2)
-                                            Catch ex As Exception
-                                            End Try
-                                        End If
-                                    End If
-                                End If
+								If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd") Or
+								(StrContainsAny(child2, True, "installer2", "nvstream", "nvtray", "nvcontainer", "nvdisplay.container") AndAlso removegfe) Then
+									If removephysx Then
+										Try
+											deletesubregkey(regkey2, child2)
+										Catch ex As Exception
+										End Try
+									Else
+										If child2.ToLower.Contains("physx") Then
+											'do nothing
+										Else
+											Try
+												deletesubregkey(regkey2, child2)
+											Catch ex As Exception
+											End Try
+										End If
+									End If
+								End If
 							Next
 							If regkey2.SubKeyCount = 0 Then
 								Try
@@ -4775,32 +4774,32 @@ Public Class frmMain
 		Catch ex As Exception
 		End Try
 
-        Select Case System.Windows.Forms.SystemInformation.BootMode
-            Case Forms.BootMode.FailSafe
-                CleanupEngine.StartService("Schedule")
-            Case Forms.BootMode.FailSafeWithNetwork
-                CleanupEngine.StartService("Schedule")
-            Case Forms.BootMode.Normal
-                'Usually this service is Running in normal mode, we *could* in the future check all this.
-        End Select
+		Select Case System.Windows.Forms.SystemInformation.BootMode
+			Case Forms.BootMode.FailSafe
+				StartService("Schedule")
+			Case Forms.BootMode.FailSafeWithNetwork
+				StartService("Schedule")
+			Case Forms.BootMode.Normal
+				'Usually this service is Running in normal mode, we *could* in the future check all this.
+		End Select
 
 		Using tsc As New TaskSchedulerControl(config)
 			For Each task As Task In tsc.GetAllTasks
-				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") Then
+				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") AndAlso config.RemoveGFE Then
 					task.Delete()
 					Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
 				End If
 			Next
 		End Using
 
-        Select Case System.Windows.Forms.SystemInformation.BootMode
-            Case Forms.BootMode.FailSafe
-                CleanupEngine.StopService("Schedule")
-            Case Forms.BootMode.FailSafeWithNetwork
-                CleanupEngine.StopService("Schedule")
-            Case Forms.BootMode.Normal
-                'Usually this service is running in normal mode, we don't need to stop it.
-        End Select
+		Select Case System.Windows.Forms.SystemInformation.BootMode
+			Case Forms.BootMode.FailSafe
+				StopService("Schedule")
+			Case Forms.BootMode.FailSafeWithNetwork
+				StopService("Schedule")
+			Case Forms.BootMode.Normal
+				'Usually this service is running in normal mode, we don't need to stop it.
+		End Select
 
 		UpdateTextMethod("End of Registry Cleaning")
 
@@ -6473,10 +6472,10 @@ Public Class frmMain
 			filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 
-			For Each child As String In Fileio.GetDirectories(filePath)
+			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("installer2") Then
-						For Each child2 As String In Fileio.GetDirectories(child)
+						For Each child2 As String In FileIO.GetDirectories(child)
 							If IsNullOrWhitespace(child2) = False Then
 								If child2.ToLower.Contains("display.3dvision") Or
 								   child2.ToLower.Contains("display.controlpanel") Or
@@ -6566,6 +6565,13 @@ Public Class frmMain
 	Private Sub Delete(ByVal filename As String)
 		FileIO.Delete(filename)
 		CleanupEngine.RemoveSharedDlls(filename)
+	End Sub
+
+	Private Sub StartService(ByVal service As String)
+		CleanupEngine.StartService(service)
+	End Sub
+	Private Sub StopService(ByVal service As String)
+		CleanupEngine.StopService(service)
 	End Sub
 
 	Private Sub AmdEnvironementPath(ByVal filepath As String)
