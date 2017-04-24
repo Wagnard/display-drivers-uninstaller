@@ -66,6 +66,7 @@ Public Class AppSettings
 	Private m_winVersion As DependencyProperty = RegDP("WinVersion", GetType(OSVersion), GetType(AppSettings), OSVersion.Unknown)
 	Private m_winVersionText As DependencyProperty = RegDP("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
 	Private m_winIs64 As DependencyProperty = RegDP("WinIs64", GetType(Boolean), GetType(AppSettings), False)
+	Private m_processKilled As DependencyProperty = RegDP("ProcessKilled", GetType(Boolean), GetType(AppSettings), False)
 
 	' Removals
 	Private m_remMonitors As DependencyProperty = RegDP("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
@@ -131,6 +132,15 @@ Public Class AppSettings
 		End Get
 		Set(value As Boolean)
 			SetValue(m_winIs64, value)
+		End Set
+	End Property
+
+	Public Property ProcessKilled As Boolean
+		Get
+			Return CBool(GetValue(m_processKilled))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_processKilled, value)
 		End Set
 	End Property
 

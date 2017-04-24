@@ -71,7 +71,7 @@ Class Application
 		'ALL Exceptions are shown in English
 		Thread.CurrentThread.CurrentCulture = New CultureInfo("en-US")
 		Thread.CurrentThread.CurrentUICulture = New CultureInfo("en-US")
-        KillGPUStatsProcesses()
+
 		FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement),
 		   New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
 	End Sub
@@ -202,11 +202,12 @@ Class Application
             End If
 
             For Each process As Process In process.GetProcessesByName(processName)
-                Try
-                    process.Kill()
-                Catch ex As Exception
-                    Application.Log.AddExceptionWithValues(ex, "@KillProcess()", String.Concat("ProcessName: ", processName))
-                End Try
+				Try
+					process.Kill()
+					Application.Settings.ProcessKilled = True
+				Catch ex As Exception
+					Application.Log.AddExceptionWithValues(ex, "@KillProcess()", String.Concat("ProcessName: ", processName))
+				End Try
             Next
         Next
     End Sub
@@ -337,11 +338,12 @@ Class Application
 		'	MessageBox.Show("Attach debugger!")		' for Debugging System process
 		'	IsDebug = True
 		'End If
-        KillGPUStatsProcesses()
+		KillGPUStatsProcesses()
 		Try
 			' Launch as Admin if not
 			If Not Tools.UserHasAdmin Then
-				Using process As Process = New Process() With {.StartInfo = New ProcessStartInfo(Application.Paths.AppExeFile, String.Join(" ", e.Args)) With {.Verb = "runas"}}
+				Using process As Process = New Process() With {.StartInfo = New ProcessStartInfo(Application.Paths.AppExeFile, String.Join(" ", e.Args) & If(Application.Settings.ProcessKilled, " -processkilled", "")) With {.Verb = "runas"}}
+
 					Try
 						process.Start()
 					Catch ex As ComponentModel.Win32Exception
@@ -359,7 +361,6 @@ Class Application
 					Exit Sub
 				End Using
 			End If
-
 
 			' Process commandline args
 			LaunchOptions.LoadArgs(e.Args)

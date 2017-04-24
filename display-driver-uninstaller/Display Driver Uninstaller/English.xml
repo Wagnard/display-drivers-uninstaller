@@ -131,7 +131,7 @@
 			<Text12>You are not in Safe Mode. It is highly recommended that you reboot into Safe Mode to avoid possible issues. Reboot into Safe Mode now?</Text12>
 			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>There is a pending reboot, please reboot before using DDU</Text14>
-      <Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
 		
 		<UpdateLog>
@@ -280,6 +280,9 @@
 			<Item2>Safe Mode (Recommended)</Item2>
 			<Item3>Safe Mode with Networking</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
 	
 	<frmLog Text="Extended log">
@@ -405,7 +408,7 @@ anything to do with this program, and in no way affiliates of DDU or its creator
 		<Translator>
 			<User>Wagnard</User>
 			<Details>Owner</Details>
-			<LastUpdate>29/05/2016</LastUpdate>
+			<LastUpdate>24/04/2017</LastUpdate>
 		</Translator>
 
 		<Translator2>

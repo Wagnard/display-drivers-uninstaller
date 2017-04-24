@@ -431,9 +431,9 @@ Public NotInheritable Class ServiceInstaller
 				End If
 
 				If Not WaitForServiceStatus(ptrService, SERVICE_STATE.RUNNING) Then
-					Application.Log.AddWarningMessage("Failed to start service (timeout)!")
+					Application.Log.AddWarningMessage("Failed to start service: " & serviceName & " (timeout)!")
 				Else
-					Application.Log.AddMessage("Service is successfully started!")
+					Application.Log.AddMessage("Service: " & serviceName & " is successfully started!")
 				End If
 			End Using
 		End Using
@@ -451,7 +451,7 @@ Public NotInheritable Class ServiceInstaller
 	'	End If
 	'End Sub
 
-	Private Shared Sub StopService(ByVal ptrService As SafeServiceHandle)
+	Private Shared Sub StopService(ByVal ptrService As SafeServiceHandle, ByVal serviceName As String)
 		Dim statusProcess As New SERVICE_STATUS_PROCESS
 		Dim requiredSize As UInt32 = 0UI
 
@@ -479,9 +479,9 @@ Public NotInheritable Class ServiceInstaller
 		End Select
 
 		If Not WaitForServiceStatus(ptrService, SERVICE_STATE.STOPPED) Then
-			Application.Log.AddWarningMessage("Failed to stop service (timeout)!")
+			Application.Log.AddWarningMessage("Failed to stop service: " & serviceName & " (timeout)!")
 		Else
-			Application.Log.AddMessage("Service is successfully stopped!")
+			Application.Log.AddMessage("Service: " & serviceName & " is successfully stopped!")
 		End If
 
 		Return
@@ -504,7 +504,7 @@ Public NotInheritable Class ServiceInstaller
 					Return
 				End If
 
-				StopService(ptrService)
+				StopService(ptrService, serviceName)
 			End Using
 		End Using
 	End Sub

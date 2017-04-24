@@ -5436,6 +5436,11 @@ Public Class frmMain
 	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
 		Me.Topmost = False
 
+		If Application.Settings.ProcessKilled AndAlso (Not Application.LaunchOptions.Silent) AndAlso (Not Application.Settings.ShowSafeModeMsg) Then
+			MessageBox.Show(Languages.GetTranslation("frmLaunch", "Messages", "Text1"), Application.Settings.AppName, Nothing, MessageBoxImage.Information)
+			Application.Settings.ProcessKilled = False
+		End If
+
 		Try
 			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
 
@@ -6394,13 +6399,17 @@ Public Class frmMain
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
 					Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate", Nothing))
 
-					If regkey IsNot Nothing AndAlso regValue <> If(enable, 0, 1) Then
-						regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
+					If regkey IsNot Nothing Then
+						If regValue <> If(enable, 0, 1) Then
+							regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
 
-						If enable Then
-							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
-						Else
-							MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+							If enable Then
+								MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+							Else
+								MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+							End If
+						ElseIf enable <> False Then
+							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
 						End If
 					End If
 				End Using

@@ -19,6 +19,10 @@
 	Private Sub frmLaunch_ContentRendered(sender As Object, e As System.EventArgs) Handles Me.ContentRendered
 		Me.Topmost = False
 		Dim Checkupdate As New CheckUpdate
+		If Application.Settings.ProcessKilled Then
+			MessageBox.Show(Languages.GetTranslation("frmLaunch", "Messages", "Text1"), Application.Settings.AppName, Nothing, MessageBoxImage.Information)
+			Application.Settings.ProcessKilled = False
+		End If
 		If Application.Settings.CheckUpdates Then
 			Checkupdate.CheckUpdates()
 		End If

@@ -72,6 +72,7 @@ Public Class AppLaunchOptions
 			For Each Argument As String In args
 				Select Case True
 					Case StrContainsAny(Argument, True, "-5648674614687") : Application.IsDebug = True
+					Case StrContainsAny(Argument, True, "-processkilled") : Application.Settings.ProcessKilled = True
 					Case StrContainsAny(Argument, True, "-visitdonate") : VisitDonate = True
 					Case StrContainsAny(Argument, True, "-visitsvn") : VisitSVN = True
 					Case StrContainsAny(Argument, True, "-visitguru3dnvidia") : VisitGuru3DNvidia = True
