@@ -15,6 +15,7 @@ Public Enum UpdateStatus As Int32
 	NoUpdates = 2
 	UpdateAvailable = 3
 	[Error] = 4
+	NotAllowed = 5
 End Enum
 
 Public Enum OSVersion As Int32

@@ -23,9 +23,9 @@
 			MessageBox.Show(Languages.GetTranslation("frmLaunch", "Messages", "Text1"), Application.Settings.AppName, Nothing, MessageBoxImage.Information)
 			Application.Settings.ProcessKilled = False
 		End If
-		If Application.Settings.CheckUpdates Then
-			Checkupdate.CheckUpdates()
-		End If
+
+		Checkupdate.CheckUpdates()
+
 	End Sub
 
 	Private Sub frmLaunch_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded

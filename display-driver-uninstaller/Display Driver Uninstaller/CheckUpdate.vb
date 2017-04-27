@@ -7,10 +7,18 @@ Imports System.Windows.Threading
 
 Public Class CheckUpdate
 
-	Private Sub CheckUpdatesThread(ByVal currentVersion As Version)
+	Private Sub CheckUpdatesThread(ByVal currentVersion As Version, ByVal CheckUpdate As Boolean)
 		Dim status As UpdateStatus = UpdateStatus.NotChecked
 
 		Try
+			Try
+				If CheckUpdate = False Then
+					status = UpdateStatus.NotAllowed
+					Return
+				End If
+			Catch ex As Exception
+
+			End Try
 			Try
 				If Not My.Computer.Network.IsAvailable Then
 					status = UpdateStatus.Error
@@ -94,7 +102,8 @@ Public Class CheckUpdate
 				Application.Settings.UpdateAvailable = UpdateStatus.Error
 			Else
 				Dim currentVersion As Version = Application.Settings.AppVersion
-				Dim trd As Thread = New Thread(Sub() CheckUpdatesThread(currentVersion)) With
+				Dim CheckUpdate As Boolean = Application.Settings.CheckUpdates
+				Dim trd As Thread = New Thread(Sub() CheckUpdatesThread(currentVersion, CheckUpdate)) With
 				  {
 				  .CurrentCulture = New Globalization.CultureInfo("en-US"),
 				  .CurrentUICulture = New Globalization.CultureInfo("en-US"),
