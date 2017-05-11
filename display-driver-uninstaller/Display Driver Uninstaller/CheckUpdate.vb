@@ -11,30 +11,30 @@ Public Class CheckUpdate
 		Dim status As UpdateStatus = UpdateStatus.NotChecked
 
 		Try
-			Try
-				If CheckUpdate = False Then
-					status = UpdateStatus.NotAllowed
-					Return
-				End If
-			Catch ex As Exception
 
-			End Try
+			If CheckUpdate = False Then
+				status = UpdateStatus.NotAllowed
+				Return
+			End If
+
 			Try
 				If Not My.Computer.Network.IsAvailable Then
 					status = UpdateStatus.Error
 					Return
 				End If
 			Catch ex As Exception
+				Application.Log.AddWarning(ex)
 			End Try
 
 			Dim response As System.Net.WebResponse = Nothing
 			Dim request As System.Net.WebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardsoft.com/DDU/currentversion2.txt")
-			request.Timeout = 2500
+			request.Timeout = 5000
 
 			Try
 				response = request.GetResponse()
 			Catch ex As Exception
 				status = UpdateStatus.Error
+				Application.Log.AddException(ex)
 				Return
 			End Try
 

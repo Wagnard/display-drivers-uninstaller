@@ -2156,7 +2156,11 @@ Public Class frmMain
 		Using tsc As New TaskSchedulerControl(config)
 			For Each task As Task In tsc.GetAllTasks
 				If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
-					task.Delete()
+					Try
+						task.Delete()
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
 					Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
 				End If
 			Next
@@ -4786,7 +4790,11 @@ Public Class frmMain
 		Using tsc As New TaskSchedulerControl(config)
 			For Each task As Task In tsc.GetAllTasks
 				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") AndAlso config.RemoveGFE Then
-					task.Delete()
+					Try
+						task.Delete()
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
 					Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
 				End If
 			Next
@@ -5445,9 +5453,9 @@ Public Class frmMain
 			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
 
 			If Not Application.LaunchOptions.Silent Then
-
-				CheckUpdate.CheckUpdates()
-
+				If WinForm.SystemInformation.BootMode <> Forms.BootMode.FailSafe Then
+					CheckUpdate.CheckUpdates()
+				End If
 			End If
 
 
