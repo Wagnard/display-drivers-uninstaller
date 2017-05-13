@@ -48,24 +48,27 @@
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Установити автоматичну інсталяцію
-				драйверів Windows типовою
+				Встановити типові параметри інсталяції пристроїв для Windows
+				(автоматична інсталяція драйверів)
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>Виявлено ОС:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>Подобається DDU? Поміркуйте щодо пожертвування — це допоможе його подальшому розвитку.</Text>
+			<Text>
+				Подобається DDU?
+				Поміркуйте щодо пожертвування — це допоможе його подальшому розвитку.
+			</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Журнал</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Вибрано графічний драйвер</Text>
+			<Text>— вибраний графічний драйвер.</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Вибрано мову</Text>
+			<Text>Вибрано мову:</Text>
 		</lblLanguage>
 
 		<lblUpdate>
@@ -132,6 +135,7 @@
 			<Text12>Система працює не в безпечному режимі. Настійно рекомендовано перезавантажити її в безпечному режимі, щоб уникнути можливих проблем. Перезапустити систему в безпечному режимі зараз?</Text12>
 			<Text13>Ось що вам необхідно вибрати на синьому екрані відновлення: Виправити неполадки -&gt; Додаткові параметри -&gt; Настройки завантаження.</Text13>
 			<Text14>Існує відкладене перезавантаження, виконайте його, перш ніж використовувати DDU</Text14>
+			<Text15>Не було зроблено ніяких змін. Типові параметри інсталяції пристроїв для Windows вже встановлено.</Text15>
 		</Messages>
 		
 		<UpdateLog>
@@ -280,6 +284,9 @@
 			<Item2>Безпечний режим (рекомендовано)</Item2>
 			<Item3>Безпечний режим з підтримкою мережі</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU було закрито програми, що можуть заважати (такі, як MSI Afterburner та RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
 	
 	<frmLog Text="Розширений журнал">
@@ -394,7 +401,7 @@ Display Driver Uninstaller (DDU) — програма для видалення 
 		<Translator>
 			<User>YuriPet</User>
 			<Details>yuripet@gmail.com</Details>
-			<LastUpdate>09/12/2016</LastUpdate>
+			<LastUpdate>28/04/2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

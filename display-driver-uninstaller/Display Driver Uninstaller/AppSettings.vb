@@ -62,7 +62,7 @@ Public Class AppSettings
 	Private m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
 	Private m_gpuSelected As DependencyProperty = RegDP("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
 	Private m_langSelected As DependencyProperty = RegDP("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
-	Private m_updateAvailable As DependencyProperty = RegDP("UpdateAvailable", GetType(UpdateStatus), GetType(AppSettings), UpdateStatus.NotChecked)
+	Private m_updateAvailable As DependencyProperty = RegDP("UpdateAvailable", GetType(UpdateStatus), GetType(AppSettings), UpdateStatus.NotAllowed)
 
 	Private m_winVersion As DependencyProperty = RegDP("WinVersion", GetType(OSVersion), GetType(AppSettings), OSVersion.Unknown)
 	Private m_winVersionText As DependencyProperty = RegDP("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")

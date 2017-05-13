@@ -129,6 +129,7 @@
 			<Text12>Vous n'êtes pas en mode sans échec. Il est fortement recommandé de redémarrer en mode sans échec pour éviter des problèmes. Redémarrez en mode sans échec, maintenant? "</Text12>
 			<Text13>Voici les options que vous devez selectioner a l'ecran bleu du menu de recuperation" : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Il ya un redémarrage en attente , s'il vous plaît, redémarrer avant d'utiliser DDU.</Text14>
+			<Text15> Aucun changement n'a été effectué. Les paramètres d'installation des périphérique Windows sont déjà définis par défaut. </Text15>
 		</Messages>
 		
 		<UpdateLog>
@@ -280,6 +281,9 @@
 			<Item1>Normal</Item1>
 			<Item2>Mode sans échec (Recommendé)</Item2>
 			<Item3>Mode sans échec avec prise en charge du réseau</Item3>
+			<Messages>
+			<Text1>DDU a fermé des programmes connus pour interférer (comme MSI Afterburner et RTSS).</Text1>
+		    </Messages>
 		</cbBootOption>
 	</frmLaunch>
 	
@@ -399,7 +403,7 @@
 		<Translator>
 			<User>Wagnard</User>
 			<Details>wagnard28@gmail.com</Details>
-			<LastUpdate>13/06/2016</LastUpdate>
+			<LastUpdate>13/05/2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
