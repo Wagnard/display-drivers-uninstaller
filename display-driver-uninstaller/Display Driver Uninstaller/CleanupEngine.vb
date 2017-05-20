@@ -909,6 +909,22 @@ Public Class CleanupEngine
 		Next
 
 	End Sub
+    Public Function CheckServiceStartupType(ByVal service As String) As String
+        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services\" & service, False)
+            If regkey IsNot Nothing Then
+                Return CStr(regkey.GetValue("Start"))
+            End If
+        End Using
+        Return Nothing
+    End Function
+
+    Public Sub SetServiceStartupType(ByVal service As String, value As String)
+        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services\" & service, True)
+            If regkey IsNot Nothing Then
+                regkey.SetValue("Start", value, RegistryValueKind.DWord)
+            End If
+        End Using
+    End Sub
 
 	Public Sub StopService(ByVal service As String)
 

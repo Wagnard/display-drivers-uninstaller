@@ -2143,15 +2143,35 @@ Public Class frmMain
 		'		Next
 		'	End If
 		'End Using
-
+        Dim OldValue As String = Nothing
 		Select Case System.Windows.Forms.SystemInformation.BootMode
-			Case Forms.BootMode.FailSafe
-				StartService("Schedule")
+            Case Forms.BootMode.FailSafe
+                If (CheckServiceStartupType("Schedule")) <> "4" Then
+                    StartService("Schedule")
+                Else
+                    OldValue = CheckServiceStartupType("Schedule")
+                    SetServiceStartupType("Schedule", "3")
+                    StartService("Schedule")
+                End If
+
 			Case Forms.BootMode.FailSafeWithNetwork
-				StartService("Schedule")
+                If (CheckServiceStartupType("Schedule")) <> "4" Then
+                    StartService("Schedule")
+                Else
+                    OldValue = CheckServiceStartupType("Schedule")
+                    SetServiceStartupType("Schedule", "3")
+                    StartService("Schedule")
+                End If
 			Case Forms.BootMode.Normal
 				'Usually this service is Running in normal mode, we *could* in the future check all this.
-		End Select
+                If (CheckServiceStartupType("Schedule")) <> "4" Then
+                    StartService("Schedule")
+                Else
+                    OldValue = CheckServiceStartupType("Schedule")
+                    SetServiceStartupType("Schedule", "3")
+                    StartService("Schedule")
+                End If
+        End Select
 
 		Using tsc As New TaskSchedulerControl(config)
 			For Each task As Task In tsc.GetAllTasks
@@ -2168,11 +2188,21 @@ Public Class frmMain
 
 		Select Case System.Windows.Forms.SystemInformation.BootMode
 			Case Forms.BootMode.FailSafe
-				StopService("Schedule")
+                StopService("Schedule")
+                If OldValue IsNot Nothing Then
+                    SetServiceStartupType("Schedule", OldValue)
+                End If
 			Case Forms.BootMode.FailSafeWithNetwork
-				StopService("Schedule")
+                StopService("Schedule")
+                If OldValue IsNot Nothing Then
+                    SetServiceStartupType("Schedule", OldValue)
+                End If
 			Case Forms.BootMode.Normal
-				'Usually this service is running in normal mode, we don't need to stop it.
+                'Usually this service is running in normal mode, we don't need to stop it.
+                If OldValue IsNot Nothing Then
+                    StopService("Schedule")
+                    SetServiceStartupType("Schedule", OldValue)
+                End If
 		End Select
 
 		'Killing Explorer.exe to help releasing file that were open.
@@ -4778,14 +4808,35 @@ Public Class frmMain
 		Catch ex As Exception
 		End Try
 
-		Select Case System.Windows.Forms.SystemInformation.BootMode
-			Case Forms.BootMode.FailSafe
-				StartService("Schedule")
-			Case Forms.BootMode.FailSafeWithNetwork
-				StartService("Schedule")
-			Case Forms.BootMode.Normal
-				'Usually this service is Running in normal mode, we *could* in the future check all this.
-		End Select
+        Dim OldValue As String = Nothing
+        Select Case System.Windows.Forms.SystemInformation.BootMode
+            Case Forms.BootMode.FailSafe
+                If (CheckServiceStartupType("Schedule")) <> "4" Then
+                    StartService("Schedule")
+                Else
+                    OldValue = CheckServiceStartupType("Schedule")
+                    SetServiceStartupType("Schedule", "3")
+                    StartService("Schedule")
+                End If
+
+            Case Forms.BootMode.FailSafeWithNetwork
+                If (CheckServiceStartupType("Schedule")) <> "4" Then
+                    StartService("Schedule")
+                Else
+                    OldValue = CheckServiceStartupType("Schedule")
+                    SetServiceStartupType("Schedule", "3")
+                    StartService("Schedule")
+                End If
+            Case Forms.BootMode.Normal
+                'Usually this service is Running in normal mode, we *could* in the future check all this.
+                If (CheckServiceStartupType("Schedule")) <> "4" Then
+                    StartService("Schedule")
+                Else
+                    OldValue = CheckServiceStartupType("Schedule")
+                    SetServiceStartupType("Schedule", "3")
+                    StartService("Schedule")
+                End If
+        End Select
 
 		Using tsc As New TaskSchedulerControl(config)
 			For Each task As Task In tsc.GetAllTasks
@@ -4800,14 +4851,24 @@ Public Class frmMain
 			Next
 		End Using
 
-		Select Case System.Windows.Forms.SystemInformation.BootMode
-			Case Forms.BootMode.FailSafe
-				StopService("Schedule")
-			Case Forms.BootMode.FailSafeWithNetwork
-				StopService("Schedule")
-			Case Forms.BootMode.Normal
-				'Usually this service is running in normal mode, we don't need to stop it.
-		End Select
+        Select Case System.Windows.Forms.SystemInformation.BootMode
+            Case Forms.BootMode.FailSafe
+                StopService("Schedule")
+                If OldValue IsNot Nothing Then
+                    SetServiceStartupType("Schedule", OldValue)
+                End If
+            Case Forms.BootMode.FailSafeWithNetwork
+                StopService("Schedule")
+                If OldValue IsNot Nothing Then
+                    SetServiceStartupType("Schedule", OldValue)
+                End If
+            Case Forms.BootMode.Normal
+                'Usually this service is running in normal mode, we don't need to stop it.
+                If OldValue IsNot Nothing Then
+                    StopService("Schedule")
+                    SetServiceStartupType("Schedule", OldValue)
+                End If
+        End Select
 
 		UpdateTextMethod("End of Registry Cleaning")
 
@@ -5530,10 +5591,10 @@ Public Class frmMain
 				}
 
 				workThread.Start()
-			End If
+            End If
 
-		Catch ex As Exception
-			Application.Log.AddException(ex, "frmMain loading caused error!")
+        Catch ex As Exception
+            Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try
 	End Sub
 
@@ -6586,7 +6647,14 @@ Public Class frmMain
 
 	Private Sub StartService(ByVal service As String)
 		CleanupEngine.StartService(service)
-	End Sub
+    End Sub
+    Private Function CheckServiceStartupType(ByVal service As String) As String
+        Return CleanupEngine.CheckServiceStartupType(service)
+    End Function
+
+    Private Sub SetServiceStartupType(ByVal service As String, value As String)
+        CleanupEngine.SetServiceStartupType(service, value)
+    End Sub
 	Private Sub StopService(ByVal service As String)
 		CleanupEngine.StopService(service)
 	End Sub
