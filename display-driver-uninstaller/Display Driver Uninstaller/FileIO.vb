@@ -671,6 +671,10 @@ Public Class FileIO
 
 				If Not findDir.EndsWith(DIR_CHAR) Then findDir &= DIR_CHAR
 
+				If IsJunctionPoint(findDir.Substring(UNC_PREFIX.Length)) Then
+					Continue While
+				End If
+
 				findHandle = FindFirstFile(findDir & wildCard, findData)
 
 				If findHandle <> INVALID_HANDLE Then
@@ -766,6 +770,11 @@ Public Class FileIO
 
 			While dirs.Count > 0
 				findDir = dirs.Dequeue()
+
+				If IsJunctionPoint(findDir.Substring(UNC_PREFIX.Length)) Then
+					Continue While
+				End If
+
 				findHandle = FindFirstFile(findDir & wildCard, findData)
 
 				If findHandle <> INVALID_HANDLE Then
@@ -900,7 +909,16 @@ Public Class FileIO
 
 #End Region
 
+	Private Shared Function IsJunctionPoint(ByVal ToCheck As String) As Boolean
+		Dim di As New DirectoryInfo(ToCheck)
+		'if the directory has the attributes which indicate that it's a junction point...
+		If ((di.Attributes And FileAttributes.ReparsePoint) = FileAttributes.ReparsePoint) Then
 
+			Return True
+		Else 'is not a junction point...
+			Return False
+		End If
+	End Function
 
 End Class
 

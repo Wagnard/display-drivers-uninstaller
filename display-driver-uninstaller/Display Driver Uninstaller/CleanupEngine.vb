@@ -801,7 +801,12 @@ Public Class CleanupEngine
 								If ServiceInstaller.GetServiceStatus(service) = ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
 									'Service is not present
 								Else
-									ServiceInstaller.Uninstall(service)
+									Try
+										ServiceInstaller.Uninstall(service)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+
 
 									Dim waits As Int32 = 0
 

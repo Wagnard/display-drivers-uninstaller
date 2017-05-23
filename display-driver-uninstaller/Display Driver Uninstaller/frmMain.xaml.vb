@@ -2828,6 +2828,7 @@ Public Class frmMain
 					   child.ToLower.Contains("nvidia wmi provider") Or
 					   child.ToLower.Contains("gamemonitor") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvgsync") Or
@@ -2938,7 +2939,9 @@ Public Class frmMain
 						 child.ToLower.Contains("nvstreamc") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("update common") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("display.nvcontainer") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvgsync") Or
 						 child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or

@@ -9,10 +9,10 @@
 		<btnCleanRestart>
 			<Text>
 				Nettoyer et redémarrer
-				(Hautement Recommendé)
+				(Hautement recommandé)
 			</Text>
 			<Tooltip>
-				Désinstaller les pilotes actuels et antérieurs et redémarrez l'ordinateur
+				Désinstaller les pilotes actuels et antérieurs et redémarrer l'ordinateur
 				(Fortement recommandé)
 			</Tooltip>
 		</btnCleanRestart>
@@ -22,7 +22,7 @@
 				(Possible écran noir)
 			</Text>
 			<Tooltip>
-				Désinstaller les pilotes actuels et antérieurs et ne PAS redémarrez l'ordinateur.
+				Désinstaller les pilotes actuels et antérieurs et ne PAS redémarrer l'ordinateur.
 				(Peut causer un écran noir)
 			</Tooltip>
 		</btnClean>
@@ -43,23 +43,23 @@
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Version de Windows détecté</Text>
+			<Text>Version de Windows détectée</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** You like DDU? Think about a Donation, it will help further developement. ***</Text>
+			<Text>*** Vous appréciez DDU ? Pensez à faire un don, cela aide à pérenniser le développement. ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Log</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Sélectionnez Pilote graphique</Text>
+			<Text>Sélection du Pilote graphique</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
 		  <Text>Langue sélectionnée</Text>
 		</lblLanguage>
 		
 		<Label9>
-			<Text>Note: Tout dommage ou erreurs causés à votre PC est de votre responsabilité.</Text>
+			<Text>Note: Tout dommage ou erreurs causés à votre PC sont sous votre responsabilité.</Text>
 		</Label9>
 		<Label10>
 			<Text>Utiliser DDU en mode sans échec est recommandé.</Text>
@@ -67,14 +67,14 @@
 		
 		<lblUpdate>
 			<Text>Vérification des mises à jour ...</Text>
-			<Text2>Aucune mise-à-jour trouvé. DDU est à jour.</Text2>
-			<Text3>Mise-à-jour trouvée!</Text3>
-			<Text4>Incapable de vérifier les mises-à-jour.</Text4>
+			<Text2>Aucune mise à jour trouvée. DDU est à jour.</Text2>
+			<Text3>Mise à jour trouvée !</Text3>
+			<Text4>Impossible de vérifier les mises à jour.</Text4>
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>Offres de nos partenaires</Text>
+			<Tooltip>Vous pouvez les désactiver depuis le menu des options.</Tooltip>
 		</lblOffer>
 		
 		<OptionsMenuItem>
@@ -84,10 +84,10 @@
 			<Text>Info</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>Log étendu</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
-			<Text>Links</Text>
+			<Text>Liens</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
 			<Text>Terms of Service (ToS)</Text>
@@ -96,39 +96,39 @@
 			<Text>À propos</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>Traducteurs</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visiter official DDU Website</Text>
+			<Text>Visiter la page officielle DDU</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Visiter SVN Website</Text>
+			<Text>Visiter la page web SVN</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visiter Guru3d NVIDIA Thread</Text>
+			<Text>Visiter le forum Guru3d NVIDIA</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Visiter Guru3d AMD Thread</Text>
+			<Text>Visiter le forum Guru3d AMD</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Visiter Geforce Thread</Text>
+			<Text>Visiter le forum Geforce</Text>
 		</VisitGeforceMenuItem>
 		
 		<Messages>
-			<Text1>Mise à jour disponible! Visitez le site Internet DDU maintenant?</Text1>
-			<Text2>Attendez-vous un soutien limité sur les versions plus anciennes que la plus récente. S'il vous plaît vérifier la nouvelle version avant de signaler des bugs.</Text2>
+			<Text1>Mise à jour disponible! Voulez-vous accéder au site Internet DDU ?</Text1>
+			<Text2>Le support est limité sur les versions antérieures à la version actuelle. Veuillez essayer la nouvelle version avant de signaler des bugs.</Text2>
 			<Text3>Vous n'utilisez pas DDU avec des privilèges d'administrateur. DDU va maintenant quitter.</Text3>
-			<Text4>Impossible de trouver ddudr. S'il vous plaît se référer au log.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) modifie votre base de registre beaucoup. DDU va essayer de créer automatiquement un point de restauration système (mode normal uniquement).</Text5>
-			<Text6>Un problème est survenu dans l'un des modules, envoyer vos logs de DDU au développeur.</Text6>
-			<Text7>DDU a détecté que vous disposez d'un ordinateur portable AMD de commutation (Enduro ou équivalent), DDU n'est pas encore pleinement compatible / testé avec des systèmes enduro, utiliser à vos risques et périls.</Text7>
-			<Text8>DDU a détecté que vous n'êtes pas en mode sans échec ... Pour un meilleur CleanUP sans problèmes, il est recommandé que vous redémarrez en mode sans échec.</Text8>
-			<Text9>DDU a changé un paramètre qui empêche les pilotes de télécharger automatiquement avec Windows Update. Vous pouvez définir ce retour à défaut, si vous voulez après votre installation du nouveau pilote.</Text9>
-			<Text10>Désinstallation propre terminée! Voulez-vous quitter maintenant?</Text10>
-			<Text11>Fait!</Text11>
-			<Text12>Vous n'êtes pas en mode sans échec. Il est fortement recommandé de redémarrer en mode sans échec pour éviter des problèmes. Redémarrez en mode sans échec, maintenant? "</Text12>
-			<Text13>Voici les options que vous devez selectioner a l'ecran bleu du menu de recuperation" : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
-			<Text14>Il ya un redémarrage en attente , s'il vous plaît, redémarrer avant d'utiliser DDU.</Text14>
+			<Text4>Impossible de trouver ddudr. Veuillez vous référer au log.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) modifie considérablement votre base de registre. DDU va essayer de créer automatiquement un point de restauration système (en mode normal uniquement).</Text5>
+			<Text6>Un problème est survenu dans l'un des modules, envoyez vos logs de DDU au développeur.</Text6>
+			<Text7>DDU a détecté que vous disposez d'un ordinateur portable AMD avec gestion d'alimentation (Enduro ou équivalent), DDU n'est pas encore pleinement compatible / testé avec des systèmes Enduro, utiliser à vos risques et périls.</Text7>
+			<Text8>DDU a détecté que vous n'êtes pas en mode sans échec ... Pour un nettoyage sans problèmes, il est recommandé de redémarrer en mode sans échec.</Text8>
+			<Text9>DDU a changé un paramètre qui empêche les pilotes d'être automatiquement téléchargés par Windows Update. Vous pourrez rétablir ce réglage après l'installation du nouveau pilote.</Text9>
+			<Text10>Désinstallation propre terminée ! Voulez-vous quitter maintenant ?</Text10>
+			<Text11>Les pilotes seront maintenant téléchargés automatiquement par le système.</Text11>
+			<Text12>Vous n'êtes pas en mode sans échec. Il est fortement recommandé de redémarrer en mode sans échec pour éviter des problèmes. Voulez-vous redémarrer en mode sans échec ? "</Text12>
+			<Text13>Voici les options que vous devez sélectionner à l'écran bleu du menu de récuperation" : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text14>Il y a un redémarrage en attente, veuillez redémarrer avant d'utiliser DDU.</Text14>
 			<Text15> Aucun changement n'a été effectué. Les paramètres d'installation des périphérique Windows sont déjà définis par défaut.</Text15>
 		</Messages>
 		
@@ -183,70 +183,70 @@
 			<Text>Fermer</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>Afficher les offres de nos partenaires</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Specific Options</Text>
+			<Text>Options spécifiques NVIDIA</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Specific Options</Text>
+			<Text>Options spécifiques AMD</Text>
 		</lblAmdspecific>
 		<lblGeneral>
-			<Text>General Options</Text>
+			<Text>Options générales</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Retirer les dossiers "C:\nVidia" (PAS recommendé)</Text>
+			<Text>Supprimer les dossiers "C:\nVidia" (NON recommandé)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Enregistrer les fichiers journaux dans le chemin de démarrage (recommandé)</Text>
+			<Text>Enregistrer les fichiers journaux dans le répertoire de démarrage (recommandé)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
-			<Text>Retirer PhysX</Text>
+			<Text>Supprimer PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
-			<Text>Retirer 3DTV Play</Text>
+			<Text>Supprimer 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
-			<Text>Créer un point de restauration système (Si il est actif)</Text>
+			<Text>Créer un point de restauration système (S'il est actif)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Retirez les moniteurs présents et non présents (recommandé)</Text>
+			<Text>Supprimer les moniteurs présents et cachés (recommandé)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Retirer AMD Audio Bus (System Device)</Text>
+			<Text>Supprimer AMD Audio Bus (Périphérique système)</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Retirer les dossiers "C:\AMD" (PAS recommendé)</Text>
+			<Text>Supprimer les dossiers "C:\AMD" (NON recommandé)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Retirer pilote / filtre AMDKMPFD  (Une Sauvegarde est recommandée pour les chipset AMD)</Text>
+			<Text>Supprimer le pilote / filtre AMDKMPFD  (Une Sauvegarde est recommandée pour les chipsets AMD)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Afficher le message du mode sans échec au démarrage.</Text>
+			<Text>Afficher le message du mode sans échec au démarrage</Text>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Sauvegarder le fichier de configuration dans le dossier d'itinérance</Text>
+			<Text>Sauvegarder le fichier de configuration dans le répertoire roaming</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
+			<Text>Vérifier automatiquement les mises à jour au démarrage (Recommandé)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Retirer Geforce Experience (GFE)</Text>
+			<Text>Supprimer Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>Retirer le répertoire du AMD Crimson Shader Cache</Text>
+			<Text>Supprimer le répertoire du AMD Crimson Shader Cache</Text>
 			<Tooltip>
-				Recommandé s’il y a des anomalies graphiques (vitesse ou la corruption visuelle) causée par un cache de données de shader corrompu.
+				Recommandé s’il y a des anomalies graphiques (vitesse ou corruption visuelle) causée par un cache de données de shader corrompu.
 				Aussi recommandé si vous passez à une autre marque comme nVidia.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Remove Vulkan Runtime</Text>
-			<Tooltip>Not Recommended If You Have 2 Differents GPUs Capable Of Using The Vulkan API.</Tooltip>
+			<Text>Supprimer Vulkan</Text>
+			<Tooltip>Non recommandé si vous avez 2 GPU différents compatibles avec l'API Vulkan.</Tooltip>
 		</lblVulkan>
 		<lblUseSetupAPI>
-			<Text>Use SetupAPI *Experimental*</Text>
-			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
+			<Text>Utiliser SetupAPI *Experimental*</Text>
+			<Tooltip>Utiliser SetupAPI à la place de l'outil externe DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
 	
@@ -266,20 +266,20 @@
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				Vous n'êtes pas en mode sans échec . Il est fortement recommandé de
+				Vous n'êtes pas en mode sans échec. Il est fortement recommandé de
 				redémarrer en mode sans échec pour éviter des problèmes.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Important note for Windows 8/8.1/10 users:
-				Your Windows "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Note importante pour les utilisateurs de Windows 8/8.1/10 :
+				MOT DE PASSE Windows obligatoire, le PIN ne marche PAS en mode sans échec.
+				Fermez immédiatement si vous l'avez perdu ou si vous ne le connaissez pas !
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
-			<Item2>Mode sans échec (Recommendé)</Item2>
+			<Item2>Mode sans échec (Recommandé)</Item2>
 			<Item3>Mode sans échec avec prise en charge du réseau</Item3>
 		</cbBootOption>
 		<Messages>
@@ -292,33 +292,33 @@
 			<Text>Fermer</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Open log</Text>
+			<Text>Ouvrir log</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
 			<Text>Options</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>Copie activée</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>Filters</Text>
+			<Text>Filtres</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>Afficher les évènements</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>Afficher les avertissements</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>Afficher les erreurs</Text>
 		</errorsMenuItem>
 	</frmLog>
 
-	<frmSystemRestore Text="System Restore">
+	<frmSystemRestore Text="Restauration Système">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>Tentative de création d'un point de restauration système.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
@@ -333,7 +333,7 @@
 			<Text>Terms of Service (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>Traducteurs</Text>
 		</btnTranslators>
 		<lblTranslators>
 			<Text>Big thanks to following translators and also those who aren't listed!</Text>
@@ -357,15 +357,14 @@
 				Usage recommandé :
 
 				- Cet utilitaire peut être utilisé en mode normal, mais pour des raisons de stabilité lors de l'utilisation de
-				« DDU », le mode
-				sans échec est toujours le meilleur choix.
+				« DDU », le mode sans échec est toujours le meilleur choix.
 
 				- Nous tenons à recueillir les commentaires des utilisateurs. Dites-nous si c'était un succès ou non. Par mesure
 				de sécurité, nous vous recommandons d'utiliser la partie "Sauvegarde et Restauration" de Windows
 				(normalement, il ne devrait pas y avoir de problèmes).
 
 				Gardez à l'esprit que NVIDIA / AMD n'ont rien à voir avec nous, nous ne travaillons pas avec eux, ainsi,
-				ni NVIDIA, ni AMD, ne pourra être tenu pour responsable de tout dommage causé à votre système par « DDU ».
+				ni NVIDIA, ni AMD, ne pourront être tenus pour responsable de tout dommage causé à votre système par « DDU ».
 
 				-------------------------------
 
@@ -393,8 +392,7 @@
 
 				En utilisant DDU vous acceptez de ne pas accuser DDU ou ses créateurs et affiliés, d'endommager ou affecter négativement votre PC.
 
-				En utilisant DDU vous reconnaissez que NVIDIA («NVIDIA, GeForce») , Advanced Micro Devices ("AMD Radeon») et Microsoft n'ont
-				rien à voir avec ce programme,ne peuvent etre accusés pour des dommages a vous ou votre ordinateur et en aucune façon affiliés à DDU ou ses créateurs.
+				En utilisant DDU vous reconnaissez que NVIDIA («NVIDIA, GeForce») , Advanced Micro Devices ("AMD Radeon») et Microsoft n'ont rien à voir avec ce programme, ne peuvent etre accusés pour des dommages à vous ou votre ordinateur et en aucune façon affiliés à DDU ou ses créateurs.
 			</Text>
 		</Tos>
 	</Misc>
