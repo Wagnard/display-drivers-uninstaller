@@ -2561,6 +2561,21 @@ Public Class frmMain
 			End If
 		Next
 
+		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath) + "\Public\Desktop"
+		If FileIO.ExistsDir(filePath) Then
+			If filePath IsNot Nothing Then
+				For Each child As String In FileIO.GetFiles(filePath)
+					If IsNullOrWhitespace(child) = False Then
+						If StrContainsAny(child, True, "geforce experience.lnk") AndAlso config.RemoveGFE Then
+
+							Delete(child)
+
+						End If
+					End If
+				Next
+			End If
+		End If
+
 		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath) + "\Public\Pictures\NVIDIA Corporation"
 		If FileIO.ExistsDir(filePath) Then
 			If filePath IsNot Nothing Then
