@@ -1,0 +1,40 @@
+Question 
+Applies to Windows Windows 7 Ease of access
+28218 views
+how to start program before user logon windows 7
+
+GEgeogherkins asked on  August 3, 2012See post history
+I already know how to start a program when a user logs onto Windows 7. *(Not easy to find, but once you know the trick, it is easy as pie: Place a shortcut into C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup). So don't answer that. I already know that.
+ 
+But my question is this:
+How can I get the same program to launch *before* the users logon? I want the program to launch whenever Windows restarts.
+This program doesn't require user privileges - doesn't require opening any files, etc., except access to (of course) its location within C:\Program Files (x86)/ folder.
+ 
+ 
+(What is it, you may ask? I want to launch a Wake-on-LAN program to send a "magic packet" to a sleeping computer on the local subnet. The sleeping computer happens to host some shared data.)
+ 
+11 people had this question
+ ImageMe Too
+  Reply   Subscribe
+ The answered status icon Answer
+BurrWalnut
+BurrWalnut replied on  August 3, 2012See post history
+Insider
+If you want it to start before the user logs on, you will have to start it as a service.
+ 
+Here is the startup sequence of the major registry keys, starting immediately after bootmgr has been read and ending with the program shortcut entries in the two Startup folders.
+ 
+1. HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\BootExecute. This can include instructions to schedule the running of chkdsk but not user programs.
+2. Services start next, followed by the RunServicesOnce and RunServices registry keys (if present)
+3. User then logs on to the system
+4. HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserInit. This points to the program C:\WINDOWS\system32\userinit.exe and the entry ends with a comma. Other programs can be started from this key by appending them and separating them with a comma.
+5. HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Shell. This should contain just one entry, explorer.exe.
+6. Program entries in these 2 registry keys for ALL USERS start next:
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run and \RunOnce
+7. Program entries in these 2 registry keys for CURRENT USER start next:
+HKCU\Software\Microsoft\Windows\CurrentVersion\Run and \RunOnce
+8. Programs in the Startup Folders of All Users and Current User are started last of all.
+ 
+Important programs like antivirus and firewall start early in the sequence as Services. The icons that appear in the Notification Area (bottom right of the screen) are just their user interfaces, i.e. options and preferences.
+ 
+The additional location for 32-bit software in a 64-bit computer is HKLM\SOFTWARE\Wow6432Node and HKCU.
