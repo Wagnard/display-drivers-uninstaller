@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="pl-PL" Text="Polski">
 	<!--
-		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
-		for quick guide
+		Zobacz plik ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		w celu uzyskania instrukcji
 	-->
 
 	<frmMain Text="Display Driver Uninstaller">
@@ -17,11 +17,11 @@
 		<btnClean>
 			<Text>
 				Usuń wszystkie sterowniki bez ponownego uruchamiania
-				(może powodować problemy np.czarny ekran)
+				(może powodować problemy np. czarny ekran)
 			</Text>
 			<Tooltip>
 				Usuń wszystkie sterowniki bez ponownego uruchamiania
-				(może powodować problemy np.czarny ekran)
+				(może powodować problemy np. czarny ekran)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
@@ -38,12 +38,10 @@
 		</btnCleanShutdown>
 		    <btnCleanGfeDownloads>
       <Text>
-        Usuń instalator sterowników "GeForce Experience" oraz pliki tymczasowe.
-        (sterowniki nie są usuwane)
+        Usuń tylko Geforce Experience bez usuwania sterowników
       </Text>
       <Tooltip>
-         Usuń instalator sterowników "GeForce Experience" oraz pliki tymczasowe.
-        (sterowniki nie są usuwane).
+            Usuń tylko Geforce Experience bez usuwania sterowników
       </Tooltip>
     </btnCleanGfeDownloads>
 		<btnWuRestore>
@@ -58,32 +56,25 @@
 			<Text>Lubisz DDU? Pomyśl o darowiznie, aby pomóc w dalszym rozwoju programu.</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Dziennik zdarzeń</Text>
+			<Text>Raport podstawowy</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Wybierz sterownik graficzny</Text>
+			<Text>Wybrany sterownik graficzny</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Wybierz język:</Text>
+			<Text>Wybrany język:</Text>
 		</lblLanguage>
-		
-		<Label9>
-			<Text>Odpowiedzialność za błędy i uszkodzenie sprzętu spoczywa na użytkowniku.</Text>
-		</Label9>
-		<Label10>
-			<Text>Zalecane jest użycie w trybie awaryjnym.</Text>
-		</Label10>
 		
 		<lblUpdate>
 			<Text>Sprawdzanie aktualizacji...</Text>
 			<Text2>Posiadasz najnowszą wersję.</Text2>
-			<Text3>Dostępna aktualizacja!</Text3>
+			<Text3>Dostępna aktualizacja! Chcesz teraz pobrać nową wersję?</Text3>
 			<Text4>Nie można pobrać informacji o aktualizacjach!</Text4>
 		</lblUpdate>
 
 		<lblOffer>
 			<Text>Oferty naszych partnerów</Text>
-			<Tooltip>Możesz to wyłączyć w menu Opcje ogólne.</Tooltip>
+			<Tooltip>Możesz to wyłączyć w menu Opcje główne.</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
@@ -93,7 +84,7 @@
 			<Text>Informacje</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Raport</Text>
+			<Text>Rozszerzony raport</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
 			<Text>Linki</Text>
@@ -124,21 +115,22 @@
 		</VisitGeforceMenuItem>
 		
 		<Messages>
-			<Text1>Dostępna aktualizacja! Chcesz pobrać nową wersję z oficjalnej strony?</Text1>
+			<Text1>Dostępna aktualizacja! Chcesz teraz pobrać nową wersję?</Text1>
 			<Text2>Ograniczone wsparcie dla starszych wersji. Zaktualizuj do nowej wersji zanim zgłosisz błędy.</Text2>
-			<Text3>Używasz DDU bez praw Administratora. Aplikacja zostanie zamknięta.</Text3>
-			<Text4>Nie można odnaleźć ddudr. Zajrzyj do dziennika zdarzeń.</Text4>
-			<Text5>Display Driver Uninstaller w znacznym stopniu modyfikuje wpisy rejestru. DDU postara się automatycznie utworzyć punkt Przywracania Systemu (tylko w trybie Normalnym).</Text5>
-			<Text6>Wystąpił problem w jednym z modułów, wyślij dzienniki zdarzeń do autora programu.</Text6>
-			<Text7>DDU wykrył, że posiadasz Laptopa z przełączaną grafiką AMD (Enduro lub podobne), DDU nie jest w pełni kompatybilne/testowane z systemami Enduro. Używaj na własne ryzyko.</Text7>
-			<Text8>DDU wykrył, że system nie jest Trybie Awaryjnym... Dla lepszego usuwania bez wystąpienia problemów, zalecany jest restart systemu do trybu awaryjnego.</Text8>
-			<Text9>DDU zmienił ustawienia, które zapobiegają automatycznej aktualizacji sterowników z Windows Update. Możesz zmienić ustawienie na domyślne jeśli chcesz, ale PO instalacji nowych sterowników.</Text9>
+			<Text3>Uruchomiono DDU bez praw Administratora. Aplikacja zostanie zamknięta.</Text3>
+			<Text4>Nie można znaleźć PAExec. Zajrzyj do raportu.</Text4>
+			<Text5>DDU w znacznym stopniu modyfikuje wpisy rejestru. DDU postara się automatycznie utworzyć punkt przywracania systemu (tylko w trybie normalnym).</Text5>
+			<Text6>Wystąpił problem w jednym z modułów, wyślij plik raportu do autora programu.</Text6>
+			<Text7>DDU wykrył, że posiadasz laptopa z przełączaną grafiką AMD Enduro (lub podobne), DDU nie jest w pełni kompatybilny/przetestowany z systemem AMD Enduro. Używasz na własne ryzyko.</Text7>
+			<Text8>DDU wykrył, że system nie został uruchomiony w trybie awaryjnym... W celu uniknięcia problemów z usuwaniem, zalecamy uruchomić komputer w trybie awaryjnym.</Text8>
+			<Text9>DDU wyłączył automatyczne instalowanie oraz aktualizowanie sterowników z Windows Update. Możesz włączyć z powrotem jeśli chcesz.</Text9>
 			<Text10>Usuwanie zakończone! Czy chcesz teraz zamknąć program?</Text10>
-			<Text11>Zrobione!</Text11>
-			<Text12>System nie jest uruchomiony w trybie awaryjnym. Tryb awaryjny jest zalecany, aby uniknąć błędów. Czy uruchomić system w trybie awaryjnym?</Text12>
-			<Text13>Oto co potrzebujesz wybrać jeśli pojawi się niebieski ekran odzyskiwania : Rozwiązywanie problemów -&gt; zaawansowane opcje -&gt; Opcje startowe Windows.</Text13>
-			<Text14>Trwa proces ponownego uruchamiania, uruchom ponownie przed użyciem DDU</Text14>
-		</Messages>
+			<Text11>Ustawienia instalacji urządzeń systemu Windows zostały zmienione, aby automatycznie zainstalować sterowniki.</Text11>
+			<Text12>Nie uruchomiono trybu awaryjnego. W celu uniknięcia problemów zalecamy tryb awaryjny. Uruchomić komputer w trybie awaryjnym?</Text12>
+			<Text13>Czynności do wykonania na niebieskim ekranie odzyskiwania: Rozwiązywanie problemów -&gt; Opcje zaawansowane -&gt; Ustawienia uruchamiania.</Text13>
+			<Text14>Oczekiwanie na ponowne uruchomienie, uruchom ponownie przed użyciem DDU</Text14>
+			<Text15>Nie dokonano żadnych zmian. Ustawienia instalacji sterowników z Windows Update są już ustawione domyślnie</Text15>
+			</Messages>
 		
 		<UpdateLog>
 			<Text1>Rozpoczynanie usuwania sterowników (etap OEM)...</Text1>
@@ -147,7 +139,7 @@
 			<Text4>Usuwanie konta UpdatusUser jeśli istnieje.</Text4>
 			<Text5>Usuwanie folderu</Text5>
 			<Text6>Rozpoczynanie czyszczenia rejestru</Text6>
-			<Text7>Zakończono czyszczenie Rejestru</Text7>
+			<Text7>Zakończono czyszczenie rejestru</Text7>
 			<Text8>Rozpoczynanie usuwania nVidia Optimus UpperFilter jeśli istnieje.</Text8>
 			<Text9>Skanowanie w poszukiwaniu nowego sprzętu...</Text9>
 			<Text10>Usuwanie zakończone!</Text10>
@@ -159,25 +151,25 @@
 			<Text16>INF</Text16>
 			<Text17>Sekcja INF</Text17>
 			<Text18>Karta graficzna nie została poprawnie zainstalowana</Text18>
-			<Text19>Usuwanie zawartości kilku wybranych folderów, może to zająć chwilę czasu...</Text19>
+			<Text19>Usuwanie kilku folderów specjalnych, może to zająć chwilę czasu...</Text19>
 			<Text20>Rozpoczęto usuwanie...</Text20>
 			<Text21>Usuwanie</Text21>
 			<Text22>Sterownik</Text22>
-			<Text23>Uruchamianie usunięcia ddudr , Proszę czekać (może zająć kilka minut)</Text23>
+			<Text23>Usuwanie danych instalatora, proszę czekać (to może zająć kilka minut)</Text23>
 			<Text24>Karta graficzna usunięta z Menedżera urządzeń.</Text24>
-			<Text25>Uruchamianie usuwania DDUDR kontrolera dźwięku.</Text25>
+			<Text25>Usuwanie kontrolera dźwięku.</Text25>
 			<Text26>Usunięto kontrolery dźwięku HD !</Text26>
 			<Text27>Usunięto kontroler 3D Vision USB z Menedżera urządzeń.</Text27>
 			<Text28>Wszystkie monitory zostały usunięte !</Text28>
-			<Text29>Usuwanie ddudr zakończone</Text29>
-			<Text30>Rozpoczynanie usuwania regionu S-1-5-xx</Text30>
-			<Text31>Koniec usuwania regionu S-1-5-xx</Text31>
-			<Text32>Początek usuwania instalatora\produktów w CLASSESROOT</Text32>
-			<Text33>Koniec usuwania instalatora\produktów w CLASSESROOT</Text33>
-			<Text34>Początek usuwania instalatora\produktów w LOCALMACHINE</Text34>
-			<Text35>Koniec usuwania instalatora\produktów w LOCALMACHINE</Text35>
-			<Text36>Początek usuwania instalatora\produktów w CURRENTUSER</Text36>
-			<Text37>Koniec usuwania instalatora\produktów w CURRENTUSER</Text37>
+			<Text29>Usuwanie zakończone</Text29>
+			<Text30>Rozpoczynanie usuwania wartości z S-1-5-xx</Text30>
+			<Text31>Zakończono usuwanie wartości z S-1-5-xx</Text31>
+			<Text32>Rozpoczynanie usuwania instalatora\produktów w CLASSESROOT</Text32>
+			<Text33>Zakończono usuwanie instalatora\produktów w CLASSESROOT</Text33>
+			<Text34>Rozpoczynanie usuwania instalatora\produktów w LOCALMACHINE</Text34>
+			<Text35>Zakończono usuwanie instalatora\produktów w LOCALMACHINE</Text35>
+			<Text36>Rozpoczynanie usuwania instalatora\produktów w CURRENTUSER</Text36>
+			<Text37>Zakończono usuwanie instalatora\produktów w CURRENTUSER</Text37>
 			<Text38>Usuwanie procesów/usług...</Text38>
 			<Text39>Usuwanie procesów/usług zakończone</Text39>
 			<Text40>Usunięto.</Text40>
@@ -203,10 +195,10 @@
 			<Text>Opcje główne</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Usuń folder sterowników "C:\NVIDIA" (nie zalecane)</Text>
+			<Text>Usuń folder z sterownikami "C:\NVIDIA" (nie zalecane)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Zapisuj pliki Dziennika zdarzeń w folderze startowym (zalecane)</Text>
+			<Text>Zapisuj pliki raportu w folderze DDU Logs (zalecane)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Usuń PhysX</Text>
@@ -221,16 +213,16 @@
 			<Text>Usuń wszystkie monitory (zalecane)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Usuń AMD Audio Bus</Text>
+			<Text>Usuń sterownik dźwięku AMD High Definition Audio</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Usuń folder sterowników "C:\AMD"(nie zalecane)</Text>
+			<Text>Usuń folder z sterownikami "C:\AMD"(nie zalecane)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Aktywuj bezpośredni tryb awaryjny (Windows 8 i nowsze)</Text>
+			<Text>Usuń sterownik chipsetu (dla chipsetu AMD zalecamy utworzenie kopi zapasowej)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Pokaż opcje trybu uruchomienia</Text>
+			<Text>Pokaż wiadomość o trybie awaryjnym podczas uruchamiania (można zmienić tryb na inny)</Text>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Przechowuj plik ustawień w folderze Roaming</Text>
@@ -245,7 +237,7 @@
 			<Text>Usuń folder pamięci podręcznej jednostek cieniujących AMD Crimson</Text>
 			<Tooltip>
 				Zalecane, jeśli istnieją anomalie graficzne (szybkość działania lub problemy z wyświetlaniem) spowodowane uszkodzonymi danymi bufora cieniującego.
-				Zalecane również, jeśli zmieniasz kartę na innego producenta np. z AMD na NVIDIA
+				Zalecane również, jeśli zmieniasz markę karty graficznej
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
@@ -290,6 +282,9 @@
 			<Item2>Tryb awaryjny (zalecane)</Item2>
 			<Item3>Tryb awaryjny z obsługą sieci (opcjonalnie)</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU zamknie znane programy ingerujące w karte graficzną(MSI Afterburner oraz RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
 	
 	<frmLog Text="Rozszerzony raport">
@@ -297,7 +292,7 @@
 			<Text>Zamknij</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Otwórz plik raportu</Text>
+			<Text>Otwórz raport</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
@@ -348,10 +343,10 @@
 	<Misc>
 		<About>
 			<Text>
-				Driver Uninstaller  / program usuwający sterowniki graficzne kart NVIDIA/AMD/Intel
+				Display Driver Uninstaller (DDU) / usuwa sterowniki kart graficznych NVIDIA/AMD/Intel
 
 				Ten program służy do usuwania sterowników graficznych/monitora z Menedżera urządzeń i usuwania obecnych
-				i poprzednich sterowników z magazynu Windows Driver Store, jak i do usuwania usług od NVIDIA/AMD/Intel
+				i poprzednich sterowników z magazynu Windows Driver, jak i do usuwania usług od NVIDIA/AMD/Intel
 
 				Efekt działania programu będzie podobny do tego, jakby system Windows był "świeżo" zainstalowany
 				na komputerze.
@@ -359,14 +354,13 @@
 				To narzędzie działa podobnie jak program "Driver Sweeper" i posiada dodatki wspomniane wyżej.
 
 				Jeśli masz jakiekolwiek problemy podczas instalacji starszych lub nowszych sterowników wypróbuj ten
-				program gdyż użytkownicy donoszą, że program te problemy rozwiązuje.
+				program, użytkownicy poinformowali nas że w ten sposób rozwiązali te problemy.
 
 				ZALECANE UŻYCIE:
 
-				- To narzędzie może być użyte w Normalnym trybie pracy Windows, jednak dla absolutnej stabilności
-				podczas pracy DDU najlepiej uruchomić Windows w Trybie Awaryjnym.
+				- Można użyć DDU w trybie normalnym, jednak by uniknąć pojawienia się błędów zaleca się użycie trybu awaryjnego
 
-				- Chcielibyśmy zebrać opinie od wszystkich, powiedz nam czy odniosłeś sukces czy nie.
+				- Chcielibyśmy zebrać opinie od wszystkich, powiedz nam czy program działa u ciebie prawidłowo czy nie.
 
 				- Stwórz kopię zapasową lub utwórz punkt przywracania (jednakże użycie programu powinno być w miarę bezpieczne).
 
@@ -378,13 +372,13 @@
 				tego programu.
 				-------------------------------
 
-				Program stworzony przez Wagnard.
+				Program stworzony przez zespół Wagnardsoft.
 
 				Współwłaściciel: Shady7557
 
 				Testujący: Dellon132
 
-				Logi: juanchacin
+				Raporty: juanchacin
 
 				Wielkie dzięki dla Jackalito, który zasponsorował AMD 7850.
 
@@ -414,8 +408,8 @@
 	<LanguageTranslators>
 		<Translator>
 			<User>Łukasz Kuchta @Bladius</User>
-			<Details></Details>
-			<LastUpdate>28.05.2017</LastUpdate>
+			<Details>Tłumacz oficjalny</Details>
+			<LastUpdate>29.05.2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
