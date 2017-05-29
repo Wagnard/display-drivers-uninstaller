@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="nl-NL" Text="Dutch">
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -123,7 +123,7 @@
 			<Text6>Er is een probleem voorgekomen in een van de modules, stuur je DDU logs naar de ontwikkelaar.</Text6>
 			<Text7>DDU heeft gedecteerd dat u een AMD omschakel Laptop hebt (Enduro of gelijkwaardig), DDU is nog niet volledig compatibel / getest met Enduro systemen, Gebruik op eigen risico.</Text7>
 			<Text8>DDU heeft gedecteerd dat u NIET in Veilige Modus bent... Voor een betere schoonmaak zonder problemen, is het aanbevolen om te herstarten in veilige modus.</Text8>
-			<Text9>DDU heeft een optie verandert dat weerhoud drivers automatisch te downloaden met Windows Update. U kunt deze terugzetten naar standaart , NADAT je nieuwe driver geinstalleerd is.</Text9>
+			<Text9>DDU heeft een optie veranderd die weerhoudt drivers automatisch te downloaden met Windows Update. U kunt deze terugzetten naar standaard NADAT je nieuwe driver geinstalleerd is.</Text9>
 			<Text10>Volledige verwijdering klaar! Wilt u nu afsluiten?</Text10>
 			<Text11>Klaar!</Text11>
 			<Text12>U bent niet in veilige modus. Het is zeer aanbevolen te herstarten naar veilige modus om problemen te voorkomen., Nu opnieuw opstarten in veilige modus?"</Text12>
@@ -150,16 +150,16 @@
 			<Text16>INF</Text16>
 			<Text17>INF Sectie</Text17>
 			<Text18>GPU niet Correct Geinstalleerd</Text18>
-			<Text19>Speciale mappen worden verwijdert, dit kan even duren...</Text19>
+			<Text19>Speciale mappen worden verwijderd, dit kan even duren...</Text19>
 			<Text20>Schoonmaak gestart...</Text20>
-			<Text21>Deinstalleren</Text21>
+			<Text21>Deïnstalleren</Text21>
 			<Text22>driver</Text22>
-			<Text23>ddudr Verwijdering Word Uitgevoerd , Even geduld(kan een paar minuten duren)</Text23>
-			<Text24>GPU(s) Verwijdert van ApparaatBeheer.</Text24>
-			<Text25>DDUDR Verwijdering Geluids controller word Uitgevoerd.</Text25>
-			<Text26>HD geluid adapters Verwijdert !</Text26>
-			<Text27>3D Visie USB Adapter Verwijdert van ApparaatBeheer.</Text27>
-			<Text28>Monitors en verborgen monitors verwijdert !</Text28>
+			<Text23>ddudr Verwijdering Wordt Uitgevoerd , Even geduld (kan een paar minuten duren)</Text23>
+			<Text24>GPU(s) Verwijderd van ApparaatBeheer.</Text24>
+			<Text25>DDUDR Verwijdering Geluidscontroller wordt Uitgevoerd.</Text25>
+			<Text26>HD geluid adapters Verwijderd!</Text26>
+			<Text27>3D Visie USB Adapter Verwijderd van ApparaatBeheer.</Text27>
+			<Text28>Monitors en verborgen monitors verwijderd!</Text28>
 			<Text29>ddudr Verwijdering compleet</Text29>
 			<Text30>S-1-5-xx region Schoonmaak gestart</Text30>
 			<Text31>S-1-5-xx region Schoonmaak geëindigd</Text31>
@@ -172,8 +172,8 @@
 			<Text38>Bezig met het schoonmaken van process/services...</Text38>
 			<Text39>Process/Services Schoonmaak Klaar</Text39>
 			<Text40>Verwijderd.</Text40>
-			<Text41>Waarde verwijdert.</Text41>
-			<Text42>Bestand verwijdert.</Text42>
+			<Text41>Waarde verwijderd.</Text41>
+			<Text42>Bestand verwijderd.</Text42>
 		</UpdateLog>
 	</frmMain>
 	
@@ -265,15 +265,15 @@
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				Je bent niet in Veilige Modus. Het is sterk aanbevolen
-				Herstart naar Veilige Modus om problemen te voorkomen.
+				Je bent niet in Veilige Modus. Het is sterk aanbevolen om te 
+				herstarten in Veilige Modus om problemen te voorkomen.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Important note for Windows 8/8.1/10 users:
-				Your Windows "PASSWORD" is required! (PIN is NOT working in safe mode)
-				Quit Immediately if you lost or don't know it!
+				Belangrijke info voor gebruikers van Windows 8/8.1/10:
+				Uw Windows "PASWOORD" is vereist! (PIN werkt NIET in Veilige Modus!)
+				Ga niet verder indien u uw pawoord bent vergeten!
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
