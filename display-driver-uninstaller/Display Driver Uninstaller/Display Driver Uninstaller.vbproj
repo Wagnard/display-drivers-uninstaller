@@ -103,8 +103,8 @@
     <Compile Include="LogEntry.vb" />
     <Compile Include="Win32\ServiceInstaller.vb" />
     <Compile Include="Win32\SetupAPI.vb" />
-    <Compile Include="SetupAPITestWindow.xaml.vb">
-      <DependentUpon>SetupAPITestWindow.xaml</DependentUpon>
+    <Compile Include="DebugWindow.xaml.vb">
+      <DependentUpon>DebugWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ThreadSettings.vb" />
     <Compile Include="Tools.vb" />
@@ -145,7 +145,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SetupAPITestWindow.xaml">
+    <Page Include="DebugWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -33,15 +33,15 @@
 				Rimuove i driver installati e spegne il computer.
 			</Tooltip>
 		</btnCleanShutdown>
-	<btnCleanGfeDownloads>
-      <Text>
-        Rimuovi file di installazione di "GeForce Experience".
-        (NOTA: Nessun driver video verrà rimosso)
-      </Text>
-      <Tooltip>
-         Permette di recuperare spazio dall'hardisk.
-      </Tooltip>
-    </btnCleanGfeDownloads>
+		<btnCleanGfeDownloads>
+			<Text>
+				Rimuovi file di installazione di "GeForce Experience".
+				(NOTA: Nessun driver video verrà rimosso)
+			</Text>
+			<Tooltip>
+				Permette di recuperare spazio dall'hardisk.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Ripristina l'installazione automatica dei
@@ -63,7 +63,7 @@
 		<lblLanguage>
 			<Text>Seleziona la lingua:</Text>
 		</lblLanguage>
-		
+
 		<lblUpdate>
 			<Text>Controllo degli aggiornamenti in corso...</Text>
 			<Text2>Nessun aggiornamento trovato. Il programma è aggiornato.</Text2>
@@ -75,7 +75,7 @@
 			<Text>Offerte dai nostri partner:</Text>
 			<Tooltip>Puoi disabilitare questo box dal menu delle opzioni.</Tooltip>
 		</lblOffer>
-		
+
 		<OptionsMenuItem>
 			<Text>Opzioni</Text>
 		</OptionsMenuItem>
@@ -130,7 +130,7 @@
 			<Text14>DDU ha rilevato un riavvio in sospeso, riavviare prima di utilizzare il programma.</Text14>
 			<Text15>Non è effettuata alcuna modifica sulle impostazioni di installazione del dispositivo.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
@@ -176,7 +176,7 @@
 			<Text42>File Deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Opzioni">
 		<btnClose>
 			<Text>Chiudi</Text>
@@ -248,7 +248,7 @@
 			<Tooltip>Usa SetupAPI invece dello strumento esterno DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Display Driver Uninstaller (DDU)">
 		<btnAccept>
 			<Text>Avvia</Text>
@@ -271,7 +271,7 @@
 		<lblWinPasswordWarn>
 			<Text>
 				ATTENZIONE: Per gli utenti di Windows 8/8.1/10.
-				È richiesta la tua password di Windows (Il PIN non funziona in 
+				È richiesta la tua password di Windows (Il PIN non funziona in
 				modalità provvisoria). Non utilizzare la modalità provvisoria
 				se non conosci la tua password!
 			</Text>
@@ -285,7 +285,7 @@
 			<Text1>DDU ha chiuso dei programmi che potrebbero interferire (ad esempio: MSI Afterburner e RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Log esteso">
 		<btnClose>
 			<Text>Chiudi</Text>
@@ -361,7 +361,7 @@
 				- Se hai avuto problemi con un driver video e questo programma ti è stato d'aiuto, puoi condividere il risultato nella discussione ufficiale del programma: http://forums.guru3d.com/showthread.php?t=379505
 
 				- Tieni a mente che NVIDIA, AMD, INTEL o Microsoft non hanno niente a che fare con noi. Non lavoriamo per NVIDIA, AMD, INTEL o Microsoft e non devono essere ritenuti responsabili per qualunque danno causato al tuo computer.
-				
+
 				-------------------------------
 				Creato da Wagnard.
 

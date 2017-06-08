@@ -12,7 +12,7 @@
 				(Συνιστάται)
 			</Text>
 			<Tooltip>
-				Κατάργηση των τρέχων και προηγούμενων οδηγών, έπειτα επανεκκίνηση του υπολογιστή. 
+				Κατάργηση των τρέχων και προηγούμενων οδηγών, έπειτα επανεκκίνηση του υπολογιστή.
 				(Συνιστάται)
 			</Tooltip>
 		</btnCleanRestart>
@@ -22,7 +22,7 @@
 				(Μπορεί να προκαλέσει προβλήματα όπως μαύρη οθόνη)
 			</Text>
 			<Tooltip>
-				Κατάργηση των τρέχων και προηγούμενων οδηγών, αλλά να μη γίνει επανεκκίνηση του υπολογιστή. 
+				Κατάργηση των τρέχων και προηγούμενων οδηγών, αλλά να μη γίνει επανεκκίνηση του υπολογιστή.
 				(Μπορεί να προκαλέσει προβλήματα όπως μαύρη οθόνη)
 			</Tooltip>
 		</btnClean>
@@ -36,6 +36,15 @@
 				(Για εγκατάσταση νέας κάρτας γραφικών)
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remove "GeForce Experience" display driver installer cache/files.
+				(Note: Drivers won't be removed)
+			</Text>
+			<Tooltip>
+				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Ρύθμιση της αυτόματης εγκατάστασης
@@ -57,14 +66,14 @@
 		<lblLanguage>
 			<Text>Selected language</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>ΣΗΜΕΙΩΣΗ: Τυχόν βλάβες ή σφάλματα που μπορεί να δημιουργηθούν στον υπολογιστή σας είναι δική σας ευθύνη.</Text>
 		</Label9>
 		<Label10>
 			<Text>Η χρήση του DDU σε Ασφαλή Λειτουργεία συνιστάται.</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Έλεγχος για ενημερώσεις...</Text>
 			<Text2>No Updates found. Program is up to date.</Text2>
@@ -129,8 +138,9 @@
 			<Text12>You are not in safe mode. It is highly recommended that you reboot into safe mode to avoid possible issues. Reboot into Safe Mode now?</Text12>
 			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
@@ -176,7 +186,7 @@
 			<Text42>File Deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Options">
 		<btnClose>
 			<Text>Close</Text>
@@ -248,7 +258,7 @@
 			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -281,8 +291,11 @@
 			<Item2>Safe Mode (Recommended)</Item2>
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>

@@ -36,15 +36,15 @@
 				(Para instalação de nova Placa de Video)
 			</Tooltip>
 		</btnCleanShutdown>
-    <btnCleanGfeDownloads>
-      <Text>
-        Remover cache/ficheiros do instalador do controlador "GeForce Experience".
-        (Nota: Os controladores não serão removidos)
-      </Text>
-      <Tooltip>
-         Isto é mais usado para recuperar algum espaço no HDD/SSD não limpo pelo instalador do GFE.
-      </Tooltip>
-    </btnCleanGfeDownloads>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remover cache/ficheiros do instalador do controlador "GeForce Experience".
+				(Nota: Os controladores não serão removidos)
+			</Text>
+			<Tooltip>
+				Isto é mais usado para recuperar algum espaço no HDD/SSD não limpo pelo instalador do GFE.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Definir instalação automática de
@@ -64,9 +64,9 @@
 			<Text>Controlador Gráfico seleccionado</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-		  <Text>Idioma Seleccionado</Text>
-		</lblLanguage>	
-		
+			<Text>Idioma Seleccionado</Text>
+		</lblLanguage>
+
 		<lblUpdate>
 			<Text>A procurar actualizações...</Text>
 			<Text2>Não foram encontradas actualizações. O programa está actualizado.</Text2>
@@ -78,7 +78,7 @@
 			<Text>Ofertas dos nossos parceiros</Text>
 			<Tooltip>Pode desactivar isto no menu opções.</Tooltip>
 		</lblOffer>
-		
+
 		<OptionsMenuItem>
 			<Text>Opções</Text>
 		</OptionsMenuItem>
@@ -131,8 +131,9 @@
 			<Text12>Não está em Modo Segurança. É altamente recomendável que reinicie para o modo segurança para evitar possíveis problemas. Reiniciar para Modo Segurança agora?</Text12>
 			<Text13>Eis o que precisa seleccionar no ecrã azul de recuperação : Resolução de Problemas -&gt; opções avançadas -&gt; Definições de Arranque.</Text13>
 			<Text14>Existe um Reinício pendente, por favor reinicie antes de usar o DDU</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>A Executar a limpeza do Armazenamento de Controladores(Passo Eliminar OEM)...</Text1>
 			<Text2>A Limpar Pasta</Text2>
@@ -178,7 +179,7 @@
 			<Text42>Ficheiro eliminado.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Opções">
 		<btnClose>
 			<Text>Fechar</Text>
@@ -246,7 +247,7 @@
 			<Tooltip>Não Recomendado Se Tiver 2 GPUs Diferentes Capazes De Usar o API Vulkan.</Tooltip>
 		</lblVulkan>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Opção de Arranque">
 		<btnAccept>
 			<Text>Iniciar</Text>
@@ -270,7 +271,7 @@
 		<lblWinPasswordWarn>
 			<Text>
 				Nota importante para utilizadores do Windows 8/8.1/10:
-				É necessária a sua "PALAVRA-PASSE" do Windows! (o PIN NÃO funciona em 
+				É necessária a sua "PALAVRA-PASSE" do Windows! (o PIN NÃO funciona em
 				modo segurança). Saia Imediatamente se a perdeu ou não a sabe!
 			</Text>
 		</lblWinPasswordWarn>
@@ -279,8 +280,11 @@
 			<Item2>Modo Segurança (Recomendado)</Item2>
 			<Item3>Modo Segurança Com Rede</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Registo detalhado">
 		<btnClose>
 			<Text>Fechar</Text>
@@ -337,81 +341,81 @@
 	<Misc>
 		<About>
 			<Text>
-Display Driver Uninstaller (DDU) / Concebido para limpeza de controladores de video (GPU).(NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Concebido para limpeza de controladores de video (GPU).(NVIDIA/AMD)
 
-O que ele faz é remover o controlador de vídeo/GPU do gestor de dispositivos e remover o actual e
-e todos os controladores anteriores do Armazenamento de Controladores do Windows junto com a remoção
-de serviços da NVIDIA/AMD.
+				O que ele faz é remover o controlador de vídeo/GPU do gestor de dispositivos e remover o actual e
+				e todos os controladores anteriores do Armazenamento de Controladores do Windows junto com a remoção
+				de serviços da NVIDIA/AMD.
 
-O efeito resultante do uso desta ferramenta é semelhante ao estado de uma "Nova Instalação" do Windows.
+				O efeito resultante do uso desta ferramenta é semelhante ao estado de uma "Nova Instalação" do Windows.
 
-Esta ferramenta actua de modo semelhante ao "Driver Sweeper", e possui todos os extras acima mencionados.
+				Esta ferramenta actua de modo semelhante ao "Driver Sweeper", e possui todos os extras acima mencionados.
 
-Se tiver problemas com a instalação de controladores novos ou antigos, experimente-o pois existe informação
-de que o DDU corrige esses problemas.
+				Se tiver problemas com a instalação de controladores novos ou antigos, experimente-o pois existe informação
+				de que o DDU corrige esses problemas.
 
-UTILIZAÇÂO RECOMENDADA :
+				UTILIZAÇÂO RECOMENDADA :
 
-- A ferramenta pode ser usada no modo Normal mas para estabilidade absoluta ao usar o DDU,
-o Modo de Segurança é sempre o melhor.
+				- A ferramenta pode ser usada no modo Normal mas para estabilidade absoluta ao usar o DDU,
+				o Modo de Segurança é sempre o melhor.
 
-- Gostariamos de recolher feedback de toda a gente, diga-nos se foi bem sucedido ou não.
+				- Gostariamos de recolher feedback de toda a gente, diga-nos se foi bem sucedido ou não.
 
-- Faça uma cópia de segurança ou crie um ponto de restauro do sistema (mas deve ser bastante seguro).
+				- Faça uma cópia de segurança ou crie um ponto de restauro do sistema (mas deve ser bastante seguro).
 
-- Se tem ou teve um problema com um contrador e esta ferramenta o ajudou a resolver problemas
-que teve ou que tem neste momento, por favor partilhe o seu resultado.
+				- Se tem ou teve um problema com um contrador e esta ferramenta o ajudou a resolver problemas
+				que teve ou que tem neste momento, por favor partilhe o seu resultado.
 
-Lembre-se que a NVIDIA, AMD, nem a Microsoft podem ser responsibilizadas por quaisquer danos
-causados a si ou ao seu computador e não são afiliados do DDU, ou seus criadores.
--------------------------------
+				Lembre-se que a NVIDIA, AMD, nem a Microsoft podem ser responsibilizadas por quaisquer danos
+				causados a si ou ao seu computador e não são afiliados do DDU, ou seus criadores.
+				-------------------------------
 
-Criado Por Wagnard.
+				Criado Por Wagnard.
 
-Programadores: Wagnard, Devmltk, Shady7557
+				Programadores: Wagnard, Devmltk, Shady7557
 
-Testador : Dellon132
+				Testador : Dellon132
 
-Logos : juanchacin
+				Logos : juanchacin
 
-Imenso Agradecimento a Jackalito pela doação de um AMD 7850.
+				Imenso Agradecimento a Jackalito pela doação de um AMD 7850.
 
-Agradecimentos a Helge Klein (http://helgeklein.com/setacl/) : pela autorização para usar o seu Programa com o DDU "SetAcl"
+				Agradecimentos a Helge Klein (http://helgeklein.com/setacl/) : pela autorização para usar o seu Programa com o DDU "SetAcl"
 
-Imenso Agradecimento pelo seu tempo para fazer testes : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (gastou tempo em depurações comigo)
-Extraordinary (Teste da reparação de um erro)
+				Imenso Agradecimento pelo seu tempo para fazer testes : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (gastou tempo em depurações comigo)
+				Extraordinary (Teste da reparação de um erro)
 
-Agradecimentos a todos os que colocaram o seu sistema em risco. (agradecimento especial a Dellon132)
+				Agradecimentos a todos os que colocaram o seu sistema em risco. (agradecimento especial a Dellon132)
 
-*O DDU, os seus criadores e afiliados não estão, de mogo algum, afiliados com o "Driver Sweeper", ou com os seus criadores.
-</Text>
+				*O DDU, os seus criadores e afiliados não estão, de mogo algum, afiliados com o "Driver Sweeper", ou com os seus criadores.
+			</Text>
 		</About>
-		
+
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") ACORDO DO UTILIZADOR
+				Display Driver Uninstaller ("DDU") ACORDO DO UTILIZADOR
 
-Ao utilizar o software DDU, torna-se num utilizador do DDU ("Utilizador"). Este acordo produz efeito logo que utilizar o programa para desinstalar um controlador.
+				Ao utilizar o software DDU, torna-se num utilizador do DDU ("Utilizador"). Este acordo produz efeito logo que utilizar o programa para desinstalar um controlador.
 
-Ao utilizar o DDU concorda em não acusar o DDU ou os seus criadores e afiliados, de danificar ou afectar negativamente o seu PC.
+				Ao utilizar o DDU concorda em não acusar o DDU ou os seus criadores e afiliados, de danificar ou afectar negativamente o seu PC.
 
-Ao utilizar o DDU reconhece que a NVIDIA ("NVIDIA, GeForce") e a Advanced Micro Devices ("AMD, Radeon") não têm
-nada a ver com este programa, e não são, de maneira nenhuma, afiliados do DDU ou seus criadores.
-</Text>
+				Ao utilizar o DDU reconhece que a NVIDIA ("NVIDIA, GeForce") e a Advanced Micro Devices ("AMD, Radeon") não têm
+				nada a ver com este programa, e não são, de maneira nenhuma, afiliados do DDU ou seus criadores.
+			</Text>
 		</Tos>
-        </Misc>
-	
+	</Misc>
+
 	<LanguageTranslators>
 		<Translator>
 			<User>Luis Neves</User>
 			<Details>luis.a.neves@sapo.pt</Details>
 			<LastUpdate>21/01/2017</LastUpdate>
 		</Translator>
-		
+
 		<Translator2>
 			<User></User>
 			<LastUpdate></LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
-	
+
 </DisplayDriverUninstaller>

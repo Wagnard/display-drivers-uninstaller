@@ -19,7 +19,7 @@
 		<btnClean>
 			<Text>
 				Säubern und KEIN Neustart
-				(Kann Probleme wie einen schwarz 
+				(Kann Probleme wie einen schwarz
 				bleibenden Bildschirm verursachen)
 			</Text>
 			<Tooltip>
@@ -38,13 +38,13 @@
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
-		<Text>
-			"GeForce Experience" Installationscache/-dateien entfernen
-			(Hinweis: Treiber werden nicht entfernt)
-		</Text>
-		<Tooltip>
-			Dies wird hauptsächlich dazu verwendet, um Speicherplatz, durch Entfernen von Dateien, die durch den GFE-/Treiber-Installer nicht entfernt wurden, zu gewinnen
-		</Tooltip>
+			<Text>
+				"GeForce Experience" Installationscache/-dateien entfernen
+				(Hinweis: Treiber werden nicht entfernt)
+			</Text>
+			<Tooltip>
+				Dies wird hauptsächlich dazu verwendet, um Speicherplatz, durch Entfernen von Dateien, die durch den GFE-/Treiber-Installer nicht entfernt wurden, zu gewinnen
+			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
@@ -67,14 +67,14 @@
 		<lblLanguage>
 			<Text>Ausgewählte Sprache</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>Hinweis: Jegliche Schäden oder Fehler, die Ihrem Computer zugefügt werden, liegen in Ihrer Verantwortung.</Text>
 		</Label9>
 		<Label10>
 			<Text>Das Verwenden von DDU im abgesicherten Modus wird empfohlen.</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Suche nach Updates...</Text>
 			<Text2>Keine Updates gefunden. Programm ist auf dem neuesten Stand.</Text2>
@@ -123,7 +123,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Geforce Thread besuchen</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Updates sind erhältlich! Möchten Sie jetzt die DDU Webseite besuchen?</Text1>
 			<Text2>Für ältere Versionen besteht eine eingeschränkte Unterstützung. Bitte überprüfen Sie, ob neue Versionen verfügbar sind bevor Sie Fehler melden.</Text2>
@@ -139,8 +139,9 @@
 			<Text12>Sie sind nicht im abgesicherten Modus. Um Fehler zu vermeiden wird ein Neustart im abgesicherten Modus dringend empfohlen. Jetzt im abgesicherten Modus neustarten?</Text12>
 			<Text13>Folgendes müssen Sie bei einem blauen Wiederherstellungsbildschirm auswählen: Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Ein noch ausstehender Neustart ist vorhanden, bitte vor der Benutzung von DDU neustarten</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Ausführen von Driver Store Säuberung (Löschen vom OEM Schritt)...</Text1>
 			<Text2>Säubern des Verzeichnisses</Text2>
@@ -186,7 +187,7 @@
 			<Text42>Datei gelöscht.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Optionen">
 		<btnClose>
 			<Text>Schließen</Text>
@@ -254,7 +255,7 @@
 			<Tooltip>Nicht empfohlen, wenn Sie zwei verschiedene GPUs haben, die die Vulkan API verwenden können</Tooltip>
 		</lblVulkan>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Startoptionen">
 		<btnAccept>
 			<Text>Starten</Text>
@@ -271,7 +272,7 @@
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				Sie befinden sich nicht im abgesicherten Modus. Um mögliche Fehler zu 
+				Sie befinden sich nicht im abgesicherten Modus. Um mögliche Fehler zu
 				vermeiden, wird ein Neustart im abgesicherten Modus ausdrücklich empfohlen.
 			</Text>
 		</lblNotSafeMode>
@@ -287,8 +288,11 @@
 			<Item2>Abgesicherter Modus (Empfohlen)</Item2>
 			<Item3>Abgesicherter Modus mit Netzwerktreibern</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Erweitertes Log">
 		<btnClose>
 			<Text>Schließen</Text>

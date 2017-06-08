@@ -32,10 +32,19 @@
 				(для установки новой видеокарты)
 			</Text>
 			<Tooltip>
-				Нажмите эту кнопку, чтобы удалить предыдущие и текущие драйверы 
+				Нажмите эту кнопку, чтобы удалить предыдущие и текущие драйверы
 				и выключить компьютер. Этот вариант подойдёт для установки новой видеокарты
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remove "GeForce Experience" display driver installer cache/files.
+				(Note: Drivers won't be removed)
+			</Text>
+			<Tooltip>
+				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>Включить установку драйверов через Windows Update по умолчанию</Text>
 		</btnWuRestore>
@@ -54,14 +63,14 @@
 		<lblLanguage>
 			<Text>Выбор языка:</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>Примечание: любые неполадки или ошибки, вызванные работой программы, на вашей ответственности!</Text>
 		</Label9>
 		<Label10>
 			<Text>Используйте DDU в безопасном режиме</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Проверка обновлений...</Text>
 			<Text2>Вы используете последнюю версию программы. Обновление не требуется.</Text2>
@@ -110,7 +119,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Посетить тему DDU на GeForce</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Доступны обновления! Посетить сайт DDU сейчас?</Text1>
 			<Text2>Ожидайте ограниченную поддержку на старых версиях, чем на самых последних. Пожалуйста, проверьте новую версию до отправки сообщений об ошибках.</Text2>
@@ -126,8 +135,9 @@
 			<Text12>Вы не в безопасном режиме. Чтобы избежать возможных проблем настоятельно рекомендуется перезагрузка в безопасном режиме. Перезагрузиться в безопасном режиме сейчас?</Text12>
 			<Text13>Вам нужно выбрать на экране восстановления системы: Диагностика -&gt; Дополнительные параметры -&gt; Параметры загрузки</Text13>
 			<Text14>Пожалуйста перезагрузитесь перед использованием DDU</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Выполняется чистка хранилища драйверов...</Text1>
 			<Text2>Чистка папки...</Text2>
@@ -173,7 +183,7 @@
 			<Text42>Файл удален</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Параметры">
 		<btnClose>
 			<Text>Закрыть</Text>
@@ -245,7 +255,7 @@
 			<Tooltip>Использовать SetupAPI вместо внешнего инструмента DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Настройка запуска программы">
 		<btnAccept>
 			<Text>Запустить нормальный режим</Text>
@@ -268,8 +278,8 @@
 		<lblWinPasswordWarn>
 			<Text>
 				Внимание! Важное замечание для пользователей систем Windows 8/8.1/10:
-				После перезагрузки в безопасный режим для входа в Windows требуется 
-				пароль к учётной записи! В этом режиме доступ по PIN-коду не работает! 
+				После перезагрузки в безопасный режим для входа в Windows требуется
+				пароль к учётной записи! В этом режиме доступ по PIN-коду не работает!
 				Немедленно закройте программу, если вы не знаете или забыли пароль!
 			</Text>
 		</lblWinPasswordWarn>
@@ -278,8 +288,11 @@
 			<Item2>Безопасный режим (рекомендуется)</Item2>
 			<Item3>Безопасный режим с поддержкой сети</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Расширенный журнал">
 		<btnClose>
 			<Text>Закрыть</Text>
@@ -355,7 +368,7 @@
 				Имейте в виду, что NVIDIA, AMD, Microsoft не имеют отношения к этой программе, мы не работаем на компании NVIDIA или AMD, и они не несут ответственность за любые повреждения или ошибки, вызванные в вашей системе.
 
 				-----
-				
+
 				Разработчик: Wagnard.
 
 				Совладелец: Shady7557.

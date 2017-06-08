@@ -26,24 +26,24 @@
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
-				Usuń wszystkie sterowniki bez ponownego skanowania 
+				Usuń wszystkie sterowniki bez ponownego skanowania
 				a następnie wyłącz komputer
 				(w przypadku instalowania nowej karty)
 			</Text>
 			<Tooltip>
-				Usuń wszystkie sterowniki bez ponownego skanowania 
+				Usuń wszystkie sterowniki bez ponownego skanowania
 				a następnie wyłącz komputer
 				(w przypadku instalowania nowej karty)
 			</Tooltip>
 		</btnCleanShutdown>
-		    <btnCleanGfeDownloads>
-      <Text>
-        Usuń tylko Geforce Experience bez usuwania sterowników
-      </Text>
-      <Tooltip>
-            Usuń tylko Geforce Experience bez usuwania sterowników
-      </Tooltip>
-    </btnCleanGfeDownloads>
+		<btnCleanGfeDownloads>
+			<Text>
+				Usuń tylko Geforce Experience bez usuwania sterowników
+			</Text>
+			<Tooltip>
+				Usuń tylko Geforce Experience bez usuwania sterowników
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Odblokuj sterowniki z Windows Update
@@ -64,7 +64,7 @@
 		<lblLanguage>
 			<Text>Wybrany język:</Text>
 		</lblLanguage>
-		
+
 		<lblUpdate>
 			<Text>Sprawdzanie aktualizacji...</Text>
 			<Text2>Posiadasz najnowszą wersję.</Text2>
@@ -79,7 +79,7 @@
 
 		<OptionsMenuItem>
 			<Text>Opcje</Text>
-			</OptionsMenuItem>
+		</OptionsMenuItem>
 		<InfoMenuItem>
 			<Text>Informacje</Text>
 		</InfoMenuItem>
@@ -113,7 +113,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Forum Geforce </Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Dostępna aktualizacja! Chcesz teraz pobrać nową wersję?</Text1>
 			<Text2>Ograniczone wsparcie dla starszych wersji. Zaktualizuj do nowej wersji zanim zgłosisz błędy.</Text2>
@@ -130,8 +130,8 @@
 			<Text13>Czynności do wykonania na niebieskim ekranie odzyskiwania: Rozwiązywanie problemów -&gt; Opcje zaawansowane -&gt; Ustawienia uruchamiania.</Text13>
 			<Text14>Oczekiwanie na ponowne uruchomienie, uruchom ponownie przed użyciem DDU</Text14>
 			<Text15>Nie dokonano żadnych zmian. Ustawienia instalacji sterowników z Windows Update są już ustawione domyślnie</Text15>
-			</Messages>
-		
+		</Messages>
+
 		<UpdateLog>
 			<Text1>Rozpoczynanie usuwania sterowników (etap OEM)...</Text1>
 			<Text2>Usuwanie folderu</Text2>
@@ -177,8 +177,8 @@
 			<Text42>Plik usunięty.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
-<frmOptions Text="Opcje">
+
+	<frmOptions Text="Opcje">
 		<btnClose>
 			<Text>Zamknij</Text>
 		</btnClose>
@@ -249,12 +249,12 @@
 			<Tooltip>Użyj SetupAPI zamiast zewnętrznego narzędzia DDUDR(DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Opcje uruchomienia">
 		<btnAccept>
 			<Text>Uruchom</Text>
 			<Text2>
-				Uruchom w 
+				Uruchom w
 				trybie awaryjnym
 			</Text2>
 		</btnAccept>
@@ -266,14 +266,14 @@
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				Nie uruchomiono trybu awaryjnego. 
+				Nie uruchomiono trybu awaryjnego.
 				Tryb awaryjny jest zalecany w celu uniknięcia błędów.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
 				Ważna informacja dla użytkowników systemu Windows 8/8.1/10:
-				Tryb awaryjny nie obsługuje logowania za pomocą PIN! 
+				Tryb awaryjny nie obsługuje logowania za pomocą PIN!
 				Wybierz tryb normalny jeśli nie znasz lub nie pamiętasz hasła!
 			</Text>
 		</lblWinPasswordWarn>
@@ -286,7 +286,7 @@
 			<Text1>DDU zamknie znane programy ingerujące w karte graficzną(MSI Afterburner oraz RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Rozszerzony raport">
 		<btnClose>
 			<Text>Zamknij</Text>

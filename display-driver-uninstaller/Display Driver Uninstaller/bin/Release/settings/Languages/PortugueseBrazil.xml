@@ -36,6 +36,15 @@
 				(Instalação de nova placa de video)
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remove "GeForce Experience" display driver installer cache/files.
+				(Note: Drivers won't be removed)
+			</Text>
+			<Tooltip>
+				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Definir instalação de driver no
@@ -57,7 +66,7 @@
 		<lblLanguage>
 			<Text>Idioma selecionado</Text>
 		</lblLanguage>
-		
+
 		<lblUpdate>
 			<Text>Verificando atualizações...</Text>
 			<Text2>Nenhuma atualização encontrada. O programa está atualizado.</Text2>
@@ -69,7 +78,7 @@
 			<Text>Ofertas dos nossos parceiros</Text>
 			<Tooltip>Você pode desabilitar isto no menu de opções.</Tooltip>
 		</lblOffer>
-		
+
 		<OptionsMenuItem>
 			<Text>Opções</Text>
 		</OptionsMenuItem>
@@ -106,7 +115,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Visite o forum da Geforce</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Atualizações disponiveis! Visitar DDU agora?</Text1>
 			<Text2>Espere por menor suporte em versões antigas do que nas atuais. Por favor cheque por atualização antes de reportar erros.</Text2>
@@ -122,8 +131,9 @@
 			<Text12>Você não está em modo seguro. É altamente recomendado reiniciar em modo seguro para evitar problemas, Reiniciar em modo seguro agora?"</Text12>
 			<Text13>Isso é o que você precisa selecionar na tela azul de recuperação : Solucionar -&gt; opções avançadas -&gt; configurações de inicialização.</Text13>
 			<Text14>Existe uma reinicialização pendende, reinicie ante de usar o DDU</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Executando Driver Store cleanUP(Deletando detalhes OEM )...</Text1>
 			<Text2>Limpando diretório</Text2>
@@ -169,7 +179,7 @@
 			<Text42>Arquivo deletado.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Options">
 		<btnClose>
 			<Text>Fechar</Text>
@@ -237,7 +247,7 @@
 			<Tooltip>Não recomendado se você possui diferentes GPUS com suporte a Vulkan API.</Tooltip>
 		</lblVulkan>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Iniciar</Text>
@@ -270,8 +280,11 @@
 			<Item2>Modo Seguro (Recomendado)</Item2>
 			<Item3>Modo Seguro com Internet</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Log extendido">
 		<btnClose>
 			<Text>Fechar</Text>

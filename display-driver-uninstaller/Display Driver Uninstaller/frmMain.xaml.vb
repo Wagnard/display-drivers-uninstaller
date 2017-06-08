@@ -6801,188 +6801,60 @@ Public Class frmMain
 	End Sub
 
 	Private Sub testing2MenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles testingMenuItem.Click
-
-		If ServiceInstaller.ServiceIsInstalled("Schedule") Then
-			MessageBox.Show(ServiceInstaller.GetServiceStatus("Schedule").ToString())
-
-			ServiceInstaller.StopService("Schedule")
-
-			ServiceInstaller.StartService("Schedule")
-		End If
-
-		Return
-
-		Dim config As New ThreadSettings(False)
-		' Example usage
-		Using tsc As New TaskSchedulerControl(config)
-			For Each task As Task In tsc.GetAllTasks()
-				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") Then
-
-					' in use, replace ALL text below with just
-					' task.Delete()
-
-					' Below is just for testing
-					Dim sb As New StringBuilder
-					sb.AppendLine("[ Name ]" & CRLF & task.Name & CRLF)
-					sb.AppendLine("[ Path ]" & CRLF & task.Path & CRLF)
-					sb.AppendLine("[ Enabled ]" & CRLF & If(task.Enabled, "Yes", "No") & CRLF)
-					sb.AppendLine("[ State ]" & CRLF & task.State.ToString() & CRLF)
-
-					If task.Author IsNot Nothing Then sb.AppendLine("[ Author ]" & CRLF & task.Author & CRLF)
-					If task.Description IsNot Nothing Then sb.AppendLine("[ Description ]" & CRLF & task.Description & CRLF)
-
-					If MessageBox.Show(sb.ToString(), "Found!", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) = MessageBoxResult.Cancel Then
-						Exit For
-					End If
-
-				End If
-			Next
-		End Using
-
-		MessageBox.Show("End of Tasks")
-
 		' TESTING / LOGGING (FILE)
-		'Dim sfd As New SaveFileDialog() With
-		'{
-		' .Title = "Select file for tasklist output",
-		' .Filter = "Txt files (*.txt)|*.txt",
-		' .FilterIndex = 1,
-		' .AddExtension = True,
-		' .DefaultExt = ".txt"
-		'}
 
-		'Dim delete As Boolean = (MessageBox.Show("Delete tasks?" & CRLF & "Yes = Ask delete for each task" & CRLF & "No = Just save to file", "Question", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) = MessageBoxResult.Yes)
+		Dim sfd As New SaveFileDialog() With
+		{
+		 .Title = "Select file for tasklist output",
+		 .Filter = "Txt files (*.txt)|*.txt",
+		 .FilterIndex = 1,
+		 .AddExtension = True,
+		 .DefaultExt = ".txt"
+		}
 
-		'If sfd.ShowDialog() = True Then
+		Dim delete As Boolean = (MessageBox.Show("Delete tasks?" & CRLF & "Yes = Ask delete for each task" & CRLF & "No = Just save to file", "Question", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) = MessageBoxResult.Yes)
 
-		'	Using sw As New StreamWriter(sfd.FileName, False, Encoding.UTF8)
+		If sfd.ShowDialog() = True Then
 
-		'		Using tsc As New TaskSchedulerControl
-		'			For Each task As Task In tsc.GetAllTasks()
+			Using sw As New StreamWriter(sfd.FileName, False, Encoding.UTF8)
 
-		'				sw.WriteLine("Name:  ".PadLeft(14, " "c) & task.Name)
-		'				sw.WriteLine("Path:  ".PadLeft(14, " "c) & task.Path)
-		'				sw.WriteLine("Enabled:  ".PadLeft(14, " "c) & If(task.Enabled, "Yes", "No"))
-		'				sw.WriteLine("State:  ".PadLeft(14, " "c) & task.State.ToString())
+				Using tsc As New TaskSchedulerControl(New ThreadSettings(False))
+					For Each task As Task In tsc.GetAllTasks()
 
-		'				If task.Author IsNot Nothing Then sw.WriteLine("Author:  ".PadLeft(14, " "c) & task.Author)
-		'				If task.Description IsNot Nothing Then sw.WriteLine("Description:  ".PadLeft(14, " "c) & task.Description)
+						sw.WriteLine("Name:  ".PadLeft(14, " "c) & task.Name)
+						sw.WriteLine("Path:  ".PadLeft(14, " "c) & task.Path)
+						sw.WriteLine("Enabled:  ".PadLeft(14, " "c) & If(task.Enabled, "Yes", "No"))
+						sw.WriteLine("State:  ".PadLeft(14, " "c) & task.State.ToString())
 
-		'				If delete Then
-		'					Select Case MessageBox.Show("Task:" & CRLF & task.Name & CRLF & task.Description & CRLF & CRLF & "Delete?", "Delete task?", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation)
-		'						Case MessageBoxResult.Yes
-		'							'	task.Delete()  ' USE WITH CAUTION! 
+						If task.Author IsNot Nothing Then sw.WriteLine("Author:  ".PadLeft(14, " "c) & task.Author)
+						If task.Description IsNot Nothing Then sw.WriteLine("Description:  ".PadLeft(14, " "c) & task.Description)
 
-		'							'	task.Enabled = Not task.Enabled	   ' enable / disable
+						If delete Then
+							Select Case MessageBox.Show("Task:" & CRLF & task.Name & CRLF & task.Description & CRLF & CRLF & "Delete?", "Delete task?", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation)
+								Case MessageBoxResult.Yes
+									'	task.Delete()  ' USE WITH CAUTION! 
 
-		'							'	If task.State = TaskStates.Running Then	'Start/Stop
-		'							'		task.Stop()
-		'							'	Else
-		'							'		task.Start()
-		'							'	End If
+									'	task.Enabled = Not task.Enabled	   ' enable / disable
 
-		'						Case MessageBoxResult.No
-		'							Continue For
-		'						Case MessageBoxResult.Cancel
-		'							Exit For
-		'					End Select
-		'				End If
+									'	If task.State = TaskStates.Running Then	'Start/Stop
+									'		task.Stop()
+									'	Else
+									'		task.Start()
+									'	End If
 
-		'				sw.WriteLine("")
+								Case MessageBoxResult.No
+									Continue For
+								Case MessageBoxResult.Cancel
+									Exit For
+							End Select
+						End If
 
-		'			Next
-		'		End Using
-		'	End Using
-		'End If
-	End Sub
+						sw.WriteLine("")
 
-	Private Sub testingMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs)	'Handles testingMenuItem.Click
-		Dim testfile As String = Application.Paths.AppBase & "TestAssembly.dll"
-
-		Try
-			' Some fancy function to create DLL file in code programmatically ^^
-
-			If Not File.Exists(testfile) Then
-				Dim sbSrc As New StringBuilder()
-				sbSrc.AppendLine("using System;")
-				sbSrc.AppendLine("using System.Collections.Generic;")
-				sbSrc.AppendLine("")
-				sbSrc.AppendLine("namespace TestAssembly")
-				sbSrc.AppendLine("{")
-				sbSrc.AppendLine("	public class MainClass")
-				sbSrc.AppendLine("	{")
-				sbSrc.AppendLine("		public MainClass()")
-				sbSrc.AppendLine("		{")
-				sbSrc.AppendLine("		}")
-				sbSrc.AppendLine("")
-				sbSrc.AppendLine("		public Double Pow(Double d, Double p)")
-				sbSrc.AppendLine("		{")
-				sbSrc.AppendLine("			return Math.Pow(d, p);")
-				sbSrc.AppendLine("		}")
-				sbSrc.AppendLine("	}")
-				sbSrc.AppendLine("}")
-
-				Dim icc As System.CodeDom.Compiler.CodeDomProvider = New Microsoft.CSharp.CSharpCodeProvider()
-				Dim parameters As New CodeDom.Compiler.CompilerParameters() With {.GenerateExecutable = False, .OutputAssembly = testfile, .GenerateInMemory = False}
-				Dim results As CodeDom.Compiler.CompilerResults = icc.CompileAssemblyFromSource(parameters, sbSrc.ToString())
-
-				If results.Errors.Count > 0 Then
-					Dim CompErr As CodeDom.Compiler.CompilerError
-					Dim sbError As New StringBuilder
-
-					For Each CompErr In results.Errors
-						sbError.AppendLine("Line number " & CompErr.Line & ", Error Number: " & CompErr.ErrorNumber & ", '" & CompErr.ErrorText & ";")
 					Next
-
-					MessageBox.Show(sbError.ToString(), "Compile Error!")
-					Return
-				Else
-					testfile = results.PathToAssembly
-				End If
-			End If
-
-			Try
-				'Loading DLL from file...
-				Dim assembly As Assembly = assembly.LoadFrom(testfile)
-				Dim t As Type = assembly.GetType("TestAssembly.MainClass")
-				Dim c As Object = Activator.CreateInstance(t, False)
-				Dim arguments() As Object = {50.0, 3.0}
-				Dim retVal As Double = CType(t.GetMethod("Pow", BindingFlags.Public Or BindingFlags.Instance, Nothing, New Type() {GetType(Double), GetType(Double)}, Nothing).Invoke(c, arguments), Double)
-
-				'returns 125000  (50 ^ 3) => DLL is loaded and working (in-use!)
-				MessageBox.Show("50 ^ 3 = " + retVal.ToString())
-			Catch ex As Exception
-				MessageBox.Show(ex.Message)
-			End Try
-
-
-			FileIO.Delete(testfile)		   ' Access Denied errors on log (warning + error)
-
-			' to crash it:
-			' use ACL.vb from previous commit and call this method ( Menu -> TESTING -> Generic test )
-			'
-			'
-			' fails because DLL is loaded and In-use = Access denied! (eg. nvshext.dll) and owner set doesn't help there (it still succesfully set thought!)
-			'
-			' on second run while file is still in-use => Access Denied
-			' Try set owner due access denied error => owner is already set => exit half way function (Owner was set before and no need to set it again)
-			' LocalFree(ptrOwnerStr) got called TWICE (!!!)   after reading and after exiting without setting Owner on finally block = cleaned twice
-			' => crash 0xC0000374
-			'
-			'tl;dr; Can't clean unmanaged object twice.
-
-		Catch ex As Exception
-			Application.Log.AddException(ex)
-		End Try
-
-		MessageBox.Show("Success?" +
-		 CRLF +
-		 "There should be 'Access Denied' exceptions on log (warning + error)" + CRLF +
-		 CRLF +
-		 "Delete file manually after closing DDU... since file is loaded and" + CRLF +
-		 "VB.Net doesn't offer option to Unload it. (not going to use WinAPI just for that..)" + CRLF +
-		 CRLF +
-		 "File location:" + CRLF + testfile)
+				End Using
+			End Using
+		End If
 	End Sub
 
 	Private Sub checkXMLMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles checkXMLMenuItem.Click
@@ -6994,7 +6866,7 @@ Public Class frmMain
 	End Sub
 
 	Private Sub SetupAPIMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles SetupAPIMenuItem.Click
-		Dim testWindow As New SetupAPITestWindow
+		Dim testWindow As New DebugWindow
 
 		testWindow.ShowDialog()
 	End Sub

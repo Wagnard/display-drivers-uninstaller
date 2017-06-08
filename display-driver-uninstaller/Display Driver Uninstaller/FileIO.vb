@@ -259,7 +259,8 @@ Public Class FileIO
 
 	' WORKING TEST FUNCTION TO CREATE LONG PATHS OVER 248+ CHARS
 	' NO NEED TO CREATE ALL CHILD DIRS "RECURSIVELY", IT CREATES WHOLE DIRECTORY STRUCTURE AT ONCE
-	Public Shared Sub CreateDir(ByVal dirPath As String)
+
+	Public Shared Sub TEST_CreateDir(ByVal dirPath As String)
 		Try
 			Dim dirs() As String = dirPath.Split("\"c)
 			Dim sb As New StringBuilder(dirPath.Length + 4)
@@ -294,8 +295,107 @@ Public Class FileIO
 		End Try
 	End Sub
 
-	' Removed Testing function... Use Delete()
-	' I assume you found ERROR_DIR_NOT_EMPTY exception... ^^
+	Public Shared Function TEST_GetPaths(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean, ByVal excludeReparsePt As Boolean) As List(Of PathEntry)
+		Dim dirNames As New List(Of PathEntry)(100)
+		Dim findData As New WIN32_FIND_DATA
+		Dim findHandle As New IntPtr
+		Dim uncDirectory As String
+
+		Try
+			If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
+
+			If directory.StartsWith(UNC_PREFIX) Then
+				uncDirectory = directory
+				directory = directory.Substring(UNC_PREFIX.Length)
+			Else
+				uncDirectory = UNC_PREFIX & directory
+			End If
+
+			Dim findDir As String
+			Dim dirs As Queue(Of String) = New Queue(Of String)(1000)
+			dirs.Enqueue(uncDirectory)
+
+			While dirs.Count > 0
+				findDir = dirs.Dequeue()
+
+				findHandle = FindFirstFile(findDir & wildCard, findData)
+
+				If findHandle <> INVALID_HANDLE Then
+					Do
+						If (findData.dwFileAttributes And FILE_ATTRIBUTES.REPARSE_POINT) = FILE_ATTRIBUTES.REPARSE_POINT Then
+							Continue Do
+						End If
+
+						If findData.cFileName <> "." AndAlso findData.cFileName <> ".." Then
+							dirNames.Add(New PathEntry(String.Concat(findDir.Substring(UNC_PREFIX.Length), findData.cFileName), findData.dwFileAttributes))
+
+							If searchSubDirs AndAlso (findData.dwFileAttributes And FILE_ATTRIBUTES.DIRECTORY) = FILE_ATTRIBUTES.DIRECTORY Then
+								If excludeReparsePt AndAlso (findData.dwFileAttributes And FILE_ATTRIBUTES.REPARSE_POINT) = FILE_ATTRIBUTES.REPARSE_POINT Then
+									Continue Do
+								End If
+
+								dirs.Enqueue(findDir & findData.cFileName & DIR_CHAR)
+							End If
+						End If
+					Loop While (FindNextFile(findHandle, findData))
+
+					FindClose(findHandle)
+				Else
+					Dim errCode As UInt32 = GetLastWin32ErrorU()
+
+					If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
+						MessageBox.Show("Directory doesn't exists!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK)
+						Return dirNames
+					End If
+
+					If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
+						If writeAccess Then
+							Dim logEntry As LogEntry = Application.Log.CreateEntry()
+							logEntry.Type = LogType.Warning
+							logEntry.Message = String.Format("Couldn't find directories, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, directory)
+							logEntry.Add("directory", directory)
+
+							Dim success As Boolean
+
+							Try
+								success = ACL.FixFileSecurity(uncDirectory, logEntry)
+							Finally
+								logEntry.Add("Fixed", If(success, "Yes", "No"))
+
+								If Not success Then
+									logEntry.Type = LogType.Error
+								End If
+
+								Application.Log.Add(logEntry)
+							End Try
+
+							Return TEST_GetPaths(directory, wildCard, searchSubDirs, writeAccess, True, excludeReparsePt)
+						Else
+							Application.Log.AddWarningMessage("Couldn't find directories, access denied!{0}{1}", CRLF, directory)
+						End If
+					Else
+						Throw New Win32Exception(GetInt32(errCode))
+					End If
+				End If
+			End While
+		Catch ex As Exception
+			Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, "Couldn't find directories!")
+			logEntry.Type = LogType.Error
+			logEntry.Add("directory", directory)
+			logEntry.Add("wildCard", wildCard)
+			logEntry.Add("searchSubDirs", searchSubDirs.ToString())
+			logEntry.Add("fixedAcl", fixedAcl.ToString())
+			logEntry.Add("excludeReparsePt", excludeReparsePt.ToString())
+
+			Application.Log.Add(logEntry)
+		Finally
+			If findHandle <> INVALID_HANDLE Then
+				FindClose(findHandle)
+			End If
+		End Try
+
+		Return dirNames
+	End Function
 
 #End Region
 
@@ -304,6 +404,14 @@ Public Class FileIO
 	Public Shared Sub Delete(ByVal fileName As String)
 		DeleteInternal(fileName, False)
 	End Sub
+
+	Public Shared Function GetAttributes(ByVal fileName As String) As UInt32
+		If Not fileName.StartsWith(UNC_PREFIX) Then
+			fileName = UNC_PREFIX & fileName
+		End If
+
+		Return GetFileAttributes(fileName)
+	End Function
 
 	Public Shared Function ExistsFile(ByVal fileName As String) As Boolean
 		Dim isDir As Boolean = True
@@ -671,15 +779,15 @@ Public Class FileIO
 
 				If Not findDir.EndsWith(DIR_CHAR) Then findDir &= DIR_CHAR
 
-				If IsJunctionPoint(findDir.Substring(UNC_PREFIX.Length)) Then
-					Continue While
-				End If
-
 				findHandle = FindFirstFile(findDir & wildCard, findData)
 
 				If findHandle <> INVALID_HANDLE Then
 					Do
-						If findData.cFileName <> "." AndAlso findData.cFileName <> ".." AndAlso (findData.dwFileAttributes And FileAttributes.Directory) <> FileAttributes.Directory Then
+						If (findData.dwFileAttributes And FILE_ATTRIBUTES.REPARSE_POINT) = FILE_ATTRIBUTES.REPARSE_POINT Then
+							Continue Do
+						End If
+
+						If findData.cFileName <> "." AndAlso findData.cFileName <> ".." AndAlso (findData.dwFileAttributes And FILE_ATTRIBUTES.DIRECTORY) <> FILE_ATTRIBUTES.DIRECTORY Then
 							If unicodePaths Then
 								fileNames.Add(String.Concat(findDir, findData.cFileName))
 							Else
@@ -771,15 +879,15 @@ Public Class FileIO
 			While dirs.Count > 0
 				findDir = dirs.Dequeue()
 
-				If IsJunctionPoint(findDir.Substring(UNC_PREFIX.Length)) Then
-					Continue While
-				End If
-
 				findHandle = FindFirstFile(findDir & wildCard, findData)
 
 				If findHandle <> INVALID_HANDLE Then
 					Do
-						If findData.cFileName <> "." AndAlso findData.cFileName <> ".." AndAlso (findData.dwFileAttributes And FileAttributes.Directory) = FileAttributes.Directory Then
+						If (findData.dwFileAttributes And FILE_ATTRIBUTES.REPARSE_POINT) = FILE_ATTRIBUTES.REPARSE_POINT Then
+							Continue Do
+						End If
+
+						If findData.cFileName <> "." AndAlso findData.cFileName <> ".." AndAlso (findData.dwFileAttributes And FILE_ATTRIBUTES.DIRECTORY) = FILE_ATTRIBUTES.DIRECTORY Then
 
 							If unicodePaths Then
 								dirNames.Add(String.Concat(findDir, findData.cFileName))
@@ -908,17 +1016,6 @@ Public Class FileIO
 	End Function
 
 #End Region
-
-	Private Shared Function IsJunctionPoint(ByVal ToCheck As String) As Boolean
-		Dim di As New DirectoryInfo(ToCheck)
-		'if the directory has the attributes which indicate that it's a junction point...
-		If ((di.Attributes And FileAttributes.ReparsePoint) = FileAttributes.ReparsePoint) Then
-
-			Return True
-		Else 'is not a junction point...
-			Return False
-		End If
-	End Function
 
 End Class
 

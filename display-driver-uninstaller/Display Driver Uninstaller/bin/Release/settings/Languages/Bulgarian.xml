@@ -36,6 +36,15 @@
 				(за инсталиране на нова видео карта)
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remove "GeForce Experience" display driver installer cache/files.
+				(Note: Drivers won't be removed)
+			</Text>
+			<Tooltip>
+				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Задай автоматичната инсталация на
@@ -57,14 +66,14 @@
 		<lblLanguage>
 			<Text>Избран език</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>Забележка: всякакви щети или грешки, причинени на Вашия компютър са на Ваша отговорност.</Text>
 		</Label9>
 		<Label10>
 			<Text>Препоръчително е да използвате DDU в безопасен режим (Safe Mode).</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Проверяване за актуализации...</Text>
 			<Text2>Не са открити актуализации. Програмата е актуална.</Text2>
@@ -113,7 +122,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Отвори темата за Geforce</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Налични са актуализации! Желаете ли да посетите страницата на DDU сега?</Text1>
 			<Text2>Очаквайте ограничена поддръжка на по-стари версии спрямо по-новите. Моля, тествайте с по-нова версия, преди да докладвате за проблем.</Text2>
@@ -129,8 +138,9 @@
 			<Text12>Не сте в безопасен режим (Safe Mode). Силно се препоръчва да рестартирате в безопасен режим, за да избегнете възможни проблеми. Искате ли да рестартирате в безопасен режим сега?</Text12>
 			<Text13>Ето какво трябва да изберете на синия екран за възстановяване: Отстраняване на неизправности -&gt; Разширени опции -&gt; Настройки за стартиране.</Text13>
 			<Text14>Има рестартиране, което е на изчакване. Моля, рестартирайте, преди да използвате DDU.</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Почистване на хранилището за драйвъри (изтриване на OEM)...</Text1>
 			<Text2>Почистване на директория...</Text2>
@@ -176,7 +186,7 @@
 			<Text42>Файлът е изтрит.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Options">
 		<btnClose>
 			<Text>Затвори</Text>
@@ -248,7 +258,7 @@
 			<Tooltip>Използване на SetupAPI вместо отделния инструмент DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Стартирай</Text>
@@ -281,8 +291,11 @@
 			<Item2>Безопасен режим (препоръчително)</Item2>
 			<Item3>Безопасен режим с мрежа</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Затвори</Text>
@@ -399,7 +412,7 @@
 			</Text>
 		</Tos>
 	</Misc>
-	
+
 	<LanguageTranslators>
 		<Translator>
 			<User>Night_Raven</User>

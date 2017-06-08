@@ -4,7 +4,7 @@
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
 		for quick guide
 	-->
-	
+
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
 			<Text>
@@ -36,20 +36,20 @@
 				(Para instalar una nueva tarjeta gráfica)
 			</Tooltip>
 		</btnCleanShutdown>
-    <btnCleanGfeDownloads>
-      <Text>
-        Eliminar los archivos de caché de los controladores "GeForce Experience".
-        (Nota: Los controladores no serán eliminados)
-      </Text>
-      <Tooltip>
-         Su función principal es la de recuperar espacio en disco ocupado por los restos que el instalador de controlador GFE no elimina.
-      </Tooltip>
-    </btnCleanGfeDownloads>
+		<btnCleanGfeDownloads>
+			<Text>
+				Eliminar los archivos de caché de los controladores "GeForce Experience".
+				(Nota: Los controladores no serán eliminados)
+			</Text>
+			<Tooltip>
+				Su función principal es la de recuperar espacio en disco ocupado por los restos que el instalador de controlador GFE no elimina.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-        Reestablecer la instalación de controlador automático de Windows
-        (Windows instala los controladores automáticamente)
-      </Text>
+				Reestablecer la instalación de controlador automático de Windows
+				(Windows instala los controladores automáticamente)
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>Sistema operativo detectado:</Text>
@@ -64,7 +64,7 @@
 			<Text>Controlador de pantalla seleccionado</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-		  <Text>Idioma seleccionado</Text>
+			<Text>Idioma seleccionado</Text>
 		</lblLanguage>
 
 		<lblUpdate>
@@ -72,13 +72,13 @@
 			<Text2>No se han encontrado actualizaciones. Su versión es la más reciente.</Text2>
 			<Text3>¡Actualización encontrada! Tenga presente que el soporte en versiones antiguas es más limitado que en la más reciente.</Text3>
 			<Text4>¡Error al descargar actualización!</Text4>
-		</lblUpdate>	
-		
+		</lblUpdate>
+
 		<lblOffer>
-		  <Text>Ofertas de nuestros socios</Text>
-		  <Tooltip>Se pueden desactivar desde el menú de opciones.</Tooltip>
+			<Text>Ofertas de nuestros socios</Text>
+			<Tooltip>Se pueden desactivar desde el menú de opciones.</Tooltip>
 		</lblOffer>
-		
+
 		<OptionsMenuItem>
 			<Text>Opciones</Text>
 		</OptionsMenuItem>
@@ -90,7 +90,7 @@
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
 			<Text>Enlaces</Text>
-		</LinksMenuItem>	
+		</LinksMenuItem>
 		<ToSMenuItem>
 			<Text>Condiciones de servicio (ToS)</Text>
 		</ToSMenuItem>
@@ -115,7 +115,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Visite el hilo de GeForce</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>¡Hay actualizaciones disponibles! ¿Desea visitar la web de DDU ahora?</Text1>
 			<Text2>Tenga en cuenta que el soporte en versiones más antiguas es más limitado que en la más reciente. Por favor, pruebe con una versión más nueva antes de reportar errores.</Text2>
@@ -133,7 +133,7 @@
 			<Text14>Su sistema tiene pendiente un reinicio. Hágalo antes de usar DDU por favor</Text14>
 			<Text15>No se ha efectuado ninguna modificación. La configuración de instalación de controladores de dispositivo de Windows ya se encontraba establecida en su valor por defecto.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Ejecutando limpieza de biblioteca de controladores(Borrar OEM)...</Text1>
 			<Text2>Limpiando directorio</Text2>
@@ -179,13 +179,13 @@
 			<Text42>Archivo borrado.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Opciones">
 		<btnClose>
-		  <Text>Cerrar</Text>
+			<Text>Cerrar</Text>
 		</btnClose>
 		<lblOffer>
-		  <Text>Mostrar ofertas de nuestros socios</Text>
+			<Text>Mostrar ofertas de nuestros socios</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>Opciones específicas de NVIDIA</Text>
@@ -247,7 +247,7 @@
 			<Tooltip>No se recomienda en caso de disponer de dos tarjetas distintas con compatibilidad con la API Vulkan.</Tooltip>
 		</lblVulkan>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Opciones de Arranque">
 		<btnAccept>
 			<Text>Arranque</Text>
@@ -284,7 +284,7 @@
 			<Text1>DDU ha cerrado programas conocidos por causar conflictos (como MSI Afterburner y RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Registro 'log' extendido">
 		<btnClose>
 			<Text>Cerrar</Text>
@@ -299,7 +299,7 @@
 		<copyMenuItem>
 			<Text>Copia habilitada</Text>
 		</copyMenuItem>
-		
+
 		<filtersMenuItem>
 			<Text>Filtros</Text>
 		</filtersMenuItem>
@@ -313,7 +313,7 @@
 			<Text>Mostrar errores</Text>
 		</errorsMenuItem>
 	</frmLog>
-  
+
 	<frmSystemRestore Text="Restauración del Sistema">
 		<lblSystemRestore>
 			<Text>Intentando crear un punto de restauración del sistema.</Text>
@@ -337,78 +337,78 @@
 			<Text>¡Agradecimientos especiales a los siguientes traductores así como a los que no están aquí mencionados!</Text>
 		</lblTranslators>
 	</frmAbout>
-	
+
 	<Misc>
 		<About>
 			<Text>
-Display Driver Uninstaller (DDU)/Limpiador para Controladores de Pantalla (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU)/Limpiador para Controladores de Pantalla (NVIDIA/AMD)
 
-Elimina el controlador de pantalla/GPU del Administrador de Dispositivos, y todo rastro
-de controlador(es) del "Almacén" de Windows, así como servicios de NVIDIA/AMD.
+				Elimina el controlador de pantalla/GPU del Administrador de Dispositivos, y todo rastro
+				de controlador(es) del "Almacén" de Windows, así como servicios de NVIDIA/AMD.
 
-El resultado es similar al que se obtendría tras una "Instalación Limpia" de Windows.
+				El resultado es similar al que se obtendría tras una "Instalación Limpia" de Windows.
 
-Esta herramienta actúa de un modo parecido a "Driver Sweeper"*, y contiene todos los
-extras mencionados anteriormente.
+				Esta herramienta actúa de un modo parecido a "Driver Sweeper"*, y contiene todos los
+				extras mencionados anteriormente.
 
-Si experimenta cualquier problema instalando un controlador más antiguo o nuevo, dele una
-oportunidad pues existen numerosos testimonios que afirman que puede corregir dichos problemas.
+				Si experimenta cualquier problema instalando un controlador más antiguo o nuevo, dele una
+				oportunidad pues existen numerosos testimonios que afirman que puede corregir dichos problemas.
 
-USO RECOMENDADO:
+				USO RECOMENDADO:
 
-- La herramienta DDU puede ser usada en Modo Normal pero para una estabilidad absoluta,
-el Modo Seguro es siempre la mejor opción.
+				- La herramienta DDU puede ser usada en Modo Normal pero para una estabilidad absoluta,
+				el Modo Seguro es siempre la mejor opción.
 
-- Nos complacería reunir opiniones de todo el mundo, cuéntenos si le ha sido útil o no.
+				- Nos complacería reunir opiniones de todo el mundo, cuéntenos si le ha sido útil o no.
 
-- Realice una Copia de Seguridad o cree un nuevo Punto de Restauración.
-(aunque normalmente debería ser bastante seguro.)
+				- Realice una Copia de Seguridad o cree un nuevo Punto de Restauración.
+				(aunque normalmente debería ser bastante seguro.)
 
--Si ha tenido problemas con un controlador de pantalla, y esta herramienta le ha
-ayudado a solventar lo que estaba o está fallando, por favor comparta su resultado.
+				-Si ha tenido problemas con un controlador de pantalla, y esta herramienta le ha
+				ayudado a solventar lo que estaba o está fallando, por favor comparta su resultado.
 
-Tenga siempre presente que ni NVIDIA, ni AMD, ni Microsoft pueden responsabilizarse
-por cualquier tipo de daños hacia usted o su ordenador y no están de ningún modo
-afiliados a DDU, o a sus creadores.
-------------------------------------------------------------------------------------------------------------------------------------------------
+				Tenga siempre presente que ni NVIDIA, ni AMD, ni Microsoft pueden responsabilizarse
+				por cualquier tipo de daños hacia usted o su ordenador y no están de ningún modo
+				afiliados a DDU, o a sus creadores.
+				------------------------------------------------------------------------------------------------------------------------------------------------
 
-Creado Por Wagnard.
+				Creado Por Wagnard.
 
-Programadores: Wagnard, Devmltk, Shady7557
+				Programadores: Wagnard, Devmltk, Shady7557
 
-Testador: Dellon132
+				Testador: Dellon132
 
-Logos: juanchacin
+				Logos: juanchacin
 
-Agradecimiento muy especial a Jackalito por la donación de una AMD 7850.
+				Agradecimiento muy especial a Jackalito por la donación de una AMD 7850.
 
-Gracias a Helge Klein (http://helgeklein.com/setacl/): por el permiso para usar su programa "SetAcl" con DDU
+				Gracias a Helge Klein (http://helgeklein.com/setacl/): por el permiso para usar su programa "SetAcl" con DDU
 
-Especial agradecimiento por su tiempo invertido en testar a: Gamer1291 (optimus), Octopuss (Amd Enduro) ,
-nedooo` (por su tiempo invertido en ayudarme con tareas de 'debugging')
-Extraordinary (por testar la corrección de un error grave)
+				Especial agradecimiento por su tiempo invertido en testar a: Gamer1291 (optimus), Octopuss (Amd Enduro) ,
+				nedooo` (por su tiempo invertido en ayudarme con tareas de 'debugging')
+				Extraordinary (por testar la corrección de un error grave)
 
 
-Gracias a todos aquellos que corrieron el riesgo con su sistema.
-(Especial Agradecimiento a Dellon132)
+				Gracias a todos aquellos que corrieron el riesgo con su sistema.
+				(Especial Agradecimiento a Dellon132)
 
-*DDU, sus creadores y colaboradores no están de ningún modo
-afiliados a Driver Sweeper, o a sus creadores.
-</Text>
+				*DDU, sus creadores y colaboradores no están de ningún modo
+				afiliados a Driver Sweeper, o a sus creadores.
+			</Text>
 		</About>
 
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") ACUERDO DE USUARIO
+				Display Driver Uninstaller ("DDU") ACUERDO DE USUARIO
 
-En el momento de utilizar DDU, usted pasa a convertirse en ("Usuario") del software DDU. El presente acuerdo entra en vigor
-tan pronto como usted usa el programa para desinstalar un controlador.
+				En el momento de utilizar DDU, usted pasa a convertirse en ("Usuario") del software DDU. El presente acuerdo entra en vigor
+				tan pronto como usted usa el programa para desinstalar un controlador.
 
-Al usar DDU usted accede a no acusar a DDU o a sus creadores, y colaboradores, de dañar o afectar negativamente su PC.
+				Al usar DDU usted accede a no acusar a DDU o a sus creadores, y colaboradores, de dañar o afectar negativamente su PC.
 
-Al usar DDU usted reconoce que ni NVIDIA ("NVIDIA, Geforce") ni Advanced Micro Devices ("AMD, Radeon") tienen
-nada que ver con este programa, y que de ningún modo están afiliados a DDU o a sus creadores.
-</Text>
+				Al usar DDU usted reconoce que ni NVIDIA ("NVIDIA, Geforce") ni Advanced Micro Devices ("AMD, Radeon") tienen
+				nada que ver con este programa, y que de ningún modo están afiliados a DDU o a sus creadores.
+			</Text>
 		</Tos>
 	</Misc>
 

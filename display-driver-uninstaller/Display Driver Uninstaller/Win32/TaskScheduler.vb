@@ -19,7 +19,7 @@ Namespace Win32
 	' Task Scheduler 2.0 Interfaces (Vista ->)
 	' https://msdn.microsoft.com/en-us/library/windows/desktop/aa383600(v=vs.85).aspx
 
-	Public Enum TaskStates
+	Public Enum TaskStates As Integer
 		Unknown = 0
 		Disabled = 1
 		Queued = 2
@@ -40,76 +40,110 @@ Namespace Win32
 		Private _taskSchedulerV2 As Version2.TaskScheduler = Nothing
 
 		Public Sub New(ByVal config As ThreadSettings)
-
 			_useV2 = (config.WinVersion >= OSVersion.WinVista)
 
-			If _useV2 Then
-				_taskSchedulerV2 = New Version2.TaskScheduler()
-				_taskSchedulerV2.Connect()
-			Else
-				_taskSchedulerV1 = CType(New Version1.CTaskScheduler(), Version1.ITaskScheduler)
-				_taskSchedulerV1.SetTargetComputer(Nothing)
-			End If
+			Try
+				If _useV2 Then
+					_taskSchedulerV2 = New Version2.TaskScheduler()
+					_taskSchedulerV2.Connect()
+				Else
+					_taskSchedulerV1 = CType(New Version1.CTaskScheduler(), Version1.ITaskScheduler)
+					_taskSchedulerV1.SetTargetComputer(Nothing)
+				End If
+			Catch ex As Exception
+				Dim logEntry As LogEntry = Application.Log.CreateEntry(ex)
+				logEntry.Type = LogType.Error
+				logEntry.Add("_useV2", _useV2.ToString())
+				logEntry.Add("config.WinVersion", config.WinVersion.ToString())
 
+				Application.Log.Add(logEntry)
+			End Try
 		End Sub
 
 		Friend Function GetAllTasks() As List(Of Task)
 			Dim tasks As New List(Of Task)(100)
 
-			If _useV2 Then
-				Dim folders As New List(Of Version2.ITaskFolder)(10)
+			Try
+				If _useV2 Then
+					Dim folders As New List(Of Version2.ITaskFolder)(10)
 
-				GetFolders(_taskSchedulerV2.GetFolder(_rootFolder), folders)
+					GetFolders(_taskSchedulerV2.GetFolder(_rootFolder), folders)
 
-				For Each folder As Version2.ITaskFolder In folders
-					For Each task As Version2.IRegisteredTask In folder.GetTasks(0)
-						tasks.Add(New TaskV2(folder, task))
-					Next
-				Next
+					Dim logEntry As LogEntry = Application.Log.CreateEntry()
+					logEntry.Add("_useV2", _useV2.ToString())
+					logEntry.Add("Failed paths:")
 
-				Return tasks
-			Else
-				Dim task As Version1.ITask
-				Dim ptrJob As IntPtr = IntPtr.Zero
-				Dim i As UInt32 = 0UI
-				Dim errCode As UInt32
-
-				Dim workItems As Version1.IEnumWorkItems = _taskSchedulerV1.Enum()
-
-				If workItems IsNot Nothing Then
-					While True
+					For Each folder As Version2.ITaskFolder In folders
 						Try
-							errCode = workItems.Next(1UI, ptrJob, i)
-
-							If errCode = 1UI OrElse i <> 1UI Then
-								Exit While
+							For Each task As Version2.IRegisteredTask In folder.GetTasks(TASK_ENUM_FLAGS.HIDDEN)
+								tasks.Add(New TaskV2(folder, task))
+							Next
+						Catch ex As Exception
+							If Not logEntry.HasException Then
+								logEntry.AddException(ex, False)
 							End If
 
-							Dim jobName As String = Nothing
-
-							Using coMemStr As Version1.CoTaskMemStr = New Version1.CoTaskMemStr(Marshal.ReadIntPtr(ptrJob))
-								jobName = coMemStr.ToString()
-							End Using
-
-							If jobName.EndsWith(".job", StringComparison.InvariantCultureIgnoreCase) Then
-								jobName = jobName.Substring(0, jobName.Length - 4)
-							End If
-
-
-							task = TaskV1.ReActivate(_taskSchedulerV1, jobName)
-
-							If task IsNot Nothing Then
-								tasks.Add(New TaskV1(_taskSchedulerV1, task))
-							End If
-						Finally
-							If ptrJob <> IntPtr.Zero Then
-								Marshal.FreeCoTaskMem(ptrJob)
-								ptrJob = IntPtr.Zero
-							End If
+							logEntry.Add("> " & folder.Path)
 						End Try
-					End While
+					Next
+
+					If logEntry.Values.Count > 0 Then
+						logEntry.Message = "Failed to get tasks from some paths!"
+						logEntry.Type = LogType.Error
+
+						Application.Log.Add(logEntry)
+					End If
+
+					Return tasks
+				Else
+					Dim task As Version1.ITask
+					Dim ptrJob As IntPtr = IntPtr.Zero
+					Dim i As UInt32 = 0UI
+					Dim errCode As UInt32
+
+					Dim workItems As Version1.IEnumWorkItems = _taskSchedulerV1.Enum()
+
+					If workItems IsNot Nothing Then
+						While True
+							Try
+								errCode = workItems.Next(1UI, ptrJob, i)
+
+								If errCode = 1UI OrElse i <> 1UI Then
+									Exit While
+								End If
+
+								Dim jobName As String = Nothing
+
+								Using coMemStr As Version1.CoTaskMemStr = New Version1.CoTaskMemStr(Marshal.ReadIntPtr(ptrJob))
+									jobName = coMemStr.ToString()
+								End Using
+
+								If jobName.EndsWith(".job", StringComparison.InvariantCultureIgnoreCase) Then
+									jobName = jobName.Substring(0, jobName.Length - 4)
+								End If
+
+
+								task = TaskV1.ReActivate(_taskSchedulerV1, jobName)
+
+								If task IsNot Nothing Then
+									tasks.Add(New TaskV1(_taskSchedulerV1, task))
+								End If
+							Finally
+								If ptrJob <> IntPtr.Zero Then
+									Marshal.FreeCoTaskMem(ptrJob)
+									ptrJob = IntPtr.Zero
+								End If
+							End Try
+						End While
+					End If
 				End If
-			End If
+			Catch ex As Exception
+				Dim logEntry As LogEntry = Application.Log.CreateEntry(ex)
+				logEntry.Type = LogType.Error
+				logEntry.Add("_useV2", _useV2.ToString())
+
+				Application.Log.Add(logEntry)
+			End Try
 
 			Return tasks
 		End Function
@@ -597,6 +631,11 @@ Namespace Win32.TaskScheduler
 		LastWeek = &H10S
 		AllWeeks = &H1FS
 	End Enum
+
+	Friend Enum TASK_ENUM_FLAGS As Integer
+		HIDDEN = &H1
+	End Enum
+
 
 End Namespace
 

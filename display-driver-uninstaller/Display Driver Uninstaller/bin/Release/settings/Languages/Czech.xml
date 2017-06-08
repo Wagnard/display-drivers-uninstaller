@@ -36,20 +36,20 @@
 				(Před instalací nové grafické karty)
 			</Tooltip>
 		</btnCleanShutdown>
-        <btnCleanGfeDownloads>
-      <Text>
-        Odstranit instalační soubory/cache grafického ovladače "GeForce Experience".
-        (Poznámka: Ovladače nebudou odebrány)
-      </Text>
-      <Tooltip>
-         Toto je většinou používáno pro obnovení místa na HDD/SSD nevyčištěného instalátorem GFE/Ovladače.
-      </Tooltip>
-    </btnCleanGfeDownloads>
+		<btnCleanGfeDownloads>
+			<Text>
+				Odstranit instalační soubory/cache grafického ovladače "GeForce Experience".
+				(Poznámka: Ovladače nebudou odebrány)
+			</Text>
+			<Tooltip>
+				Toto je většinou používáno pro obnovení místa na HDD/SSD nevyčištěného instalátorem GFE/Ovladače.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
-            <Text>
-                Obnovit výchozí nastavení
-                automatické instalace ovladačů
-            </Text>
+			<Text>
+				Obnovit výchozí nastavení
+				automatické instalace ovladačů
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>Detekován operační systém:</Text>
@@ -66,7 +66,7 @@
 		<lblLanguage>
 			<Text>Vybraný jazyk</Text>
 		</lblLanguage>
-		
+
 		<lblUpdate>
 			<Text>Vyhledávání aktualizací ...</Text>
 			<Text2>Aktualizace nenalezeny, program je aktuální.</Text2>
@@ -131,55 +131,55 @@
 			<Text12>Nejste v nouzovém režimu. Je vysoce doporučeno restartovat do nouzového režimu, aby se zabránilo případným problémům... Restartovat do Nouzového režimu nyní?</Text12>
 			<Text13>Musíte vybrat následující věci na modré obrazovce obnovení: Odstranit potíže -&gt; Upřesnit možnosti -&gt; Nastavení spouštění.</Text13>
 			<Text14>Čeká se na restart systému, prosíme, restartujte systém před použitím DDU</Text14>
-      <Text15>Žádná změna nebyla provedena. Nastavení pro instalaci zařízení systému Windows již byly nastaveny na výchozí hodnoty.</Text15>
+			<Text15>Žádná změna nebyla provedena. Nastavení pro instalaci zařízení systému Windows již byly nastaveny na výchozí hodnoty.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
-			      <Text1>Executing Driver Store cleanup (Delete OEM step)...</Text1>
-            <Text2>Cleaning directory</Text2>
-            <Text3>Cleaning known Regkeys... May take a minute or two.</Text3>
-            <Text4>Cleaning UpdatusUser users account if present.</Text4>
-            <Text5>Cleaning directory</Text5>
-            <Text6>Starting Registry cleanup</Text6>
-            <Text7>Finished cleaning Registry</Text7>
-            <Text8>Starting the removal of NVIDIA Optimus UpperFilter if present.</Text8>
-            <Text9>Scanning for new device...</Text9>
-            <Text10>Clean uninstall completed!</Text10>
-            <Text11>DDU Version</Text11>
-            <Text12>GPU #</Text12>
-            <Text13>Detected</Text13>
-            <Text14>GPU DeviceId</Text14>
-            <Text15>Detected Driver(s) Version(s)</Text15>
-            <Text16>INF</Text16>
-            <Text17>INF Section</Text17>
-            <Text18>GPU not correctly installed</Text18>
-            <Text19>Deleting some special folders, it may take some time...</Text19>
-            <Text20>Cleanup started...</Text20>
-            <Text21>Uninstalling</Text21>
-            <Text22>driver</Text22>
-            <Text23>Executing SetupAPI remove, please wait (can take a few minutes)</Text23>
-            <Text24>GPU(s) removed from Device Manager.</Text24>
-            <Text25>Executing SetupAPI Remove Audio controller.</Text25>
-            <Text26>HD audio adapters Removed!</Text26>
-            <Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
-            <Text28>Monitors and Hidden monitors removed!</Text28>
-            <Text29>SetupAPI remove complete</Text29>
-            <Text30>Starting S-1-5-xx region cleanup</Text30>
-            <Text31>End of S-1-5-xx region cleanup</Text31>
-            <Text32>Begin Classesroot ,installer\products cleanup</Text32>
-            <Text33>End Classesroot ,installer\products cleanup</Text33>
-            <Text34>Start localmachine ,installer\products cleanup</Text34>
-            <Text35>End localmachine ,installer\products cleanup</Text35>
-            <Text36>Start currentuser ,installer\products cleanup</Text36>
-            <Text37>End currentuser ,installer\products cleanup</Text37>
-            <Text38>Cleaning process/services...</Text38>
-            <Text39>Process/Services cleanup complete</Text39>
-            <Text40>Deleted.</Text40>
-            <Text41>Value removed.</Text41>
-            <Text42>File deleted.</Text42>
+			<Text1>Executing Driver Store cleanup (Delete OEM step)...</Text1>
+			<Text2>Cleaning directory</Text2>
+			<Text3>Cleaning known Regkeys... May take a minute or two.</Text3>
+			<Text4>Cleaning UpdatusUser users account if present.</Text4>
+			<Text5>Cleaning directory</Text5>
+			<Text6>Starting Registry cleanup</Text6>
+			<Text7>Finished cleaning Registry</Text7>
+			<Text8>Starting the removal of NVIDIA Optimus UpperFilter if present.</Text8>
+			<Text9>Scanning for new device...</Text9>
+			<Text10>Clean uninstall completed!</Text10>
+			<Text11>DDU Version</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Detected</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Detected Driver(s) Version(s)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Section</Text17>
+			<Text18>GPU not correctly installed</Text18>
+			<Text19>Deleting some special folders, it may take some time...</Text19>
+			<Text20>Cleanup started...</Text20>
+			<Text21>Uninstalling</Text21>
+			<Text22>driver</Text22>
+			<Text23>Executing SetupAPI remove, please wait (can take a few minutes)</Text23>
+			<Text24>GPU(s) removed from Device Manager.</Text24>
+			<Text25>Executing SetupAPI Remove Audio controller.</Text25>
+			<Text26>HD audio adapters Removed!</Text26>
+			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
+			<Text28>Monitors and Hidden monitors removed!</Text28>
+			<Text29>SetupAPI remove complete</Text29>
+			<Text30>Starting S-1-5-xx region cleanup</Text30>
+			<Text31>End of S-1-5-xx region cleanup</Text31>
+			<Text32>Begin Classesroot ,installer\products cleanup</Text32>
+			<Text33>End Classesroot ,installer\products cleanup</Text33>
+			<Text34>Start localmachine ,installer\products cleanup</Text34>
+			<Text35>End localmachine ,installer\products cleanup</Text35>
+			<Text36>Start currentuser ,installer\products cleanup</Text36>
+			<Text37>End currentuser ,installer\products cleanup</Text37>
+			<Text38>Cleaning process/services...</Text38>
+			<Text39>Process/Services cleanup complete</Text39>
+			<Text40>Deleted.</Text40>
+			<Text41>Value removed.</Text41>
+			<Text42>File deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Možnosti">
 		<btnClose>
 			<Text>Zavřít</Text>
@@ -247,7 +247,7 @@
 			<Tooltip>Není doporučeno v případě, že vlastníte 2 odlišné GPu podporující Vulkan API.</Tooltip>
 		</lblVulkan>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Možnosti spuštění">
 		<btnAccept>
 			<Text>Spustit</Text>
@@ -280,8 +280,11 @@
 			<Item2>Nouzový režim (Doporučeno)</Item2>
 			<Item3>Nouzový režim se sítí</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Rozšířený protokol">
 		<btnClose>
 			<Text>Zavřít</Text>
@@ -338,67 +341,67 @@
 	<Misc>
 		<About>
 			<Text>
-Display Driver Uninstaller (DDU) / Nástroj pro čištění ovladačů zobrazení. (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Nástroj pro čištění ovladačů zobrazení. (NVIDIA/AMD)
 
-Nástroj odstraňuje ovladače zobrazení ze správce zařízení a zároveň odstraní stávající a předchozí verze
-ovladače z katalogu ovladačů systému Windows a to i včetně přidružených služeb.
+				Nástroj odstraňuje ovladače zobrazení ze správce zařízení a zároveň odstraní stávající a předchozí verze
+				ovladače z katalogu ovladačů systému Windows a to i včetně přidružených služeb.
 
-Použitím programu docílíte podobného stavu jako po čisté instalaci OS Windows.
+				Použitím programu docílíte podobného stavu jako po čisté instalaci OS Windows.
 
-Nástroj pracuje podobně jako Driver Sweeper + přidává další funkce uvedené výše.
+				Nástroj pracuje podobně jako Driver Sweeper + přidává další funkce uvedené výše.
 
-Pokud máte problémy s instalací novějšího nebo staršího ovladače, neváhejte a zkuste použít tento program.
-Ohlasy dokazují, že tyto problémy opravdu řeší.
+				Pokud máte problémy s instalací novějšího nebo staršího ovladače, neváhejte a zkuste použít tento program.
+				Ohlasy dokazují, že tyto problémy opravdu řeší.
 
-DOPORUČENÉ POUŽITÍ :
+				DOPORUČENÉ POUŽITÍ :
 
-- Vytvořte zálohu nebo bod obnovení systému. (Ale obvykle by to mělo být bezpečné.)
+				- Vytvořte zálohu nebo bod obnovení systému. (Ale obvykle by to mělo být bezpečné.)
 
-- Tento nástroj může být používán v normálním režimu OS, ale pro dosažení maximální stability
-je nejlepší DDU používat v nouzovém režimu.
+				- Tento nástroj může být používán v normálním režimu OS, ale pro dosažení maximální stability
+				je nejlepší DDU používat v nouzovém režimu.
 
-- Rádi bychom od Vás dostali zpětnou vazbu. Řekněte nám, jestli Vám nástroj pomohl či nikoliv. Pro jistotu
-vytvořte zálohu OS  nebo aspoň bod obnovy (i když by to nemělo být potřeba).
+				- Rádi bychom od Vás dostali zpětnou vazbu. Řekněte nám, jestli Vám nástroj pomohl či nikoliv. Pro jistotu
+				vytvořte zálohu OS  nebo aspoň bod obnovy (i když by to nemělo být potřeba).
 
-- Pokud se potýkáte, nebo jste se někdy potýkali, s problémy s ovladači a tento nástroj Vám pomohl, neváhejte
-se s námi podělit o výsledky.
+				- Pokud se potýkáte, nebo jste se někdy potýkali, s problémy s ovladači a tento nástroj Vám pomohl, neváhejte
+				se s námi podělit o výsledky.
 
-Mějte na paměti, že NVIDIA/AMD nemají s tímto nástrojem co do činění. Nepracujeme pro NVIDIA/AMD a tyto
-společnosti nenesou zodpovědnost za jakékoliv způsobené škody.
--------------------------------
+				Mějte na paměti, že NVIDIA/AMD nemají s tímto nástrojem co do činění. Nepracujeme pro NVIDIA/AMD a tyto
+				společnosti nenesou zodpovědnost za jakékoliv způsobené škody.
+				-------------------------------
 
-Vytvořil Wagnard.
+				Vytvořil Wagnard.
 
-Programátoři: Wagnard, Devmltk, Shady7557
+				Programátoři: Wagnard, Devmltk, Shady7557
 
-Tester : Dellon132
+				Tester : Dellon132
 
-Loga : juanchacin
+				Loga : juanchacin
 
-Velké poděkování patří Jackalito za věnování AMD 7850.
-        
-Děkuji Helge Klein (http://helgeklein.com/setacl/) za povolení používat jeho program s DDU "SetAcl"
-        
-Velké poděkování patří následujícím lidem za jejich čas pro testování: Gamer1291 (optimus), Octopuss (Amd Enduro) ,
-nedooo` (ladění), Extraordinary (Testování opravy) 
-        
-Díky všem, kteří dávali svůj systém všanc (speciální poděkování patří uživateli Dellon132)
-        
-*DDU, jeho tvůrci a partneři nejsou žádným způsobem přidruženi s programem s Driver Sweeper, nebo jeho autory.
-</Text>
-        </About>
- 
-        <Tos>
-            <Text>
-Smlouva s koncovým uživatelem Display Driver Uninstaller ("DDU")
- 
-Stanete se uživatelem DDU ("User") použitím software DDU. Tato dohoda vstoupí v platnost, jakmile pomocí programu odinstalujete ovladač.
- 
-Používáním DDU souhlasíte, že nebudete obviňovat DDU nebo jeho tvůrce a přidružené společnosti z poškození nebo negativního ovlivnění vašeho PC.
- 
-Používáním DDU berete na vědomí, že NVIDIA ("NVIDIA, GeForce") ani Advanced Micro Devices ("AMD, Radeon") nemají
-nic společného s tímto programem a v žádném případě nejsou partneři DDU či jeho tvůrců. 
-</Text>
+				Velké poděkování patří Jackalito za věnování AMD 7850.
+
+				Děkuji Helge Klein (http://helgeklein.com/setacl/) za povolení používat jeho program s DDU "SetAcl"
+
+				Velké poděkování patří následujícím lidem za jejich čas pro testování: Gamer1291 (optimus), Octopuss (Amd Enduro) ,
+				nedooo` (ladění), Extraordinary (Testování opravy)
+
+				Díky všem, kteří dávali svůj systém všanc (speciální poděkování patří uživateli Dellon132)
+
+				*DDU, jeho tvůrci a partneři nejsou žádným způsobem přidruženi s programem s Driver Sweeper, nebo jeho autory.
+			</Text>
+		</About>
+
+		<Tos>
+			<Text>
+				Smlouva s koncovým uživatelem Display Driver Uninstaller ("DDU")
+
+				Stanete se uživatelem DDU ("User") použitím software DDU. Tato dohoda vstoupí v platnost, jakmile pomocí programu odinstalujete ovladač.
+
+				Používáním DDU souhlasíte, že nebudete obviňovat DDU nebo jeho tvůrce a přidružené společnosti z poškození nebo negativního ovlivnění vašeho PC.
+
+				Používáním DDU berete na vědomí, že NVIDIA ("NVIDIA, GeForce") ani Advanced Micro Devices ("AMD, Radeon") nemají
+				nic společného s tímto programem a v žádném případě nejsou partneři DDU či jeho tvůrců.
+			</Text>
 		</Tos>
 	</Misc>
 

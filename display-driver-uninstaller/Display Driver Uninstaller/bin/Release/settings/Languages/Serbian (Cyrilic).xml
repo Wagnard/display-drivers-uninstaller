@@ -36,15 +36,15 @@
 				(За уградњу/инсталацију нове графичке картице)
 			</Tooltip>
 		</btnCleanShutdown>
-	<btnCleanGfeDownloads>
-      <Text>
-        Уклони "GeForce Experience" display driver инсталационе фајлове/кеш.
-        (Напомена: драјвери неће бити уклоњени!)
-      </Text>
-      <Tooltip>
-         Ово се најчешће користи за брисање непотребних фајлова на HDD-у/SSD-у који нису обрисани од стране GFE/Driver Installer-а.
-      </Tooltip>
-    </btnCleanGfeDownloads>
+		<btnCleanGfeDownloads>
+			<Text>
+				Уклони "GeForce Experience" display driver инсталационе фајлове/кеш.
+				(Напомена: драјвери неће бити уклоњени!)
+			</Text>
+			<Tooltip>
+				Ово се најчешће користи за брисање непотребних фајлова на HDD-у/SSD-у који нису обрисани од стране GFE/Driver Installer-а.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>Windows аутоматску инсталацију драјвера врати на Default (укључи)</Text>
 		</btnWuRestore>
@@ -63,14 +63,14 @@
 		<lblLanguage>
 			<Text>Изабрани језик:</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>Напомена: Било каква штета или грешке проузроковане Вашем компјутеру искључиво су Ваша Одговорност!</Text>
 		</Label9>
 		<Label10>
 			<Text>Коришћење DDU у Safe Mode-у је препоручљиво!</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Провера да ли постоји новија верзија програма...</Text>
 			<Text2>Не постоји новија верзија програма. Користите тренутно најновију верзију.</Text2>
@@ -119,7 +119,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Посети Geforce одељак</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Нова верзија је расположива! Желите ли сада да посетите DDU сајт?</Text1>
 			<Text2>Очекујте ограничену подршку за старије верзије уодносу на тренутно најновије. Молимо покушајте са најновијом верзијом пре пријављивања грешака.</Text2>
@@ -135,8 +135,9 @@
 			<Text12>Нисте у Windows Safe Мode-u. Препоручљиво је да рестартујете Windows у Safe Mode-у да би избегли могуће проблеме. Желите ли да стартујете Windows у Safe Mode-у?</Text12>
 			<Text13>Ово треба да изаберете на плавом Recovery екрану: Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Неопходан је рестарт система, молимо да прво рестартујете оперативни систем па тек онда наставите са коришћењем DDU програма.</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Извршавање Driver Store cleanUP-а (брисање OEM step-а)...</Text1>
 			<Text2>Чишћење Directory-а</Text2>
@@ -182,7 +183,7 @@
 			<Text42>Фајл обрисан.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Опције">
 		<btnClose>
 			<Text>Затвори</Text>
@@ -254,7 +255,7 @@
 			<Tooltip>Користи SetupAPI уместо екстерног алата DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Покрени</Text>
@@ -287,8 +288,11 @@
 			<Item2>Safe Mode (Препоручљиво)</Item2>
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Затвори</Text>
@@ -422,7 +426,7 @@
 			<Details>igor.precep@hotmail.com</Details>
 			<LastUpdate>18/03/2017</LastUpdate>
 		</Translator>
-		
+
 		<Translator2>
 			<User>Bricco</User>
 			<Details>boris.precep@hotmail.com</Details>

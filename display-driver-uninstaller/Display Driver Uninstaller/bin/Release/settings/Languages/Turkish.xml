@@ -4,7 +4,7 @@
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
 		for quick guide
 	-->
-	
+
 	<frmMain Text="Görüntü Sürücü Kaldırma Aracı (DDU)">
 		<btnCleanRestart>
 			<Text>
@@ -36,19 +36,19 @@
 				(Yeni grafik kartı yüklemek için)
 			</Tooltip>
 		</btnCleanShutdown>
-    <btnCleanGfeDownloads>
-      <Text>
-         Yüklü olan GeForce Experience önbellek ve kalıntıları kaldır.
-         (Not: Sürücüyü kaldırmaz)
-      </Text>
-      <Tooltip>
-         Bu, HDD/SSD'den GFE/Sürücü yükleyicisinin kaldıramadığı dosyaları kaldırır.
-      </Tooltip>
-    </btnCleanGfeDownloads>
+		<btnCleanGfeDownloads>
+			<Text>
+				Yüklü olan GeForce Experience önbellek ve kalıntıları kaldır.
+				(Not: Sürücüyü kaldırmaz)
+			</Text>
+			<Tooltip>
+				Bu, HDD/SSD'den GFE/Sürücü yükleyicisinin kaldıramadığı dosyaları kaldırır.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-        Windows Otomatik Sürücü yüklemeyi varsayılan olarak ayarla
-      </Text>
+				Windows Otomatik Sürücü yüklemeyi varsayılan olarak ayarla
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>Yüklü olan Windows sürümü:</Text>
@@ -63,7 +63,7 @@
 			<Text>Seçilen Grafik Sürücü</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-		  <Text>Seçilen Dil</Text>
+			<Text>Seçilen Dil</Text>
 		</lblLanguage>
 
 		<lblUpdate>
@@ -71,13 +71,13 @@
 			<Text2>Hiçbir guncelleme bulunamadı. Program günceldir.</Text2>
 			<Text3>Güncellemeler bulundu! En son sürümden daha eski sürümlerde sınırlı destek veriyoruz.</Text3>
 			<Text4>Güncelleştirmeler yapılamıyor veya zaten güncel!</Text4>
-		</lblUpdate>	
-		
+		</lblUpdate>
+
 		<lblOffer>
-		  <Text>Ortaklarımızın Teklifleri</Text>
-		  <Tooltip>Seçenekler menüsünden devre dışı bırakabilirsiniz.</Tooltip>
+			<Text>Ortaklarımızın Teklifleri</Text>
+			<Tooltip>Seçenekler menüsünden devre dışı bırakabilirsiniz.</Tooltip>
 		</lblOffer>
-		
+
 		<OptionsMenuItem>
 			<Text>Seçenekler</Text>
 		</OptionsMenuItem>
@@ -89,7 +89,7 @@
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
 			<Text>Bağlantılar</Text>
-		</LinksMenuItem>	
+		</LinksMenuItem>
 		<ToSMenuItem>
 			<Text>Kullanım Koşulları (ToS)</Text>
 		</ToSMenuItem>
@@ -114,7 +114,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Geforce Konusunu Ziyaret Edin.</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Güncellemeler mevcut! Şimdi DDU web sitesini ziyaret etmek ister misin?</Text1>
 			<Text2>En son sürümden daha eski sürümlerde sınırlı destek veriyoruz. Hata bildirmeden önce yeni bir sürüme geçin.</Text2>
@@ -130,9 +130,9 @@
 			<Text12>Güvenli modda değil. Güvenli modda olası sorunları önlemek için yeniden başlatmanız önerilir. Şimdi güvenli moda geçilsin mi?</Text12>
 			<Text13>Mavi kurtarma ekranında seçmeniz gereken budur: Troubleshoot(Sorun Giderme) -&gt; advanced options(Gelişmiş Seçenekler) -&gt; startup Settings(Başlangıç Ayarları).</Text13>
 			<Text14>Bekleyen yeniden başlatma var, DDU'yu kullanmadan önce sistemi yeniden başaltınız.</Text14>
-            <Text15>Hiçbir değişiklik yapılmadı. Windows aygıt yükleme ayarları zaten varsayılan olarak ayarlanmış.</Text15>
+			<Text15>Hiçbir değişiklik yapılmadı. Windows aygıt yükleme ayarları zaten varsayılan olarak ayarlanmış.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Yürütülen, Sürücü deposu temizleniyor (Adım OEM Sil)...</Text1>
 			<Text2>Dizin temizleniyor</Text2>
@@ -178,13 +178,13 @@
 			<Text42>Dosya Silindi.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Seçenekler">
 		<btnClose>
-		  <Text>Kapat</Text>
+			<Text>Kapat</Text>
 		</btnClose>
 		<lblOffer>
-		  <Text>Ortakların Tekliflerini Göster</Text>
+			<Text>Ortakların Tekliflerini Göster</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>NVIDIA Seçenekleri</Text>
@@ -246,7 +246,7 @@
 			<Tooltip>Eğer Vulkan API Kullanan 2 Farklı GPU Yeteneği Varsa Tavsiye Edilmez.</Tooltip>
 		</lblVulkan>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Başlatma Seçeneği">
 		<btnAccept>
 			<Text>Başlat</Text>
@@ -278,8 +278,11 @@
 			<Item2>Güvenli Mod (Tavsiye Edilen)</Item2>
 			<Item3>Ağ ile Güvenli Mod</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Genişletilmiş Günlük">
 		<btnClose>
 			<Text>Kapat</Text>
@@ -294,7 +297,7 @@
 		<copyMenuItem>
 			<Text>Kopyalama Etkin</Text>
 		</copyMenuItem>
-		
+
 		<filtersMenuItem>
 			<Text>Filtreler</Text>
 		</filtersMenuItem>
@@ -308,7 +311,7 @@
 			<Text>Hataları Göster</Text>
 		</errorsMenuItem>
 	</frmLog>
-  
+
 	<frmSystemRestore Text="Sistem Geri Yükleme">
 		<lblSystemRestore>
 			<Text>Sistem Geri Yükleme noktası oluşturmak için çalışıyor.</Text>
@@ -332,56 +335,56 @@
 			<Text>Ayrıca aşağıda bulunan ve bulunmayan bütün çevirmenlere çok teşekkürler.</Text>
 		</lblTranslators>
 	</frmAbout>
-	
+
 	<Misc>
 		<About>
 			<Text>
-Bu program ne işe yarar?
+				Bu program ne işe yarar?
 
-Eski sürücü sorunlarını ya da daha yeni kuruyorsanız ve yüklenenmeme gibi bir durumda bu sorunları giderir.
+				Eski sürücü sorunlarını ya da daha yeni kuruyorsanız ve yüklenenmeme gibi bir durumda bu sorunları giderir.
 
-ÖNERİLEN KULLANIM:
+				ÖNERİLEN KULLANIM:
 
-- Aracı windows normal modda da kullanabilirsiniz. Güvenli Mod tercihen kullanabilirsiniz.
+				- Aracı windows normal modda da kullanabilirsiniz. Güvenli Mod tercihen kullanabilirsiniz.
 
-- Biz görüşlerinizi almak istiyoruz. Başarılı ya da değil yine de bize söyleyin.
-Ayrıca eğer yeni bir sorun varsa geri dönebilmek için bir geri yükleme noktası oluşturun.
+				- Biz görüşlerinizi almak istiyoruz. Başarılı ya da değil yine de bize söyleyin.
+				Ayrıca eğer yeni bir sorun varsa geri dönebilmek için bir geri yükleme noktası oluşturun.
 
-- Eğer bir sorununuz varsa bu program sizin sorununuza yardımcı oldu veya olmadı ise lütfen paylaşın.
+				- Eğer bir sorununuz varsa bu program sizin sorununuza yardımcı oldu veya olmadı ise lütfen paylaşın.
 
-NVIDIA / AMD / Intel bu program ile ilgisi olduğunu unutmayın, biz NVIDIA / AMD / Intel içindir. İşe yaramazsa sorumlu değildir.
-Sisteminizde herhangi bir hasar veya hata olduğunda sorumlu değildir.
--------------------------------
+				NVIDIA / AMD / Intel bu program ile ilgisi olduğunu unutmayın, biz NVIDIA / AMD / Intel içindir. İşe yaramazsa sorumlu değildir.
+				Sisteminizde herhangi bir hasar veya hata olduğunda sorumlu değildir.
+				-------------------------------
 
-Wagnard tarafından düzenlendi.
+				Wagnard tarafından düzenlendi.
 
-Yazılımcılar: Wagnard, Devmltk, Shady7557
+				Yazılımcılar: Wagnard, Devmltk, Shady7557
 
-Test eden: Dellon132
+				Test eden: Dellon132
 
-Logo yapımcı: juanchacin
+				Logo yapımcı: juanchacin
 
--Jackalito'ya AMD 7850'yi bize bağladığındna dolayı çok teşekkürler. 
--Programımız olan DDU "SetAcl"(http://helgeklein.com/setacl/) özelliği için verdiği izinden dolayı Helge Klein'a teşekkürler.
--Sorunları çözen ve test eden Gamer1291 (optimus), Octopuss (Amd Enduro), nedooo'ya çok teşekkürler.
--Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
+				-Jackalito'ya AMD 7850'yi bize bağladığındna dolayı çok teşekkürler.
+				-Programımız olan DDU "SetAcl"(http://helgeklein.com/setacl/) özelliği için verdiği izinden dolayı Helge Klein'a teşekkürler.
+				-Sorunları çözen ve test eden Gamer1291 (optimus), Octopuss (Amd Enduro), nedooo'ya çok teşekkürler.
+				-Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
 
-*DDU, Driver Sweeper yapımcı veya kurucuları ile alakası yoktur.
+				*DDU, Driver Sweeper yapımcı veya kurucuları ile alakası yoktur.
 
-Çevirmen: murat5038
-</Text>
+				Çevirmen: murat5038
+			</Text>
 		</About>
 
 		<Tos>
 			<Text>
-Display Driver Uninstaller ("DDU") KULLANICI SÖZLEŞMESİ
+				Display Driver Uninstaller ("DDU") KULLANICI SÖZLEŞMESİ
 
-DDU yazılım kullanarak bir DDU ("kullanıcı") kullanıcısı olursunuz. Bu anlaşma bir sürücüyü kaldırmak için programı kullandığınızda etkin duruma gelir.
+				DDU yazılım kullanarak bir DDU ("kullanıcı") kullanıcısı olursunuz. Bu anlaşma bir sürücüyü kaldırmak için programı kullandığınızda etkin duruma gelir.
 
-DDU'yu kullanarak bilgisayarınıza gelebilecek tüm sorunları kabul etmiş olur ve suçlama talebinde bulunamazsınız.
+				DDU'yu kullanarak bilgisayarınıza gelebilecek tüm sorunları kabul etmiş olur ve suçlama talebinde bulunamazsınız.
 
-DDU'yu kullanarak, NVIDIA ("NVIDIA, GeForce") Advanced Micro Devices ("AMD, Radeon") sahip olduğunuzu kabul etmiş olursunuz.
-</Text>
+				DDU'yu kullanarak, NVIDIA ("NVIDIA, GeForce") Advanced Micro Devices ("AMD, Radeon") sahip olduğunuzu kabul etmiş olursunuz.
+			</Text>
 		</Tos>
 	</Misc>
 

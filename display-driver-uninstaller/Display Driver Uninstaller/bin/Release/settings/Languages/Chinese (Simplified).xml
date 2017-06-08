@@ -36,6 +36,15 @@
 				（用于安装新的显示卡）
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remove "GeForce Experience" display driver installer cache/files.
+				(Note: Drivers won't be removed)
+			</Text>
+			<Tooltip>
+				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>重置 "设备安装设置" 为默认值</Text>
 		</btnWuRestore>
@@ -115,6 +124,7 @@
 			<Text12>检测到当前系统不是在安全模式中运行，强烈建议您重启电脑进入安全模式以避免可能出现的任何意外。现在就重启电脑进入安全模式吗？</Text12>
 			<Text13>这是您在蓝色的恢复屏幕下需要操作的步骤：疑难解答 -&gt; 高级选项 -&gt; 启动设置。</Text13>
 			<Text14>检测到当前系统有一个挂起的重启行为，请在使用本软件之前重新启动计算机。</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
 		<UpdateLog>
 			<Text1>正在执行 Driver Store 清理（删除 OEM 驱动的步骤）...</Text1>
@@ -253,7 +263,7 @@
 		<lblWinPasswordWarn>
 			<Text>
 				给 Windows 8/8.1/10 用户的重要提示：
-				       您需要知道您的 Windows 账户密码！（PIN 在安全模式下【无法】使用）
+				您需要知道您的 Windows 账户密码！（PIN 在安全模式下【无法】使用）
 				如果您忘记的话请立即关闭本软件！
 			</Text>
 		</lblWinPasswordWarn>
@@ -262,6 +272,9 @@
 			<Item2>安全模式【推荐】</Item2>
 			<Item3>带网络连接的安全模式</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
 	<frmLog Text="扩展日志">
 		<btnClose>

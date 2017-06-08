@@ -12,7 +12,8 @@
 				(Silno odporúčané)
 			</Text>
 			<Tooltip
-				>Odinštalovať aktuálne aj predchádzajúce ovládače a reštartovať počítač
+				>
+				Odinštalovať aktuálne aj predchádzajúce ovládače a reštartovať počítač
 				(Silno odporúčané)
 			</Tooltip>
 		</btnCleanRestart>
@@ -36,6 +37,15 @@
 				(Na inštaláciu novej grafickej karty)
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remove "GeForce Experience" display driver installer cache/files.
+				(Note: Drivers won't be removed)
+			</Text>
+			<Tooltip>
+				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>Obnoviť nastavenia inštalácie ovládačov cez Windows Update.</Text>
 		</btnWuRestore>
@@ -54,14 +64,14 @@
 		<lblLanguage>
 			<Text>Selected language</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>Poznámka: Akákoľvek chyba alebo škoda na PC je na Vašu zodpovednosť.</Text>
 		</Label9>
 		<Label10>
 			<Text>Odporúčame použiť DDU v Núdzovom režime.</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Kontrola aktualizácií...</Text>
 			<Text2>No Updates found. Program is up to date.</Text2>
@@ -110,7 +120,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Visit Geforce Thread</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Našli sa aktualizácie! Chcete navštíviť webstránku DDU?</Text1>
 			<Text2>Počítajte s obmedzenou podporou starších verzií, než najnovšej. Pred nahlasovaním chýb skontrolujte, či máte najnovšiu verziu.</Text2>
@@ -126,8 +136,9 @@
 			<Text12>Nie ste v núdzovom režime. Odporúčame reštartovať do núdzového režimu, aby ste predišli možným problémom., Chcete reštartovať do núdzového režimu?"</Text12>
 			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Spúšťanie čistenia úložiska ovládačov (Krok odstraňovanie OEM)...</Text1>
 			<Text2>Čistenie priečinka</Text2>
@@ -173,7 +184,7 @@
 			<Text42>File Deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Options">
 		<btnClose>
 			<Text>Close</Text>
@@ -245,7 +256,7 @@
 			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -278,8 +289,11 @@
 			<Item2>Safe Mode (Recommended)</Item2>
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>

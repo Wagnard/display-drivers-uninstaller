@@ -36,6 +36,15 @@
 				(För installation av nytt grafikkort)
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remove "GeForce Experience" display driver installer cache/files.
+				(Note: Drivers won't be removed)
+			</Text>
+			<Tooltip>
+				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Använd standardinställning för Windows
@@ -57,14 +66,14 @@
 		<lblLanguage>
 			<Text>Selected language</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>OBS! Eventuell skada eller fel på din PC är ditt eget ansvar.</Text>
 		</Label9>
 		<Label10>
 			<Text>Vi rekommenderar att du använder DDU i felsäkert läge.</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Söker efter uppdateringar...</Text>
 			<Text2>No Updates found. Program is up to date.</Text2>
@@ -129,8 +138,9 @@
 			<Text12>You are not in safe mode. It is highly recommended that you reboot into safe mode to avoid possible issues. Reboot into Safe Mode now?</Text12>
 			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
@@ -176,7 +186,7 @@
 			<Text42>File Deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Options">
 		<btnClose>
 			<Text>Close</Text>
@@ -248,7 +258,7 @@
 			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -281,8 +291,11 @@
 			<Item2>Safe Mode (Recommended)</Item2>
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>

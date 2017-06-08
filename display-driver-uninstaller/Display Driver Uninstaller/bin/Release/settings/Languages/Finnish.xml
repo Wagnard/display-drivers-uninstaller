@@ -37,6 +37,15 @@
 				Asenna näytönohjain koneen sammuttua ja käynnistä.
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Poista "GeForce Experience" ohjelman välimuisti/asennustiedostot
+				(Huom: Ajureita ei poisteta)
+			</Text>
+			<Tooltip>
+				Käytetään levytilan vapauttamiseksi väliaikaistiedostoista joita GFE/Ajurien asennusohjelma ei poista.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Palauta Windowsin automaattinen
@@ -58,21 +67,21 @@
 		<lblLanguage>
 			<Text>Valittu kieli</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>Huomautus: Mikä tahansa tietokoneelle aiheutettu vaurio tai virhe on omalla vastuullasi.</Text>
 		</Label9>
 		<Label10>
 			<Text>DDU:n käyttäminen vikasietotilassa suositeltavaa</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Tarkistetaan päivityksiä...</Text>
 			<Text2>Ei löytynyt päivityksiä. Ohjelma on ajantasalla.</Text2>
 			<Text3>Päivityksiä löydetty! Vanhemman version tuki on huonompaa.</Text3>
 			<Text4>Päivityksien hakeminen epäonnistui!</Text4>
 		</lblUpdate>
-		
+
 		<lblOffer>
 			<Text>Näytä tarjouksia yhteistyökumppaneilta</Text>
 			<Tooltip>Voit poistaa tämän käytöstä asetuksista</Tooltip>
@@ -114,7 +123,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Avaa Geforce viestiketju</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Päivityksiä saatavilla! Vieraile DDU verkkosivulla nyt?</Text1>
 			<Text2>Vanhemman version tuki on huonompaa kuin uuden. Ennen virheiden raportointa, tarkista uusin versio.</Text2>
@@ -130,8 +139,9 @@
 			<Text12>Et ole vikasietotilassa. On erittäin suositeltavaa käynnistää uudelleen vikasietotilaan virheiden välttämiseksi. Käynnistä uudelleen vikasietotilaan?</Text12>
 			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Täällä on odottava uudellenkäynnistys jonossa, Käynnistä uudelleen ennen ohjelman käyttöä.</Text14>
+			<Text15>Ei muutoksia tehty. Windowsin Laitteen asennusasetukset oli jo asetettu oletusarvoonsa.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Suoritetaan ajuri hakemiston puhdistusta (Poista OEM vaihe)...</Text1>
 			<Text2>Siivotaan hakemisto</Text2>
@@ -177,7 +187,7 @@
 			<Text42>Tiedosto poistettu.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Asetukset">
 		<btnClose>
 			<Text>Sulje</Text>
@@ -253,7 +263,7 @@
 			<Tooltip>Käytä SetupAPI ulkoisen ohjelman DDUDR (DEVCON) sijasta.</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Käynnistysvalinta">
 		<btnAccept>
 			<Text>Käynnistä</Text>
@@ -286,8 +296,11 @@
 			<Item2>Vikasietotila (Suositeltavaa)</Item2>
 			<Item3>Vikasietotila verkkoyhteyksillä</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU sulki ohjelmia jotka tiedetään aiheuttavan ongelmia (kuten MSI Afterburner ja RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Laajennettu loki" >
 		<btnClose>
 			<Text>Sulje</Text>
@@ -411,7 +424,7 @@
 		<Translator>
 			<User>DevMltk</User>
 			<Details></Details>
-			<LastUpdate>09/06/2016</LastUpdate>
+			<LastUpdate>08/06/2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

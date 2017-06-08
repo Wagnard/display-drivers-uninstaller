@@ -9,8 +9,9 @@ Imports System.Windows.Data
 Imports System.Windows.Input
 Imports System.Windows.Media
 Imports Display_Driver_Uninstaller.Win32
+Imports System.Threading
 
-Public Class SetupAPITestWindow
+Public Class DebugWindow
 	Private _devices As ObservableCollection(Of SetupAPI.Device) = New ObservableCollection(Of SetupAPI.Device)
 
 	Public ReadOnly Property Devices As ObservableCollection(Of SetupAPI.Device)
@@ -412,13 +413,13 @@ Public Class SetupAPITestWindow
 		Dim isAdmin As Boolean = Tools.UserHasAdmin
 
 		If isAdmin Then
-			MessageBox.Show("Process running as " & (If(Tools.ProcessIs64, "x64", "x86")) & vbCrLf & "Admin? Yes")
+			Me.Title = "Process running as " & (If(Tools.ProcessIs64, "x64", "x86")) & " --- " & "Admin: Yes"
 		Else
 			btnDisable.IsEnabled = False
 			btnEnable.IsEnabled = False
 			btnRemove.IsEnabled = False
 
-			MessageBox.Show("Process running as " & (If(Tools.ProcessIs64, "x64", "x86")) & vbCrLf & "Admin? No!" & vbCrLf & vbCrLf & "You can find devices but can't enable/disable/remove!")
+			Me.Title = "Process running as " & (If(Tools.ProcessIs64, "x64", "x86")) & " --- " & "Admin: No!   (You can find devices but can't enable/disable/remove!)"
 		End If
 	End Sub
 
@@ -482,8 +483,176 @@ Public Class SetupAPITestWindow
 		End If
 	End Sub
 
-	Private Sub Button1_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles Button1.Click
+	Private Sub btnReScanDevices_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnReScanDevices.Click
 		SetupAPI.ReScanDevices()
+		MessageBox.Show("Done!")
 	End Sub
 
+
+
+	Public Shared Property CurrentProperty As DependencyProperty = DependencyProperty.Register("Current", GetType(Int64), GetType(DebugWindow), New PropertyMetadata(0L))
+	Public Shared Property CountProperty As DependencyProperty = DependencyProperty.Register("Count", GetType(Int64), GetType(DebugWindow), New PropertyMetadata(0L))
+
+	Public Property Current As Int64
+		Get
+			Return DirectCast(GetValue(CurrentProperty), Int64)
+		End Get
+		Set(value As Int64)
+			SetValue(CurrentProperty, value)
+		End Set
+	End Property
+
+	Public Property Count As Int64
+		Get
+			Return DirectCast(GetValue(CountProperty), Int64)
+		End Get
+		Set(value As Int64)
+			SetValue(CountProperty, value)
+		End Set
+	End Property
+
+
+	Public lockPathList As Object = "SomeVeryHeavyLock"
+	Public Property PathList As New ObservableCollection(Of PathEntry)
+	Private pathThread As Thread = Nothing
+	Private cancelHandle As EventWaitHandle = New EventWaitHandle(False, EventResetMode.ManualReset)
+
+	Private Sub btnGetFiles_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnGetFiles.Click
+		If String.IsNullOrEmpty(tbWildCards.Text) Then
+			tbWildCards.Text = "*"
+		End If
+
+		PathList.Clear()
+
+		cancelHandle.Reset()
+		Current = 0
+		Count = 0
+
+		Dim path As String = tbPath.Text
+		Dim wildCard As String = tbWildCards.Text
+		Dim subFolders As Boolean = If(chkSubFolders.IsChecked.HasValue, chkSubFolders.IsChecked.Value, False)
+		Dim excludeReparsePt As Boolean = If(chkFilesReparsePt.IsChecked.HasValue, chkFilesReparsePt.IsChecked.Value, False)
+
+		btnGetFiles.IsEnabled = False
+		btnGetFolders.IsEnabled = False
+
+
+		pathThread = New Thread(New ThreadStart(Sub() GetPathsThread(path, wildCard, subFolders, True, excludeReparsePt))) With {.IsBackground = True, .Name = "bgThread"}
+		pathThread.Start()
+	End Sub
+
+	Private Sub btnGetFolders_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnGetFolders.Click
+		If String.IsNullOrEmpty(tbWildCards.Text) Then
+			tbWildCards.Text = "*"
+		End If
+
+		PathList.Clear()
+
+		cancelHandle.Reset()
+		Current = 0
+		Count = 0
+
+		Dim path As String = tbPath.Text
+		Dim wildCard As String = tbWildCards.Text
+		Dim subFolders As Boolean = If(chkSubFolders.IsChecked.HasValue, chkSubFolders.IsChecked.Value, False)
+		Dim excludeReparsePt As Boolean = If(chkFilesReparsePt.IsChecked.HasValue, chkFilesReparsePt.IsChecked.Value, False)
+
+		btnGetFiles.IsEnabled = False
+		btnGetFolders.IsEnabled = False
+
+		pathThread = New Thread(New ThreadStart(Sub() GetPathsThread(path, wildCard, subFolders, False, excludeReparsePt))) With {.IsBackground = True, .Name = "bgThread"}
+		pathThread.Start()
+	End Sub
+
+	Private Sub GetPathsThread(ByVal path As String, ByVal wildCard As String, ByVal subFolders As Boolean, ByVal filesOnly As Boolean, ByVal excludeReparsePt As Boolean)
+		Try
+			Dim files As List(Of PathEntry) = FileIO.TEST_GetPaths(path, wildCard, subFolders, False, False, excludeReparsePt)
+
+			Application.Current.Dispatcher.Invoke(DirectCast(Sub() Count = files.Count, ThreadStart), Windows.Threading.DispatcherPriority.DataBind)
+
+			For Each entry As PathEntry In files
+				If cancelHandle.WaitOne(0) Then
+					Exit For
+				End If
+
+				If (filesOnly AndAlso Not entry.IsDirectory) OrElse (Not filesOnly AndAlso entry.IsDirectory) Then
+					AddEntry(entry)
+				End If
+			Next
+		Catch ex As ThreadAbortException
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		Finally
+			Application.Current.Dispatcher.Invoke(DirectCast(Sub() ThreadDone(), ThreadStart), Windows.Threading.DispatcherPriority.DataBind)
+		End Try
+	End Sub
+
+	Private Delegate Sub AddEntryFinalDelegate(ByVal entry As PathEntry)
+	Private Sub AddEntryFinal(ByVal entry As PathEntry)
+		SyncLock lockPathList
+			Interlocked.Increment(Current)
+			PathList.Add(entry)
+		End SyncLock
+	End Sub
+
+	Private Sub AddEntry(ByVal entry As PathEntry)
+		If Not Application.Current.Dispatcher.CheckAccess() Then
+			Queue(New AddEntryFinalDelegate(AddressOf Me.AddEntryFinal), entry)
+		Else
+			AddEntryFinal(entry)
+		End If
+	End Sub
+
+	Private Sub Queue(ByVal method As [Delegate], ByVal ParamArray args() As Object)
+		Application.Current.Dispatcher.Invoke(method, Windows.Threading.DispatcherPriority.Background, args)
+	End Sub
+
+	Private Sub btnCancel_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnCancel.Click
+		If pathThread IsNot Nothing AndAlso pathThread.IsAlive Then
+			cancelHandle.Set()
+		End If
+	End Sub
+
+	Private Sub ThreadDone()
+		btnGetFiles.IsEnabled = True
+		btnGetFolders.IsEnabled = True
+
+		Count = Current
+	End Sub
+
+	Private Sub tbPath_MouseDoubleClick(sender As System.Object, e As System.Windows.Input.MouseButtonEventArgs) Handles tbPath.MouseDoubleClick
+		Using fbd As New System.Windows.Forms.FolderBrowserDialog
+			fbd.SelectedPath = tbPath.Text
+
+			If fbd.ShowDialog() = Forms.DialogResult.OK Then
+				tbPath.Text = fbd.SelectedPath
+			End If
+		End Using
+
+	End Sub
+End Class
+
+Public Class PathEntry
+	Public Property IsDirectory As Boolean
+	Public Property Path As String
+	Public Property Flags As UInt32
+
+	Public ReadOnly Property FlagsStr As String
+		Get
+			Return "0x" & Flags.ToString("X2") & "  (" & Flags.ToString() & ")"
+		End Get
+	End Property
+
+	Public ReadOnly Property FlagsList As String
+		Get
+			Return String.Join(Environment.NewLine, ToStringArray(Of FileIO.FILE_ATTRIBUTES)(Flags, "-"))
+		End Get
+	End Property
+
+	Public Sub New(ByVal path As String, ByVal flags As UInt32)
+		Me.Path = path
+		Me.Flags = flags
+
+		Me.IsDirectory = (flags And FileIO.FILE_ATTRIBUTES.DIRECTORY) = FileIO.FILE_ATTRIBUTES.DIRECTORY
+	End Sub
 End Class

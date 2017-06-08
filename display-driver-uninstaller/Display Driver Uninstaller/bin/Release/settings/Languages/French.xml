@@ -36,6 +36,15 @@
 				(Pour installer une nouvelle carte graphique)
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remove "GeForce Experience" display driver installer cache/files.
+				(Note: Drivers won't be removed)
+			</Text>
+			<Tooltip>
+				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Réglez l'installation du pilote
@@ -55,16 +64,16 @@
 			<Text>Sélection du Pilote graphique</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-		  <Text>Langue sélectionnée</Text>
+			<Text>Langue sélectionnée</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>Note: Tout dommage ou erreurs causés à votre PC sont sous votre responsabilité.</Text>
 		</Label9>
 		<Label10>
 			<Text>Utiliser DDU en mode sans échec est recommandé.</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Vérification des mises à jour ...</Text>
 			<Text2>Aucune mise à jour trouvée. DDU est à jour.</Text2>
@@ -76,7 +85,7 @@
 			<Text>Offres de nos partenaires</Text>
 			<Tooltip>Vous pouvez les désactiver depuis le menu des options.</Tooltip>
 		</lblOffer>
-		
+
 		<OptionsMenuItem>
 			<Text>Options</Text>
 		</OptionsMenuItem>
@@ -113,7 +122,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Visiter le forum Geforce</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Mise à jour disponible! Voulez-vous accéder au site Internet DDU ?</Text1>
 			<Text2>Le support est limité sur les versions antérieures à la version actuelle. Veuillez essayer la nouvelle version avant de signaler des bugs.</Text2>
@@ -131,7 +140,7 @@
 			<Text14>Il y a un redémarrage en attente, veuillez redémarrer avant d'utiliser DDU.</Text14>
 			<Text15> Aucun changement n'a été effectué. Les paramètres d'installation des périphérique Windows sont déjà définis par défaut.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
@@ -177,7 +186,7 @@
 			<Text42>File Deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Options">
 		<btnClose>
 			<Text>Fermer</Text>
@@ -249,7 +258,7 @@
 			<Tooltip>Utiliser SetupAPI à la place de l'outil externe DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Options de démarrage">
 		<btnAccept>
 			<Text>Exécuter</Text>
@@ -286,7 +295,7 @@
 			<Text1>DDU a fermé des programmes connus pour interférer (comme MSI Afterburner et RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Log Étendu">
 		<btnClose>
 			<Text>Fermer</Text>

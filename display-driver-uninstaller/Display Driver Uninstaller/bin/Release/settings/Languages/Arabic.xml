@@ -7,7 +7,8 @@
 
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
-			<Text>حذف تعريفات البطاقة ومن ثم اعادة تشغيل النظام
+			<Text>
+				حذف تعريفات البطاقة ومن ثم اعادة تشغيل النظام
 			</Text>
 			<Tooltip>
 				حذف جميع التعريفات المتعلقة بالبطاقة ثم اعادة تشغيل الجهاز
@@ -28,15 +29,15 @@
 				(استخدم هذا الخيار في حال كنت ترغب بتركيب بطاقة جديدة)
 			</Tooltip>
 		</btnCleanShutdown>
-		    <btnCleanGfeDownloads>
-      <Text>
-        حذف مجلد الكاش الخاص بتعريف بطاقة نفيديا جي-فورس
-        (ملاحظة: لن يتم حذف التعريفات)
-      </Text>
-      <Tooltip>
-         استخدم هذا الخيار لحذف مجلد الكاش من اجل تحرير بعض سعة التخزين
-      </Tooltip>
-    </btnCleanGfeDownloads>
+		<btnCleanGfeDownloads>
+			<Text>
+				حذف مجلد الكاش الخاص بتعريف بطاقة نفيديا جي-فورس
+				(ملاحظة: لن يتم حذف التعريفات)
+			</Text>
+			<Tooltip>
+				استخدم هذا الخيار لحذف مجلد الكاش من اجل تحرير بعض سعة التخزين
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>ارجاع نظام التثبيت التلقائي للتعريفات إلى الوضع الافتراضي</Text>
 		</btnWuRestore>
@@ -55,21 +56,21 @@
 		<lblLanguage>
 			<Text>اختيار اللغـة</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>مـلاحظـة : أيـة اضرار أو اخطاء قـد تلحـق بجهازك هي تحت مسؤوليتـك الخاصة فقـط .</Text>
 		</Label9>
 		<Label10>
 			<Text>ينصــح باستخــدام هـذه الاداة في الوضع الآمن</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>التحقـق من التحديثات .....</Text>
 			<Text2>لا يوجد تحديث حاليا ؛ الأداة بآخر اصدار.</Text2>
 			<Text3>تم العثور على تحديث جديد! ؛ سينحـصر الدعم عن الاصدارات القديمـة تدريجيا بعكس الاصدارات الحديثة</Text3>
 			<Text4>لا يمكـن جلب التحديثات في الوقت الحالي !</Text4>
 		</lblUpdate>
-		
+
 		<lblOffer>
 			<Text>عروض من شركائنا</Text>
 			<Tooltip>تستطيع ايقافها من قائمة الخيارات</Tooltip>
@@ -111,7 +112,7 @@
 		<VisitGeforceMenuItem>
 			<Text>زيارة Geforce Thread</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>يوجـد تحديث جديـد ! ؛ هـل تريد زيارة موقع الأداة الآن ؟</Text1>
 			<Text2>الاصدارات القديمــة لهذه الأداة دعمها محدود ؛ لذلك قم بتحديث الأداة لآخر اصدار قبل تبليغنـا بأيـة مشاكل أو اخطاء.</Text2>
@@ -127,8 +128,9 @@
 			<Text12>أنت الان لست في الوضع الآمن للنظام . يستحسـن ان تقوم بإعادة التشغيل والدخول للوضع الآمن ؛ وذلك لتجنب أية اخطاء قد تحدث</Text12>
 			<Text13>في حال حدوث شاشة زرقاء  Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>يجب عمل اعادة تشغيل للنظام قبل اعادة استخدام هذه الآداة مجددا</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
@@ -174,7 +176,7 @@
 			<Text42>File Deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="الخيارات">
 		<btnClose>
 			<Text>خروج</Text>
@@ -246,7 +248,7 @@
 			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="خيارات الدخول">
 		<btnAccept>
 			<Text>دخول</Text>
@@ -263,7 +265,7 @@
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				أنت حاليا تستخدم الوضع الاعتيادي للنظام.ينصح 
+				أنت حاليا تستخدم الوضع الاعتيادي للنظام.ينصح
 				بإعادة التشغيل والدخول للوضع الآمن لتجنب الأخطاء.
 			</Text>
 		</lblNotSafeMode>
@@ -279,8 +281,11 @@
 			<Item2>الوضع الآمن-ينصح به بشدة</Item2>
 			<Item3>الوضع الآمن بدون شبكة</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="تقرير مفصل">
 		<btnClose>
 			<Text>خروج</Text>
@@ -365,7 +370,7 @@
 				NVIDIA , AMD , Microsoft
 				غير مسؤولة نهائيا عن أية اضرار قد تلحق بجهازك جراء استخدام هذه الاداة أو من مصمم الاداة
 				-------------------------------
-                
+
 				هذه الاداة من برمجة Wagnard.
 
 				بالاشتراك مع: Shady757
@@ -373,9 +378,9 @@
 				الاختبار : Dellon132
 
 				تصميم الشعار : juanchacin
-                 
-				 الترجمة للعربية: هاشم ورور / الاردن-اربد
-				 
+
+				الترجمة للعربية: هاشم ورور / الاردن-اربد
+
 				الشكر الجزيل لـ
 				Jackalito
 				لتبرعه ببطاقة

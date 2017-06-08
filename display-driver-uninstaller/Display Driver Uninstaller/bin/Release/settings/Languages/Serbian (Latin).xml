@@ -19,10 +19,12 @@
 		<btnClean>
 			<Text>
 				Ukloni i NEMOJ restartovati kompjuter
-				(Može dovesti do problema kao što su zacrnjenje ekrana)</Text>
+				(Može dovesti do problema kao što su zacrnjenje ekrana)
+			</Text>
 			<Tooltip>
 				Ukloni trenutne i prethodne zaostale drajvere, ali NEMOJ restartovati kompjuter.
-				(Može dovesti do problema kao što su zacrnjenje ekrana)</Tooltip>
+				(Može dovesti do problema kao što su zacrnjenje ekrana)
+			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
@@ -34,15 +36,15 @@
 				(Za ugradnju/instalaciju nove grafičke kartice)
 			</Tooltip>
 		</btnCleanShutdown>
-	<btnCleanGfeDownloads>
-      <Text>
-        Ukloni "GeForce Experience" display driver instalacione fajlove/cache.
-        (Napomena: drajveri neće biti uklonjeni!)
-      </Text>
-      <Tooltip>
-         Ovo se najčešće koristi za brisanje nepotrebnih fajlova na HDD-u/SSD-u koji nisu obrisani od strane GFE/Driver Installer-a.
-      </Tooltip>
-    </btnCleanGfeDownloads>
+		<btnCleanGfeDownloads>
+			<Text>
+				Ukloni "GeForce Experience" display driver instalacione fajlove/cache.
+				(Napomena: drajveri neće biti uklonjeni!)
+			</Text>
+			<Tooltip>
+				Ovo se najčešće koristi za brisanje nepotrebnih fajlova na HDD-u/SSD-u koji nisu obrisani od strane GFE/Driver Installer-a.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Windows automatsku instalaciju
@@ -64,14 +66,14 @@
 		<lblLanguage>
 			<Text>Izabrani jezik:</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>Napomena: Bilo kakva šteta ili greške prouzrokovane Vašem kompjuteru isključivo su Vaša odgovornost!</Text>
 		</Label9>
 		<Label10>
 			<Text>Korišćenje DDU u Safe Mode-u je preporučljivo!</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Provera da li postoji novija verzija programa...</Text>
 			<Text2>Ne postoji novija verzija programa. Koristite trenutno najnoviju verziju.</Text2>
@@ -120,7 +122,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Poseti Geforce odeljak</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Nova verzija je raspoloživa! Želite li sada da posetite DDU sajt?</Text1>
 			<Text2>Očekujte ograničenu podršku za starije verzije uodnosu na trenutno najnovije. Molimo pokušajte sa najnovijom verzijom pre prijavljivanja grešaka.</Text2>
@@ -138,7 +140,7 @@
 			<Text14>Neophodan je restart sistema, molimo da prvo restartujete operativni sistem pa tek onda nastavite sa korišćenjem DDU programa.</Text14>
 			<Text15>Nije bilo nikakvih izmena. Windows Device instalaciona podešavanja su već bila postavljena na Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Izvršavanje Driver Store cleanUP-a (brisanje OEM step-a)...</Text1>
 			<Text2>Čišćenje Directory-a</Text2>
@@ -184,7 +186,7 @@
 			<Text42>Fajl obrisan.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Opcije">
 		<btnClose>
 			<Text>Zatvori</Text>
@@ -256,7 +258,7 @@
 			<Tooltip>Koristi SetupAPI umesto eksternog alata DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Pokreni</Text>
@@ -289,8 +291,11 @@
 			<Item2>Safe Mode (Preporučljivo)</Item2>
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Zatvori</Text>
@@ -417,20 +422,20 @@
 			</Text>
 		</Tos>
 	</Misc>
-	
+
 	<LanguageTranslators>
 		<Translator>
 			<User>CrazY_Milojko</User>
 			<Details>igor.precep@hotmail.com</Details>
 			<LastUpdate>18/03/2017</LastUpdate>
 		</Translator>
-		
+
 		<Translator2>
 			<User>Bricco</User>
 			<Details>boris.precep@hotmail.com</Details>
 			<LastUpdate>18/03/2017</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
-	
+
 
 </DisplayDriverUninstaller>

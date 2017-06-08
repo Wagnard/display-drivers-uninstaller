@@ -1,0 +1,483 @@
+﻿<Window x:Class="DebugWindow"
+        x:Name="frmMain"
+        xmlns:local="clr-namespace:Display_Driver_Uninstaller"
+        xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SetupAPI" Height="480" Width="640" MinHeight="480" MinWidth="640" Loaded="Window_Loaded" Background="#FFD2E4FF">
+
+	<Window.Resources>
+		<conv:IsNullConverter x:Key="IsNull" />
+		<conv:BooleanToVisibilityConverter x:Key="BoolToVis" TrueValue="Collapsed" FalseValue="Visible" />
+		<conv:CombiningConverter x:Key="NullToVis" Converter1="{StaticResource IsNull}" Converter2="{StaticResource BoolToVis}" />
+
+		<DataTemplate x:Key="logItem" >
+			<StackPanel>
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="Description:   " FontSize="14" />
+					<TextBlock Text="{Binding Path=Description, Mode=OneWay}" FontSize="14" />
+				</DockPanel>
+
+				<TextBlock />
+
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="FriendlyName:   " />
+					<TextBlock Text="{Binding Path=FriendlyName, Mode=OneWay}" />
+				</DockPanel>
+
+				<TextBlock />
+
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="Class Guid:    " />
+					<TextBlock Text="{Binding Path=ClassGuid, Mode=OneWay}" />
+				</DockPanel>
+
+				<TextBlock />
+
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="Device ID:    " />
+					<TextBlock Text="{Binding Path=DeviceID, Mode=OneWay}" />
+				</DockPanel>
+
+				<TextBlock />
+
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="DevInst:    " />
+					<TextBlock Text="{Binding Path=DevInstID, Mode=OneWay}" />
+				</DockPanel>
+
+				<TextBlock />
+
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="Install State:    " />
+					<TextBlock Text="{Binding Path=InstallStateStr, Mode=OneWay}" />
+				</DockPanel>
+
+				<TextBlock />
+
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="Dev Problem:    " />
+					<TextBlock Text="{Binding Path=DevProblemStr, Mode=OneWay}" />
+				</DockPanel>
+
+				<TextBlock />
+
+				<StackPanel>
+					<TextBlock FontWeight="Bold" Text="Dev Status:    " />
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding DevStatusStr}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
+
+				<DockPanel LastChildFill="true">
+					<TextBlock FontWeight="Bold" Text="RebootRequired:    " />
+					<TextBlock Text="{Binding Path=RebootRequired, Mode=OneWay}" />
+				</DockPanel>
+
+				<TextBlock />
+
+				<StackPanel>
+					<TextBlock FontWeight="Bold" Text="Install Flags:    " />
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding InstallFlagsStr}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
+
+				<StackPanel>
+					<TextBlock FontWeight="Bold" Text="Capabilities:    " />
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding CapabilitiesStr}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
+
+				<StackPanel>
+					<TextBlock FontWeight="Bold" Text="Config Flags:    " />
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding ConfigFlagsStr}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
+
+				<StackPanel>
+					<TextBlock FontWeight="Bold" Text="Oem Inf(s):    " />
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding OemInfs}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<StackPanel>
+									<TextBlock>
+										<TextBlock Text="File: "/><TextBlock FontWeight="Bold" Text="{Binding FileName, Mode=OneWay}"/>
+									</TextBlock>
+									<TextBlock>
+										<TextBlock Text="Install Date: "/><TextBlock Text="{Binding InstallDate, Mode=OneWay}"/>
+									</TextBlock>
+									<TextBlock>
+										<TextBlock Text="Class: "/><TextBlock Text="{Binding Class, Mode=OneWay}"/>
+									</TextBlock>
+									<TextBlock>
+										<TextBlock Text="Provider: "/><TextBlock Text="{Binding Provider, Mode=OneWay}"/>
+									</TextBlock>
+									<TextBlock>
+										<TextBlock Text="Is Valid: "/><TextBlock Text="{Binding IsValid, Mode=OneWay}"/>
+									</TextBlock>
+									<TextBlock/>
+								</StackPanel>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
+
+				<StackPanel>
+					<TextBlock FontWeight="Bold" Text="Hardware IDs:    " />
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding HardwareIDs}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
+
+				<StackPanel>
+					<TextBlock FontWeight="Bold" Text="Compatible IDs:    " />
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding CompatibleIDs}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
+
+				<StackPanel>
+					<TextBlock FontWeight="Bold" Text="LowerFilters:    " />
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding LowerFilters}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
+
+				<StackPanel Visibility="{Binding Path=DriverInfo, Mode=OneWay, Converter={StaticResource NullToVis}}">
+					<TextBlock FontWeight="Bold" 
+                               Text="{Binding Path=DriverInfo.Length, FallbackValue=0, StringFormat='{}Driver(s) Details: ( Count: {0} )'}"/>
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding DriverInfo}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition MinWidth="100" Width="Auto" />
+										<ColumnDefinition MinWidth="10" Width="10" MaxWidth="10" />
+										<ColumnDefinition MinWidth="100" Width="*" />
+									</Grid.ColumnDefinitions>
+
+									<TextBlock Grid.Row="0" Grid.Column="0" Text="Description:" HorizontalAlignment="Right" />
+									<TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Path=Description, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="1" Grid.Column="0" Text="Manufacturer:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=MfgName, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="2" Grid.Column="0" Text="Provider Name:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=ProviderName, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="3" Grid.Column="0" Text="Driver Version:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Path=DriverVersion, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="4" Grid.Column="0" Text="Driver Date:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Path=DriverDate, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="5" Grid.Column="0" Text="Inf FileName:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding Path=InfFile.FileName, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="6" Grid.Column="0" Text="Inf Install Date:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="6" Grid.Column="2" Text="{Binding Path=InfFile.InstallDate, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="7" Grid.Column="0" Text="Inf Details:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="7" Grid.Column="2" >
+										<TextBlock Text="{Binding Path=InfFile.Class, Mode=OneWay, StringFormat='{}Class: {0}'}" />
+										<TextBlock Text="   /   " />
+										<TextBlock Text="{Binding Path=InfFile.Provider, Mode=OneWay, StringFormat='{}Provider: {0}'}" />
+										<TextBlock Text="   /   " />
+										<TextBlock Text="{Binding Path=InfFile.IsValid, Mode=OneWay, StringFormat='{}Valid: {0}'}" />
+									</TextBlock>
+
+									<TextBlock Grid.Row="8" Grid.Column="0" Text="Hardware ID:" HorizontalAlignment="Right"/>
+									<TextBlock Grid.Row="8" Grid.Column="2" Text="{Binding Path=HardwareID, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="9" Grid.Column="0" Text="Compatible IDs:" HorizontalAlignment="Right"/>
+
+									<ItemsControl Grid.Row="9" Grid.Column="2" ItemsSource="{Binding CompatibleIDs}">
+										<ItemsControl.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding}"/>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+
+									<Separator Margin="0,5,0,5" Grid.Row="10" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="2" />
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
+
+				<StackPanel Visibility="{Binding Path=SiblingDevices, Mode=OneWay, Converter={StaticResource NullToVis}}">
+					<TextBlock FontWeight="Bold" 
+                               Text="{Binding Path=SiblingDevices.Length, FallbackValue=0, StringFormat='{}Sibling(s): ( Count: {0} )'}"/>
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding SiblingDevices}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition MinWidth="100" Width="Auto" />
+										<ColumnDefinition MinWidth="10" Width="10" MaxWidth="10" />
+										<ColumnDefinition MinWidth="100" Width="*" />
+									</Grid.ColumnDefinitions>
+
+									<TextBlock Grid.Row="0" Grid.Column="0" Text="Description:" HorizontalAlignment="Right" />
+									<TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Path=Description, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="1" Grid.Column="0" Text="FriendlyName:" HorizontalAlignment="Right" />
+									<TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=FriendlyName, TargetNullValue=&lt;null&gt;, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="2" Grid.Column="0" Text="ClassName:" HorizontalAlignment="Right" />
+									<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=ClassName, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="3" Grid.Column="0" Text="Device ID:" HorizontalAlignment="Right" />
+									<TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Path=DeviceID, Mode=OneWay}" />
+
+									<TextBlock Grid.Row="4" Grid.Column="0" Text="LowerFilters:" HorizontalAlignment="Right" />
+									<ItemsControl Grid.Row="4" Grid.Column="2" ItemsSource="{Binding LowerFilters}">
+										<ItemsControl.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding}"/>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+
+									<Separator Margin="0,5,0,5" Grid.Row="5" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="2" />
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+				<Separator Margin="0,5,0,5" BorderBrush="Black" BorderThickness="2" />
+
+				<TextBlock />
+
+			</StackPanel>
+		</DataTemplate>
+
+		<ContextMenu x:Key="cm">
+			<MenuItem x:Name="copyDevice" Header="Copy Selected Device" Command="Copy" CommandParameter="CopyDevice"/>
+		</ContextMenu>
+
+		<Style x:Key="alternatingListViewItemStyle" TargetType="{x:Type Control}">
+			<Style.Triggers>
+				<Trigger Property="ItemsControl.AlternationIndex" Value="1">
+					<Setter Property="Background" Value="#FFF0F0F0"></Setter>
+				</Trigger>
+				<Trigger Property="ItemsControl.AlternationIndex" Value="2">
+					<Setter Property="Background" Value="White"></Setter>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+	</Window.Resources>
+
+	<TabControl>
+		<TabItem Header="Setup API">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+
+
+				<ListBox Name="listBox1" 
+                 Grid.Row="3" 
+                 ItemContainerStyle="{StaticResource alternatingListViewItemStyle}" 
+                 AlternationCount="2" 
+                 ContextMenu="{StaticResource cm}"
+                 ScrollViewer.CanContentScroll="False"
+                 ItemsSource="{Binding ElementName=frmMain, Path=Devices}"
+                 ItemTemplate="{StaticResource logItem}">
+
+					<ListBox.CommandBindings>
+						<CommandBinding Command="Copy" Executed="CopyCommand" />
+					</ListBox.CommandBindings>
+					<ListBox.InputBindings>
+						<KeyBinding Key="C" Modifiers="Control" Command="Copy" CommandParameter="CopyAll"/>
+					</ListBox.InputBindings>
+				</ListBox>
+
+				<StackPanel Name="stackPanel1" Orientation="Horizontal">
+					<StackPanel.Resources>
+						<Style TargetType="Button">
+							<Setter Property="Margin" Value="5,10,0,10" />
+						</Style>
+
+						<Style TargetType="CheckBox">
+							<Setter Property="Margin" Value="5,10,0,10" />
+						</Style>
+					</StackPanel.Resources>
+
+					<Button Content="disable" Height="23" Name="btnDisable" Width="75" Click="btnDisable_Click" />
+					<Button Content="enable" Height="23" Name="btnEnable" Width="75" Click="btnEnable_Click" />
+					<Button Content="remove" Height="23" Name="btnRemove" Width="75" Click="btnRemove_Click" />
+					<Button Content="update inf" Height="23" Name="btnUpdate" Width="75" Click="btnUpdate_Click" />
+					<Button Content="remove inf" Height="23" Name="btnRemoveInf" Width="75" Click="btnRemoveInf_Click" />
+					<Button Content="ReScan devices" Height="23" Name="btnReScanDevices" Width="89" Click="btnReScanDevices_Click" />
+					<CheckBox Content="Include Siblings" Height="16" Name="chbSearchSiblings" />
+				</StackPanel>
+
+				<DockPanel Grid.Row="1">
+					<StackPanel Orientation="Horizontal">
+						<Label Content="Device Filter:" VerticalAlignment="Center" />
+						<ComboBox x:Name="cbFilterDev" Width="150" HorizontalAlignment="Center" SelectedIndex="0" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+					</StackPanel>
+
+					<StackPanel Orientation="Horizontal" DockPanel.Dock="Right" >
+						<Button Content="Find devices" Height="23" Name="btnFindDevs" Width="120" Click="btnFindDevs_Click" Margin="10,10,0,10" />
+						<Label Width="80" Content="Devices: 0" Height="28" Name="lblDevicesDev" DockPanel.Dock="Right" />
+					</StackPanel>
+
+					<TextBox Name="tbFilterDev" Text="display" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+				</DockPanel>
+
+				<DockPanel Grid.Row="2" Background="{x:Null}">
+					<Label Content="Filter:"/>
+					<ComboBox x:Name="cbFilter" Width="150" HorizontalAlignment="Center" SelectedIndex="6" SelectionChanged="cbFilter_SelectionChanged" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+
+					<Label Width="80" Content="Items: 0" Height="28" Name="lblDevices" DockPanel.Dock="Right" />
+
+					<TextBox Name="tbFilter" TextChanged="tbFilter_TextChanged" />
+				</DockPanel>
+			</Grid>
+		</TabItem>
+
+		<TabItem Header="File IO">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="386*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+
+				<ListView Grid.ColumnSpan="3" Grid.Row="2" Name="lbPaths" ItemsSource="{Binding ElementName=frmMain, Path=PathList, Mode=OneWay}">
+					<ListView.ItemContainerStyle>
+						<Style TargetType="{x:Type ListViewItem}">
+							<Setter Property="ToolTip" Value="{Binding Path=FlagsList, Mode=OneWay}"/>
+						</Style>
+					</ListView.ItemContainerStyle>
+
+					<ListView.View>
+						<GridView>
+							<GridViewColumn Header="Path" DisplayMemberBinding="{Binding Path=Path, Mode=OneWay}" Width="350" />
+							<GridViewColumn Header="Attributes" DisplayMemberBinding="{Binding Path=FlagsStr, Mode=OneWay}" Width="150"  />
+						</GridView>
+					</ListView.View>
+				</ListView>
+
+				<TextBox Name="tbPath" VerticalScrollBarVisibility="Disabled" TextWrapping="Wrap" Text="C:\Windows" />
+
+				<StackPanel Grid.Column="1" Orientation="Horizontal">
+					<Button Content="Get Files"  Height="28" Name="btnGetFiles" VerticalAlignment="Center" Width="60" Margin="6" />
+					<Button Content="Get Folders"  Height="28" Name="btnGetFolders" VerticalAlignment="Center" Width="70" Margin="6" />
+					<Button Content="Cancel"  Height="28" Name="btnCancel" VerticalAlignment="Center" Width="50" Margin="6" />
+				</StackPanel>
+				
+				<StackPanel Grid.ColumnSpan="3" Grid.Row="1" Name="StackPanel2" Orientation="Horizontal" Margin="6">
+					<CheckBox Content="Sub folders" Height="16" Name="chkSubFolders" IsChecked="True" />
+					<Separator Margin="20,0" />
+					<CheckBox Content="Exclude ReparsePoints" Height="16" Name="chkFilesReparsePt" IsChecked="True" />
+					<Separator Margin="20,0" />
+					<TextBlock Text="Wildcard:" VerticalAlignment="Center" />
+					<TextBox Name="tbWildCards" VerticalScrollBarVisibility="Disabled" Text="*" MinWidth="80" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+					<Separator Margin="20,0" />
+					<TextBlock Name="tbStatus" VerticalAlignment="Center" >
+						<TextBlock.Text>
+							<MultiBinding StringFormat="{}Status: {0} / {1}">
+								<Binding ElementName="frmMain" Path="Current" Mode="OneWay" />
+								<Binding ElementName="frmMain" Path="Count" Mode="OneWay" />
+							</MultiBinding>
+						</TextBlock.Text>
+					</TextBlock>
+				</StackPanel>
+			</Grid>
+		</TabItem>
+	</TabControl>
+
+</Window>

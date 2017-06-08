@@ -36,6 +36,15 @@
 				(Új grafikus kártya telepítéséhez)
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remove "GeForce Experience" display driver installer cache/files.
+				(Note: Drivers won't be removed)
+			</Text>
+			<Tooltip>
+				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
 				Windows Update illesztőprogram
@@ -57,14 +66,14 @@
 		<lblLanguage>
 			<Text>Selected language</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>Figyelem: Bármely esetleges hiba vagy kár, ami a számítógépedet éri, a te felelősséged.</Text>
 		</Label9>
 		<Label10>
 			<Text>DDU csökkentett mód használata ajánlott.</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Frissítések keresése ...</Text>
 			<Text2>Nem található frissítés. A program a legfrissebb.</Text2>
@@ -76,7 +85,7 @@
 			<Text>Offers from our partners</Text>
 			<Tooltip>You can disable this from the option menu.</Tooltip>
 		</lblOffer>
-		
+
 		<OptionsMenuItem>
 			<Text>Options</Text>
 		</OptionsMenuItem>
@@ -113,7 +122,7 @@
 		<VisitGeforceMenuItem>
 			<Text>Visit Geforce Thread</Text>
 		</VisitGeforceMenuItem>
-		
+
 		<Messages>
 			<Text1>Frissítések érhetőek el! Meglátogatod most a DDU honlapját?</Text1>
 			<Text2>A régebbi verziókon korlátozott támogatásra számíthatsz. Kérlek először próbáld ki az újabb verziókat, mielőtt hibát jelentenél.</Text2>
@@ -129,8 +138,9 @@
 			<Text12>Jelenleg nem csökkentett módban vagy. Erősen ajánlott csökkentett módba újraindítani az esetleges hibák elkerülése érdekében. Újraindítod most csökkentett módba?</Text12>
 			<Text13>A kék helyreállító képernyő esetén a következőt kell kiválasztanod: Hibakeresés -&gt; Haladó beállítások -&gt; Indítópult beállítások.</Text13>
 			<Text14>Egy várakozó újraindítás van folyamatban, a DDU használata előtt kérlek indítsd újra a számítógépet</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Illesztőprogram tároló takarítás végrehajtása (OEM lépés törlése)...</Text1>
 			<Text2>Könyvtár törlése</Text2>
@@ -176,7 +186,7 @@
 			<Text42>Fájl törölve.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Beállítások">
 		<btnClose>
 			<Text>Close</Text>
@@ -248,7 +258,7 @@
 			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Launch</Text>
@@ -281,8 +291,11 @@
 			<Item2>Safe Mode (Recommended)</Item2>
 			<Item3>Safe Mode With Networking</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Extended log">
 		<btnClose>
 			<Text>Close</Text>

@@ -338,6 +338,7 @@ Public Class LogEntry
 				End If
 
 				m_exData.Add("Win32_Message", msg)
+				m_exData.Add("Win32_ErrorName", Win32.GetErrorEnum(errCode))
 				m_exData.Add("Win32_ErrorCode", String.Format("{0} (0x{1:X})", win32Ex.NativeErrorCode.ToString(), errCode))
 
 				If overrideMessage OrElse IsNullOrWhitespace(Message) Then
@@ -351,6 +352,7 @@ Public Class LogEntry
 				Dim errCode As UInt32 = Win32.GetUInt32(comEx.ErrorCode)
 
 				m_exData.Add("COM_Message", comEx.Message)
+				m_exData.Add("COM_ErrorName", Win32.GetErrorEnum(errCode))
 				m_exData.Add("COM_ErrorCode", String.Format("{0} (0x{1:X})", comEx.ErrorCode.ToString(), errCode))
 
 				If overrideMessage OrElse IsNullOrWhitespace(Message) Then

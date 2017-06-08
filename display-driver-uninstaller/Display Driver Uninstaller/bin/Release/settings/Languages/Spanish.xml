@@ -36,6 +36,15 @@
 				(Para instalar una nueva tarjeta gráfica)
 			</Tooltip>
 		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Remove "GeForce Experience" display driver installer cache/files.
+				(Note: Drivers won't be removed)
+			</Text>
+			<Tooltip>
+				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+			</Tooltip>
+		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>Establecer por defecto la Instalación de Controlador Automático de Windows.</Text>
 		</btnWuRestore>
@@ -54,14 +63,14 @@
 		<lblLanguage>
 			<Text>Selected language</Text>
 		</lblLanguage>
-		
+
 		<Label9>
 			<Text>Aviso: Cualquier daño o error causado a su PC será bajo su propia responsabilidad.</Text>
 		</Label9>
 		<Label10>
 			<Text>Se recomienda usar DDU en Modo Seguro.</Text>
 		</Label10>
-		
+
 		<lblUpdate>
 			<Text>Buscando actualizaciones...</Text>
 			<Text2>No se han encontrado actualizaciones. Su versión es la más reciente.</Text2>
@@ -126,8 +135,9 @@
 			<Text12>No se encuentra en modo Seguro. Se recomienda encarecidamente reiniciar en dicho modo para evitar conflictos. ¿Desea reiniciar en Modo Seguro ahora?</Text12>
 			<Text13>Esto es lo que necesita seleccionar en la pantalla azul de recuperación: Solucionar problemas -&gt; Opciones avanzadas -&gt; Configuración de inicio.</Text13>
 			<Text14>There is a pending Reboot, please reboot before using DDU</Text14>
+			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 		</Messages>
-		
+
 		<UpdateLog>
 			<Text1>Ejecutando limpieza de biblioteca de controladores(Borrar OEM)...</Text1>
 			<Text2>Limpiando Directorio</Text2>
@@ -173,7 +183,7 @@
 			<Text42>Archivo Borrado.</Text42>
 		</UpdateLog>
 	</frmMain>
-	
+
 	<frmOptions Text="Opciones">
 		<btnClose>
 			<Text>Close</Text>
@@ -227,7 +237,7 @@
 			<Text>Automatically check for DDU updates on startup. (Recommended)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Eliminar 'Geforce Experience' (GFE)</Text>		
+			<Text>Eliminar 'Geforce Experience' (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
 			<Text>Eliminar carpeta de caché de AMD 'Crimson Shader'</Text>
@@ -245,7 +255,7 @@
 			<Tooltip>Use SetupAPI instead of the external tool DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 	</frmOptions>
-	
+
 	<frmLaunch Text="Launch option">
 		<btnAccept>
 			<Text>Arranque</Text>
@@ -278,10 +288,13 @@
 			<Item2>Modo Seguro (Recomendado)</Item2>
 			<Item3>Modo Seguro con Funciones de Red</Item3>
 		</cbBootOption>
+		<Messages>
+			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+		</Messages>
 	</frmLaunch>
-	
+
 	<frmLog Text="Registro 'log' Extendido">
-     	<btnClose>
+		<btnClose>
 			<Text>Cerrar</Text>
 		</btnClose>
 		<btnOpenLog>
@@ -385,7 +398,7 @@
 			</Text>
 		</Tos>
 	</Misc>
-	
+
 	<LanguageTranslators>
 		<Translator>
 			<User></User>
