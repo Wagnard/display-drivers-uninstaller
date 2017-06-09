@@ -87,7 +87,7 @@ Namespace Win32
 						End Try
 					Next
 
-					If logEntry.Values.Count > 0 Then
+					If logEntry.Values.Count > 2 Then
 						logEntry.Message = "Failed to get tasks from some paths!"
 						logEntry.Type = LogType.Error
 

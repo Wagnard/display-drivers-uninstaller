@@ -436,7 +436,13 @@
 					<RowDefinition Height="*" />
 				</Grid.RowDefinitions>
 
-				<ListView Grid.ColumnSpan="3" Grid.Row="2" Name="lbPaths" ItemsSource="{Binding ElementName=frmMain, Path=PathList, Mode=OneWay}">
+				<ListView Grid.ColumnSpan="3" Grid.Row="2" Name="lbPaths" ItemsSource="{Binding ElementName=frmMain, Path=PathList, Mode=OneWay}" SelectionMode="Single">
+					<ListView.ContextMenu>
+						<ContextMenu >
+							<MenuItem Header="Delete!" Name="menuFileIODelete" />
+						</ContextMenu>
+					</ListView.ContextMenu>
+					
 					<ListView.ItemContainerStyle>
 						<Style TargetType="{x:Type ListViewItem}">
 							<Setter Property="ToolTip" Value="{Binding Path=FlagsList, Mode=OneWay}"/>
@@ -462,7 +468,6 @@
 				<StackPanel Grid.ColumnSpan="3" Grid.Row="1" Name="StackPanel2" Orientation="Horizontal" Margin="6">
 					<CheckBox Content="Sub folders" Height="16" Name="chkSubFolders" IsChecked="True" />
 					<Separator Margin="20,0" />
-					<CheckBox Content="Exclude ReparsePoints" Height="16" Name="chkFilesReparsePt" IsChecked="True" />
 					<Separator Margin="20,0" />
 					<TextBlock Text="Wildcard:" VerticalAlignment="Center" />
 					<TextBox Name="tbWildCards" VerticalScrollBarVisibility="Disabled" Text="*" MinWidth="80" VerticalContentAlignment="Center" VerticalAlignment="Center" />

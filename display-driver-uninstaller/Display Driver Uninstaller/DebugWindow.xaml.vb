@@ -531,13 +531,12 @@ Public Class DebugWindow
 		Dim path As String = tbPath.Text
 		Dim wildCard As String = tbWildCards.Text
 		Dim subFolders As Boolean = If(chkSubFolders.IsChecked.HasValue, chkSubFolders.IsChecked.Value, False)
-		Dim excludeReparsePt As Boolean = If(chkFilesReparsePt.IsChecked.HasValue, chkFilesReparsePt.IsChecked.Value, False)
-
+	
 		btnGetFiles.IsEnabled = False
 		btnGetFolders.IsEnabled = False
 
 
-		pathThread = New Thread(New ThreadStart(Sub() GetPathsThread(path, wildCard, subFolders, True, excludeReparsePt))) With {.IsBackground = True, .Name = "bgThread"}
+		pathThread = New Thread(New ThreadStart(Sub() GetPathsThread(path, wildCard, subFolders, True))) With {.IsBackground = True, .Name = "bgThread"}
 		pathThread.Start()
 	End Sub
 
@@ -555,28 +554,38 @@ Public Class DebugWindow
 		Dim path As String = tbPath.Text
 		Dim wildCard As String = tbWildCards.Text
 		Dim subFolders As Boolean = If(chkSubFolders.IsChecked.HasValue, chkSubFolders.IsChecked.Value, False)
-		Dim excludeReparsePt As Boolean = If(chkFilesReparsePt.IsChecked.HasValue, chkFilesReparsePt.IsChecked.Value, False)
 
 		btnGetFiles.IsEnabled = False
 		btnGetFolders.IsEnabled = False
 
-		pathThread = New Thread(New ThreadStart(Sub() GetPathsThread(path, wildCard, subFolders, False, excludeReparsePt))) With {.IsBackground = True, .Name = "bgThread"}
+		pathThread = New Thread(New ThreadStart(Sub() GetPathsThread(path, wildCard, subFolders, False))) With {.IsBackground = True, .Name = "bgThread"}
 		pathThread.Start()
 	End Sub
 
-	Private Sub GetPathsThread(ByVal path As String, ByVal wildCard As String, ByVal subFolders As Boolean, ByVal filesOnly As Boolean, ByVal excludeReparsePt As Boolean)
+	Private Sub GetPathsThread(ByVal path As String, ByVal wildCard As String, ByVal subFolders As Boolean, ByVal filesOnly As Boolean)
 		Try
-			Dim files As List(Of PathEntry) = FileIO.TEST_GetPaths(path, wildCard, subFolders, False, False, excludeReparsePt)
+			Dim paths As List(Of String)
 
-			Application.Current.Dispatcher.Invoke(DirectCast(Sub() Count = files.Count, ThreadStart), Windows.Threading.DispatcherPriority.DataBind)
+			If filesOnly Then
+				paths = FileIO.GetFiles(path, wildCard, subFolders)
+			Else
+				paths = FileIO.GetDirectories(path, wildCard, subFolders)
+			End If
 
-			For Each entry As PathEntry In files
+			Application.Current.Dispatcher.Invoke(DirectCast(Sub() Count = paths.Count, ThreadStart), Windows.Threading.DispatcherPriority.DataBind)
+
+			Dim attr As UInt32 = 0UI
+
+			For Each p As String In paths
 				If cancelHandle.WaitOne(0) Then
 					Exit For
 				End If
 
-				If (filesOnly AndAlso Not entry.IsDirectory) OrElse (Not filesOnly AndAlso entry.IsDirectory) Then
-					AddEntry(entry)
+				attr = FileIO.GetAttributes(p)
+
+
+				If (filesOnly AndAlso Not ((attr And FileIO.FILE_ATTRIBUTES.DIRECTORY) = FileIO.FILE_ATTRIBUTES.DIRECTORY)) OrElse (Not filesOnly AndAlso ((attr And FileIO.FILE_ATTRIBUTES.DIRECTORY) = FileIO.FILE_ATTRIBUTES.DIRECTORY)) Then
+					AddEntry(New PathEntry(p, attr))
 				End If
 			Next
 		Catch ex As ThreadAbortException
@@ -630,6 +639,23 @@ Public Class DebugWindow
 		End Using
 
 	End Sub
+
+	Private Sub menuFileIODelete_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles menuFileIODelete.Click
+		If lbPaths.SelectedItem Is Nothing Then
+			Return
+		End If
+
+		Dim pathEntry As PathEntry = TryCast(lbPaths.SelectedItem, PathEntry)
+
+		If pathEntry Is Nothing Then
+			Return
+		End If
+
+		If MessageBox.Show("Delete path:" & CRLF & pathEntry.Path, "Delete?", MessageBoxButton.YesNo, MessageBoxImage.Warning) = MessageBoxResult.Yes Then
+			FileIO.Delete(pathEntry.Path)
+		End If
+	End Sub
+
 End Class
 
 Public Class PathEntry
