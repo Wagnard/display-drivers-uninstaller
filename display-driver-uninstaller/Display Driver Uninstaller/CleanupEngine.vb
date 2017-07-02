@@ -903,12 +903,12 @@ Public Class CleanupEngine
 				If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
 					If svc.Status = ServiceControllerStatus.Stopped Then
 						Try
-							svc.Start()
+                            svc.Start()
+                            svc.WaitForStatus(ServiceControllerStatus.Running)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 						End Try
-						svc.WaitForStatus(ServiceControllerStatus.Running)
-					End If
+                    End If
 				End If
 			End Using
 		Next
