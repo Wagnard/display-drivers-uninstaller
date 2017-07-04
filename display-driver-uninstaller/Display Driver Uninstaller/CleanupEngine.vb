@@ -904,7 +904,7 @@ Public Class CleanupEngine
 					If svc.Status = ServiceControllerStatus.Stopped Then
 						Try
                             svc.Start()
-                            svc.WaitForStatus(ServiceControllerStatus.Running)
+							svc.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(5))
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 						End Try
@@ -939,10 +939,11 @@ Public Class CleanupEngine
 					If svc.Status <> ServiceControllerStatus.Stopped Then
 						Try
 							svc.Stop()
+							svc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5))
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 						End Try
-						svc.WaitForStatus(ServiceControllerStatus.Stopped)
+
 					End If
 				End If
 			End Using

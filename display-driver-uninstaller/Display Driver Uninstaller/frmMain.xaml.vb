@@ -6266,74 +6266,83 @@ Public Class frmMain
 										If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
 									Else
 
-										If subRegkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
-											regValue = HexToString(GetREG_BINARY(subRegkey, "DriverDesc").Replace("00", ""))
+										regValue = subRegkey.GetValue("DriverDesc", String.Empty).ToString()
 
-										Else
-											regValue = subRegkey.GetValue("DriverDesc", String.Empty).ToString()
+										If Not IsNullOrWhitespace(regValue) Then
+											If subRegkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
+												regValue = HexToString(GetREG_BINARY(subRegkey, "DriverDesc").Replace("00", ""))
+
+											Else
+												regValue = subRegkey.GetValue("DriverDesc", String.Empty).ToString()
+											End If
 										End If
 
 										UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
 										If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
 
-									End If
+										End If
 
-									regValue = subRegkey.GetValue("MatchingDeviceId", String.Empty).ToString()
+										regValue = subRegkey.GetValue("MatchingDeviceId", String.Empty).ToString()
 
-									If Not IsNullOrWhitespace(regValue) Then
-										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(13), regValue))
-										If firstLaunch Then info.Add("GPU DeviceID", regValue)
-									End If
+										If Not IsNullOrWhitespace(regValue) Then
+											UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(13), regValue))
+											If firstLaunch Then info.Add("GPU DeviceID", regValue)
+										End If
 
 									Try
-										If subRegkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
-											regValue = HexToString(GetREG_BINARY(subRegkey, "HardwareInformation.BiosString").Replace("00", ""))
+										regValue = subRegkey.GetValue("HardwareInformation.BiosString", String.Empty).ToString()
 
-											UpdateTextMethod(String.Format("Vbios: {0}", regValue))
-											If firstLaunch Then info.Add("Vbios", regValue)
-										Else
-											regValue = subRegkey.GetValue("HardwareInformation.BiosString", String.Empty).ToString()
+										If Not IsNullOrWhitespace(regValue) Then
+											If subRegkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
+												regValue = HexToString(GetREG_BINARY(subRegkey, "HardwareInformation.BiosString").Replace("00", ""))
 
-											Dim sb As New StringBuilder(30)
-											Dim values() As String = regValue.Split(New String() {" ", "."}, StringSplitOptions.None)
+												UpdateTextMethod(String.Format("Vbios: {0}", regValue))
+												If firstLaunch Then info.Add("Vbios", regValue)
+											Else
+												regValue = subRegkey.GetValue("HardwareInformation.BiosString", String.Empty).ToString()
 
-											For i As Int32 = 0 To values.Length - 1
-												If i = values.Length - 1 Then		'Last
-													sb.Append(values(i).PadLeft(2, "0"c))
-												ElseIf i > 0 Then
-													sb.AppendFormat("{0}.", values(i).PadLeft(2, "0"c))
-												Else
-													sb.AppendFormat("{0} ", values(i))
-												End If
-											Next
-											regValue = sb.ToString()
+												Dim sb As New StringBuilder(30)
+												Dim values() As String = regValue.Split(New String() {" ", "."}, StringSplitOptions.None)
 
-											UpdateTextMethod(String.Format("Vbios: {0}", regValue))
-											If firstLaunch Then info.Add("Vbios", regValue)
+												For i As Int32 = 0 To values.Length - 1
+													If i = values.Length - 1 Then		'Last
+														sb.Append(values(i).PadLeft(2, "0"c))
+													ElseIf i > 0 Then
+														sb.AppendFormat("{0}.", values(i).PadLeft(2, "0"c))
+													Else
+														sb.AppendFormat("{0} ", values(i))
+													End If
+												Next
+												regValue = sb.ToString()
+
+												UpdateTextMethod(String.Format("Vbios: {0}", regValue))
+												If firstLaunch Then info.Add("Vbios", regValue)
+											End If
 										End If
 									Catch ex As Exception
+										Application.Log.AddException(ex)
 									End Try
 
-									regValue = subRegkey.GetValue("DriverVersion", String.Empty).ToString()
+										regValue = subRegkey.GetValue("DriverVersion", String.Empty).ToString()
 
-									If Not IsNullOrWhitespace(regValue) Then
-										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(14), regValue))
-										If firstLaunch Then info.Add("Detected Driver(s) Version(s)", regValue)
-									End If
+										If Not IsNullOrWhitespace(regValue) Then
+											UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(14), regValue))
+											If firstLaunch Then info.Add("Detected Driver(s) Version(s)", regValue)
+										End If
 
-									regValue = subRegkey.GetValue("InfPath", String.Empty).ToString()
+										regValue = subRegkey.GetValue("InfPath", String.Empty).ToString()
 
-									If Not IsNullOrWhitespace(regValue) Then
-										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(15), regValue))
-										If firstLaunch Then info.Add("INF name", regValue)
-									End If
+										If Not IsNullOrWhitespace(regValue) Then
+											UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(15), regValue))
+											If firstLaunch Then info.Add("INF name", regValue)
+										End If
 
-									regValue = subRegkey.GetValue("InfSection", String.Empty).ToString()
+										regValue = subRegkey.GetValue("InfSection", String.Empty).ToString()
 
-									If Not IsNullOrWhitespace(regValue) Then
-										UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(16), regValue))
-										If firstLaunch Then info.Add("INF section", regValue)
-									End If
+										If Not IsNullOrWhitespace(regValue) Then
+											UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(16), regValue))
+											If firstLaunch Then info.Add("INF section", regValue)
+										End If
 								End If
 
 								UpdateTextMethod("--------------")
