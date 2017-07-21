@@ -665,7 +665,7 @@ Class Application
 				If Not isWinXP Then
 					Using process As Process = New Process() With
 					  {
-					   .StartInfo = New ProcessStartInfo("cmd.exe", " /CBCDEDIT /deletevalue safeboot") With
+					   .StartInfo = New ProcessStartInfo(Paths.System32 & "BCDEDIT", " /deletevalue safeboot") With
 					   {
 					 .UseShellExecute = False,
 					 .CreateNoWindow = True,
@@ -722,12 +722,12 @@ Class Application
 			Return False
 		End If
 
-		Dim args() As String = New String() {" /Csc stop PAExec", " /Csc delete PAExec", " /Csc interrogate PAExec"}
+		Dim args() As String = New String() {"stop PAExec", "delete PAExec", "interrogate PAExec"}
 
 		For Each arg As String In args
 			Using process As Process = New Process() With
 			 {
-			  .StartInfo = New ProcessStartInfo("cmd.exe", arg) With
+			  .StartInfo = New ProcessStartInfo(Paths.System32 & "sc.exe", arg) With
 			  {
 			   .UseShellExecute = False,
 			   .CreateNoWindow = True,
@@ -772,7 +772,7 @@ Class Application
 
 			Using process As Process = New Process() With
 			  {
-			   .StartInfo = New ProcessStartInfo("bcdedit", If(withNetwork, "/set safeboot network", "/set safeboot minimal")) With
+			   .StartInfo = New ProcessStartInfo(Paths.System32 & "BCDEDIT", If(withNetwork, "/set safeboot network", "/set safeboot minimal")) With
 			   {
 			 .UseShellExecute = False,
 			 .CreateNoWindow = True,
@@ -789,7 +789,7 @@ Class Application
 				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", True)
 					If regkey IsNot Nothing Then
 						regkey.SetValue("*" + Settings.AppName, Paths.AppExeFile)
-						regkey.SetValue("*UndoSM", "BCDEDIT /deletevalue safeboot")
+						regkey.SetValue("*UndoSM", Paths.System32 & "BCDEDIT /deletevalue safeboot")
 					End If
 				End Using
 			Catch ex As Exception
@@ -815,7 +815,7 @@ Class Application
 
 			Using process As Process = New Process() With
 			  {
-			   .StartInfo = New ProcessStartInfo("shutdown", "/r /t 0") With
+			   .StartInfo = New ProcessStartInfo(Paths.System32 & "shutdown", "/r /t 0") With
 			   {
 			 .WindowStyle = ProcessWindowStyle.Hidden,
 			 .UseShellExecute = True,
@@ -840,7 +840,7 @@ Class Application
 
 			Using process As Process = New Process() With
 			{
-			  .StartInfo = New ProcessStartInfo("shutdown", "/s /t 0") With
+			  .StartInfo = New ProcessStartInfo(Paths.System32 & "shutdown", "/s /t 0") With
 			   {
 			   .WindowStyle = ProcessWindowStyle.Hidden,
 			   .UseShellExecute = True,
