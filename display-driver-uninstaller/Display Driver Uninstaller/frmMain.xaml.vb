@@ -2769,6 +2769,7 @@ Public Class frmMain
 					 (child.ToLower.Contains("nvstereoinstaller") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("driverdumps") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 
 						Delete(child)
@@ -4168,6 +4169,8 @@ Public Class frmMain
 							 child.ToLower.Contains("nvidiastereo") Or
 							 child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
 							 child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
+							 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
+							 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso removegfe Or
 							 child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Then
 								If removephysx = False And child.ToLower.Contains("physx") Then
 									Continue For
@@ -4246,6 +4249,8 @@ Public Class frmMain
 						 child.ToLower.Contains("_nvtelemetry") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvvhci") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvdisplaycontainer") Or
+						 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
+						 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso removegfe Or
 						 child.ToLower.Contains("_nvcontainer") AndAlso config.RemoveGFE Then
 							If removephysx = False AndAlso child.ToLower.Contains("physx") Then
 								Continue For
@@ -4859,7 +4864,7 @@ Public Class frmMain
 
 		Using tsc As New TaskSchedulerControl(config)
 			For Each task As Task In tsc.GetAllTasks
-				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily") AndAlso config.RemoveGFE Then
+				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience") AndAlso config.RemoveGFE Then
 					Try
 						task.Delete()
 					Catch ex As Exception

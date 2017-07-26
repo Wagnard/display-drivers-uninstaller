@@ -1738,72 +1738,69 @@ Public Class CleanupEngine
 
 			If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(driverFile, True, "amdkmafd")) Then
 
-				filePath = System.Environment.SystemDirectory
+				filePath = Application.Paths.System32
 
 				Try
-					delete(filePath & "\" & driverFile)
+					delete(filePath & driverFile)
 				Catch ex As Exception
+					Application.Log.AddException(ex)
 				End Try
 
 				Try
-					delete(filePath & "\Drivers\" & driverFile)
+					delete(filePath & "Drivers\" & driverFile)
 				Catch ex As Exception
+					Application.Log.AddException(ex)
 				End Try
 
 				If winxp Then
 					Try
-						delete(filePath & "\Drivers\dllcache\" & driverFile)
+						delete(filePath & "Drivers\dllcache\" & driverFile)
 					Catch ex As Exception
+						Application.Log.AddException(ex)
 					End Try
 				End If
 			End If
-		Next
 
-		Try
-			For Each driverFile As String In driverfiles
-				If IsNullOrWhitespace(driverFile) Then Continue For
 
-				filePath = Environment.GetEnvironmentVariable("windir")
+			filePath = Application.Paths.WinDir
 
-				For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "\Prefetch")
-					If IsNullOrWhitespace(child) Then Continue For
+			Try
+				delete(filePath & driverFile)
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
 
-					If StrContainsAny(child, True, driverFile) Then
-						Try
-							delete(child)
-						Catch ex As Exception
-						End Try
-					End If
-				Next
+			For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "Prefetch")
+				If IsNullOrWhitespace(child) Then Continue For
 
+				If StrContainsAny(child, True, driverFile) Then
+					Try
+						delete(child)
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				End If
 			Next
-		Catch ex As Exception
-			Application.Log.AddException(ex)
-		End Try
+
+			Dim winPath As String = Nothing
+
+			Try
+				'	Note  As of Windows Vista, these values have been replaced by KNOWNFOLDERID values. 
+				'	See that topic for a list of the new constants and their corresponding CSIDL values. 
+				'	For convenience, corresponding KNOWNFOLDERID values are also noted here for each CSIDL value.
+
+				'	The CSIDL system is supported under Windows Vista for compatibility reasons.
+				'	However, new development should use KNOWNFOLDERID values rather than CSIDL values.
+
+				If Not WinAPI.GetFolderPath(WinAPI.CLSID.SYSTEMX86, winPath) Then
+					Throw New ArgumentException("Can't get window's sysWOW64 directory")
+				End If
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Can't get window's sysWOW64 directory")
+			End Try
 
 
-		Dim winPath As String = Nothing
-
-		Try
-			'	Note  As of Windows Vista, these values have been replaced by KNOWNFOLDERID values. 
-			'	See that topic for a list of the new constants and their corresponding CSIDL values. 
-			'	For convenience, corresponding KNOWNFOLDERID values are also noted here for each CSIDL value.
-
-			'	The CSIDL system is supported under Windows Vista for compatibility reasons.
-			'	However, new development should use KNOWNFOLDERID values rather than CSIDL values.
-
-			If Not WinAPI.GetFolderPath(WinAPI.CLSID.SYSTEMX86, winPath) Then
-				Throw New ArgumentException("Can't get window's sysWOW64 directory")
-			End If
-		Catch ex As Exception
-			Application.Log.AddException(ex, "Can't get window's sysWOW64 directory")
-		End Try
-
-
-		If IntPtr.Size = 8 Then
-			For Each driverFile As String In driverfiles
-				If IsNullOrWhitespace(driverFile) Then Continue For
-
+			If IntPtr.Size = 8 Then
 				If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(driverFile, True, "amdkmafd")) Then
 
 					For Each child As String In My.Computer.FileSystem.GetFiles(winPath, Microsoft.VisualBasic.FileIO.SearchOption.SearchTopLevelOnly, "*.log")
@@ -1827,8 +1824,10 @@ Public Class CleanupEngine
 					Catch ex As Exception
 					End Try
 				End If
-			Next
-		End If
+			End If
+
+		Next
+
 	End Sub
 	Public Sub TestDelete(ByVal folder As String, config As ThreadSettings)
 		' UpdateTextMethod(UpdateTextMethodmessagefn("18"))
