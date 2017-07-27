@@ -684,6 +684,27 @@ Public Class frmMain
 			Next
 		End If
 
+		If config.RemoveVulkan Then
+			filePath = config.Paths.ProgramFiles + "VulkanRT"
+			If FileIO.ExistsDir(filePath) Then
+
+				Delete(filePath)
+
+			End If
+
+			If IntPtr.Size = 8 Then
+				filePath = Application.Paths.ProgramFilesx86 + "VulkanRT"
+				If FileIO.ExistsDir(filePath) Then
+
+					Delete(filePath)
+
+				End If
+			End If
+
+		End If
+
+
+
 	End Sub
 
 	Private Sub cleanamd(ByVal config As ThreadSettings)
@@ -969,6 +990,7 @@ Public Class frmMain
 								Try
 									deletevalue(regkey, child)
 								Catch ex As Exception
+									Application.Log.AddException(ex)
 								End Try
 							End If
 						End If
@@ -977,6 +999,7 @@ Public Class frmMain
 						Try
 							deletesubregkey(Registry.LocalMachine, "Software\Khronos\OpenCL")
 						Catch ex As Exception
+							Application.Log.AddException(ex)
 						End Try
 					End If
 					CleanVulkan(config)
@@ -986,6 +1009,7 @@ Public Class frmMain
 								Try
 									deletesubregkey(Registry.LocalMachine, "Software\Khronos")
 								Catch ex As Exception
+									Application.Log.AddException(ex)
 								End Try
 							End If
 						End If
@@ -993,6 +1017,7 @@ Public Class frmMain
 				End If
 			End Using
 		Catch ex As Exception
+			Application.Log.AddException(ex)
 		End Try
 
 		If IntPtr.Size = 8 Then
@@ -1014,6 +1039,7 @@ Public Class frmMain
 							Try
 								deletesubregkey(Registry.LocalMachine, "Software\WOW6432Node\Khronos\OpenCL")
 							Catch ex As Exception
+								Application.Log.AddException(ex)
 							End Try
 						End If
 						Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Khronos", True)
@@ -1022,6 +1048,7 @@ Public Class frmMain
 									Try
 										deletesubregkey(Registry.LocalMachine, "Software\WOW6432Node\Khronos")
 									Catch ex As Exception
+										Application.Log.AddException(ex)
 									End Try
 								End If
 							End If
@@ -1029,6 +1056,7 @@ Public Class frmMain
 					End If
 				End Using
 			Catch ex As Exception
+				Application.Log.AddException(ex)
 			End Try
 		End If
 
@@ -1073,6 +1101,7 @@ Public Class frmMain
 								Try
 									deletevalue(regkey, child)
 								Catch ex As Exception
+									Application.Log.AddException(ex)
 								End Try
 							End If
 						End If
@@ -1094,6 +1123,7 @@ Public Class frmMain
 									Try
 										deletevalue(regkey, child)
 									Catch ex As Exception
+										Application.Log.AddException(ex)
 									End Try
 								End If
 							End If
@@ -2922,7 +2952,7 @@ Public Class frmMain
 		End If
 
 
-		If config.RemoveVulkan Then
+		If config.RemovePhysX Then
 			filePath = Environment.GetFolderPath _
 			 (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
 			If FileIO.ExistsDir(filePath) Then

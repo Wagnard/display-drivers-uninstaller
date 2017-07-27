@@ -53,7 +53,7 @@
 			<Text>Zainstalowana wersja systemu:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>Lubisz DDU? Pomyśl o darowiznie, aby pomóc w dalszym rozwoju programu.</Text>
+			<Text>Wesprzyj finansowo dalszy rozwój programu.</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Raport podstawowy</Text>
@@ -207,7 +207,7 @@
 			<Text>Usuń 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
-			<Text>Utwórz punkt przywracania systemu (jeśli włączone)</Text>
+			<Text>Utwórz punkt przywracania systemu</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Usuń wszystkie monitory (zalecane)</Text>
@@ -222,7 +222,7 @@
 			<Text>Usuń sterownik chipsetu (dla chipsetu AMD zalecamy utworzenie kopi zapasowej)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Pokaż wiadomość o trybie awaryjnym podczas uruchamiania (można zmienić tryb na inny)</Text>
+			<Text>Pokaż wiadomość o trybie awaryjnym podczas uruchamiania</Text>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Przechowuj plik ustawień w folderze Roaming</Text>
@@ -272,13 +272,13 @@
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Ważna informacja dla użytkowników systemu Windows 8/8.1/10:
-				Tryb awaryjny nie obsługuje logowania za pomocą PIN!
-				Wybierz tryb normalny jeśli nie znasz lub nie pamiętasz hasła!
+				 *Dotyczy systemu Windows 8/8.1/10:
+				 Tryb awaryjny nie obsługuje logowania za pomocą PIN!
+				 Wybierz tryb normalny jeśli nie znasz lub nie pamiętasz hasła!
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
-			<Item1>Tryb normalny (nie zalecane)</Item1>
+			<Item1>Tryb normalny (*nie zalecane)</Item1>
 			<Item2>Tryb awaryjny (zalecane)</Item2>
 			<Item3>Tryb awaryjny z obsługą sieci (opcjonalnie)</Item3>
 		</cbBootOption>
@@ -409,7 +409,7 @@
 		<Translator>
 			<User>Łukasz Kuchta @Bladius</User>
 			<Details>Tłumacz oficjalny</Details>
-			<LastUpdate>29.05.2017</LastUpdate>
+			<LastUpdate>22.07.2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
