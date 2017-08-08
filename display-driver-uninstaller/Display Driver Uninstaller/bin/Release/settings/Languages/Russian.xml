@@ -38,11 +38,11 @@
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Remove "GeForce Experience" display driver installer cache/files.
-				(Note: Drivers won't be removed)
+				Удалить кеш/файлы установленного драйвера GeForce Experience.
+                (Примечание: драйверы не будут удалены)
 			</Text>
 			<Tooltip>
-				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+				Это в основном используется для освобождения пространства на HDD / SSD, которое не очищается установщиком GFE.
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
@@ -135,7 +135,7 @@
 			<Text12>Вы не в безопасном режиме. Чтобы избежать возможных проблем настоятельно рекомендуется перезагрузка в безопасном режиме. Перезагрузиться в безопасном режиме сейчас?</Text12>
 			<Text13>Вам нужно выбрать на экране восстановления системы: Диагностика -&gt; Дополнительные параметры -&gt; Параметры загрузки</Text13>
 			<Text14>Пожалуйста перезагрузитесь перед использованием DDU</Text14>
-			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
+			<Text15>Не было внесено никаких изменений. Параметры установки устройств Windows установлены по умолчанию.</Text15>
 		</Messages>
 
 		<UpdateLog>
@@ -371,7 +371,7 @@
 
 				Разработчик: Wagnard.
 
-				Совладелец: Shady7557.
+				Совладелец: Wagnard, Devmltk, Shady7557.
 
 				Тестирование: Dellon132.
 
@@ -398,6 +398,11 @@
 			<User>KoNoRIMCI</User>
 			<LastUpdate>01/12/2016</LastUpdate>
 		</Translator>
+
+		<Translator2>
+			<User>Danis Miryasov</User>
+			<LastUpdate>06/08/2017</LastUpdate>
+		</Translator2>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

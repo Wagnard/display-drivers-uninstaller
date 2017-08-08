@@ -1,296 +1,306 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="zh-CN" Text="Chinese (Simplified)">
+<DisplayDriverUninstaller ISO="zh-CN" Text="简体中文(CHN)" >
 	<!--
-		See file ' \Settings\Languages\_For translators - ReadMe.txt '
+		See file ' \Settings\Languages\_For Translators - ReadMe.txt ' 	
 		for quick guide
 	-->
 
-	<frmMain Text="显卡驱动卸载工具（DDU）">
+	<frmMain Text="显卡驱动彻底清除器 (DDU)">
 		<btnCleanRestart>
 			<Text>
-				清理显卡驱动并重启
-				【强烈建议】
+				清除后重启
+				(最佳推荐)
 			</Text>
 			<Tooltip>
-				卸载当前和以前版本的显卡驱动程序，并重新启动计算机。
-				【强烈建议】
+				清除当前及残留版本驱动后重启.
+				(最佳推荐)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				清理显卡驱动，但【不要】重启
-				（可能会导致黑屏等问题）
+				清除后 [不重启]
+				(可能出现未知错误,例如黑屏等)
 			</Text>
 			<Tooltip>
-				卸载当前和以前版本的显卡驱动程序，但【不要】重新启动计算机。
-				（可能会导致黑屏等问题）
+				清除当前及残留版本驱动后 [不重启].
+				(可能出现未知错误,例如黑屏等)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
-				清理显卡驱动并关机
-				（用于安装新的显示卡）
+				清除后关机
+				(该模式用于更换显卡)
 			</Text>
 			<Tooltip>
-				卸载当前和以前版本的显卡驱动程序，阻止新硬件扫描并关闭计算机。
-				（用于安装新的显示卡）
+				清除当前及残留版本驱动后关机 [禁止扫描硬件改动]
+				(该模式用于更换显卡)
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Remove "GeForce Experience" display driver installer cache/files.
-				(Note: Drivers won't be removed)
+				彻底移除Nvidia"GeForce Experience"的 [安装文件及缓存].
+				(提醒:该模式保留驱动程序)
 			</Text>
 			<Tooltip>
-				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+				主要用于找回 (卸载"GeForce Experience"和"驱动"后未被清除干净的残留文件) 所占的硬盘空间.
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
-			<Text>重置 "设备安装设置" 为默认值</Text>
+			<Text>
+				Windows Updata将自动下载并安装显卡驱动
+				(恢复Windows默认设置)
+			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>当前 Windows 版本：</Text>
+			<Text>检测到当前系统版本:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** 您喜欢 DDU 这款软件吗？不妨考虑捐助，这会对软件的持续深入开发带来帮助。 ***</Text>
+			<Text>*** DDU为用户坚持的共享软件,如您觉得实用,无论打赏多少,都将对后续的开发起到至关重要的作用!感谢! ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>日志：</Text>
+			<Text>驱动日志</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>选择显卡芯片品牌</Text>
+			<Text>当前选定显卡品牌</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>选择语言：</Text>
+			<Text>选择您习惯的语种:</Text>
 		</lblLanguage>
+
 		<lblUpdate>
-			<Text>正在检查更新...</Text>
-			<Text2>当前程序已是最新版本，无需更新。</Text2>
-			<Text3>发现新版本！请立即更新以获得更好的驱动清理服务。</Text3>
-			<Text4>无法获取更新信息！请检查网络连接。</Text4>
+			<Text>检测更新ing......</Text>
+			<Text2>恭喜!您当前使用的已经是最新版本.</Text2>
+			<Text3>检测到更新版本,为更加彻底的清除驱动赶快升级吧!</Text3>
+			<Text4>更新服务器失踪了,等它回来再试试吧!</Text4>
 		</lblUpdate>
+
 		<lblOffer>
-			<Text>合作伙伴提供的项目</Text>
-			<Tooltip>您可以在 "选项" 菜单中隐藏此区域。</Tooltip>
+			<Text>合作项目优惠信息</Text>
+			<Tooltip>可以在设置菜单中选择关闭优惠推荐位.</Tooltip>
 		</lblOffer>
+
 		<OptionsMenuItem>
-			<Text>选项</Text>
+			<Text>选项设置</Text>
 		</OptionsMenuItem>
 		<InfoMenuItem>
 			<Text>信息</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>扩展日志</Text>
+			<Text>完整日志</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
-			<Text>链接</Text>
+			<Text>相关链接</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>用户协议</Text>
+			<Text>服务条款 (ToS)</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
-			<Text>关于</Text>
+			<Text>About</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>翻译人员</Text>
+			<Text>翻译名单</Text>
 		</TranslatorsMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>浏览 DDU 软件官方网站</Text>
+			<Text>访问 official DDU 官方网站</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>浏览 Github 上的项目主页</Text>
+			<Text>访问 SVN 官方网站</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>浏览 Guru3d 论坛的 NVIDIA 板块</Text>
+			<Text>访问 Guru3d NVIDIA 专版</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>浏览 Guru3d 论坛的 AMD 板块</Text>
+			<Text>访问 Guru3d AMD 专版</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>浏览 Geforce 论坛的相关主题</Text>
+			<Text>访问 GeForce 官方 DDU 专版</Text>
 		</VisitGeforceMenuItem>
+
 		<Messages>
-			<Text1>有可用的更新！是否立即访问 DDU 官方网站下载最新版本？</Text1>
-			<Text2>旧版本的驱动清理能力远不如新版本。在向论坛报告错误前，请先检查有无更新版本。</Text2>
-			<Text3>您没有在管理员权限下运行 DDU 软件。本软件将立即退出。</Text3>
-			<Text4>无法找到 ddudr。请参考日志以获取更多信息。</Text4>
-			<Text5>本软件在清理显卡驱动程序时，会清理大量与显卡有关的注册表数据。为了以防万一，本软件会在系统运行于正常模式（非安全模式）时，尝试自动创建系统还原点。</Text5>
-			<Text6>检测到本软件的一个模块出了问题，请将您所有的 DDU 日志文件发送给 DDU 开发者。</Text6>
-			<Text7>检测到您正在使用 AMD 双显卡笔记本（Enduro 或相关产品），本软件目前尚未完全兼容 Enduro 笔记本。如继续使用本软件，由此带来的任何风险须自行承担。</Text7>
-			<Text8>检测到当前系统【不是】在安全模式中运行。为拥有一个更好的驱动清理体验并防止过程中出现的任何意外，推荐您重启电脑并进入安全模式后，再继续使用。</Text8>
-			<Text9>本软件更改了一项系统设置，以防止在清理后自动从 Windows Update 下载安装驱动程序。如果您想要恢复，可在新驱动安装完毕【之后】自行调回默认值。</Text9>
-			<Text10>显卡驱动程序清理完毕！您现在要退出吗？</Text10>
-			<Text11>成功将 "设备安装设置" 重置为默认值！</Text11>
-			<Text12>检测到当前系统不是在安全模式中运行，强烈建议您重启电脑进入安全模式以避免可能出现的任何意外。现在就重启电脑进入安全模式吗？</Text12>
-			<Text13>这是您在蓝色的恢复屏幕下需要操作的步骤：疑难解答 -&gt; 高级选项 -&gt; 启动设置。</Text13>
-			<Text14>检测到当前系统有一个挂起的重启行为，请在使用本软件之前重新启动计算机。</Text14>
-			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
+			<Text1>是否立即前往 DDU 官方网站下载最新版本?</Text1>
+			<Text2>在您需要反馈BUG前请检测是否使用的是最新版本,DDU如果不是最新版本可能不支持最新驱动程序.</Text2>
+			<Text3>DDU没有运行在管理员权限模式(Administrator),即将退出.</Text3>
+			<Text4>没有找到 PAExec.详情参考日记记录.</Text4>
+			<Text5>显卡驱动彻底清除器 (DDU) 对多项注册表进行修改操作. 为确保用户系统安全,DDU 将尝试自动建立系统还原点. (仅标准模式下).</Text5>
+			<Text6>主程序出现错误,请发送您的 DDU日志 给开发人员,感谢.</Text6>
+			<Text7>DDU 检测到AMD双显卡笔记本(Enduro 或相关类型),DDU在Enduro型号上没有通过完整兼容及测试,如坚持使用,请自行决定!</Text7>
+			<Text8>DDU检测到当前并非安全模式!   建议选择"安全模式"并重启进入. "更好的稳定性,更彻底的清除能力以及避免出现任何未知问题的发生."</Text8>
+			<Text9>Windows Update设置已经修改,[不自动下载并安装驱动程序]</Text9>
+			<Text10>显卡驱动已彻底清除,是否退出?</Text10>
+			<Text11>Windows Update设置恢复默认,[自动下载并安装驱动程序]</Text11>
+			<Text12>警告: 当前并非安全模式!为避免出现未知问题,我们建议您立刻重启进入安全模式.现在重启?</Text12>
+			<Text13>您需要在蓝色修复界面下按步骤操作 : 疑难解答 -&gt; 高级选项 -&gt; 启动设置.</Text13>
+			<Text14>当前正在等待重启,请重启后再运行 DDU.</Text14>
+			<Text15>未设置，Windows设备安装为默认.</Text15>
 		</Messages>
+
 		<UpdateLog>
-			<Text1>正在执行 Driver Store 清理（删除 OEM 驱动的步骤）...</Text1>
-			<Text2>正在清理目录...</Text2>
-			<Text3>正在清理已知的注册表键值... 这可能需要一两分钟。</Text3>
-			<Text4>正在清理 UpdatusUser 用户帐户（如果存在）...</Text4>
-			<Text5>正在清理目录...</Text5>
-			<Text6>开始清理注册表，请稍后...</Text6>
-			<Text7>注册表清理完毕！</Text7>
-			<Text8>开始移除 nVidia Optimus UpperFilter（如果存在），请稍后...</Text8>
-			<Text9>正在扫描新设备...</Text9>
-			<Text10>驱动卸载并清理完毕！</Text10>
-			<Text11>DDU 版本</Text11>
-			<Text12>显卡 #</Text12>
-			<Text13>检测到</Text13>
-			<Text14>显卡硬件 ID</Text14>
-			<Text15>驱动程序版本</Text15>
+			<Text1>正在执行驱动存放空间清除 (检测OEM环节)...</Text1>
+			<Text2>清除目录ing......</Text2>
+			<Text3>清除已知注册表关键值... 可能需要1-2分钟.</Text3>
+			<Text4>清除 UpdatusUser用户帐户 (如果存在)</Text4>
+			<Text5>清除目录ing......</Text5>
+			<Text6>开始注册表清除</Text6>
+			<Text7>注册表清除完成</Text7>
+			<Text8>开始清除"Nvidia Optimus UpperFilter" (如果存在)</Text8>
+			<Text9>扫描新设备...</Text9>
+			<Text10>清除驱动完成</Text10>
+			<Text11>DDU 当前版本</Text11>
+			<Text12>GPU(显卡) #</Text12>
+			<Text13>识别为</Text13>
+			<Text14>GPU DeviceId(显卡硬件ID)</Text14>
+			<Text15>识别到驱动程序(s) 版本(s)</Text15>
 			<Text16>INF</Text16>
-			<Text17>INF 部分</Text17>
-			<Text18>未正确安装的显卡</Text18>
-			<Text19>正在清理一些特定的文件夹... 这可能需要几分钟。</Text19>
-			<Text20>开始清理，请稍后...</Text20>
-			<Text21>正在卸载...</Text21>
-			<Text22>驱动程序</Text22>
-			<Text23>正在执行 ddudr 移除... 这可能需要几分钟。</Text23>
-			<Text24>显卡已从 "设备管理器" 中移除。</Text24>
-			<Text25>正在执行 ddudr 移除声音控制器...</Text25>
-			<Text26>HD 声音适配器移除成功！</Text26>
-			<Text27>3D Vision USB 适配器已从 "设备管理器" 移除。</Text27>
-			<Text28>当前和隐藏的监视器移除成功！</Text28>
-			<Text29>ddudr 移除执行完毕。</Text29>
-			<Text30>开始清理 S-1-5-xx 注册表项，请稍后...</Text30>
-			<Text31>结束对 S-1-5-xx 注册表项的清理。</Text31>
-			<Text32>开始清理 HKCR\Installer\Products 注册表项，请稍后...</Text32>
-			<Text33>结束对 HKCR\Installer\Products 注册表项的清理。</Text33>
-			<Text34>开始清理 HKLM\Installer\Products 注册表项，请稍后...</Text34>
-			<Text35>结束对 HKLM\Installer\Products 注册表项的清理。</Text35>
-			<Text36>开始清理 HKCU\Installer\Products 注册表项，请稍后...</Text36>
-			<Text37>结束对 HKCU\Installer\Products 注册表项的清理。</Text37>
-			<Text38>正在清理进程/服务...</Text38>
-			<Text39>进程/服务清理完毕。</Text39>
-			<Text40>删除完毕。</Text40>
-			<Text41>值移除完毕。</Text41>
-			<Text42>文件删除完毕。</Text42>
+			<Text17>INF 区间</Text17>
+			<Text18>显卡没有被正确安装</Text18>
+			<Text19>正在删除特定文件夹,请稍等...</Text19>
+			<Text20>开始清除...</Text20>
+			<Text21>正在卸载ing</Text21>
+			<Text22>驱动</Text22>
+			<Text23>正在从 SetupAPI(安装接口)清除相关内容,请稍等......</Text23>
+			<Text24>已经从设备管理器删除显卡驱动(s)</Text24>
+			<Text25>正在从SetupAPI(安装接口) 清除 Audio controller(音频控制程序).</Text25>
+			<Text26>HD audio 适配器 已清除</Text26>
+			<Text27>已经从设备管理器删除 3D Vision USB 适配器</Text27>
+			<Text28>监视器及隐藏的监视器 清除完成</Text28>
+			<Text29>SetupAPI(安装接口) 清除完成</Text29>
+			<Text30>开始清除至 S-1-5-xx 区间</Text30>
+			<Text31>结束至 S-1-5-xx 区间清除</Text31>
+			<Text32>开始清除 Classesroot ,installer\products </Text32>
+			<Text33>结束清除 Classesroot ,installer\products </Text33>
+			<Text34>开始清除 localmachine ,installer\products </Text34>
+			<Text35>结束清除 localmachine ,installer\products </Text35>
+			<Text36>开始清除 currentuser ,installer\products </Text36>
+			<Text37>结束清除 currentuser ,installer\products </Text37>
+			<Text38>正在清除 process/services...</Text38>
+			<Text39>Process/Services 清除完成</Text39>
+			<Text40>已删除.</Text40>
+			<Text41>已移除数值.</Text41>
+			<Text42>文件清除完成.</Text42>
 		</UpdateLog>
 	</frmMain>
-	<frmOptions Text="选项">
-		<btnClose>
+
+	<frmOptions Text="选项设置">
+		<btnclose>
 			<Text>关闭</Text>
-		</btnClose>
+		</btnclose>
 		<lblOffer>
-			<Text>显示合作伙伴提供的项目（主界面广告）</Text>
-			<Tooltip>取消勾选可隐藏主界面广告。</Tooltip>
+			<Text>显示 合作项目优惠信息</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA 特定选项</Text>
+			<Text>NVIDIA 个性设置</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD 特定选项</Text>
+			<Text>AMD 个性设置</Text>
 		</lblAmdspecific>
 		<lblGeneral>
-			<Text>常规选项</Text>
+			<Text>常规设置</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>移除 "C:\nVidia" 驱动文件夹【不推荐】</Text>
+			<Text>清除 "C:\NVIDIA" 驱动文件夹 (一般情况下不建议使用)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>在启动路径下保存日志文件【强烈建议】</Text>
+			<Text>将日志文件保存在启动路径下 (最佳推荐)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
-			<Text>移除 PhysX</Text>
+			<Text>清除 PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
-			<Text>移除 3DTV Play</Text>
+			<Text>清除 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
-			<Text>创建系统还原点（如果允许）</Text>
+			<Text>创建系统还原点 (如果允许)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>移除当前和非当前监视器（推荐）</Text>
+			<Text>清除 当前和隐藏监视器 (推荐勾选)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>移除 AMD 声音总线控制器</Text>
+			<Text>清除 AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>移除 "C:\AMD" 驱动文件夹【不推荐】</Text>
+			<Text>清除 "C:\AMD" 驱动文件夹 (一般情况下不建议使用)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>移除 amdkmpfd 过滤器驱动（推荐 AMD 芯片组用户提前备份）</Text>
+			<Text>清除 AMDKMPFD 筛选器驱动  (建议AMD芯片组用户提前备份)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>软件启动时显示 "加载方式选择对话框"</Text>
+			<Text>启动时显示 安全模式选择界面</Text>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>在 Roaming 用户文件夹保存配置文件</Text>
+			<Text>将配置文件保存在 Roaming 文件夹中</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>软件启动时自动检查更新（推荐）</Text>
+			<Text>DDU启动时自动检测更新 (推荐勾选)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>移除 Geforce Experience（GFE）</Text>
+			<Text>清除 GeForce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>移除 AMD Crimson 着色器缓存文件夹</Text>
-			<Tooltip>推荐用于出现着色器缓存损坏引起的绘图异常（速度或画面错误）时，或者您要切换到芯片品牌不同（如 NVIDIA）的显卡时。</Tooltip>
+			<Text>清除 AMD Crimson Shader Cache folder(着色器缓存文件夹)</Text>
+			<Tooltip>
+				如果你的机器出现过因为着色器缓存数据引发的问题(例如:渲染速度不正常或者画面显示不正常),或者你打算更换不同品牌的显卡(例如: NVIDIA)时.我们才建议您勾选.
+			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>移除 Vulkan 运行库</Text>
-			<Tooltip>当存在两块不同的能够调用 Vulkan API 的显卡时【不推荐】勾选。</Tooltip>
+			<Text>清除 Vulkan Runtime</Text>
+			<Tooltip>一般情况下不建议使用,除非你拥有两个或多个不同的显卡需要使用到 Vulkan 接口开发..</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>使用 SetupAPI</Text>
-			<Tooltip>勾选以使用 SetupAPI 取代外部的 ddudr 工具（DDU 软件自带）来移除驱动程序。</Tooltip>
-		</lblUseSetupAPI>
 	</frmOptions>
-	<frmLaunch Text="加载方式选择对话框">
+
+	<frmLaunch Text="运行模式启动器">
 		<btnAccept>
-			<Text>继续加载</Text>
+			<Text>启动DDU</Text>
 			<Text2>
-				重启电脑进入
+				重启切至
 				安全模式
 			</Text2>
 		</btnAccept>
-		<btnClose>
-			<Text>关闭</Text>
-		</btnClose>
+		<btnclose>
+			<Text>close</Text>
+		</btnclose>
 		<lblLaunchOption>
-			<Text>选择加载方式：</Text>
+			<Text>运行模式</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				检测到当前系统没有在安全模式中运行。强烈建议您重新启动计算机进入安全模式
-				以避免可能出现的任何问题。
+					建议选择"安全模式"下更好的稳定性,更彻底的清除能力
+					*避免出现任何未知问题的发生.*
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				给 Windows 8/8.1/10 用户的重要提示：
-				您需要知道您的 Windows 账户密码！（PIN 在安全模式下【无法】使用）
-				如果您忘记的话请立即关闭本软件！
+				Windows 8/8.1/10 用户请注意:
+				由于在"安全模式"下无法使用PIN码,你必需清楚得记得你的Windows登陆密码!
+				如果忘记了,在不知道密码的情况下,请立刻closeDDU.
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
-			<Item1>正常模式（当前模式）</Item1>
-			<Item2>安全模式【推荐】</Item2>
-			<Item3>带网络连接的安全模式</Item3>
+			<Item1>标准模式</Item1>
+			<Item2>安全模式 (推荐)</Item2>
+			<Item3>安全模式"带网络连接"</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+			<Text1>DDU运行时需要close一些软件 (例如 MSI Afterburner 和 RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
+
 	<frmLog Text="扩展日志">
-		<btnClose>
-			<Text>关闭</Text>
-		</btnClose>
+		<btnclose>
+			<Text>close</Text>
+		</btnclose>
 		<btnOpenLog>
-			<Text>打开日志文件</Text>
+			<Text>打开日志</Text>
 		</btnOpenLog>
+
 		<optionsMenuItem>
-			<Text>选项</Text>
+			<Text>设置</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
 			<Text>允许复制</Text>
 		</copyMenuItem>
+
 		<filtersMenuItem>
-			<Text>筛选器</Text>
+			<Text>过滤器</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
 			<Text>显示事件</Text>
@@ -302,32 +312,35 @@
 			<Text>显示错误</Text>
 		</errorsMenuItem>
 	</frmLog>
+
 	<frmSystemRestore Text="系统还原">
 		<lblSystemRestore>
-			<Text>尝试创建系统还原点。</Text>
+			<Text>尝试创建系统还原点.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
-	<frmAbout Text="关于">
-		<btnClose>
+
+	<frmAbout Text="About">
+		<btnclose>
 			<Text>关闭</Text>
-		</btnClose>
+		</btnclose>
 		<btnAbout>
-			<Text>关于</Text>
+			<Text>About</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>用户协议</Text>
+			<Text>服务条款 (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>翻译人员</Text>
+			<Text>翻译名单</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>向以下的翻译人员和所有没有在列的匿名人士表示衷心的感谢！</Text>
+			<Text>言语难以表达对以下人们的感谢,同时也感谢那些默默付出过的所有人!</Text>
 		</lblTranslators>
 	</frmAbout>
+
 	<Misc>
 		<About>
 			<Text>
-				显卡驱动卸载工具（Display Driver Uninstaller，缩写为 "DDU"）是专为清理显卡驱动而生的。（适用于 Intel/NVIDIA/AMD 芯片的显卡）
+				显卡驱动彻底清除器 (DDU) / 作为专清 (GPU) 驱动的程序.目前支持 (NVIDIA/AMD/INTEL)
 
 				本软件的作用就是从设备管理器和 Windows Driver Store 中移除所有版本的显卡驱动程序，以及 Intel/NVIDIA/AMD 安装的服务。
 
@@ -373,9 +386,11 @@
 				*DDU 软件及其开发者们与 Driver Sweeper 及其开发者们没有任何关联。
 			</Text>
 		</About>
+
 		<Tos>
 			<Text>
-				显卡驱动卸载工具（Display Driver Uninstaller，缩写为 "DDU"）用户协议
+
+				显卡驱动彻底清除器 ("DDU") 用户条款
 
 				开始使用 DDU 软件即表明您自愿成为本软件用户（"User"）。本协议在您开始使用 DDU 软件卸载驱动程序时自动生效。
 
@@ -385,11 +400,12 @@
 			</Text>
 		</Tos>
 	</Misc>
+
 	<LanguageTranslators>
 		<Translator>
-			<User>雷锋</User>
-			<Details>解放军</Details>
-			<LastUpdate>12/06/2016</LastUpdate>
+			<User>KvipCN</User>
+			<Details>共享精神不灭</Details>
+			<LastUpdate>24/07/2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 </DisplayDriverUninstaller>
