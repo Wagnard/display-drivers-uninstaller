@@ -5559,7 +5559,7 @@ Public Class frmMain
 	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
 		Me.Topmost = False
 
-		If Application.Settings.ProcessKilled AndAlso (Not Application.LaunchOptions.Silent) AndAlso (Not Application.Settings.ShowSafeModeMsg) Then
+		If Application.Settings.ProcessKilled AndAlso (Not Application.LaunchOptions.Silent) AndAlso (Not Application.Settings.EnableSafeModeDialog) Then
 			MessageBox.Show(Languages.GetTranslation("frmLaunch", "Messages", "Text1"), Application.Settings.AppName, Nothing, MessageBoxImage.Information)
 			Application.Settings.ProcessKilled = False
 		End If
@@ -5650,6 +5650,14 @@ Public Class frmMain
         Catch ex As Exception
             Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try
+
+		Select Case System.Windows.Forms.SystemInformation.BootMode
+			
+			Case Forms.BootMode.Normal
+				Microsoft.VisualBasic.MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text8"), MsgBoxStyle.Information, Application.Settings.AppName)
+
+		End Select
+
 	End Sub
 
 	Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing

@@ -77,7 +77,7 @@ Public Class CheckUpdate
 			Application.Settings.UpdateAvailable = status
 
 			If status = UpdateStatus.UpdateAvailable Then
-				If Not Application.Settings.ShowSafeModeMsg Then
+				If Not Application.Settings.EnableSafeModeDialog Then
 					Return
 				End If
 				If Not Security.Principal.WindowsIdentity.GetCurrent().IsSystem Then

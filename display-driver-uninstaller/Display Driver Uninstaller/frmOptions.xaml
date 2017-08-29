@@ -4,7 +4,7 @@
 	xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	Title="frmOptions" MinWidth="400" MinHeight="300" SizeToContent="WidthAndHeight" mc:Ignorable="d" d:DesignHeight="400" d:DesignWidth="400" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+	Title="frmOptions" MinWidth="400" MinHeight="300" mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="400" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight" Width="Auto">
 
 	<Window.Resources>
 		<conv:NullableBooleanToBoolean x:Key="NulBoolToBool"></conv:NullableBooleanToBoolean>
@@ -35,11 +35,10 @@
 				<DockPanel Grid.Row="0" Margin="10,10,10,10" DockPanel.Dock="Top">
 					<Label DockPanel.Dock="Top" x:Name="lblGeneral" Content="lblGeneral" FontWeight="Bold" FontSize="14"/>
 
-					<UniformGrid DockPanel.Dock="Top" Rows="9">
+					<UniformGrid DockPanel.Dock="Top" Rows="7">
 						<CheckBox x:Name="lblRemMonitors" IsChecked="{Binding RemoveMonitors, Converter={StaticResource NulBoolToBool}}" Content="lblRemMonitors" />
 						<CheckBox x:Name="lblSaveLogs" IsChecked="{Binding SaveLogs, Converter={StaticResource NulBoolToBool}}" Content="lblSaveLogs" />
 						<CheckBox x:Name="lblCreateRestorePoint" IsChecked="{Binding CreateRestorePoint, Converter={StaticResource NulBoolToBool}}" Content="lblCreateRestorePoint" />
-						<CheckBox x:Name="lblShowSafeModeMsg" IsChecked="{Binding ShowSafeModeMsg, Converter={StaticResource NulBoolToBool}}" Content="lblShowSafeModeMsg" />
 						<CheckBox x:Name="lblUseRoamingCfg" IsChecked="{Binding UseRoamingConfig, Converter={StaticResource NulBoolToBool}}" Content="lblUseRoamingCfg" />
 						<CheckBox x:Name="lblCheckUpdates" IsChecked="{Binding CheckUpdates, Converter={StaticResource NulBoolToBool}}" Content="lblCheckUpdates" />
 						<CheckBox x:Name="lblVulkan" IsChecked="{Binding RemoveVulkan, Converter={StaticResource NulBoolToBool}}" Content="lblVulkan" />
@@ -59,7 +58,7 @@
 					</UniformGrid>
 				</DockPanel>
 
-				<DockPanel Grid.Row="2" Margin="10,10,10,0" DockPanel.Dock="Top">
+				<DockPanel Grid.Row="2" Margin="10,10,10,10" DockPanel.Dock="Top">
 					<Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
 					<Label DockPanel.Dock="Top" x:Name="lblAmdspecific" Content="lblAmdspecific" FontWeight="Bold" FontSize="14" />
 
@@ -70,7 +69,15 @@
 						<CheckBox x:Name="lblRemCrimsonCache" IsChecked="{Binding RemoveCrimsonCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemCrimsonCache" />
 					</UniformGrid>
 				</DockPanel>
-			
+				
+				<DockPanel Grid.Row="2" Margin="10,10,10,0" DockPanel.Dock="Top">
+					<Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
+					<Label DockPanel.Dock="Top" x:Name="lblAdvancedO" Content="lblAdvancedO" FontWeight="Bold" FontSize="14" />
+
+					<UniformGrid DockPanel.Dock="Top" Rows="1">
+						<CheckBox x:Name="lblShowSafeModeMsg" IsChecked="{Binding EnableSafeModeDialog, Converter={StaticResource NulBoolToBool}}" Content="lblShowSafeModeMsg" />
+					</UniformGrid>
+				</DockPanel>
 			</DockPanel >
 		</ScrollViewer> 
 	

@@ -83,13 +83,13 @@ Public Class AppSettings
 	Private m_remGFE As DependencyProperty = RegDP("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
 
 	' Settings
-	Private m_showSafeModeMsg As DependencyProperty = RegDP("ShowSafeModeMsg", GetType(Boolean), GetType(AppSettings), True)
 	Private m_UseRoamingCfg As DependencyProperty = RegDP("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
 	Private m_CheckUpdates As DependencyProperty = RegDP("CheckUpdates", GetType(Boolean), GetType(AppSettings), True)
 	Private m_createRestorePoint As DependencyProperty = RegDP("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
 	Private m_saveLogs As DependencyProperty = RegDP("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
 	Private m_removevulkan As DependencyProperty = RegDP("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
 	Private m_showoffer As DependencyProperty = RegDP("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
+	Private m_enablesafemodedialog As DependencyProperty = RegDP("EnableSafeModeDialog", GetType(Boolean), GetType(AppSettings), False)
 
 #End Region
 
@@ -252,14 +252,6 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property ShowSafeModeMsg As Boolean
-		Get
-			Return CBool(GetValue(m_showSafeModeMsg))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_showSafeModeMsg, value)
-		End Set
-	End Property
 	Public Property UseRoamingConfig As Boolean
 		Get
 			Return CBool(GetValue(m_UseRoamingCfg))
@@ -310,6 +302,14 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property EnableSafeModeDialog As Boolean
+		Get
+			Return CBool(GetValue(m_enablesafemodedialog))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_enablesafemodedialog, value)
+		End Set
+	End Property
 
 #End Region
 
@@ -431,13 +431,13 @@ Public Class AppSettings
 						.WriteElementString("RemovePhysX", RemovePhysX.ToString())
 						.WriteElementString("Remove3DTVPlay", Remove3DTVPlay.ToString())
 						.WriteElementString("RemoveGFE", RemoveGFE.ToString())
-						.WriteElementString("ShowSafeModeMsg", ShowSafeModeMsg.ToString())
 						.WriteElementString("UseRoamingConfig", UseRoamingConfig.ToString())
 						.WriteElementString("CheckUpdates", CheckUpdates.ToString())
 						.WriteElementString("CreateRestorePoint", CreateRestorePoint.ToString())
 						.WriteElementString("SaveLogs", SaveLogs.ToString())
 						.WriteElementString("RemoveVulkan", RemoveVulkan.ToString())
 						.WriteElementString("ShowOffer", ShowOffer.ToString())
+						.WriteElementString("EnableSafeModeDialog", EnableSafeModeDialog.ToString())
 
 						.WriteEndElement()
 
@@ -568,9 +568,6 @@ Public Class AppSettings
 							Case "removegfe"
 								RemoveGFE = Boolean.Parse(KvP.Value)
 
-							Case "showsafemodemsg"
-								ShowSafeModeMsg = Boolean.Parse(KvP.Value)
-
 							Case "useroamingconfig"
 								UseRoamingConfig = Boolean.Parse(KvP.Value)
 
@@ -589,6 +586,8 @@ Public Class AppSettings
 							Case "showoffer"
 								ShowOffer = Boolean.Parse(KvP.Value)
 
+							Case "enablesafemodedialog"
+								EnableSafeModeDialog = Boolean.Parse(KvP.Value)
 						End Select
 					Next
 

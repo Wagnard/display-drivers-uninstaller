@@ -193,6 +193,9 @@
 		<lblAmdspecific>
 			<Text>AMD Specific Options</Text>
 		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>Advanced Options (Change at your own risks)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>General Options</Text>
 		</lblGeneral>
@@ -224,7 +227,8 @@
 			<Text>Remove the driver/filter AMDKMPFD (A backup is recommended for AMD chipset)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Show Safe Mode message box on startup</Text>
+			<Text>Enable Safe Mode dialog (Not recommended until you tested Safe Mode manually)</Text>
+			<Tooltip>Not recommended if you never booted your computer yourself into safe mode to see if it work. This option can cause a boot loop, black screen and possibly more.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Store config file in roaming folder</Text>

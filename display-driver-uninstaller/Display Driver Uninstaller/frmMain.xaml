@@ -8,7 +8,7 @@
 	mc:Ignorable="d"
 
 	Title="{Binding Settings.AppName, Mode=OneWay}"
-	Height="600" Width="692"
+	Height="625" Width="692"
 	MinHeight="590" MinWidth="600" ResizeMode="CanResize" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico"
 	Visibility="Visible" WindowStartupLocation="CenterScreen">
 

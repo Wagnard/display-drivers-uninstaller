@@ -689,7 +689,7 @@ Class Application
 						Exit Select
 					End If
 
-					If Settings.ShowSafeModeMsg = True Then
+					If Settings.EnableSafeModeDialog Then
 						Dim bootOption As Integer = -1				'-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
 						Dim frmSafeBoot As New frmLaunch With {.DataContext = Data, .Topmost = True}
 
