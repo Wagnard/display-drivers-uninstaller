@@ -197,6 +197,9 @@
 		<lblAmdspecific>
 			<Text>Папаметри, специфічні для AMD</Text>
 		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>Додаткові параметри (змінюйте на свій страх і ризик)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Загальні параметри</Text>
 		</lblGeneral>
@@ -228,7 +231,11 @@
 			<Text>Видалити драйвер/фільтр AMDKMPFD (рекомендовано створення резервної копії для чіпсета AMD)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Відображати вікно повідомлення про безпечний режим при запуску</Text>
+			<Text>Увімкнути діалог безпечного режиму (не рекомендовано, доки ви не перевірите безпечний режим вручну).</Text>
+			<Tooltip>
+				Не рекомендовано, якщо ви ніколи не завантажували комп'ютер самостійно в безпечному режимі, щоб перевірити, чи працює він.
+				Цей параметр може призвести до циклічного перезавантаження, чорного екрану і, можливо, більше.
+			</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Зберігати файл конфігурації у папці переміщення</Text>
@@ -401,7 +408,7 @@
 		<Translator>
 			<User>YuriPet</User>
 			<Details>yuripet@gmail.com</Details>
-			<LastUpdate>28/04/2017</LastUpdate>
+			<LastUpdate>30/08/2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
