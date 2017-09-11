@@ -4281,6 +4281,7 @@ Public Class frmMain
 						 child.ToLower.Contains("_nvdisplaycontainer") Or
 						 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
 						 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso removegfe Or
+						 child.ToLower.Contains("_osc") AndAlso removegfe Or
 						 child.ToLower.Contains("_nvcontainer") AndAlso config.RemoveGFE Then
 							If removephysx = False AndAlso child.ToLower.Contains("physx") Then
 								Continue For

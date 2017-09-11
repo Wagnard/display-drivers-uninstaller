@@ -63,15 +63,15 @@
 		<lblLanguage>
 			<Text>Выбор языка:</Text>
 		</lblLanguage>
+		
 
-		<Label9>
-			<Text>Примечание: любые неполадки или ошибки, вызванные работой программы, на вашей ответственности!</Text>
-		</Label9>
-		<Label10>
-			<Text>Используйте DDU в безопасном режиме</Text>
-		</Label10>
 
-		<lblUpdate>
+
+
+
+
+
+        <lblUpdate>
 			<Text>Проверка обновлений...</Text>
 			<Text2>Вы используете последнюю версию программы. Обновление не требуется.</Text2>
 			<Text3>Найдено обновление! Рекомендуется использовать последнюю доступную версию программы.</Text3>
@@ -197,6 +197,9 @@
 		<lblAmdspecific>
 			<Text>Параметры драйверов AMD</Text>
 		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>Дополнительные опции (изменение на свой страх и риск)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Общие параметры</Text>
 		</lblGeneral>
@@ -228,7 +231,8 @@
 			<Text>Удалить драйвер AMDKMPFD (рекомендуется резервное копирование для чипсета AMD)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Показывать окно с сообщением о безопасном режиме при запуске программы</Text>
+			<Text>Включить диалоговое окно "безопасный режим" при запуске программы (не рекомендуется до тех пор, пока безопасный режим не будет протестирован  вручную)
+Не рекомендуется, если вы никогда не загружали свой компьютер в безопасный режим, чтобы узнать, работает ли он. Этот параметр может вызвать циклическую перезагрузку, черный экран.</Text>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Сохранить конфигурационный файл в перемещаемой папке (могут быть ошибки)</Text>
@@ -250,11 +254,11 @@
 			<Text>Удалить библиотеки Vulkan API</Text>
 			<Tooltip>Не рекомендуется, если у вас установлено две разные видеокарты с поддержкой Vulkan API.</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>Использовать SetupAPI (тестовая функция)</Text>
-			<Tooltip>Использовать SetupAPI вместо внешнего инструмента DDUDR (DEVCON)</Tooltip>
-		</lblUseSetupAPI>
-	</frmOptions>
+	
+
+
+
+    </frmOptions>
 
 	<frmLaunch Text="Настройка запуска программы">
 		<btnAccept>
@@ -400,8 +404,8 @@
 		</Translator>
 
 		<Translator2>
-			<User>Danis Miryasov</User>
-			<LastUpdate>06/08/2017</LastUpdate>
+			<User>Danis Miryasov (E-mail: miryasov.danis@yandex.ru)</User>
+			<LastUpdate>05/09/2017</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 
