@@ -77,9 +77,6 @@ Public Class CheckUpdate
 			Application.Settings.UpdateAvailable = status
 
 			If status = UpdateStatus.UpdateAvailable Then
-				If Not Application.Settings.EnableSafeModeDialog Then
-					Return
-				End If
 				If Not Security.Principal.WindowsIdentity.GetCurrent().IsSystem Then
 					Select Case MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text1"), "Display Driver Uninstaller", MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
 						Case MessageBoxResult.Yes
@@ -101,16 +98,22 @@ Public Class CheckUpdate
 			If Application.IsDebug Then
 				Application.Settings.UpdateAvailable = UpdateStatus.Error
 			Else
-				Dim currentVersion As Version = Application.Settings.AppVersion
-				Dim CheckUpdate As Boolean = Application.Settings.CheckUpdates
-				Dim trd As Thread = New Thread(Sub() CheckUpdatesThread(currentVersion, CheckUpdate)) With
-				  {
-				  .CurrentCulture = New Globalization.CultureInfo("en-US"),
-				  .CurrentUICulture = New Globalization.CultureInfo("en-US"),
-				  .IsBackground = True
-				  }
+				If Application.Settings.EnableSafeModeDialog Then
+					Dim currentVersion As Version = Application.Settings.AppVersion
+					Dim CheckUpdate As Boolean = Application.Settings.CheckUpdates
+					Dim trd As Thread = New Thread(Sub() CheckUpdatesThread(currentVersion, CheckUpdate)) With
+					  {
+					  .CurrentCulture = New Globalization.CultureInfo("en-US"),
+					  .CurrentUICulture = New Globalization.CultureInfo("en-US"),
+					  .IsBackground = True
+					  }
 
-				trd.Start()
+					trd.Start()
+				Else
+					Dim currentVersion As Version = Application.Settings.AppVersion
+					Dim CheckUpdate As Boolean = Application.Settings.CheckUpdates
+					CheckUpdatesThread(currentVersion, CheckUpdate)
+				End If
 			End If
 		Catch ex As Exception
 			Application.Log.AddException(ex, "Failed to start UpdateCheck thread!")

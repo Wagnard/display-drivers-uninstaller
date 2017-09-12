@@ -714,6 +714,9 @@ Class Application
 								Return True
 
 						End Select
+					Else
+						Dim CheckUpdate As New CheckUpdate
+						CheckUpdate.CheckUpdates()
 					End If
 				End If
 		End Select
