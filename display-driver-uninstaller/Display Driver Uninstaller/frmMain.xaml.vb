@@ -1551,7 +1551,7 @@ Public Class frmMain
 											If IsNullOrWhitespace(child2) Then Continue For
 
 											If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages",
-											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard", "amd problem report wizard") Then
+											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard", "amd problem report wizard", "cnbranding") Then
 												Try
 													deletesubregkey(regkey2, child2)
 												Catch ex As Exception
@@ -1600,7 +1600,7 @@ Public Class frmMain
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-							If StrContainsAny(child, True, "eeu", "fuel", "cn", "chill", "mftvdecoder", "dvr", "gpu") Then
+							If StrContainsAny(child, True, "eeu", "fuel", "cn", "chill", "mftvdecoder", "dvr", "gpu", "amdanalytics") Then
 								Try
 									deletesubregkey(regkey, child)
 								Catch ex As Exception
@@ -5646,10 +5646,10 @@ Public Class frmMain
 				}
 
 				workThread.Start()
-            End If
+			End If
 
-        Catch ex As Exception
-            Application.Log.AddException(ex, "frmMain loading caused error!")
+		Catch ex As Exception
+			Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try
 
 		Select Case System.Windows.Forms.SystemInformation.BootMode
