@@ -191,6 +191,9 @@
 		<lblAmdspecific>
 			<Text>Opcje dla kart AMD</Text>
 		</lblAmdspecific>
+			<lblAdvancedO>
+			<Text>Opcje zaawansowane</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Opcje główne</Text>
 		</lblGeneral>
@@ -223,6 +226,7 @@
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Pokaż wiadomość o trybie awaryjnym podczas uruchamiania</Text>
+			<Tooltip>Nie zalecane, jeśli nigdy nie uruchomiłeś komputera w trybie awaryjnym, aby sprawdzić, czy działa. Ta opcja może powodować pętlę rozruchu, czarny ekran</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Przechowuj plik ustawień w folderze Roaming</Text>
@@ -409,7 +413,7 @@
 		<Translator>
 			<User>Łukasz Kuchta @Bladius</User>
 			<Details>Tłumacz oficjalny</Details>
-			<LastUpdate>22.07.2017</LastUpdate>
+			<LastUpdate>30.08.2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
