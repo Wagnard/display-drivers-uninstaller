@@ -5652,13 +5652,14 @@ Public Class frmMain
 			Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try
 
-		Select Case System.Windows.Forms.SystemInformation.BootMode
-			
-			Case Forms.BootMode.Normal
-				Microsoft.VisualBasic.MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text8"), MsgBoxStyle.Information, Application.Settings.AppName)
+		If Not Application.LaunchOptions.Silent Then
+			Select Case System.Windows.Forms.SystemInformation.BootMode
 
-		End Select
+				Case Forms.BootMode.Normal
+					Microsoft.VisualBasic.MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text8"), MsgBoxStyle.Information, Application.Settings.AppName)
 
+			End Select
+		End If
 	End Sub
 
 	Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
