@@ -38,11 +38,11 @@
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Remove "GeForce Experience" display driver installer cache/files.
+				Remove "GeForce Experience" display driver installer cache and files.
 				(Note: Drivers won't be removed)
 			</Text>
 			<Tooltip>
-				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+				This is mostly used to recover some disk space not cleaned by GeForce Experience when it install a driver (Old GFE version).
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
@@ -122,8 +122,8 @@
 			<Text3>You are not using DDU with Administrator privileges. The application will now exit.</Text3>
 			<Text4>Unable to find PAExec. Please refer to the log.</Text4>
 			<Text5>Display Driver Uninstaller (DDU) is modifying your registry a lot. DDU will try to create a system restore point automatically (Normal mode only).</Text5>
-			<Text6>A problem occurred in one of the module, send your DDU logs to the developer.</Text6>
-			<Text7>DDU detected that you have an AMD switching Laptop (Enduro or equivalent), DDU is not yet fully compatible / tested with Enduro systems. Use at your own risk.</Text7>
+			<Text6>A problem occurred in one of the modules, send your DDU logs to the developer.</Text6>
+			<Text7>DDU detected that you have an AMD switching Laptop (Enduro or equivalent), DDU is not yet fully compatible and tested with Enduro systems. Use at your own risk.</Text7>
 			<Text8>DDU has detected that you are NOT in Safe Mode... For a better cleanup without issues, it is recommended that you reboot into safemode.</Text8>
 			<Text9>Windows Device Installation Settings have been changed to NOT automatically install drivers.</Text9>
 			<Text10>Clean uninstall completed! Would you like to exit now?</Text10>
@@ -149,7 +149,7 @@
 			<Text12>GPU #</Text12>
 			<Text13>Detected</Text13>
 			<Text14>GPU DeviceId</Text14>
-			<Text15>Detected Driver(s) Version(s)</Text15>
+			<Text15>Detected Driver Version(s)</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF Section</Text17>
 			<Text18>GPU not correctly installed</Text18>
@@ -159,9 +159,9 @@
 			<Text22>driver</Text22>
 			<Text23>Executing SetupAPI remove, please wait (can take a few minutes)</Text23>
 			<Text24>GPU(s) removed from Device Manager.</Text24>
-			<Text25>Executing SetupAPI Remove Audio controller.</Text25>
-			<Text26>HD audio adapters Removed!</Text26>
-			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
+			<Text25>Executing SetupAPI remove Audio controller.</Text25>
+			<Text26>HD audio adapters removed!</Text26>
+			<Text27>3D Vision USB Adapter removed from Device Manager.</Text27>
 			<Text28>Monitors and Hidden monitors removed!</Text28>
 			<Text29>SetupAPI remove complete</Text29>
 			<Text30>Starting S-1-5-xx region cleanup</Text30>
@@ -172,8 +172,8 @@
 			<Text35>End localmachine ,installer\products cleanup</Text35>
 			<Text36>Start currentuser ,installer\products cleanup</Text36>
 			<Text37>End currentuser ,installer\products cleanup</Text37>
-			<Text38>Cleaning process/services...</Text38>
-			<Text39>Process/Services cleanup complete</Text39>
+			<Text38>Cleaning processes/services...</Text38>
+			<Text39>Processes/Services cleanup complete</Text39>
 			<Text40>Deleted.</Text40>
 			<Text41>Value removed.</Text41>
 			<Text42>File deleted.</Text42>
@@ -228,7 +228,7 @@
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Enable Safe Mode dialog (Not recommended until you tested Safe Mode manually)</Text>
-			<Tooltip>Not recommended if you never booted your computer yourself into safe mode to see if it work. This option can cause a boot loop, black screen and possibly more.</Tooltip>
+			<Tooltip>Not recommended if you never booted your computer yourself into safe mode to see if it works. This option can cause a boot loop, black screen and possibly more.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Store config file in roaming folder</Text>
@@ -338,7 +338,7 @@
 			<Text>Translators</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>Big thanks to the following translators and also those who aren't listed!</Text>
 		</lblTranslators>
 	</frmAbout>
 

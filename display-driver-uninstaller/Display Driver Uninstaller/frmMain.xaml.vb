@@ -2990,6 +2990,7 @@ Public Class frmMain
 						 child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvgsync") Or
 						 child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
 						 child.ToLower.EndsWith("nvtelemetry") AndAlso config.RemoveGFE Or
@@ -3881,6 +3882,7 @@ Public Class frmMain
 											 child2.ToLower.Contains("nvcontrolpanel") Or
 											 child2.ToLower.Contains("nvcamera") Or
 											 child2.ToLower.Contains("nvtray") AndAlso removegfe Or
+											 child2.ToLower.Contains("ansel") AndAlso removegfe Or
 											 child2.ToLower.Contains("nvcontainer") AndAlso removegfe Or
 											 child2.ToLower.Contains("nvstream") AndAlso removegfe Or
 											 child2.ToLower.Contains("nvidia control panel") Then
