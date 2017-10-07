@@ -157,16 +157,17 @@ Namespace Win32
 #Region "Functions"
 
 		Private Shared Function GetIs64() As Boolean
-			Dim binaryType As BinaryType
+			Return (IntPtr.Size = 8)
+			'Dim binaryType As BinaryType
 
-			Try
-				If GetBinaryType(Assembly.GetExecutingAssembly().Location, binaryType) Then
-					Return binaryType = binaryType.SCS_64BIT_BINARY
-				End If
-			Catch ex As Exception
-			End Try
+			'Try
+			'	If GetBinaryType(Assembly.GetExecutingAssembly().Location, binaryType) Then
+			'		Return binaryType = binaryType.SCS_64BIT_BINARY
+			'	End If
+			'Catch ex As Exception
+			'End Try
 
-			Return False
+			'Return False
 		End Function
 
 		Private Shared Function GetIsAdmin() As Boolean
