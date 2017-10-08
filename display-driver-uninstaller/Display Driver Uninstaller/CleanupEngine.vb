@@ -1770,17 +1770,22 @@ Public Class CleanupEngine
 				Application.Log.AddException(ex)
 			End Try
 
-			For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "Prefetch")
-				If IsNullOrWhitespace(child) Then Continue For
 
-				If StrContainsAny(child, True, driverFile) Then
-					Try
-						delete(child)
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-				End If
-			Next
+			Try
+				For Each child As String In My.Computer.FileSystem.GetFiles(filePath & "Prefetch")
+					If IsNullOrWhitespace(child) Then Continue For
+
+					If StrContainsAny(child, True, driverFile) Then
+						Try
+							delete(child)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					End If
+				Next
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
 
 			Dim winPath As String = Nothing
 
