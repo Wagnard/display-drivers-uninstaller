@@ -429,10 +429,12 @@ Class Application
 
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
 				If ExtractPAExec() Then				' Extract PAExec to \x64 or \x86 dir
-					If LaunchAsSystem() Then		' Launched as System, close this instance, True = close, false = continue
-						Me.Shutdown(0)
-						Exit Sub
-					End If
+                    If LaunchAsSystem() Then
+                        ' Launched as System, close this instance, True = close, false = continue
+                        Log.SaveToFile()
+                        Me.Shutdown(0)
+                        Exit Sub
+                    End If
 				End If
 			End If
 
@@ -672,10 +674,15 @@ Class Application
 					 .RedirectStandardOutput = False
 					   }
 					  }
+						Try
 
-						process.Start()
-						process.WaitForExit()
-						process.Close()
+							process.Start()
+							process.WaitForExit()
+							process.Close()
+
+						Catch ex As Exception
+							Log.AddException(ex, "Failed to use BCDEDIT! - " & Paths.System32 & "BCDEDIT")
+						End Try
 					End Using
 				End If
 
@@ -783,9 +790,15 @@ Class Application
 			   }
 			  }
 
-				process.Start()
-				process.WaitForExit()
-				process.Close()
+				Try
+					process.Start()
+					process.WaitForExit()
+					process.Close()
+				Catch ex As Exception
+					Log.AddException(ex, "Failed to use BCDEDIT! - " & Paths.System32 & "BCDEDIT")
+					Return False
+				End Try
+
 			End Using
 
 			Try
@@ -821,15 +834,19 @@ Class Application
 			   .StartInfo = New ProcessStartInfo(Paths.System32 & "shutdown", "/r /t 0") With
 			   {
 			 .WindowStyle = ProcessWindowStyle.Hidden,
-			 .UseShellExecute = True,
+			 .UseShellExecute = False,
 			 .CreateNoWindow = True,
 			 .RedirectStandardOutput = False
 			   }
 			  }
+				Try
+					process.Start()
+					process.WaitForExit()
+					process.Close()
+				Catch ex As Exception
+					Log.AddException(ex, "Failed to use into shutdown! - " & Paths.System32 & "shutdown")
+				End Try
 
-				process.Start()
-				process.WaitForExit()
-				process.Close()
 			End Using
 		End If
 	End Sub
@@ -846,7 +863,7 @@ Class Application
 			  .StartInfo = New ProcessStartInfo(Paths.System32 & "shutdown", "/s /t 0") With
 			   {
 			   .WindowStyle = ProcessWindowStyle.Hidden,
-			   .UseShellExecute = True,
+			   .UseShellExecute = False,
 			   .CreateNoWindow = True,
 			   .RedirectStandardOutput = False
 			   }

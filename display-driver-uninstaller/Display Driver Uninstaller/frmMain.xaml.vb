@@ -2124,116 +2124,121 @@ Public Class frmMain
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
-
 		End If
+
 		'Task Scheduler cleanUP (AMD Updater)
-		'Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
-		'	If regkey IsNot Nothing Then
-		'		For Each child As String In regkey.GetSubKeyNames
-		'			If IsNullOrWhitespace(child) Then Continue For
-		'			Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-		'				If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-		'					If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater") Then
-		'						deletesubregkey(regkey, child)
-		'					End If
-		'				End If
-		'			End Using
-		'		Next
-		'	End If
-		'End Using
-
-		'Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree", True)
-		'	If regkey IsNot Nothing Then
-		'		For Each child As String In regkey.GetSubKeyNames
-		'			If IsNullOrWhitespace(child) Then Continue For
-		'			If StrContainsAny(child, True, "AMD Updater", "StartCN") Then
-		'				Try
-		'					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-		'						If regkey2 IsNot Nothing Then
-		'							If Not IsNullOrWhitespace(regkey2.GetValue("Id", String.Empty).ToString) Then
-		'								wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
-		'								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
-		'									If regkey3 IsNot Nothing Then
-		'										For Each child2 As String In regkey3.GetSubKeyNames
-		'											If IsNullOrWhitespace(child2) Then Continue For
-		'											If StrContainsAny(wantedvalue, True, child2) Then
-		'												deletesubregkey(regkey3, child2)
-		'											End If
-		'										Next
-		'									End If
-		'								End Using
-		'							End If
-		'						End If
-		'					End Using
-		'				Catch ex As Exception
-		'					Application.Log.AddException(ex)
-		'				End Try
-		'				deletesubregkey(regkey, child)
-		'			End If
-		'		Next
-		'	End If
-		'End Using
-        Dim OldValue As String = Nothing
-		Select Case System.Windows.Forms.SystemInformation.BootMode
-            Case Forms.BootMode.FailSafe
-                If (CheckServiceStartupType("Schedule")) <> "4" Then
-                    StartService("Schedule")
-                Else
-                    OldValue = CheckServiceStartupType("Schedule")
-                    SetServiceStartupType("Schedule", "3")
-                    StartService("Schedule")
-                End If
-
-			Case Forms.BootMode.FailSafeWithNetwork
-                If (CheckServiceStartupType("Schedule")) <> "4" Then
-                    StartService("Schedule")
-                Else
-                    OldValue = CheckServiceStartupType("Schedule")
-                    SetServiceStartupType("Schedule", "3")
-                    StartService("Schedule")
-                End If
-			Case Forms.BootMode.Normal
-				'Usually this service is Running in normal mode, we *could* in the future check all this.
-                If (CheckServiceStartupType("Schedule")) <> "4" Then
-                    StartService("Schedule")
-                Else
-                    OldValue = CheckServiceStartupType("Schedule")
-                    SetServiceStartupType("Schedule", "3")
-                    StartService("Schedule")
-                End If
-        End Select
-
-		Using tsc As New TaskSchedulerControl(config)
-			For Each task As Task In tsc.GetAllTasks
-				If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
-					Try
-						task.Delete()
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-					Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
-				End If
-			Next
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames
+					If IsNullOrWhitespace(child) Then Continue For
+					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+						If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
+							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater") Then
+								deletesubregkey(regkey, child)
+							End If
+						End If
+					End Using
+				Next
+			End If
 		End Using
 
-		Select Case System.Windows.Forms.SystemInformation.BootMode
-			Case Forms.BootMode.FailSafe
-                StopService("Schedule")
-                If OldValue IsNot Nothing Then
-                    SetServiceStartupType("Schedule", OldValue)
-                End If
-			Case Forms.BootMode.FailSafeWithNetwork
-                StopService("Schedule")
-                If OldValue IsNot Nothing Then
-                    SetServiceStartupType("Schedule", OldValue)
-                End If
-			Case Forms.BootMode.Normal
-                'Usually this service is running in normal mode, we don't need to stop it.
-                If OldValue IsNot Nothing Then
-                    StopService("Schedule")
-                    SetServiceStartupType("Schedule", OldValue)
-                End If
-		End Select
+		Using schedule As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache", True)
+			If schedule IsNot Nothing Then
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(schedule, "Tree", True)
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames
+							If IsNullOrWhitespace(child) Then Continue For
+							If StrContainsAny(child, True, "AMD Updater", "StartCN") Then
+								For Each ScheduleChild As String In schedule.GetSubKeyNames
+									Try
+										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+											If regkey2 IsNot Nothing Then
+												If Not IsNullOrWhitespace(regkey2.GetValue("Id", String.Empty).ToString) Then
+													wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
+													Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(schedule, ScheduleChild, True)
+														If regkey3 IsNot Nothing Then
+															For Each child2 As String In regkey3.GetSubKeyNames
+																If IsNullOrWhitespace(child2) Then Continue For
+																If StrContainsAny(wantedvalue, True, child2) Then
+																	deletesubregkey(regkey3, child2)
+																End If
+															Next
+														End If
+													End Using
+												End If
+											End If
+										End Using
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								Next
+								deletesubregkey(regkey, child)
+							End If
+						Next
+					End If
+				End Using
+			End If
+		End Using
+
+		'      Dim OldValue As String = Nothing
+		'Select Case System.Windows.Forms.SystemInformation.BootMode
+		'          Case Forms.BootMode.FailSafe
+		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
+		'                  StartService("Schedule")
+		'              Else
+		'                  OldValue = CheckServiceStartupType("Schedule")
+		'                  SetServiceStartupType("Schedule", "3")
+		'                  StartService("Schedule")
+		'              End If
+		'	Case Forms.BootMode.FailSafeWithNetwork
+		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
+		'                  StartService("Schedule")
+		'              Else
+		'                  OldValue = CheckServiceStartupType("Schedule")
+		'                  SetServiceStartupType("Schedule", "3")
+		'                  StartService("Schedule")
+		'              End If
+		'	Case Forms.BootMode.Normal
+		'		'Usually this service is Running in normal mode, we *could* in the future check all this.
+		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
+		'                  StartService("Schedule")
+		'              Else
+		'                  OldValue = CheckServiceStartupType("Schedule")
+		'                  SetServiceStartupType("Schedule", "3")
+		'                  StartService("Schedule")
+		'              End If
+		'      End Select
+		'Using tsc As New TaskSchedulerControl(config)
+		'	For Each task As Task In tsc.GetAllTasks
+		'		If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
+		'			Try
+		'				task.Delete()
+		'			Catch ex As Exception
+		'				Application.Log.AddException(ex)
+		'			End Try
+		'			Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
+		'		End If
+		'	Next
+		'End Using
+
+		'Select Case System.Windows.Forms.SystemInformation.BootMode
+		'	Case Forms.BootMode.FailSafe
+		'              StopService("Schedule")
+		'              If OldValue IsNot Nothing Then
+		'                  SetServiceStartupType("Schedule", OldValue)
+		'              End If
+		'	Case Forms.BootMode.FailSafeWithNetwork
+		'              StopService("Schedule")
+		'              If OldValue IsNot Nothing Then
+		'                  SetServiceStartupType("Schedule", OldValue)
+		'              End If
+		'	Case Forms.BootMode.Normal
+		'              'Usually this service is running in normal mode, we don't need to stop it.
+		'              If OldValue IsNot Nothing Then
+		'                  StopService("Schedule")
+		'                  SetServiceStartupType("Schedule", OldValue)
+		'              End If
+		'End Select
 
 		'Killing Explorer.exe to help releasing file that were open.
 		Application.Log.AddMessage("Killing Explorer.exe")
@@ -2646,6 +2651,7 @@ Public Class frmMain
 						 (child.ToLower.Contains("nvosc.") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("shareconnect") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("nvgs") AndAlso config.RemoveGFE) Or
+						 (child.ToLower.Contains("GLCache") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Then
 
 							Delete(child)
@@ -2869,6 +2875,7 @@ Public Class frmMain
 					   child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
 					   child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("update common") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("shield") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nview") Or
@@ -2985,6 +2992,7 @@ Public Class frmMain
 						 child.ToLower.Contains("nvidia geforce experience") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvstreamc") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("update common") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("display.nvcontainer") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
@@ -4865,67 +4873,121 @@ Public Class frmMain
 		Catch ex As Exception
 		End Try
 
-        Dim OldValue As String = Nothing
-        Select Case System.Windows.Forms.SystemInformation.BootMode
-            Case Forms.BootMode.FailSafe
-                If (CheckServiceStartupType("Schedule")) <> "4" Then
-                    StartService("Schedule")
-                Else
-                    OldValue = CheckServiceStartupType("Schedule")
-                    SetServiceStartupType("Schedule", "3")
-                    StartService("Schedule")
-                End If
-
-            Case Forms.BootMode.FailSafeWithNetwork
-                If (CheckServiceStartupType("Schedule")) <> "4" Then
-                    StartService("Schedule")
-                Else
-                    OldValue = CheckServiceStartupType("Schedule")
-                    SetServiceStartupType("Schedule", "3")
-                    StartService("Schedule")
-                End If
-            Case Forms.BootMode.Normal
-                'Usually this service is Running in normal mode, we *could* in the future check all this.
-                If (CheckServiceStartupType("Schedule")) <> "4" Then
-                    StartService("Schedule")
-                Else
-                    OldValue = CheckServiceStartupType("Schedule")
-                    SetServiceStartupType("Schedule", "3")
-                    StartService("Schedule")
-                End If
-        End Select
-
-		Using tsc As New TaskSchedulerControl(config)
-			For Each task As Task In tsc.GetAllTasks
-				If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience") AndAlso config.RemoveGFE Then
-					Try
-						task.Delete()
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-					Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
-				End If
-			Next
+		'Task Scheduler cleanUP 
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames
+					If IsNullOrWhitespace(child) Then Continue For
+					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+						If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
+							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NVIDIA Profile Updater", "NVIDIA telemetry monitor", "NVIDIA crash and telemetry reporter") AndAlso config.RemoveGFE Then
+								deletesubregkey(regkey, child)
+							End If
+						End If
+					End Using
+				Next
+			End If
 		End Using
 
-        Select Case System.Windows.Forms.SystemInformation.BootMode
-            Case Forms.BootMode.FailSafe
-                StopService("Schedule")
-                If OldValue IsNot Nothing Then
-                    SetServiceStartupType("Schedule", OldValue)
-                End If
-            Case Forms.BootMode.FailSafeWithNetwork
-                StopService("Schedule")
-                If OldValue IsNot Nothing Then
-                    SetServiceStartupType("Schedule", OldValue)
-                End If
-            Case Forms.BootMode.Normal
-                'Usually this service is running in normal mode, we don't need to stop it.
-                If OldValue IsNot Nothing Then
-                    StopService("Schedule")
-                    SetServiceStartupType("Schedule", OldValue)
-                End If
-        End Select
+		Using schedule As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache", True)
+			If schedule IsNot Nothing Then
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(schedule, "Tree", True)
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames
+							If IsNullOrWhitespace(child) Then Continue For
+							If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience") AndAlso config.RemoveGFE Then
+								For Each ScheduleChild As String In schedule.GetSubKeyNames
+									Try
+										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+											If regkey2 IsNot Nothing Then
+												If Not IsNullOrWhitespace(regkey2.GetValue("Id", String.Empty).ToString) Then
+													wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
+													Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(schedule, ScheduleChild, True)
+														If regkey3 IsNot Nothing Then
+															For Each child2 As String In regkey3.GetSubKeyNames
+																If IsNullOrWhitespace(child2) Then Continue For
+																If StrContainsAny(wantedvalue, True, child2) Then
+																	deletesubregkey(regkey3, child2)
+																End If
+															Next
+														End If
+													End Using
+												End If
+											End If
+										End Using
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								Next
+								deletesubregkey(regkey, child)
+							End If
+						Next
+					End If
+				End Using
+			End If
+		End Using
+
+		'      Dim OldValue As String = Nothing
+		'      Select Case System.Windows.Forms.SystemInformation.BootMode
+		'          Case Forms.BootMode.FailSafe
+		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
+		'                  StartService("Schedule")
+		'              Else
+		'                  OldValue = CheckServiceStartupType("Schedule")
+		'                  SetServiceStartupType("Schedule", "3")
+		'                  StartService("Schedule")
+		'              End If
+
+		'          Case Forms.BootMode.FailSafeWithNetwork
+		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
+		'                  StartService("Schedule")
+		'              Else
+		'                  OldValue = CheckServiceStartupType("Schedule")
+		'                  SetServiceStartupType("Schedule", "3")
+		'                  StartService("Schedule")
+		'              End If
+		'          Case Forms.BootMode.Normal
+		'              'Usually this service is Running in normal mode, we *could* in the future check all this.
+		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
+		'                  StartService("Schedule")
+		'              Else
+		'                  OldValue = CheckServiceStartupType("Schedule")
+		'                  SetServiceStartupType("Schedule", "3")
+		'                  StartService("Schedule")
+		'              End If
+		'      End Select
+
+		'Using tsc As New TaskSchedulerControl(config)
+		'	For Each task As Task In tsc.GetAllTasks
+		'		If StrContainsAny(task.Name, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience") AndAlso config.RemoveGFE Then
+		'			Try
+		'				task.Delete()
+		'			Catch ex As Exception
+		'				Application.Log.AddException(ex)
+		'			End Try
+		'			Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
+		'		End If
+		'	Next
+		'End Using
+
+		'      Select Case System.Windows.Forms.SystemInformation.BootMode
+		'          Case Forms.BootMode.FailSafe
+		'              StopService("Schedule")
+		'              If OldValue IsNot Nothing Then
+		'                  SetServiceStartupType("Schedule", OldValue)
+		'              End If
+		'          Case Forms.BootMode.FailSafeWithNetwork
+		'              StopService("Schedule")
+		'              If OldValue IsNot Nothing Then
+		'                  SetServiceStartupType("Schedule", OldValue)
+		'              End If
+		'          Case Forms.BootMode.Normal
+		'              'Usually this service is running in normal mode, we don't need to stop it.
+		'              If OldValue IsNot Nothing Then
+		'                  StopService("Schedule")
+		'                  SetServiceStartupType("Schedule", OldValue)
+		'              End If
+		'      End Select
 
 		UpdateTextMethod("End of Registry Cleaning")
 
