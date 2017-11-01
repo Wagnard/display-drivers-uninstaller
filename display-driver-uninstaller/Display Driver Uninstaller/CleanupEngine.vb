@@ -250,6 +250,14 @@ Public Class CleanupEngine
 									End Using
 								Catch ex As Exception
 								End Try
+								Try
+									Using regkeyM As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True)
+										If regkeyM IsNot Nothing Then
+											deletesubregkey(regkeyM, (child.Replace("{", "")).Replace("}", ""))
+										End If
+									End Using
+								Catch ex As Exception
+								End Try
 
 								deletesubregkey(regkeyRoot, child)
 							End If
@@ -358,6 +366,15 @@ Public Class CleanupEngine
 
 									Try
 										Using regkeyM As RegistryKey = MyRegistry.OpenSubKey(regkey, "MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True)
+											If regkeyM IsNot Nothing Then
+												deletesubregkey(regkeyM, (child.Replace("{", "")).Replace("}", ""))
+											End If
+										End Using
+									Catch ex As Exception
+									End Try
+
+									Try
+										Using regkeyM As RegistryKey = MyRegistry.OpenSubKey(regkey, "MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True)
 											If regkeyM IsNot Nothing Then
 												deletesubregkey(regkeyM, (child.Replace("{", "")).Replace("}", ""))
 											End If
@@ -1098,14 +1115,56 @@ Public Class CleanupEngine
 														End Try
 
 														Try
+															Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface", True)
+																If reginterface IsNot Nothing Then
+																	For Each interfacechild As String In reginterface.GetSubKeyNames
+																		If IsNullOrWhitespace(interfacechild) Then Continue For
+																		Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
+																			If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
+																				If StrContainsAny(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty).ToString, True, child) Then
+																					deletesubregkey(reginterface, interfacechild)
+																				End If
+																			End If
+																		End Using
+																	Next
+																End If
+															End Using
+														Catch ex As Exception
+															Application.Log.AddException(ex, "Interface Removal via InProcServer32")
+														End Try
+
+														Try
 															'here I remove the mediafoundationkeys if present
 															'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
 															Try
-																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms", True), (child.Replace("{", "")).Replace("}", ""))
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
 															Catch ex As Exception
 															End Try
 															Try
-																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), (child.Replace("{", "")).Replace("}", ""))
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\CLSID", True), child)
 															Catch ex As Exception
 															End Try
 															deletesubregkey(regkey, child)
@@ -1167,11 +1226,34 @@ Public Class CleanupEngine
 															'here I remove the mediafoundationkeys if present
 															'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
 															Try
-																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms", True), (child.Replace("{", "")).Replace("}", ""))
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
 															Catch ex As Exception
 															End Try
 															Try
-																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), (child.Replace("{", "")).Replace("}", ""))
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\CLSID", True), child)
 															Catch ex As Exception
 															End Try
 															deletesubregkey(regkey, child)
@@ -1235,15 +1317,58 @@ Public Class CleanupEngine
 																End Try
 
 																Try
+																	Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface", True)
+																		If reginterface IsNot Nothing Then
+																			For Each interfacechild As String In reginterface.GetSubKeyNames
+																				If IsNullOrWhitespace(interfacechild) Then Continue For
+																				Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
+																					If reginterface2 IsNot Nothing Then
+																						If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
+																							If StrContainsAny(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty).ToString, True, child) Then
+																								deletesubregkey(reginterface, interfacechild)
+																							End If
+																						End If
+																					End If
+																				End Using
+																			Next
+																		End If
+																	End Using
+																Catch ex As Exception
+																	Application.Log.AddException(ex, "Interface Removal via InProcServer32")
+																End Try
+
+																Try
 																	'here I remove the mediafoundationkeys if present
 																	'f79eac7d-e545-4387-bdee-d647d7bde42a is the Encoder section. Same on all windows version.
 																	Try
-																		deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms", True), (child.Replace("{", "")).Replace("}", ""))
-
+																		deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
 																	Catch ex As Exception
 																	End Try
 																	Try
-																		deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), (child.Replace("{", "")).Replace("}", ""))
+																		deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\WOW6432Node\MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
+																	Catch ex As Exception
+																	End Try
+
+																	Try
+																		deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+																	Catch ex As Exception
+																	End Try
+																	Try
+																		deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\WOW6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+																	Catch ex As Exception
+																	End Try
+
+																	Try
+																		deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+																	Catch ex As Exception
+																	End Try
+																	Try
+																		deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\WOW6432Node\MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+																	Catch ex As Exception
+																	End Try
+
+																	Try
+																		deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\Wow6432Node\CLSID", True), child)
 																	Catch ex As Exception
 																	End Try
 																	deletesubregkey(regkey, child)
@@ -1308,12 +1433,36 @@ Public Class CleanupEngine
 															Try
 																'here I remove the mediafoundationkeys if present
 																'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
+
 																Try
-																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms", True), (child.Replace("{", "")).Replace("}", ""))
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
 																Catch ex As Exception
 																End Try
 																Try
-																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), (child.Replace("{", "")).Replace("}", ""))
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\WOW6432Node\MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
+																Catch ex As Exception
+																End Try
+
+																Try
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+																Catch ex As Exception
+																End Try
+																Try
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\WOW6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+																Catch ex As Exception
+																End Try
+
+																Try
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+																Catch ex As Exception
+																End Try
+																Try
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\WOW6432Node\MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+																Catch ex As Exception
+																End Try
+
+																Try
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\Wow6432Node\CLSID", True), child)
 																Catch ex As Exception
 																End Try
 																deletesubregkey(regkey, child)
@@ -1376,11 +1525,34 @@ Public Class CleanupEngine
 															'here I remove the mediafoundationkeys if present
 															'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
 															Try
-																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms", True), (child.Replace("{", "")).Replace("}", ""))
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
 															Catch ex As Exception
 															End Try
 															Try
-																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), (child.Replace("{", "")).Replace("}", ""))
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+															Catch ex As Exception
+															End Try
+
+															Try
+																deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\CLSID", True), child)
 															Catch ex As Exception
 															End Try
 															deletesubregkey(regkey, child)
@@ -1443,12 +1615,36 @@ Public Class CleanupEngine
 															Try
 																'here I remove the mediafoundationkeys if present
 																'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
+
 																Try
-																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms", True), (child.Replace("{", "")).Replace("}", ""))
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
 																Catch ex As Exception
 																End Try
 																Try
-																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), (child.Replace("{", "")).Replace("}", ""))
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\WOW6432Node\MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1))
+																Catch ex As Exception
+																End Try
+
+																Try
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+																Catch ex As Exception
+																End Try
+																Try
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\WOW6432Node\MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True), child.Substring(0, child.Length - 1).Substring(1))
+																Catch ex As Exception
+																End Try
+
+																Try
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+																Catch ex As Exception
+																End Try
+																Try
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\WOW6432Node\MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True), child.Substring(0, child.Length - 1).Substring(1))
+																Catch ex As Exception
+																End Try
+
+																Try
+																	deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\Wow6432Node\CLSID", True), child)
 																Catch ex As Exception
 																End Try
 																deletesubregkey(regkey, child)

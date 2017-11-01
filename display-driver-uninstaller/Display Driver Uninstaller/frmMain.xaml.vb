@@ -2651,7 +2651,7 @@ Public Class frmMain
 						 (child.ToLower.Contains("nvosc.") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("shareconnect") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("nvgs") AndAlso config.RemoveGFE) Or
-						 (child.ToLower.Contains("GLCache") AndAlso config.RemoveGFE) Or
+						 (child.ToLower.Contains("glcache") AndAlso config.RemoveGFE) Or
 						 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Then
 
 							Delete(child)
@@ -3424,6 +3424,7 @@ Public Class frmMain
 		Else
 			CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 		End If
+
 		'------------------------------
 		'Clean the rebootneeded message
 		'------------------------------
@@ -4573,6 +4574,7 @@ Public Class frmMain
 									If child.ToLower.StartsWith("nvidia update") Or
 									 child.ToLower.StartsWith("nvidia opengl driver") Or
 									 child.ToLower.StartsWith("nvwmi") Or
+									 child.ToLower.StartsWith("nvlddmkm") Or
 									 child.ToLower.StartsWith("nview") Then
 										deletesubregkey(regkey, child)
 									End If
@@ -4588,6 +4590,27 @@ Public Class frmMain
 		'---------------------------
 		'end remove event view stuff
 		'---------------------------
+
+
+		'-----------------------
+		'Windows Error Reporting
+		'-----------------------
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps", True)
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames()
+					If IsNullOrWhitespace(child) Then Continue For
+					If StrContainsAny(child, True, "nvcontainer.exe", "nvidia geforce experience", "nvnodejslauncher", "nvidia share.exe", "nvidia web helper.exe", "nvidia.steamlauncher.exe", "nvoawrappercache.exe", "nvprofileupdater", "nvshim", "nvsphelper", "nvstreamer", "nvtelemetrycontainer", "nvtmmon", "nvtmrep", "oawrapper") Then
+						Try
+							deletesubregkey(regkey, child)
+						Catch ex As Exception
+							Application.Log.AddException(ex, "Windows error Reporting (LocalDumps)")
+						End Try
+					End If
+				Next
+			End If
+		End Using
+
 
 		'---------------------------
 		'virtual store
@@ -4730,7 +4753,7 @@ Public Class frmMain
 		End If
 
 		'-----------------------------
-		'Shell extensions\aproved
+		'Shell extensions\approved
 		'-----------------------------
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved", True)
@@ -4830,6 +4853,41 @@ Public Class frmMain
 
 			Try
 				deletesubregkey(regkey, "00nView")
+			Catch ex As Exception
+			End Try
+		End Using
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".avi\shellex", True)
+			Try
+				deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+			Catch ex As Exception
+			End Try
+		End Using
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpe\shellex", True)
+			Try
+				deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+			Catch ex As Exception
+			End Try
+		End Using
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpeg\shellex", True)
+			Try
+				deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+			Catch ex As Exception
+			End Try
+		End Using
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpg\shellex", True)
+			Try
+				deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+			Catch ex As Exception
+			End Try
+		End Using
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".wmv\shellex", True)
+			Try
+				deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
 			Catch ex As Exception
 			End Try
 		End Using
