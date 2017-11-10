@@ -10,6 +10,8 @@ Public Class AppLaunchOptions
 	Public Property Restart As Boolean = False
 	Public Property NoSafeModeMsg As Boolean = False
 
+	Public Property CleanComplete As Boolean = False
+
 	Public Property CleanNvidia As Boolean = False
 	Public Property CleanAmd As Boolean = False
 	Public Property CleanIntel As Boolean = False
@@ -86,6 +88,7 @@ Public Class AppLaunchOptions
 					Case StrContainsAny(Argument, True, "-Shutdown") : Shutdown = True
 					Case StrContainsAny(Argument, True, "-Restart") : Restart = True
 					Case StrContainsAny(Argument, True, "-NoSafeModeMsg") : NoSafeModeMsg = True
+					Case StrContainsAny(Argument, True, "-cleancomplete") : CleanComplete = True
 
 					Case StrContainsAny(Argument, True, "-CleanNvidia") : CleanNvidia = True
 					Case StrContainsAny(Argument, True, "-CleanAmd") : CleanAmd = True

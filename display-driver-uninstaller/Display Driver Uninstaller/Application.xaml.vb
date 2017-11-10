@@ -382,6 +382,29 @@ Class Application
 				Application.Log.AddException(ex, "Parsing arguments failed!" & CRLF & ">> Application_Startup()")
 			End Try
 
+
+			' DDU completed cleaning just close and dont do anything else.
+			Try
+				If LaunchOptions.CleanComplete Then
+					If LaunchOptions.Restart Then
+						Thread.Sleep(2000)
+						RestartComputer()
+						Me.Shutdown(0)			' Skip loading.
+						Exit Sub
+					End If
+					If LaunchOptions.Shutdown Then
+						Thread.Sleep(2000)
+						ShutdownComputer()
+						Me.Shutdown(0)			' Skip loading.
+						Exit Sub
+					End If
+					Me.Shutdown(0)			' Skip loading.
+					Exit Sub
+				End If
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Parsing arguments failed!" & CRLF & ">> Application_Startup()")
+			End Try
+
 			' Load default language (English) + Find language files from folder
 			InitLanguages()
 

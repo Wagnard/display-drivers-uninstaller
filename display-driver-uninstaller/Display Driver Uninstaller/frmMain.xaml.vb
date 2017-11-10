@@ -6231,12 +6231,16 @@ Public Class frmMain
 			End If
 
 			If config.Restart Then
-				Application.RestartComputer()
+				'Application.RestartComputer()
+				WinAPI.OpenVisitLink(" -CleanComplete -Restart")
+				CloseDDU()
 				Exit Sub
 			End If
 
 			If config.Shutdown Then
-				Application.ShutdownComputer()
+				'Application.ShutdownComputer()
+				WinAPI.OpenVisitLink(" -CleanComplete -Shutdown")
+				CloseDDU()
 				Exit Sub
 			End If
 		Catch ex As Exception
