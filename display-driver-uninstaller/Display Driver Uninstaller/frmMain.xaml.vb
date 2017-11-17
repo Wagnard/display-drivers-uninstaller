@@ -6448,6 +6448,8 @@ Public Class frmMain
 											End If
 										End If
 
+										If IsNullOrWhitespace(regValue) Then Continue For
+
 										UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
 										If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
 
