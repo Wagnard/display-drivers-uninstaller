@@ -4127,7 +4127,7 @@ Public Class frmMain
 											End Using
 										End If
 									End If
-									If StrContainsAny(child2, True, "logging", "physx_systemsoftware", "physxupdateloader", "installer2", "physx", "nvnetworkservice") Then
+									If StrContainsAny(child2, True, "logging", "physx_systemsoftware", "physxupdateloader", "installer2", "physx", "nvnetworkservice", "installer") Then
 										If removephysx Then
 											Try
 												deletesubregkey(regkey2, child2)
