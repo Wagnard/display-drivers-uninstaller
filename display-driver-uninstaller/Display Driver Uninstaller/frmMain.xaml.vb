@@ -1550,7 +1550,7 @@ Public Class frmMain
 										For Each child2 As String In regkey2.GetSubKeyNames()
 											If IsNullOrWhitespace(child2) Then Continue For
 
-											If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages",
+											If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages", "distribution",
 											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard", "amd problem report wizard", "cnbranding") Then
 												Try
 													deletesubregkey(regkey2, child2)
@@ -2148,7 +2148,7 @@ Public Class frmMain
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
 							If IsNullOrWhitespace(child) Then Continue For
-							If StrContainsAny(child, True, "AMD Updater", "StartCN") Then
+							If StrContainsAny(child, True, "AMD Updater", "StartCN", "StartDVR") Then
 								For Each ScheduleChild As String In schedule.GetSubKeyNames
 									Try
 										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
