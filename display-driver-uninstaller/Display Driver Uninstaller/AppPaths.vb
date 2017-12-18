@@ -131,7 +131,7 @@ Public Class AppPaths
 			m_exefile = Assembly.GetExecutingAssembly().Location
 			m_dirapp = Path.GetDirectoryName(AppExeFile)
 
-			m_roaming = Environment.GetFolderPath(Environment.SpecialFolder.System) + "config\systemprofile\AppData\Roaming\"
+			m_roaming = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\config\systemprofile\AppData\Roaming\"
 			m_dirapproaming = Path.Combine(m_roaming, Assembly.GetExecutingAssembly().GetName().Name.Replace(" ", ""))
 
 			m_dirsettings = Path.Combine(m_dirapp, "Settings\")
