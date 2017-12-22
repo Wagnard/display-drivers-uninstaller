@@ -557,6 +557,36 @@ Public Class frmMain
 				End Try
 			End If
 
+			filePath = filepaths + "\AppData\Local\RadeonInstaller"
+			If winxp Then
+				filePath = filepaths + "\Local Settings\Application Data\RadeonInstaller"
+			End If
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							If StrContainsAny(child, True, "glcache") Then
+
+								Delete(child)
+
+							End If
+						End If
+					Next
+					If FileIO.CountDirectories(filePath) = 0 Then
+
+						Delete(filePath)
+
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				Catch ex As Exception
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+				End Try
+			End If
+
 			filePath = filepaths + "\AppData\LocalLow\AMD"
 			If winxp Then
 				filePath = filepaths + "\Local Settings\Application Data\AMD"  'need check in the future.
