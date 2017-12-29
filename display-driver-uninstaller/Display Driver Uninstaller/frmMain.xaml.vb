@@ -565,7 +565,7 @@ Public Class frmMain
 				Try
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
-							If StrContainsAny(child, True, "glcache") Then
+							If StrContainsAny(child, True, "cache", "QtWeb Engine") Then
 
 								Delete(child)
 
@@ -5663,6 +5663,9 @@ Public Class frmMain
 	Private Sub imgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
 		WinAPI.OpenVisitLink(" -visitdonate")
 	End Sub
+	Private Sub imgPatron_Click(sender As Object, e As EventArgs) Handles imgPatron.Click
+		WinAPI.OpenVisitLink(" -visitpatron")
+	End Sub
 
 	Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomeMenuItem.Click
 		WinAPI.OpenVisitLink(" -visitdduhome")
@@ -5681,7 +5684,7 @@ Public Class frmMain
 		frmOptions.ShowDialog()
 	End Sub
 
-	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click, ToSMenuItem.Click, TranslatorsMenuItem.Click
+	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click, ToSMenuItem.Click, TranslatorsMenuItem.Click, PatronMenuItem.Click
 		Dim menuItem As MenuItem = TryCast(sender, MenuItem)
 
 		If menuItem Is Nothing Then
@@ -5695,6 +5698,8 @@ Public Class frmMain
 				ShowAboutWindow(2)
 			Case StrContainsAny(menuItem.Name, True, "TranslatorsMenuItem")
 				ShowAboutWindow(3)
+			Case StrContainsAny(menuItem.Name, True, "PatronMenuItem")
+				ShowAboutWindow(4)
 		End Select
 	End Sub
 

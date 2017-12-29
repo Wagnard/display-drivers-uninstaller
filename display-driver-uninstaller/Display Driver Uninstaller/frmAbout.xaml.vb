@@ -32,6 +32,7 @@ Public Class frmAbout
 					Case 1 : Text = Languages.GetTranslation("Misc", "About", "Text")
 					Case 2 : Text = Languages.GetTranslation("Misc", "Tos", "Text")
 					Case 3 : Text = Languages.GetTranslation("frmAbout", "lblTranslators", "Text")
+					Case 4 : Text = Languages.GetTranslation("frmAbout", "lblPatron", "Text")
 					Case Else : Text = Nothing
 				End Select
 
@@ -48,7 +49,7 @@ Public Class frmAbout
 		Me.Close()
 	End Sub
 
-	Private Sub btn_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnAbout.Click, btnTos.Click, btnTranslators.Click
+	Private Sub btn_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnAbout.Click, btnTos.Click, btnTranslators.Click, btnPatron.Click
 		Dim btn As Button = TryCast(sender, Button)
 
 		If btn Is Nothing Then
@@ -59,6 +60,7 @@ Public Class frmAbout
 			Case StrContainsAny(btn.Name, True, "btnAbout") : FrmType = 1
 			Case StrContainsAny(btn.Name, True, "btnTos") : FrmType = 2
 			Case StrContainsAny(btn.Name, True, "btnTranslators") : FrmType = 3
+			Case StrContainsAny(btn.Name, True, "btnPatron") : FrmType = 4
 		End Select
 	End Sub
 

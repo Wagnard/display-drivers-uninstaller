@@ -123,6 +123,9 @@
 				<DataTrigger Binding="{Binding Path=FrmType, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="3">
 					<Setter Property="Title" Value="{Binding ElementName=btnTranslators, Path=Content, Mode=OneWay}"/>
 				</DataTrigger>
+				<DataTrigger Binding="{Binding Path=FrmType, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="4">
+					<Setter Property="Title" Value="{Binding ElementName=btnPatron, Path=Content, Mode=OneWay}"/>
+				</DataTrigger>
 			</Style.Triggers>
 		</Style>
 	</Window.Style>
@@ -150,7 +153,10 @@
 						<DataTrigger Binding="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay}" Value="3">
 							<Setter Property="Template" Value="{StaticResource tempTranslators}"/>
 						</DataTrigger>
-					</Style.Triggers>
+						<DataTrigger Binding="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay}" Value="4">
+							<Setter Property="Template" Value="{StaticResource tempText}"/>
+						</DataTrigger>
+						</Style.Triggers>
 				</Style>
 			</ContentControl.Style>
 			</ContentControl>
@@ -170,6 +176,7 @@
 			<Button DockPanel.Dock="Left" Name="btnAbout" Content="btnAbout" Visibility="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay, Converter={StaticResource NonZeroToVis}, ConverterParameter=1}" />
 			<Button DockPanel.Dock="Left" Name="btnTos" Content="btnTos" Visibility="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay, Converter={StaticResource NonZeroToVis}, ConverterParameter=2}" />
 			<Button DockPanel.Dock="Left" Name="btnTranslators" Content="btnTranslators" Visibility="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay, Converter={StaticResource NonZeroToVis}, ConverterParameter=3}" />
+			<Button DockPanel.Dock="Left" Name="btnPatron" Content="btnPatron" Visibility="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay, Converter={StaticResource NonZeroToVis}, ConverterParameter=4}" />
 
 			<Button DockPanel.Dock="Right" Name="btnClose" Content="btnClose" IsCancel="True" />
 		</DockPanel>

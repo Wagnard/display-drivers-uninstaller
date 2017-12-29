@@ -100,6 +100,9 @@
 		<TranslatorsMenuItem>
 			<Text>Translators</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Patron</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visit official DDU website</Text>
 		</VisitDDUHomeMenuItem>
@@ -337,9 +340,15 @@
 		<btnTranslators>
 			<Text>Translators</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>Patron</Text>
+		</btnPatron>
 		<lblTranslators>
 			<Text>Big thanks to the following translators and also those who aren't listed!</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>Big thanks to the following Patron and also those who aren't listed!</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>

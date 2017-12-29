@@ -14,7 +14,8 @@ Class Application
 #Region "Visit links URLs"
 
 	Private Const URL_DONATE As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
-	Private Const URL_DDUHOME As String = "http://www.wagnardsoft.com"
+	Private Const URL_PATRON As String = "https://www.patreon.com/wagnardsoft"
+	Private Const URL_DDUHOME As String = "https://www.wagnardsoft.com"
 	Private Const URL_GURU3D_AMD As String = "http://forums.guru3d.com/showthread.php?t=379505"
 	Private Const URL_GURU3D_NVIDIA As String = "http://forums.guru3d.com/showthread.php?t=379506"
 	Private Const URL_GEFORCE As String = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
@@ -494,6 +495,8 @@ Class Application
 
 		If Application.LaunchOptions.VisitDonate Then
 			webAddress = URL_DONATE
+		ElseIf Application.LaunchOptions.VisitPatron Then
+			webAddress = URL_PATRON
 		ElseIf Application.LaunchOptions.VisitGuru3DNvidia Then
 			webAddress = URL_GURU3D_NVIDIA
 		ElseIf Application.LaunchOptions.VisitGuru3DAMD Then

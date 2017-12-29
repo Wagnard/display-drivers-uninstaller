@@ -40,6 +40,7 @@ Public Class AppLaunchOptions
 
 	' Remember to update HasLinkArg and LoadArgs() !
 	Public VisitDonate As Boolean = False
+	Public VisitPatron As Boolean = False
 	Public VisitSVN As Boolean = False
 	Public VisitGuru3DNvidia As Boolean = False
 	Public VisitGuru3DAMD As Boolean = False
@@ -50,6 +51,7 @@ Public Class AppLaunchOptions
 	Public ReadOnly Property HasLinkArg As Boolean
 		Get
 			If VisitDonate OrElse
+			 VisitPatron OrElse
 			 VisitSVN OrElse
 			 VisitGuru3DNvidia OrElse
 			 VisitGuru3DAMD OrElse
@@ -76,6 +78,7 @@ Public Class AppLaunchOptions
 					Case StrContainsAny(Argument, True, "-5648674614687") : Application.IsDebug = True
 					Case StrContainsAny(Argument, True, "-processkilled") : Application.Settings.ProcessKilled = True
 					Case StrContainsAny(Argument, True, "-visitdonate") : VisitDonate = True
+					Case StrContainsAny(Argument, True, "-visitpatron") : VisitPatron = True
 					Case StrContainsAny(Argument, True, "-visitsvn") : VisitSVN = True
 					Case StrContainsAny(Argument, True, "-visitguru3dnvidia") : VisitGuru3DNvidia = True
 					Case StrContainsAny(Argument, True, "-visitguru3damd") : VisitGuru3DAMD = True
