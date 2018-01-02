@@ -96,6 +96,9 @@
     <TranslatorsMenuItem>
       <Text>翻訳者</Text>
     </TranslatorsMenuItem>
+    <PatronMenuItem>
+      <Text>支援者</Text>
+    </PatronMenuItem>
     <VisitDDUHomeMenuItem>
       <Text>DDUの公式ウェブサイトに行く</Text>
     </VisitDDUHomeMenuItem>
@@ -324,9 +327,15 @@
     <btnTranslators>
       <Text>翻訳者</Text>
     </btnTranslators>
+    <btnPatron>
+      <Text>支援者</Text>
+    </btnPatron>
     <lblTranslators>
       <Text>以下の翻訳者、及びリストされていない翻訳者に大きな感謝を!</Text>
     </lblTranslators>
+    <lblPatron>
+      <Text>以下の支援者、及びリストされていない支援者に大きな感謝を!</Text>
+    </lblPatron>
   </frmAbout>
   <Misc>
     <About>
@@ -400,7 +409,7 @@
     <Translator>
       <User>DH ◆OmegaWBPUI</User>
       <Details>DH.OmegaWBPUI@gmail.com</Details>
-      <LastUpdate>03/09/2017</LastUpdate>
+      <LastUpdate>03/01/2018</LastUpdate>
     </Translator>
   </LanguageTranslators>
 </DisplayDriverUninstaller>

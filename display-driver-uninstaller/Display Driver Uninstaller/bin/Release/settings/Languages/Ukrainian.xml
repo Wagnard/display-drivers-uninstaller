@@ -39,11 +39,11 @@
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Видалити файли "GeForce Experience" з кешу інсталятора драйвера дисплея.
+				Видалити файли та кеш інсталятора драйвера дисплея "GeForce Experience".
 				(Примітка: драйвери видалено не буде)
 			</Text>
 			<Tooltip>
-				Використовується, в основному, для відновлення якоїсь кількості вільного простору на HDD/SSD, не очищеного інсталятором.
+				Використовується, в основному, для відновлення якоїсь кількості дискового простору, не очищеного інсталятором старої версії.
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
@@ -104,6 +104,9 @@
 		<TranslatorsMenuItem>
 			<Text>Перекладачі</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Покровитель</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Відвідайте веб-сайт DDU</Text>
 		</VisitDDUHomeMenuItem>
@@ -127,7 +130,7 @@
 			<Text4>Не вдалося знайти PAExec. Зверніться до журналу.</Text4>
 			<Text5>Display Driver Uninstaller (DDU) внесе багато змін до реєстру. DDU спробує автоматично створити точку відновлення системи (лише звичайний режим).</Text5>
 			<Text6>Виникла проблема в одному з модулів, надішліть ваші журнали DDU розробнику.</Text6>
-			<Text7>DDU виявлено ноутбук з графікою AMD, що перемикається (Enduro або аналогічний). DDU ще не повністю сумісний/випробуваний з системами Enduro. Використовуйте на свій страх і ризик.</Text7>
+			<Text7>DDU виявлено ноутбук з графікою AMD, що перемикається (Enduro або аналогічний). DDU ще не повністю сумісний та випробуваний з системами Enduro. Використовуйте на свій страх і ризик.</Text7>
 			<Text8>DDU виявлено, що система працює не в безпечному режимі... Для кращого очищення без проблем радимо перезавантажити комп'ютер у безпечному режимі.</Text8>
 			<Text9>DDU змінив налаштування, щоб запобігти автоматичному завантаженю драйверів через Windows Update. Ви можете повернути їх до типового стану, якщо бажаєте, але ПІСЛЯ інсталяції нового драйвера.</Text9>
 			<Text10>Повне видалення завершено! Ви хочете зараз вийти?</Text10>
@@ -153,7 +156,7 @@
 			<Text12>Графічний процесор #</Text12>
 			<Text13>Виявлено</Text13>
 			<Text14>DeviceId графічного процесора</Text14>
-			<Text15>Виявлено драйвери версій</Text15>
+			<Text15>Виявлено драйвер версії</Text15>
 			<Text16>Файл INF</Text16>
 			<Text17>Секція INF</Text17>
 			<Text18>Графічний процесор інстальовано неправильно</Text18>
@@ -176,8 +179,8 @@
 			<Text35>Кінець очищення  localmachine ,installer\products</Text35>
 			<Text36>Початок очищення currentuser ,installer\products</Text36>
 			<Text37>Кінець очищення  currentuser ,installer\products</Text37>
-			<Text38>Очищення process/services...</Text38>
-			<Text39>Очищення process/services завершено</Text39>
+			<Text38>Очищення processes/services...</Text38>
+			<Text39>Очищення processes/services завершено</Text39>
 			<Text40>Видалено.</Text40>
 			<Text41>Значення видалено.</Text41>
 			<Text42>Файл видалено.</Text42>
@@ -344,9 +347,15 @@
 		<btnTranslators>
 			<Text>Перекладачі</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>Покровитель</Text>
+		</btnPatron>
 		<lblTranslators>
 			<Text> Щиро дякуємо переліченим перекладачам та тим, кого не перелічено!</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>Велике спасибі нижченаведеному покровителю, а також тим, кого не перелічено!</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
@@ -408,7 +417,7 @@
 		<Translator>
 			<User>YuriPet</User>
 			<Details>yuripet@gmail.com</Details>
-			<LastUpdate>30/08/2017</LastUpdate>
+			<LastUpdate>31/12/2017</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
