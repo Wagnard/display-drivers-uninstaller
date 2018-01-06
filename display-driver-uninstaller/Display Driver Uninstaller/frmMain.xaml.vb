@@ -2949,6 +2949,7 @@ Public Class frmMain
 					   child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvgsync") Or
+					   child.ToLower.Contains("nvupdate") Or
 					   child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 
 						Delete(child)
@@ -3063,6 +3064,7 @@ Public Class frmMain
 						 child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvgsync") Or
+						 child.ToLower.Contains("nvidia updatus") Or
 						 child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
 						 child.ToLower.EndsWith("nvtelemetry") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
@@ -4115,7 +4117,7 @@ Public Class frmMain
 										End Using
 									End If
 								End If
-								If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd") Or
+								If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd", "nvidia updatus") Or
 								(StrContainsAny(child2, True, "installer2", "nvstream", "nvtray", "nvcontainer", "nvdisplay.container") AndAlso removegfe) Then
 									If removephysx Then
 										Try

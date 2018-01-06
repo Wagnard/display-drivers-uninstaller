@@ -100,6 +100,9 @@
 		<TranslatorsMenuItem>
 			<Text>Trandutores</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Patron</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visite o site oficial DDU</Text>
 		</VisitDDUHomeMenuItem>
@@ -138,7 +141,7 @@
 			<Text1>Executando Driver Store cleanUP(Deletando detalhes OEM )...</Text1>
 			<Text2>Limpando diretório</Text2>
 			<Text3>Limpando Regkeys conhecidas... Pode demorar alguns minutos.</Text3>
-			<Text4>Limpando UpdatusUser users account if present.</Text4>
+			<Text4>Limpando UpdatusUser da conta de usuário se existir.</Text4>
 			<Text5>Limpando diretório</Text5>
 			<Text6>Iniciando CleanUP do registro</Text6>
 			<Text7>Finalizada a limpeza do registro</Text7>
@@ -193,6 +196,9 @@
 		<lblAmdspecific>
 			<Text>Opções especificas AMD</Text>
 		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>Opções avançadas (Alterações por conta e risco)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Opções gerais</Text>
 		</lblGeneral>
@@ -225,6 +231,7 @@
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Mostrar janela de modo seguro quando executar</Text>
+			<Tooltip>Não recomendado se você não acessou o modo seguro antes. Essa opçao pode causar boot loop, tela preta e possivelmente mais.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Salvar arquivo de configurações</Text>
@@ -271,7 +278,7 @@
 		<lblWinPasswordWarn>
 			<Text>
 				Nota importante para usuários do Windows 8/8.1/10:
-				Sua "SENHA" do Windows é necessária! (PIN não esta funcionando em modo de segurança)
+				Sua "SENHA" do Windows é necessária! (PIN não funciona em modo de segurança)
 				Saia Imediatamente se você a perdeu ou não sabe!
 			</Text>
 		</lblWinPasswordWarn>
@@ -281,7 +288,7 @@
 			<Item3>Modo Seguro com Internet</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+			<Text1>DDU encerrou programas conhecidos por interferirem (exemplo: MSI Afterburner and RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
 
@@ -333,9 +340,15 @@
 		<btnTranslators>
 			<Text>Tradutores</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>Patron</Text>
+		</btnPatron>
 		<lblTranslators>
 			<Text>Grandes agradecimentos aos seguintes tradutores e também aqueles que não estão listados!</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>Grandes agradecimentos aos seguintes Patron e também aqueles que não estão listados!</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
@@ -406,10 +419,14 @@
 
 	<LanguageTranslators>
 		<Translator>
-			<User></User>
-			<Details></Details>
-			<LastUpdate></LastUpdate>
+			<User>Wagnard</User>
+			<Details>Owner</Details>
+			<LastUpdate>03/01/2018</LastUpdate>
 		</Translator>
+		<Translator2>
+			<User>Mauricio Gassen</User>
+			<LastUpdate>03/01/2018</LastUpdate>
+		</Translator2>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

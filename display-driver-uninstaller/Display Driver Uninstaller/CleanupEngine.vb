@@ -1085,16 +1085,16 @@ Public Class CleanupEngine
 						If IsNullOrWhitespace(child) = False Then
 							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\" & child & "\InProcServer32", False)
 								If subregkey IsNot Nothing Then
-									If IsNullOrWhitespace(CStr(subregkey.GetValue(""))) = False Then
-										wantedvalue = subregkey.GetValue("").ToString
+									If IsNullOrWhitespace(CStr(subregkey.GetValue("", String.Empty))) = False Then
+										wantedvalue = subregkey.GetValue("", String.Empty).ToString
 										If IsNullOrWhitespace(wantedvalue) = False Then
 											For i As Integer = 0 To clsidleftover.Length - 1
 												If Not IsNullOrWhitespace(clsidleftover(i)) Then
 													If wantedvalue.ToLower.Contains(clsidleftover(i).ToLower) Then
 
 														Try
-															If Not IsNullOrWhitespace(CStr(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID"))) Then
-																appid = MyRegistry.OpenSubKey(regkey, child).GetValue("AppID").ToString
+															If Not IsNullOrWhitespace(CStr(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty))) Then
+																appid = MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty).ToString
 																Try
 																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "AppID", True), appid)
 																Catch ex As Exception
@@ -1104,8 +1104,8 @@ Public Class CleanupEngine
 														End Try
 
 														Try
-															If Not IsNullOrWhitespace(CStr(MyRegistry.OpenSubKey(regkey, child & "\TypeLib").GetValue(""))) Then
-																typelib = MyRegistry.OpenSubKey(regkey, child & "\TypeLib").GetValue("").ToString
+															If Not IsNullOrWhitespace(CStr(MyRegistry.OpenSubKey(regkey, child & "\TypeLib").GetValue("", String.Empty))) Then
+																typelib = MyRegistry.OpenSubKey(regkey, child & "\TypeLib").GetValue("", String.Empty).ToString
 																Try
 																	deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib", True), typelib)
 																Catch ex As Exception

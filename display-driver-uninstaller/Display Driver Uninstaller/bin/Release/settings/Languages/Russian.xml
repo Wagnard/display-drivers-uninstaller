@@ -67,10 +67,6 @@
 
 
 
-
-
-
-
         <lblUpdate>
 			<Text>Проверка обновлений...</Text>
 			<Text2>Вы используете последнюю версию программы. Обновление не требуется.</Text2>
@@ -104,6 +100,9 @@
 		<TranslatorsMenuItem>
 			<Text>Переводчики</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Patron</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Посетить официальный сайт DDU</Text>
 		</VisitDDUHomeMenuItem>
@@ -254,16 +253,16 @@
 			<Text>Удалить библиотеки Vulkan API</Text>
 			<Tooltip>Не рекомендуется, если у вас установлено две разные видеокарты с поддержкой Vulkan API.</Tooltip>
 		</lblVulkan>
-	
+	</frmOptions>
 
-
-
-    </frmOptions>
-
-	<frmLaunch Text="Настройка запуска программы">
+    <frmLaunch Text="Настройка запуска программы">
 		<btnAccept>
 			<Text>Запустить нормальный режим</Text>
-			<Text2>
+			
+
+
+
+            <Text2>
 				Перезагрузиться в безопасный
 			</Text2>
 		</btnAccept>
@@ -293,7 +292,7 @@
 			<Item3>Безопасный режим с поддержкой сети</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+			<Text1>DDU закрытые программы, которые, как известно, вмешиваются в процесс (например, MSI Afterburner и RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
 
@@ -345,9 +344,15 @@
 		<btnTranslators>
 			<Text>Переводчики</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>Patron</Text>
+		</btnPatron>
 		<lblTranslators>
 			<Text>Большое спасибо следующим переводчикам, а также тем, кто не в списке!</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>Big thanks to the following Patron and also those who aren't listed!</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
@@ -404,8 +409,9 @@
 		</Translator>
 
 		<Translator2>
-			<User>Danis Miryasov (E-mail: miryasov.danis@yandex.ru)</User>
-			<LastUpdate>05/09/2017</LastUpdate>
+			<User>Danis Miryasov 
+            (E-mail: miryasov.danis@yandex.ru)</User>
+			<LastUpdate>06/01/2018</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 
