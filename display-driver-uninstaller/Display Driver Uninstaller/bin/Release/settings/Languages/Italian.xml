@@ -52,7 +52,7 @@
 			<Text>Versione di Windows rilevata:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** Ti piace DDU? Fai una donazione, supporterai gli sviluppatori di questo programma. ***</Text>
+			<Text>*** Ti piace DDU? Fai una donazione, supporterai gli sviluppatori. ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Log</Text>
@@ -121,7 +121,7 @@
 			<Text5>Display Driver Uninstaller (DDU) sta modificando il registro di sistema. Verrà creato automaticamente un punto di ripristino del sistema (SOLO in Avvio Normale).</Text5>
 			<Text6>Si è verificato un problema, invia il file di log agli sviluppatori per ulteriori informazioni.</Text6>
 			<Text7>DDU ha rilevato l'utilizzo di un portatile AMD con Enduro o equvalente, DDU non è pienamente compatibile con i sistemi Enduro, pertanto usa DDU a tuo rischio.</Text7>
-			<Text8>DDU ha rilevato che non sei in modalità provvisoria! Per una migliore pulizia senza problemi, è raccomandato il riavvio in modalità provvisoria.</Text8>
+			<Text8>DDU ha rilevato che non sei in modalità provvisoria! Per una pulizia sicura, è raccomandato il riavvio in modalità provvisoria.</Text8>
 			<Text9>DDU ha disabilitato il download automatico dei driver tramite Windows Update. Per ripristinare l'impostazione predefinita premere il tasto "Ripristina l'installazione automatica dei driver su Windows Update".</Text9>
 			<Text10>Pulizia completata! Vuoi uscire dal programma?</Text10>
 			<Text11>Fine!</Text11>
@@ -190,6 +190,9 @@
 		<lblAmdspecific>
 			<Text>Opzioni driver AMD</Text>
 		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>Avanzate (Cambia queste opzioni a tuo rischio!)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Varie</Text>
 		</lblGeneral>
@@ -206,7 +209,7 @@
 			<Text>Rimuovi 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
-			<Text>Cra punto di ripristino configurazione di sistema</Text>
+			<Text>Crea punto di ripristino configurazione di sistema</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Rimuovi i driver del monitor (Scelta consigliata)</Text>
@@ -401,7 +404,7 @@
 		<Translator>
 			<User>Juicedjuiced14</User>
 			<Details></Details>
-			<LastUpdate>04/06/2017</LastUpdate>
+			<LastUpdate>09/01/2018</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
