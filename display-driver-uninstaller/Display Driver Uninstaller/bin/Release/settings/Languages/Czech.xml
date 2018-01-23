@@ -12,18 +12,18 @@
 				(Vysoce doporučeno)
 			</Text>
 			<Tooltip>
-				Odinstalovat stávající i předchozí ovladače a restartovat PC
+				Odinstalovat stávající a předchozí ovladače, potom restartovat PC
 				(Vysoce doporučeno)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
 				Odinstalovat ovladače a NERESTARTOVAT PC
-				(Může způsobit problémy jako zčernání obrazovky atp.)
+				(Může způsobit problémy jako zčernání obrazovky)
 			</Text>
 			<Tooltip>
-				Odinstalovat stávající i předchozí ovladače a NERESTARTOVAT PC.
-				(Může způsobit problémy jako zčernání obrazovky atp.)
+				Odinstalovat stávající a předchozí ovladače, NERESTARTOVAT PC.
+				(Může způsobit problémy jako zčernání obrazovky)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
@@ -32,7 +32,7 @@
 				(Před instalací nové grafické karty)
 			</Text>
 			<Tooltip>
-				Odinstalovat stávající i předchozí ovladače a vypnout PC bez znovuvyhledání adaptéru.
+				Odinstalovat stávající a předchozí ovladače, potom vypnout PC bez znovuvyhledání adaptéru.
 				(Před instalací nové grafické karty)
 			</Tooltip>
 		</btnCleanShutdown>
@@ -42,13 +42,13 @@
 				(Poznámka: Ovladače nebudou odebrány)
 			</Text>
 			<Tooltip>
-				Toto je většinou používáno pro obnovení místa na HDD/SSD nevyčištěného instalátorem GFE/Ovladače.
+				Toto je většinou používáno pro obnovení místa na disku nevyčištěného Geforce Experience po instalaci ovladače (stará verze GFE).
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Obnovit výchozí nastavení
-				automatické instalace ovladačů
+				Použít výchozí Nastavení instalace zařízení 
+        (instalovat ovladače automaticky)
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
@@ -61,7 +61,7 @@
 			<Text>Protokol</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Vyberte grafický ovladač</Text>
+			<Text>Vybraný grafický ovladač</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
 			<Text>Vybraný jazyk</Text>
@@ -100,6 +100,9 @@
 		<TranslatorsMenuItem>
 			<Text>Překladatelé</Text>
 		</TranslatorsMenuItem>
+    		<PatronMenuItem>
+			<Text>Patron</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Navštívit oficiální web DDU</Text>
 		</VisitDDUHomeMenuItem>
@@ -113,25 +116,25 @@
 			<Text>Navštívit AMD téma na Guru3d</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Navštívit Geforce téma</Text>
+			<Text>Navštívit GeForce téma</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
 			<Text1>Jsou k dispozici aktualizace! Navštívit web DDU nyní?</Text1>
 			<Text2>Starší verze mají oproti těm novým omezenou podporu. Před nahlášením chyb zkontrolujte, zda používáte nejnovější verzi.</Text2>
 			<Text3>Nepoužíváte DDU s oprávněním správce. Aplikace bude nyní ukončena.</Text3>
-			<Text4>Nepodařilo se najít ddudr. Zkontrolujte prosím protokol.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) upravuje registr. DDU se automaticky pokusí vytvořit Bod obnovení systému (Pouze v Normal módu).</Text5>
+			<Text4>Nepodařilo se najít PAExec. Zkontrolujte prosím protokol.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) často upravuje registr. DDU se automaticky pokusí vytvořit Bod obnovení systému (Pouze v Normal módu).</Text5>
 			<Text6>V jednom modulu nastal problém, pošlete své DDU protokoly vývojáři.</Text6>
 			<Text7>DDU detekoval přepínací notebook AMD (Enduro či podobný), DDU ještě není plně kompatibilní / otestovaný s Enduro systémy, používejte na vlastní riziko.</Text7>
 			<Text8>DDU detekoval, že NEJSTE v Nouzovém režimu... Pro lepší vyčištění bez chyb je doporučen restart do Nouzového režimu.</Text8>
-			<Text9>DDU změnil nastavení, které nedovoluje stažení ovladačů automaticky přes Windows Update. Toto nastavení můžete vrátit zpátky po instalaci nového ovladače.</Text9>
+			<Text9>Nastavení instalace zařízení systému Windows bylo změněno, aby se ovladače NEinstalovaly automaticky.</Text9>
 			<Text10>Čistá odinstalace dokončena! Chcete nyní odejít?</Text10>
-			<Text11>Hotovo!</Text11>
-			<Text12>Nejste v nouzovém režimu. Je vysoce doporučeno restartovat do nouzového režimu, aby se zabránilo případným problémům... Restartovat do Nouzového režimu nyní?</Text12>
+			<Text11>Nastavení instalace zařízení systému Windows bylo změněno, aby se ovladače instalovaly automaticky.</Text11>
+			<Text12>Nejste v nouzovém režimu. Je vysoce doporučeno restartovat do nouzového režimu, aby se zabránilo případným problémům. Restartovat do Nouzového režimu nyní?</Text12>
 			<Text13>Musíte vybrat následující věci na modré obrazovce obnovení: Odstranit potíže -&gt; Upřesnit možnosti -&gt; Nastavení spouštění.</Text13>
 			<Text14>Čeká se na restart systému, prosíme, restartujte systém před použitím DDU</Text14>
-			<Text15>Žádná změna nebyla provedena. Nastavení pro instalaci zařízení systému Windows již byly nastaveny na výchozí hodnoty.</Text15>
+			<Text15>Žádná změna nebyla provedena. Nastavení instalace zařízení již byly nastaveny na výchozí hodnoty.</Text15>
 		</Messages>
 
 		<UpdateLog>
@@ -149,7 +152,7 @@
 			<Text12>GPU #</Text12>
 			<Text13>Detected</Text13>
 			<Text14>GPU DeviceId</Text14>
-			<Text15>Detected Driver(s) Version(s)</Text15>
+			<Text15>Detected Driver Version(s)</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF Section</Text17>
 			<Text18>GPU not correctly installed</Text18>
@@ -159,9 +162,9 @@
 			<Text22>driver</Text22>
 			<Text23>Executing SetupAPI remove, please wait (can take a few minutes)</Text23>
 			<Text24>GPU(s) removed from Device Manager.</Text24>
-			<Text25>Executing SetupAPI Remove Audio controller.</Text25>
-			<Text26>HD audio adapters Removed!</Text26>
-			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
+			<Text25>Executing SetupAPI remove Audio controller.</Text25>
+			<Text26>HD audio adapters removed!</Text26>
+			<Text27>3D Vision USB Adapter removed from Device Manager.</Text27>
 			<Text28>Monitors and Hidden monitors removed!</Text28>
 			<Text29>SetupAPI remove complete</Text29>
 			<Text30>Starting S-1-5-xx region cleanup</Text30>
@@ -172,8 +175,8 @@
 			<Text35>End localmachine ,installer\products cleanup</Text35>
 			<Text36>Start currentuser ,installer\products cleanup</Text36>
 			<Text37>End currentuser ,installer\products cleanup</Text37>
-			<Text38>Cleaning process/services...</Text38>
-			<Text39>Process/Services cleanup complete</Text39>
+			<Text38>Cleaning processes/services...</Text38>
+			<Text39>Processes/Services cleanup complete</Text39>
 			<Text40>Deleted.</Text40>
 			<Text41>Value removed.</Text41>
 			<Text42>File deleted.</Text42>
@@ -185,7 +188,7 @@
 			<Text>Zavřít</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Zobrazovat Nabídky od našich partnerů</Text>
+			<Text>Zobrazovat nabídky od našich partnerů</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>Specifické NVIDIA možnosti</Text>
@@ -193,14 +196,17 @@
 		<lblAmdspecific>
 			<Text>Specifické AMD možnosti</Text>
 		</lblAmdspecific>
+    		<lblAdvancedO>
+			<Text>Pokročilá nastavení (Změna na vlastní nebezpečí)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Obecné možnost</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Odstranit složky ovladačů v "C:\nVidia" (NEDOPORUČENO)</Text>
+			<Text>Odstranit složky ovladačů v "C:\NVIDIA" (NEDOPORUČENO)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Uložit log soubory do složky programu (doporučeno)</Text>
+			<Text>Uložit soubory protokolu do složky programu (Vysoce doporučeno)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Odstranit PhysX</Text>
@@ -212,7 +218,7 @@
 			<Text>Vytvořit bod obnovení systému (pokud je to dovoleno)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Odstranit stávající a minulé monitory (doporučeno)</Text>
+			<Text>Odstranit stávající a předchozí monitory (Doporučeno)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
 			<Text>Odstranit AMD Audio Bus</Text>
@@ -224,13 +230,14 @@
 			<Text>Odstranit ovladač/filtr AMDKMPFD (Pro AMD chipsety je doporučena záloha)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Při spuštění umožnit výběr mezi standartním a nouzovým režimem</Text>
+			<Text>Povolit dialog Nouzového režimu (Nedoporučeno, dokud jste Nouzový režim neotestovali manuálně)</Text>
+      <Tooltip>Nedoporučeno, pokud jste nikdy neotestovali, zda nouzový režim funguje. Tato možnost může způsobit nekonečné zapínání, černou obrazovku atp.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Skladovat konfigurační soubor ve složce roaming</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automaticky kontrolovat aktualizace DDU při spuštění. (doporučeno)</Text>
+			<Text>Automaticky kontrolovat aktualizace DDU při spuštění. (Doporučeno)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Odstranit Geforce Experience (GFE)</Text>
@@ -239,12 +246,12 @@
 			<Text>Odstranit složku AMD Crimson Shader Cache</Text>
 			<Tooltip>
 				Doporučeno při grafických anomáliích (rychlostní či vizuální poškození) způsobených poškozenou mezipamětí shaderu.
-				Také je to doporučeno při přechodu k jinému výrobci, například nVidia.
+				Také je to doporučeno při přechodu k jinému výrobci, například NVIDIA.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>Odstranit Vulkan Runtime</Text>
-			<Tooltip>Není doporučeno v případě, že vlastníte 2 odlišné GPu podporující Vulkan API.</Tooltip>
+			<Tooltip>Není doporučeno v případě, že vlastníte 2 odlišné grafické karty podporující Vulkan API.</Tooltip>
 		</lblVulkan>
 	</frmOptions>
 
@@ -265,7 +272,7 @@
 		<lblNotSafeMode>
 			<Text>
 				Nejste v nouzovém režimu. Důrazně se doporučuje
-				restart do nouzového režimu, aby se předešlo případným problémům.
+				restart do Nouzového režimu, aby se předešlo případným problémům.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
@@ -281,7 +288,7 @@
 			<Item3>Nouzový režim se sítí</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+			<Text1>DDU ukončil programy, které mohou do procesu zasahovat (jako např. MSI Afterburner a RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
 
@@ -333,18 +340,24 @@
 		<btnTranslators>
 			<Text>Překladatelé</Text>
 		</btnTranslators>
+    		<btnPatron>
+			<Text>Patron</Text>
+		</btnPatron>
 		<lblTranslators>
 			<Text>Velké poděkování patří následujícím překladatelům včetně těch, kteří nejsou uvedeni!</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>Velké poděkování patří následujícím Patronům včetně těch, kteří nejsou uvedeni!</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
 		<About>
 			<Text>
-				Display Driver Uninstaller (DDU) / Nástroj pro čištění ovladačů zobrazení. (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Nástroj pro čištění grafických ovladačů. (NVIDIA/AMD)
 
 				Nástroj odstraňuje ovladače zobrazení ze správce zařízení a zároveň odstraní stávající a předchozí verze
-				ovladače z katalogu ovladačů systému Windows a to i včetně přidružených služeb.
+				ovladače z katalogu ovladačů systému Windows, a to i včetně přidružených služeb.
 
 				Použitím programu docílíte podobného stavu jako po čisté instalaci OS Windows.
 
@@ -355,19 +368,18 @@
 
 				DOPORUČENÉ POUŽITÍ :
 
-				- Vytvořte zálohu nebo bod obnovení systému. (Ale obvykle by to mělo být bezpečné.)
-
-				- Tento nástroj může být používán v normálním režimu OS, ale pro dosažení maximální stability
+				- Tento nástroj může být používán ve standartním režimu OS, ale pro dosažení maximální stability
 				je nejlepší DDU používat v nouzovém režimu.
 
-				- Rádi bychom od Vás dostali zpětnou vazbu. Řekněte nám, jestli Vám nástroj pomohl či nikoliv. Pro jistotu
-				vytvořte zálohu OS  nebo aspoň bod obnovy (i když by to nemělo být potřeba).
+				- Rádi bychom od Vás dostali zpětnou vazbu. Řekněte nám, jestli Vám nástroj pomohl či nikoliv.
+        
+        - Vytvořte zálohu OS nebo alespoň bod obnovy (Ale obvykle by to mělo být bezpečné.)
 
 				- Pokud se potýkáte, nebo jste se někdy potýkali, s problémy s ovladači a tento nástroj Vám pomohl, neváhejte
 				se s námi podělit o výsledky.
 
-				Mějte na paměti, že NVIDIA/AMD nemají s tímto nástrojem co do činění. Nepracujeme pro NVIDIA/AMD a tyto
-				společnosti nenesou zodpovědnost za jakékoliv způsobené škody.
+				Mějte na paměti, že NVIDIA, AMD ani Microsoft nenesou zodpovědnost za případné škody
+        na vašem počítači, protože nemají s DDU či jeho tvůrci co dočinění.
 				-------------------------------
 
 				Vytvořil Wagnard.
@@ -407,9 +419,9 @@
 
 	<LanguageTranslators>
 		<Translator>
-			<User>Jan Szotkowski</User>
-			<Details>Twitter: @czjohns</Details>
-			<LastUpdate>7.4.2017</LastUpdate>
+			<User>Jan 'ThatJohnS' Szotkowski</User>
+			<Details>@czjohns / contact@thatjohns.eu</Details>
+			<LastUpdate>17.1.2018</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
