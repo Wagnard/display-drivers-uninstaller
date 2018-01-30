@@ -139,6 +139,7 @@
 			<Text13>Voici les options que vous devez sélectionner à l'écran bleu du menu de récuperation" : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>Il y a un redémarrage en attente, veuillez redémarrer avant d'utiliser DDU.</Text14>
 			<Text15> Aucun changement n'a été effectué. Les paramètres d'installation des périphérique Windows sont déjà définis par défaut.</Text15>
+			<Text16>Une erreur critique s'est produite à partir de Windows qui empêche la suppression des pilotes. Par mesure de sécurité, DDU ne poursuivra pas la suppression des fichiers et du registre. Vous devez corriger les problèmes de votre système avant d'utiliser DDU.</Text16>
 		</Messages>
 
 		<UpdateLog>
@@ -345,8 +346,11 @@
 			<Text>Traducteurs</Text>
 		</btnTranslators>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>Un grand merci aux traducteurs suivants et aussi à ceux qui ne sont pas listés!</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>Un grand merci au Patron suivant et aussi à ceux qui ne sont pas listés!</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
