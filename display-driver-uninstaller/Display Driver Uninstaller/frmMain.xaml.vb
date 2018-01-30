@@ -48,7 +48,6 @@ Public Class frmMain
 	Dim CheckUpdate As New CheckUpdate
 	Dim CleanupEngine As New CleanupEngine
 	Dim enduro As Boolean = False
-
 	Public Shared donotremoveamdhdaudiobusfiles As Boolean = True
 
 	Private Sub cleandriverstore(ByVal config As ThreadSettings)
@@ -2789,6 +2788,7 @@ Public Class frmMain
 							 (child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvtmrep") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("gfesdk") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
 
@@ -2961,6 +2961,7 @@ Public Class frmMain
 								If child2.ToLower.Contains("display.3dvision") Or
 								   child2.ToLower.Contains("display.controlpanel") Or
 								   child2.ToLower.Contains("display.driver") Or
+								   child2.ToLower.Contains("displaydriveranalyzer") Or
 								   child2.ToLower.Contains("display.optimus") Or
 								   child2.ToLower.Contains("msvcruntime") Or
 								   child2.ToLower.Contains("ansel.") Or
@@ -4273,6 +4274,7 @@ Public Class frmMain
 							 child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
 							 child.ToLower.Contains("_update.core") AndAlso removegfe Or
 							 child.ToLower.Contains("nvidiastereo") Or
+							 child.ToLower.Contains("_displaydriveranalyzer") Or
 							 child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
 							 child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
 							 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
@@ -4355,6 +4357,7 @@ Public Class frmMain
 						 child.ToLower.Contains("_nvtelemetry") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvvhci") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvdisplaycontainer") Or
+						 child.ToLower.Contains("_displaydriveranalyzer") Or
 						 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
 						 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso removegfe Or
 						 child.ToLower.Contains("_osc") AndAlso removegfe Or
@@ -5965,7 +5968,6 @@ Public Class frmMain
 								Catch ex As Exception
 									Application.Log.AddException(ex)
 								End Try
-
 							End If
 						Next
 					Next
@@ -6006,11 +6008,13 @@ Public Class frmMain
 					For Each d As SetupAPI.Device In found
 						Win32.SetupAPI.UninstallDevice(d)
 					Next
+					found.Clear()
 				End If
-
 			Catch ex As Exception
 				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 				Application.Log.AddException(ex)
+				config.GPURemovedSuccess = False
+				Exit Sub
 			End Try
 
 
@@ -6044,12 +6048,10 @@ Public Class frmMain
 				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False)
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
-
 						SetupAPI.UninstallDevice(d)
-
 					Next
+					found.Clear()
 				End If
-
 			Catch ex As Exception
 				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 				Application.Log.AddException(ex)
@@ -6271,8 +6273,18 @@ Public Class frmMain
 		Try
 			Application.Log.AddMessage("Clean uninstall completed!" & CRLF & ">> GPU: " & config.SelectedGPU.ToString())
 
-			If Not config.Success Then
+			If Not config.Success AndAlso config.GPURemovedSuccess Then
 				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), "Error!", MessageBoxButton.OK, MessageBoxImage.Error)
+
+				'Scan for new hardware to not let users into a non working state.
+				SetupAPI.ReScanDevices()
+
+				CloseDDU()
+				Exit Sub
+			End If
+
+			If Not config.GPURemovedSuccess Then
+				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text16"), "Error!", MessageBoxButton.OK, MessageBoxImage.Error)
 
 				'Scan for new hardware to not let users into a non working state.
 				SetupAPI.ReScanDevices()

@@ -135,6 +135,7 @@
 			<Text13>Here is what you need to select at the blue recovery screen : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
 			<Text14>There is a pending reboot, please reboot before using DDU</Text14>
 			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
+			<Text16>A critical error occured from Windows that is preventing the correct removal of drivers. As a security measure, DDU will not continue the files and registry removal. You must fix your system issue(s) before using DDU.</Text16>
 		</Messages>
 
 		<UpdateLog>

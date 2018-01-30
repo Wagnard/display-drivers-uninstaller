@@ -5,6 +5,7 @@ Public Class ThreadSettings
 
 	Public Property Paths As New AppPaths(False)
 	Public Property Success As Boolean = False
+	Public Property GPURemovedSuccess As Boolean = True
 	Public Property PreventClose As Boolean = False
 
 	Public Property SelectedGPU As GPUVendor
