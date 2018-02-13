@@ -330,7 +330,7 @@ Public Class CleanupEngine
 											Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "CLSID\" & wantedvalue & "\TypeLib")
 												typelib = regkey3.GetValue("", String.Empty).ToString
 
-												If Not IsNullOrWhitespace(appid) Then
+												If Not IsNullOrWhitespace(typelib) Then
 													Try
 														Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "TypeLib", True)
 															If regkey4 IsNot Nothing Then
@@ -881,6 +881,7 @@ Public Class CleanupEngine
 								If IsNullOrWhitespace(serviceValue) Then Continue For
 
 								For Each service As String In services
+								If IsNullOrWhitespace(service) Then Continue For
 									If serviceValue.Equals(service, StringComparison.OrdinalIgnoreCase) Then
 										Try
 											deletesubregkey(regkey, child)
