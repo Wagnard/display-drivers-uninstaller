@@ -205,6 +205,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In FileIO.GetDirectories(filePath)
+				If IsNullOrWhitespace(data) Then Continue For
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 			End If
@@ -229,6 +230,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In FileIO.GetDirectories(filePath)
+				If IsNullOrWhitespace(data) Then Continue For
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -254,6 +256,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In FileIO.GetDirectories(filePath)
+				If IsNullOrWhitespace(data) Then Continue For
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -301,6 +304,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -370,6 +374,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -430,6 +435,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In FileIO.GetDirectories(filePath)
+				If IsNullOrWhitespace(data) Then Continue For
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -455,6 +461,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In FileIO.GetDirectories(filePath)
+				If IsNullOrWhitespace(data) Then Continue For
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -462,6 +469,7 @@ Public Class frmMain
 		End If
 
 		For Each filepaths As String In FileIO.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
+		If IsNullOrWhitespace(filepaths) Then Continue For
 			filePath = filepaths + "\AppData\Roaming\ATI"
 			If winxp Then
 				filePath = filepaths + "\Application Data\ATI"
@@ -483,6 +491,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -514,6 +523,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -547,6 +557,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -577,6 +588,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -610,6 +622,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -642,6 +655,7 @@ Public Class frmMain
 
 				Else
 					For Each data As String In FileIO.GetDirectories(filePath)
+					If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 
@@ -670,6 +684,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In FileIO.GetDirectories(filePath)
+				If IsNullOrWhitespace(data) Then Continue For
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -1311,6 +1326,7 @@ Public Class frmMain
 			Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM", False)
 				If subregkey IsNot Nothing Then
 					For Each child2 As String In subregkey.GetSubKeyNames()
+					If IsNullOrWhitespace(child2) Then Continue For
 						If child2.ToLower.Contains("controlset") Then
 							Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
 								If regkey IsNot Nothing Then
@@ -1531,6 +1547,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
@@ -1621,6 +1638,7 @@ Public Class frmMain
 											End If
 										Next
 										For Each values As String In regkey2.GetValueNames()
+										If IsNullOrWhitespace(values) Then Continue For
 											Try
 												deletevalue(regkey2, values) 'This is for windows 7, it prevent removing the South Bridge and fix the Catalyst "Upgrade"
 											Catch ex As Exception
@@ -1633,6 +1651,7 @@ Public Class frmMain
 											End Try
 										Else
 											For Each data As String In regkey2.GetSubKeyNames()
+											If IsNullOrWhitespace(data) Then Continue For
 												Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 											Next
 										End If
@@ -1648,6 +1667,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
@@ -1685,6 +1705,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
@@ -1705,6 +1726,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
@@ -1735,6 +1757,7 @@ Public Class frmMain
 							End Try
 						Else
 							For Each data As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 							Next
 						End If
@@ -1757,6 +1780,7 @@ Public Class frmMain
 							deletesubregkey(Registry.LocalMachine, "Software\Wow6432Node\AMD")
 						Else
 							For Each data As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 							Next
 						End If
@@ -1826,6 +1850,7 @@ Public Class frmMain
 												End Try
 											Else
 												For Each data As String In regkey2.GetSubKeyNames()
+												If IsNullOrWhitespace(data) Then Continue For
 													Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 												Next
 											End If
@@ -1841,6 +1866,7 @@ Public Class frmMain
 							End Try
 						Else
 							For Each data As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 							Next
 						End If
@@ -2212,6 +2238,7 @@ Public Class frmMain
 							If IsNullOrWhitespace(child) Then Continue For
 							If StrContainsAny(child, True, "AMD Updater", "StartCN", "StartDVR") Then
 								For Each ScheduleChild As String In schedule.GetSubKeyNames
+								If IsNullOrWhitespace(ScheduleChild) Then Continue For
 									Try
 										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 											If regkey2 IsNot Nothing Then
@@ -2692,6 +2719,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -2702,7 +2730,7 @@ Public Class frmMain
 		End If
 
 		For Each filepaths As String In FileIO.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
-
+		If IsNullOrWhitespace(filepaths) Then Continue For
 			filePath = filepaths + "\AppData\Local\NVIDIA"
 
 
@@ -2728,6 +2756,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -2758,6 +2787,7 @@ Public Class frmMain
 
 					Else
 						For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
 
@@ -2804,6 +2834,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -2838,6 +2869,7 @@ Public Class frmMain
 
 				Else
 					For Each data As String In FileIO.GetDirectories(filePath)
+					If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 				End If
@@ -2882,6 +2914,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In FileIO.GetDirectories(filePath)
+				If IsNullOrWhitespace(data) Then Continue For
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 
@@ -2908,6 +2941,7 @@ Public Class frmMain
 
 				Else
 					For Each data As String In FileIO.GetDirectories(filePath)
+					If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 				End If
@@ -3005,6 +3039,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In FileIO.GetDirectories(child)
+							If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + child + "\ --> " + data)
 							Next
 
@@ -3018,6 +3053,7 @@ Public Class frmMain
 
 			Else
 				For Each data As String In FileIO.GetDirectories(filePath)
+				If IsNullOrWhitespace(data) Then Continue For
 					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 				Next
 			End If
@@ -3092,6 +3128,7 @@ Public Class frmMain
 
 				Else
 					For Each data As String In FileIO.GetDirectories(filePath)
+					If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
 
@@ -3185,7 +3222,7 @@ Public Class frmMain
 
 
 		For Each filepaths As String In FileIO.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
-
+		If IsNullOrWhitespace(filepaths) Then Continue For
 			filePath = filepaths + "\AppData\Local\Temp\NvidiaLogging"
 			If FileIO.ExistsDir(filePath) Then
 				Try
@@ -3203,6 +3240,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3235,6 +3273,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3268,6 +3307,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3299,6 +3339,7 @@ Public Class frmMain
 
 						Else
 							For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
 
@@ -3337,6 +3378,7 @@ Public Class frmMain
 
 									Else
 										For Each data As String In FileIO.GetDirectories(filePath)
+										If IsNullOrWhitespace(data) Then Continue For
 											Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 										Next
 
@@ -3568,6 +3610,7 @@ Public Class frmMain
 					End Try
 				Else
 					For Each data As String In regkey.GetSubKeyNames()
+					If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 					Next
 				End If
@@ -3618,7 +3661,8 @@ Public Class frmMain
 					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM", False)
 						If subregkey IsNot Nothing Then
 							For Each child2 As String In subregkey.GetSubKeyNames()
-								If child2.ToLower.Contains("controlset") Then
+							If IsNullOrWhitespace(child2) Then Continue For
+								If StrContainsAny(child2, True, "controlset") Then
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Services\SharedAccess\Parameters\FirewallPolicy\FirewallRules", True)
 										If regkey IsNot Nothing Then
 											For Each child As String In regkey.GetValueNames()
@@ -3974,6 +4018,7 @@ Public Class frmMain
 											End Try
 										Else
 											For Each data As String In regkey2.GetSubKeyNames()
+											If IsNullOrWhitespace(data) Then Continue For
 												Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 											Next
 										End If
@@ -4068,6 +4113,7 @@ Public Class frmMain
 								End Try
 							Else
 								For Each data As String In regkey2.GetSubKeyNames()
+								If IsNullOrWhitespace(data) Then Continue For
 									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 								Next
 							End If
@@ -4144,6 +4190,7 @@ Public Class frmMain
 								End Try
 							Else
 								For Each data As String In regkey2.GetSubKeyNames()
+								If IsNullOrWhitespace(data) Then Continue For
 									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 								Next
 							End If
@@ -4224,6 +4271,7 @@ Public Class frmMain
 									End Try
 								Else
 									For Each data As String In regkey2.GetSubKeyNames()
+									If IsNullOrWhitespace(data) Then Continue For
 										Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
 									Next
 								End If
@@ -4699,6 +4747,7 @@ Public Class frmMain
 					End Using
 				Else
 					For Each data As String In regkey.GetSubKeyNames()
+					If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 					Next
 				End If
@@ -4723,6 +4772,7 @@ Public Class frmMain
 								End Using
 							Else
 								For Each data As String In regkey.GetSubKeyNames()
+								If IsNullOrWhitespace(data) Then Continue For
 									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 								Next
 							End If
@@ -4751,6 +4801,7 @@ Public Class frmMain
 										End Using
 									Else
 										For Each data As String In regkey.GetSubKeyNames()
+										If IsNullOrWhitespace(data) Then Continue For
 											Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 										Next
 									End If
@@ -5023,6 +5074,7 @@ Public Class frmMain
 							If IsNullOrWhitespace(child) Then Continue For
 							If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience") AndAlso config.RemoveGFE Then
 								For Each ScheduleChild As String In schedule.GetSubKeyNames
+								If IsNullOrWhitespace(ScheduleChild) Then Continue For
 									Try
 										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 											If regkey2 IsNot Nothing Then
@@ -5192,6 +5244,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
@@ -5223,6 +5276,7 @@ Public Class frmMain
 								End Try
 							Else
 								For Each data As String In regkey.GetSubKeyNames()
+								If IsNullOrWhitespace(data) Then Continue For
 									Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 								Next
 							End If
@@ -5255,6 +5309,7 @@ Public Class frmMain
 							End Try
 						Else
 							For Each data As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 							Next
 						End If
@@ -5416,6 +5471,7 @@ Public Class frmMain
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
 						Next
 					End If
@@ -5461,6 +5517,7 @@ Public Class frmMain
 												Dim fixUpperFilters As Boolean = False
 
 												For Each u As String In array
+												If IsNullOrWhitespace(u) Then Continue For
 													If StrContainsAny(u, True, "nvpciflt", "nvkflt") Then
 
 														'If StrContainsAny(u, True, "nvpciflt", "nvkflt") Then
@@ -5562,6 +5619,7 @@ Public Class frmMain
 										isGpu = False
 
 										For Each id As String In compatibleIDs
+										If IsNullOrWhitespace(id) Then Continue For
 											If StrContainsAny(id, True, "pci\cc_03") Then
 												isGpu = True
 												Exit For
@@ -5570,6 +5628,7 @@ Public Class frmMain
 
 										If isGpu Then
 											For Each id As String In compatibleIDs
+											If IsNullOrWhitespace(id) Then Continue For
 												If StrContainsAny(id, True, "ven_8086") Then
 													Return GPUVendor.Intel
 												ElseIf StrContainsAny(id, True, "ven_1002") Then
@@ -5926,6 +5985,7 @@ Public Class frmMain
 						For Each Sibling In SystemDevice.SiblingDevices
 							If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
 								For Each compatibleid In SystemDevice.CompatibleIDs
+									If IsNullOrWhitespace(compatibleid) Then Continue For
 									If StrContainsAny(compatibleid, True, "PCI\CC_040300") Then
 										Application.Log.AddMessage("Removing AMD HD Audio Bus (amdkmafd)")
 
@@ -6961,7 +7021,7 @@ Public Class frmMain
 		Dim removedPaths As List(Of String)
 
 		'--------------------------------
-		'System environement path cleanup
+		'System environment path cleanup
 		'--------------------------------
 
 		Dim logEntry As LogEntry = Application.Log.CreateEntry()
@@ -6971,6 +7031,7 @@ Public Class frmMain
 			Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM", False)
 				If subregkey IsNot Nothing Then
 					For Each child2 As String In subregkey.GetSubKeyNames()
+					If IsNullOrWhitespace(child2) Then Continue For
 						If StrContainsAny(child2, True, "controlset") Then
 
 							Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Control\Session Manager\Environment", True)
@@ -6988,6 +7049,7 @@ Public Class frmMain
 												removedPaths = New List(Of String)(paths.Length)
 
 												For Each p As String In paths
+												If IsNullOrWhitespace(p) Then Continue For
 													If Not StrContainsAny(p, True, valuesToRemove) Then	'StrContainsAny(..) checks p and each valuesToRemove for empty/null
 														newPaths.Add(p)
 													Else
