@@ -5198,6 +5198,48 @@ Public Class frmMain
 			End If
 		Next
 
+		filePath = Environment.GetFolderPath _
+			  (Environment.SpecialFolder.ProgramFiles) + "\Intel"
+		If FileIO.ExistsDir(filePath) Then
+			For Each child As String In FileIO.GetDirectories(filePath)
+				If IsNullOrWhitespace(child) = False Then
+					If StrContainsAny(child, True, "Media SDK", "Media Resource") Then
+						Delete(child)
+					End If
+				End If
+			Next
+			If FileIO.CountDirectories(filePath) = 0 Then
+				Delete(filePath)
+			Else
+				For Each data As String In FileIO.GetDirectories(filePath)
+					If IsNullOrWhitespace(data) Then Continue For
+					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+				Next
+			End If
+		End If
+
+		If IntPtr.Size = 8 Then
+			filePath = Environment.GetFolderPath _
+			  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Intel"
+			If FileIO.ExistsDir(filePath) Then
+				For Each child As String In FileIO.GetDirectories(filePath)
+					If IsNullOrWhitespace(child) = False Then
+						If StrContainsAny(child, True, "Media SDK", "Media Resource") Then
+							Delete(child)
+						End If
+					End If
+				Next
+				If FileIO.CountDirectories(filePath) = 0 Then
+					Delete(filePath)
+				Else
+					For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
+						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+					Next
+				End If
+			End If
+		End If
+
 	End Sub
 
 	Private Sub cleanintelserviceprocess()
