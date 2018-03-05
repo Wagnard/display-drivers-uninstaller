@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="pl-PL" Text="Polski">
-	<!--Update date 31.01.2018-->
+	<!--Update date 05.03.2018-->
 
 	<frmMain Text="Display Driver Uninstaller">
 		<btnCleanRestart>
@@ -222,7 +222,7 @@
 			<Text>Usuń folder z sterownikami "C:\AMD"(nie zalecane)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Usuń sterownik chipsetu (dla chipsetu AMD zalecamy utworzenie kopi zapasowej)</Text>
+			<Text>Usuń sterownik chipsetu</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Pokaż wiadomość o trybie awaryjnym podczas uruchamiania</Text>
@@ -238,7 +238,7 @@
 			<Text>Usuń Geforce Experience</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>Usuń folder pamięci podręcznej jednostek cieniujących AMD Crimson</Text>
+			<Text>Usuń folder pamięci podręcznej jednostek cieniujących</Text>
 			<Tooltip>
 				Zalecane, jeśli istnieją anomalie graficzne (szybkość działania lub problemy z wyświetlaniem) spowodowane uszkodzonymi danymi bufora cieniującego.
 				Zalecane również, jeśli zmieniasz markę karty graficznej
@@ -419,7 +419,7 @@
 		<Translator>
 			<User>Łukasz Kuchta @Bladius</User>
 			<Details>Tłumacz oficjalny</Details>
-			<LastUpdate>30.08.2017</LastUpdate>
+			<LastUpdate>05.03.2018</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
