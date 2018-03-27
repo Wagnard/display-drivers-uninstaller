@@ -348,7 +348,10 @@
 			<Text>Big thanks to the following translators and also those who aren't listed!</Text>
 		</lblTranslators>
 		<lblPatron>
-			<Text>Big thanks to the following Patron and also those who aren't listed!</Text>
+			<Text>Big thanks to the following Patron and also those who aren't listed!
+				  
+				  -honnmaguro   (Since 2018-03-16)  
+			</Text>
 		</lblPatron>
 	</frmAbout>
 

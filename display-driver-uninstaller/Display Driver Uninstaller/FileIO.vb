@@ -168,7 +168,44 @@ Public Class FileIO
 		''' For additional information, see the Caching Behavior section of this topic.</summary>
 		FLAG_WRITE_THROUGH = &H80000000UI
 	End Enum
+	Friend Enum MoveFileFlags As UInt32
+		''' <summary>
+		'''If a file named lpNewFileName exists, the function replaces its contents with the contents of the lpExistingFileName file, provided that security requirements regarding access control lists (ACLs) are met. For more information, see the Remarks section of this topic.
+		'''This value cannot be used if lpNewFileName or lpExistingFileName names a directory.
+		''' </summary>
+		MOVEFILE_REPLACE_EXISTING = &H1UI
 
+		''' <summary>
+		'''If the file is to be moved to a different volume, the function simulates the move by using the CopyFile and DeleteFile functions.
+		'''If the file is successfully copied to a different volume and the original file is unable to be deleted, the function succeeds leaving the source file intact.
+		'''This value cannot be used with MOVEFILE_DELAY_UNTIL_REBOOT.
+		''' </summary>
+		MOVEFILE_COPY_ALLOWED = &H2UI
+
+		''' <summary>
+		''' The system does not move the file until the operating system is restarted. The system moves the file immediately after AUTOCHK is executed, but before creating any paging files. Consequently, this parameter enables the function to delete paging files from previous startups.
+		'''This value can be used only if the process is in the context of a user who belongs to the administrators group or the LocalSystem account.
+		'''This value cannot be used with MOVEFILE_COPY_ALLOWED.
+		''' </summary>
+		MOVEFILE_DELAY_UNTIL_REBOOT = &H4UI
+
+		''' <summary>
+		''' The function does not return until the file is actually moved on the disk.
+		'''Setting this value guarantees that a move performed as a copy and delete operation is flushed to disk before the function returns. The flush occurs at the end of the copy operation.
+		'''This value has no effect if MOVEFILE_DELAY_UNTIL_REBOOT is set.
+		''' </summary>
+		MOVEFILE_WRITE_THROUGH = &H8UI
+
+		''' <summary>
+		''' Reserved for future use.
+		''' </summary>
+		MOVEFILE_CREATE_HARDLINK = &H10UI
+
+		''' <summary>
+		''' The function fails if the source file is a link source, but the file cannot be tracked after the move. This situation can occur if the destination is a volume formatted with the FAT file system.
+		''' </summary>
+		MOVEFILE_FAIL_IF_NOT_TRACKABLE = &H20UI
+	End Enum
 #End Region
 
 #Region "Structures"
@@ -192,6 +229,13 @@ Public Class FileIO
 #End Region
 
 #Region "P/Invokes"
+
+	<DllImport("kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+	Private Shared Function MoveFileEx(
+  <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpExistingFileName As String, ByVal lpNewFileName As String, ByVal dwFlags As MoveFileFlags) As <MarshalAs(UnmanagedType.Bool)> Boolean
+	End Function
+
+
 
 	<DllImport("kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 	Private Shared Function DeleteFile(
@@ -440,11 +484,21 @@ Public Class FileIO
 						Throw New Win32Exception(GetInt32(errCode))
 					End If
 				Else				' fileName is file
-					If DeleteFile(uncFileName) Then
-						Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, fileName))
-						Return
+					If StrContainsAny(uncFileName, True, "icons.ttf") Then
+						MoveFileEx(uncFileName, Application.Paths.WinDir & "Fonts\icons.ttf", MoveFileFlags.MOVEFILE_WRITE_THROUGH)
+						If DeleteFile(Application.Paths.WinDir & "Fonts\icons.ttf") Then
+							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, Application.Paths.WinDir & "Fonts\icons.ttf"))
+							Return
+						Else
+							errCode = GetLastWin32ErrorU()
+						End If
 					Else
-						errCode = GetLastWin32ErrorU()
+						If DeleteFile(uncFileName) Then
+							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, fileName))
+							Return
+						Else
+							errCode = GetLastWin32ErrorU()
+						End If
 					End If
 				End If
 				If errCode <> Errors.ACCESS_DENIED AndAlso errCode <> Errors.FILE_NOT_FOUND AndAlso errCode <> Errors.PATH_NOT_FOUND Then
