@@ -6,6 +6,7 @@ Imports System.Security.AccessControl
 Imports System.Security.Principal
 
 Imports Display_Driver_Uninstaller.Win32
+Imports Microsoft.Win32
 
 Public Class FileIO
 
@@ -484,10 +485,22 @@ Public Class FileIO
 						Throw New Win32Exception(GetInt32(errCode))
 					End If
 				Else				' fileName is file
-					If StrContainsAny(uncFileName, True, "icons.ttf") Then
-						MoveFileEx(uncFileName, Application.Paths.WinDir & "Fonts\icons.ttf", MoveFileFlags.MOVEFILE_WRITE_THROUGH)
-						If DeleteFile(Application.Paths.WinDir & "Fonts\icons.ttf") Then
-							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, Application.Paths.WinDir & "Fonts\icons.ttf"))
+					If StrContainsAny(uncFileName, True, "icons.ttf") Then	 'This is a workaround for FONTS that are in-use. No idea how to really fix.
+						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts", True)
+							If regkey IsNot Nothing Then
+								For Each childs As String In regkey.GetValueNames
+									If IsNullOrWhitespace(childs) Then Continue For
+									If StrContainsAny(childs, True, "qtquickcontrols") Then
+										deletevalue(regkey, childs)
+
+									End If
+								Next
+							End If
+						End Using
+						MoveFileEx(uncFileName, Application.Paths.AppBase & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING)
+						System.Threading.Thread.Sleep(100) ' To let the time for the file move to take effect.
+						If DeleteFile(Application.Paths.AppBase & "deleteme.tmp") Then
+							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, Application.Paths.AppBase & "deleteme.tmp"))
 							Return
 						Else
 							errCode = GetLastWin32ErrorU()
@@ -967,6 +980,10 @@ Public Class FileIO
 	End Function
 
 #End Region
+	Private Shared Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
+		Dim cleanupengine As New CleanupEngine
+		cleanupengine.deletevalue(value1, value2)
+	End Sub
 
 End Class
 
