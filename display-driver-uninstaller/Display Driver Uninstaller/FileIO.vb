@@ -492,14 +492,13 @@ Public Class FileIO
 									If IsNullOrWhitespace(childs) Then Continue For
 									If StrContainsAny(childs, True, "qtquickcontrols") Then
 										deletevalue(regkey, childs)
-
 									End If
 								Next
 							End If
 						End Using
-						MoveFileEx(uncFileName, Path.GetTempPath & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING)
+						MoveFileEx(uncFileName, Path.GetPathRoot(fileName) & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING)
 						System.Threading.Thread.Sleep(100) ' To let the time for the file move to take effect.
-						If DeleteFile(Path.GetTempPath & "deleteme.tmp") Then
+						If DeleteFile(Path.GetPathRoot(fileName) & "deleteme.tmp") Then
 							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, Application.Paths.AppBase & "deleteme.tmp"))
 							Return
 						Else
