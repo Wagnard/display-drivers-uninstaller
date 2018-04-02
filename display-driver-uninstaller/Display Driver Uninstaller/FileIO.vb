@@ -497,9 +497,9 @@ Public Class FileIO
 								Next
 							End If
 						End Using
-						MoveFileEx(uncFileName, Application.Paths.AppBase & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING)
+						MoveFileEx(uncFileName, Path.GetTempPath & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING)
 						System.Threading.Thread.Sleep(100) ' To let the time for the file move to take effect.
-						If DeleteFile(Application.Paths.AppBase & "deleteme.tmp") Then
+						If DeleteFile(Path.GetTempPath & "deleteme.tmp") Then
 							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, Application.Paths.AppBase & "deleteme.tmp"))
 							Return
 						Else
