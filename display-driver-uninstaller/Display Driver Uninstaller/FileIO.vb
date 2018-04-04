@@ -496,14 +496,10 @@ Public Class FileIO
 								Next
 							End If
 						End Using
+						MoveFileEx(Path.GetPathRoot(fileName) & "deleteme.tmp", Nothing, MoveFileFlags.MOVEFILE_DELAY_UNTIL_REBOOT)
 						MoveFileEx(uncFileName, Path.GetPathRoot(fileName) & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING)
 						System.Threading.Thread.Sleep(100) ' To let the time for the file move to take effect.
-						If DeleteFile(Path.GetPathRoot(fileName) & "deleteme.tmp") Then
-							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, Application.Paths.AppBase & "deleteme.tmp"))
-							Return
-						Else
-							errCode = GetLastWin32ErrorU()
-						End If
+						Return
 					Else
 						If DeleteFile(uncFileName) Then
 							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, fileName))
