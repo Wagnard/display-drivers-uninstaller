@@ -496,8 +496,8 @@ Public Class FileIO
 								Next
 							End If
 						End Using
-						MoveFileEx(Path.GetPathRoot(fileName) & "deleteme.tmp", Nothing, MoveFileFlags.MOVEFILE_DELAY_UNTIL_REBOOT)
-						MoveFileEx(uncFileName, Path.GetPathRoot(fileName) & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING)
+						MoveFileEx(Path.GetPathRoot(fileName) & "deleteme.tmp", Nothing, MoveFileFlags.MOVEFILE_DELAY_UNTIL_REBOOT)	' This will delete de file after reboot
+						MoveFileEx(uncFileName, Path.GetPathRoot(fileName) & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING) ' This move the file.
 						System.Threading.Thread.Sleep(100) ' To let the time for the file move to take effect.
 						Return
 					Else
