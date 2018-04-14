@@ -99,6 +99,9 @@
 		<TranslatorsMenuItem>
 			<Text>Çevirmenler</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Patron</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Resmi DDU Web Sitesini Ziyaret Edin.</Text>
 		</VisitDDUHomeMenuItem>
@@ -134,7 +137,7 @@
 		</Messages>
 
 		<UpdateLog>
-			<Text1>Yürütülen, Sürücü deposu temizleniyor (Adım OEM Sil)...</Text1>
+			<Text1>Sürücü deposu temizleme yürütülüyor (Adım OEM Sil)...</Text1>
 			<Text2>Dizin temizleniyor</Text2>
 			<Text3>Bilinen reg anahtarları siliniyor... Bir veya iki dakika sürebilir.</Text3>
 			<Text4>Eğer varsa UpdatusUser kullanıcıları temizleniyor.</Text4>
@@ -163,14 +166,14 @@
 			<Text27>3D Vision USB Adaptörü Aygıt Yöneticisinden kaldırıldı.</Text27>
 			<Text28>Monitörler ve Gizli monitörler kaldırıldı!</Text28>
 			<Text29>SetupAPI kaldırma işlemi tamamlandı.</Text29>
-			<Text30>Başlatıldı, S-1-5-xx bölge temizleme...</Text30>
-			<Text31>S-1-5-xx bölge temizliği tamamlandı.</Text31>
-			<Text32>Classesroot, yükleyici ve ürünleri temizleme başlatıldı...</Text32>
-			<Text33>Classesroot, yükleyici ve ürünleri temizleme tamamlandı.</Text33>
-			<Text34>Başlatıldı, LocalMachine yükleyici ve ürünleri temizleme başlatıldı...</Text34>
-			<Text35>LocalMachine yükleyici ve ürünleri temizleme tamamlandı.</Text35>
-			<Text36>Başlatıldı, varsayılan kullanıcı yükleyici ve ürünleri temizleme başlatıldı...</Text36>
-			<Text37>Varsayılan kullanıcı yükleyici ve ürünleri temizleme tamamlandı.</Text37>
+			<Text30>Başlatıldı S-1-5-xx bölge temizleme</Text30>
+			<Text31>Bitti S-1-5-xx bölge temizliği tamamlandı</Text31>
+			<Text32>Classesroot  ,yükleyici ve ürünleri temizleme başlatıldı...</Text32>
+			<Text33>Classesroot  ,yükleyici ve ürünleri temizleme tamamlandı.</Text33>
+			<Text34>Başlatıldı  ,LocalMachine yükleyici ve ürünleri temizleme başlatıldı...</Text34>
+			<Text35>LocalMachine  ,yükleyici ve ürünleri temizleme tamamlandı.</Text35>
+			<Text36>Başlatıldı  ,varsayılan kullanıcı yükleyici ve ürünleri temizleme başlatıldı...</Text36>
+			<Text37>Varsayılan  ,kullanıcı yükleyici ve ürünleri temizleme tamamlandı.</Text37>
 			<Text38>İşlemler ve servisler temizleniyor...</Text38>
 			<Text39>İşlemler ve servisler temizlendi.</Text39>
 			<Text40>Silindi.</Text40>
@@ -192,6 +195,9 @@
 		<lblAmdspecific>
 			<Text>AMD Seçenekleri</Text>
 		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>Gelişmiş Seçenekler (Değiştirmeniz riskli olabilir)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Genel Seçenekler</Text>
 		</lblGeneral>
@@ -223,7 +229,8 @@
 			<Text>AMDKMPFD Sürücü/Filtre sil. (AMD chipset için yedeklemeniz tavsiye edilir)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Başlangıçta Güvenli Mod mesaj kutusu göster.</Text>
+			<Text>Başlangıçta Güvenli Mod mesaj kutusu göster (Güvenli Mod'u manuel olarak test edene kadar önerilmez)</Text>
+			<Tooltip>Çalışmıyor olup olmadığını görmek için bilgisayarınızı daha önce güvenli modda başlatmamışsanız önerilmez. Bu seçenek bir önyükleme döngüsüne, siyah ekrana ve muhtemelen daha fazlasına neden olabilir.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Yapılandırma dosyalarını Romaing klasöründe sakla.</Text>
@@ -331,9 +338,18 @@
 		<btnTranslators>
 			<Text>Çevirmenler</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>Patron</Text>
+		</btnPatron>
 		<lblTranslators>
 			<Text>Ayrıca aşağıda bulunan ve bulunmayan bütün çevirmenlere çok teşekkürler.</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>Aşağıdaki Patron ve ayrıca listelenmemiş olanlar için çok teşekkürler!
+				  
+				  -honnmaguro  (2018-03-16'dan beri)  
+			</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
@@ -392,7 +408,7 @@
 		<Translator>
 			<User>murat5038</User>
 			<Details>Kaspersky Turkey Moderator</Details>
-			<LastUpdate>25.02.2017</LastUpdate>
+			<LastUpdate>14.04.2018</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
