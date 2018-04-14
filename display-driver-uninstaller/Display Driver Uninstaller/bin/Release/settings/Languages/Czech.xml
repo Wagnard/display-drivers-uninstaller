@@ -135,6 +135,7 @@
 			<Text13>Musíte vybrat následující věci na modré obrazovce obnovení: Odstranit potíže -&gt; Upřesnit možnosti -&gt; Nastavení spouštění.</Text13>
 			<Text14>Čeká se na restart systému, prosíme, restartujte systém před použitím DDU</Text14>
 			<Text15>Žádná změna nebyla provedena. Nastavení instalace zařízení již byly nastaveny na výchozí hodnoty.</Text15>
+      <Text16>Kritická chyba Windows znemožňuje správné odebrání ovladačů. DDU nebude z bezpečnostních důvodů pokračovat v odstraňování souborů a záznamů registru. Před použitím DDU vyřešte problém(y) s vašim systémem.</Text16>
 		</Messages>
 
 		<UpdateLog>
@@ -347,7 +348,10 @@
 			<Text>Velké poděkování patří následujícím překladatelům včetně těch, kteří nejsou uvedeni!</Text>
 		</lblTranslators>
 		<lblPatron>
-			<Text>Velké poděkování patří následujícím Patronům včetně těch, kteří nejsou uvedeni!</Text>
+			<Text>Velké poděkování patří následujícím Patronům včetně těch, kteří nejsou uvedeni!
+      
+				  -honnmaguro   (Od 16.03.2018)  
+			</Text>
 		</lblPatron>
 	</frmAbout>
 
@@ -421,7 +425,7 @@
 		<Translator>
 			<User>Jan 'ThatJohnS' Szotkowski</User>
 			<Details>@czjohns / contact@thatjohns.eu</Details>
-			<LastUpdate>17.1.2018</LastUpdate>
+			<LastUpdate>14.4.2018</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
