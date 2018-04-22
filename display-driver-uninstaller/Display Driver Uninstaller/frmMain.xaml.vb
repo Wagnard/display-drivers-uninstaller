@@ -5534,104 +5534,133 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Starting the removal of nVidia Optimus UpperFilter if present.")
 
+
+		UpdateTextMethod("Start - Check for OPTIMUS system device.")
 		Try
-			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
-				If regkey IsNot Nothing Then
-					For Each child As String In regkey.GetSubKeyNames()
-						If IsNullOrWhitespace(child) Then Continue For
-
-						If StrContainsAny(child, True, "ven_8086") Then
-							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-								If subregkey IsNot Nothing Then
-									For Each childs As String In subregkey.GetSubKeyNames()
-										If IsNullOrWhitespace(childs) Then Continue For
-
-										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, childs, True)
-											If regkey2 Is Nothing Then Continue For
-
-											array = TryCast(regkey2.GetValue("UpperFilters"), String())
-
-											If array IsNot Nothing AndAlso array.Length > 0 Then
-												Application.Log.AddMessage("UpperFilters found", "UpperFilters", String.Join(Environment.NewLine, array))
-
-												Dim fixUpperFilters As Boolean = False
-
-												For Each u As String In array
-													If IsNullOrWhitespace(u) Then Continue For
-													If StrContainsAny(u, True, "nvpciflt", "nvkflt") Then
-
-														'If StrContainsAny(u, True, "nvpciflt", "nvkflt") Then
-														' Orginal didn't check for "nvkflt", should it?
-														' => "nvkflt" won't get removed if "nvpciflt" doesn't exists (uncomment top line)
-
-														Application.Log.AddMessage("nVidia Optimus UpperFilter Found.")
-
-														fixUpperFilters = True
-														Exit For
-													End If
-												Next
-
-												If fixUpperFilters Then
-													Try
-														Dim AList As List(Of String) = New List(Of String)(array.Length)
-
-														For Each item As String In array
-															If IsNullOrWhitespace(item) Then Continue For
-
-															If Not StrContainsAny(item, True, "nvpciflt", "nvkflt") Then
-																AList.Add(item)
-															End If
-														Next
-
-														Deletevalue(regkey2, "UpperFilters")
-
-														If AList.Count > 0 Then
-															regkey2.SetValue("UpperFilters", AList.ToArray(), RegistryValueKind.MultiString)
-														End If
-													Catch ex As Exception
-														Application.Log.AddException(ex)
-														Application.Log.AddWarningMessage("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
-													End Try
-												End If
-
-												'For Each item As String In array
-												'	If IsNullOrWhitespace(item) Then Continue For
-
-												'	Application.Log.AddMessage("UpperFilter found : " + item)
-												'	If StrContainsAny(item, True, "nvpciflt") Then
-												'		Dim AList As ArrayList = New ArrayList(array)
-
-												'		AList.Remove("nvpciflt")
-												'		AList.Remove("nvkflt")
-
-												'		Application.Log.AddMessage("nVidia Optimus UpperFilter Found.")
-												'		Dim upfiler As String() = CType(AList.ToArray(GetType(String)), String())
-
-												'		Try
-
-												'			deletevalue(regkey2, "UpperFilters")
-												'			If (upfiler IsNot Nothing) AndAlso (Not upfiler.Length < 1) Then
-												'				regkey2.SetValue("UpperFilters", upfiler, RegistryValueKind.MultiString)
-												'			End If
-												'		Catch ex As Exception
-												'			Application.Log.AddException(ex)
-												'			Application.Log.AddWarningMessage("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
-												'		End Try
-												'	End If
-												'Next
-											End If
-										End Using
-									Next
+			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
+			If found.Count > 0 Then
+				For Each d As SetupAPI.Device In found
+					If StrContainsAny(d.HardwareIDs(0), True, "VEN_8086") Then
+						If d.UpperFilters IsNot Nothing AndAlso StrContainsAny(d.UpperFilters(0), True, "nvpciflt", "nvkflt") Then
+							If d.OemInfs.Length > 0 AndAlso (Not IsNullOrWhitespace(d.OemInfs(0).ToString)) AndAlso FileIO.ExistsFile(d.OemInfs(0).ToString) Then
+								SetupAPI.UpdateDeviceInf(d, d.OemInfs(0).ToString, True)
+							Else
+								If win10 Then
+									SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\PCI.inf", True)
+								Else
+									SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\machine.inf", True)
 								End If
-							End Using
+							End If
 						End If
-					Next
-				End If
-			End Using
+					End If
+				Next
+			End If
+			UpdateTextMethod("End - Check for OPTIMUS system device.")
 		Catch ex As Exception
-			MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 			Application.Log.AddException(ex)
+			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 		End Try
+
+		UpdateTextMethod(UpdateTextTranslated(28))
+
+		'Try
+		'	Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
+		'		If regkey IsNot Nothing Then
+		'			For Each child As String In regkey.GetSubKeyNames()
+		'				If IsNullOrWhitespace(child) Then Continue For
+
+		'				If StrContainsAny(child, True, "ven_8086") Then
+		'					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+		'						If subregkey IsNot Nothing Then
+		'							For Each childs As String In subregkey.GetSubKeyNames()
+		'								If IsNullOrWhitespace(childs) Then Continue For
+
+		'								Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, childs, True)
+		'									If regkey2 Is Nothing Then Continue For
+
+		'									array = TryCast(regkey2.GetValue("UpperFilters"), String())
+
+		'									If array IsNot Nothing AndAlso array.Length > 0 Then
+		'										Application.Log.AddMessage("UpperFilters found", "UpperFilters", String.Join(Environment.NewLine, array))
+
+		'										Dim fixUpperFilters As Boolean = False
+
+		'										For Each u As String In array
+		'											If IsNullOrWhitespace(u) Then Continue For
+		'											If StrContainsAny(u, True, "nvpciflt", "nvkflt") Then
+
+		'												'If StrContainsAny(u, True, "nvpciflt", "nvkflt") Then
+		'												' Orginal didn't check for "nvkflt", should it?
+		'												' => "nvkflt" won't get removed if "nvpciflt" doesn't exists (uncomment top line)
+
+		'												Application.Log.AddMessage("nVidia Optimus UpperFilter Found.")
+
+		'												fixUpperFilters = True
+		'												Exit For
+		'											End If
+		'										Next
+
+		'										If fixUpperFilters Then
+		'											Try
+		'												Dim AList As List(Of String) = New List(Of String)(array.Length)
+
+		'												For Each item As String In array
+		'													If IsNullOrWhitespace(item) Then Continue For
+
+		'													If Not StrContainsAny(item, True, "nvpciflt", "nvkflt") Then
+		'														AList.Add(item)
+		'													End If
+		'												Next
+
+		'												Deletevalue(regkey2, "UpperFilters")
+
+		'												If AList.Count > 0 Then
+		'													regkey2.SetValue("UpperFilters", AList.ToArray(), RegistryValueKind.MultiString)
+		'												End If
+		'											Catch ex As Exception
+		'												Application.Log.AddException(ex)
+		'												Application.Log.AddWarningMessage("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
+		'											End Try
+		'										End If
+
+		'										'For Each item As String In array
+		'										'	If IsNullOrWhitespace(item) Then Continue For
+
+		'										'	Application.Log.AddMessage("UpperFilter found : " + item)
+		'										'	If StrContainsAny(item, True, "nvpciflt") Then
+		'										'		Dim AList As ArrayList = New ArrayList(array)
+
+		'										'		AList.Remove("nvpciflt")
+		'										'		AList.Remove("nvkflt")
+
+		'										'		Application.Log.AddMessage("nVidia Optimus UpperFilter Found.")
+		'										'		Dim upfiler As String() = CType(AList.ToArray(GetType(String)), String())
+
+		'										'		Try
+
+		'										'			deletevalue(regkey2, "UpperFilters")
+		'										'			If (upfiler IsNot Nothing) AndAlso (Not upfiler.Length < 1) Then
+		'										'				regkey2.SetValue("UpperFilters", upfiler, RegistryValueKind.MultiString)
+		'										'			End If
+		'										'		Catch ex As Exception
+		'										'			Application.Log.AddException(ex)
+		'										'			Application.Log.AddWarningMessage("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
+		'										'		End Try
+		'										'	End If
+		'										'Next
+		'									End If
+		'								End Using
+		'							Next
+		'						End If
+		'					End Using
+		'				End If
+		'			Next
+		'		End If
+		'	End Using
+		'Catch ex As Exception
+		'	MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+		'	Application.Log.AddException(ex)
+		'End Try
 	End Sub
 
 	Private Function GPUIdentify() As GPUVendor
@@ -6344,10 +6373,10 @@ Public Class frmMain
 			End If
 
 			If config.SelectedGPU = GPUVendor.Nvidia Then
+				Checkpcieroot(config)
 				Cleannvidiaserviceprocess(config)
 				Cleannvidia(config)
 				Cleannvidiafolders(config)
-				Checkpcieroot(config)
 			End If
 
 			If config.SelectedGPU = GPUVendor.Intel Then

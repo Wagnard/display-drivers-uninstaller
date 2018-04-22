@@ -1511,6 +1511,7 @@ Namespace Win32
 				Dim nullGuid As Guid = Guid.Empty
 				Dim hardwareIds(0) As String
 				Dim lowerfilters(0) As String
+				Dim upperfilters(0) As String
 				Dim friendlyname As String
 				Dim desc As String = Nothing
 				Dim className As String = Nothing
@@ -1551,6 +1552,7 @@ Namespace Win32
 							className = Nothing
 							hardwareIds = Nothing
 							lowerfilters = Nothing
+							upperfilters = Nothing
 							friendlyname = Nothing
 
 							If Not String.IsNullOrEmpty(text) Then
@@ -1589,6 +1591,16 @@ Namespace Win32
 												End If
 											Next
 										End If
+									Case "Device_UpperFilters"
+										upperfilters = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.UPPERFILTERS)
+										If upperfilters IsNot Nothing Then
+											For Each UFs As String In upperfilters
+												If UFs.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
+													match = True
+													Exit Select
+												End If
+											Next
+										End If
 									Case "Device_FriendlyName"
 										friendlyname = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.FRIENDLYNAME)
 										If friendlyname IsNot Nothing Then
@@ -1620,6 +1632,7 @@ Namespace Win32
 								 .ClassName = className,
 								 .HardwareIDs = hardwareIds,
 								 .LowerFilters = lowerfilters,
+								 .UpperFilters = upperfilters,
 								 .FriendlyName = friendlyname
 								}
 
@@ -1856,6 +1869,7 @@ Namespace Win32
 				Dim nullGuid As Guid = Guid.Empty
 				Dim hardwareIds(0) As String
 				Dim lowerfilters(0) As String
+				Dim upperfilters(0) As String
 				Dim friendlyname As String
 				Dim desc As String = Nothing
 				Dim className As String = Nothing
@@ -1896,6 +1910,7 @@ Namespace Win32
 							className = Nothing
 							hardwareIds = Nothing
 							lowerfilters = Nothing
+							upperfilters = Nothing
 							friendlyname = Nothing
 
 							If Not String.IsNullOrEmpty(text) Then
@@ -1925,6 +1940,7 @@ Namespace Win32
 								 .ClassName = className,
 								 .HardwareIDs = hardwareIds,
 								 .LowerFilters = lowerfilters,
+								 .UpperFilters = lowerfilters,
 								 .FriendlyName = friendlyname
 								}
 
@@ -2599,6 +2615,7 @@ Namespace Win32
 				.HardwareIDs = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.HARDWAREID)
 				.CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.COMPATIBLEIDS)
 				.LowerFilters = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.LOWERFILTERS)
+				.UpperFilters = GetMultiStringProperty(infoSet, ptrDevInfo, SPDRP.UPPERFILTERS)
 
 				.RebootRequired = RebootRequired(infoSet, ptrDevInfo, device)
 
@@ -2971,6 +2988,7 @@ Namespace Win32
 			Private _hasHardwareID As Boolean = False
 			Private _hardwareIDs As String()
 			Private _lowerfilters As String()
+			Private _upperfilters As String()
 			Private _friendlyname As String
 			Private _compatibleIDs As String()
 			Private _description As String
@@ -3028,6 +3046,14 @@ Namespace Win32
 				End Get
 				Friend Set(value As String())
 					_lowerfilters = value
+				End Set
+			End Property
+			Public Property UpperFilters As String()
+				Get
+					Return _upperfilters
+				End Get
+				Friend Set(value As String())
+					_upperfilters = value
 				End Set
 			End Property
 			Public Property FriendlyName As String
