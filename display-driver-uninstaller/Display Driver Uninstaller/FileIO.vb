@@ -977,7 +977,7 @@ Public Class FileIO
 #End Region
 	Private Shared Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
 		Dim cleanupengine As New CleanupEngine
-		cleanupengine.deletevalue(value1, value2)
+		cleanupengine.Deletevalue(value1, value2)
 	End Sub
 
 End Class

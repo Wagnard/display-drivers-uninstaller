@@ -99,7 +99,7 @@ Public Class frmMain
 			End If
 			'check if the oem was removed to process to the pnplockdownfile if necessary
 			If win8higher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
-				CleanupEngine.prePnplockdownfiles(catalog)
+				CleanupEngine.PrePnplockdownfiles(catalog)
 			End If
 		Next
 
@@ -112,7 +112,7 @@ Public Class frmMain
 	Private Sub Cleanamdserviceprocess()
 
 
-		CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\AMD\services.cfg"))    '// add each line as String Array.
+		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\AMD\services.cfg"))    '// add each line as String Array.
 
 		Dim killpid As New ProcessStartInfo
 		killpid.FileName = "cmd.exe"
@@ -165,7 +165,7 @@ Public Class frmMain
 		'Delete driver files
 		'delete OpenCL
 
-		CleanupEngine.folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")) '// add each line as String Array.
+		CleanupEngine.Folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")) '// add each line as String Array.
 
 
 
@@ -314,14 +314,14 @@ Public Class frmMain
 			End If
 
 			filePath = System.Environment.SystemDirectory
-			Dim files() As String = IO.Directory.GetFiles(filePath + "\", "coinst_*.*")
-			For i As Integer = 0 To files.Length - 1
-				If Not IsNullOrWhitespace(files(i)) Then
-
-					Delete(files(i))
-
-				End If
-			Next
+			If FileIO.ExistsDir(filePath) Then
+				Dim files() As String = IO.Directory.GetFiles(filePath + "\", "coinst_*.*")
+				For i As Integer = 0 To files.Length - 1
+					If Not IsNullOrWhitespace(files(i)) Then
+						Delete(files(i))
+					End If
+				Next
+			End If
 
 			filePath = Environment.GetFolderPath _
 			   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
@@ -809,7 +809,7 @@ Public Class frmMain
 
 
 
-		CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\interface.cfg"))    '// add each line as String Array.
+		CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\interface.cfg"))    '// add each line as String Array.
 
 		Application.Log.AddMessage("Instance class cleanUP")
 		Try
@@ -980,7 +980,7 @@ Public Class frmMain
 		Application.Log.AddMessage("AppID and clsidleftover cleanUP")
 		'old dcom 
 
-		CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\clsidleftover.cfg"))  '// add each line as String Array.
+		CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\clsidleftover.cfg"))  '// add each line as String Array.
 
 		Application.Log.AddMessage("Record CleanUP")
 
@@ -1978,7 +1978,7 @@ Public Class frmMain
 			End Try
 		End If
 
-		CleanupEngine.installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg"), config)
+		CleanupEngine.Installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg"), config)
 
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
@@ -2557,7 +2557,7 @@ Public Class frmMain
 	Private Sub Cleannvidiaserviceprocess(ByVal config As ThreadSettings)
 
 		If FileIO.ExistsFile(config.Paths.AppBase & "settings\NVIDIA\services.cfg") Then
-			CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\services.cfg"))
+			CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\services.cfg"))
 		Else
 			Microsoft.VisualBasic.MsgBox(config.Paths.AppBase & "settings\NVIDIA\services.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
 		End If
@@ -2565,7 +2565,7 @@ Public Class frmMain
 
 		If config.RemoveGFE Then
 			If FileIO.ExistsFile(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg") Then
-				CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg"))
+				CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg"))
 			Else
 				Microsoft.VisualBasic.MsgBox(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
 			End If
@@ -3160,9 +3160,9 @@ Public Class frmMain
 			End If
 		End If
 
-		CleanupEngine.folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
+		CleanupEngine.Folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
 		If config.RemoveGFE Then
-			CleanupEngine.folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg"))   '// add each line as String Array.
+			CleanupEngine.Folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg"))   '// add each line as String Array.
 		End If
 
 		filePath = System.Environment.SystemDirectory
@@ -3528,9 +3528,9 @@ Public Class frmMain
 
 		'for GFE removal only
 		If removegfe Then
-			CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
+			CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
 		Else
-			CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
+			CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
 		End If
 
 		'------------------------------
@@ -3564,9 +3564,9 @@ Public Class frmMain
 
 
 		If removegfe Then 'When removing GFE only
-			CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
+			CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
 		Else
-			CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interface.cfg"))  '// add each line as String Array.
+			CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interface.cfg"))  '// add each line as String Array.
 		End If
 
 		Application.Log.AddMessage("Finished dcom/clsid/appid/typelib/interface cleanup")
@@ -4034,24 +4034,26 @@ Public Class frmMain
 								If IsNullOrWhitespace(child) Then Continue For
 
 								Dim tArray() As String = CType(regkey.GetValue(child), String())
-								For Each arrayelement As String In tArray
-									If IsNullOrWhitespace(arrayelement) Then Continue For
+								If tArray.Length > 0 Then
+									For Each arrayelement As String In tArray
+										If IsNullOrWhitespace(arrayelement) Then Continue For
 
-									If Not arrayelement = "" Then
-										If StrContainsAny(arrayelement, True, "nvstview.exe", "vulkaninfo", "nvstlink.exe") Then
-											Try
-												Deletevalue(regkey, child)
-											Catch ex As Exception
-											End Try
+										If Not arrayelement = "" Then
+											If StrContainsAny(arrayelement, True, "nvstview.exe", "vulkaninfo", "nvstlink.exe") Then
+												Try
+													Deletevalue(regkey, child)
+												Catch ex As Exception
+												End Try
+											End If
+											If StrContainsAny(arrayelement, True, "geforce experience") AndAlso config.RemoveGFE Then
+												Try
+													Deletevalue(regkey, child)
+												Catch ex As Exception
+												End Try
+											End If
 										End If
-										If StrContainsAny(arrayelement, True, "geforce experience") AndAlso config.RemoveGFE Then
-											Try
-												Deletevalue(regkey, child)
-											Catch ex As Exception
-											End Try
-										End If
-									End If
-								Next
+									Next
+								End If
 							Next
 						End If
 					End Using
@@ -4070,18 +4072,20 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) Then Continue For
 
 					Dim tArray() As String = CType(regkey.GetValue(child), String())
-					For Each arrayelement As String In tArray
-						If IsNullOrWhitespace(arrayelement) Then Continue For
+					If tArray.Length > 0 Then
+						For Each arrayelement As String In tArray
+							If IsNullOrWhitespace(arrayelement) Then Continue For
 
-						If Not arrayelement = "" Then
-							If StrContainsAny(arrayelement, True, "nvi2.dll", "vulkaninfo", "nvstlink.exe", "nvidiastereo") Then
-								Try
-									Deletevalue(regkey, child)
-								Catch ex As Exception
-								End Try
+							If Not arrayelement = "" Then
+								If StrContainsAny(arrayelement, True, "nvi2.dll", "vulkaninfo", "nvstlink.exe", "nvidiastereo") Then
+									Try
+										Deletevalue(regkey, child)
+									Catch ex As Exception
+									End Try
+								End If
 							End If
-						End If
-					Next
+						Next
+					End If
 				Next
 			End If
 		End Using
@@ -4851,7 +4855,7 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		CleanupEngine.installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\packages.cfg"), config)
+		CleanupEngine.Installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\packages.cfg"), config)
 
 
 		If config.Remove3DTVPlay Then
@@ -5183,7 +5187,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Cleaning Directory")
 
-		CleanupEngine.folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg"))      '// add each line as String Array.
+		CleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg"))      '// add each line as String Array.
 
 		filePath = System.Environment.SystemDirectory
 		Dim files() As String = IO.Directory.GetFiles(filePath + "\", "igfxcoin*.*")
@@ -5242,7 +5246,7 @@ Public Class frmMain
 
 	Private Sub cleanintelserviceprocess()
 
-		CleanupEngine.cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\services.cfg")) '// add each line as String Array.
+		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\services.cfg")) '// add each line as String Array.
 
 		KillProcess("IGFXEM")
 	End Sub
@@ -5260,9 +5264,9 @@ Public Class frmMain
 
 		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\classroot.cfg")) '// add each line as String Array.
 
-		CleanupEngine.interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\interface.cfg")) '// add each line as String Array.
+		CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\interface.cfg")) '// add each line as String Array.
 
-		CleanupEngine.clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
+		CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
 
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Intel", True)
@@ -5405,7 +5409,7 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		CleanupEngine.installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packages.cfg"), config)
+		CleanupEngine.Installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packages.cfg"), config)
 
 		If IntPtr.Size = 8 Then
 			packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packages.cfg") '// add each line as String Array.
@@ -5528,20 +5532,17 @@ Public Class frmMain
 	End Sub
 
 	Private Sub Checkpcieroot(ByVal config As ThreadSettings)   'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
-		Dim array() As String = Nothing
 
 		UpdateTextMethod(UpdateTextTranslated(7))
 
 		Application.Log.AddMessage("Starting the removal of nVidia Optimus UpperFilter if present.")
 
-
-		UpdateTextMethod("Start - Check for OPTIMUS system device.")
 		Try
 			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
 			If found.Count > 0 Then
 				For Each d As SetupAPI.Device In found
 					If StrContainsAny(d.HardwareIDs(0), True, "VEN_8086") Then
-						If d.UpperFilters IsNot Nothing AndAlso StrContainsAny(d.UpperFilters(0), True, "nvpciflt", "nvkflt") Then
+						If d.UpperFilters IsNot Nothing AndAlso d.UpperFilters.Length > 0 AndAlso StrContainsAny(d.UpperFilters(0), True, "nvpciflt", "nvkflt") Then
 							If d.OemInfs.Length > 0 AndAlso (Not IsNullOrWhitespace(d.OemInfs(0).ToString)) AndAlso FileIO.ExistsFile(d.OemInfs(0).ToString) Then
 								SetupAPI.UpdateDeviceInf(d, d.OemInfs(0).ToString, True)
 							Else
@@ -5555,7 +5556,7 @@ Public Class frmMain
 					End If
 				Next
 			End If
-			UpdateTextMethod("End - Check for OPTIMUS system device.")
+
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -5563,104 +5564,6 @@ Public Class frmMain
 
 		UpdateTextMethod(UpdateTextTranslated(28))
 
-		'Try
-		'	Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
-		'		If regkey IsNot Nothing Then
-		'			For Each child As String In regkey.GetSubKeyNames()
-		'				If IsNullOrWhitespace(child) Then Continue For
-
-		'				If StrContainsAny(child, True, "ven_8086") Then
-		'					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-		'						If subregkey IsNot Nothing Then
-		'							For Each childs As String In subregkey.GetSubKeyNames()
-		'								If IsNullOrWhitespace(childs) Then Continue For
-
-		'								Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, childs, True)
-		'									If regkey2 Is Nothing Then Continue For
-
-		'									array = TryCast(regkey2.GetValue("UpperFilters"), String())
-
-		'									If array IsNot Nothing AndAlso array.Length > 0 Then
-		'										Application.Log.AddMessage("UpperFilters found", "UpperFilters", String.Join(Environment.NewLine, array))
-
-		'										Dim fixUpperFilters As Boolean = False
-
-		'										For Each u As String In array
-		'											If IsNullOrWhitespace(u) Then Continue For
-		'											If StrContainsAny(u, True, "nvpciflt", "nvkflt") Then
-
-		'												'If StrContainsAny(u, True, "nvpciflt", "nvkflt") Then
-		'												' Orginal didn't check for "nvkflt", should it?
-		'												' => "nvkflt" won't get removed if "nvpciflt" doesn't exists (uncomment top line)
-
-		'												Application.Log.AddMessage("nVidia Optimus UpperFilter Found.")
-
-		'												fixUpperFilters = True
-		'												Exit For
-		'											End If
-		'										Next
-
-		'										If fixUpperFilters Then
-		'											Try
-		'												Dim AList As List(Of String) = New List(Of String)(array.Length)
-
-		'												For Each item As String In array
-		'													If IsNullOrWhitespace(item) Then Continue For
-
-		'													If Not StrContainsAny(item, True, "nvpciflt", "nvkflt") Then
-		'														AList.Add(item)
-		'													End If
-		'												Next
-
-		'												Deletevalue(regkey2, "UpperFilters")
-
-		'												If AList.Count > 0 Then
-		'													regkey2.SetValue("UpperFilters", AList.ToArray(), RegistryValueKind.MultiString)
-		'												End If
-		'											Catch ex As Exception
-		'												Application.Log.AddException(ex)
-		'												Application.Log.AddWarningMessage("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
-		'											End Try
-		'										End If
-
-		'										'For Each item As String In array
-		'										'	If IsNullOrWhitespace(item) Then Continue For
-
-		'										'	Application.Log.AddMessage("UpperFilter found : " + item)
-		'										'	If StrContainsAny(item, True, "nvpciflt") Then
-		'										'		Dim AList As ArrayList = New ArrayList(array)
-
-		'										'		AList.Remove("nvpciflt")
-		'										'		AList.Remove("nvkflt")
-
-		'										'		Application.Log.AddMessage("nVidia Optimus UpperFilter Found.")
-		'										'		Dim upfiler As String() = CType(AList.ToArray(GetType(String)), String())
-
-		'										'		Try
-
-		'										'			deletevalue(regkey2, "UpperFilters")
-		'										'			If (upfiler IsNot Nothing) AndAlso (Not upfiler.Length < 1) Then
-		'										'				regkey2.SetValue("UpperFilters", upfiler, RegistryValueKind.MultiString)
-		'										'			End If
-		'										'		Catch ex As Exception
-		'										'			Application.Log.AddException(ex)
-		'										'			Application.Log.AddWarningMessage("Failed to fix Optimus. You will have to manually remove the device with yellow mark in device manager to fix the missing videocard")
-		'										'		End Try
-		'										'	End If
-		'										'Next
-		'									End If
-		'								End Using
-		'							Next
-		'						End If
-		'					End Using
-		'				End If
-		'			Next
-		'		End If
-		'	End Using
-		'Catch ex As Exception
-		'	MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
-		'	Application.Log.AddException(ex)
-		'End Try
 	End Sub
 
 	Private Function GPUIdentify() As GPUVendor
@@ -5682,7 +5585,7 @@ Public Class frmMain
 								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey2, child2)
 									If regkey3 Is Nothing Then Continue For
 
-									compatibleIDs = TryCast(regkey3.GetValue("CompatibleIDs"), String())
+									compatibleIDs = TryCast(regkey3.GetValue("CompatibleIDs", String.Empty), String())
 
 									If compatibleIDs IsNot Nothing AndAlso compatibleIDs.Length > 0 Then
 										isGpu = False
@@ -6359,7 +6262,7 @@ Public Class frmMain
 				If config.Restart Or config.Shutdown Then
 					If Not Checkamdkmpfd() Then
 						UpdateTextMethod("Start - Check for AMDKMPFD service.")
-						CleanupEngine.cleanserviceprocess({"amdkmpfd"})
+						CleanupEngine.Cleanserviceprocess({"amdkmpfd"})
 						UpdateTextMethod("End - Check for AMDKMPFD service.")
 					End If
 				End If
@@ -7046,11 +6949,11 @@ Public Class frmMain
 	End Function
 
 	Private Sub Deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
-		CleanupEngine.deletesubregkey(value1, value2)
+		CleanupEngine.Deletesubregkey(value1, value2)
 	End Sub
 
 	Private Sub Deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
-		CleanupEngine.deletevalue(value1, value2)
+		CleanupEngine.Deletevalue(value1, value2)
 	End Sub
 	Private Sub Delete(ByVal filename As String)
 		FileIO.Delete(filename)
