@@ -421,10 +421,11 @@ Public Class FileIO
 			If errCode <> Errors.ACCESS_DENIED Then
 
 				If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
-					uncFileName = GetLongPath(fileName)		' Check if was short path
+
+					uncFileName = GetLongPath(fileName)     ' Check if was short path
 
 					If uncFileName Is Nothing Then
-						Return			' Wasn't short path... Just doesn't exist
+						Return          ' Wasn't short path... Just doesn't exist
 					End If
 
 					If Not uncFileName.StartsWith(UNC_PREFIX) Then
