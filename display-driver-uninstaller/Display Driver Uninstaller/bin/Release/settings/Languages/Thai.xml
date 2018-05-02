@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="th-TH" Text="ไทย" >
+	<!--
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
+
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<btnCleanRestart>
+			<Text>
+				ทำความสะอาดและรีสตาร์ท
+				(ขอแนะนำ)
+			</Text>
+			<Tooltip>
+				ถอนการติดตั้งไดร์เวอร์ปัจจุบันและก่อนหน้าจากนั้นรีสตาร์ทเครื่องคอมพิวเตอร์
+				(ขอแนะนำ)
+			</Tooltip>
+		</btnCleanRestart>
+		<btnClean>
+			<Text>
+				ทำความสะอาดและอย่ารีสตาร์ท
+				(อาจทำให้เกิดปัญหาเช่นหน้าจอสีดำ)
+			</Text>
+			<Tooltip>
+				ถอนการติดตั้งไดร์เวอร์ปัจจุบันและก่อนหน้านี้ แต่อย่ารีสตาร์ทเครื่องคอมพิวเตอร์
+				(อาจทำให้เกิดปัญหาเช่นหน้าจอสีดำ)
+			</Tooltip>
+		</btnClean>
+		<btnCleanShutdown>
+			<Text>
+				ทำความสะอาดและปิดระบบ
+				(สำหรับการติดตั้งการ์ดกราฟิกใหม่)
+			</Text>
+			<Tooltip>
+				ถอนการติดตั้งไดร์เวอร์ปัจจุบันและก่อนหน้านี้และปิดระบบคอมพิวเตอร์โดยไม่ใช้ Rescan
+				(สำหรับการติดตั้งการ์ดกราฟิกใหม่)
+			</Tooltip>
+		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				ลบแคชและไฟล์แคชของโปรแกรมควบคุมโปรแกรมติดตั้งไดรเวอร์ "GeForce Experience" ที่แสดง "GeForce Experience"
+				(หมายเหตุ: ไดรเวอร์จะไม่ถูกเอาออก)
+			</Text>
+			<Tooltip>
+				ส่วนใหญ่จะใช้เพื่อกู้พื้นที่ดิสก์บางส่วนที่ทำความสะอาดโดย GeForce Experience เมื่อติดตั้งไดรฟ์เวอร์ (GFE เวอร์ชันเก่า)
+			</Tooltip>
+		</btnCleanGfeDownloads>
+		<btnWuRestore>
+			<Text>
+				ตั้งค่าการตั้งค่าอุปกรณ์ Windows เป็นค่าปกติ
+				(ติดตั้งไดรเวอร์โดยอัตโนมัติ)
+			</Text>
+		</btnWuRestore>
+		<lblWinVersion>
+			<Text>ตรวจพบระบบปฏิบัติการ:</Text>
+		</lblWinVersion>
+		<lblDonate>
+			<Text>*** คุณชอบ DDU? คิดเกี่ยวกับการบริจาคซึ่งจะช่วยพัฒนาต่อไป ***</Text>
+		</lblDonate>
+		<lblLog>
+			<Text>Log</Text>
+		</lblLog>
+		<lblSelectedGPU>
+			<Text>ไดร์เวอร์กราฟิกที่เลือก</Text>
+		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>ภาษาที่เลือก</Text>
+		</lblLanguage>
+
+		<lblUpdate>
+			<Text>ตรวจสอบการปรับปรุง...</Text>
+			<Text2>ไม่พบการปรับปรุง โปรแกรมอัปเดตแล้ว</Text2>
+			<Text3>พบการอัปเดตแล้ว! คาดว่าการสนับสนุนเวอร์ชันเก่าจะมี จำกัด ไม่มากไปกว่ารุ่นล่าสุด</Text3>
+			<Text4>ไม่สามารถเรียกข้อมูลอัปเดต!</Text4>
+		</lblUpdate>
+
+		<lblOffer>
+			<Text>ข้อเสนอจากคู่ค้าของเรา</Text>
+			<Tooltip>คุณสามารถปิดใช้งานได้ในเมนูตัวเลือก</Tooltip>
+		</lblOffer>
+
+		<OptionsMenuItem>
+			<Text>ตัวเลือก</Text>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>ข้อมูล</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>บันทึกเพิ่มเติม</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>การเชื่อมโยง</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>ข้อกำหนดในการให้บริการ (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
+			<Text>เกี่ยวกับ</Text>
+		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text></Text>
+		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>ผู้อุปถัมภ์</Text>
+		</PatronMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>เยี่ยมชมเว็บไซต์ DDU อย่างเป็นทางการ</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>เยี่ยมชมเว็บไซต์ SVN</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>ไปที่หัวข้อ Guru3d NVIDIA</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>ไปที่หัวข้อ Guru3d AMD</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>ไปที่หัวข้อ Guru3d GeForce</Text>
+		</VisitGeforceMenuItem>
+
+		<Messages>
+			<Text1>มีการปรับปรุง! เยี่ยมชมเว็บไซต์ DDU ตอนนี้หรือไม่?</Text1>
+			<Text2>คาดว่าการสนับสนุนเวอร์ชันเก่าจะมี จำกัด ไม่มากไปกว่ารุ่นล่าสุด โปรดตรวจสอบเวอร์ชันที่ใหม่กว่าก่อนรายงานข้อบกพร่อง</Text2>
+			<Text3>คุณไม่ได้ใช้ DDU ที่มีสิทธิ์ของผู้ดูแลระบบ โปรแกรมจะออกจากโปรแกรม</Text3>
+			<Text4>ไม่สามารถหา PAExec โปรดดูล็อก</Text4>
+			<Text5>Display Driver Uninstaller (DDU) กำลังปรับเปลี่ยนรีจิสทรีของคุณเป็นจำนวนมาก DDU จะพยายามสร้างจุดคืนค่าระบบโดยอัตโนมัติ (โหมดปกติเท่านั้น)</Text5>
+			<Text6>เกิดปัญหาขึ้นในโมดูลใดชุดหนึ่งส่งบันทึก DDU ของคุณไปให้นักพัฒนาซอฟต์แวร์</Text6>
+			<Text7>DDU ตรวจพบว่าคุณมี AMD switching Laptop (Enduro หรือเทียบเท่า) DDU ยังไม่สามารถใช้งานร่วมกับ Enduro ได้อย่างสมบูรณ์ ใช้ความเสี่ยงด้วยตัวคุณเอง</Text7>
+			<Text8>DDU ตรวจพบว่าคุณไม่ได้อยู่ใน Safe Mode ... สำหรับการล้างข้อมูลที่ดีขึ้นโดยไม่มีปัญหาขอแนะนำให้คุณบูตเครื่องใหม่ใน safemode</Text8>
+			<Text9>การตั้งค่าการติดตั้ง Windows Device ถูกเปลี่ยนไปเป็น NOT จะติดตั้งไดรเวอร์โดยอัตโนมัติ</Text9>
+			<Text10>ถอนการติดตั้งเสร็จสมบูรณ์! คุณต้องการออกตอนนี้หรือไม่?</Text10>
+			<Text11>มีการเปลี่ยนแปลงการตั้งค่าการติดตั้งอุปกรณ์ Windows เพื่อให้ติดตั้งไดรเวอร์โดยอัตโนมัติ</Text11>
+			<Text12>คุณไม่ได้อยู่ใน Safe Mode ขอแนะนำให้คุณรีบูตเข้า Safe Mode เพื่อหลีกเลี่ยงปัญหาที่เป็นไปได้ เริ่มต้นใหม่ในโหมดปลอดภัยหรือไม่?</Text12>
+			<Text13>นี่คือสิ่งที่คุณต้องเลือกที่หน้าจอการกู้คืนข้อมูลสีฟ้า: แก้ปัญหา -&gt; ตัวเลือกขั้นสูง -&gt; การตั้งค่าเริ่มต้น</Text13>
+			<Text14>มีการรีบูตที่รอดำเนินการโปรดรีบูตก่อนที่จะใช้ DDU</Text14>
+			<Text15>ไม่มีการเปลี่ยนแปลง การตั้งค่าการติดตั้งอุปกรณ์ Windows ได้รับการตั้งค่าเป็นค่าเริ่มต้นแล้ว</Text15>
+			<Text16>เกิดข้อผิดพลาดร้ายแรงจาก Windows ที่ป้องกันการลบไดรเวอร์ที่ถูกต้อง เป็นมาตรการรักษาความปลอดภัย DDU จะไม่ดำเนินการต่อไฟล์และการลบรีจิสทรี คุณต้องแก้ไขปัญหาระบบของคุณก่อนที่จะใช้ DDU</Text16>
+		</Messages>
+
+		<UpdateLog>
+			<Text1>กำลังดำเนินการล้างข้อมูลในไดร์เวอร์สโตร์ (ลบขั้นตอน OEM) ...</Text1>
+			<Text2>ทำความสะอาดไดเร็กทอรี</Text2>
+			<Text3>ทำความสะอาด Regkeys ที่รู้จัก ... อาจใช้เวลาสักครู่หรือสองนาที</Text3>
+			<Text4>ทำความสะอาดบัญชีผู้ใช้ UpdatusUser หากมีอยู่</Text4>
+			<Text5>ทำความสะอาดไดเร็กทอรี</Text5>
+			<Text6>เริ่มการล้างข้อมูลรีจิสทรี</Text6>
+			<Text7>ทำความสะอาด Registry สำเร็จรูป</Text7>
+			<Text8>เริ่มต้นการลบ NVIDIA ออปติมัส ตัวกรองด้านบน ถ้ามีอยู่</Text8>
+			<Text9>กำลังสแกนหาอุปกรณ์ใหม่...</Text9>
+			<Text10>ถอนการติดตั้งเสร็จสมบูรณ์!</Text10>
+			<Text11>DDU รุ่น</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>ตรวจพบ</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>เวอร์ชั่นของไดร์เวอร์ที่ตรวจพบ(s)</Text15>
+			<Text16>INF</Text16>
+			<Text17>ส่วน INF</Text17>
+			<Text18>ไม่ได้ติดตั้ง GPU อย่างถูกต้อง</Text18>
+			<Text19>การลบโฟลเดอร์พิเศษบางอย่างอาจใช้เวลาสักครู่...</Text19>
+			<Text20>ล้างข้อมูลแล้ว...</Text20>
+			<Text21>ถอนการติดตั้ง</Text21>
+			<Text22>driver</Text22>
+			<Text23>กำลังใช้ API การตั้งค่าโปรดรอสักครู่ (อาจใช้เวลาสองสามนาที)</Text23>
+			<Text24>นำ GPU(s) ออกจาก Device Manager แล้ว</Text24>
+			<Text25>การดำเนินการตั้งค่า API จะเอาตัวควบคุมเสียงออก</Text25>
+			<Text26>ลบอะแดปเตอร์เสียง HD แล้ว!</Text26>
+			<Text27>การ์ดเชื่อมต่อ USB 3D Vision ถูกนำออกจาก Device Manager</Text27>
+			<Text28>ปิดจอภาพและจอภาพที่ซ่อนอยู่!</Text28>
+			<Text29>API การตั้งค่าเสร็จสมบูรณ์</Text29>
+			<Text30>เริ่มต้นการล้างพื้นที่ S-1-5-xx</Text30>
+			<Text31>สิ้นสุดการล้างพื้นที่ S-1-5-xx</Text31>
+			<Text32>เริ่มการทำงานของ คลาสราก, ทำความสะอาด ติดตั้ง \ ผลิตภัณฑ์</Text32>
+			<Text33>การล้างข้อมูลสำหรับ คลาสราก, ติดตั้ง \ ผลิตภัณฑ์</Text33>
+			<Text34>เริ่ม เครื่องท้องถิ่น การล้างข้อมูล ติดตั้ง \ ผลิตภัณฑ์</Text34>
+			<Text35>ปิดเครื่อง เครื่องท้องถิ่น การล้างข้อมูลตัวติดตั้ง \ผลิตภัณฑ์</Text35>
+			<Text36>เริ่มการทำงานปัจจุบันผู้ล้างทำความสะอาดตัวติดตั้ง \ ผลิตภัณฑ์</Text36>
+			<Text37>สิ้นสุดการใช้งานปัจจุบันการล้างข้อมูลตัวติดตั้ง \ ผลิตภัณฑ์</Text37>
+			<Text38>กระบวนการ / บริการทำความสะอาด...</Text38>
+			<Text39>ล้างกระบวนการ / บริการแล้วเสร็จ</Text39>
+			<Text40>ที่ถูกลบ</Text40>
+			<Text41>นำมูลค่าออกแล้ว</Text41>
+			<Text42>ลบไฟล์แล้ว</Text42>
+		</UpdateLog>
+	</frmMain>
+
+	<frmOptions Text="Options">
+		<btnClose>
+			<Text>ปิด</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>แสดงข้อเสนอจากคู่ค้าของเรา</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>ตัวเลือกเฉพาะของ NVIDIA</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>ตัวเลือกเฉพาะของ AMD</Text>
+		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>ตัวเลือกขั้นสูง (เปลี่ยนแปลงตามความเสี่ยงของคุณเอง)</Text>
+		</lblAdvancedO>
+		<lblGeneral>
+			<Text>ตัวเลือกทั่วไป</Text>
+		</lblGeneral>
+		<lblRemNvidiaDirs>
+			<Text>ลบโฟลเดอร์โปรแกรมควบคุม "C: \ NVIDIA" (ไม่แนะนำ)</Text>
+		</lblRemNvidiaDirs>
+		<lblSaveLogs>
+			<Text>บันทึกแฟ้มบันทึกในเส้นทางเริ่มต้น (แนะนำอย่างมาก)</Text>
+		</lblSaveLogs>
+		<lblRemPhysX>
+			<Text>ลบ PhysX</Text>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
+			<Text>ลบ 3DTV Play</Text>
+		</lblRem3DtvPlay>
+		<lblCreateRestorePoint>
+			<Text>สร้างจุดคืนค่าระบบ (ถ้าได้รับอนุญาต)</Text>
+		</lblCreateRestorePoint>
+		<lblRemMonitors>
+			<Text>ถอดจอภาพปัจจุบันและไม่ใช่ปัจจุบัน (แนะนำ)</Text>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
+			<Text>ถอดบัสเสียง AMD ออก</Text>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
+			<Text>ลบโฟลเดอร์โปรแกรมควบคุม "C: \ AMD" (ไม่แนะนำ)</Text>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
+			<Text>ถอดไดรเวอร์ / ตัวกรอง AMDKMPFD (ขอแนะนำให้ใช้ชิปเซ็ต AMD สำหรับการสำรองข้อมูล)</Text>
+		</lblRemAMDKMPFD>
+		<lblShowSafeModeMsg>
+			<Text>เปิดใช้งานโหมดเซฟโหมด (ไม่แนะนำจนกว่าคุณจะทดสอบโหมดปลอดภัยด้วยตนเอง)</Text>
+			<Tooltip>ไม่แนะนำให้ใช้หากคุณไม่ได้บูตเครื่องคอมพิวเตอร์ของคุณเองเข้าสู่เซฟโหมดเพื่อดูว่าทำงานได้หรือไม่ ตัวเลือกนี้อาจทำให้เกิดการบูต, หน้าจอสีดำและอาจมีมากกว่า</Tooltip>
+		</lblShowSafeModeMsg>
+		<lblUseRoamingCfg>
+			<Text>จัดเก็บไฟล์ config ไว้ในโฟลเดอร์ roaming</Text>
+		</lblUseRoamingCfg>
+		<lblCheckUpdates>
+			<Text>ตรวจสอบการอัปเดต DDU เมื่อเริ่มต้นโดยอัตโนมัติ (แนะนำ)</Text>
+		</lblCheckUpdates>
+		<lblRemGFE>
+			<Text>ลบประสบการณ์ GeForce (GFE)</Text>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
+			<Text>ลบโฟลเดอร์ของ AMD Crimson Shader Cache</Text>
+			<Tooltip>
+				แนะนำหากมีความผิดปกติแบบกราฟิก (ความเร็วหรือความเสียหายทางสายตา) ที่เกิดจากข้อมูลแคชของแคชที่เสียหาย
+				แนะนำให้ใช้หากคุณเปลี่ยนไปใช้แบรนด์อื่นเช่น NVIDIA
+			</Tooltip>
+		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>ลบ Vulkan Runtime</Text>
+			<Tooltip>ไม่แนะนำถ้าคุณมี GPU สองแบบที่สามารถใช้ API Vulkan ได้</Tooltip>
+		</lblVulkan>
+	</frmOptions>
+
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Launch</Text>
+			<Text2>
+				เริ่มต้นใหม่ที่
+				โหมดปลอดภัย
+			</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>ปิด</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>เปิดตัวตัวเลือก</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>
+				คุณไม่ได้อยู่ใน โหมดปลอดภัย ขอแนะนำให้
+				รีบูตเข้า โหมดปลอดภัย เพื่อหลีกเลี่ยงปัญหาที่เป็นไปได้
+			</Text>
+		</lblNotSafeMode>
+		<lblWinPasswordWarn>
+			<Text>
+				หมายเหตุสำคัญสำหรับผู้ใช้ Windows 8/8.1/ 10:
+				รหัสผ่าน "Windows" ของคุณจำเป็นต้องใช้! (PIN ไม่ทำงานใน Safe Mode)
+				ออกทันทีหากคุณสูญหายหรือไม่ทราบ!
+			</Text>
+		</lblWinPasswordWarn>
+		<cbBootOption>
+			<Item1>ปกติ</Item1>
+			<Item2>โหมดปลอดภัย (แนะนำ)</Item2>
+			<Item3>โหมดปลอดภัยด้วยระบบเครือข่าย</Item3>
+		</cbBootOption>
+		<Messages>
+			<Text1>DDU ปิดโปรแกรมที่จะแทรกแซง (เช่น MSI Afterburner และ RTSS).</Text1>
+		</Messages>
+	</frmLaunch>
+
+	<frmLog Text="Extended log">
+		<btnClose>
+			<Text>ปิด</Text>
+		</btnClose>
+		<btnOpenLog>
+			<Text>เปิดบันทึก</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>ตัวเลือก</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>เปิดใช้งานสำเนาแล้ว</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>ฟิลเตอร์</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>แสดงกิจกรรม</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>แสดงคำเตือน</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>แสดงข้อผิดพลาด</Text>
+		</errorsMenuItem>
+	</frmLog>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>กำลังพยายามสร้างจุดเรียกคืนระบบ</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>ปิด</Text>
+		</btnClose>
+		<btnAbout>
+			<Text>เกี่ยวกับ</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>ข้อกำหนดในการให้บริการ (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>แปล</Text>
+		</btnTranslators>
+		<btnPatron>
+			<Text>ผู้อุปถัมภ์</Text>
+		</btnPatron>
+		<lblTranslators>
+			<Text>ขอบคุณบิ๊กแปลต่อไปนี้และผู้ที่ไม่ได้อยู่ในรายการ!</Text>
+		</lblTranslators>
+		<lblPatron>
+			<Text>ขอขอบคุณผู้มีอุปการคุณต่อไปนี้และผู้ที่ไม่ได้อยู่ในรายการ!
+				  
+				  -honnmaguro (ตั้งแต่ 2018-03-16)  
+			</Text>
+		</lblPatron>
+	</frmAbout>
+
+	<Misc>
+		<About>
+			<Text>
+				แสดงไดร์เวอร์ Uninstaller (DDU) / ทำความสะอาดสำหรับไดรเวอร์จอแสดงผล (GPU) (NVIDIA / AMD)
+
+				สิ่งที่ควรทำคือนำไดรเวอร์จอแสดงผล / GPU ออกจาก Device Manager และนำออกปัจจุบันและ
+				โปรแกรมควบคุมก่อนหน้าทั้งหมดจากที่เก็บไดรเวอร์ของ Windows พร้อมกับการลบบริการจาก NVIDIA / AMD
+
+				ผลปัจจุบันหลังจากที่คุณใช้เครื่องมือนี้จะคล้ายกับถ้า Windows อยู่ในสถานะ "Fresh Install"
+
+				เครื่องมือนี้ทำหน้าที่เหมือน "Driver Sweeper" * และมีสิ่งที่กล่าวมาทั้งหมดข้างต้น
+
+				หากคุณมีปัญหาในการติดตั้งไดร์เวอร์ที่เก่ากว่าหรือใหม่กว่าให้ทดลองใช้เนื่องจากมีรายงานบางฉบับที่แก้ไข
+				ปัญหาเหล่านั้น
+
+				การใช้ที่แนะนำ:
+
+				- เครื่องมือสามารถใช้งานได้ในโหมดปกติ แต่สำหรับความเสถียรแบบสัมบูรณ์เมื่อใช้ DDU Safe Mode คือ
+				เสมอดีที่สุด
+
+				- เราต้องการรวบรวมความคิดเห็นจากทุกคนบอกเราว่าประสบความสำเร็จหรือไม่
+
+				- ทำการสำรองข้อมูลหรือจุดคืนค่าระบบ (แต่ปกติแล้วจะปลอดภัยพอสมควร)
+
+				- หากคุณมีหรือมีปัญหาเกี่ยวกับโปรแกรมควบคุมและเครื่องมือนี้ช่วยคุณในการแก้ไขปัญหาบางอย่าง
+				กำลังประสบอยู่โปรดแชร์ผลของคุณ
+
+				โปรดทราบว่า NVIDIA, AMD หรือ Microsoft อาจต้องรับผิดชอบต่อความเสียหายใด ๆ
+				ให้กับคุณหรือคอมพิวเตอร์ของคุณและไม่เป็นพันธมิตรของ DDU หรือผู้สร้างรายนั้น
+				-------------------------------
+
+				สร้างโดย Wagnard
+
+				Coders: Wagnard, Devmltk, Shady7557
+
+				ผู้ทดสอบ: Dellon132 PramCrazyCH
+
+				โลโก้: juanchacin
+
+				ขอบคุณมากสำหรับ Jackalito สำหรับการบริจาคของ AMD 7850
+				
+				ขอบคุณมากสำหรับภาษาไทยจาก: PramCrazyCH
+
+				ขอบคุณ Helge Klein (http://helgeklein.com/setacl/) สำหรับการอนุญาตให้ใช้โปรแกรมของเขากับ DDU "SetAcl"
+
+				ขอบคุณมากสำหรับเวลาในการทดสอบ: Gamer1291 (optimus), Octopuss (Amd Enduro), nedooo` (ใช้เวลาแก้บั๊กกับฉัน)
+				วิสามัญ (ทดสอบข้อบกพร่อง)
+
+				ขอบคุณทุกคนที่ทำให้ระบบของพวกเขามีความเสี่ยง (ขอขอบคุณ Dellon132 PramCrazyCH)
+
+				*DDU ผู้สร้างและ บริษัท ในเครือไม่มีส่วนเกี่ยวข้องกับ Driver Sweeper หรือผู้สร้าง
+				
+				Safe Mode = โหมดปลอดภัย
+			</Text>
+		</About>
+
+		<Tos>
+			<Text>
+				แสดง Driver Uninstaller ("DDU") ข้อตกลงสำหรับผู้ใช้
+
+				คุณเป็นผู้ใช้ DDU ("ผู้ใช้") โดยใช้ซอฟต์แวร์ DDU ข้อตกลงนี้มีผลทันทีที่คุณใช้โปรแกรมเพื่อถอนการติดตั้งไดร์เวอร์
+
+				โดยการใช้ DDU คุณยินยอมที่จะไม่กล่าวหา DDU หรือผู้สร้างและ บริษัท ในเครือที่เป็นอันตรายต่อหรือมีผลต่อคอมพิวเตอร์ของคุณ
+
+				เมื่อใช้ DDU คุณยอมรับว่า NVIDIA ("NVIDIA, GeForce") และ Advanced Micro Devices ("AMD, Radeon") มี
+				เกี่ยวข้องกับโครงการนี้และในทางไม่ช้า บริษัท ในเครือของ DDU หรือผู้สร้าง
+			</Text>
+		</Tos>
+	</Misc>
+
+	<LanguageTranslators>
+		<Translator>
+			<User>Wagnard</User>
+			<Details>Owner</Details>
+			<LastUpdate>24/04/2017</LastUpdate>
+		</Translator>
+
+		<Translator2>
+			<User>DevMltk</User>
+			<LastUpdate>31/05/2016</LastUpdate>
+		</Translator2>
+	</LanguageTranslators>
+
+</DisplayDriverUninstaller>
