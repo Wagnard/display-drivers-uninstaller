@@ -543,6 +543,7 @@ Public Class frmMain
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("cn") Or
 							 child.ToLower.Contains("fuel") Or
+							  child.ToLower.Contains("dvr") Or
 							 removedxcache AndAlso child.ToLower.Contains("dxcache") Or
 							 removedxcache AndAlso child.ToLower.Contains("glcache") Then
 
@@ -2819,6 +2820,8 @@ Public Class frmMain
 							 (child.ToLower.Contains("nvtmrep") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("gfesdk") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("nvbatteryboostcheck") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
 

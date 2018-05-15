@@ -33,16 +33,16 @@
 			</Text>
 			<Tooltip>
 				Деинсталира текущия и всички предишно инсталирани драйвъри и изключва компютъра, без повторно сканиране.
-				(за инсталиране на нова видео карта)
+				(ако инсталирате нова видео карта)
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Remove "GeForce Experience" display driver installer cache/files.
-				(Note: Drivers won't be removed)
+				Премахни инсталационните файлове и кеш на GeForce Experience.
+				(забележка: драйвърите няма да бъдат премахнати)
 			</Text>
 			<Tooltip>
-				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+				Основната цел на това е да освободи дисково пространство, което не се освобождава GeForce Experience при инсталация на драйвър.
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
@@ -55,24 +55,17 @@
 			<Text>Засечена версия на Windows</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** Харесвате DDU? Помислете за дарение, то ще помогне за бъдещото развитие. ***</Text>
+			<Text>*** Харесвате DDU? Помислете за дарение, ще помогне за бъдещото развитие. ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Дневник</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Изберете графичен драйвър</Text>
+			<Text>Избран графичен драйвър</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
 			<Text>Избран език</Text>
 		</lblLanguage>
-
-		<Label9>
-			<Text>Забележка: всякакви щети или грешки, причинени на Вашия компютър са на Ваша отговорност.</Text>
-		</Label9>
-		<Label10>
-			<Text>Препоръчително е да използвате DDU в безопасен режим (Safe Mode).</Text>
-		</Label10>
 
 		<lblUpdate>
 			<Text>Проверяване за актуализации...</Text>
@@ -82,7 +75,7 @@
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Предложения от наши партньори</Text>
+			<Text>Предложения от нашите партньори</Text>
 			<Tooltip>Можете да забраните това в менюто с опциите.</Tooltip>
 		</lblOffer>
 
@@ -99,7 +92,7 @@
 			<Text>Връзки</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Условия за използване (Узи)</Text>
+			<Text>Условия за използване (УЗИ)</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
 			<Text>Относно</Text>
@@ -107,38 +100,42 @@
 		<TranslatorsMenuItem>
 			<Text>Преводачи</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Покровител</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Отвори официалната страница на DDU</Text>
+			<Text>Отворяне на официалната страница на DDU</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Отвори SVN страницата</Text>
+			<Text>Отворяне на SVN страницата</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Отвори темата за NVIDIA в Guru3d</Text>
+			<Text>Отворяне на темата за NVIDIA в Guru3d</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Отвори темата за AMD в Guru3d</Text>
+			<Text>Отворяне на темата за AMD в Guru3d</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Отвори темата за Geforce</Text>
+			<Text>Отворяне на темата за Geforce</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
 			<Text1>Налични са актуализации! Желаете ли да посетите страницата на DDU сега?</Text1>
-			<Text2>Очаквайте ограничена поддръжка на по-стари версии спрямо по-новите. Моля, тествайте с по-нова версия, преди да докладвате за проблем.</Text2>
+			<Text2>Очаквайте ограничена поддръжка при по-стари версии, спрямо по-новите. Моля, тествайте с по-нова версия, преди да докладвате за проблем.</Text2>
 			<Text3>Не използвате DDU с администраторски привилегии. Приложението ще се затвори.</Text3>
-			<Text4>Файлът ddudr не беше открит. Моля, проверете дневника.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) прави много промени по системния регистър. DDU ще опита да създаде точка на възстановяване автоматично (само в нормален режим).</Text5>
+			<Text4>Файлът PAExec не беше открит. Моля, проверете дневника.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) прави много промени по системния регистър. DDU ще се опита автоматично да създаде точка на възстановяване (само в нормален режим).</Text5>
 			<Text6>Появи се проблем в един от модулите. Изпратете Вашите DDU дневници на разработчика.</Text6>
-			<Text7>DDU засече, че разполагате с лаптоп с AMD превключваща видео карта (Enduro или подобен). DDU все още не е съвместим/тестван с Enduro системи. Използвате го на Ваш риск.</Text7>
-			<Text8>DDU засече, че НЕ сте в безопасен режим (Safe Mode). За по-добро почистване без проблеми се препоръчва да рестартирате в безопасен режим..</Text8>
+			<Text7>DDU засече, че разполагате с лаптоп с превключваща видео карта на AMD (Enduro или подобен). DDU все още не е напълно съвместим и тестван с Enduro системи. Използвате го на Ваш риск.</Text7>
+			<Text8>DDU засече, че НЕ сте в безопасен режим (Safe Mode). За по-добро почистване се препоръчва да рестартирате в безопасен режим.</Text8>
 			<Text9>DDU промени настройка, която предотвратява драйвъри да бъдат автоматично изтегляни от Windows Update. Можете да върнете настройката по подразбиране, ако желаете, но СЛЕД инсталацията на новия драйвър.</Text9>
 			<Text10>Почистването завърши! Желаете ли да затворите програмата?</Text10>
-			<Text11>Готово!</Text11>
+			<Text11>Настройките на Windows за инсталиране нустройства са променени автоматично да бъдат инсталирани драйвъри.</Text11>
 			<Text12>Не сте в безопасен режим (Safe Mode). Силно се препоръчва да рестартирате в безопасен режим, за да избегнете възможни проблеми. Искате ли да рестартирате в безопасен режим сега?</Text12>
 			<Text13>Ето какво трябва да изберете на синия екран за възстановяване: Отстраняване на неизправности -&gt; Разширени опции -&gt; Настройки за стартиране.</Text13>
 			<Text14>Има рестартиране, което е на изчакване. Моля, рестартирайте, преди да използвате DDU.</Text14>
-			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
+			<Text15>Не беше направена промяна. Настройките на Windows за инсталиране на устройства са вече по подразбиране.</Text15>
+			<Text16>DDU се натъкна на критична грешка, която предотвратява премахването на драйвъри. Като мярка за сигурност, DDU няма да продължи с премахването на файлове и стойности в системния регистър. Трябва да отстраните проблемите с Вашата система, преди да използвате DDU отново.</Text16>
 		</Messages>
 
 		<UpdateLog>
@@ -149,7 +146,7 @@
 			<Text5>Почистване на директория...</Text5>
 			<Text6>Почистване на системния регистър...</Text6>
 			<Text7>Почистването на системния регистър е завършено.</Text7>
-			<Text8>Премахване на nVidia Optimus UpperFilter, ако е наличен....</Text8>
+			<Text8>Премахване на NVIDIA Optimus UpperFilter, ако е наличен....</Text8>
 			<Text9>Сканиране за ново устройство...</Text9>
 			<Text10>Чистата деинсталация е завършена!</Text10>
 			<Text11>DDU версия</Text11>
@@ -160,19 +157,19 @@
 			<Text16>INF</Text16>
 			<Text17>Секция в INF</Text17>
 			<Text18>ГП не е инсталиран коректно</Text18>
-			<Text19>Изтриване на някои специални папки. Може да отнеме известно време.</Text19>
+			<Text19>Изтриване на някои специални папки, може да отнеме известно време.</Text19>
 			<Text20>Започнато е почистване.</Text20>
 			<Text21>Деинсталиране</Text21>
 			<Text22>Драйвър</Text22>
-			<Text23>DDUDR премахване. Моля, изчакайте, може да отнеме няколко минути.</Text23>
+			<Text23>Изпълнение на SetupAPI за премахване. Моля, изчакайте, може да отнеме няколко минути.</Text23>
 			<Text24>ГП премахнат(и) от диспечера на устройства.</Text24>
-			<Text25>DDUDR премахване на аудио контролер.</Text25>
+			<Text25>Изпълнение на SetupAPI за премахване на аудио контролер.</Text25>
 			<Text26>HD аудио контролерите са премахнати!</Text26>
 			<Text27>3D Vision USB контролерът е премахнат от диспечера на устройства.</Text27>
 			<Text28>Активните и неактивните монитори са премахнати!</Text28>
-			<Text29>DDUDR премахването завърши.</Text29>
-			<Text30>Стартиране на почистване на регион S-1-5-xx.</Text30>
-			<Text31>Завършване на почистване на регион S-1-5-xx.</Text31>
+			<Text29>SetupAPI премахването завърши.</Text29>
+			<Text30>Начало на почистване на регион S-1-5-xx.</Text30>
+			<Text31>Край на почистване на регион S-1-5-xx.</Text31>
 			<Text32>Начало на почистване на Classesroot ,installer\products</Text32>
 			<Text33>Край на почистване на Classesroot ,installer\products</Text33>
 			<Text34>Начало на почистване на localmachine ,installer\products</Text34>
@@ -200,38 +197,42 @@
 		<lblAmdspecific>
 			<Text>Специфични опции за AMD</Text>
 		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>Опции за напреднали потребители (променяте ги на свой риск)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Общи опции</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Премахвай папката с драйвъри „C:\nVidia“ (НЕпрепоръчително)</Text>
+			<Text>Премахни папката с драйвъри „C:\NVIDIA“ (НЕпрепоръчително)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Дневници в пътя за стартиране (силно препоръчително)</Text>
+			<Text>Запази дневници в пътя за стартиране (силно препоръчително)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
-			<Text>Премахвай PhysX</Text>
+			<Text>Премахни PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
-			<Text>Премахвай 3DTV Play</Text>
+			<Text>Премахни 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
-			<Text>Създавай точка за възстановяване (ако е възможно)</Text>
+			<Text>Създай точка за възстановяване (ако е възможно)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Премахвай налични и неналични монитори (препоръчително)</Text>
+			<Text>Премахни налични и неналични монитори (препоръчително)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Премахвай AMD Audio Bus</Text>
+			<Text>Премахни AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Премахвай папката с драйвъри „C:\AMD“ (НЕпрепоръчително)</Text>
+			<Text>Премахни папката с драйвъри „C:\AMD“ (НЕпрепоръчително)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Разреши директен безопасен режим за Windows 8 и следваши</Text>
+			<Text>Премахни драйвърът/филтърът AMDKMPFD (препоръчва се резервно копие за чипсета на AMD)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Показвай съобщение за безопасен режим при стартиране</Text>
+			<Text>Показвай съобщение за безопасен режим при стартиране (не се препоръчва, докато не тествате безопасния режим ръчно)</Text>
+			<Tooltip>Не се препоръчва, ако никога досега не сте стартирали Вашия компютър ръчно в безопасен режим, за да разберете дали функционира. Тази опция може да доведе до невъзможност за стартиране, черен екран и други проблеми.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Съхранявай конфигурационния файл в папка roaming</Text>
@@ -240,12 +241,12 @@
 			<Text>Автоматично проверявай за актуализации на DDU при стартиране (препоръчително)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Премахвай Geforce Experience (GFE)</Text>
+			<Text>Премахни Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>Премахвай папката с кеша на шейдъри на AMD Crimson</Text>
+			<Text>Премахни папката с кеша на шейдъри на AMD Crimson</Text>
 			<Tooltip>
-				Препоръчително, ако има графични аномалии (проблеми със скоростта и изображението) причинени от повредена информация за кешираните шейдъри.
+				Препоръчително, ако има графични аномалии (проблеми с производителността и изображението) причинени от повредена информация за кешираните шейдъри.
 				Също препоръчително, ако преминавате от един производител на друг (например NVIDIA).
 			</Tooltip>
 		</lblRemCrimsonCache>
@@ -253,15 +254,11 @@
 			<Text>Премахвай средата за изпълнение (runtime) на Vulkan</Text>
 			<Tooltip>Не се препоръчва, ако разполагате с две различни видео карти, способни да използват Vulkan интерфейса.</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>Използвай SetupAPI *Експериментално*</Text>
-			<Tooltip>Използване на SetupAPI вместо отделния инструмент DDUDR (DEVCON)</Tooltip>
-		</lblUseSetupAPI>
 	</frmOptions>
 
 	<frmLaunch Text="Launch option">
 		<btnAccept>
-			<Text>Стартирай</Text>
+			<Text>Стартиране</Text>
 			<Text2>
 				Рестартирай в
 				безопасен режим
@@ -275,14 +272,14 @@
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				Не сте в безопасен режим. Силно се препоръчва да
-				преминете в, за да избегнете евентуални проблеми.
+				Не сте в безопасен режим. Силно се препоръчва да преминете
+				в безопасен режим, за да избегнете евентуални проблеми.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
 				Важна забележка за потребители на Windows 8/8.1/10:
-				Ще е необходима ПАРОЛАТА Ви за Windows! (ПИН НЕ функционира в безопасен режим)
+				Ще е необходима ПАРОЛАТА Ви за Windows! (ПИН НЕ функционира в безопасен режим).
 				Затворете програмата, ако сте я забравили или не я знаете!
 			</Text>
 		</lblWinPasswordWarn>
@@ -292,7 +289,7 @@
 			<Item3>Безопасен режим с мрежа</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+			<Text1>DDU затвори програми, за които е известно, че могат да създадат проблеми (като MSI Afterburner and RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
 
@@ -301,7 +298,7 @@
 			<Text>Затвори</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Отваряне на дневник</Text>
+			<Text>Отвари дневника</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
@@ -327,7 +324,7 @@
 
 	<frmSystemRestore Text="System Restore">
 		<lblSystemRestore>
-			<Text>Опит за създаване на точка на възстановяване.</Text>
+			<Text>Опит за създаване на точка на възстановяване...</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
@@ -339,20 +336,29 @@
 			<Text>Относно</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>Условия за използване (Узи)</Text>
+			<Text>Условия за използване (УЗИ)</Text>
 		</btnTos>
 		<btnTranslators>
 			<Text>Преводачи</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>Покровител</Text>
+		</btnPatron>
 		<lblTranslators>
 			<Text>Големи благодарности на следните преводачи, както и на онези, които не са споменати!</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>Големи благодарности на следния покровител, както и на онези, които не са споменати!
+				  
+				  -honnmaguro   (от 16.03.2018)  
+			</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
 		<About>
 			<Text>
-				Display Driver Uninstaller (DDU) / Чистачът е създаден за видео (ГП) драйвъри. (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Чистач създаден за видео (ГП) драйвъри. (NVIDIA/AMD)
 
 				Програмата премахва видео драйвъра на графичния процесор от диспечера на устройства (device manager)
 				и премахва текущия и всички инсталирани преди него драйвъри от хранилището за драйвъри на Windows,
@@ -382,7 +388,7 @@
 
 				Инструментът е създаден от Wagnard.
 
-				Съсобственик: Shady757
+				Разработчици: Wagnard, Devmltk, Shady7557
 
 				Тестер: Dellon132
 
@@ -390,16 +396,16 @@
 
 				Огромни благодарности на Jackalito за дарението на AMD 7850.
 
-				Благодарности на Helge Klein (http://helgeklein.com/setacl/) за позволението за използване на неговата програма (SetACL) с DDU
+				Благодарности на Helge Klein (http://helgeklein.com/setacl/) за позволението за използване на неговата програма (SetACL) с DDU.
 
-				Огромни благодарности на тестерите за отделеното време: Gamer1291 (optimus), Octopuss (Amd Enduro),
-				nedooo` (прекара време за дебъг с мен), Extraordinary (тества отстраняване на бъг)
+				Огромни благодарности на тестерите за отделеното време: Gamer1291 (optimus), Octopuss (Amd Enduro),	nedooo` (прекара време за дебъг с мен), Extraordinary (тества отстраняване на бъг).
 
-				Благодарности на всеки, който изложи системата си на риск и специални благодарности на Dellon132.
+				Благодарности на всеки, който изложи системата си на риск, и специални благодарности на Dellon132.
 
 				*DDU, неговите създатели и съдружници не са свързани по никакъв начин с Driver Sweeper или неговите създатели.
 			</Text>
 		</About>
+		
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") ПОТРЕБИТЕЛСКО СПОРАЗУМЕНИЕ
@@ -417,8 +423,13 @@
 		<Translator>
 			<User>Night_Raven</User>
 			<Details>SoftVisia.com</Details>
-			<LastUpdate></LastUpdate>
+			<LastUpdate>13.05.2018</LastUpdate>
 		</Translator>
+		
+		<Translator2>
+			<User>DevMltk</User>
+			<LastUpdate>31/05/2016</LastUpdate>
+		</Translator2>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>
