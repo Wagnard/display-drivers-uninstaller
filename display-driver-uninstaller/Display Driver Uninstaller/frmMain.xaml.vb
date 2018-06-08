@@ -149,6 +149,7 @@ Public Class frmMain
 	Private Sub Cleanamdfolders(ByVal config As ThreadSettings)
 		Dim filePath As String = Nothing
 		Dim removedxcache As Boolean = config.RemoveCrimsonCache
+		Dim Thread1Finished = False
 		'Delete AMD data Folders
 		UpdateTextMethod(UpdateTextTranslated(1))
 
@@ -165,8 +166,8 @@ Public Class frmMain
 		'Delete driver files
 		'delete OpenCL
 
-		CleanupEngine.Folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")) '// add each line as String Array.
-
+		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")))
+		thread1.Start()
 
 
 		filePath = Environment.GetEnvironmentVariable("windir")
@@ -791,7 +792,7 @@ Public Class frmMain
 		Dim wantedvalue2 As String = Nothing
 		Dim filePath As String = Nothing
 		Dim packages As String()
-
+		Dim Thread2Finished As Boolean = False
 		UpdateTextMethod(UpdateTextTranslated(2))
 		Application.Log.AddMessage("Cleaning known Regkeys")
 
@@ -981,7 +982,8 @@ Public Class frmMain
 		Application.Log.AddMessage("AppID and clsidleftover cleanUP")
 		'old dcom 
 
-		CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\clsidleftover.cfg"))  '// add each line as String Array.
+		Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\clsidleftover.cfg")))
+		thread2.Start()
 
 		Application.Log.AddMessage("Record CleanUP")
 
@@ -2635,7 +2637,21 @@ Public Class frmMain
 	End Sub
 	Private Sub Cleannvidiafolders(ByVal config As ThreadSettings)
 		Dim filePath As String = Nothing
-		Dim removephysx As Boolean = config.RemovePhysX
+        Dim removephysx As Boolean = config.RemovePhysX
+        Dim Thread1Finished = False
+        Dim Thread2Finished = False
+
+		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")))
+		thread1.Start()
+
+		If config.RemoveGFE Then
+			Dim thread2 As Thread = New Thread(Sub() Threaddata1(Thread2Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")))
+			thread2.Start()
+		Else
+			Thread2Finished = True
+		End If
+
+
 		'Delete NVIDIA data Folders
 		'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
 
@@ -2669,7 +2685,7 @@ Public Class frmMain
 		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath)
 		For Each child As String In FileIO.GetDirectories(filePath)
 			If IsNullOrWhitespace(child) = False Then
-				If child.ToLower.Contains("updatususer") Then
+				If StrContainsAny(child, True, "updatususer") Then
 
 					Delete(child)
 
@@ -2677,7 +2693,7 @@ Public Class frmMain
 
 
 					'Yes we do it 2 times. This will workaround a problem on junction/sybolic/hard link
-					'(Will have to see if this is this valid. This was on old driver pre 300.xx I beleive :/ )
+					'(Will have to see if this is still valid. This was on old driver pre 300.xx I believe :/ )
 					Delete(child)
 
 					Delete(child)
@@ -2707,6 +2723,35 @@ Public Class frmMain
 				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "3d vision experience") Then
+
+							Delete(child)
+
+						End If
+					End If
+				Next
+				Try
+					If FileIO.CountDirectories(filePath) = 0 Then
+
+						Delete(filePath)
+
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				Catch ex As Exception
+				End Try
+			End If
+		End If
+
+		filePath = IO.Path.GetDirectoryName(config.Paths.System32) + "drivers"
+		If FileIO.ExistsDir(filePath) Then
+			If filePath IsNot Nothing Then
+				For Each child As String In FileIO.GetDirectories(filePath)
+					If IsNullOrWhitespace(child) = False Then
+						If StrContainsAny(child, True, "nvidia corporation") Then
 
 							Delete(child)
 
@@ -2804,31 +2849,32 @@ Public Class frmMain
 				Try
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
-							If (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvtmmon") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvprofileupdater") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.EndsWith("\osc") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvidia share") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvidia notification") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvtmrep") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("gfesdk") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("nvbatteryboostcheck") AndAlso config.RemoveGFE) Or
-							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
+                            If (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvtmmon") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvprofileupdater") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.EndsWith("\osc") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvidia share") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvidia notification") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvtmrep") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("gfesdk") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvbatteryboostcheck") AndAlso config.RemoveGFE) Or
+                             (child.ToLower.Contains("nvetwlog")) Or
+                             (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
 
-								Delete(child)
+                                Delete(child)
 
-							End If
-						End If
+                            End If
+                        End If
 					Next
 					Try
 						If FileIO.CountDirectories(filePath) = 0 Then
@@ -3161,11 +3207,6 @@ Public Class frmMain
 
 				End If
 			End If
-		End If
-
-		CleanupEngine.Folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")) '// add each line as String Array.
-		If config.RemoveGFE Then
-			CleanupEngine.Folderscleanup(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg"))   '// add each line as String Array.
 		End If
 
 		filePath = System.Environment.SystemDirectory
@@ -3508,38 +3549,74 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-	End Sub
+        While Thread1Finished <> True Or Thread2Finished <> True
+			Thread.Sleep(500)
+		End While
 
-	Private Sub Cleannvidia(ByVal config As ThreadSettings)
+    End Sub
+
+    Private Sub Threaddata1(ByRef ThreadFinised As Boolean, ByVal driverfiles As String())
+        ThreadFinised = False
+        CleanupEngine.Folderscleanup(driverfiles)
+        ThreadFinised = True
+    End Sub
+
+    Private Sub ClassrootCleanThread(ByRef ThreadFinised As Boolean, ByVal Classroot As String())
+        ThreadFinised = False
+        CleanupEngine.ClassRoot(Classroot)
+        ThreadFinised = True
+    End Sub
+
+    Private Sub CLSIDCleanThread(ByRef ThreadFinised As Boolean, ByVal Clsidleftover As String())
+        ThreadFinised = False
+        CleanupEngine.Clsidleftover(Clsidleftover)
+        ThreadFinised = True
+    End Sub
+
+    Private Sub InstallerCleanThread(ByRef ThreadFinised As Boolean, ByVal Packages As String(), config As ThreadSettings)
+        ThreadFinised = False
+        CleanupEngine.Installer(Packages, config)
+        ThreadFinised = True
+    End Sub
+
+    Private Sub Cleannvidia(ByVal config As ThreadSettings)
 
 		Dim wantedvalue As String = Nothing
 		Dim wantedvalue2 As String = Nothing
 		Dim removegfe As Boolean = config.RemoveGFE
 		Dim removephysx As Boolean = config.RemovePhysX
 
-		'-----------------
-		'Registry Cleaning
-		'-----------------
-		UpdateTextMethod(UpdateTextTranslated(5))
+		Dim Thread2Finished As Boolean = True
+        Dim Thread3Finished As Boolean = True
+        '-----------------
+        'Registry Cleaning
+        '-----------------
+        UpdateTextMethod(UpdateTextTranslated(5))
 		Application.Log.AddMessage("Starting reg cleanUP... May take a minute or two.")
 
 
 		'Deleting DCOM object /classroot
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg")) '// add each line as String Array.
+
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg"))
 
 		'for GFE removal only
 		If removegfe Then
-			CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverGFE.cfg")) '// add each line as String Array.
-		Else
-			CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftover.cfg")) '// add each line as String Array.
-		End If
+            Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverGFE.cfg")))
+            thread2.Start()
+        Else
+            Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftover.cfg")))
+            thread2.Start()
+        End If
 
-		'------------------------------
-		'Clean the rebootneeded message
-		'------------------------------
-		Try
+        Dim thread3 As Thread = New Thread(Sub() InstallerCleanThread(Thread3Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\packages.cfg"), config))
+        thread3.Start()
+
+        '------------------------------
+        'Clean the rebootneeded message
+        '------------------------------
+        Try
 
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE", True)
 				If regkey IsNot Nothing Then
@@ -3564,9 +3641,12 @@ Public Class frmMain
 		'interface cleanup
 		'-----------------
 
+		While Thread2Finished <> True
+			Application.Log.AddMessage("Waiting for MainRegCleanThread")
+            Thread.Sleep(250)
+        End While
 
-
-		If removegfe Then 'When removing GFE only
+        If removegfe Then 'When removing GFE only
 			CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
 		Else
 			CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interface.cfg"))  '// add each line as String Array.
@@ -4858,10 +4938,8 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
-		CleanupEngine.Installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\packages.cfg"), config)
 
-
-		If config.Remove3DTVPlay Then
+        If config.Remove3DTVPlay Then
 			Try
 				Deletesubregkey(Registry.ClassesRoot, "mpegfile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
 			Catch ex As Exception
@@ -5172,7 +5250,12 @@ Public Class frmMain
 		'              End If
 		'      End Select
 
-		UpdateTextMethod("End of Registry Cleaning")
+		While Thread2Finished <> True Or Thread3Finished <> True
+			Application.Log.AddMessage("Waiting for InstallerCleanThread")
+            Thread.Sleep(250)
+        End While
+
+        UpdateTextMethod("End of Registry Cleaning")
 
 		Application.Log.AddMessage("End of Registry Cleaning")
 
