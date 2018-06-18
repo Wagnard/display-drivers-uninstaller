@@ -782,9 +782,11 @@ Public Class frmMain
 
 		End If
 
+        While Thread1Finished <> True
+            Thread.Sleep(500)
+        End While
 
-
-	End Sub
+    End Sub
 
 	Private Sub Cleanamd(ByVal config As ThreadSettings)
 
@@ -3586,8 +3588,8 @@ Public Class frmMain
 		Dim removegfe As Boolean = config.RemoveGFE
 		Dim removephysx As Boolean = config.RemovePhysX
 
-		Dim Thread2Finished As Boolean = True
-        Dim Thread3Finished As Boolean = True
+        Dim Thread2Finished As Boolean = False
+        Dim Thread3Finished As Boolean = False
         '-----------------
         'Registry Cleaning
         '-----------------
@@ -3643,7 +3645,7 @@ Public Class frmMain
 
 		While Thread2Finished <> True
 			Application.Log.AddMessage("Waiting for MainRegCleanThread")
-            Thread.Sleep(250)
+            Thread.Sleep(500)
         End While
 
         If removegfe Then 'When removing GFE only
@@ -5252,7 +5254,7 @@ Public Class frmMain
 
 		While Thread2Finished <> True Or Thread3Finished <> True
 			Application.Log.AddMessage("Waiting for InstallerCleanThread")
-            Thread.Sleep(250)
+            Thread.Sleep(500)
         End While
 
         UpdateTextMethod("End of Registry Cleaning")

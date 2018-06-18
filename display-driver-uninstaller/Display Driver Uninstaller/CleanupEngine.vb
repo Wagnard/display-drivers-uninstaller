@@ -958,24 +958,29 @@ Public Class CleanupEngine
         End Using
     End Sub
 
-    Public Sub StopService(ByVal service As String)
+	Public Sub StopService(ByVal service As String)
 
-        For Each svc As ServiceController In ServiceController.GetServices()
-            Using svc
-                If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
-                    If svc.Status <> ServiceControllerStatus.Stopped Then
-                        Try
-                            svc.Stop()
-                            svc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5))
-                        Catch ex As Exception
-                            Application.Log.AddException(ex)
-                        End Try
+		For Each svc As ServiceController In ServiceController.GetServices()
+			Using svc
+				If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
+					If svc.Status <> ServiceControllerStatus.Stopped Then
+						Try
+							svc.Stop()
+							svc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5))
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 
-                    End If
-                End If
-            End Using
-        Next
+					End If
+				End If
+			End Using
+		Next
 
+	End Sub
+
+    Public Sub DeleteService(ByVal service As String)
+        Dim servicearray As String() = New String() {service}
+        Cleanserviceprocess(servicearray)
     End Sub
 
     Public Sub PrePnplockdownfiles(ByVal oeminf As String)

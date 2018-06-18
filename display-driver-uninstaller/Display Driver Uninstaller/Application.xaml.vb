@@ -10,7 +10,7 @@ Imports System.Security.Principal
 Imports Microsoft.Win32
 
 Class Application
-
+	Dim CleanupEngine As New CleanupEngine
 #Region "Visit links URLs"
 
 	Private Const URL_DONATE As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
@@ -758,24 +758,25 @@ Class Application
 			Return False
 		End If
 
-		Dim args() As String = New String() {"stop PAExec", "delete PAExec", "interrogate PAExec"}
-
-		For Each arg As String In args
-			Using process As Process = New Process() With
-			 {
-			  .StartInfo = New ProcessStartInfo(Paths.System32 & "sc.exe", arg) With
-			  {
-			   .UseShellExecute = False,
-			   .CreateNoWindow = True,
-			   .RedirectStandardOutput = False
-			  }
-			 }
-				process.Start()
-				process.WaitForExit()
-				process.Close()
-				Thread.Sleep(10)
-			End Using
-		Next
+		'Dim args() As String = New String() {"stop PAExec", "delete PAExec", "interrogate PAExec"}
+		StopService("PAExec")
+		DeleteService("PAExec")
+		'For Each arg As String In args
+		'	Using process As Process = New Process() With
+		'	 {
+		'	  .StartInfo = New ProcessStartInfo(Paths.System32 & "sc.exe", arg) With
+		'	  {
+		'	   .UseShellExecute = False,
+		'	   .CreateNoWindow = True,
+		'	   .RedirectStandardOutput = False
+		'	  }
+		'	 }
+		'		process.Start()
+		'		process.WaitForExit()
+		'		process.Close()
+		'		Thread.Sleep(10)
+		'	End Using
+		'Next
 
 		Using process As Process = New Process() With
 		  {
@@ -943,7 +944,15 @@ Class Application
 	'	-> frmMain_Loaded				(UI elements added to Window and loaded, but not rendered!)					<-- Use only for Non-UI stuff which are fast to do
 	'	-> frmMain_ContentRendered		(UI is completely ready for use, dimensions of each control aligned etc.)	<-- Anything else
 
-
+	Private Sub StartService(ByVal service As String)
+		CleanupEngine.StartService(service)
+	End Sub
+	Private Sub StopService(ByVal service As String)
+		CleanupEngine.StopService(service)
+	End Sub
+	Private Sub DeleteService(ByVal service As String)
+		CleanupEngine.DeleteService(service)
+	End Sub
 End Class
 
 Public Class Data
