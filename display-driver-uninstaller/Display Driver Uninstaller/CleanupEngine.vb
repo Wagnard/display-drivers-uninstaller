@@ -812,114 +812,109 @@ Public Class CleanupEngine
     Public Sub Cleanserviceprocess(ByVal services As String())
         Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services", False)
+			If regkey IsNot Nothing Then
+				For Each service As String In services
+					If IsNullOrWhitespace(service) Then Continue For
 
-        Application.Log.AddMessage("Cleaning Process/Services...")
+					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
+						If regkey2 IsNot Nothing Then
+							If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(service, True, "amdkmafd")) Then
 
-        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services", False)
-            If regkey IsNot Nothing Then
-                For Each service As String In services
-                    If IsNullOrWhitespace(service) Then Continue For
-
-                    Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
-                        If regkey2 IsNot Nothing Then
-                            If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(service, True, "amdkmafd")) Then
-
-                                If ServiceInstaller.GetServiceStatus(service) = ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
-                                    'Service is not present
-                                Else
-                                    Try
-                                        ServiceInstaller.Uninstall(service)
-                                    Catch ex As Exception
-                                        Application.Log.AddException(ex)
-                                    End Try
+								If ServiceInstaller.GetServiceStatus(service) = ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
+									'Service is not present
+								Else
+									Try
+										ServiceInstaller.Uninstall(service)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
 
 
-                                    Dim waits As Int32 = 0
+									Dim waits As Int32 = 0
 
-                                    While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
-                                        If ServiceInstaller.GetServiceStatus(service) <> ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
-                                            waits += 1
-                                            System.Threading.Thread.Sleep(100)
-                                        Else
-                                            Exit While
-                                        End If
-                                    End While
-                                End If
+									While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
+										If ServiceInstaller.GetServiceStatus(service) <> ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
+											waits += 1
+											System.Threading.Thread.Sleep(100)
+										Else
+											Exit While
+										End If
+									End While
+								End If
 
-                                'Verify that the service was indeed removed via registry.
-                                Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
-                                    If regkey3 IsNot Nothing Then
+								'Verify that the service was indeed removed via registry.
+								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
+									If regkey3 IsNot Nothing Then
 
-                                        Application.Log.AddWarningMessage("Failed to remove the service : " & service)
-                                    Else
+										Application.Log.AddWarningMessage("Failed to remove the service : " & service)
+									Else
 
-                                        Application.Log.AddMessage("Service : " & service & " removed.")
-                                    End If
-                                End Using
-                            End If
-                        End If
-                    End Using
+										Application.Log.AddMessage("Service : " & service & " removed.")
+									End If
+								End Using
+							End If
+						End If
+					End Using
 
-                    System.Threading.Thread.Sleep(10)
-                Next
-            End If
-        End Using
+					System.Threading.Thread.Sleep(10)
+				Next
+			End If
+		End Using
 
 
-        Application.Log.AddMessage("Process/Services CleanUP Complete")
 
-        '-------------
-        'control/video
-        '-------------
-        'Reason I put this in service is that the removal of this is based from its service.
 
-        Application.Log.AddMessage("Control/Video CleanUP")
+		'-------------
+		'control/video
+		'-------------
+		'Reason I put this in service is that the removal of this is based from its service.
 
-        Try
-            Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\Video", True)
-                If regkey IsNot Nothing Then
-                    Dim serviceValue As String
+		Try
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\Video", True)
+				If regkey IsNot Nothing Then
+					Dim serviceValue As String
 
-                    For Each child As String In regkey.GetSubKeyNames
-                        If IsNullOrWhitespace(child) Then Continue For
+					For Each child As String In regkey.GetSubKeyNames
+						If IsNullOrWhitespace(child) Then Continue For
 
-                        Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\Video", False)
-                            If subregkey IsNot Nothing Then
-                                serviceValue = TryCast(subregkey.GetValue("Service", String.Empty), String)
+						Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\Video", False)
+							If subregkey IsNot Nothing Then
+								serviceValue = TryCast(subregkey.GetValue("Service", String.Empty), String)
 
-                                If IsNullOrWhitespace(serviceValue) Then Continue For
+								If IsNullOrWhitespace(serviceValue) Then Continue For
 
-                                For Each service As String In services
-                                    If IsNullOrWhitespace(service) Then Continue For
-                                    If serviceValue.Equals(service, StringComparison.OrdinalIgnoreCase) Then
-                                        Try
-                                            Deletesubregkey(regkey, child)
-                                            Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                                            Exit For
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
+								For Each service As String In services
+									If IsNullOrWhitespace(service) Then Continue For
+									If serviceValue.Equals(service, StringComparison.OrdinalIgnoreCase) Then
+										Try
+											Deletesubregkey(regkey, child)
+											Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+											Exit For
+										Catch ex As Exception
+										End Try
+									End If
 
-                                Next
-                            Else
-                                'Here, if subregkey is nothing, it mean \video doesnt exist and is no \0000, we can delete it.
-                                'this is a general cleanUP we could say.
-                                Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\0000")
-                                    If regkey3 Is Nothing Then
-                                        Try
-                                            Deletesubregkey(regkey, child)
-                                            Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-                                        Catch ex As Exception
-                                        End Try
-                                    End If
-                                End Using
-                            End If
-                        End Using
-                    Next
-                End If
-            End Using
-        Catch ex As Exception
-            Application.Log.AddException(ex)
+								Next
+							Else
+								'Here, if subregkey is nothing, it mean \video doesnt exist and is no \0000, we can delete it.
+								'this is a general cleanUP we could say.
+								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\0000")
+									If regkey3 Is Nothing Then
+										Try
+											Deletesubregkey(regkey, child)
+											Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+										Catch ex As Exception
+										End Try
+									End If
+								End Using
+							End If
+						End Using
+					Next
+				End If
+			End Using
+		Catch ex As Exception
+			Application.Log.AddException(ex)
         End Try
     End Sub
 

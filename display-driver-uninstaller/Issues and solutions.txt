@@ -1,0 +1,29 @@
+USEFUL TIP:
+
+To solve the infinite boot loop issue (stuck in Safe Mode) / password lost that some users are having, you must boot with the DVD/USB (Windows installation disk) in recovery with Command prompt OR restart the computer (not the reset button) and HOLD THE SHIFT KEY until you have the advanced option menu and the option to boot with a Command prompt and type : 
+
+Option 1 (recommended) : bcdedit /deletevalue {default} safeboot
+
+* Replace "default" with the identifier of your operation system. (can be seen when you run bcdedit)
+
+If option 1 is not working,
+
+Option 2 : bootrec /rebuildbcd
+
+There may need to be some adjustement if you have a dualboot system. but if not , it should work correctly.
+
+From my personal experience, the UXTHEME patcher was a possible cause of this.
+
+Safe Mode may not work especially with the "Windows 10 Anniversary Update" when CSM in the bios is "Disabled". (Microsoft issue)
+
+
+
+If DDU is not starting:
+-DDU doesn't work from a network drive.
+-The folder permission you have DDU install are broken, check that you have SYSTEM, Administrators and your username at Full Control.(Windows default)
+-Try to install DDU on the Desktop and run it from there.
+-Send the logs, if any, located within the DDU folder in the DDU Logs folder.
+
+
+New driver is not installing are an old driver from windows updare is getting installed by itself?
+-You had the internet connected and it should be disconnnected when running DDU and until you re-install the new driver

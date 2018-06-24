@@ -207,7 +207,7 @@ Class Application
 					process.Kill()
 					Application.Settings.ProcessKilled = True
 				Catch ex As Exception
-					Application.Log.AddExceptionWithValues(ex, "@KillProcess()", String.Concat("ProcessName: ", processName))
+					Log.AddExceptionWithValues(ex, "@KillProcess()", String.Concat("ProcessName: ", processName))
 				End Try
             Next
         Next
@@ -285,7 +285,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PAExec)!")
+				Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PAExec)!")
 			End Try
 
 			Try
@@ -295,7 +295,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (PAExec)!")
+				Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (PAExec)!")
 			End Try
 
 			Try
@@ -305,7 +305,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (Schedule)!")
+				Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (Schedule)!")
 			End Try
 
 			Try
@@ -315,7 +315,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (Schedule)!")
+				Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (Schedule)!")
 			End Try
 
 			Try
@@ -325,7 +325,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PNP_TDI)!")
+				Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PNP_TDI)!")
 			End Try
 
 			SaveData()
@@ -339,6 +339,26 @@ Class Application
 		'	MessageBox.Show("Attach debugger!")		' for Debugging System process
 		'	IsDebug = True
 		'End If
+		Dim info As New LogEntry()
+		info.Type = LogType.Event
+		info.Separator = " = "
+		info.Message = "The following paths are detected."
+
+		info.Add(Paths.AppExeFile)
+		info.Add(Paths.AppBase)
+		info.Add(Paths.Settings)
+		info.Add(Paths.Logs)
+		info.Add(Paths.AppBaseRoaming)
+		info.Add(Paths.Language)
+		info.Add(Paths.ProgramFiles)
+		info.Add(Paths.ProgramFilesx86)
+		info.Add(Paths.Roaming)
+		info.Add(Paths.System32)
+		info.Add(Paths.SystemDrive)
+		info.Add(Paths.UserPath)
+		info.Add(Paths.WinDir)
+
+		Application.Log.Add(info)
 		KillGPUStatsProcesses()
 		Try
 			' Launch as Admin if not
@@ -351,11 +371,16 @@ Class Application
 						Dim errCode As UInt32 = GetUInt32(ex.NativeErrorCode)
 						Dim msg As String = String.Format("Error:{0}{1}{0}{0}Message:{0}{2}", CRLF, GetErrorEnum(errCode), ex.Message)
 
-						If errCode = Errors.CANCELLED Then	'User pressed 'No' on UAC screen
+						If errCode = Errors.CANCELLED Then  'User pressed 'No' on UAC screen
 							msg = String.Format("Administrator rights are required to use application.{0}{0}{1}", CRLF, msg)
 						End If
 
 						MessageBox.Show(msg, "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Exclamation, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly)
+						Log.AddMessage("No admin rights, denied by user via UAC")
+						Log.SaveToFile()
+					Catch ex2 As Exception
+						Log.AddException(ex2, "No admin rights")
+						Log.SaveToFile()
 					End Try
 
 					Me.Shutdown(0)
@@ -374,13 +399,15 @@ Class Application
 
 			Try
 				If LaunchOptions.HasLinkArg Then
-					If ProcessLinks() Then		' Link found and opened?
-						Me.Shutdown(0)			' Skip loading if link is opened
+					If ProcessLinks() Then      ' Link found and opened?
+						Log.AddMessage("Closed by HasLinkArg")
+						Log.SaveToFile()
+						Me.Shutdown(0)          ' Skip loading if link is opened
 						Exit Sub
 					End If
 				End If
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Parsing arguments failed!" & CRLF & ">> Application_Startup()")
+				Log.AddException(ex, "Parsing arguments failed!" & CRLF & ">> Application_Startup()")
 			End Try
 
 
@@ -403,7 +430,7 @@ Class Application
 					Exit Sub
 				End If
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Parsing arguments failed!" & CRLF & ">> Application_Startup()")
+				Log.AddException(ex, "Parsing arguments failed!" & CRLF & ">> Application_Startup()")
 			End Try
 
 			' Load default language (English) + Find language files from folder
@@ -428,12 +455,14 @@ Class Application
 				'We check if there are any reboot from windows update pending. and if so we quit.
 				If WinUpdatePending() Then
 					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
+					Log.SaveToFile()
 					Me.Shutdown(0)
 					Exit Sub
 				End If
 
 			Catch ex As Exception
-				Application.Log.AddException(ex)
+				Log.AddException(ex)
+				Log.SaveToFile()
 				Me.Shutdown(0)
 				Exit Sub
 			End Try
@@ -441,12 +470,14 @@ Class Application
 			'Verify is there is missing files in DDU\settings folder (only check for 2 atm)
 			If Not FileIO.ExistsFile(Application.Paths.AppBase & "settings\NVIDIA\services.cfg") Then
 				Microsoft.VisualBasic.MsgBox(Application.Paths.AppBase & "settings\NVIDIA\services.cfg does not exist. please reinstall or extract DDU correctly", MsgBoxStyle.Critical)
+				Log.SaveToFile()
 				Me.Shutdown(0)
 				Exit Sub
 			End If
 
 			If Not FileIO.ExistsFile(Application.Paths.AppBase & "settings\AMD\services.cfg") Then
 				Microsoft.VisualBasic.MsgBox(Application.Paths.AppBase & "settings\AMD\services.cfg does not exist. please reinstall or extract DDU correctly", MsgBoxStyle.Critical)
+				Log.SaveToFile()
 				Me.Shutdown(0)
 				Exit Sub
 			End If
@@ -467,7 +498,7 @@ Class Application
 				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
 
 			Catch ex As Exception
-				Application.Log.AddException(ex, "AddPriviliges failed!" & CRLF & ">> AppStart()")
+				Log.AddException(ex, "AddPriviliges failed!" & CRLF & ">> AppStart()")
 			End Try
 		Catch ex As Exception
 			Log.AddException(ex, "Some part of application startup failed!" & CRLF & ">> Application_Startup()")
@@ -593,7 +624,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAExec!")
+				Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAExec!")
 				Return False
 			End Try
 
@@ -606,7 +637,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for PAExec!")
+				Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for PAExec!")
 				Return False
 			End Try
 
@@ -619,7 +650,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for Schedule!")
+				Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for Schedule!")
 				Return False
 			End Try
 
@@ -632,7 +663,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for Schedule!")
+				Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for Schedule!")
 				Return False
 			End Try
 
@@ -645,7 +676,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for Schedule!")
+				Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for Schedule!")
 				Return False
 			End Try
 
@@ -661,7 +692,7 @@ Class Application
 					End Using
 				End If
 			Catch ex As Exception
-				Application.Log.AddException(ex, "Checking for existing PAExec failed!")
+				Log.AddException(ex, "Checking for existing PAExec failed!")
 			End Try
 
 			File.WriteAllBytes(dir & "paexec.exe", My.Resources.paexec)
@@ -674,7 +705,7 @@ Class Application
 
 			Return True
 		Catch ex As Exception
-			Application.Log.AddException(ex, "Extracting PAExec failed!")
+			Log.AddException(ex, "Extracting PAExec failed!")
 			Return False
 		End Try
 	End Function
@@ -744,6 +775,7 @@ Class Application
 								Return RestartToSafemode(True)
 
 							Case Else '-1 = Close
+								Log.AddMessage("Close on frmLaunch selected.")
 								Return True
 
 						End Select
@@ -759,8 +791,12 @@ Class Application
 		End If
 
 		'Dim args() As String = New String() {"stop PAExec", "delete PAExec", "interrogate PAExec"}
-		StopService("PAExec")
-		DeleteService("PAExec")
+		Try
+			StopService("PAExec")
+			DeleteService("PAExec")
+		Catch ex As Exception
+			Log.AddException(ex, "Error when trying to stop/remove paexec on startup")
+		End Try
 		'For Each arg As String In args
 		'	Using process As Process = New Process() With
 		'	 {
@@ -777,7 +813,7 @@ Class Application
 		'		Thread.Sleep(10)
 		'	End Using
 		'Next
-
+		Log.AddMessage("Starting DDU with system right with " & Paths.AppBase & If(Settings.WinIs64, "x64\", "x86\") & "paexec.exe", "-noname -i -s " & Chr(34) & Paths.AppExeFile & Chr(34) + " " & LaunchOptions.Arguments)
 		Using process As Process = New Process() With
 		  {
 		   .StartInfo = New ProcessStartInfo(Paths.AppBase & If(Settings.WinIs64, "x64\", "x86\") & "paexec.exe", "-noname -i -s " & Chr(34) & Paths.AppExeFile & Chr(34) + " " & LaunchOptions.Arguments) With
@@ -803,7 +839,7 @@ Class Application
 	Private Function RestartToSafemode(ByVal withNetwork As Boolean) As Boolean
 		Try
 			SystemRestore(Nothing) 'we try to do a system restore if allowed before going into safemode.
-			Application.Log.AddMessage("Restarting in safemode")
+			Log.AddMessage("Restarting in safemode")
 
 
 
@@ -836,7 +872,7 @@ Class Application
 					End If
 				End Using
 			Catch ex As Exception
-				Application.Log.AddException(ex)
+				Log.AddException(ex)
 			End Try
 
 
@@ -853,7 +889,7 @@ Class Application
 		If Not m_dispatcher.CheckAccess() Then
 			m_dispatcher.Invoke(Sub() RestartComputer())
 		Else
-			Application.Log.AddMessage("Restarting Computer ")
+			Log.AddMessage("Restarting Computer ")
 			Application.SaveData()
 
 			Using process As Process = New Process() With
@@ -882,7 +918,7 @@ Class Application
 		If Not m_dispatcher.CheckAccess() Then
 			m_dispatcher.Invoke(Sub() ShutdownComputer())
 		Else
-			Application.Log.AddMessage("Shutdown Computer ")
+			Log.AddMessage("Shutdown Computer ")
 			Application.SaveData()
 
 			Using process As Process = New Process() With

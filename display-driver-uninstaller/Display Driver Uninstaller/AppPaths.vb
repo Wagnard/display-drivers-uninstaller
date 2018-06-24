@@ -128,7 +128,7 @@ Public Class AppPaths
 
 	Public Sub New(Optional ByVal createPaths As Boolean = True)
 		If createPaths Then
-			m_exefile = Assembly.GetExecutingAssembly().Location
+			m_exefile = New Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath
 			m_dirapp = Path.GetDirectoryName(AppExeFile)
 
 			m_roaming = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\config\systemprofile\AppData\Roaming\"
@@ -145,9 +145,10 @@ Public Class AppPaths
 			m_system32 = Environment.GetFolderPath(Environment.SpecialFolder.System)
 
 			Using regkey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist")
-				m_userpath = regkey.GetValue("ProfilesDirectory", String.Empty).ToString + "\"
+				m_userpath = regkey.GetValue("ProfilesDirectory", String.Empty).ToString
 			End Using
 
+			If Not m_userpath.EndsWith("\") Then m_userpath &= Path.DirectorySeparatorChar
 			If Not m_dirapp.EndsWith("\") Then m_dirapp &= Path.DirectorySeparatorChar
 
 			If Not m_roaming.EndsWith("\") Then m_roaming &= Path.DirectorySeparatorChar
