@@ -470,7 +470,7 @@ Public Class frmMain
 			End If
 		End If
 
-		For Each filepaths As String In FileIO.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
+		For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
 			If IsNullOrWhitespace(filepaths) Then Continue For
 			filePath = filepaths + "\AppData\Roaming\ATI"
 			If winxp Then
@@ -2688,7 +2688,7 @@ Public Class frmMain
 		End If
 
 		' here I erase the folders / files of the nvidia GFE / update in users.
-		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath)
+		filePath = config.Paths.UserPath
 		For Each child As String In FileIO.GetDirectories(filePath)
 			If IsNullOrWhitespace(child) = False Then
 				If StrContainsAny(child, True, "updatususer") Then
@@ -2708,7 +2708,7 @@ Public Class frmMain
 			End If
 		Next
 
-		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath) + "\Public\Desktop"
+		filePath = config.Paths.UserPath + "Public\Desktop"
 		If FileIO.ExistsDir(filePath) Then
 			If filePath IsNot Nothing Then
 				For Each child As String In FileIO.GetFiles(filePath)
@@ -2723,7 +2723,7 @@ Public Class frmMain
 			End If
 		End If
 
-		filePath = IO.Path.GetDirectoryName(config.Paths.UserPath) + "\Public\Pictures\NVIDIA Corporation"
+		filePath = config.Paths.UserPath + "Public\Pictures\NVIDIA Corporation"
 		If FileIO.ExistsDir(filePath) Then
 			If filePath IsNot Nothing Then
 				For Each child As String In FileIO.GetDirectories(filePath)
@@ -2752,12 +2752,12 @@ Public Class frmMain
 			End If
 		End If
 
-		filePath = IO.Path.GetDirectoryName(config.Paths.System32) + "drivers"
+		filePath = config.Paths.System32 + "drivers\NVIDIA Corporation"
 		If FileIO.ExistsDir(filePath) Then
 			If filePath IsNot Nothing Then
 				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
-						If StrContainsAny(child, True, "nvidia corporation") Then
+						If StrContainsAny(child, True, "drs") Then
 
 							Delete(child)
 
@@ -2781,7 +2781,7 @@ Public Class frmMain
 			End If
 		End If
 
-		For Each filepaths As String In FileIO.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
+		For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
 			If IsNullOrWhitespace(filepaths) Then Continue For
 			filePath = filepaths + "\AppData\Local\NVIDIA"
 
@@ -3215,7 +3215,7 @@ Public Class frmMain
 			End If
 		End If
 
-		filePath = System.Environment.SystemDirectory
+		filePath = config.Paths.System32
 		Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
 		For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
@@ -3225,7 +3225,7 @@ Public Class frmMain
 			End If
 		Next
 
-		filePath = System.Environment.SystemDirectory
+		filePath = config.Paths.System32
 		files = IO.Directory.GetFiles(filePath + "\", "nvhdagenco*.*")
 		For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
@@ -3235,15 +3235,15 @@ Public Class frmMain
 			End If
 		Next
 
-		filePath = Environment.GetEnvironmentVariable("windir")
+		filePath = config.Paths.WinDir
 		Try
-			Delete(filePath + "\Help\nvcpl")
+			Delete(filePath + "Help\nvcpl")
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
 
 		Try
-			filePath = Environment.GetEnvironmentVariable("windir") + "\Temp"
+			filePath = config.Paths.WinDir + "Temp"
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If StrContainsAny(child, True, "NVIDIA Corporation", "NvidiaLogging") Then
@@ -3271,7 +3271,7 @@ Public Class frmMain
 		End Try
 
 
-		For Each filepaths As String In FileIO.GetDirectories(IO.Path.GetDirectoryName(config.Paths.UserPath))
+		For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
 			If IsNullOrWhitespace(filepaths) Then Continue For
 			filePath = filepaths + "\AppData\Local\Temp\NvidiaLogging"
 			If FileIO.ExistsDir(filePath) Then
@@ -3689,6 +3689,33 @@ Public Class frmMain
 			End If
 		End Using
 
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\SOFTWARE\NVIDIA Corporation\global", False)
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\SOFTWARE\NVIDIA Corporation\global")
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
+			End If
+		End Using
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\SOFTWARE\NVIDIA Corporation", False)
+			If regkey IsNot Nothing Then
+				If regkey.SubKeyCount = 0 Then
+					Try
+						Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\SOFTWARE\NVIDIA Corporation")
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				Else
+					For Each data As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(data) Then Continue For
+						Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
+					Next
+				End If
+			End If
+		End Using
+
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\NVIDIA Corporation", False)
 			If regkey IsNot Nothing Then
 				If regkey.SubKeyCount = 0 Then
@@ -3720,6 +3747,17 @@ Public Class frmMain
 			If regkey IsNot Nothing Then
 				Try
 					Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\NVIDIA Corporation")
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
+			End If
+		End Using
+
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\services\nvlddmkm", False)
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\services\nvlddmkm")
 				Catch ex As Exception
 					Application.Log.AddException(ex)
 				End Try
@@ -4907,6 +4945,28 @@ Public Class frmMain
 			Application.Log.AddException(ex)
 		End Try
 
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "SOFTWARE\NVIDIA Corporation", True)
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(regkey, "Global")
+				Catch ex As Exception
+				End Try
+				If regkey.SubKeyCount = 0 Then
+					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "SOFTWARE", True)
+						Try
+							Deletesubregkey(regkey2, "NVIDIA Corporation")
+							Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR\SOFTWARE\NVIDIA Corporation")
+						Catch ex As Exception
+						End Try
+					End Using
+				Else
+					For Each data As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(data) Then Continue For
+						Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
+					Next
+				End If
+			End If
+		End Using
 
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
@@ -5146,7 +5206,7 @@ Public Class frmMain
 					If IsNullOrWhitespace(child) Then Continue For
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 						If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NVIDIA Profile Updater", "NVIDIA telemetry monitor", "NVIDIA crash and telemetry reporter") AndAlso config.RemoveGFE Then
+							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NVIDIA Profile Updater", "NVIDIA telemetry monitor", "NVIDIA crash and telemetry reporter", "batteryboost") AndAlso config.RemoveGFE Then
 								Deletesubregkey(regkey, child)
 							End If
 						End If
@@ -5161,7 +5221,7 @@ Public Class frmMain
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
 							If IsNullOrWhitespace(child) Then Continue For
-							If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience") AndAlso config.RemoveGFE Then
+							If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NvBatteryBoostCheckOnLogon") AndAlso config.RemoveGFE Then
 								For Each ScheduleChild As String In schedule.GetSubKeyNames
 									If IsNullOrWhitespace(ScheduleChild) Then Continue For
 									Try
@@ -6889,7 +6949,7 @@ Public Class frmMain
 									MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
 								End If
 							End If
-						ElseIf enable <> False Then
+						ElseIf enable <> False AndAlso Not silent Then
 							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
 						End If
 					End If
@@ -6908,12 +6968,14 @@ Public Class frmMain
 						If regValue <> If(enable, 0, 1) Then
 							regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
 
-							If enable Then
-								MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
-							Else
-								MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+							If Not silent Then
+								If enable Then
+									MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+								Else
+									MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+								End If
 							End If
-						ElseIf enable <> False Then
+						ElseIf enable <> False AndAlso Not silent Then
 							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
 						End If
 					End If

@@ -38,8 +38,8 @@ Public Class CleanupEngine
                 Try
                     regkeypath.DeleteSubKeyTree(child)
                 Catch ex As Exception
-                    Application.Log.AddWarning(ex, " Already removed with another Thread ? " & child)
-                End Try
+					Application.Log.AddWarning(ex, " Failed or already removed with another Thread ? " & child)
+				End Try
                 Application.Log.AddMessage(child + " - " + UpdateTextMethodmessagefn(39))
             End If
         End If
