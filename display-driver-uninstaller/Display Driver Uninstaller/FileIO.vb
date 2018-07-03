@@ -519,8 +519,8 @@ Public Class FileIO
 			If Not fixedAcl Then
 				Dim logEntry As LogEntry = Application.Log.CreateEntry()
 				logEntry.Type = LogType.Warning
-				logEntry.Message = String.Format("Couldn't delete path, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, fileName)
-				logEntry.Add("fileName", fileName)
+                logEntry.Message = String.Format("Couldn't delete path, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, fileName)
+                logEntry.Add("fileName", fileName)
 
 				Dim success As Boolean
 				Try

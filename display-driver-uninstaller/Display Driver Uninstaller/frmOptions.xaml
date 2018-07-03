@@ -4,26 +4,25 @@
 	xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	Title="frmOptions" MinWidth="400" MinHeight="300" mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="400" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight" Width="Auto">
+	Title="frmOptions" MinWidth="400" MinHeight="300" mc:Ignorable="d" d:DesignWidth="400" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight" Height="637.25" >
+    <Window.Resources>
+        <conv:NullableBooleanToBoolean x:Key="NulBoolToBool"></conv:NullableBooleanToBoolean>
+    </Window.Resources>
 
-	<Window.Resources>
-		<conv:NullableBooleanToBoolean x:Key="NulBoolToBool"></conv:NullableBooleanToBoolean>
-	</Window.Resources>
+    <Grid DataContext="{Binding Settings}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-	<Grid DataContext="{Binding Settings}">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style TargetType="CheckBox">
+                <Setter Property="Margin" Value="0,0,0,5" />
+            </Style>
+        </Grid.Resources>
 
-		<Grid.Resources>
-			<Style TargetType="CheckBox">
-				<Setter Property="Margin" Value="0,0,0,5" />
-			</Style>
-		</Grid.Resources>
-
-		<ScrollViewer 
+        <ScrollViewer 
 			CanContentScroll="False" 
 			HorizontalScrollBarVisibility="Auto" 
 			VerticalScrollBarVisibility="Auto"
@@ -31,59 +30,60 @@
 			VirtualizingStackPanel.IsVirtualizing="True"
 			VirtualizingStackPanel.VirtualizationMode="Recycling" >
 
-			<DockPanel LastChildFill="False">		
-				<DockPanel Grid.Row="0" Margin="10,10,10,10" DockPanel.Dock="Top">
-					<Label DockPanel.Dock="Top" x:Name="lblGeneral" Content="lblGeneral" FontWeight="Bold" FontSize="14"/>
+            <DockPanel LastChildFill="False">
+                <DockPanel Grid.Row="0" Margin="10,10,10,10" DockPanel.Dock="Top">
+                    <Label DockPanel.Dock="Top" x:Name="lblGeneral" Content="lblGeneral" FontWeight="Bold" FontSize="14"/>
 
-					<UniformGrid DockPanel.Dock="Top" Rows="7">
-						<CheckBox x:Name="lblRemMonitors" IsChecked="{Binding RemoveMonitors, Converter={StaticResource NulBoolToBool}}" Content="lblRemMonitors" />
-						<CheckBox x:Name="lblSaveLogs" IsChecked="{Binding SaveLogs, Converter={StaticResource NulBoolToBool}}" Content="lblSaveLogs" />
-						<CheckBox x:Name="lblCreateRestorePoint" IsChecked="{Binding CreateRestorePoint, Converter={StaticResource NulBoolToBool}}" Content="lblCreateRestorePoint" />
-						<CheckBox x:Name="lblUseRoamingCfg" IsChecked="{Binding UseRoamingConfig, Converter={StaticResource NulBoolToBool}}" Content="lblUseRoamingCfg" />
-						<CheckBox x:Name="lblCheckUpdates" IsChecked="{Binding CheckUpdates, Converter={StaticResource NulBoolToBool}}" Content="lblCheckUpdates" />
-						<CheckBox x:Name="lblVulkan" IsChecked="{Binding RemoveVulkan, Converter={StaticResource NulBoolToBool}}" Content="lblVulkan" />
+                    <UniformGrid DockPanel.Dock="Top" Rows="7">
+                        <CheckBox x:Name="lblRemMonitors" IsChecked="{Binding RemoveMonitors, Converter={StaticResource NulBoolToBool}}" Content="lblRemMonitors" />
+                        <CheckBox x:Name="lblSaveLogs" IsChecked="{Binding SaveLogs, Converter={StaticResource NulBoolToBool}}" Content="lblSaveLogs" />
+                        <CheckBox x:Name="lblCreateRestorePoint" IsChecked="{Binding CreateRestorePoint, Converter={StaticResource NulBoolToBool}}" Content="lblCreateRestorePoint" />
+                        <CheckBox x:Name="lblUseRoamingCfg" IsChecked="{Binding UseRoamingConfig, Converter={StaticResource NulBoolToBool}}" Content="lblUseRoamingCfg" />
+                        <CheckBox x:Name="lblCheckUpdates" IsChecked="{Binding CheckUpdates, Converter={StaticResource NulBoolToBool}}" Content="lblCheckUpdates" />
+                        <CheckBox x:Name="lblVulkan" IsChecked="{Binding RemoveVulkan, Converter={StaticResource NulBoolToBool}}" Content="lblVulkan" />
                         <CheckBox x:Name="lblOffer" IsChecked="{Binding ShowOffer, Converter={StaticResource NulBoolToBool}}" Content="lblOffer" />
-					</UniformGrid>
-				</DockPanel>
+                    </UniformGrid>
+                </DockPanel>
 
-				<DockPanel Grid.Row="1" Margin="10,10,10,10" DockPanel.Dock="Top">
-					<Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
-					<Label DockPanel.Dock="Top" x:Name="lblNvidiaspecific" Content="lblNvidiaspecific" FontWeight="Bold" FontSize="14"/>
+                <DockPanel Grid.Row="1" Margin="10,10,10,10" DockPanel.Dock="Top">
+                    <Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
+                    <Label DockPanel.Dock="Top" x:Name="lblNvidiaspecific" Content="lblNvidiaspecific" FontWeight="Bold" FontSize="14"/>
 
-					<UniformGrid DockPanel.Dock="Top" Rows="4">
-						<CheckBox x:Name="lblRemNvidiaDirs" IsChecked="{Binding RemoveNvidiaDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemNvidiaDirs" />
-						<CheckBox x:Name="lblRemPhysX" IsChecked="{Binding RemovePhysX, Converter={StaticResource NulBoolToBool}}" Content="lblRemPhysX" />
-						<CheckBox x:Name="lblRem3DtvPlay" IsChecked="{Binding Remove3DTVPlay, Converter={StaticResource NulBoolToBool}}" Content="lblRem3DtvPlay" />
-						<CheckBox x:Name="lblRemGFE" IsChecked="{Binding RemoveGFE, Converter={StaticResource NulBoolToBool}}" Content="lblRemGFE" />
-					</UniformGrid>
-				</DockPanel>
+                    <UniformGrid DockPanel.Dock="Top" Rows="4">
+                        <CheckBox x:Name="lblRemNvidiaDirs" IsChecked="{Binding RemoveNvidiaDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemNvidiaDirs" />
+                        <CheckBox x:Name="lblRemPhysX" IsChecked="{Binding RemovePhysX, Converter={StaticResource NulBoolToBool}}" Content="lblRemPhysX" />
+                        <CheckBox x:Name="lblRem3DtvPlay" IsChecked="{Binding Remove3DTVPlay, Converter={StaticResource NulBoolToBool}}" Content="lblRem3DtvPlay" />
+                        <CheckBox x:Name="lblRemGFE" IsChecked="{Binding RemoveGFE, Converter={StaticResource NulBoolToBool}}" Content="lblRemGFE" />
+                    </UniformGrid>
+                </DockPanel>
 
-				<DockPanel Grid.Row="2" Margin="10,10,10,10" DockPanel.Dock="Top">
-					<Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
-					<Label DockPanel.Dock="Top" x:Name="lblAmdspecific" Content="lblAmdspecific" FontWeight="Bold" FontSize="14" />
+                <DockPanel Grid.Row="2" Margin="10,10,10,10" DockPanel.Dock="Top">
+                    <Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
+                    <Label DockPanel.Dock="Top" x:Name="lblAmdspecific" Content="lblAmdspecific" FontWeight="Bold" FontSize="14" />
 
-					<UniformGrid DockPanel.Dock="Top" Rows="4">
-						<CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" />
-						<CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" />
-						<CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAMDAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" />
-						<CheckBox x:Name="lblRemCrimsonCache" IsChecked="{Binding RemoveCrimsonCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemCrimsonCache" />
-					</UniformGrid>
-				</DockPanel>
-				
-				<DockPanel Grid.Row="2" Margin="10,10,10,0" DockPanel.Dock="Top">
-					<Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
-					<Label DockPanel.Dock="Top" x:Name="lblAdvancedO" Content="lblAdvancedO" FontWeight="Bold" FontSize="14" />
+                    <UniformGrid DockPanel.Dock="Top" Rows="4">
+                        <CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" />
+                        <CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" />
+                        <CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAMDAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" />
+                        <CheckBox x:Name="lblRemCrimsonCache" IsChecked="{Binding RemoveCrimsonCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemCrimsonCache" />
+                    </UniformGrid>
+                </DockPanel>
 
-					<UniformGrid DockPanel.Dock="Top" Rows="1">
-						<CheckBox x:Name="lblShowSafeModeMsg" IsChecked="{Binding EnableSafeModeDialog, Converter={StaticResource NulBoolToBool}}" Content="lblShowSafeModeMsg" />
-					</UniformGrid>
-				</DockPanel>
-			</DockPanel >
-		</ScrollViewer> 
-	
-		<Separator Grid.Row="1" DockPanel.Dock="Bottom" BorderBrush="Black" BorderThickness="1" />
-		
-		<Button Grid.Row="2" Margin="10" Content="btnClose" Name="btnClose" HorizontalAlignment="Right" Height="30" MinWidth="80" VerticalAlignment="Bottom" IsCancel="True" />
-	</Grid>
-	
+                <DockPanel Grid.Row="2" Margin="10,10,10,0" DockPanel.Dock="Top">
+                    <Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
+                    <Label DockPanel.Dock="Top" x:Name="lblAdvancedO" Content="lblAdvancedO" FontWeight="Bold" FontSize="14" />
+
+                    <UniformGrid DockPanel.Dock="Top" Rows="2">
+                        <CheckBox x:Name="lblShowSafeModeMsg" IsChecked="{Binding EnableSafeModeDialog, Converter={StaticResource NulBoolToBool}}" Content="lblShowSafeModeMsg" />
+                        <CheckBox x:Name="lblPreventWinUpdate" IsChecked="{Binding PreventWinUpdate, Converter={StaticResource NulBoolToBool}}" Content="lblPreventWinUpdate"  HorizontalAlignment="Left" />
+                    </UniformGrid>
+                </DockPanel>
+            </DockPanel >
+        </ScrollViewer>
+
+        <Separator Grid.Row="1" DockPanel.Dock="Bottom" BorderBrush="Black" BorderThickness="1" />
+
+        <Button Grid.Row="2" Margin="10" Content="btnClose" Name="btnClose" HorizontalAlignment="Right" Height="30" MinWidth="80" VerticalAlignment="Bottom" IsCancel="True" />
+    </Grid>
+
 </Window>

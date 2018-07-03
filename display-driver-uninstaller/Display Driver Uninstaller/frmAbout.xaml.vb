@@ -29,8 +29,8 @@ Public Class frmAbout
 				_frmType = value
 
 				Select Case _frmType
-					Case 1 : Text = Languages.GetTranslation("Misc", "About", "Text")
-					Case 2 : Text = Languages.GetTranslation("Misc", "Tos", "Text")
+                    Case 1 : Text = Languages.GetTranslation("Misc", "About", "Text")
+                    Case 2 : Text = Languages.GetTranslation("Misc", "Tos", "Text")
 					Case 3 : Text = Languages.GetTranslation("frmAbout", "lblTranslators", "Text")
 					Case 4 : Text = Languages.GetTranslation("frmAbout", "lblPatron", "Text")
 					Case Else : Text = Nothing
@@ -42,8 +42,9 @@ Public Class frmAbout
 	End Property
 
 	Private Sub frmAbout_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
-		Languages.TranslateForm(Me, False)
-	End Sub
+        Languages.TranslateForm(Me, False)
+        lblVersion.Content = Application.Settings.AppVersion.ToString
+    End Sub
 
 	Private Sub btnClose_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnClose.Click
 		Me.Close()

@@ -89,12 +89,13 @@ Public Class AppSettings
 	Private m_saveLogs As DependencyProperty = RegDP("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
 	Private m_removevulkan As DependencyProperty = RegDP("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
 	Private m_showoffer As DependencyProperty = RegDP("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
-	Private m_enablesafemodedialog As DependencyProperty = RegDP("EnableSafeModeDialog", GetType(Boolean), GetType(AppSettings), False)
+    Private m_enablesafemodedialog As DependencyProperty = RegDP("EnableSafeModeDialog", GetType(Boolean), GetType(AppSettings), False)
+    Private m_PreventWinUpdate As DependencyProperty = RegDP("PreventWinUpdate", GetType(Boolean), GetType(AppSettings), False)
 
 #End Region
 
 #Region "Public Properties"
-	Public Property AppName As String ' Name of application (DDU)
+    Public Property AppName As String ' Name of application (DDU)
 		Get
 			Return CStr(GetValue(m_appname))
 		End Get
@@ -302,18 +303,27 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property EnableSafeModeDialog As Boolean
-		Get
-			Return CBool(GetValue(m_enablesafemodedialog))
-		End Get
-		Set(value As Boolean)
-			SetValue(m_enablesafemodedialog, value)
-		End Set
-	End Property
+    Public Property EnableSafeModeDialog As Boolean
+        Get
+            Return CBool(GetValue(m_enablesafemodedialog))
+        End Get
+        Set(value As Boolean)
+            SetValue(m_enablesafemodedialog, value)
+        End Set
+    End Property
+
+    Public Property PreventWinUpdate As Boolean
+        Get
+            Return CBool(GetValue(m_PreventWinUpdate))
+        End Get
+        Set(value As Boolean)
+            SetValue(m_PreventWinUpdate, value)
+        End Set
+    End Property
 
 #End Region
 
-	Private Sub UpdateWinText(ByVal version As OSVersion)
+    Private Sub UpdateWinText(ByVal version As OSVersion)
 		If WinVersion = version Then
 			Return
 		End If
@@ -438,8 +448,10 @@ Public Class AppSettings
 						.WriteElementString("RemoveVulkan", RemoveVulkan.ToString())
 						.WriteElementString("ShowOffer", ShowOffer.ToString())
 						.WriteElementString("EnableSafeModeDialog", EnableSafeModeDialog.ToString())
+                        .WriteElementString("PreventWinUpdate", PreventWinUpdate.ToString())
 
-						.WriteEndElement()
+
+                        .WriteEndElement()
 
 						.WriteEndElement()
 						.WriteEndDocument()
@@ -456,11 +468,11 @@ Public Class AppSettings
 	End Sub
 
 	Private Function Load(ByVal fileName As String) As Boolean
-		If String.IsNullOrEmpty(fileName) OrElse Not File.Exists(fileName) Then
-			Return False
-		End If
+        If String.IsNullOrEmpty(fileName) OrElse Not File.Exists(fileName) Then
+            Return False
+        End If
 
-		Try
+        Try
 			Using fs As Stream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.None)
 				If fs.Length <= 3L Then
 					Return False
@@ -587,8 +599,12 @@ Public Class AppSettings
 								ShowOffer = Boolean.Parse(KvP.Value)
 
 							Case "enablesafemodedialog"
-								EnableSafeModeDialog = Boolean.Parse(KvP.Value)
-						End Select
+                                EnableSafeModeDialog = Boolean.Parse(KvP.Value)
+
+                            Case "preventwinupdate"
+                                PreventWinUpdate = Boolean.Parse(KvP.Value)
+
+                        End Select
 					Next
 
 					reader.Close()

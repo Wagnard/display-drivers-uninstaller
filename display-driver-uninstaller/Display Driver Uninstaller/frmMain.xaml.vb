@@ -3216,8 +3216,8 @@ Public Class frmMain
 		End If
 
 		filePath = config.Paths.System32
-		Dim files() As String = IO.Directory.GetFiles(filePath + "\", "nvdisp*.*")
-		For i As Integer = 0 To files.Length - 1
+        Dim files() As String = IO.Directory.GetFiles(filePath, "nvdisp*.*")
+        For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
 
 				Delete(files(i))
@@ -3226,8 +3226,8 @@ Public Class frmMain
 		Next
 
 		filePath = config.Paths.System32
-		files = IO.Directory.GetFiles(filePath + "\", "nvhdagenco*.*")
-		For i As Integer = 0 To files.Length - 1
+        files = IO.Directory.GetFiles(filePath, "nvhdagenco*.*")
+        For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
 
 				Delete(files(i))
@@ -5889,15 +5889,15 @@ Public Class frmMain
 	Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
 		Dim frmOptions As New frmOptions
 
-		With frmOptions
-			.Background = Me.Background
-			.DataContext = Me.DataContext
-			.Icon = Me.Icon
-			.Owner = Me
-		End With
+        With frmOptions
+            .Background = Me.Background
+            .DataContext = Me.DataContext
+            .Icon = Me.Icon
+            ' .Owner = Me
+        End With
 
-		frmOptions.ShowDialog()
-	End Sub
+        frmOptions.ShowDialog()
+    End Sub
 
 	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click, ToSMenuItem.Click, TranslatorsMenuItem.Click, PatronMenuItem.Click
 		Dim menuItem As MenuItem = TryCast(sender, MenuItem)
@@ -6926,31 +6926,80 @@ Public Class frmMain
 		  "nvidiaInspector")
 	End Sub
 
-	Private Sub EnableDriverSearch(ByVal enable As Boolean, ByVal silent As Boolean)
+    Public Shared Sub EnableDriverSearch(ByVal enable As Boolean, ByVal silent As Boolean)
+        Dim version As OSVersion = Application.Settings.WinVersion
+
+        If Not enable Then
+            Application.Log.AddMessage("Trying to disable search for Windows Updates", "Version", GetDescription(version))
+        End If
+
+        If version >= OSVersion.Win7 Then
+            Try
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
+                    If regkey IsNot Nothing Then
+                        Dim regValue As Int32 = CInt(regkey.GetValue("SearchOrderConfig", Nothing))
+
+                        If regValue <> If(enable, 1, 0) Then
+                            regkey.SetValue("SearchOrderConfig", If(enable, 1, 0), RegistryValueKind.DWord)
+
+                            If Not silent Then
+                                If enable Then
+                                    MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+                                Else
+                                    MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+                                End If
+                            End If
+                        ElseIf enable <> False AndAlso Not silent Then
+                            MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
+                        End If
+                    End If
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            End Try
+        End If
+
+        If version >= OSVersion.WinVista AndAlso version < OSVersion.Win7 Then
+            Try
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
+                    Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate", Nothing))
+
+                    If regkey IsNot Nothing Then
+                        If regValue <> If(enable, 0, 1) Then
+                            regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
+
+                            If Not silent Then
+                                If enable Then
+                                    MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+                                Else
+                                    MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+                                End If
+                            End If
+                        ElseIf enable <> False AndAlso Not silent Then
+                            MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
+                        End If
+                    End If
+                End Using
+
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            End Try
+        End If
+    End Sub
+
+	Public Shared Function InfoDriverSearch() As Boolean
 		Dim version As OSVersion = Application.Settings.WinVersion
-
-		If Not enable Then
-			Application.Log.AddMessage("Trying to disable search for Windows Updates", "Version", GetDescription(version))
-		End If
-
+		Dim regValue As Int32
+		Dim response As Boolean
 		If version >= OSVersion.Win7 Then
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
 					If regkey IsNot Nothing Then
-						Dim regValue As Int32 = CInt(regkey.GetValue("SearchOrderConfig", Nothing))
-
-						If regValue <> If(enable, 1, 0) Then
-							regkey.SetValue("SearchOrderConfig", If(enable, 1, 0), RegistryValueKind.DWord)
-
-							If Not silent Then
-								If enable Then
-									MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
-								Else
-									MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
-								End If
-							End If
-						ElseIf enable <> False AndAlso Not silent Then
-							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
+						regValue = CInt(regkey.GetValue("SearchOrderConfig", 1))
+						If regValue = 0 Then
+							response = True
+						Else
+							response = False
 						End If
 					End If
 				End Using
@@ -6962,21 +7011,12 @@ Public Class frmMain
 		If version >= OSVersion.WinVista AndAlso version < OSVersion.Win7 Then
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-					Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate", Nothing))
-
 					If regkey IsNot Nothing Then
-						If regValue <> If(enable, 0, 1) Then
-							regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
-
-							If Not silent Then
-								If enable Then
-									MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
-								Else
-									MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
-								End If
-							End If
-						ElseIf enable <> False AndAlso Not silent Then
-							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
+						regValue = CInt(regkey.GetValue("DontSearchWindowsUpdate", 0))
+						If regValue = 1 Then
+							response = True
+						Else
+							response = False
 						End If
 					End If
 				End Using
@@ -6985,7 +7025,8 @@ Public Class frmMain
 				Application.Log.AddException(ex)
 			End Try
 		End If
-	End Sub
+		Return response
+	End Function
 
 	Private Function Checkamdkmpfd() As Boolean
 		Try
