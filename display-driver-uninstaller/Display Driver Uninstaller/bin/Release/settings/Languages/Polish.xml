@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="pl-PL" Text="Polski">
-	<!--Update date 05.03.2018-->
+	<!--Update date 04.07.2018-->
 
 	<frmMain Text="Display Driver Uninstaller">
 		<btnCleanRestart>
@@ -252,8 +252,12 @@
 			<Text>Użyj SetupAPI *faza testowa*</Text>
 			<Tooltip>Użyj SetupAPI zamiast zewnętrznego narzędzia DDUDR(DEVCON)</Tooltip>
 		</lblUseSetupAPI>
+	  <lblPreventWinUpdate>
+      <Text>Wyłącz wyszukiwanie sterowników za pomocą Windows Update.</Text>
+      <Tooltip>Ta opcja uniemożliwi Menedżerowi urządzeń wyszukiwanie sterowników urządzeń w Windows Update
+               Uwaga: Nie zapobiega to pobieraniu i instalowaniu nowych sterowników z "Windows Update".</Tooltip>
+    </lblPreventWinUpdate>
 	</frmOptions>
-
 	<frmLaunch Text="Opcje uruchomienia">
 		<btnAccept>
 			<Text>Uruchom</Text>

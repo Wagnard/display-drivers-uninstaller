@@ -2275,68 +2275,71 @@ Public Class frmMain
 			End If
 		End Using
 
-		'      Dim OldValue As String = Nothing
-		'Select Case System.Windows.Forms.SystemInformation.BootMode
-		'          Case Forms.BootMode.FailSafe
-		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
-		'                  StartService("Schedule")
-		'              Else
-		'                  OldValue = CheckServiceStartupType("Schedule")
-		'                  SetServiceStartupType("Schedule", "3")
-		'                  StartService("Schedule")
-		'              End If
-		'	Case Forms.BootMode.FailSafeWithNetwork
-		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
-		'                  StartService("Schedule")
-		'              Else
-		'                  OldValue = CheckServiceStartupType("Schedule")
-		'                  SetServiceStartupType("Schedule", "3")
-		'                  StartService("Schedule")
-		'              End If
-		'	Case Forms.BootMode.Normal
-		'		'Usually this service is Running in normal mode, we *could* in the future check all this.
-		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
-		'                  StartService("Schedule")
-		'              Else
-		'                  OldValue = CheckServiceStartupType("Schedule")
-		'                  SetServiceStartupType("Schedule", "3")
-		'                  StartService("Schedule")
-		'              End If
-		'      End Select
-		'Using tsc As New TaskSchedulerControl(config)
-		'	For Each task As Task In tsc.GetAllTasks
-		'		If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
-		'			Try
-		'				task.Delete()
-		'			Catch ex As Exception
-		'				Application.Log.AddException(ex)
-		'			End Try
-		'			Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
-		'		End If
-		'	Next
-		'End Using
+        '      Dim OldValue As String = Nothing
+        'Select Case System.Windows.Forms.SystemInformation.BootMode
+        '          Case Forms.BootMode.FailSafe
+        '              If (CheckServiceStartupType("Schedule")) <> "4" Then
+        '                  StartService("Schedule")
+        '              Else
+        '                  OldValue = CheckServiceStartupType("Schedule")
+        '                  SetServiceStartupType("Schedule", "3")
+        '                  StartService("Schedule")
+        '              End If
+        '	Case Forms.BootMode.FailSafeWithNetwork
+        '              If (CheckServiceStartupType("Schedule")) <> "4" Then
+        '                  StartService("Schedule")
+        '              Else
+        '                  OldValue = CheckServiceStartupType("Schedule")
+        '                  SetServiceStartupType("Schedule", "3")
+        '                  StartService("Schedule")
+        '              End If
+        '	Case Forms.BootMode.Normal
+        '		'Usually this service is Running in normal mode, we *could* in the future check all this.
+        '              If (CheckServiceStartupType("Schedule")) <> "4" Then
+        '                  StartService("Schedule")
+        '              Else
+        '                  OldValue = CheckServiceStartupType("Schedule")
+        '                  SetServiceStartupType("Schedule", "3")
+        '                  StartService("Schedule")
+        '              End If
+        '      End Select
+        'Using tsc As New TaskSchedulerControl(config)
+        '	For Each task As Task In tsc.GetAllTasks
+        '		If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
+        '			Try
+        '				task.Delete()
+        '			Catch ex As Exception
+        '				Application.Log.AddException(ex)
+        '			End Try
+        '			Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
+        '		End If
+        '	Next
+        'End Using
 
-		'Select Case System.Windows.Forms.SystemInformation.BootMode
-		'	Case Forms.BootMode.FailSafe
-		'              StopService("Schedule")
-		'              If OldValue IsNot Nothing Then
-		'                  SetServiceStartupType("Schedule", OldValue)
-		'              End If
-		'	Case Forms.BootMode.FailSafeWithNetwork
-		'              StopService("Schedule")
-		'              If OldValue IsNot Nothing Then
-		'                  SetServiceStartupType("Schedule", OldValue)
-		'              End If
-		'	Case Forms.BootMode.Normal
-		'              'Usually this service is running in normal mode, we don't need to stop it.
-		'              If OldValue IsNot Nothing Then
-		'                  StopService("Schedule")
-		'                  SetServiceStartupType("Schedule", OldValue)
-		'              End If
-		'End Select
+        'Select Case System.Windows.Forms.SystemInformation.BootMode
+        '	Case Forms.BootMode.FailSafe
+        '              StopService("Schedule")
+        '              If OldValue IsNot Nothing Then
+        '                  SetServiceStartupType("Schedule", OldValue)
+        '              End If
+        '	Case Forms.BootMode.FailSafeWithNetwork
+        '              StopService("Schedule")
+        '              If OldValue IsNot Nothing Then
+        '                  SetServiceStartupType("Schedule", OldValue)
+        '              End If
+        '	Case Forms.BootMode.Normal
+        '              'Usually this service is running in normal mode, we don't need to stop it.
+        '              If OldValue IsNot Nothing Then
+        '                  StopService("Schedule")
+        '                  SetServiceStartupType("Schedule", OldValue)
+        '              End If
+        'End Select
 
-		'Killing Explorer.exe to help releasing file that were open.
-		Application.Log.AddMessage("Killing Explorer.exe")
+        'Killing Explorer.exe to help releasing file that were open.
+        While Thread2Finished <> True
+            Thread.Sleep(500)
+        End While
+        Application.Log.AddMessage("Killing Explorer.exe")
 		KillProcess("explorer")
 
 	End Sub
@@ -6614,7 +6617,7 @@ Public Class frmMain
 		Else
 			EnableControls(False)
 
-			EnableDriverSearch(True, True)
+			'EnableDriverSearch(True, True)
 
 			'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
 			KillGPUStatsProcesses()
