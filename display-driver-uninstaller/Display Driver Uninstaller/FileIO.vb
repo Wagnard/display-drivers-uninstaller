@@ -9,7 +9,6 @@ Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
 
 Public Class FileIO
-
 #Region "Consts"
 	Friend Const UNC_PREFIX As String = "\\?\"
 	Friend Shared ReadOnly DIR_CHAR As String = Path.DirectorySeparatorChar
@@ -442,6 +441,7 @@ Public Class FileIO
 				If isDir Then		' fileName is directory
 					If RemoveDirectory(uncFileName) Then
 						Application.Log.AddMessage(String.Concat("Deleted directory:", CRLF, fileName))
+						Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), fileName.Substring(UNC_PREFIX.Length), uncFileName))
 						Return
 					End If
 
@@ -478,6 +478,7 @@ Public Class FileIO
 
 						If RemoveDirectory(uncFileName) Then
 							Application.Log.AddMessage(String.Concat("Deleted directory:", CRLF, fileName))
+							Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), fileName.Substring(UNC_PREFIX.Length), uncFileName))
 							Return
 						Else
 							Throw New Win32Exception(GetLastWin32Error)
@@ -492,18 +493,19 @@ Public Class FileIO
 								For Each childs As String In regkey.GetValueNames
 									If IsNullOrWhitespace(childs) Then Continue For
 									If StrContainsAny(childs, True, "qtquickcontrols") Then
-										deletevalue(regkey, childs)
+										Deletevalue(regkey, childs)
 									End If
 								Next
 							End If
 						End Using
-						MoveFileEx(Path.GetPathRoot(fileName) & "deleteme.tmp", Nothing, MoveFileFlags.MOVEFILE_DELAY_UNTIL_REBOOT)	' This will delete de file after reboot
+						MoveFileEx(Path.GetPathRoot(fileName) & "deleteme.tmp", Nothing, MoveFileFlags.MOVEFILE_DELAY_UNTIL_REBOOT) ' This will delete de file after reboot
 						MoveFileEx(uncFileName, Path.GetPathRoot(fileName) & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING) ' This move the file.
 						System.Threading.Thread.Sleep(100) ' To let the time for the file move to take effect.
 						Return
 					Else
 						If DeleteFile(uncFileName) Then
 							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, fileName))
+							Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), fileName.Substring(UNC_PREFIX.Length), uncFileName))
 							Return
 						Else
 							errCode = GetLastWin32ErrorU()
@@ -519,8 +521,8 @@ Public Class FileIO
 			If Not fixedAcl Then
 				Dim logEntry As LogEntry = Application.Log.CreateEntry()
 				logEntry.Type = LogType.Warning
-                logEntry.Message = String.Format("Couldn't delete path, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, fileName)
-                logEntry.Add("fileName", fileName)
+				logEntry.Message = String.Format("Couldn't delete path, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, fileName)
+				logEntry.Add("fileName", fileName)
 
 				Dim success As Boolean
 				Try
@@ -535,7 +537,7 @@ Public Class FileIO
 					Application.Log.Add(logEntry)
 				End Try
 
-				DeleteInternal(fileName, True)	'Retry
+				DeleteInternal(fileName, True)  'Retry
 
 				Return
 			Else
@@ -609,14 +611,14 @@ Public Class FileIO
 		End If
 
 		Try
-			errCode = GetAttributes(uncFileName, isDir)		   ' checks does it exist, check is dir or file
+			errCode = GetAttributes(uncFileName, isDir)        ' checks does it exist, check is dir or file
 
 			If errCode <> Errors.ACCESS_DENIED Then
 				If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
-					uncFileName = GetLongPath(fileName)			' Check if was short path
+					uncFileName = GetLongPath(fileName)         ' Check if was short path
 
 					If uncFileName Is Nothing Then
-						Return GetFilesToDeleteInternal					' Wasn't short path... Just doesn't exist
+						Return GetFilesToDeleteInternal                 ' Wasn't short path... Just doesn't exist
 					End If
 
 					errCode = GetAttributes(uncFileName, isDir)
@@ -661,7 +663,7 @@ Public Class FileIO
 					Application.Log.Add(logEntry)
 				End Try
 
-				Return GetFilesToDeleteInternal(fileName, wildCard, searchSubDirs, searchFiles, True)	'Retry
+				Return GetFilesToDeleteInternal(fileName, wildCard, searchSubDirs, searchFiles, True)   'Retry
 			Else
 				Throw New Win32Exception(GetInt32(errCode))
 			End If
@@ -952,7 +954,7 @@ Public Class FileIO
 	Private Shared Function SetAttributes(ByVal filePath As String, ByVal fileAttributes As FILE_ATTRIBUTES, ByRef isDirectory As Boolean) As UInt32
 		Dim fileAttr As UInt32 = GetFileAttributes(filePath)
 
-		If fileAttr = Errors.INVALID_FILE_ATTRIBUTES Then	  'Doesn't exists
+		If fileAttr = Errors.INVALID_FILE_ATTRIBUTES Then     'Doesn't exists
 			Return Errors.FILE_NOT_FOUND
 		End If
 
@@ -967,7 +969,7 @@ Public Class FileIO
 	Private Shared Function GetAttributes(ByVal filePath As String, ByRef isDirectory As Boolean) As UInt32
 		Dim fileAttr As UInt32 = GetFileAttributes(filePath)
 
-		If fileAttr = Errors.INVALID_FILE_ATTRIBUTES Then	  'Doesn't exists
+		If fileAttr = Errors.INVALID_FILE_ATTRIBUTES Then     'Doesn't exists
 			Return Errors.FILE_NOT_FOUND
 		End If
 
@@ -976,9 +978,14 @@ Public Class FileIO
 	End Function
 
 #End Region
-	Private Shared Sub deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
+	Private Shared Sub Deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
 		Dim cleanupengine As New CleanupEngine
 		cleanupengine.Deletevalue(value1, value2)
+	End Sub
+
+	Private Shared Sub Removeshareddll(ByVal value1 As String)
+		Dim cleanupengine As New CleanupEngine
+		cleanupengine.RemoveSharedDlls(value1)
 	End Sub
 
 End Class

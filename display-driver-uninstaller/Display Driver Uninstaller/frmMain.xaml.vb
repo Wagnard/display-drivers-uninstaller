@@ -5892,14 +5892,15 @@ Public Class frmMain
 	Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
 		Dim frmOptions As New frmOptions
 
-        With frmOptions
-            .Background = Me.Background
-            .DataContext = Me.DataContext
-            .Icon = Me.Icon
-            ' .Owner = Me
-        End With
+		With frmOptions
+			.Owner = Me
+			.Icon = Me.Icon
+			.Background = Me.Background
+			.DataContext = Me.DataContext
+			.WindowStartupLocation = WindowStartupLocation.CenterOwner
+		End With
 
-        frmOptions.ShowDialog()
+		frmOptions.ShowDialog()
     End Sub
 
 	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click, ToSMenuItem.Click, TranslatorsMenuItem.Click, PatronMenuItem.Click

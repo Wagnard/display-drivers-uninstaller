@@ -10,6 +10,18 @@ Public Enum GPUVendor As Int32
 	Intel
 End Enum
 
+Public Enum CleanType As Int32
+	None
+	Audio
+	GPU
+End Enum
+
+Public Enum AudioVendor As Int32
+	None
+	Realtek
+	SoundBlaster
+End Enum
+
 Public Enum UpdateStatus As Int32
 	NotChecked = 1
 	NoUpdates = 2
@@ -61,6 +73,8 @@ Public Class AppSettings
 	Private m_appversion As DependencyProperty = RegDP("AppVersion", GetType(Version), GetType(AppSettings), New Version(0, 0, 0, 0))
 	Private m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
 	Private m_gpuSelected As DependencyProperty = RegDP("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
+	Private m_audioSelected As DependencyProperty = RegDP("SelectedAudio", GetType(AudioVendor), GetType(AppSettings), AudioVendor.Realtek)
+	Private m_cleanType As DependencyProperty = RegDP("SelectedType", GetType(CleanType), GetType(AppSettings), CleanType.None)
 	Private m_langSelected As DependencyProperty = RegDP("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
 	Private m_updateAvailable As DependencyProperty = RegDP("UpdateAvailable", GetType(UpdateStatus), GetType(AppSettings), UpdateStatus.NotAllowed)
 
@@ -160,6 +174,25 @@ Public Class AppSettings
 			SetValue(m_gpuSelected, value)
 		End Set
 	End Property
+
+	Public Property SelectedAudio As AudioVendor
+		Get
+			Return CType(GetValue(m_audioSelected), AudioVendor)
+		End Get
+		Set(value As AudioVendor)
+			SetValue(m_audioSelected, value)
+		End Set
+	End Property
+
+	Public Property SelectedType As CleanType
+		Get
+			Return CType(GetValue(m_cleanType), CleanType)
+		End Get
+		Set(value As CleanType)
+			SetValue(m_cleanType, value)
+		End Set
+	End Property
+
 	Public Property SelectedLanguage As Languages.LanguageOption
 		Get
 			Return CType(GetValue(m_langSelected), Languages.LanguageOption)

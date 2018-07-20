@@ -4,7 +4,7 @@
 	xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	Title="frmOptions" MinWidth="400" MinHeight="300" mc:Ignorable="d" d:DesignWidth="400" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight" Height="637.25" >
+	Title="frmOptions" MinWidth="400" MinHeight="300" mc:Ignorable="d" d:DesignWidth="400" WindowStartupLocation="Manual" Height="637.25" SizeToContent="WidthAndHeight" ResizeMode="CanResizeWithGrip" >
     <Window.Resources>
         <conv:NullableBooleanToBoolean x:Key="NulBoolToBool"></conv:NullableBooleanToBoolean>
     </Window.Resources>

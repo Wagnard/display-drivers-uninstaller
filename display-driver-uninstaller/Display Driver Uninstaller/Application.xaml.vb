@@ -452,15 +452,15 @@ Class Application
 
 			Try
 
-				'We check if there are any reboot from windows update pending. and if so we quit.
-				If WinUpdatePending() Then
-					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
-					Log.SaveToFile()
-					Me.Shutdown(0)
-					Exit Sub
-				End If
+                'We check if there are any reboot from windows update pending. and if so we quit.
+                If Not LaunchOptions.Silent AndAlso WinUpdatePending() Then
+                    MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
+                    Log.SaveToFile()
+                    Me.Shutdown(0)
+                    Exit Sub
+                End If
 
-			Catch ex As Exception
+            Catch ex As Exception
 				Log.AddException(ex)
 				Log.SaveToFile()
 				Me.Shutdown(0)

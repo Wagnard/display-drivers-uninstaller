@@ -190,7 +190,7 @@
       <Text>AMD 固有オプション</Text>
     </lblAmdspecific>
     <lblAdvancedO>
-      <Text>拡張オプション (変更は自己責任で)</Text>
+      <Text>拡張オプション（変更は自己責任で）</Text>
     </lblAdvancedO>
     <lblGeneral>
       <Text>全般オプション</Text>
@@ -246,6 +246,12 @@
       <Text>Vulkan ランタイムを削除</Text>
       <Tooltip>Vulkan APIを利用できる2つの異なるGPUを持っている場合非推奨。</Tooltip>
     </lblVulkan>
+    <lblPreventWinUpdate>
+      <Text>"Windows"がデバイスのドライバーを検索したとき、"Windows update"からドライバーをダウンロードしないようにする</Text>
+      <Tooltip>簡単にいうと、このオプションは "windows/デバイスマネージャー"が、"windows update"でドライバーの更新を確認することを拒否します。
+               注1:これは "Windows Update"が新しいドライバーをダウンロード/インストールする事を妨げるものではありません。
+               注2:DDUの使用を終了してGPUドライバーを再インストールした後、または他のデバイスのインストールに問題がある場合は、この変更を元に戻すことを *強く* お勧めします。</Tooltip>
+    </lblPreventWinUpdate>
   </frmOptions>
   <frmLaunch Text="起動オプション">
     <btnAccept>
@@ -409,7 +415,7 @@
     <Translator>
       <User>DH ◆OmegaWBPUI</User>
       <Details>DH.OmegaWBPUI@gmail.com</Details>
-      <LastUpdate>03/01/2018</LastUpdate>
+      <LastUpdate>16/07/2018</LastUpdate>
     </Translator>
   </LanguageTranslators>
 </DisplayDriverUninstaller>
