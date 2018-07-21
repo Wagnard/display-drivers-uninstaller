@@ -7185,7 +7185,6 @@ Public Class frmMain
 	End Sub
 	Private Sub Delete(ByVal filename As String)
 		FileIO.Delete(filename)
-		CleanupEngine.RemoveSharedDlls(filename)
 	End Sub
 
 	Private Sub StartService(ByVal service As String)

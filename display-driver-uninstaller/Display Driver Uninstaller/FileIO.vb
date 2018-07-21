@@ -441,7 +441,7 @@ Public Class FileIO
 				If isDir Then		' fileName is directory
 					If RemoveDirectory(uncFileName) Then
 						Application.Log.AddMessage(String.Concat("Deleted directory:", CRLF, fileName))
-						Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), fileName.Substring(UNC_PREFIX.Length), uncFileName))
+						Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), uncFileName.Substring(UNC_PREFIX.Length), uncFileName))
 						Return
 					End If
 
@@ -478,7 +478,7 @@ Public Class FileIO
 
 						If RemoveDirectory(uncFileName) Then
 							Application.Log.AddMessage(String.Concat("Deleted directory:", CRLF, fileName))
-							Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), fileName.Substring(UNC_PREFIX.Length), uncFileName))
+							Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), uncFileName.Substring(UNC_PREFIX.Length), uncFileName))
 							Return
 						Else
 							Throw New Win32Exception(GetLastWin32Error)
@@ -505,7 +505,7 @@ Public Class FileIO
 					Else
 						If DeleteFile(uncFileName) Then
 							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, fileName))
-							Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), fileName.Substring(UNC_PREFIX.Length), uncFileName))
+							Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), uncFileName.Substring(UNC_PREFIX.Length), uncFileName))
 							Return
 						Else
 							errCode = GetLastWin32ErrorU()

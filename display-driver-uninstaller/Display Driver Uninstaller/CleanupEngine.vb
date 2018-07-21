@@ -48,9 +48,9 @@ Public Class CleanupEngine
 
 
 	Public Sub RemoveSharedDlls(ByVal directorypath As String)
-        If Not IsNullOrWhitespace(directorypath) AndAlso Not FileIO.ExistsDir(directorypath) Then
-            Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
-                If regkey IsNot Nothing Then
+		If Not IsNullOrWhitespace(directorypath) AndAlso Not FileIO.ExistsDir(directorypath) Then
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
+				If regkey IsNot Nothing Then
 					Try
 						Deletevalue(regkey, If(Not directorypath.EndsWith("\"), directorypath & "\", directorypath))
 					Catch exARG As ArgumentException
@@ -58,39 +58,39 @@ Public Class CleanupEngine
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 					End Try
-                End If
-            End Using
+				End If
+			End Using
 
-            If Not directorypath.EndsWith("\") Then
-                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
-                    If regkey IsNot Nothing Then
-                        Try
+			If Not directorypath.EndsWith("\") Then
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+					If regkey IsNot Nothing Then
+						Try
 							Deletevalue(regkey, directorypath)
 						Catch exARG As ArgumentException
-                            'nothing to do,it probably doesn't exit.
-                        Catch ex As Exception
-                            Application.Log.AddException(ex)
-                        End Try
-                    End If
-                End Using
+							'nothing to do,it probably doesn't exit.
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					End If
+				End Using
 
-                If IntPtr.Size = 8 Then
-                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
-                        If regkey IsNot Nothing Then
-                            Try
-                                Deletevalue(regkey, directorypath)
-                            Catch exARG As ArgumentException
-                                'nothing to do,it probably doesn't exit.
-                            Catch ex As Exception
-                                Application.Log.AddException(ex)
-                            End Try
-                        End If
-                    End Using
-                End If
-            End If
-        End If
+				If IntPtr.Size = 8 Then
+					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+						If regkey IsNot Nothing Then
+							Try
+								Deletevalue(regkey, directorypath)
+							Catch exARG As ArgumentException
+								'nothing to do,it probably doesn't exit.
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
+						End If
+					End Using
+				End If
+			End If
+		End If
 
-    End Sub
+	End Sub
 
 	Public Sub Deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String)
 		If regkeypath IsNot Nothing AndAlso Not IsNullOrWhitespace(child) Then
