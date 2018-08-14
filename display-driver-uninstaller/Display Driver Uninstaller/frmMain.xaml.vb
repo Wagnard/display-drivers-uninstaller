@@ -7508,14 +7508,14 @@ Public Class frmMain
 			Case 1
 				Application.Settings.SelectedType = CleanType.Audio
 				cbSelectedGPU.IsEnabled = True
-                cbSelectedGPU.ItemsSource = {"---Select device---", "Realtek", "SoundBlaster"}  ' the order is important, check Appsettings.vb
-                cbSelectedGPU.SelectedIndex = 0
+				cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_AUDIO", "Options1"), Languages.GetTranslation("frmMain", "Options_AUDIO", "Options2"), Languages.GetTranslation("frmMain", "Options_AUDIO", "Options3")}  ' the order is important, check Appsettings.vb
+				cbSelectedGPU.SelectedIndex = 0
 
 			Case 2
 				Application.Settings.SelectedType = CleanType.GPU
                 cbSelectedGPU.IsEnabled = True
-                cbSelectedGPU.ItemsSource = {"---Select device---", "Nvidia_test", "AMD_test", "Intel_test"} 'the order is important, check Appsettings.vb
-                cbSelectedGPU.SelectedIndex = 0
+				cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_GPU", "Options1"), Languages.GetTranslation("frmMain", "Options_GPU", "Options2"), Languages.GetTranslation("frmMain", "Options_GPU", "Options3"), Languages.GetTranslation("frmMain", "Options_GPU", "Options4")} 'the order is important, check Appsettings.vb
+				cbSelectedGPU.SelectedIndex = 0
                 cbSelectedGPU.SelectedIndex = GPUIdentify()
 		End Select
 

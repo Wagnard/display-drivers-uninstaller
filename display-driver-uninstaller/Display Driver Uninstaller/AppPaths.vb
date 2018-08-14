@@ -128,7 +128,7 @@ Public Class AppPaths
 
 	Public Sub New(Optional ByVal createPaths As Boolean = True)
 		If createPaths Then
-			m_exefile = New Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath
+			m_exefile = Assembly.GetExecutingAssembly().Location
 			m_dirapp = Path.GetDirectoryName(AppExeFile)
 
 			m_roaming = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\config\systemprofile\AppData\Roaming\"
