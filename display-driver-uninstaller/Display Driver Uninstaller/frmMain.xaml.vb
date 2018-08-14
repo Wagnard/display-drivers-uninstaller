@@ -1,4 +1,4 @@
-﻿'    Display driver Uninstaller (DDU) a driver uninstaller / Cleaner for Windows
+﻿'    Display Driver Uninstaller (DDU) a driver uninstaller / Cleaner for Windows
 '    Copyright (C) <2013>  <DDU dev team>
 
 '    This program is free software: you can redistribute it and/or modify
@@ -52,34 +52,46 @@ Public Class frmMain
 
 	Private Sub Cleandriverstore(ByVal config As ThreadSettings)
 		Dim catalog As String = ""
-		Dim CurrentProvider As String = ""
+		Dim CurrentProvider As String() = Nothing
 		UpdateTextMethod("Executing Driver Store cleanUP(finding OEM step)...")
 		Application.Log.AddMessage("Executing Driver Store cleanUP(Find OEM)...")
 		'Check the driver from the driver store  ( oemxx.inf)
 
 		UpdateTextMethod(UpdateTextTranslated(0))
 
-		Select Case config.SelectedGPU
-			Case GPUVendor.Nvidia
-				CurrentProvider = "NVIDIA"
-			Case GPUVendor.AMD
-				CurrentProvider = "Advanced Micro Devices"
-			Case GPUVendor.Intel
-				CurrentProvider = "Intel"
+		Select Case config.SelectedType
+			Case CleanType.GPU
+				Select Case config.SelectedGPU
+					Case GPUVendor.Nvidia
+						CurrentProvider = {"NVIDIA"}
+					Case GPUVendor.AMD
+						CurrentProvider = {"Advanced Micro Devices", "atitech", "advancedmicrodevices", "ati tech", "amd"}
+					Case GPUVendor.Intel
+						CurrentProvider = {"Intel"}
+					Case GPUVendor.None
+						CurrentProvider = {"None"}
+				End Select
+			Case CleanType.Audio
+				Select Case config.SelectedAUDIO
+					Case AudioVendor.Realtek
+						CurrentProvider = {"Realtek"}
+					Case AudioVendor.SoundBlaster
+						CurrentProvider = {"Creative"} 'Not verified.
+					Case AudioVendor.None
+						CurrentProvider = {"None"}
+				End Select
+			Case CleanType.None
+				CurrentProvider = {"None"}
+				Application.Log.AddWarningMessage("CleanType is none, it is unexpected")
 		End Select
-
 
 		For Each oem As Inf In GetOemInfList(Application.Paths.WinDir & "inf\")
 			If Not oem.IsValid Then
 				Continue For
 			End If
 
-			If StrContainsAny(oem.Provider, True, CurrentProvider) Or
-			   oem.Provider.ToLower.StartsWith("atitech") Or
-			   oem.Provider.ToLower.StartsWith("advancedmicrodevices") Or
-			   oem.Provider.ToLower.StartsWith("ati tech") Or
-			   oem.Provider.ToLower.StartsWith("amd") Then
-
+			If StrContainsAny(oem.Provider, True, CurrentProvider) Then
+				Microsoft.VisualBasic.MsgBox("after strcontain")
 				'before removing the oem we try to get the original inf name (win8+)
 				If win8higher Then
 					Try
@@ -5800,13 +5812,13 @@ Public Class frmMain
 				End If
 			End Using
 
-			Return GPUVendor.Nvidia
+			Return GPUVendor.None
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 
 			MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 
-			Return GPUVendor.Nvidia
+			Return GPUVendor.None
 		End Try
 	End Function
 
@@ -5867,6 +5879,8 @@ Public Class frmMain
 
 	Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
 		EnableDriverSearch(True, False)
+		MsgBox(Application.Settings.SelectedType.ToString)
+		MsgBox(Application.Settings.SelectedGPU.ToString)
 	End Sub
 
 	Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
@@ -5892,15 +5906,17 @@ Public Class frmMain
 	Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
 		Dim frmOptions As New frmOptions
 
-		With frmOptions
-			.Owner = Me
-			.Icon = Me.Icon
-			.Background = Me.Background
-			.DataContext = Me.DataContext
-			.WindowStartupLocation = WindowStartupLocation.CenterOwner
-		End With
+        With frmOptions
+            .Owner = Me
+            .Background = Me.Background
+            .DataContext = Me.DataContext
+            .Icon = Me.Icon
+            .SizeToContent = SizeToContent.WidthAndHeight
+            .ResizeMode = Windows.ResizeMode.CanResizeWithGrip
+            .WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+        End With
 
-		frmOptions.ShowDialog()
+        frmOptions.ShowDialog()
     End Sub
 
 	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click, ToSMenuItem.Click, TranslatorsMenuItem.Click, PatronMenuItem.Click
@@ -5975,8 +5991,13 @@ Public Class frmMain
 		End If
 
 		Try
-			cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
+			'cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
+			cbSelectedType.ItemsSource = {"---Select device type---", "Audio", "GPU"}
+			cbSelectedGPU.ItemsSource = {"Select device", "Nvidia_test", "AMD_test", "Intel_test"}
+			'cbSelectedType.ItemsSource = [Enum].GetValues(GetType(CleanType))
 
+
+			cbSelectedType.SelectedIndex = 0
 			If Not Application.LaunchOptions.Silent Then
 				If WinForm.SystemInformation.BootMode <> Forms.BootMode.FailSafe Then
 					CheckUpdate.CheckUpdates()
@@ -5991,7 +6012,7 @@ Public Class frmMain
 
 			GetGPUDetails(True)
 
-			Application.Settings.SelectedGPU = GPUIdentify()
+			'Application.Settings.SelectedGPU = GPUIdentify()
 
 			' -------------------------------------
 			' Check if this is an AMD Enduro system
@@ -6100,12 +6121,29 @@ Public Class frmMain
 
 			UpdateTextMethod(UpdateTextTranslated(19))
 
-			Select Case config.SelectedGPU
-				Case GPUVendor.Nvidia : vendidexpected = "VEN_10DE" : VendCHIDGPU = "VEN_10DE&CC_03"
-				Case GPUVendor.AMD : vendidexpected = "VEN_1002" : VendCHIDGPU = "VEN_1002&CC_03"
-				Case GPUVendor.Intel : vendidexpected = "VEN_8086" : VendCHIDGPU = "VEN_8086&CC_03"
+			Select Case config.SelectedType
+				Case CleanType.GPU
+					Select Case config.SelectedGPU
+						Case GPUVendor.Nvidia : vendidexpected = "VEN_10DE" : VendCHIDGPU = "VEN_10DE&CC_03"
+						Case GPUVendor.AMD : vendidexpected = "VEN_1002" : VendCHIDGPU = "VEN_1002&CC_03"
+						Case GPUVendor.Intel : vendidexpected = "VEN_8086" : VendCHIDGPU = "VEN_8086&CC_03"
+						Case GPUVendor.None : vendidexpected = "NONE"
+					End Select
+				Case CleanType.Audio
+					Select Case config.SelectedAUDIO
+						Case AudioVendor.Realtek
+							vendidexpected = "VEN_10EC"
+						Case AudioVendor.SoundBlaster
+							vendidexpected = "VEN_1102"
+						Case AudioVendor.None
+							vendidexpected = "NONE"
+					End Select
 			End Select
 
+			If vendidexpected = "NONE" Then
+				Application.Log.AddWarningMessage("VendID is NONE, this is unexpected, cleaning aborted.")
+				Exit Sub
+			End If
 
 			UpdateTextMethod(UpdateTextTranslated(20) + " " & config.SelectedGPU.ToString() & " " + UpdateTextTranslated(21))
 			Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
@@ -6132,66 +6170,66 @@ Public Class frmMain
 			'----------------------------------------------
 			'Here I remove AMD HD Audio bus (System device)
 			'----------------------------------------------
+			If config.SelectedType = CleanType.GPU Then
+				Try
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "VEN_1002", True)
+					If found.Count > 0 Then
+						For Each SystemDevice As SetupAPI.Device In found
+							For Each Sibling In SystemDevice.SiblingDevices
+								If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
+									For Each compatibleid In SystemDevice.CompatibleIDs
+										If IsNullOrWhitespace(compatibleid) Then Continue For
+										If StrContainsAny(compatibleid, True, "PCI\CC_040300") Then
+											Application.Log.AddMessage("Removing AMD HD Audio Bus (amdkmafd)")
 
-			Try
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "VEN_1002", True)
-				If found.Count > 0 Then
-					For Each SystemDevice As SetupAPI.Device In found
-						For Each Sibling In SystemDevice.SiblingDevices
-							If StrContainsAny(Sibling.ClassName, True, "DISPLAY") Then
-								For Each compatibleid In SystemDevice.CompatibleIDs
-									If IsNullOrWhitespace(compatibleid) Then Continue For
-									If StrContainsAny(compatibleid, True, "PCI\CC_040300") Then
-										Application.Log.AddMessage("Removing AMD HD Audio Bus (amdkmafd)")
-
-										Win32.SetupAPI.UninstallDevice(SystemDevice)
-									End If
-								Next
-
-								'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
-								Try
-									donotremoveamdhdaudiobusfiles = False
-									Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
-										If subregkey IsNot Nothing Then
-											For Each child2 As String In subregkey.GetSubKeyNames()
-												If IsNullOrWhitespace(child2) Then Continue For
-
-												If StrContainsAny(child2, True, "ven_1002") Then
-													Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey, child2)
-														If regkey3 IsNot Nothing Then
-															For Each child3 As String In regkey3.GetSubKeyNames()
-																If IsNullOrWhitespace(child3) Then Continue For
-																'need to test more this code. got an error on a friend computer (Wagnard)(Possibly fixed with the trycast)
-																array = TryCast(MyRegistry.OpenSubKey(regkey3, child3).GetValue("LowerFilters"), String())
-																If (array IsNot Nothing) AndAlso array.Length > 0 Then
-																	For Each entry As String In array
-																		If IsNullOrWhitespace(entry) Then Continue For
-
-																		If StrContainsAny(entry, True, "amdkmafd") Then
-																			Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
-																			donotremoveamdhdaudiobusfiles = True
-																		End If
-																	Next
-																End If
-															Next
-														End If
-													End Using
-												End If
-											Next
+											Win32.SetupAPI.UninstallDevice(SystemDevice)
 										End If
-									End Using
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-								End Try
-							End If
-						Next
-					Next
-				End If
-			Catch ex As Exception
-				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-				Application.Log.AddException(ex)
-			End Try
+									Next
 
+									'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
+									Try
+										donotremoveamdhdaudiobusfiles = False
+										Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
+											If subregkey IsNot Nothing Then
+												For Each child2 As String In subregkey.GetSubKeyNames()
+													If IsNullOrWhitespace(child2) Then Continue For
+
+													If StrContainsAny(child2, True, "ven_1002") Then
+														Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey, child2)
+															If regkey3 IsNot Nothing Then
+																For Each child3 As String In regkey3.GetSubKeyNames()
+																	If IsNullOrWhitespace(child3) Then Continue For
+																	'need to test more this code. got an error on a friend computer (Wagnard)(Possibly fixed with the trycast)
+																	array = TryCast(MyRegistry.OpenSubKey(regkey3, child3).GetValue("LowerFilters"), String())
+																	If (array IsNot Nothing) AndAlso array.Length > 0 Then
+																		For Each entry As String In array
+																			If IsNullOrWhitespace(entry) Then Continue For
+
+																			If StrContainsAny(entry, True, "amdkmafd") Then
+																				Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
+																				donotremoveamdhdaudiobusfiles = True
+																			End If
+																		Next
+																	End If
+																Next
+															End If
+														End Using
+													End If
+												Next
+											End If
+										End Using
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+							Next
+						Next
+					End If
+				Catch ex As Exception
+					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					Application.Log.AddException(ex)
+				End Try
+			End If
 			'-----------------------
 			'Removing NVVHCI
 			'-----------------------
@@ -6216,42 +6254,42 @@ Public Class frmMain
 			' ----------------------
 			' Removing the videocard
 			' ----------------------
-
-			Try
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False)
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						Win32.SetupAPI.UninstallDevice(d)
-					Next
-					found.Clear()
-				End If
-			Catch ex As Exception
-				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-				Application.Log.AddException(ex)
-				config.GPURemovedSuccess = False
-				Exit Sub
-			End Try
-
-
-			'Try
-			'	Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected, False)
-			'	If found.Count > 0 Then
-			'		For Each d As SetupAPI.Device In found
-
-			'			Win32.SetupAPI.UninstallDevice(d)
-
-			'		Next
-			'	End If
-
-			'Catch ex As Exception
-			'	'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-			'	Application.Log.AddException(ex)
-			'End Try
+			If config.SelectedType = CleanType.GPU Then
+				Try
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False)
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							Win32.SetupAPI.UninstallDevice(d)
+						Next
+						found.Clear()
+					End If
+				Catch ex As Exception
+					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					Application.Log.AddException(ex)
+					config.GPURemovedSuccess = False
+					Exit Sub
+				End Try
 
 
-			UpdateTextMethod(UpdateTextTranslated(23))
-			Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
+				'Try
+				'	Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("display", vendidexpected, False)
+				'	If found.Count > 0 Then
+				'		For Each d As SetupAPI.Device In found
 
+				'			Win32.SetupAPI.UninstallDevice(d)
+
+				'		Next
+				'	End If
+
+				'Catch ex As Exception
+				'	'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+				'	Application.Log.AddException(ex)
+				'End Try
+
+
+				UpdateTextMethod(UpdateTextTranslated(23))
+				Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
+			End If
 
 			Cleandriverstore(config)
 
@@ -6399,54 +6437,56 @@ Public Class frmMain
 			'removing monitor and hidden monitor
 
 
+			If config.SelectedType = CleanType.GPU Then
 
-			If config.RemoveMonitors Then
-				Application.Log.AddMessage("SetupAPI Remove Monitor started")
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("monitor", Nothing, False)
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						SetupAPI.UninstallDevice(d)
-					Next
-				End If
-				UpdateTextMethod(UpdateTextTranslated(27))
-			End If
-
-
-			'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont want that
-			'espcially if we are not using an AMD GPU
-
-			If config.RemoveAMDKMPFD Then
-				UpdateTextMethod("Start - Check for AMDKMPFD system device.")
-				Try
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "0a0", False)
+				If config.RemoveMonitors Then
+					Application.Log.AddMessage("SetupAPI Remove Monitor started")
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("monitor", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
-							If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
-								If d.LowerFilters IsNot Nothing AndAlso StrContainsAny(d.LowerFilters(0), True, "amdkmpfd") Then
-									If win10 Then
-										SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\PCI.inf", True)
-									Else
-										SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\machine.inf", True)
-									End If
-								End If
-							End If
+							SetupAPI.UninstallDevice(d)
 						Next
 					End If
-					UpdateTextMethod("End - Check for AMDKMPFD system device.")
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-				End Try
-
-				UpdateTextMethod(UpdateTextTranslated(28))
+					UpdateTextMethod(UpdateTextTranslated(27))
+				End If
 
 
-				'We now try to remove the service AMDPMPFD if its lowerfilter is not found
-				If config.Restart Or config.Shutdown Then
-					If Not Checkamdkmpfd() Then
-						UpdateTextMethod("Start - Check for AMDKMPFD service.")
-						CleanupEngine.Cleanserviceprocess({"amdkmpfd"})
-						UpdateTextMethod("End - Check for AMDKMPFD service.")
+				'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont want that
+				'espcially if we are not using an AMD GPU
+
+				If config.RemoveAMDKMPFD Then
+					UpdateTextMethod("Start - Check for AMDKMPFD system device.")
+					Try
+						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "0a0", False)
+						If found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
+									If d.LowerFilters IsNot Nothing AndAlso StrContainsAny(d.LowerFilters(0), True, "amdkmpfd") Then
+										If win10 Then
+											SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\PCI.inf", True)
+										Else
+											SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\machine.inf", True)
+										End If
+									End If
+								End If
+							Next
+						End If
+						UpdateTextMethod("End - Check for AMDKMPFD system device.")
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+						'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					End Try
+
+					UpdateTextMethod(UpdateTextTranslated(28))
+
+
+					'We now try to remove the service AMDPMPFD if its lowerfilter is not found
+					If config.Restart Or config.Shutdown Then
+						If Not Checkamdkmpfd() Then
+							UpdateTextMethod("Start - Check for AMDKMPFD service.")
+							CleanupEngine.Cleanserviceprocess({"amdkmpfd"})
+							UpdateTextMethod("End - Check for AMDKMPFD service.")
+						End If
 					End If
 				End If
 			End If
@@ -6621,12 +6661,14 @@ Public Class frmMain
 			'EnableDriverSearch(True, True)
 
 			'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-			KillGPUStatsProcesses()
-			'this shouldn't be slow, so it isn't on a thread/background worker
+			If Application.Settings.SelectedType = CleanType.GPU Then
+				KillGPUStatsProcesses()
+				'this shouldn't be slow, so it isn't on a thread/background worker
+			End If
 
 			SystemRestore()
-		End If
-	End Sub
+			End If
+    End Sub
 
 	Private Sub StartThread(ByVal config As ThreadSettings)
 		Try
@@ -7185,6 +7227,7 @@ Public Class frmMain
 	End Sub
 	Private Sub Delete(ByVal filename As String)
 		FileIO.Delete(filename)
+		CleanupEngine.RemoveSharedDlls(filename)
 	End Sub
 
 	Private Sub StartService(ByVal service As String)
@@ -7398,6 +7441,52 @@ Public Class frmMain
 
 	Private Sub cbSelectedGPU_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedGPU.SelectionChanged
 
+		Select Case cbSelectedType.SelectedIndex
+
+			Case CleanType.None
+				Application.Settings.SelectedGPU = GPUVendor.None
+				Application.Settings.SelectedAudio = AudioVendor.None
+				ButtonsPanel.IsEnabled = False
+			Case CleanType.Audio
+				Select Case cbSelectedGPU.SelectedIndex
+
+					Case 0
+						Application.Settings.SelectedGPU = GPUVendor.None
+						Application.Settings.SelectedAudio = AudioVendor.None
+						ButtonsPanel.IsEnabled = False
+					Case 1
+						Application.Settings.SelectedAudio = AudioVendor.Realtek
+						cbSelectedGPU.IsEnabled = True
+						ButtonsPanel.IsEnabled = True
+					Case 2
+						Application.Settings.SelectedAudio = AudioVendor.SoundBlaster
+						cbSelectedGPU.IsEnabled = True
+						ButtonsPanel.IsEnabled = True
+
+				End Select
+			Case CleanType.GPU
+
+				Select Case cbSelectedGPU.SelectedIndex
+
+					Case 0
+						Application.Settings.SelectedGPU = GPUVendor.None
+						Application.Settings.SelectedAudio = AudioVendor.None
+						ButtonsPanel.IsEnabled = False
+					Case 1
+						Application.Settings.SelectedGPU = GPUVendor.Nvidia
+						cbSelectedGPU.IsEnabled = True
+						ButtonsPanel.IsEnabled = True
+					Case 2
+						Application.Settings.SelectedGPU = GPUVendor.AMD
+						cbSelectedGPU.IsEnabled = True
+						ButtonsPanel.IsEnabled = True
+					Case 3
+						Application.Settings.SelectedGPU = GPUVendor.Intel
+						cbSelectedGPU.IsEnabled = True
+						ButtonsPanel.IsEnabled = True
+				End Select
+
+		End Select
 		If Application.Settings.SelectedGPU = GPUVendor.Nvidia Then
 			btnCleanGfeDownloads.IsEnabled = True
 			btnCleanGfeDownloads.Visibility = Windows.Visibility.Visible
@@ -7405,5 +7494,30 @@ Public Class frmMain
 			btnCleanGfeDownloads.IsEnabled = False
 			btnCleanGfeDownloads.Visibility = Windows.Visibility.Hidden
 		End If
+	End Sub
+
+	Private Sub cbSelectedType_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedType.SelectionChanged
+
+		Select Case cbSelectedType.SelectedIndex
+			Case 0
+				Application.Settings.SelectedType = CleanType.None
+				cbSelectedGPU.SelectedIndex = 0
+				cbSelectedGPU.IsEnabled = False
+
+
+			Case 1
+				Application.Settings.SelectedType = CleanType.Audio
+				cbSelectedGPU.IsEnabled = True
+                cbSelectedGPU.ItemsSource = {"---Select device---", "Realtek", "SoundBlaster"}  ' the order is important, check Appsettings.vb
+                cbSelectedGPU.SelectedIndex = 0
+
+			Case 2
+				Application.Settings.SelectedType = CleanType.GPU
+                cbSelectedGPU.IsEnabled = True
+                cbSelectedGPU.ItemsSource = {"---Select device---", "Nvidia_test", "AMD_test", "Intel_test"} 'the order is important, check Appsettings.vb
+                cbSelectedGPU.SelectedIndex = 0
+                cbSelectedGPU.SelectedIndex = GPUIdentify()
+		End Select
+
 	End Sub
 End Class

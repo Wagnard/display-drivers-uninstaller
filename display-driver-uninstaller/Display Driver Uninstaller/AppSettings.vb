@@ -5,6 +5,7 @@ Imports System.Reflection
 Imports System.Collections.ObjectModel
 
 Public Enum GPUVendor As Int32
+	None
 	Nvidia
 	AMD
 	Intel

@@ -25,5 +25,5 @@ If DDU is not starting:
 -Send the logs, if any, located within the DDU folder in the DDU Logs folder.
 
 
-New driver is not installing are an old driver from windows updare is getting installed by itself?
+New driver is not installing and an old driver from windows update is getting installed by itself?
 -You had the internet connected and it should be disconnnected when running DDU and until you re-install the new driver

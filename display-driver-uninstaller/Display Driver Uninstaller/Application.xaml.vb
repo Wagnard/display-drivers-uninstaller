@@ -256,7 +256,7 @@ Class Application
 
 	Private Sub AppClosing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
 		Try
-			If frmMain.workThread IsNot Nothing Then					' workThread running, cleaning in progress!
+			If frmMain.workThread IsNot Nothing Then                    ' workThread running, cleaning in progress!
 				' Should take few milliseconds...	
 				If frmMain.workThread.IsAlive Then Thread.Sleep(200)
 				If frmMain.workThread.IsAlive Then Thread.Sleep(2000)
@@ -268,7 +268,7 @@ Class Application
 				End If
 			End If
 		Catch ex As Exception
-			e.Cancel = True			' frmMain.workThread may be null after checking
+			e.Cancel = True         ' frmMain.workThread may be null after checking
 		End Try
 	End Sub
 
@@ -330,7 +330,7 @@ Class Application
 
 			SaveData()
 		Finally
-			Me.Shutdown(0)	' Close application completely
+			Me.Shutdown(0)  ' Close application completely
 		End Try
 	End Sub
 
@@ -417,16 +417,16 @@ Class Application
 					If LaunchOptions.Restart Then
 						Thread.Sleep(2000)
 						RestartComputer()
-						Me.Shutdown(0)			' Skip loading.
+						Me.Shutdown(0)          ' Skip loading.
 						Exit Sub
 					End If
 					If LaunchOptions.Shutdown Then
 						Thread.Sleep(2000)
 						ShutdownComputer()
-						Me.Shutdown(0)			' Skip loading.
+						Me.Shutdown(0)          ' Skip loading.
 						Exit Sub
 					End If
-					Me.Shutdown(0)			' Skip loading.
+					Me.Shutdown(0)          ' Skip loading.
 					Exit Sub
 				End If
 			Catch ex As Exception
@@ -452,15 +452,15 @@ Class Application
 
 			Try
 
-                'We check if there are any reboot from windows update pending. and if so we quit.
-                If Not LaunchOptions.Silent AndAlso WinUpdatePending() Then
-                    MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
-                    Log.SaveToFile()
-                    Me.Shutdown(0)
-                    Exit Sub
-                End If
+				'We check if there are any reboot from windows update pending. and if so we quit.
+				If Not LaunchOptions.Silent AndAlso WinUpdatePending() Then
+					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
+					Log.SaveToFile()
+					Me.Shutdown(0)
+					Exit Sub
+				End If
 
-            Catch ex As Exception
+			Catch ex As Exception
 				Log.AddException(ex)
 				Log.SaveToFile()
 				Me.Shutdown(0)
@@ -483,13 +483,13 @@ Class Application
 			End If
 
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				If ExtractPAExec() Then				' Extract PAExec to \x64 or \x86 dir
-                    If LaunchAsSystem() Then
-                        ' Launched as System, close this instance, True = close, false = continue
-                        Log.SaveToFile()
-                        Me.Shutdown(0)
-                        Exit Sub
-                    End If
+				If ExtractPAExec() Then             ' Extract PAExec to \x64 or \x86 dir
+					If LaunchAsSystem() Then
+						' Launched as System, close this instance, True = close, false = continue
+						Log.SaveToFile()
+						Me.Shutdown(0)
+						Exit Sub
+					End If
 				End If
 			End If
 
@@ -502,7 +502,7 @@ Class Application
 			End Try
 		Catch ex As Exception
 			Log.AddException(ex, "Some part of application startup failed!" & CRLF & ">> Application_Startup()")
-			Log.SaveToFile()	' Save to file
+			Log.SaveToFile()    ' Save to file
 
 			MessageBox.Show("Launching Application failed!" & CRLF &
 			 "A problem occurred in one of the module, send your DDU logs to the developer." & CRLF &

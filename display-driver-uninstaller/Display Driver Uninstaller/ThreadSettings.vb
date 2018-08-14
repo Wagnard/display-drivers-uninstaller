@@ -9,6 +9,8 @@ Public Class ThreadSettings
 	Public Property PreventClose As Boolean = False
 
 	Public Property SelectedGPU As GPUVendor
+	Public Property SelectedAUDIO As AudioVendor
+	Public Property SelectedType As CleanType
 	Public Property AppName As String
 
 	Public Property WinVersion As OSVersion

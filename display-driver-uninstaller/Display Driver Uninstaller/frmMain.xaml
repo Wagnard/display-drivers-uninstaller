@@ -17,9 +17,10 @@
 		<conv:BooleanToString x:Key="BoolToStr" TrueValue="x64" FalseValue="x86" />
 		<conv:EnumToTextConverter x:Key="EnumToText" />
 
-		<ImageBrush x:Key="logoAMD" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/amd_logo.png" Stretch="Uniform" AlignmentY="Bottom" />
-		<ImageBrush x:Key="logoNvidia" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/nvidia_logo.png" Stretch="Uniform" AlignmentY="Bottom" />
-		<ImageBrush x:Key="logoIntel" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/intel_logo.png" Stretch="Uniform" AlignmentY="Bottom" />
+        <ImageBrush x:Key="logoAMD" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/amd_logo.png" Stretch="Uniform" AlignmentY="Center" />
+        <ImageBrush x:Key="logoNvidia" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/nvidia_logo.png" Stretch="Uniform" AlignmentY="Center" />
+        <ImageBrush x:Key="logoIntel" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/intel_logo.png" Stretch="Uniform" AlignmentY="Center" />
+        <ImageBrush x:Key="logoRealtek" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/realtek-logo.png" Stretch="Uniform" AlignmentY="Center" />
 
 		<LinearGradientBrush x:Key="brushNvidia" EndPoint="0.5,1" StartPoint="0.5,0">
 			<GradientStop Color="#FFDCFFDC" Offset="0" />
@@ -31,6 +32,10 @@
 		</LinearGradientBrush>
 		<LinearGradientBrush x:Key="brushAmd" EndPoint="0.5,1" StartPoint="0.5,0">
 			<GradientStop Color="#FFFFE6E6" Offset="0" />
+			<GradientStop Color="White" Offset="1" />
+		</LinearGradientBrush>
+		<LinearGradientBrush x:Key="brushRealtek" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FFDCDCFF" Offset="0" />
 			<GradientStop Color="White" Offset="1" />
 		</LinearGradientBrush>
 	</Window.Resources>
@@ -46,6 +51,9 @@
 				</DataTrigger>
 				<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Intel}">
 					<Setter Property="Background" Value="{StaticResource brushIntel}"/>
+				</DataTrigger>
+				<DataTrigger Binding="{Binding Path=Settings.SelectedAudio, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
+					<Setter Property="Background" Value="{StaticResource brushRealtek}"/>
 				</DataTrigger>
 			</Style.Triggers>
 		</Style>
@@ -113,8 +121,8 @@
 
 		<DockPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="3" Margin="10,0">
 			<DockPanel DockPanel.Dock="Bottom" Grid.Row="1" Grid.Column="3" >
-				<ComboBox Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedItem="{Binding Settings.SelectedGPU, Mode=TwoWay}" DockPanel.Dock="Top" />
-				<Label Name="lblSelectedGPU" Content="lblSelectedGPU" DockPanel.Dock="Top" FontWeight="Bold" VerticalAlignment="Center" />
+				<ComboBox Name="cbSelectedType" HorizontalAlignment="Stretch" VerticalAlignment="Center"  DockPanel.Dock="Top" SelectedIndex="0" />
+				<ComboBox Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center"  DockPanel.Dock="Top" SelectedIndex="0" />
 			</DockPanel>
 
 			<Border DockPanel.Dock="Bottom" Margin="0,0,0,10">
@@ -130,7 +138,10 @@
 							<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Intel}">
 								<Setter Property="Background" Value="{StaticResource logoIntel}"/>
 							</DataTrigger>
-						</Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=Settings.SelectedAudio, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
+                                <Setter Property="Background" Value="{StaticResource logoRealtek}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
 					</Style>
 				</Border.Style>
 			</Border>

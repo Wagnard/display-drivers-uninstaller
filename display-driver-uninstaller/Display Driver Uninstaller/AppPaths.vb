@@ -107,8 +107,8 @@ Public Class AppPaths
 			m_programfilesx86 = value
 		End Set
 	End Property
-	''' <summary>Roaming Directory ( "C:\%Users%\AppData\Roaming\" most likely C:\Windows\System32\comfig\systemprofile\AppData\Roaming\)</summary>
-	Public Property Roaming As String
+    ''' <summary>Roaming Directory ( "C:\%Users%\AppData\Roaming\" most likely C:\Windows\System32\comfig\systemprofile\AppData\Roaming\)</summary>
+    Public Property Roaming As String
 		Get
 			Return m_roaming
 		End Get

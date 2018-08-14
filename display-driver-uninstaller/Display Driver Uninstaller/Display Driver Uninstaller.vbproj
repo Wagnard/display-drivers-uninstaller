@@ -225,5 +225,8 @@
   <ItemGroup>
     <Resource Include="Resources\become_a_patron_button.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\realtek-logo.PNG" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
