@@ -369,7 +369,7 @@ Class Application
 						process.Start()
 					Catch ex As ComponentModel.Win32Exception
 						Dim errCode As UInt32 = GetUInt32(ex.NativeErrorCode)
-						Dim msg As String = String.Format("Error:{0}{1}{0}{0}Message:{0}{2}", CRLF, GetErrorEnum(errCode), ex.Message)
+						Dim msg As String = String.Format("Error:{0}{1}{0}{0}Message:{0}{2}", CRLF, errCode, ex.Message)
 
 						If errCode = Errors.CANCELLED Then  'User pressed 'No' on UAC screen
 							msg = String.Format("Administrator rights are required to use application.{0}{0}{1}", CRLF, msg)
