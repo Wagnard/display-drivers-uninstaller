@@ -125,7 +125,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Cleaning Process/Services...")
 
-		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\AMD\services.cfg"))    '// add each line as String Array.
+		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\AMD\services.cfg"))	'// add each line as String Array.
 
 		Dim killpid As New ProcessStartInfo
 		killpid.FileName = "cmd.exe"
@@ -203,10 +203,10 @@ Public Class frmMain
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("ati.ace") Or
-				   child.ToLower.Contains("ati catalyst control center") Or
-				   child.ToLower.Contains("application profiles") Or
-				   child.ToLower.EndsWith("\px") Or
-				   child.ToLower.Contains("hydravision") Then
+					  child.ToLower.Contains("ati catalyst control center") Or
+					  child.ToLower.Contains("application profiles") Or
+					  child.ToLower.EndsWith("\px") Or
+					  child.ToLower.Contains("hydravision") Then
 
 						Delete(child)
 
@@ -817,7 +817,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\classroot.cfg"))  '// add each line as String Array.
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\classroot.cfg"))	'// add each line as String Array.
 
 
 		'-----------------
@@ -826,7 +826,7 @@ Public Class frmMain
 
 
 
-		CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\interface.cfg"))    '// add each line as String Array.
+		CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\interface.cfg"))	   '// add each line as String Array.
 
 		Application.Log.AddMessage("Instance class cleanUP")
 		Try
@@ -846,13 +846,13 @@ Public Class frmMain
 																wantedvalue2 = superkey.GetValue("FriendlyName", String.Empty).ToString
 																If Not IsNullOrWhitespace(wantedvalue2) Then
 																	If wantedvalue2.ToLower.Contains("ati mpeg") Or
-																 wantedvalue2.ToLower.Contains("amd mjpeg") Or
-																 wantedvalue2.ToLower.Contains("ati ticker") Or
-																 wantedvalue2.ToLower.Contains("mmace softemu") Or
-																 wantedvalue2.ToLower.Contains("mmace deinterlace") Or
-																 wantedvalue2.ToLower.Contains("amd video") Or
-																 wantedvalue2.ToLower.Contains("mmace procamp") Or
-																 wantedvalue2.ToLower.Contains("ati video") Then
+																	wantedvalue2.ToLower.Contains("amd mjpeg") Or
+																	wantedvalue2.ToLower.Contains("ati ticker") Or
+																	wantedvalue2.ToLower.Contains("mmace softemu") Or
+																	wantedvalue2.ToLower.Contains("mmace deinterlace") Or
+																	wantedvalue2.ToLower.Contains("amd video") Or
+																	wantedvalue2.ToLower.Contains("mmace procamp") Or
+																	wantedvalue2.ToLower.Contains("ati video") Then
 																		Try
 																			Deletesubregkey(Registry.ClassesRoot, "CLSID\" & child & "\Instance\" & child2)
 																		Catch ex As Exception
@@ -1237,7 +1237,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg"))   '// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg"))	  '// add each line as String Array.
 
 		Try
 
@@ -1710,7 +1710,7 @@ Public Class frmMain
 								Catch ex As Exception
 								End Try
 							End If
-							If StrContainsAny(child, True, "install") Then  'Just a safety here....
+							If StrContainsAny(child, True, "install") Then	'Just a safety here....
 								If regkey.OpenSubKey(child).SubKeyCount = 0 Then
 									Try
 										Deletesubregkey(regkey, child)
@@ -1921,7 +1921,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Removing known Packages")
 
-		packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg")   '// add each line as String Array.
+		packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg")	  '// add each line as String Array.
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 			"Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -1960,7 +1960,7 @@ Public Class frmMain
 		End Try
 
 		If IntPtr.Size = 8 Then
-			packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg")   '// add each line as String Array.
+			packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg")	  '// add each line as String Array.
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 				 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -2287,71 +2287,71 @@ Public Class frmMain
 			End If
 		End Using
 
-        '      Dim OldValue As String = Nothing
-        'Select Case System.Windows.Forms.SystemInformation.BootMode
-        '          Case Forms.BootMode.FailSafe
-        '              If (CheckServiceStartupType("Schedule")) <> "4" Then
-        '                  StartService("Schedule")
-        '              Else
-        '                  OldValue = CheckServiceStartupType("Schedule")
-        '                  SetServiceStartupType("Schedule", "3")
-        '                  StartService("Schedule")
-        '              End If
-        '	Case Forms.BootMode.FailSafeWithNetwork
-        '              If (CheckServiceStartupType("Schedule")) <> "4" Then
-        '                  StartService("Schedule")
-        '              Else
-        '                  OldValue = CheckServiceStartupType("Schedule")
-        '                  SetServiceStartupType("Schedule", "3")
-        '                  StartService("Schedule")
-        '              End If
-        '	Case Forms.BootMode.Normal
-        '		'Usually this service is Running in normal mode, we *could* in the future check all this.
-        '              If (CheckServiceStartupType("Schedule")) <> "4" Then
-        '                  StartService("Schedule")
-        '              Else
-        '                  OldValue = CheckServiceStartupType("Schedule")
-        '                  SetServiceStartupType("Schedule", "3")
-        '                  StartService("Schedule")
-        '              End If
-        '      End Select
-        'Using tsc As New TaskSchedulerControl(config)
-        '	For Each task As Task In tsc.GetAllTasks
-        '		If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
-        '			Try
-        '				task.Delete()
-        '			Catch ex As Exception
-        '				Application.Log.AddException(ex)
-        '			End Try
-        '			Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
-        '		End If
-        '	Next
-        'End Using
+		'      Dim OldValue As String = Nothing
+		'Select Case System.Windows.Forms.SystemInformation.BootMode
+		'          Case Forms.BootMode.FailSafe
+		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
+		'                  StartService("Schedule")
+		'              Else
+		'                  OldValue = CheckServiceStartupType("Schedule")
+		'                  SetServiceStartupType("Schedule", "3")
+		'                  StartService("Schedule")
+		'              End If
+		'	Case Forms.BootMode.FailSafeWithNetwork
+		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
+		'                  StartService("Schedule")
+		'              Else
+		'                  OldValue = CheckServiceStartupType("Schedule")
+		'                  SetServiceStartupType("Schedule", "3")
+		'                  StartService("Schedule")
+		'              End If
+		'	Case Forms.BootMode.Normal
+		'		'Usually this service is Running in normal mode, we *could* in the future check all this.
+		'              If (CheckServiceStartupType("Schedule")) <> "4" Then
+		'                  StartService("Schedule")
+		'              Else
+		'                  OldValue = CheckServiceStartupType("Schedule")
+		'                  SetServiceStartupType("Schedule", "3")
+		'                  StartService("Schedule")
+		'              End If
+		'      End Select
+		'Using tsc As New TaskSchedulerControl(config)
+		'	For Each task As Task In tsc.GetAllTasks
+		'		If StrContainsAny(task.Name, True, "AMD Updater", "StartCN") Then
+		'			Try
+		'				task.Delete()
+		'			Catch ex As Exception
+		'				Application.Log.AddException(ex)
+		'			End Try
+		'			Application.Log.AddMessage("TaskScheduler: " & task.Name & " as been removed")
+		'		End If
+		'	Next
+		'End Using
 
-        'Select Case System.Windows.Forms.SystemInformation.BootMode
-        '	Case Forms.BootMode.FailSafe
-        '              StopService("Schedule")
-        '              If OldValue IsNot Nothing Then
-        '                  SetServiceStartupType("Schedule", OldValue)
-        '              End If
-        '	Case Forms.BootMode.FailSafeWithNetwork
-        '              StopService("Schedule")
-        '              If OldValue IsNot Nothing Then
-        '                  SetServiceStartupType("Schedule", OldValue)
-        '              End If
-        '	Case Forms.BootMode.Normal
-        '              'Usually this service is running in normal mode, we don't need to stop it.
-        '              If OldValue IsNot Nothing Then
-        '                  StopService("Schedule")
-        '                  SetServiceStartupType("Schedule", OldValue)
-        '              End If
-        'End Select
+		'Select Case System.Windows.Forms.SystemInformation.BootMode
+		'	Case Forms.BootMode.FailSafe
+		'              StopService("Schedule")
+		'              If OldValue IsNot Nothing Then
+		'                  SetServiceStartupType("Schedule", OldValue)
+		'              End If
+		'	Case Forms.BootMode.FailSafeWithNetwork
+		'              StopService("Schedule")
+		'              If OldValue IsNot Nothing Then
+		'                  SetServiceStartupType("Schedule", OldValue)
+		'              End If
+		'	Case Forms.BootMode.Normal
+		'              'Usually this service is running in normal mode, we don't need to stop it.
+		'              If OldValue IsNot Nothing Then
+		'                  StopService("Schedule")
+		'                  SetServiceStartupType("Schedule", OldValue)
+		'              End If
+		'End Select
 
-        'Killing Explorer.exe to help releasing file that were open.
-        While Thread2Finished <> True
-            Thread.Sleep(500)
-        End While
-        Application.Log.AddMessage("Killing Explorer.exe")
+		'Killing Explorer.exe to help releasing file that were open.
+		While Thread2Finished <> True
+			Thread.Sleep(500)
+		End While
+		Application.Log.AddMessage("Killing Explorer.exe")
 		KillProcess("explorer")
 
 	End Sub
@@ -2378,7 +2378,7 @@ Public Class frmMain
 					Application.Log.AddMessage(process.StandardOutput.ReadToEnd())
 
 					process.Close()
-				End Using   ' Dispose() !
+				End Using	' Dispose() !
 			Next
 
 		Catch ex As Exception
@@ -3231,8 +3231,8 @@ Public Class frmMain
 		End If
 
 		filePath = config.Paths.System32
-        Dim files() As String = IO.Directory.GetFiles(filePath, "nvdisp*.*")
-        For i As Integer = 0 To files.Length - 1
+		Dim files() As String = IO.Directory.GetFiles(filePath, "nvdisp*.*")
+		For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
 
 				Delete(files(i))
@@ -3241,8 +3241,8 @@ Public Class frmMain
 		Next
 
 		filePath = config.Paths.System32
-        files = IO.Directory.GetFiles(filePath, "nvhdagenco*.*")
-        For i As Integer = 0 To files.Length - 1
+		files = IO.Directory.GetFiles(filePath, "nvhdagenco*.*")
+		For i As Integer = 0 To files.Length - 1
 			If Not IsNullOrWhitespace(files(i)) Then
 
 				Delete(files(i))
@@ -3670,7 +3670,7 @@ Public Class frmMain
 		If removegfe Then 'When removing GFE only
 			CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
 		Else
-			CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interface.cfg"))  '// add each line as String Array.
+			CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interface.cfg"))	'// add each line as String Array.
 		End If
 
 		Application.Log.AddMessage("Finished dcom/clsid/appid/typelib/interface cleanup")
@@ -3678,7 +3678,7 @@ Public Class frmMain
 		'end of deleting dcom stuff
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg"))  '// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg"))	'// add each line as String Array.
 
 		If removegfe Then
 			CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")) '// add each line as String Array.
@@ -4655,7 +4655,7 @@ Public Class frmMain
 				For Each child As String In regkey.GetSubKeyNames()
 					If IsNullOrWhitespace(child) Then Continue For
 					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-						"Software\Microsoft\Windows NT\CurrentVersion\ProfileList\" & child, False)
+					 "Software\Microsoft\Windows NT\CurrentVersion\ProfileList\" & child, False)
 						If subregkey IsNot Nothing Then
 							If Not IsNullOrWhitespace(subregkey.GetValue("ProfileImagePath", String.Empty).ToString) Then
 								wantedvalue = subregkey.GetValue("ProfileImagePath", String.Empty).ToString
@@ -4680,13 +4680,13 @@ Public Class frmMain
 				For Each child As String In regkey.GetSubKeyNames()
 					If IsNullOrWhitespace(child) Then Continue For
 					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-						 "Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\" & child, False)
+					  "Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\" & child, False)
 						If subregkey IsNot Nothing Then
 							If Not IsNullOrWhitespace(subregkey.GetValue("", String.Empty).ToString) Then
 								wantedvalue = subregkey.GetValue("", String.Empty).ToString
 								If IsNullOrWhitespace(wantedvalue) = False Then
 									If wantedvalue.ToLower.Contains("nvidia control panel") Or
-										   wantedvalue.ToLower.Contains("nvidia nview desktop manager") Then
+										wantedvalue.ToLower.Contains("nvidia nview desktop manager") Then
 										Try
 											Deletesubregkey(regkey, child)
 										Catch ex As Exception
@@ -5354,7 +5354,7 @@ Public Class frmMain
 
 		Application.Log.AddMessage("Cleaning Directory")
 
-		CleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg"))      '// add each line as String Array.
+		CleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg"))	  '// add each line as String Array.
 
 		filePath = System.Environment.SystemDirectory
 		Dim files() As String = IO.Directory.GetFiles(filePath + "\", "igfxcoin*.*")
@@ -5368,7 +5368,7 @@ Public Class frmMain
 		Next
 
 		filePath = Environment.GetFolderPath _
-			  (Environment.SpecialFolder.ProgramFiles) + "\Intel"
+		   (Environment.SpecialFolder.ProgramFiles) + "\Intel"
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
@@ -5725,7 +5725,7 @@ Public Class frmMain
 		KillProcess("explorer")
 	End Sub
 
-	Private Sub Checkpcieroot(ByVal config As ThreadSettings)   'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
+	Private Sub Checkpcieroot(ByVal config As ThreadSettings)	'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
 
 		UpdateTextMethod(UpdateTextTranslated(7))
 
@@ -5906,18 +5906,18 @@ Public Class frmMain
 	Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
 		Dim frmOptions As New frmOptions
 
-        With frmOptions
-            .Owner = Me
-            .Background = Me.Background
-            .DataContext = Me.DataContext
-            .Icon = Me.Icon
-            .SizeToContent = SizeToContent.WidthAndHeight
-            .ResizeMode = Windows.ResizeMode.CanResizeWithGrip
-            .WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
-        End With
+		With frmOptions
+			.Owner = Me
+			.Background = Me.Background
+			.DataContext = Me.DataContext
+			.Icon = Me.Icon
+			.SizeToContent = SizeToContent.WidthAndHeight
+			.ResizeMode = Windows.ResizeMode.CanResizeWithGrip
+			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+		End With
 
-        frmOptions.ShowDialog()
-    End Sub
+		frmOptions.ShowDialog()
+	End Sub
 
 	Private Sub AboutMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles AboutMenuItem.Click, ToSMenuItem.Click, TranslatorsMenuItem.Click, PatronMenuItem.Click
 		Dim menuItem As MenuItem = TryCast(sender, MenuItem)
@@ -6667,12 +6667,12 @@ Public Class frmMain
 			End If
 
 			SystemRestore()
-			End If
-    End Sub
+		End If
+	End Sub
 
 	Private Sub StartThread(ByVal config As ThreadSettings)
 		Try
-			If System.Diagnostics.Debugger.IsAttached Then          'TODO: remove when tested
+			If System.Diagnostics.Debugger.IsAttached Then			'TODO: remove when tested
 				Dim logEntry As New LogEntry() With {.Message = "Used settings for cleaning!"}
 
 				For Each p As PropertyInfo In config.GetType().GetProperties(BindingFlags.Public Or BindingFlags.Instance)
@@ -6817,7 +6817,7 @@ Public Class frmMain
 												Dim values() As String = regValue.Split(New String() {" ", "."}, StringSplitOptions.None)
 
 												For i As Int32 = 0 To values.Length - 1
-													If i = values.Length - 1 Then       'Last
+													If i = values.Length - 1 Then		'Last
 														sb.Append(values(i).PadLeft(2, "0"c))
 													ElseIf i > 0 Then
 														sb.AppendFormat("{0}.", values(i).PadLeft(2, "0"c))
@@ -6884,7 +6884,7 @@ Public Class frmMain
 			If uiContent IsNot Nothing Then
 				uiContent.IsEnabled = enabled
 			Else
-				cbLanguage.IsEnabled = enabled          'Selecting this at runtime maybe not good idea.. ;)
+				cbLanguage.IsEnabled = enabled			'Selecting this at runtime maybe not good idea.. ;)
 				cbSelectedGPU.IsEnabled = enabled
 				ButtonsPanel.IsEnabled = enabled
 				btnWuRestore.IsEnabled = enabled
@@ -6972,66 +6972,66 @@ Public Class frmMain
 		  "nvidiaInspector")
 	End Sub
 
-    Public Shared Sub EnableDriverSearch(ByVal enable As Boolean, ByVal silent As Boolean)
-        Dim version As OSVersion = Application.Settings.WinVersion
+	Public Shared Sub EnableDriverSearch(ByVal enable As Boolean, ByVal silent As Boolean)
+		Dim version As OSVersion = Application.Settings.WinVersion
 
-        If Not enable Then
-            Application.Log.AddMessage("Trying to disable search for Windows Updates", "Version", GetDescription(version))
-        End If
+		If Not enable Then
+			Application.Log.AddMessage("Trying to disable search for Windows Updates", "Version", GetDescription(version))
+		End If
 
-        If version >= OSVersion.Win7 Then
-            Try
-                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
-                    If regkey IsNot Nothing Then
-                        Dim regValue As Int32 = CInt(regkey.GetValue("SearchOrderConfig", Nothing))
+		If version >= OSVersion.Win7 Then
+			Try
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching", True)
+					If regkey IsNot Nothing Then
+						Dim regValue As Int32 = CInt(regkey.GetValue("SearchOrderConfig", Nothing))
 
-                        If regValue <> If(enable, 1, 0) Then
-                            regkey.SetValue("SearchOrderConfig", If(enable, 1, 0), RegistryValueKind.DWord)
+						If regValue <> If(enable, 1, 0) Then
+							regkey.SetValue("SearchOrderConfig", If(enable, 1, 0), RegistryValueKind.DWord)
 
-                            If Not silent Then
-                                If enable Then
-                                    MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
-                                Else
-                                    MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
-                                End If
-                            End If
-                        ElseIf enable <> False AndAlso Not silent Then
-                            MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
-                        End If
-                    End If
-                End Using
-            Catch ex As Exception
-                Application.Log.AddException(ex)
-            End Try
-        End If
+							If Not silent Then
+								If enable Then
+									MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+								Else
+									MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+								End If
+							End If
+						ElseIf enable <> False AndAlso Not silent Then
+							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
+						End If
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
+		End If
 
-        If version >= OSVersion.WinVista AndAlso version < OSVersion.Win7 Then
-            Try
-                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-                    Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate", Nothing))
+		If version >= OSVersion.WinVista AndAlso version < OSVersion.Win7 Then
+			Try
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
+					Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate", Nothing))
 
-                    If regkey IsNot Nothing Then
-                        If regValue <> If(enable, 0, 1) Then
-                            regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
+					If regkey IsNot Nothing Then
+						If regValue <> If(enable, 0, 1) Then
+							regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
 
-                            If Not silent Then
-                                If enable Then
-                                    MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
-                                Else
-                                    MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
-                                End If
-                            End If
-                        ElseIf enable <> False AndAlso Not silent Then
-                            MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
-                        End If
-                    End If
-                End Using
+							If Not silent Then
+								If enable Then
+									MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+								Else
+									MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+								End If
+							End If
+						ElseIf enable <> False AndAlso Not silent Then
+							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
+						End If
+					End If
+				End Using
 
-            Catch ex As Exception
-                Application.Log.AddException(ex)
-            End Try
-        End If
-    End Sub
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
+		End If
+	End Sub
 
 	Public Shared Function InfoDriverSearch() As Boolean
 		Dim version As OSVersion = Application.Settings.WinVersion
@@ -7128,7 +7128,7 @@ Public Class frmMain
 		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1), True)
 	End Function
 
-	Private Sub Temporarynvidiaspeedup(ByVal config As ThreadSettings)   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
+	Private Sub Temporarynvidiaspeedup(ByVal config As ThreadSettings)	 'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
 		Dim filePath As String = Nothing
 
 		Try
@@ -7292,7 +7292,7 @@ Public Class frmMain
 
 												For Each p As String In paths
 													If IsNullOrWhitespace(p) Then Continue For
-													If Not StrContainsAny(p, True, valuesToRemove) Then 'StrContainsAny(..) checks p and each valuesToRemove for empty/null
+													If Not StrContainsAny(p, True, valuesToRemove) Then	'StrContainsAny(..) checks p and each valuesToRemove for empty/null
 														newPaths.Add(p)
 													Else
 														removedPaths.Add(p)
@@ -7302,10 +7302,10 @@ Public Class frmMain
 												logEntry.Add(child2, String.Join(Environment.NewLine, paths))
 												logEntry.Add(KvP.Empty)
 
-												If removedPaths.Count > 0 Then  'Change regkey's value only if modified
+												If removedPaths.Count > 0 Then	'Change regkey's value only if modified
 													regkey.SetValue(child, String.Join(";", newPaths.ToArray()))
 
-													logEntry.Add(">> Removed", String.Join(Environment.NewLine, removedPaths.ToArray()))    'Log removed values
+													logEntry.Add(">> Removed", String.Join(Environment.NewLine, removedPaths.ToArray()))	'Log removed values
 												Else
 													logEntry.Add(">> Not modified")
 												End If
@@ -7497,6 +7497,34 @@ Public Class frmMain
 	End Sub
 
 	Private Sub cbSelectedType_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedType.SelectionChanged
+		'	I'm quite sure that manufacturer brands doesn't need to be translated...?
+
+		'	cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(AudioVendor))
+		'	cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
+		'	=> GPUVendor() / AudioVendor()   (enum array)
+		'	Works directly atm. Index is directly based on Enum order.
+
+		'	cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frm.....
+		'	=> String()		(String array)
+
+		'	If cbSelectedGPU.SelectedItem IsNot Nothing Then
+		'		Select Case DirectCast(cbSelectedGPU.SelectedItem, AudioVendor)		' if used Enum array =>  SelectedItem=enum  =>  Order is irrelevant
+		'			Case AudioVendor.Realtek
+		'			Case AudioVendor.SoundBlaster
+		'			Case Else
+		'		End Select
+		'	End If
+
+		' tl;dr; toggling controls on/off on codes is so... WinForms era. not WPF ;)
+
+		'	Suggestion: (If you really implement audio cleaning as well) 
+		'	move ALL cleaning code from frmMain to CleanupEngine (and maybe rename to something like GPUCleanupEngine etc.)
+		'	create new cleanupengine (AudioCleanupEngine etc.) for only audio stuff.
+		'	Eventually GPU and Audio code will be mixed if they are on some class... (frmMain)
+		'	eg. Removing gpu drivers accidentally removed part of Audio because shared functions accessed same regkeys.. not good.
+
+		'	+  https://docs.microsoft.com/en-us/visualstudio/ide/reference/implement-abstract-class
+
 
 		Select Case cbSelectedType.SelectedIndex
 			Case 0
@@ -7504,19 +7532,18 @@ Public Class frmMain
 				cbSelectedGPU.SelectedIndex = 0
 				cbSelectedGPU.IsEnabled = False
 
-
 			Case 1
 				Application.Settings.SelectedType = CleanType.Audio
 				cbSelectedGPU.IsEnabled = True
-				cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_AUDIO", "Options1"), Languages.GetTranslation("frmMain", "Options_AUDIO", "Options2"), Languages.GetTranslation("frmMain", "Options_AUDIO", "Options3")}  ' the order is important, check Appsettings.vb
+				cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_AUDIO", "Options1"), Languages.GetTranslation("frmMain", "Options_AUDIO", "Options2"), Languages.GetTranslation("frmMain", "Options_AUDIO", "Options3")}	' the order is important, check Appsettings.vb
 				cbSelectedGPU.SelectedIndex = 0
 
 			Case 2
 				Application.Settings.SelectedType = CleanType.GPU
-                cbSelectedGPU.IsEnabled = True
+				cbSelectedGPU.IsEnabled = True
 				cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_GPU", "Options1"), Languages.GetTranslation("frmMain", "Options_GPU", "Options2"), Languages.GetTranslation("frmMain", "Options_GPU", "Options3"), Languages.GetTranslation("frmMain", "Options_GPU", "Options4")} 'the order is important, check Appsettings.vb
 				cbSelectedGPU.SelectedIndex = 0
-                cbSelectedGPU.SelectedIndex = GPUIdentify()
+				cbSelectedGPU.SelectedIndex = GPUIdentify()
 		End Select
 
 	End Sub
