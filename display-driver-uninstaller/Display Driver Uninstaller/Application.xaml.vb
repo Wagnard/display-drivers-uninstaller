@@ -178,40 +178,40 @@ Class Application
 		End Try
 	End Sub
 
-    Private Sub KillGPUStatsProcesses()
-        ' Not sure for the x86 one...
-        ' Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
+	Private Sub KillGPUStatsProcesses()
+		' Not sure for the x86 one...
+		' Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
 
-        KillProcess(
-         "MSIAfterburner",
-          "PrecisionX_x64",
-          "PrecisionXServer_x64",
-          "PrecisionX",
-          "PrecisionXServer",
-          "RTSS",
-          "RTSSHooksLoader64",
-          "EncoderServer64",
-          "RTSSHooksLoader",
-          "EncoderServer",
-          "nvidiaInspector")
-    End Sub
+		KillProcess(
+		 "MSIAfterburner",
+		  "PrecisionX_x64",
+		  "PrecisionXServer_x64",
+		  "PrecisionX",
+		  "PrecisionXServer",
+		  "RTSS",
+		  "RTSSHooksLoader64",
+		  "EncoderServer64",
+		  "RTSSHooksLoader",
+		  "EncoderServer",
+		  "nvidiaInspector")
+	End Sub
 
-    Private Sub KillProcess(ByVal ParamArray processnames As String())
-        For Each processName As String In processnames
-            If String.IsNullOrEmpty(processName) Then
-                Continue For
-            End If
+	Private Sub KillProcess(ByVal ParamArray processnames As String())
+		For Each processName As String In processnames
+			If String.IsNullOrEmpty(processName) Then
+				Continue For
+			End If
 
-            For Each process As Process In process.GetProcessesByName(processName)
+			For Each process As Process In process.GetProcessesByName(processName)
 				Try
 					process.Kill()
 					Application.Settings.ProcessKilled = True
 				Catch ex As Exception
 					Log.AddExceptionWithValues(ex, "@KillProcess()", String.Concat("ProcessName: ", processName))
 				End Try
-            Next
-        Next
-    End Sub
+			Next
+		Next
+	End Sub
 
 	Private Sub LaunchMainWindow()
 		' >>> Loading UI <<<
@@ -256,7 +256,7 @@ Class Application
 
 	Private Sub AppClosing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
 		Try
-			If frmMain.workThread IsNot Nothing Then                    ' workThread running, cleaning in progress!
+			If frmMain.workThread IsNot Nothing Then					' workThread running, cleaning in progress!
 				' Should take few milliseconds...	
 				If frmMain.workThread.IsAlive Then Thread.Sleep(200)
 				If frmMain.workThread.IsAlive Then Thread.Sleep(2000)
@@ -268,7 +268,7 @@ Class Application
 				End If
 			End If
 		Catch ex As Exception
-			e.Cancel = True         ' frmMain.workThread may be null after checking
+			e.Cancel = True			' frmMain.workThread may be null after checking
 		End Try
 	End Sub
 
@@ -330,7 +330,7 @@ Class Application
 
 			SaveData()
 		Finally
-			Me.Shutdown(0)  ' Close application completely
+			Me.Shutdown(0)	' Close application completely
 		End Try
 	End Sub
 
@@ -339,24 +339,26 @@ Class Application
 		'	MessageBox.Show("Attach debugger!")		' for Debugging System process
 		'	IsDebug = True
 		'End If
-		Dim info As New LogEntry()
+		Dim info As LogEntry = Log.CreateEntry(Nothing, "The following paths are detected.")
 		info.Type = LogType.Event
 		info.Separator = " = "
-		info.Message = "The following paths are detected."
 
-		info.Add(Paths.AppExeFile)
-		info.Add(Paths.AppBase)
-		info.Add(Paths.Settings)
-		info.Add(Paths.Logs)
-		info.Add(Paths.AppBaseRoaming)
-		info.Add(Paths.Language)
-		info.Add(Paths.ProgramFiles)
-		info.Add(Paths.ProgramFilesx86)
-		info.Add(Paths.Roaming)
-		info.Add(Paths.System32)
-		info.Add(Paths.SystemDrive)
-		info.Add(Paths.UserPath)
-		info.Add(Paths.WinDir)
+		info.Add(If(FileIO.ExistsFile(Paths.AppExeFile), "[Found]", "[Not found]") + " AppExeFile", Paths.AppExeFile)
+		info.Add(If(FileIO.ExistsDir(Paths.AppBase), "[Found]", "[Not found]") + " AppBase", Paths.AppBase)
+		info.Add(If(FileIO.ExistsDir(Paths.Settings), "[Found]", "[Not found]") + " Settings", Paths.Settings)
+		info.Add(If(FileIO.ExistsDir(Paths.Logs), "[Found]", "[Not found]") + " Logs", Paths.Logs)
+		info.Add(If(FileIO.ExistsDir(Paths.Language), "[Found]", "[Not found]") + " Language", Paths.Language)
+		info.Add(KvP.Empty)
+		info.Add(If(FileIO.ExistsDir(Paths.ProgramFiles), "[Found]", "[Not found]") + " ProgramFiles", Paths.ProgramFiles)
+		info.Add(If(FileIO.ExistsDir(Paths.ProgramFilesx86), "[Found]", "[Not found]") + " ProgramFilesx86", Paths.ProgramFilesx86)
+		info.Add(KvP.Empty)
+		info.Add(If(FileIO.ExistsDir(Paths.Roaming), "[Found]", "[Not found]") + " Roaming", Paths.Roaming)
+		info.Add(If(FileIO.ExistsDir(Paths.AppBaseRoaming), "[Found]", "[Not found]") + " AppBaseRoaming", Paths.AppBaseRoaming)
+		info.Add(KvP.Empty)
+		info.Add(If(FileIO.ExistsDir(Paths.SystemDrive), "[Found]", "[Not found]") + " SystemDrive", Paths.SystemDrive)
+		info.Add(If(FileIO.ExistsDir(Paths.WinDir), "[Found]", "[Not found]") + " WinDir", Paths.WinDir)
+		info.Add(If(FileIO.ExistsDir(Paths.UserPath), "[Found]", "[Not found]") + " UserPath", Paths.UserPath)
+		info.Add(If(FileIO.ExistsDir(Paths.System32), "[Found]", "[Not found]") + " System32", Paths.System32)
 
 		Application.Log.Add(info)
 		KillGPUStatsProcesses()
@@ -369,9 +371,9 @@ Class Application
 						process.Start()
 					Catch ex As ComponentModel.Win32Exception
 						Dim errCode As UInt32 = GetUInt32(ex.NativeErrorCode)
-						Dim msg As String = String.Format("Error:{0}{1}{0}{0}Message:{0}{2}", CRLF, errCode, ex.Message)
+						Dim msg As String = String.Format("Error:{0}{1}{0}{0}Message:{0}{2}", CRLF, GetErrorEnum(errCode), ex.Message)
 
-						If errCode = Errors.CANCELLED Then  'User pressed 'No' on UAC screen
+						If errCode = Errors.CANCELLED Then	'User pressed 'No' on UAC screen
 							msg = String.Format("Administrator rights are required to use application.{0}{0}{1}", CRLF, msg)
 						End If
 
@@ -399,10 +401,10 @@ Class Application
 
 			Try
 				If LaunchOptions.HasLinkArg Then
-					If ProcessLinks() Then      ' Link found and opened?
+					If ProcessLinks() Then		' Link found and opened?
 						Log.AddMessage("Closed by HasLinkArg")
 						Log.SaveToFile()
-						Me.Shutdown(0)          ' Skip loading if link is opened
+						Me.Shutdown(0)			' Skip loading if link is opened
 						Exit Sub
 					End If
 				End If
@@ -417,16 +419,16 @@ Class Application
 					If LaunchOptions.Restart Then
 						Thread.Sleep(2000)
 						RestartComputer()
-						Me.Shutdown(0)          ' Skip loading.
+						Me.Shutdown(0)			' Skip loading.
 						Exit Sub
 					End If
 					If LaunchOptions.Shutdown Then
 						Thread.Sleep(2000)
 						ShutdownComputer()
-						Me.Shutdown(0)          ' Skip loading.
+						Me.Shutdown(0)			' Skip loading.
 						Exit Sub
 					End If
-					Me.Shutdown(0)          ' Skip loading.
+					Me.Shutdown(0)			' Skip loading.
 					Exit Sub
 				End If
 			Catch ex As Exception
@@ -483,7 +485,7 @@ Class Application
 			End If
 
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				If ExtractPAExec() Then             ' Extract PAExec to \x64 or \x86 dir
+				If ExtractPAExec() Then				' Extract PAExec to \x64 or \x86 dir
 					If LaunchAsSystem() Then
 						' Launched as System, close this instance, True = close, false = continue
 						Log.SaveToFile()
@@ -502,7 +504,7 @@ Class Application
 			End Try
 		Catch ex As Exception
 			Log.AddException(ex, "Some part of application startup failed!" & CRLF & ">> Application_Startup()")
-			Log.SaveToFile()    ' Save to file
+			Log.SaveToFile()	' Save to file
 
 			MessageBox.Show("Launching Application failed!" & CRLF &
 			 "A problem occurred in one of the module, send your DDU logs to the developer." & CRLF &
