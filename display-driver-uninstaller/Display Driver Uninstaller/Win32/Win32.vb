@@ -271,15 +271,16 @@ Namespace Win32
 
 		Friend Function GetErrorEnum(ByVal errCode As UInt32) As String
 			If [Enum].IsDefined(GetType(Errors), errCode) Then
-				Return String.Format(If(errCode > &HFFFFUI, "{0} (0x{1:X8})", "{0} (0x{1:X4})"), "ERROR_" & DirectCast(errCode, Errors).ToString(), errCode)
+				Return String.Format(ENUM_FORMAT, "ERROR_" & DirectCast(errCode, Errors).ToString(), errCode.ToString("X2").PadLeft(4, "8"c))
 			Else
-				Return String.Format(If(errCode > &HFFFFUI, "{0} (0x{1:X8})", "{0} (0x{1:X4})"), "ERROR_UNKNOWN", errCode)
+				Return String.Format(ENUM_FORMAT, "Unknown error", errCode.ToString("X2").PadLeft(4, "8"c))
 			End If
 		End Function
 
 		Friend Sub ShowException(ByVal ex As Exception)
 			If TypeOf (ex) Is Win32Exception Then
 				Dim e As UInt32 = GetUInt32(DirectCast(ex, Win32Exception).NativeErrorCode)
+
 				MessageBox.Show(String.Format("Error code: {0}{1}{2}{1}{1}{3}", e.ToString(), CRLF, ex.Message, ex.StackTrace), "Win32Exception!")
 			Else
 				MessageBox.Show(ex.Message & CRLF & CRLF & If(ex.TargetSite IsNot Nothing, ex.TargetSite.Name, "<null>") & CRLF & CRLF & ex.Source & CRLF & CRLF & ex.StackTrace, "Exception!")
