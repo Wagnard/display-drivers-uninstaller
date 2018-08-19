@@ -216,7 +216,7 @@ Class Application
 	Private Sub LaunchMainWindow()
 		' >>> Loading UI <<<
 		Try
-			Dim window As frmMain = New frmMain() With {.DataContext = Data, .Topmost = True}
+			Dim window As frmMain = New frmMain() With {.DataContext = Data, .Topmost = True, .Visibility = Visibility.Visible}
 
 			AddHandler window.Closing, AddressOf AppClosing
 			AddHandler window.Closed, AddressOf AppClose

@@ -73,12 +73,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppLaunchOptions.vb" />
+    <Compile Include="AUDIOCleanup.vb" />
     <Compile Include="CheckUpdate.vb" />
     <Compile Include="CleanupEngine.vb" />
     <Compile Include="FileIO.vb" />
     <Compile Include="frmSystemRestore.xaml.vb">
       <DependentUpon>frmSystemRestore.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GPUCleanup.vb" />
     <Compile Include="Inf.vb" />
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>

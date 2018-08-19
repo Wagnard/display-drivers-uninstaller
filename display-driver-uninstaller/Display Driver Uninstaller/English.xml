@@ -145,8 +145,8 @@
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Select device---</Options1>
-			<Options2>REALTEK</Options2>
-			<Options3>SOUNDBLASTER</Options3>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
 		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanup (Delete OEM step)...</Text1>

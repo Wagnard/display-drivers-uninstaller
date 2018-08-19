@@ -7,6 +7,9 @@ Imports System.Configuration.Install
 Imports System.Threading
 
 Public Class CleanupEngine
+
+	'	Private win8higher As Boolean = frmMain.win8higher
+
 	Private Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
 		Return Languages.GetTranslation("frmMain", "UpdateLog", String.Format("Text{0}", number + 1))
 	End Function
@@ -48,9 +51,9 @@ Public Class CleanupEngine
 
 
 	Public Sub RemoveSharedDlls(ByVal directorypath As String)
-        If Not IsNullOrWhitespace(directorypath) AndAlso Not FileIO.ExistsDir(directorypath) Then
-            Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
-                If regkey IsNot Nothing Then
+		If Not IsNullOrWhitespace(directorypath) AndAlso Not FileIO.ExistsDir(directorypath) Then
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
+				If regkey IsNot Nothing Then
 					Try
 						Deletevalue(regkey, If(Not directorypath.EndsWith("\"), directorypath & "\", directorypath))
 					Catch exARG As ArgumentException
@@ -58,39 +61,39 @@ Public Class CleanupEngine
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 					End Try
-                End If
-            End Using
+				End If
+			End Using
 
-            If Not directorypath.EndsWith("\") Then
-                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
-                    If regkey IsNot Nothing Then
-                        Try
+			If Not directorypath.EndsWith("\") Then
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+					If regkey IsNot Nothing Then
+						Try
 							Deletevalue(regkey, directorypath)
 						Catch exARG As ArgumentException
-                            'nothing to do,it probably doesn't exit.
-                        Catch ex As Exception
-                            Application.Log.AddException(ex)
-                        End Try
-                    End If
-                End Using
+							'nothing to do,it probably doesn't exit.
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					End If
+				End Using
 
-                If IntPtr.Size = 8 Then
-                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
-                        If regkey IsNot Nothing Then
-                            Try
-                                Deletevalue(regkey, directorypath)
-                            Catch exARG As ArgumentException
-                                'nothing to do,it probably doesn't exit.
-                            Catch ex As Exception
-                                Application.Log.AddException(ex)
-                            End Try
-                        End If
-                    End Using
-                End If
-            End If
-        End If
+				If IntPtr.Size = 8 Then
+					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
+						If regkey IsNot Nothing Then
+							Try
+								Deletevalue(regkey, directorypath)
+							Catch exARG As ArgumentException
+								'nothing to do,it probably doesn't exit.
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
+						End If
+					End Using
+				End If
+			End If
+		End If
 
-    End Sub
+	End Sub
 
 	Public Sub Deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String)
 		If regkeypath IsNot Nothing AndAlso Not IsNullOrWhitespace(child) Then
@@ -2187,5 +2190,197 @@ Public Class CleanupEngine
 		FileIO.Delete(filename)
 		RemoveSharedDlls(filename)
 	End Sub
+
+	Public Sub Cleandriverstore(ByVal config As ThreadSettings)
+		Dim catalog As String = ""
+		Dim CurrentProvider As String() = Nothing
+		UpdateTextMethod("Executing Driver Store cleanUP(finding OEM step)...")
+		Application.Log.AddMessage("Executing Driver Store cleanUP(Find OEM)...")
+		'Check the driver from the driver store  ( oemxx.inf)
+
+		UpdateTextMethod(UpdateTextTranslated(0))
+
+		Select Case config.SelectedType
+			Case CleanType.GPU
+				Select Case config.SelectedGPU
+					Case GPUVendor.Nvidia
+						CurrentProvider = {"NVIDIA"}
+					Case GPUVendor.AMD
+						CurrentProvider = {"Advanced Micro Devices", "atitech", "advancedmicrodevices", "ati tech", "amd"}
+					Case GPUVendor.Intel
+						CurrentProvider = {"Intel"}
+					Case GPUVendor.None
+						CurrentProvider = {"None"}
+				End Select
+			Case CleanType.Audio
+				Select Case config.SelectedAUDIO
+					Case AudioVendor.Realtek
+						CurrentProvider = {"Realtek"}
+					Case AudioVendor.SoundBlaster
+						CurrentProvider = {"Creative"} 'Not verified.
+					Case AudioVendor.None
+						CurrentProvider = {"None"}
+				End Select
+			Case CleanType.None
+				CurrentProvider = {"None"}
+				Application.Log.AddWarningMessage("CleanType is none, it is unexpected")
+		End Select
+
+		For Each oem As Inf In GetOemInfList(Application.Paths.WinDir & "inf\")
+			If Not oem.IsValid Then
+				Continue For
+			End If
+
+			If StrContainsAny(oem.Provider, True, CurrentProvider) Then
+				Microsoft.VisualBasic.MsgBox("after strcontain")
+				'before removing the oem we try to get the original inf name (win8+)
+				If frmMain.win8higher Then
+					Try
+						catalog = MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName).GetValue("Active").ToString
+						catalog = catalog.Substring(0, catalog.IndexOf("inf_") + 3)
+					Catch ex As Exception
+						catalog = ""
+					End Try
+				End If
+				If StrContainsAny(oem.Class, True, "display") Or StrContainsAny(oem.Class, True, "media") Then
+					SetupAPI.RemoveInf(oem, True)
+				Else
+					If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.
+						SetupAPI.RemoveInf(oem, False)
+					End If
+				End If
+			End If
+			'check if the oem was removed to process to the pnplockdownfile if necessary
+			If frmMain.win8higher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
+				PrePnplockdownfiles(catalog)
+			End If
+		Next
+
+		UpdateTextMethod("Driver Store cleanUP complete.")
+
+		Application.Log.AddMessage("Driver Store CleanUP Complete.")
+
+	End Sub
+
+	Public Sub Fixregistrydriverstore(ByVal config As ThreadSettings)
+		Dim win8higher As Boolean = frmMain.win8higher
+		Dim donotremoveamdhdaudiobusfiles As Boolean = frmMain.donotremoveamdhdaudiobusfiles
+		'Windows 8 + only
+		'This should fix driver installation problem reporting that a file is not found.
+		'It is usually caused by Windows somehow losing track of the driver store , This intend to help it a bit.
+		If win8higher Then
+			Dim FilePath As String = Nothing
+			Application.Log.AddMessage("Fixing registry driverstore if necessary")
+			Try
+
+				Dim infslist As String = ""
+				For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", Microsoft.VisualBasic.FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
+					If Not IsNullOrWhitespace(infs) Then
+						infslist = infslist + infs
+					End If
+				Next
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles", True)
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(child) Then Continue For
+
+							If child.ToLower.StartsWith("oem") AndAlso child.ToLower.EndsWith(".inf") Then
+								If Not StrContainsAny(infslist, True, child) Then
+									If Not IsNullOrWhitespace(MyRegistry.OpenSubKey(regkey, child).GetValue("", String.Empty).ToString) Then
+										Try
+											Deletesubregkey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverPackages\" & MyRegistry.OpenSubKey(regkey, child).GetValue("", String.Empty).ToString)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
+									Try
+										Deletesubregkey(regkey, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+							End If
+						Next
+					End If
+				End Using
+
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverPackages", True)
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(child) Then Continue For
+
+							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+								If (Not IsNullOrWhitespace(regkey2.GetValue("", String.Empty).ToString)) AndAlso
+								 regkey2.GetValue("", String.Empty).ToString.ToLower.StartsWith("oem") AndAlso
+								 regkey2.GetValue("", String.Empty).ToString.ToLower.EndsWith(".inf") AndAlso
+								 (Not StrContainsAny(infslist, True, regkey2.GetValue("", String.Empty).ToString)) Then
+									Try
+										Deletesubregkey(regkey, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+							End Using
+						Next
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
+
+			'Cleaning of possible left-overs %windir%\system32\driverstore\filerepository
+			Select Case config.SelectedGPU
+				Case GPUVendor.AMD
+					FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
+					If IsNullOrWhitespace(FilePath) = False Then
+						For Each child As String In FileIO.GetDirectories(FilePath)
+							If IsNullOrWhitespace(child) = False Then
+								Dim dirinfo As New System.IO.DirectoryInfo(child)
+								If dirinfo.Name.ToLower.StartsWith("c030") Or
+								 StrContainsAny(dirinfo.Name, True, "atihdwt6.inf") Or
+								 (Not donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(dirinfo.Name, True, "amdkmafd.inf")) Then
+									Try
+										Delete(child)
+									Catch ex As Exception
+									End Try
+								End If
+							End If
+						Next
+					End If
+				Case GPUVendor.Nvidia
+					FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
+					If IsNullOrWhitespace(FilePath) = False Then
+						For Each child As String In FileIO.GetDirectories(FilePath)
+							If IsNullOrWhitespace(child) = False Then
+								Dim dirinfo As New System.IO.DirectoryInfo(child)
+								If StrContainsAny(dirinfo.Name, True, "nvstusb.inf", "nvhda.inf", "nv_dispi.inf") Then
+									Try
+										Delete(child)
+									Catch ex As Exception
+									End Try
+								End If
+								If config.RemoveGFE Then
+									If StrContainsAny(dirinfo.Name, True, "nvvad.inf", "nvswcfilter.inf") Then
+										Try
+											Delete(child)
+										Catch ex As Exception
+										End Try
+									End If
+								End If
+							End If
+						Next
+					End If
+			End Select
+		End If
+	End Sub
+
+
+	Private Sub UpdateTextMethod(ByVal strMessage As String)
+		frmMain.UpdateTextMethod(strMessage)
+	End Sub
+
+	Private Function UpdateTextTranslated(ByVal number As Integer) As String
+		Return frmMain.UpdateTextTranslated(number)
+	End Function
 
 End Class

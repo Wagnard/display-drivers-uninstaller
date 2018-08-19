@@ -167,9 +167,6 @@
 			<Button DockPanel.Dock="Top" x:Name="btnCleanShutdown" HorizontalAlignment="Stretch" >
 				<TextBlock Text="btnCleanShutdown" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
 			</Button>
-			<Button DockPanel.Dock="Top" x:Name="btnCleanGfeDownloads" HorizontalAlignment="Stretch" >
-				<TextBlock Text="btnCleanGfeDownloads" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
-			</Button>
 		</DockPanel>
 
 		<Button Grid.Row="4" Grid.Column="3" Margin="10,10" x:Name="btnWuRestore" MinHeight="40" MaxHeight="60">
