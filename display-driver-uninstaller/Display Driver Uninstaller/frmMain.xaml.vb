@@ -1135,7 +1135,6 @@ Public Class frmMain
 
 	End Sub
 	Private Sub Cleandriverstore(ByVal config As ThreadSettings)
-		Dim CleanupEngine As New CleanupEngine
 		CleanupEngine.Cleandriverstore(config)
 	End Sub
 

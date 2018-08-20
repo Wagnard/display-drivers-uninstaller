@@ -2232,7 +2232,6 @@ Public Class CleanupEngine
 			End If
 
 			If StrContainsAny(oem.Provider, True, CurrentProvider) Then
-				Microsoft.VisualBasic.MsgBox("after strcontain")
 				'before removing the oem we try to get the original inf name (win8+)
 				If frmMain.win8higher Then
 					Try

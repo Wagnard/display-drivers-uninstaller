@@ -144,24 +144,24 @@ Public Class GPUCleanup
 		' ----------------------
 		' Removing the videocard
 		' ----------------------
-		If config.SelectedType = CleanType.GPU Then
-			Try
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False)
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						Win32.SetupAPI.UninstallDevice(d)
-					Next
-					found.Clear()
-				End If
-			Catch ex As Exception
-				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-				Application.Log.AddException(ex)
-				config.GPURemovedSuccess = False
-				Exit Sub
-			End Try
-			UpdateTextMethod(UpdateTextTranslated(23))
-			Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
-		End If
+
+		Try
+			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False)
+			If found.Count > 0 Then
+				For Each d As SetupAPI.Device In found
+					Win32.SetupAPI.UninstallDevice(d)
+				Next
+				found.Clear()
+			End If
+		Catch ex As Exception
+			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+			Application.Log.AddException(ex)
+			config.GPURemovedSuccess = False
+			Exit Sub
+		End Try
+		UpdateTextMethod(UpdateTextTranslated(23))
+		Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
+
 
 		CleanupEngine.Cleandriverstore(config)
 
