@@ -1,0 +1,445 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="si" Text="Slovenian" >
+	<!--
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
+
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<btnCleanRestart>
+			<Text>
+				Počisti in vnovič zaženi
+				(Zelo priporočljivo)
+			</Text>
+			<Tooltip>
+				Odstrani trenutne in prejšnje gonilnike, nato znova zažene računalnik.
+				(Zelo priporočljivo)
+			</Tooltip>
+		</btnCleanRestart>
+		<btnClean>
+			<Text>
+				Počisti in znova NE zaženi
+				(Lahko povzroči težave, kot je črni zaslon)
+			</Text>
+			<Tooltip>
+				Odstrani trenutne in prejšnje gonilnike, vendar znova ne zažene računalnika.
+				(Lahko povzroči težave, kot je črni zaslon)
+			</Tooltip>
+		</btnClean>
+		<btnCleanShutdown>
+			<Text>
+				Počisti in zaustavi računalnik
+				(Za namestitev nove grafične kartice)
+			</Text>
+			<Tooltip>
+				Odstrani trenutne in prejšnje gonilnike ter zaustavi računalnik brez ponovnega pregleda
+				(Za namestitev nove grafične kartice)
+			</Tooltip>
+		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Odstrani "GeForce Experience" predpomnilnik nameščevalca grafičnih gonilnikov in datoteke.
+				(Opomba: Gonilniki ne bodo odstranjeni)
+			</Text>
+			<Tooltip>
+				To se večinoma uporablja za obnovitev nekaj prostora na disku, ki ga GeForce Experience ni počistil, ko namesti gonilnik (stara različica GFE).
+			</Tooltip>
+		</btnCleanGfeDownloads>
+		<btnWuRestore>
+			<Text>
+				Nastavi nastavitve Windows Namestitev naprave  na privzeto
+				(samodejno namesti gonilnike)
+			</Text>
+		</btnWuRestore>
+		<lblWinVersion>
+			<Text>Zaznan operacijski sistem:</Text>
+		</lblWinVersion>
+		<lblDonate>
+			<Text>*** Vam je všeč DDU? Razmislite o donaciji. Ta bo pripomogla k njegovem nadaljnjemu razvoju. ***</Text>
+		</lblDonate>
+		<lblLog>
+			<Text>Dnevnik</Text>
+		</lblLog>
+		<lblSelectedGPU>
+			<Text>Izbrani grafični gonilnik</Text>
+		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Izbrani jezik</Text>
+		</lblLanguage>
+
+		<lblUpdate>
+			<Text>Preverjanje posodobitev...</Text>
+			<Text2>Ni bilo najdenih nobenih posodobitev. Program je posodobljen.</Text2>
+			<Text3>Posodobitve so bile najdene! Za pričakovati je omejeno podporo pri starejših različicah od zadnje.</Text3>
+			<Text4>Ni mogoče pridobiti posodobitev!</Text4>
+		</lblUpdate>
+
+		<lblOffer>
+			<Text>Ponudbe naših partnerjev</Text>
+			<Tooltip>To lahko onemogočite v meniju Možnosti.</Tooltip>
+		</lblOffer>
+
+		<OptionsMenuItem>
+			<Text>Možnosti</Text>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Informacije</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Razširjeni dnevnik</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Povezave</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Pogoji storitve (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
+			<Text>Vizitka</Text>
+		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Prevajalci</Text>
+		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Pokrovitelj</Text>
+		</PatronMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Obiščite uradno spletno stran DDU</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Obiščite spletno stran SVN</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Obiščite nit Guru3d NVIDIA</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Obiščite nit Guru3d AMD</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Obiščite nit GeForce</Text>
+		</VisitGeforceMenuItem>
+
+		<Messages>
+			<Text1>Na voljo so posodobitve! Obiščem zdaj spletno stran DDU?</Text1>
+			<Text2>Pričakujte omejeno podporo pri starejših različicah od zadnje. Pred prijavo napak posodobite na novejšo različico.</Text2>
+			<Text3>DDU ne uporabljate s skrbniškimi pravicami. Aplikacija se bo zdaj zaprla.</Text3>
+			<Text4>PAExec ni mogoče najti. Prosimo, glejte dnevnik.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) veliko spreminja vaš register. DDU bo samodejno ustvaril obnovitveno točko sistema (samo v običajnem načinu).</Text5>
+			<Text6>V enem od modulov je prišlo do težave. Pošljite dnevnike DDU razvijalcu programa.</Text6>
+			<Text7>DDU je zaznal, da imate prenosni prenosnik AMD (Enduro ali enakovreden). DDU še ni v celoti združljiv in preizkušen s sistemi Enduro. Uporabite na lastno odgovornost.</Text7>
+			<Text8>DDU je zaznal, da NISTE v varnem načinu... Za boljše čiščenje brez težav je priporočljivo, da ponovno zaženete računalnik v varnem načinu.</Text8>
+			<Text9>Nastavitve Windows Namestitev naprave so bile spremenjene v NE namesti samodejno gonilnike..</Text9>
+			<Text10>Čista odstranitev je dokončana. Ali želite zdaj zapreti program?</Text10>
+			<Text11>Nastavitve Windows Namestitev naprave so bile spremenjene v Samodejno namesti gonilnike.</Text11>
+			<Text12>Niste v varnem načinu. Zelo priporočljivo je, da znova zaženete računalnik v varnem načinu, v izogib morebitnih težav. Ali želite zdaj znova zagnati računalnik v varnem načinu?</Text12>
+			<Text13>To morate izbrati na modrem zaslonu, za obnovitev : Odpravljanje težav -&gt; Napredne možnosti -&gt; Nastavitve zagona.</Text13>
+			<Text14>Ponovni zagon je na čakanju. Preden uporabite DDU, znova zaženite računalnik</Text14>
+			<Text15>Ni bilo opravljenih sprememb. Nastavitve Windows Namestitev naprave so bile že nastavljene na Privzeto.</Text15>
+			<Text16>V sistemu Windows je prišlo do kritične napake, ki preprečuje pravilno odstranitev gonilnikov. Kot varnostni ukrep DDU ne bo nadaljeval z odstranjevanjem datotek in registra. Pred uporabo DDU morate odpraviti težave s sistemom.</Text16>
+		</Messages>
+
+		<UpdateLog>
+			<Text1>Izvedba čiščenja Shramb gonilnikov (Izbriši OEM korak)...</Text1>
+			<Text2>Čiščenje imenika</Text2>
+			<Text3>Čiščenje znanih ključev v Registru... Lahko vzame minuto ali dve.</Text3>
+			<Text4>Čiščenje UpdatusUser računa uporabnikov, če je prisoten.</Text4>
+			<Text5>Čiščenje imenika</Text5>
+			<Text6>Začetek čiščenja Registra</Text6>
+			<Text7>Dokončano čiščenje Registra</Text7>
+			<Text8>Začetek odstranitve NVIDIA Optimus UpperFilter, če je prisoten.</Text8>
+			<Text9>Iskanje nove naprave...</Text9>
+			<Text10>Čista odstranitev je končana!</Text10>
+			<Text11>Različica DDU</Text11>
+			<Text12>GPU št.</Text12>
+			<Text13>Zaznana</Text13>
+			<Text14>DeviceId grafičnega procesorja (GPU)</Text14>
+			<Text15>Različica zaznanega gonilnika</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF oddelek</Text17>
+			<Text18>Grafični procesor (GPU) ni pravilno nameščen</Text18>
+			<Text19>Brisanje nekaterih posebnih map, lahko traja nekaj časa...</Text19>
+			<Text20>Čiščenje se je začelo...</Text20>
+			<Text21>Odstranjevanje</Text21>
+			<Text22>gonilnik</Text22>
+			<Text23>Izvedba odstranitve SetupAPI. Počakajte (lahko traja nekaj minut)</Text23>
+			<Text24>Odstranjene GPU iz Upravitelja naprav.</Text24>
+			<Text25>Izvedba odstranitve SetupAPI Avdio krmilnika.</Text25>
+			<Text26>HD zvočne kartice so odstranjene!</Text26>
+			<Text27>USB katica 3D Vision je odstranjena iz Upravitelkja naprav.</Text27>
+			<Text28>Monitorji in skriti monitorji so odstranjeni!</Text28>
+			<Text29>SetupAPI odstranitev je dokončana</Text29>
+			<Text30>Začetek čiščenja območja S-1-5-xx</Text30>
+			<Text31>Koneck čiščenja območja S-1-5-xx</Text31>
+			<Text32>Začetek čiščenja ClassesRoot ,Installer\Products</Text32>
+			<Text33>Koneck čiščenja ClassesRoot ,Installer\Products</Text33>
+			<Text34>Začetek čiščenja LocalMachine ,Installer\Products</Text34>
+			<Text35>Koneck čiščenja LocalMachine ,Installer\Products</Text35>
+			<Text36>Začetek čiščenja CurrentUser ,Installer\Products</Text36>
+			<Text37>Koneck čiščenja CurrentUser ,Installer\Products</Text37>
+			<Text38>Čiščenje procesov/storitev...</Text38>
+			<Text39>Čiščenje procesovi/storitev je dokončano</Text39>
+			<Text40>Izbrisan.</Text40>
+			<Text41>Vrednost je odstranjena.</Text41>
+			<Text42>Datoteka je izbrisana.</Text42>
+		</UpdateLog>
+	</frmMain>
+
+	<frmOptions Text="Options">
+		<btnClose>
+			<Text>Zapri</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Pokaži ponudbe naših partnerjev</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Posebne možnosti</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Posebne možnosti</Text>
+		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>Napredne možnosti (Sprememba na lastno odgovornost)</Text>
+		</lblAdvancedO>
+		<lblGeneral>
+			<Text>Splošne možnosti</Text>
+		</lblGeneral>
+		<lblRemNvidiaDirs>
+			<Text>Odstrani mape z gonilniki "C:\NVIDIA" (NI priporočljivo)</Text>
+		</lblRemNvidiaDirs>
+		<lblSaveLogs>
+			<Text>Shrani dnevniške datoteke v zagonsko pot (Zelo priporočljivo)</Text>
+		</lblSaveLogs>
+		<lblRemPhysX>
+			<Text>Odstrani PhysX</Text>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
+			<Text>Odstrani 3DTV Play</Text>
+		</lblRem3DtvPlay>
+		<lblCreateRestorePoint>
+			<Text>Ustvari točko obnovitve sistema (Če je dovoljeno)</Text>
+		</lblCreateRestorePoint>
+		<lblRemMonitors>
+			<Text>Odstrani uporabljenega in neobstoječe monitorje (priporočeno)</Text>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
+			<Text>Odstrani AMD Avdio Bus</Text>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
+			<Text>Odstrani mapo gonilnikov "C:\AMD" (NI priporočljivo)</Text>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
+			<Text>Odstrani gonilnik/filter AMDKMPFD (Za AMD čipsete je priporočljiva varnostna kopija)</Text>
+		</lblRemAMDKMPFD>
+		<lblShowSafeModeMsg>
+			<Text>Omogoči pogovorno okno Varni način (Ni priporočljivo, dokler ročno ne preizkusite varnega načina)</Text>
+			<Tooltip>Ni priporočljivo, če svojega računalnika niste nikoli sami zagnali v varnem načinu, da bi ugotovil ali deluje. Ta možnost lahko povzroči zagonsko zanko, črni zaslon in morebiti česar hujšega.</Tooltip>
+		</lblShowSafeModeMsg>
+		<lblUseRoamingCfg>
+			<Text>Shrani konfiguracijsko datoteko v gostujočo mapo (Roaming)</Text>
+		</lblUseRoamingCfg>
+		<lblCheckUpdates>
+			<Text>Ob zagonu samodejno preveri obstoj posodobitve DDU (Priporočeno)</Text>
+		</lblCheckUpdates>
+		<lblRemGFE>
+			<Text>Odstrani GeForce Experience (GFE)</Text>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
+			<Text>Odstrani mapo predpomnilnika AMD Crimson Shader</Text>
+			<Tooltip>
+				Priporočljivo, če obstaja grafična nepravilnost (hitrost ali okvara slike), ki je posledica poškodovanih podatkov predpomnilnika AMD Crimson Shader.
+				Priporočamo tudi, če preklopite na drugo znamko grafične kartice, kot je NVIDIA.
+			</Tooltip>
+		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Odstrani Vulkan Runtime</Text>
+			<Tooltip>Ni priporočljivo, če imate dve različni grafični kartici, ki lahko uporabljata Vulkan API.</Tooltip>
+		</lblVulkan>
+    <lblPreventWinUpdate>
+      <Text>Prepreči prenos gonilnikov iz "Windows update", ko "Windows" išče gonilnik naprave.</Text>
+      <Tooltip>Preprosto povedano, bo ta možnost preprečila, da "Windows/Device Manager" preverja posodobitve v "Windows Update". 
+               Opomba: To ne preprečuje "Windows Update" prenos/namestitev novih gonilnikov. 
+               Opomba2: Prav tako je *ZELO* priporočeno, da povrnete to spremembo, ko končate z uporabo programa DDU in ponovno namestite gonilnik za vaš GPU ali imate težave z namestitvijo druge naprave.</Tooltip>
+     </lblPreventWinUpdate>
+  </frmOptions>
+
+	<frmLaunch Text="Zaženi možnostn">
+		<btnAccept>
+			<Text>Zaženi</Text>
+			<Text2>
+				Znova zaženi računalnik v
+				Varnem načinu
+			</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Zaženie</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Možnost zagona</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>
+				Niste v varnem načinu. Zelo priporočljivo je, da
+				znova zaženete PC v varnem načinu v izogib morebitnim težavam.
+			</Text>
+		</lblNotSafeMode>
+		<lblWinPasswordWarn>
+			<Text>
+				Pomembna opomba za uporabnike Windows 8/8.1/10:
+				Vaše Windows "GESLO" je obvezno! (PIN koda NE deluje v varnem načinu)
+				Takoj ustavite, če ste ga izgubili ali ne poznate!
+			</Text>
+		</lblWinPasswordWarn>
+		<cbBootOption>
+			<Item1>Običajen način</Item1>
+			<Item2>Varen način (priporočeno)</Item2>
+			<Item3>Varen način z omrežjem</Item3>
+		</cbBootOption>
+		<Messages>
+			<Text1>DDU zapre znane moteče programe (kot so MSI Afterburner in RTSS).</Text1>
+		</Messages>
+	</frmLaunch>
+
+	<frmLog Text="Extended log">
+		<btnClose>
+			<Text>Zapri</Text>
+		</btnClose>
+		<btnOpenLog>
+			<Text>Odpri dnevnik</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Možnosti</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Kopiranje je omogočeno</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filtri</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Prikaži dogodke</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Prikaži opozorila</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Prikaži napake</Text>
+		</errorsMenuItem>
+	</frmLog>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Poskus ustvarjanja točke obnovitve sistema.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Zapri</Text>
+		</btnClose>
+		<btnAbout>
+			<Text>Vizitka</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Pogoji storitve (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Prevajalci</Text>
+		</btnTranslators>
+		<btnPatron>
+			<Text>Pokrovitelj</Text>
+		</btnPatron>
+		<lblTranslators>
+			<Text>Velika zahvala naslednjim prevajalcem in tudi tistim, ki niso navedeni!</Text>
+		</lblTranslators>
+		<lblPatron>
+			<Text>
+        Velika zahvala naslednjemu pokrovitelju in tudi tistim, ki niso na seznamu!
+
+        -honnmaguro   (Since 2018-03-16)
+      </Text>
+		</lblPatron>
+	</frmAbout>
+
+	<Misc>
+		<About>
+			<Text>
+				Display Driver Uninstaller (DDU) / Cleaner je bil ustvarjen za grafične (GPU) gonilnike. (NVIDIA/AMD)
+
+				Kaj naredi je, da odstrani grafični/GPU gonilnike iz Upravitelja naprav Windows ter odstrani trenutne in
+				prejšnje gonilnike iz shrambe gonilnikov Windows, skupaj z odstranitvijo NVIDIA/AMD storitev.
+
+				Trenutni učinek po uporabi tega orodja bo podoben kot, če bi bil sistem Windows v stanju "Na novo nameščen".
+
+				To orodje deluje podobno kot  "Driver Sweeper"*in ima vse zgoraj dodatno omenjeno.
+
+				Če imate težave pri nameščanju starejšega ali novejšega gonilnika, ga preizkusite, ker ima nekaj poročil, 
+        ki jih lahko popravi.
+
+				PRIPOROČENA UPORABA:
+
+				- Orodje je mogoče uporabiti v normalnem načinu, vendar je pri uporabi DDU za absolutno 
+        stabilnost vedno najboljši Varen način.
+
+				- Radi bi zbrali povratne informacije od vsakogar. Povejte nam, če je bil uspešen ali ne.
+
+				- Naredite varnostno kopijo ali obnovitveno točko sistema. (To običajno mora biti precej varno.)
+
+				- Če imate ali ste imeli težave z gonilnikom in vam je to orodje pomagalo pri nekaterihtežavah, ki ste jih
+        ali jih trenutno doživljate, delite z drugimi svoje rezultate.
+
+				Vedite, da  NVIDIA, AMD niti Microsoft niso odgovorni za vašo kakršno škodo ali okvaro vašega 
+        računalnika in na noben način niso podružnice DDU ali njegovih ustvarjalcev.
+				-------------------------------
+
+				Ustvaril Wagnard.
+
+				Programerji: Wagnard, Devmltk, Shady7557
+
+				Preizkuševalec: Dellon132
+
+				Logotip: juanchacin
+
+				Ogromna zahvala Jackalitu za donacijo  AMD 7850.
+
+				Zahvala Helge Klein (http://helgeklein.com/setacl/) za dovoljenje za uporabo njunega programa "SetAcl" z DDU.
+
+				Veliko hvala za njihov čas za testiranje: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (vzel si je čas za razhroščevanje z mano)
+				Extraordinary (Preizkus popravkov  hroščev)
+
+				Hvala vsem, ki so tvegali svoj sistem. (Posebna zahvala gre Dellon132)
+
+				*DDU, njegovi ustvarjalci in podružnice niso nikakor povezani s programom Sweeper Driver ali njegovim ustvarjalcem.
+			</Text>
+		</About>
+
+		<Tos>
+			<Text> 
+             UPORABNIŠKA POGODBA
+				Display Driver Uninstaller ("DDU")
+
+				Z uporabo programa DDU ste postali uporabnik programa DDU ("Uporabnik"). Ta pogodba začne veljati takoj, ko uporabite program za odstranitev gonilnika..
+
+				Z uporabo DDU se strinjate da ne boste obtoževali programa DDU ali njegovih ustvarjalcev in povezanih podjetij zaradi škodljivih ali negativnih vplivov na vaš računalnik.
+
+				Z uporabo DDU potrjujete, da NVIDIA ("NVIDIA, GeForce") niti Advanced Micro Devices ("AMD, Radeon") nimajo ničesar
+				s tem programom in nikakor niso podružnice DDU ali njegovih ustvarjalcev.
+			</Text>
+		</Tos>
+	</Misc>
+
+	<LanguageTranslators>
+		<Translator>
+			<User>Jadran Rudec</User>
+			<Details>jrudec@gmail.com</Details>
+			<LastUpdate>04/07/2018</LastUpdate>
+		</Translator>
+
+		<Translator2>
+			<User>---</User>
+			<LastUpdate>---</LastUpdate>
+		</Translator2>
+	</LanguageTranslators>
+
+</DisplayDriverUninstaller>
