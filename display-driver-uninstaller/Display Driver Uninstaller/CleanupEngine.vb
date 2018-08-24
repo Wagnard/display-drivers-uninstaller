@@ -3,7 +3,6 @@ Imports Microsoft.Win32
 Imports Display_Driver_Uninstaller.Win32
 Imports System.Security.AccessControl
 Imports System.ServiceProcess
-Imports System.Configuration.Install
 Imports System.Threading
 
 Public Class CleanupEngine

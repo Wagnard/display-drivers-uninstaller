@@ -1,7 +1,6 @@
 ﻿Imports System.DirectoryServices
 Imports System.IO
 Imports System.Threading
-Imports System.Windows.Threading
 Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
 Imports WinForm = System.Windows.Forms

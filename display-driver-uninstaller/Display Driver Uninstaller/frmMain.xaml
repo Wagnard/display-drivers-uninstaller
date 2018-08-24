@@ -122,7 +122,6 @@
 		<DockPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="3" Margin="10,0">
 			<DockPanel DockPanel.Dock="Bottom" Grid.Row="1" Grid.Column="3" >
 				<ComboBox Name="cbSelectedType" HorizontalAlignment="Stretch" VerticalAlignment="Center"  DockPanel.Dock="Top" SelectedIndex="0" />
-				<ComboBox Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center"  DockPanel.Dock="Top" SelectedIndex="0" />
 			</DockPanel>
 
 			<Border DockPanel.Dock="Bottom" Margin="0,0,0,10">
@@ -138,10 +137,10 @@
 							<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Intel}">
 								<Setter Property="Background" Value="{StaticResource logoIntel}"/>
 							</DataTrigger>
-                            <DataTrigger Binding="{Binding Path=Settings.SelectedAudio, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
-                                <Setter Property="Background" Value="{StaticResource logoRealtek}"/>
-                            </DataTrigger>
-                        </Style.Triggers>
+							<DataTrigger Binding="{Binding Path=Settings.SelectedAudio, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
+								<Setter Property="Background" Value="{StaticResource logoRealtek}"/>
+							</DataTrigger>
+						</Style.Triggers>
 					</Style>
 				</Border.Style>
 			</Border>
@@ -230,6 +229,7 @@
 				</Button>
 			</Grid>
 		</Border>
+		<ComboBox x:Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedIndex="0" Grid.Column="3" Margin="10,0,10,8" Grid.Row="3" />
 
 	</Grid>
 </Window>

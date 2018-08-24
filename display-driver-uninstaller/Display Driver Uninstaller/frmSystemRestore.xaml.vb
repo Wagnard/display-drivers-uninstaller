@@ -1,5 +1,4 @@
-﻿Imports System.Runtime.InteropServices
-Imports System.Threading
+﻿Imports System.Threading
 Imports Microsoft.Win32
 
 Public Class frmSystemRestore

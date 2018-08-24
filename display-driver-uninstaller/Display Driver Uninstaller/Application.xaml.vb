@@ -1,7 +1,6 @@
 ﻿Imports System.IO
 Imports System.Threading
 Imports System.Globalization
-Imports System.Windows
 Imports System.Windows.Markup
 Imports System.Text
 

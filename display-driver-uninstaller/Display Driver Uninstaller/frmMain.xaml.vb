@@ -15,16 +15,12 @@
 '    along with DDU.  If not, see <http://www.gnu.org/licenses/>.
 Option Strict On
 
-Imports System.DirectoryServices
 Imports Microsoft.Win32
 Imports System.IO
-Imports System.Security.AccessControl
 Imports System.Threading
 Imports System.Security.Principal
-Imports System.Runtime.InteropServices
 Imports System.Reflection
 Imports System.Text
-
 Imports WinForm = System.Windows.Forms
 Imports Display_Driver_Uninstaller.Win32
 
