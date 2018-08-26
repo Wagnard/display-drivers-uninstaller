@@ -74,8 +74,8 @@ Public Class AppSettings
 	Private m_appversion As DependencyProperty = RegDP("AppVersion", GetType(Version), GetType(AppSettings), New Version(0, 0, 0, 0))
 	Private m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
 	Private m_gpuSelected As DependencyProperty = RegDP("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
-	Private m_audioSelected As DependencyProperty = RegDP("SelectedAudio", GetType(AudioVendor), GetType(AppSettings), AudioVendor.Realtek)
-	Private m_cleanType As DependencyProperty = RegDP("SelectedType", GetType(CleanType), GetType(AppSettings), CleanType.None)
+    Private m_audioSelected As DependencyProperty = RegDP("SelectedAUDIO", GetType(AudioVendor), GetType(AppSettings), AudioVendor.Realtek)
+    Private m_cleanType As DependencyProperty = RegDP("SelectedType", GetType(CleanType), GetType(AppSettings), CleanType.None)
 	Private m_langSelected As DependencyProperty = RegDP("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
 	Private m_updateAvailable As DependencyProperty = RegDP("UpdateAvailable", GetType(UpdateStatus), GetType(AppSettings), UpdateStatus.NotAllowed)
 
@@ -176,16 +176,16 @@ Public Class AppSettings
 		End Set
 	End Property
 
-	Public Property SelectedAudio As AudioVendor
-		Get
-			Return CType(GetValue(m_audioSelected), AudioVendor)
-		End Get
-		Set(value As AudioVendor)
-			SetValue(m_audioSelected, value)
-		End Set
-	End Property
+    Public Property SelectedAUDIO As AudioVendor
+        Get
+            Return CType(GetValue(m_audioSelected), AudioVendor)
+        End Get
+        Set(value As AudioVendor)
+            SetValue(m_audioSelected, value)
+        End Set
+    End Property
 
-	Public Property SelectedType As CleanType
+    Public Property SelectedType As CleanType
 		Get
 			Return CType(GetValue(m_cleanType), CleanType)
 		End Get

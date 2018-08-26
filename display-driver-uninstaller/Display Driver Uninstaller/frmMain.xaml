@@ -52,7 +52,7 @@
 				<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Intel}">
 					<Setter Property="Background" Value="{StaticResource brushIntel}"/>
 				</DataTrigger>
-				<DataTrigger Binding="{Binding Path=Settings.SelectedAudio, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
+				<DataTrigger Binding="{Binding Path=Settings.SelectedAUDIO, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
 					<Setter Property="Background" Value="{StaticResource brushRealtek}"/>
 				</DataTrigger>
 			</Style.Triggers>
@@ -137,7 +137,7 @@
 							<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Intel}">
 								<Setter Property="Background" Value="{StaticResource logoIntel}"/>
 							</DataTrigger>
-							<DataTrigger Binding="{Binding Path=Settings.SelectedAudio, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
+							<DataTrigger Binding="{Binding Path=Settings.SelectedAUDIO, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
 								<Setter Property="Background" Value="{StaticResource logoRealtek}"/>
 							</DataTrigger>
 						</Style.Triggers>

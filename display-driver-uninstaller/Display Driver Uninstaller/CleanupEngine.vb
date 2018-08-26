@@ -315,34 +315,38 @@ Public Class CleanupEngine
 											If IsNullOrWhitespace(wantedvalue) Then Continue For
 
 											Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "CLSID\" & wantedvalue)
-												appid = TryCast(regkey3.GetValue("AppID", String.Empty), String)
+                                                If regkey3 IsNot Nothing Then
+                                                    appid = TryCast(regkey3.GetValue("AppID", String.Empty), String)
 
-												If Not IsNullOrWhitespace(appid) Then
-													Try
-														Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "AppID", True)
-															If regkey4 IsNot Nothing Then
-																Deletesubregkey(regkey4, appid)
-															End If
-														End Using
-													Catch ex As Exception
-													End Try
-												End If
-											End Using
+                                                    If Not IsNullOrWhitespace(appid) Then
+                                                        Try
+                                                            Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "AppID", True)
+                                                                If regkey4 IsNot Nothing Then
+                                                                    Deletesubregkey(regkey4, appid)
+                                                                End If
+                                                            End Using
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                End If
+                                            End Using
 
 											Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "CLSID\" & wantedvalue & "\TypeLib")
-												typelib = TryCast(regkey3.GetValue("", String.Empty), String)
+                                                If regkey3 IsNot Nothing Then
+                                                    typelib = TryCast(regkey3.GetValue("", String.Empty), String)
 
-												If Not IsNullOrWhitespace(typelib) Then
-													Try
-														Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "TypeLib", True)
-															If regkey4 IsNot Nothing Then
-																Deletesubregkey(regkey4, typelib)
-															End If
-														End Using
-													Catch ex As Exception
-													End Try
-												End If
-											End Using
+                                                    If Not IsNullOrWhitespace(typelib) Then
+                                                        Try
+                                                            Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "TypeLib", True)
+                                                                If regkey4 IsNot Nothing Then
+                                                                    Deletesubregkey(regkey4, typelib)
+                                                                End If
+                                                            End Using
+                                                        Catch ex As Exception
+                                                        End Try
+                                                    End If
+                                                End If
+                                            End Using
 
 											Try
 												Using regkeyC As RegistryKey = MyRegistry.OpenSubKey(regkey, "CLSID", True)
