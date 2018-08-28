@@ -358,6 +358,9 @@ Class Application
 		info.Add(If(FileIO.ExistsDir(Paths.WinDir), "[Found]", "[Not found]") + " WinDir", Paths.WinDir)
 		info.Add(If(FileIO.ExistsDir(Paths.UserPath), "[Found]", "[Not found]") + " UserPath", Paths.UserPath)
 		info.Add(If(FileIO.ExistsDir(Paths.System32), "[Found]", "[Not found]") + " System32", Paths.System32)
+		If IntPtr.Size = 8 Then
+			info.Add(If(FileIO.ExistsDir(Paths.SysWOW64), "[Found]", "[Not found]") + " SysWOW64", Paths.SysWOW64)
+		End If
 
 		Application.Log.Add(info)
 		KillGPUStatsProcesses()

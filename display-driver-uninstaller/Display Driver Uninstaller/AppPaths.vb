@@ -1,9 +1,10 @@
 ﻿Imports System.IO
 Imports System.Reflection
+Imports Display_Driver_Uninstaller.Win32
 
 Public Class AppPaths
 	Private m_exefile, m_dirapp, m_dirapproaming, m_dirsettings, m_dirlanguage, m_dirlog,
-	 m_roaming, m_sysdrive, m_windir, m_programfiles, m_programfilesx86, m_userpath, m_system32 As String
+	 m_roaming, m_sysdrive, m_windir, m_programfiles, m_programfilesx86, m_userpath, m_system32, m_syswow64 As String
 
 	'NOTE!!! All paths ends with \
 	'No need to check for ending \
@@ -98,6 +99,15 @@ Public Class AppPaths
 			m_system32 = value
 		End Set
 	End Property
+	''' <summary>( "C:\windows\sysWOW64\" )(64bit only)</summary>
+	Public Property SysWOW64 As String
+		Get
+			Return m_syswow64
+		End Get
+		Private Set(value As String)
+			m_syswow64 = value
+		End Set
+	End Property
 	''' <summary>ProgramFiles(x86) Directory(64bits only) ( "C:\Program Files (x86)\" )</summary>
 	Public Property ProgramFilesx86 As String
 		Get
@@ -107,8 +117,8 @@ Public Class AppPaths
 			m_programfilesx86 = value
 		End Set
 	End Property
-    ''' <summary>Roaming Directory ( "C:\%Users%\AppData\Roaming\" most likely C:\Windows\System32\comfig\systemprofile\AppData\Roaming\)</summary>
-    Public Property Roaming As String
+	''' <summary>Roaming Directory ( "C:\%Users%\AppData\Roaming\" most likely C:\Windows\System32\comfig\systemprofile\AppData\Roaming\)</summary>
+	Public Property Roaming As String
 		Get
 			Return m_roaming
 		End Get
@@ -143,6 +153,8 @@ Public Class AppPaths
 			m_programfiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
 			m_programfilesx86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + " (x86)"
 			m_system32 = Environment.GetFolderPath(Environment.SpecialFolder.System)
+			WinAPI.GetFolderPath(WinAPI.CLSID.SYSTEMX86, m_syswow64)
+
 
 			Using regkey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist")
 				m_userpath = regkey.GetValue("ProfilesDirectory", String.Empty).ToString
@@ -162,6 +174,7 @@ Public Class AppPaths
 			If Not m_windir.EndsWith("\") Then m_windir &= Path.DirectorySeparatorChar
 			If Not m_programfiles.EndsWith("\") Then m_programfiles &= Path.DirectorySeparatorChar
 			If Not m_system32.EndsWith("\") Then m_system32 &= Path.DirectorySeparatorChar
+			If Not m_syswow64.EndsWith("\") Then m_syswow64 &= Path.DirectorySeparatorChar
 			If Not m_programfilesx86.EndsWith("\") Then m_programfilesx86 &= Path.DirectorySeparatorChar
 
 			CreateDirectories(m_dirsettings, m_dirlanguage, m_dirlog)

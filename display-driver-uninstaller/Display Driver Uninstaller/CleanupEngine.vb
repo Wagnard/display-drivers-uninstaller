@@ -2144,171 +2144,72 @@ Public Class CleanupEngine
 	Public Sub Folderscleanup(ByVal driverfiles As String())
 
 		Dim winxp = frmMain.winxp
-		Dim filePath As String
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
-		Dim system32files As String() = Directory.GetFiles(Application.Paths.System32)
-		Dim system32driverfiles As String() = Directory.GetFiles(Application.Paths.System32 & "drivers\")
-		Dim windirfiles = Directory.GetFiles(Application.Paths.WinDir)
-		Dim Prefetch = Directory.GetFiles(Application.Paths.WinDir & "Prefetch\")
-		Dim Thread1Finished = True
-		Dim Thread2Finished = True
+		Dim Thread1Finished = False
+		Dim Thread2Finished = False
 		Dim Thread3Finished = True
-		Dim Thread4Finished = True
+		Dim Thread4Finished = False
 		Dim Thread5Finished = True
-		Dim Thread6Finished = True
-		Dim Thread7Finished = True
+		Dim Thread7Finished = False
 		Dim Thread8Finished = True
 
 
 
-		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, system32files, driverfiles, donotremoveamdhdaudiobusfiles))
+		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, Application.Paths.System32, driverfiles, donotremoveamdhdaudiobusfiles))
 		thread1.Start()
 
-		Dim thread2 As Thread = New Thread(Sub() Threaddata1(Thread2Finished, system32driverfiles, driverfiles, donotremoveamdhdaudiobusfiles))
+		Dim thread2 As Thread = New Thread(Sub() Threaddata1(Thread2Finished, Application.Paths.System32 & "drivers\", driverfiles, donotremoveamdhdaudiobusfiles))
 		thread2.Start()
 
 
 		If winxp Then
-			filePath = Application.Paths.System32
-			Dim thread3 As Thread = New Thread(Sub() Threaddata1(Thread3Finished, Directory.GetFiles(filePath & "Drivers\dllcache\"), driverfiles, donotremoveamdhdaudiobusfiles))
+			Thread3Finished = False
+			Dim thread3 As Thread = New Thread(Sub() Threaddata1(Thread3Finished, Application.Paths.System32 & "drivers\dllcache\", driverfiles, donotremoveamdhdaudiobusfiles))
 			thread3.Start()
 		End If
 
-		Dim thread4 As Thread = New Thread(Sub() Threaddata1(Thread4Finished, windirfiles, driverfiles, donotremoveamdhdaudiobusfiles))
+		Dim thread4 As Thread = New Thread(Sub() Threaddata1(Thread4Finished, Application.Paths.WinDir, driverfiles, donotremoveamdhdaudiobusfiles))
 		thread4.Start()
 
-
-
-
-
-
 		If IntPtr.Size = 8 Then
+			Thread8Finished = False
+			Thread5Finished = False
 
-			Dim winPath As String = Nothing
-
-			Try
-				'	Note  As of Windows Vista, these values have been replaced by KNOWNFOLDERID values. 
-				'	See that topic for a list of the new constants and their corresponding CSIDL values. 
-				'	For convenience, corresponding KNOWNFOLDERID values are also noted here for each CSIDL value.
-
-				'	The CSIDL system is supported under Windows Vista for compatibility reasons.
-				'	However, new development should use KNOWNFOLDERID values rather than CSIDL values.
-
-				If Not WinAPI.GetFolderPath(WinAPI.CLSID.SYSTEMX86, winPath) Then
-					Throw New ArgumentException("Can't get window's sysWOW64 directory")
-				End If
-			Catch ex As Exception
-				Application.Log.AddException(ex, "Can't get window's sysWOW64 directory")
-			End Try
-
-
-			Dim thread8 As Thread = New Thread(Sub() Threaddata1(Thread8Finished, Directory.GetFiles(winPath, "*.log"), driverfiles, donotremoveamdhdaudiobusfiles))
+			Dim thread8 As Thread = New Thread(Sub() Threaddata1(Thread8Finished, Application.Paths.SysWOW64, driverfiles, donotremoveamdhdaudiobusfiles))
 			thread8.Start()
 
-			Dim syswow64files As String() = Directory.GetFiles(winPath & "\")
-			Dim syswow64driverfiles As String() = Directory.GetFiles(winPath & "\Drivers\")
-
-			Dim thread5 As Thread = New Thread(Sub() Threaddata1(Thread5Finished, syswow64driverfiles, driverfiles, donotremoveamdhdaudiobusfiles))
+			Dim thread5 As Thread = New Thread(Sub() Threaddata1(Thread5Finished, Application.Paths.SysWOW64 & "Drivers\", driverfiles, donotremoveamdhdaudiobusfiles))
 			thread5.Start()
 
-			Dim thread6 As Thread = New Thread(Sub() Threaddata1(Thread6Finished, syswow64files, driverfiles, donotremoveamdhdaudiobusfiles))
-			thread6.Start()
 		End If
 
-		Dim thread7 As Thread = New Thread(Sub() Threaddata1(Thread7Finished, Prefetch, driverfiles, donotremoveamdhdaudiobusfiles))
+		Dim thread7 As Thread = New Thread(Sub() Threaddata1(Thread7Finished, Application.Paths.WinDir & "Prefetch\", driverfiles, donotremoveamdhdaudiobusfiles))
 		thread7.Start()
 
-		While Thread1Finished <> True Or Thread2Finished <> True Or Thread3Finished <> True Or Thread4Finished <> True Or Thread5Finished <> True Or Thread6Finished <> True Or Thread7Finished <> True Or Thread8Finished <> True
+		While Thread1Finished <> True Or Thread2Finished <> True Or Thread3Finished <> True Or Thread4Finished <> True Or Thread5Finished <> True Or Thread7Finished <> True Or Thread8Finished <> True
 			Thread.Sleep(500)
 		End While
 
 	End Sub
 
-	Private Sub Threaddata1(ByRef ThreadFinished As Boolean, ByVal filepath As String(), ByVal driverfiles As String(), ByVal donotremoveamdhdaudiobusfiles As Boolean)
+	Private Sub Threaddata1(ByRef ThreadFinished As Boolean, ByVal filepath As String, ByVal driverfiles As String(), ByVal donotremoveamdhdaudiobusfiles As Boolean)
 		ThreadFinished = False
-		If driverfiles IsNot Nothing AndAlso driverfiles.Length > 0 Then
-			If filepath IsNot Nothing AndAlso filepath.Length > 0 Then
-				For Each child As String In filepath
+		If filepath IsNot Nothing Then
+			If FileIO.ExistsDir(filepath) Then
+				For Each child As String In FileIO.GetFiles(filepath)
 					If IsNullOrWhitespace(child) Then Continue For
 					If StrContainsAny(child, True, driverfiles) Then
-						If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(child, True, "amdkmafd")) Then
-							Try
-								Delete(child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-							End Try
-						End If
+						Try
+							Delete(child)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 					End If
 				Next
 			End If
 		End If
 		ThreadFinished = True
 	End Sub
-
-	'Private Sub Threaddata2(ByRef Thread2Finished As Boolean, ByVal driverfiles As String(), ByVal donotremoveamdhdaudiobusfiles As Boolean)
-	'    Application.Log.AddMessage("Thread 2 Started")
-	'    Thread2Finished = False
-	'    Dim filepath As String = Nothing
-	'    Dim winxp = frmMain.winxp
-	'    For Each driverFile As String In driverfiles
-	'        If IsNullOrWhitespace(driverFile) Then Continue For
-
-	'        If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(driverFile, True, "amdkmafd")) Then
-
-	'            filepath = Application.Paths.System32
-	'            If Not IsNullOrWhitespace(filepath) Then
-
-	'                If winxp Then
-	'                    Try
-	'                        Delete(filepath & "drivers\dllcache\" & driverFile)
-	'                    Catch ex As Exception
-	'                        Application.Log.AddException(ex)
-	'                    End Try
-	'                End If
-	'            End If
-	'        End If
-	'    Next
-	'    Thread2Finished = True
-	'    Application.Log.AddMessage("Thread 2 Finished")
-	'End Sub
-
-	'Private Sub Threaddata3(ByRef Thread3Finished As Boolean, ByVal system32files As String(), ByVal driverfiles As String(), ByVal donotremoveamdhdaudiobusfiles As Boolean)
-	'    Application.Log.AddMessage("Thread 3 Started")
-	'    Thread3Finished = False
-	'    For Each child As String In system32files
-	'        If IsNullOrWhitespace(child) Then Continue For
-
-	'        If StrContainsAny(child, True, driverfiles) Then
-	'            Try
-	'                If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(child, True, "amdkmafd")) Then
-	'                    Delete(child)
-	'                End If
-	'            Catch ex As Exception
-	'            End Try
-	'        End If
-	'    Next
-	'    Thread3Finished = True
-	'    Application.Log.AddMessage("Thread 3 Finished")
-	'End Sub
-
-	'Private Sub Threaddata4(ByRef Thread4Finished As Boolean, ByVal syswow64files As String(), ByVal driverfiles As String(), ByVal donotremoveamdhdaudiobusfiles As Boolean)
-	'    Application.Log.AddMessage("Thread 4 Started")
-	'    Thread4Finished = False
-	'    For Each child As String In syswow64files
-	'        If IsNullOrWhitespace(child) Then Continue For
-
-	'        If StrContainsAny(child, True, driverfiles) Then
-	'            Try
-	'                If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(child, True, "amdkmafd")) Then
-	'                    Delete(child)
-	'                End If
-	'            Catch ex As Exception
-	'            End Try
-	'        End If
-	'    Next
-	'    Thread4Finished = True
-	'    Application.Log.AddMessage("Thread 4 Finished")
-	'End Sub
 
 	Public Sub TestDelete(ByVal folder As String, config As ThreadSettings)
 		' UpdateTextMethod(UpdateTextMethodmessagefn("18"))

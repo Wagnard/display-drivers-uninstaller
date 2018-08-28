@@ -7,9 +7,8 @@ Public Class AUDIOCleanup
 
     Public Sub Start(ByVal config As ThreadSettings)
 
-        Microsoft.VisualBasic.MsgBox("Audiocleanup")
-        Dim vendidexpected As String = ""
-        Select Case config.SelectedAUDIO
+		Dim vendidexpected As String = ""
+		Select Case config.SelectedAUDIO
             Case AudioVendor.Realtek
                 vendidexpected = "VEN_10EC"
             Case AudioVendor.SoundBlaster
@@ -94,45 +93,47 @@ Public Class AUDIOCleanup
 
         CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\classroot.cfg"))  '// add each line as String Array.
 
-        Application.Log.AddMessage("Removing known Packages")
+		CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\clsidleftover.cfg"))
 
-        packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\packages.cfg")   '// add each line as String Array.
+		Application.Log.AddMessage("Removing known Packages")
 
-        Try
-            Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-            "Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                If regkey IsNot Nothing Then
-                    For Each child As String In regkey.GetSubKeyNames()
-                        If IsNullOrWhitespace(child) = False Then
+		packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\packages.cfg")   '// add each line as String Array.
 
-                            Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
+		Try
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
+			"Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(child) = False Then
 
-                                If subregkey IsNot Nothing Then
-                                    If Not IsNullOrWhitespace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then
-                                        wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-                                        If Not IsNullOrWhitespace(wantedvalue) Then
-                                            For i As Integer = 0 To packages.Length - 1
-                                                If Not IsNullOrWhitespace(packages(i)) Then
-                                                    If StrContainsAny(wantedvalue, True, packages(i)) Then
-                                                        Try
-                                                            If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
-                                                                Deletesubregkey(regkey, child)
-                                                            End If
-                                                        Catch ex As Exception
-                                                        End Try
-                                                    End If
-                                                End If
-                                            Next
-                                        End If
-                                    End If
-                                End If
-                            End Using
-                        End If
-                    Next
-                End If
-            End Using
-        Catch ex As Exception
-            Application.Log.AddException(ex)
+							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
+
+								If subregkey IsNot Nothing Then
+									If Not IsNullOrWhitespace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then
+										wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
+										If Not IsNullOrWhitespace(wantedvalue) Then
+											For i As Integer = 0 To packages.Length - 1
+												If Not IsNullOrWhitespace(packages(i)) Then
+													If StrContainsAny(wantedvalue, True, packages(i)) Then
+														Try
+															If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
+																Deletesubregkey(regkey, child)
+															End If
+														Catch ex As Exception
+														End Try
+													End If
+												End If
+											Next
+										End If
+									End If
+								End If
+							End Using
+						End If
+					Next
+				End If
+			End Using
+		Catch ex As Exception
+			Application.Log.AddException(ex)
         End Try
 
         If IntPtr.Size = 8 Then
@@ -206,38 +207,52 @@ Public Class AUDIOCleanup
             End If
         End If
 
+		filePath = config.Paths.SysWOW64 + "RTCOM"
+		If FileIO.ExistsDir(filePath) Then
+			If filePath IsNot Nothing Then
+				If FileIO.CountDirectories(filePath) = 0 Then
+					Delete(filePath)
+				Else
+					For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
+						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+					Next
+				End If
+			End If
+		End If
 
-        '64Bit zone
-        If IntPtr.Size = 8 Then
-            filePath = config.Paths.ProgramFilesx86 + "Realtek"
-            If FileIO.ExistsDir(filePath) Then
-                Try
-                    For Each child As String In FileIO.GetDirectories(filePath)
-                        If IsNullOrWhitespace(child) = False Then
-                            If StrContainsAny(child, True, "Audio") Then
 
-                                Delete(child)
+		'64Bit zone
+		If IntPtr.Size = 8 Then
+			filePath = config.Paths.ProgramFilesx86 + "Realtek"
+			If FileIO.ExistsDir(filePath) Then
+				If filePath IsNot Nothing Then
 
-                            End If
-                        End If
-                    Next
-                    If FileIO.CountDirectories(filePath) = 0 Then
+					For Each child As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							If StrContainsAny(child, True, "Audio") Then
 
-                        Delete(filePath)
+								Delete(child)
 
-                    Else
-                        For Each data As String In FileIO.GetDirectories(filePath)
-                            If IsNullOrWhitespace(data) Then Continue For
-                            Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
-                        Next
+							End If
+						End If
+					Next
+					If FileIO.CountDirectories(filePath) = 0 Then
 
-                    End If
-                Catch ex As Exception
-                End Try
-            End If
-        End If
+						Delete(filePath)
 
-    End Sub
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				End If
+			End If
+		End If
+
+	End Sub
 
     Private Sub KillProcess(ByVal ParamArray processnames As String())
         For Each processName As String In processnames
