@@ -5,7 +5,7 @@ Public Class AUDIOCleanup
     'todo
     Dim CleanupEngine As New CleanupEngine
 
-    Public Sub start(ByVal config As ThreadSettings)
+    Public Sub Start(ByVal config As ThreadSettings)
 
         Microsoft.VisualBasic.MsgBox("Audiocleanup")
         Dim vendidexpected As String = ""
@@ -17,9 +17,8 @@ Public Class AUDIOCleanup
             Case AudioVendor.None
                 vendidexpected = "NONE"
         End Select
-        Microsoft.VisualBasic.MsgBox(config.SelectedType.ToString)
-        Microsoft.VisualBasic.MsgBox(config.SelectedAUDIO.ToString)
-        If vendidexpected = "NONE" Then
+
+		If vendidexpected = "NONE" Then
             Application.Log.AddWarningMessage("VendID is NONE, this is unexpected, cleaning aborted.")
             Exit Sub
         End If

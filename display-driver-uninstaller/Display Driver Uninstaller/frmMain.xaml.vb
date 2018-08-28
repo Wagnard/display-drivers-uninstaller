@@ -159,10 +159,10 @@ Public Class frmMain
 
 	Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
 		EnableDriverSearch(True, False)
-        MsgBox(Application.Settings.SelectedType.ToString)  'for testing.
-        MsgBox(Application.Settings.SelectedGPU.ToString)
-        MsgBox(Application.Settings.SelectedAUDIO.ToString)
-    End Sub
+		MsgBox(Application.Settings.SelectedType.ToString)  'for testing.
+		MsgBox(Application.Settings.SelectedGPU.ToString)
+		MsgBox(Application.Settings.SelectedAUDIO.ToString)
+	End Sub
 
 	Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
 		If Application.Settings.SelectedLanguage IsNot Nothing Then
@@ -398,14 +398,14 @@ Public Class frmMain
 			Dim vendid As String = ""
 
 			Dim removegfe As Boolean = config.RemoveGFE
-			
+
 			UpdateTextMethod(UpdateTextTranslated(19))
 
 			Select Case config.SelectedType
 				Case CleanType.GPU
-					GPUCleanup.start(config)
+					GPUCleanup.Start(config)
 				Case CleanType.Audio
-					AUDIOCleanup.start(config)
+					AUDIOCleanup.Start(config)
 			End Select
 
 		Catch ex As Exception
@@ -1061,22 +1061,22 @@ Public Class frmMain
 
 			Case CleanType.None
 				Application.Settings.SelectedGPU = GPUVendor.None
-                Application.Settings.SelectedAUDIO = AudioVendor.None
-                ButtonsPanel.IsEnabled = False
+				Application.Settings.SelectedAUDIO = AudioVendor.None
+				ButtonsPanel.IsEnabled = False
 			Case CleanType.Audio
 				Select Case cbSelectedGPU.SelectedIndex
 
 					Case 0
 						Application.Settings.SelectedGPU = GPUVendor.None
-                        Application.Settings.SelectedAUDIO = AudioVendor.None
-                        ButtonsPanel.IsEnabled = False
+						Application.Settings.SelectedAUDIO = AudioVendor.None
+						ButtonsPanel.IsEnabled = False
 					Case 1
-                        Application.Settings.SelectedAUDIO = AudioVendor.Realtek
-                        cbSelectedGPU.IsEnabled = True
+						Application.Settings.SelectedAUDIO = AudioVendor.Realtek
+						cbSelectedGPU.IsEnabled = True
 						ButtonsPanel.IsEnabled = True
 					Case 2
-                        Application.Settings.SelectedAUDIO = AudioVendor.SoundBlaster
-                        cbSelectedGPU.IsEnabled = True
+						Application.Settings.SelectedAUDIO = AudioVendor.SoundBlaster
+						cbSelectedGPU.IsEnabled = True
 						ButtonsPanel.IsEnabled = True
 
 				End Select
@@ -1086,8 +1086,8 @@ Public Class frmMain
 
 					Case 0
 						Application.Settings.SelectedGPU = GPUVendor.None
-                        Application.Settings.SelectedAUDIO = AudioVendor.None
-                        ButtonsPanel.IsEnabled = False
+						Application.Settings.SelectedAUDIO = AudioVendor.None
+						ButtonsPanel.IsEnabled = False
 					Case 1
 						Application.Settings.SelectedGPU = GPUVendor.Nvidia
 						cbSelectedGPU.IsEnabled = True

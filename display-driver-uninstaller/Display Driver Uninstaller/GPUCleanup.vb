@@ -14,8 +14,8 @@ Public Class GPUCleanup
 	Dim sysdrv As String = Application.Paths.SystemDrive
 	Dim donotremoveamdhdaudiobusfiles As Boolean = frmMain.donotremoveamdhdaudiobusfiles
 
-	Public Sub start(ByVal config As ThreadSettings)
-		Dim array As String()
+	Public Sub Start(ByVal config As ThreadSettings)
+		Dim Array As String()
 		Dim VendCHIDGPU As String = ""
 		Dim vendidexpected As String = ""
 
@@ -119,7 +119,7 @@ Public Class GPUCleanup
 		Catch ex As Exception
 			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 			Application.Log.AddException(ex)
-			End Try
+		End Try
 
 		'-----------------------
 		'Removing NVVHCI
@@ -3286,14 +3286,14 @@ Public Class GPUCleanup
 
 												Try
 													Select Case True
-														Case StrContainsAny(wantedvalue, True, sysdrv & "\program files (x86)\nvidia corporation\physx\common;")
-															wantedvalue = wantedvalue.Replace(sysdrv & "\program files (x86)\nvidia corporation\physx\common;", "")
+														Case StrContainsAny(wantedvalue, True, sysdrv & "program files (x86)\nvidia corporation\physx\common;")
+															wantedvalue = wantedvalue.Replace(sysdrv & "program files (x86)\nvidia corporation\physx\common;", "")
 															Try
 																regkey.SetValue(child, wantedvalue)
 															Catch ex As Exception
 															End Try
-														Case StrContainsAny(wantedvalue, True, ";" + sysdrv & "\program files (x86)\nvidia corporation\physx\common")
-															wantedvalue = wantedvalue.Replace(";" + sysdrv & "\program files (x86)\nvidia corporation\physx\common", "")
+														Case StrContainsAny(wantedvalue, True, ";" + sysdrv & "program files (x86)\nvidia corporation\physx\common")
+															wantedvalue = wantedvalue.Replace(";" + sysdrv & "program files (x86)\nvidia corporation\physx\common", "")
 															Try
 																regkey.SetValue(child, wantedvalue)
 															Catch ex As Exception
@@ -3326,16 +3326,16 @@ Public Class GPUCleanup
 					wantedvalue = regkey.GetValue("AppInit_DLLs", String.Empty).ToString   'Will need to consider the comma in the future for multiple value
 					If IsNullOrWhitespace(wantedvalue) = False Then
 						Select Case True
-							Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
-								wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+							Case wantedvalue.Contains(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
+								wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 								regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-							Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
-								wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+							Case wantedvalue.Contains(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
+								wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
 								regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-							Case wantedvalue.Contains(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
-								wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+							Case wantedvalue.Contains(sysdrv & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
+								wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 								regkey.SetValue("AppInit_DLLs", wantedvalue)
 						End Select
 					End If
@@ -3361,16 +3361,16 @@ Public Class GPUCleanup
 						wantedvalue = regkey.GetValue("AppInit_DLLs", String.Empty).ToString
 						If IsNullOrWhitespace(wantedvalue) = False Then
 							Select Case True
-								Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
-									wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+								Case wantedvalue.Contains(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
+									wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 									regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-								Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
-									wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+								Case wantedvalue.Contains(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
+									wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
 									regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-								Case wantedvalue.Contains(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
-									wantedvalue = wantedvalue.Replace(sysdrv & "\PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+								Case wantedvalue.Contains(sysdrv & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
+									wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 									regkey.SetValue("AppInit_DLLs", wantedvalue)
 							End Select
 						End If
@@ -4732,7 +4732,7 @@ Public Class GPUCleanup
 
 
 		If config.RemoveNvidiaDirs = True Then
-			filePath = sysdrv + "\NVIDIA"
+			filePath = sysdrv + "NVIDIA"
 
 			Delete(filePath)
 
