@@ -33,7 +33,7 @@ Class Application
 		End Set
 	End Property
 
-	Private Shared m_dispatcher As Threading.Dispatcher
+	Private Shared m_dispatcher As Windows.Threading.Dispatcher
 	Private Shared m_isDataSaved As Boolean = False
 	Private Shared m_allowSaveData As Boolean = False
 	Private Shared m_Data As Data
@@ -113,7 +113,7 @@ Class Application
 			Application.Settings.LanguageOptions.Add(lang)
 		Next
 
-		Languages.Load()		'default = english
+		Languages.Load()        'default = english
 
 		ExtractEnglishLangFile(Application.Paths.Language & "English.xml", Languages.DefaultEng)
 	End Sub
@@ -129,7 +129,7 @@ Class Application
 			End If
 
 			If nativeLang Is Nothing AndAlso systemlang.Equals(item.ISOLanguage, StringComparison.OrdinalIgnoreCase) Then
-				nativeLang = item		'take native on hold incase last used language not found (avoid multiple loops)
+				nativeLang = item       'take native on hold incase last used language not found (avoid multiple loops)
 			End If
 		Next
 
@@ -137,9 +137,9 @@ Class Application
 			Application.Settings.SelectedLanguage = lastUsedLang
 		Else
 			If nativeLang IsNot Nothing Then
-				Application.Settings.SelectedLanguage = nativeLang				'couldn't find last used, using native lang
+				Application.Settings.SelectedLanguage = nativeLang              'couldn't find last used, using native lang
 			Else
-				Application.Settings.SelectedLanguage = Languages.DefaultEng	'couldn't find last used nor native lang, using default (English)
+				Application.Settings.SelectedLanguage = Languages.DefaultEng    'couldn't find last used nor native lang, using default (English)
 			End If
 		End If
 
@@ -201,7 +201,7 @@ Class Application
 				Continue For
 			End If
 
-			For Each process As Process In process.GetProcessesByName(processName)
+			For Each process As Process In Process.GetProcessesByName(processName)
 				Try
 					process.Kill()
 					Application.Settings.ProcessKilled = True
@@ -255,7 +255,7 @@ Class Application
 
 	Private Sub AppClosing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
 		Try
-			If frmMain.workThread IsNot Nothing Then					' workThread running, cleaning in progress!
+			If frmMain.workThread IsNot Nothing Then                    ' workThread running, cleaning in progress!
 				' Should take few milliseconds...	
 				If frmMain.workThread.IsAlive Then Thread.Sleep(200)
 				If frmMain.workThread.IsAlive Then Thread.Sleep(2000)
@@ -267,7 +267,7 @@ Class Application
 				End If
 			End If
 		Catch ex As Exception
-			e.Cancel = True			' frmMain.workThread may be null after checking
+			e.Cancel = True         ' frmMain.workThread may be null after checking
 		End Try
 	End Sub
 
@@ -329,7 +329,7 @@ Class Application
 
 			SaveData()
 		Finally
-			Me.Shutdown(0)	' Close application completely
+			Me.Shutdown(0)  ' Close application completely
 		End Try
 	End Sub
 
@@ -375,7 +375,7 @@ Class Application
 						Dim errCode As UInt32 = GetUInt32(ex.NativeErrorCode)
 						Dim msg As String = String.Format("Error:{0}{1}{0}{0}Message:{0}{2}", CRLF, GetErrorEnum(errCode), ex.Message)
 
-						If errCode = Errors.CANCELLED Then	'User pressed 'No' on UAC screen
+						If errCode = Errors.CANCELLED Then  'User pressed 'No' on UAC screen
 							msg = String.Format("Administrator rights are required to use application.{0}{0}{1}", CRLF, msg)
 						End If
 
@@ -403,10 +403,10 @@ Class Application
 
 			Try
 				If LaunchOptions.HasLinkArg Then
-					If ProcessLinks() Then		' Link found and opened?
+					If ProcessLinks() Then      ' Link found and opened?
 						Log.AddMessage("Closed by HasLinkArg")
 						Log.SaveToFile()
-						Me.Shutdown(0)			' Skip loading if link is opened
+						Me.Shutdown(0)          ' Skip loading if link is opened
 						Exit Sub
 					End If
 				End If
@@ -421,16 +421,16 @@ Class Application
 					If LaunchOptions.Restart Then
 						Thread.Sleep(2000)
 						RestartComputer()
-						Me.Shutdown(0)			' Skip loading.
+						Me.Shutdown(0)          ' Skip loading.
 						Exit Sub
 					End If
 					If LaunchOptions.Shutdown Then
 						Thread.Sleep(2000)
 						ShutdownComputer()
-						Me.Shutdown(0)			' Skip loading.
+						Me.Shutdown(0)          ' Skip loading.
 						Exit Sub
 					End If
-					Me.Shutdown(0)			' Skip loading.
+					Me.Shutdown(0)          ' Skip loading.
 					Exit Sub
 				End If
 			Catch ex As Exception
@@ -487,7 +487,7 @@ Class Application
 			End If
 
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				If ExtractPAExec() Then				' Extract PAExec to \x64 or \x86 dir
+				If ExtractPAExec() Then             ' Extract PAExec to \x64 or \x86 dir
 					If LaunchAsSystem() Then
 						' Launched as System, close this instance, True = close, false = continue
 						Log.SaveToFile()
@@ -506,7 +506,7 @@ Class Application
 			End Try
 		Catch ex As Exception
 			Log.AddException(ex, "Some part of application startup failed!" & CRLF & ">> Application_Startup()")
-			Log.SaveToFile()	' Save to file
+			Log.SaveToFile()    ' Save to file
 
 			MessageBox.Show("Launching Application failed!" & CRLF &
 			 "A problem occurred in one of the module, send your DDU logs to the developer." & CRLF &
@@ -596,7 +596,7 @@ Class Application
 			End If
 		End Using
 
-		If Not versionFound Then		' Double check for Unknown
+		If Not versionFound Then        ' Double check for Unknown
 			Select Case regOSValue
 				Case "5.1" : version = OSVersion.WinXP
 				Case "5.2" : version = OSVersion.WinXPPro_Server2003
@@ -690,7 +690,7 @@ Class Application
 					Using ms As MemoryStream = New MemoryStream(My.Resources.paexec)
 						Using fs As FileStream = File.OpenRead(dir & "paexec.exe")
 							If Tools.CompareStreams(ms, fs) Then
-								Return True		' paexec.exe already exists and checksum(MD5) matches
+								Return True     ' paexec.exe already exists and checksum(MD5) matches
 							End If
 						End Using
 					End Using
@@ -758,7 +758,7 @@ Class Application
 					End If
 
 					If Settings.EnableSafeModeDialog Then
-						Dim bootOption As Integer = -1				'-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
+						Dim bootOption As Integer = -1              '-1 = close, 0 = normal, 1 = SafeMode, 2 = SafeMode with network
 						Dim frmSafeBoot As New frmLaunch With {.DataContext = Data, .Topmost = True}
 
 
