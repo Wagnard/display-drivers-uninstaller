@@ -15,6 +15,8 @@ Public Class AppLaunchOptions
 	Public Property CleanNvidia As Boolean = False
 	Public Property CleanAmd As Boolean = False
 	Public Property CleanIntel As Boolean = False
+	Public Property CleanRealtek As Boolean = False
+	Public Property CleanSoundBlaster As Boolean = False
 
 	Public Property RemoveMonitors As Boolean = False
 
@@ -32,7 +34,7 @@ Public Class AppLaunchOptions
 
 	Public ReadOnly Property HasCleanArg As Boolean
 		Get
-			Return (CleanNvidia OrElse CleanAmd OrElse CleanIntel)
+			Return (CleanNvidia OrElse CleanAmd OrElse CleanIntel OrElse CleanRealtek OrElse CleanSoundBlaster)
 		End Get
 	End Property
 
@@ -96,7 +98,8 @@ Public Class AppLaunchOptions
 					Case StrContainsAny(Argument, True, "-CleanNvidia") : CleanNvidia = True
 					Case StrContainsAny(Argument, True, "-CleanAmd") : CleanAmd = True
 					Case StrContainsAny(Argument, True, "-CleanIntel") : CleanIntel = True
-
+					Case StrContainsAny(Argument, True, "-CleanRealtek") : CleanRealtek = True
+					Case StrContainsAny(Argument, True, "-CleanSoundBlaster") : CleanSoundBlaster = True
 
 						'	TODO: Add cmdline args for those RemoveXXXX properties
 						'	Case StrContainsAny(Argument, True, "-RemNvidiaDirs") : RemoveNvidiaDirs = True

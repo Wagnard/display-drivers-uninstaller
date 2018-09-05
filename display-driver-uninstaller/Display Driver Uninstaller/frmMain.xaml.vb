@@ -486,6 +486,8 @@ Public Class frmMain
 			If config.HasCleanArg Then
 				If config.CleanAmd Then
 					config.Success = False
+					config.SelectedType = CleanType.GPU
+					config.SelectedAUDIO = AudioVendor.None
 					config.SelectedGPU = GPUVendor.AMD
 
 					StartThread(config)
@@ -498,6 +500,8 @@ Public Class frmMain
 
 				If config.CleanNvidia Then
 					config.Success = False
+					config.SelectedType = CleanType.GPU
+					config.SelectedAUDIO = AudioVendor.None
 					config.SelectedGPU = GPUVendor.Nvidia
 
 					StartThread(config)
@@ -509,6 +513,8 @@ Public Class frmMain
 
 				If config.CleanIntel Then
 					config.Success = False
+					config.SelectedType = CleanType.GPU
+					config.SelectedAUDIO = AudioVendor.None
 					config.SelectedGPU = GPUVendor.Intel
 
 					StartThread(config)
@@ -517,6 +523,33 @@ Public Class frmMain
 						Thread.Sleep(200)
 					End While
 				End If
+
+				If config.CleanRealtek Then
+					config.Success = False
+					config.SelectedType = CleanType.Audio
+					config.SelectedGPU = GPUVendor.None
+					config.SelectedAUDIO = AudioVendor.Realtek
+
+					StartThread(config)
+
+					While cleaningThread.IsAlive
+						Thread.Sleep(200)
+					End While
+				End If
+
+				If config.CleanSoundBlaster Then
+					config.Success = False
+					config.SelectedType = CleanType.Audio
+					config.SelectedGPU = GPUVendor.None
+					config.SelectedAUDIO = AudioVendor.SoundBlaster
+
+					StartThread(config)
+
+					While cleaningThread.IsAlive
+						Thread.Sleep(200)
+					End While
+				End If
+
 			End If
 
 			If config.Restart Then
