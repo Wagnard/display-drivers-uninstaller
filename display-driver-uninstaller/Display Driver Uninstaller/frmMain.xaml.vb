@@ -1171,4 +1171,7 @@ Public Class frmMain
 		SharedlbLog = lbLog
 	End Sub
 
+	Private Sub lblOffer_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles lblOffer.MouseDown
+		WinAPI.OpenVisitLink(" -visitoffer")
+	End Sub
 End Class

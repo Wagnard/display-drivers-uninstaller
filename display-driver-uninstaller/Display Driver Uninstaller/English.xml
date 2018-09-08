@@ -75,7 +75,7 @@
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offers from our partners</Text>
+			<Text>Offers from our partners. (Recommended)</Text>
 			<Tooltip>You can disable this in the options menu.</Tooltip>
 		</lblOffer>
 

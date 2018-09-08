@@ -21,6 +21,7 @@
         <ImageBrush x:Key="logoNvidia" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/nvidia_logo.png" Stretch="Uniform" AlignmentY="Center" />
         <ImageBrush x:Key="logoIntel" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/intel_logo.png" Stretch="Uniform" AlignmentY="Center" />
         <ImageBrush x:Key="logoRealtek" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/realtek-logo.png" Stretch="Uniform" AlignmentY="Center" />
+		<ImageBrush x:Key="logoSoundBlaster" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/creative_logo.png" Stretch="Uniform" AlignmentY="Center" />
 
 		<LinearGradientBrush x:Key="brushNvidia" EndPoint="0.5,1" StartPoint="0.5,0">
 			<GradientStop Color="#FFDCFFDC" Offset="0" />
@@ -35,6 +36,10 @@
 			<GradientStop Color="White" Offset="1" />
 		</LinearGradientBrush>
 		<LinearGradientBrush x:Key="brushRealtek" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FFDCDCFF" Offset="0" />
+			<GradientStop Color="White" Offset="1" />
+		</LinearGradientBrush>
+		<LinearGradientBrush x:Key="brushSoundBlaster" EndPoint="0.5,1" StartPoint="0.5,0">
 			<GradientStop Color="#FFDCDCFF" Offset="0" />
 			<GradientStop Color="White" Offset="1" />
 		</LinearGradientBrush>
@@ -54,6 +59,9 @@
 				</DataTrigger>
 				<DataTrigger Binding="{Binding Path=Settings.SelectedAUDIO, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
 					<Setter Property="Background" Value="{StaticResource brushRealtek}"/>
+				</DataTrigger>
+				<DataTrigger Binding="{Binding Path=Settings.SelectedAUDIO, Mode=OneWay}" Value="{x:Static local:AudioVendor.SoundBlaster}">
+					<Setter Property="Background" Value="{StaticResource brushSoundBlaster}"/>
 				</DataTrigger>
 			</Style.Triggers>
 		</Style>
@@ -140,6 +148,9 @@
 							<DataTrigger Binding="{Binding Path=Settings.SelectedAUDIO, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
 								<Setter Property="Background" Value="{StaticResource logoRealtek}"/>
 							</DataTrigger>
+							<DataTrigger Binding="{Binding Path=Settings.SelectedAUDIO, Mode=OneWay}" Value="{x:Static local:AudioVendor.SoundBlaster}">
+								<Setter Property="Background" Value="{StaticResource logoSoundBlaster}"/>
+							</DataTrigger>
 						</Style.Triggers>
 					</Style>
 				</Border.Style>
@@ -179,7 +190,7 @@
 			</StackPanel>
 
 			<StackPanel Visibility="{Binding Settings.ShowOffer, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" DockPanel.Dock="Top" VerticalAlignment="Center">
-				<Label x:Name="lblOffer" FontWeight="Bold" Content="lblOffer" HorizontalContentAlignment="Center" />
+				<Label x:Name="lblOffer" FontWeight="Bold" Content="lblOffer" HorizontalContentAlignment="Center" FontSize="11" />
 
 				<Button x:Name="imgOffer">
 					<Button.Template>

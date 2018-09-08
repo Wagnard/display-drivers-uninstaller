@@ -230,5 +230,8 @@
   <ItemGroup>
     <Resource Include="Resources\realtek-logo.PNG" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\creative_logo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
