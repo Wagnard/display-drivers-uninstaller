@@ -651,11 +651,12 @@ Public Class CleanupEngine
 										End Try
 
 										Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Installer\Features", True)
-
-											Try
-												Deletesubregkey(regkey3, child)
-											Catch ex As Exception
-											End Try
+											If regkey3 IsNot Nothing Then
+												Try
+													Deletesubregkey(regkey3, child)
+												Catch ex As Exception
+												End Try
+											End If
 										End Using
 
 										Using superregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot,
@@ -722,10 +723,12 @@ Public Class CleanupEngine
 										End Try
 
 										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Classes\Installer\Features", True)
-											Try
-												Deletesubregkey(regkey2, child)
-											Catch ex As Exception
-											End Try
+											If regkey2 IsNot Nothing Then
+												Try
+													Deletesubregkey(regkey2, child)
+												Catch ex As Exception
+												End Try
+											End If
 										End Using
 
 										Using superregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
@@ -797,10 +800,12 @@ Public Class CleanupEngine
 											End Try
 
 											Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, users & "\Software\Microsoft\Installer\Features", True)
-												Try
-													Deletesubregkey(regkey2, child)
-												Catch ex As Exception
-												End Try
+												If regkey2 IsNot Nothing Then
+													Try
+														Deletesubregkey(regkey2, child)
+													Catch ex As Exception
+													End Try
+												End If
 											End Using
 
 											Using superregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users,
@@ -2461,15 +2466,17 @@ Public Class CleanupEngine
 							If IsNullOrWhitespace(child) Then Continue For
 
 							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-								If (Not IsNullOrWhitespace(regkey2.GetValue("", String.Empty).ToString)) AndAlso
+								If regkey2 IsNot Nothing Then
+									If (Not IsNullOrWhitespace(regkey2.GetValue("", String.Empty).ToString)) AndAlso
 								 regkey2.GetValue("", String.Empty).ToString.ToLower.StartsWith("oem") AndAlso
 								 regkey2.GetValue("", String.Empty).ToString.ToLower.EndsWith(".inf") AndAlso
 								 (Not StrContainsAny(infslist, True, regkey2.GetValue("", String.Empty).ToString)) Then
-									Try
-										Deletesubregkey(regkey, child)
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-									End Try
+										Try
+											Deletesubregkey(regkey, child)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
 								End If
 							End Using
 						Next

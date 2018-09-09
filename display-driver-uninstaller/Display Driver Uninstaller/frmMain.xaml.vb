@@ -308,18 +308,23 @@ Public Class frmMain
 							If StrContainsAny(child, True, "ven_8086") Then
 								Try
 									Using subRegKey As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-										For Each childs As String In subRegKey.GetSubKeyNames()
-											If IsNullOrWhitespace(childs) Then Continue For
+										If subRegKey IsNot Nothing Then
 
-											Using childRegKey As RegistryKey = MyRegistry.OpenSubKey(subRegKey, childs)
-												Dim regValue As String = childRegKey.GetValue("Service", String.Empty).ToString
+											For Each childs As String In subRegKey.GetSubKeyNames()
+												If IsNullOrWhitespace(childs) Then Continue For
 
-												If Not IsNullOrWhitespace(regValue) AndAlso StrContainsAny(regValue, True, "amdkmdap") Then
-													enduro = True
-													UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
-												End If
-											End Using
-										Next
+												Using childRegKey As RegistryKey = MyRegistry.OpenSubKey(subRegKey, childs)
+													If childRegKey IsNot Nothing Then
+														Dim regValue As String = childRegKey.GetValue("Service", String.Empty).ToString
+
+														If Not IsNullOrWhitespace(regValue) AndAlso StrContainsAny(regValue, True, "amdkmdap") Then
+															enduro = True
+															UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
+														End If
+													End If
+												End Using
+											Next
+										End If
 									End Using
 								Catch ex As Exception
 									Continue For
@@ -892,21 +897,23 @@ Public Class frmMain
 		If version >= OSVersion.WinVista AndAlso version < OSVersion.Win7 Then
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Policies\Microsoft\Windows\DriverSearching", True)
-					Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate", Nothing))
-
 					If regkey IsNot Nothing Then
-						If regValue <> If(enable, 0, 1) Then
-							regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
+						Dim regValue As Int32 = CInt(regkey.GetValue("DontSearchWindowsUpdate", Nothing))
 
-							If Not silent Then
-								If enable Then
-									MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
-								Else
-									MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+						If regkey IsNot Nothing Then
+							If regValue <> If(enable, 0, 1) Then
+								regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
+
+								If Not silent Then
+									If enable Then
+										MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+									Else
+										MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+									End If
 								End If
+							ElseIf enable <> False AndAlso Not silent Then
+								MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
 							End If
-						ElseIf enable <> False AndAlso Not silent Then
-							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
 						End If
 					End If
 				End Using

@@ -52,6 +52,7 @@ Public Class GPUCleanup
 					For Each child As String In regkey.GetSubKeyNames
 						If IsNullOrWhitespace(child) Then Continue For
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+							'This is not an error that we do nothing here, it is oply to trigger the persmission check on the previous line.
 						End Using
 					Next
 				End If
@@ -584,24 +585,30 @@ Public Class GPUCleanup
 						If IsNullOrWhitespace(child) Then Continue For
 
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-							If IsNullOrWhitespace(regkey2.GetValue("", String.Empty).ToString) Then Continue For
+							If regkey2 IsNot Nothing Then
+								If IsNullOrWhitespace(regkey2.GetValue("", String.Empty).ToString) Then Continue For
 
-							If StrContainsAny(regkey2.GetValue("").ToString, True, "amd d3d11 hardware mft", "amd fast (dnd) decoder", "amd h.264 hardware mft encoder", "amd playback decoder mft") Then
-								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories")
-									For Each child2 As String In regkey3.GetSubKeyNames
-										If IsNullOrWhitespace(child2) Then Continue For
-										Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories\" & child2, True)
-											Try
-												Deletesubregkey(regkey4, child)
-											Catch ex As Exception
-											End Try
-										End Using
-									Next
-								End Using
-								Try
-									Deletesubregkey(regkey, child)
-								Catch ex As Exception
-								End Try
+								If StrContainsAny(regkey2.GetValue("").ToString, True, "amd d3d11 hardware mft", "amd fast (dnd) decoder", "amd h.264 hardware mft encoder", "amd playback decoder mft") Then
+									Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories")
+										If regkey3 IsNot Nothing Then
+											For Each child2 As String In regkey3.GetSubKeyNames
+												If IsNullOrWhitespace(child2) Then Continue For
+												Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories\" & child2, True)
+													If regkey4 IsNot Nothing Then
+														Try
+															Deletesubregkey(regkey4, child)
+														Catch ex As Exception
+														End Try
+													End If
+												End Using
+											Next
+										End If
+									End Using
+									Try
+										Deletesubregkey(regkey, child)
+									Catch ex As Exception
+									End Try
+								End If
 							End If
 						End Using
 					Next
@@ -619,24 +626,30 @@ Public Class GPUCleanup
 							If IsNullOrWhitespace(child) Then Continue For
 
 							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-								If IsNullOrWhitespace(regkey2.GetValue("", String.Empty).ToString) Then Continue For
+								If regkey2 IsNot Nothing Then
+									If IsNullOrWhitespace(regkey2.GetValue("", String.Empty).ToString) Then Continue For
 
-								If StrContainsAny(regkey2.GetValue("").ToString, True, "amd d3d11 hardware mft", "amd fast (dnd) decoder", "amd h.264 hardware mft encoder", "amd playback decoder mft") Then
-									Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories")
-										For Each child2 As String In regkey3.GetSubKeyNames
-											If IsNullOrWhitespace(child2) Then Continue For
-											Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories\" & child2, True)
-												Try
-													Deletesubregkey(regkey4, child)
-												Catch ex As Exception
-												End Try
-											End Using
-										Next
-									End Using
-									Try
-										Deletesubregkey(regkey, child)
-									Catch ex As Exception
-									End Try
+									If StrContainsAny(regkey2.GetValue("").ToString, True, "amd d3d11 hardware mft", "amd fast (dnd) decoder", "amd h.264 hardware mft encoder", "amd playback decoder mft") Then
+										Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories")
+											If regkey3 IsNot Nothing Then
+												For Each child2 As String In regkey3.GetSubKeyNames
+													If IsNullOrWhitespace(child2) Then Continue For
+													Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories\" & child2, True)
+														If regkey4 IsNot Nothing Then
+															Try
+																Deletesubregkey(regkey4, child)
+															Catch ex As Exception
+															End Try
+														End If
+													End Using
+												Next
+											End If
+										End Using
+										Try
+											Deletesubregkey(regkey, child)
+										Catch ex As Exception
+										End Try
+									End If
 								End If
 							End Using
 						Next
@@ -723,10 +736,12 @@ Public Class GPUCleanup
 		'end of decom?
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" &
 		  "Display\shellex\PropertySheetHandlers", True)
-			Try
-				Deletesubregkey(regkey, "ATIACE")
-			Catch ex As Exception
-			End Try
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(regkey, "ATIACE")
+				Catch ex As Exception
+				End Try
+			End If
 		End Using
 
 		'remove opencl registry Khronos
@@ -1883,9 +1898,11 @@ Public Class GPUCleanup
 				For Each child As String In regkey.GetSubKeyNames
 					If IsNullOrWhitespace(child) Then Continue For
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-						If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater") Then
-								Deletesubregkey(regkey, child)
+						If regkey2 IsNot Nothing Then
+							If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
+								If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater") Then
+									Deletesubregkey(regkey, child)
+								End If
 							End If
 						End If
 					End Using
@@ -2773,19 +2790,21 @@ Public Class GPUCleanup
 										If IsNullOrWhitespace(child2) Then Continue For
 
 										Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey2, child2)
-											Dim array As String() = TryCast(regkey3.GetValue("LowerFilters"), String())
+											If regkey3 IsNot Nothing Then
+												Dim array As String() = TryCast(regkey3.GetValue("LowerFilters"), String())
 
-											If array IsNot Nothing AndAlso array.Length > 0 Then
-												For Each value As String In array
-													If Not IsNullOrWhitespace(value) Then
-														If StrContainsAny(value, True, "amdkmpfd") Then
-															Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
-															Application.Log.AddMessage("We do not remove the AMDKMPFP service yet")
+												If array IsNot Nothing AndAlso array.Length > 0 Then
+													For Each value As String In array
+														If Not IsNullOrWhitespace(value) Then
+															If StrContainsAny(value, True, "amdkmpfd") Then
+																Application.Log.AddMessage("Found an AMDKMPFD! in " + child)
+																Application.Log.AddMessage("We do not remove the AMDKMPFP service yet")
 
-															Return True
+																Return True
+															End If
 														End If
-													End If
-												Next
+													Next
+												End If
 											End If
 										End Using
 
@@ -3190,51 +3209,53 @@ Public Class GPUCleanup
 											If IsNullOrWhitespace(childs) Then Continue For
 
 											Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, childs)
-												For Each child As String In regkey2.GetValueNames()
-													If IsNullOrWhitespace(child) Then Continue For
+												If regkey2 IsNot Nothing Then
+													For Each child As String In regkey2.GetValueNames()
+														If IsNullOrWhitespace(child) Then Continue For
 
-													If StrContainsAny(child, True, "description") Then
-														wantedvalue = regkey2.GetValue(child, String.Empty).ToString()
-														If IsNullOrWhitespace(wantedvalue) Then Continue For
+														If StrContainsAny(child, True, "description") Then
+															wantedvalue = regkey2.GetValue(child, String.Empty).ToString()
+															If IsNullOrWhitespace(wantedvalue) Then Continue For
 
-														If StrContainsAny(wantedvalue, True, "nvsvc") Then
-															Try
-																Deletesubregkey(regkey, childs)
-																Continue For
-															Catch ex As Exception
-																Application.Log.AddException(ex)
-															End Try
-														End If
-														If StrContainsAny(wantedvalue, True, "video and display power management") Then
-															Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, childs, True)
-																If subregkey2 IsNot Nothing Then
-																	For Each childinsubregkey2 As String In subregkey2.GetSubKeyNames()
-																		If IsNullOrWhitespace(childinsubregkey2) Then Continue For
-																		Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey2, childinsubregkey2)
-																			If regkey3 IsNot Nothing Then
-																				For Each childinsubregkey2value As String In regkey3.GetValueNames()
-																					If IsNullOrWhitespace(childinsubregkey2value) Then Continue For
+															If StrContainsAny(wantedvalue, True, "nvsvc") Then
+																Try
+																	Deletesubregkey(regkey, childs)
+																	Continue For
+																Catch ex As Exception
+																	Application.Log.AddException(ex)
+																End Try
+															End If
+															If StrContainsAny(wantedvalue, True, "video and display power management") Then
+																Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, childs, True)
+																	If subregkey2 IsNot Nothing Then
+																		For Each childinsubregkey2 As String In subregkey2.GetSubKeyNames()
+																			If IsNullOrWhitespace(childinsubregkey2) Then Continue For
+																			Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey2, childinsubregkey2)
+																				If regkey3 IsNot Nothing Then
+																					For Each childinsubregkey2value As String In regkey3.GetValueNames()
+																						If IsNullOrWhitespace(childinsubregkey2value) Then Continue For
 
-																					If childinsubregkey2value.ToString.ToLower.Contains("description") Then
-																						wantedvalue2 = regkey3.GetValue(childinsubregkey2value, String.Empty).ToString
-																						If IsNullOrWhitespace(wantedvalue2) Then Continue For
+																						If childinsubregkey2value.ToString.ToLower.Contains("description") Then
+																							wantedvalue2 = regkey3.GetValue(childinsubregkey2value, String.Empty).ToString
+																							If IsNullOrWhitespace(wantedvalue2) Then Continue For
 
-																						If wantedvalue2.ToString.ToLower.Contains("nvsvc") Then
-																							Try
-																								Deletesubregkey(subregkey2, childinsubregkey2)
-																							Catch ex As Exception
-																							End Try
+																							If wantedvalue2.ToString.ToLower.Contains("nvsvc") Then
+																								Try
+																									Deletesubregkey(subregkey2, childinsubregkey2)
+																								Catch ex As Exception
+																								End Try
+																							End If
 																						End If
-																					End If
-																				Next
-																			End If
-																		End Using
-																	Next
-																End If
-															End Using
+																					Next
+																				End If
+																			End Using
+																		Next
+																	End If
+																End Using
+															End If
 														End If
-													End If
-												Next
+													Next
+												End If
 											End Using
 										Next
 									End If
@@ -4233,10 +4254,12 @@ Public Class GPUCleanup
 				End Try
 				If regkey.SubKeyCount = 0 Then
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "VirtualStore\MACHINE\SOFTWARE", True)
-						Try
-							Deletesubregkey(regkey2, "NVIDIA Corporation")
-						Catch ex As Exception
-						End Try
+						If regkey2 IsNot Nothing Then
+							Try
+								Deletesubregkey(regkey2, "NVIDIA Corporation")
+							Catch ex As Exception
+							End Try
+						End If
 					End Using
 				Else
 					For Each data As String In regkey.GetSubKeyNames()
@@ -4468,62 +4491,76 @@ Public Class GPUCleanup
 
 		'Shell ext
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Directory\background\shellex\ContextMenuHandlers", True)
-			Try
-				Deletesubregkey(regkey, "NvCplDesktopContext")
-			Catch ex As Exception
-			End Try
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(regkey, "NvCplDesktopContext")
+				Catch ex As Exception
+				End Try
 
-			Try
-				Deletesubregkey(regkey, "00nView")
-			Catch ex As Exception
-			End Try
+				Try
+					Deletesubregkey(regkey, "00nView")
+				Catch ex As Exception
+				End Try
+			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Classes\Directory\background\shellex\ContextMenuHandlers", True)
-			Try
-				Deletesubregkey(regkey, "NvCplDesktopContext")
-			Catch ex As Exception
-			End Try
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(regkey, "NvCplDesktopContext")
+				Catch ex As Exception
+				End Try
 
-			Try
-				Deletesubregkey(regkey, "00nView")
-			Catch ex As Exception
-			End Try
+				Try
+					Deletesubregkey(regkey, "00nView")
+				Catch ex As Exception
+				End Try
+			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".avi\shellex", True)
-			Try
-				Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
-			Catch ex As Exception
-			End Try
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+				Catch ex As Exception
+				End Try
+			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpe\shellex", True)
-			Try
-				Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
-			Catch ex As Exception
-			End Try
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+				Catch ex As Exception
+				End Try
+			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpeg\shellex", True)
-			Try
-				Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
-			Catch ex As Exception
-			End Try
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+				Catch ex As Exception
+				End Try
+			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpg\shellex", True)
-			Try
-				Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
-			Catch ex As Exception
-			End Try
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+				Catch ex As Exception
+				End Try
+			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".wmv\shellex", True)
-			Try
-				Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
-			Catch ex As Exception
-			End Try
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+				Catch ex As Exception
+				End Try
+			End If
 		End Using
 
 		'Cleaning of some "open with application" related to 3d vision
@@ -4571,9 +4608,11 @@ Public Class GPUCleanup
 				For Each child As String In regkey.GetSubKeyNames
 					If IsNullOrWhitespace(child) Then Continue For
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-						If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-							If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NVIDIA Profile Updater", "NVIDIA telemetry monitor", "NVIDIA crash and telemetry reporter", "batteryboost") AndAlso config.RemoveGFE Then
-								Deletesubregkey(regkey, child)
+						If regkey2 IsNot Nothing Then
+							If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
+								If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NVIDIA Profile Updater", "NVIDIA telemetry monitor", "NVIDIA crash and telemetry reporter", "batteryboost") AndAlso config.RemoveGFE Then
+									Deletesubregkey(regkey, child)
+								End If
 							End If
 						End If
 					End Using
@@ -5545,18 +5584,20 @@ Public Class GPUCleanup
 										If IsNullOrWhitespace(childs) Then Continue For
 
 										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, childs, True)
-											For Each Keyname As String In regkey2.GetValueNames
-												If IsNullOrWhitespace(Keyname) Then Continue For
+											If regkey2 IsNot Nothing Then
+												For Each Keyname As String In regkey2.GetValueNames
+													If IsNullOrWhitespace(Keyname) Then Continue For
 
-												If StrContainsAny(Keyname, True, "nvstlink.exe", "nvstview.exe", "nvcpluir.dll", "nvcplui.exe") Or
-												 (StrContainsAny(Keyname, True, "gfexperience.exe", "nvidia share.exe") AndAlso config.RemoveGFE) Then
-													Try
-														Deletevalue(regkey2, Keyname)
-													Catch ex As Exception
-														Application.Log.AddException(ex)
-													End Try
-												End If
-											Next
+													If StrContainsAny(Keyname, True, "nvstlink.exe", "nvstview.exe", "nvcpluir.dll", "nvcplui.exe") Or
+													 (StrContainsAny(Keyname, True, "gfexperience.exe", "nvidia share.exe") AndAlso config.RemoveGFE) Then
+														Try
+															Deletevalue(regkey2, Keyname)
+														Catch ex As Exception
+															Application.Log.AddException(ex)
+														End Try
+													End If
+												Next
+											End If
 										End Using
 									Next
 								End If
