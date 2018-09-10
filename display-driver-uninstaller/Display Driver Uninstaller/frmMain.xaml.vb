@@ -159,9 +159,6 @@ Public Class frmMain
 
 	Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
 		EnableDriverSearch(True, False)
-		MsgBox(Application.Settings.SelectedType.ToString)  'for testing.
-		MsgBox(Application.Settings.SelectedGPU.ToString)
-		MsgBox(Application.Settings.SelectedAUDIO.ToString)
 	End Sub
 
 	Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
