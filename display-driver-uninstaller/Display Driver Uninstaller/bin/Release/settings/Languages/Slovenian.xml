@@ -12,23 +12,23 @@
 				(Zelo priporočljivo)
 			</Text>
 			<Tooltip>
-				Odstrani trenutne in prejšnje gonilnike, nato znova zažene računalnik.
+				Odstrani trenutne in prejšnje gonilnike, nato vnovič zažene računalnik.
 				(Zelo priporočljivo)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				Počisti in znova NE zaženi
+				Počisti in vnovič NE zaženi
 				(Lahko povzroči težave, kot je črni zaslon)
 			</Text>
 			<Tooltip>
-				Odstrani trenutne in prejšnje gonilnike, vendar znova ne zažene računalnika.
+				Odstrani trenutne in prejšnje gonilnike, vendar vnovič ne zažene računalnika.
 				(Lahko povzroči težave, kot je črni zaslon)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
-				Počisti in zaustavi računalnik
+				Počisti in izklopi računalnik
 				(Za namestitev nove grafične kartice)
 			</Text>
 			<Tooltip>
@@ -38,7 +38,7 @@
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Odstrani "GeForce Experience" predpomnilnik nameščevalca grafičnih gonilnikov in datoteke.
+				Odstrani "GeForce Experience" medpomnilnik nameščevalca grafičnih gonilnikov in datoteke.
 				(Opomba: Gonilniki ne bodo odstranjeni)
 			</Text>
 			<Tooltip>
@@ -47,7 +47,7 @@
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Nastavi nastavitve Windows Namestitev naprave  na privzeto
+				Nastavi nastavitve Windows Namestitev naprave na privzeto
 				(samodejno namesti gonilnike)
 			</Text>
 		</btnWuRestore>
@@ -130,14 +130,24 @@
 			<Text8>DDU je zaznal, da NISTE v varnem načinu... Za boljše čiščenje brez težav je priporočljivo, da ponovno zaženete računalnik v varnem načinu.</Text8>
 			<Text9>Nastavitve Windows Namestitev naprave so bile spremenjene v NE namesti samodejno gonilnike..</Text9>
 			<Text10>Čista odstranitev je dokončana. Ali želite zdaj zapreti program?</Text10>
-			<Text11>Nastavitve Windows Namestitev naprave so bile spremenjene v Samodejno namesti gonilnike.</Text11>
-			<Text12>Niste v varnem načinu. Zelo priporočljivo je, da znova zaženete računalnik v varnem načinu, v izogib morebitnih težav. Ali želite zdaj znova zagnati računalnik v varnem načinu?</Text12>
+			<Text11>Windows Nastavitve mamestitve naprave so bile spremenjene v Samodejno namesti gonilnike.</Text11>
+			<Text12>Niste v varnem načinu. Zelo priporočljivo je, da vnovič zaženete računalnik v varnem načinu, v izogib morebitnih težav. Ali želite zdaj vnovič zagnati računalnik v varnem načinu?</Text12>
 			<Text13>To morate izbrati na modrem zaslonu, za obnovitev : Odpravljanje težav -&gt; Napredne možnosti -&gt; Nastavitve zagona.</Text13>
-			<Text14>Ponovni zagon je na čakanju. Preden uporabite DDU, znova zaženite računalnik</Text14>
-			<Text15>Ni bilo opravljenih sprememb. Nastavitve Windows Namestitev naprave so bile že nastavljene na Privzeto.</Text15>
+			<Text14>Ponovni zagon je na čakanju. Preden uporabite DDU, vnovič zaženite računalnik</Text14>
+			<Text15>Ni bilo opravljenih sprememb. Windows Nastavitve namestitve naprave so bile že nastavljene na Privzeto.</Text15>
 			<Text16>V sistemu Windows je prišlo do kritične napake, ki preprečuje pravilno odstranitev gonilnikov. Kot varnostni ukrep DDU ne bo nadaljeval z odstranjevanjem datotek in registra. Pred uporabo DDU morate odpraviti težave s sistemom.</Text16>
 		</Messages>
-
+		<Options_GPU>
+			<Options1>---Izberi napravo---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Izberi napravo---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>Izvedba čiščenja Shramb gonilnikov (Izbriši OEM korak)...</Text1>
 			<Text2>Čiščenje imenika</Text2>
@@ -189,7 +199,7 @@
 			<Text>Zapri</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Pokaži ponudbe naših partnerjev</Text>
+			<Text>Prikaži ponudbe naših partnerjev</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>NVIDIA Posebne možnosti</Text>
@@ -244,9 +254,9 @@
 			<Text>Odstrani GeForce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>Odstrani mapo predpomnilnika AMD Crimson Shader</Text>
+			<Text>Odstrani mapo medpomnilnika AMD Crimson Shader</Text>
 			<Tooltip>
-				Priporočljivo, če obstaja grafična nepravilnost (hitrost ali okvara slike), ki je posledica poškodovanih podatkov predpomnilnika AMD Crimson Shader.
+				Priporočljivo, če obstaja grafična nepravilnost (hitrost ali okvara slike), ki je posledica poškodovanih podatkov medpomnilnika AMD Crimson Shader.
 				Priporočamo tudi, če preklopite na drugo znamko grafične kartice, kot je NVIDIA.
 			</Tooltip>
 		</lblRemCrimsonCache>
@@ -262,16 +272,16 @@
      </lblPreventWinUpdate>
   </frmOptions>
 
-	<frmLaunch Text="Zaženi možnostn">
+	<frmLaunch Text="Možnost zagona">
 		<btnAccept>
 			<Text>Zaženi</Text>
 			<Text2>
-				Znova zaženi računalnik v
+				Vnovič zaženi računalnik v
 				Varnem načinu
 			</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Zaženie</Text>
+			<Text>Zapri</Text>
 		</btnClose>
 		<lblLaunchOption>
 			<Text>Možnost zagona</Text>
@@ -279,14 +289,14 @@
 		<lblNotSafeMode>
 			<Text>
 				Niste v varnem načinu. Zelo priporočljivo je, da
-				znova zaženete PC v varnem načinu v izogib morebitnim težavam.
+				vnovič zaženete PC v varnem načinu, v izogib morebitnim težavam.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
 				Pomembna opomba za uporabnike Windows 8/8.1/10:
 				Vaše Windows "GESLO" je obvezno! (PIN koda NE deluje v varnem načinu)
-				Takoj ustavite, če ste ga izgubili ali ne poznate!
+				Takoj ustavite, če ste ga izgubili ali ga ne poznate!
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
@@ -357,7 +367,7 @@
 			<Text>
         Velika zahvala naslednjemu pokrovitelju in tudi tistim, ki niso na seznamu!
 
-        -honnmaguro   (Since 2018-03-16)
+        -honnmaguro   (že od 13.03.2018)
       </Text>
 		</lblPatron>
 	</frmAbout>
@@ -372,7 +382,7 @@
 
 				Trenutni učinek po uporabi tega orodja bo podoben kot, če bi bil sistem Windows v stanju "Na novo nameščen".
 
-				To orodje deluje podobno kot  "Driver Sweeper"*in ima vse zgoraj dodatno omenjeno.
+				To orodje deluje podobno kot "Driver Sweeper"*in ima vse zgoraj dodatno omenjeno.
 
 				Če imate težave pri nameščanju starejšega ali novejšega gonilnika, ga preizkusite, ker ima nekaj poročil, 
         ki jih lahko popravi.
@@ -389,7 +399,7 @@
 				- Če imate ali ste imeli težave z gonilnikom in vam je to orodje pomagalo pri nekaterihtežavah, ki ste jih
         ali jih trenutno doživljate, delite z drugimi svoje rezultate.
 
-				Vedite, da  NVIDIA, AMD niti Microsoft niso odgovorni za vašo kakršno škodo ali okvaro vašega 
+				Vedite, da NVIDIA, AMD niti Microsoft niso odgovorni za vašo kakršno škodo ali okvaro vašega 
         računalnika in na noben način niso podružnice DDU ali njegovih ustvarjalcev.
 				-------------------------------
 
@@ -401,12 +411,12 @@
 
 				Logotip: juanchacin
 
-				Ogromna zahvala Jackalitu za donacijo  AMD 7850.
+				Ogromna zahvala Jackalitu za donacijo AMD 7850.
 
 				Zahvala Helge Klein (http://helgeklein.com/setacl/) za dovoljenje za uporabo njunega programa "SetAcl" z DDU.
 
 				Veliko hvala za njihov čas za testiranje: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (vzel si je čas za razhroščevanje z mano)
-				Extraordinary (Preizkus popravkov  hroščev)
+				Extraordinary (Preizkus popravkov hroščev)
 
 				Hvala vsem, ki so tvegali svoj sistem. (Posebna zahvala gre Dellon132)
 
@@ -433,7 +443,7 @@
 		<Translator>
 			<User>Jadran Rudec</User>
 			<Details>jrudec@gmail.com</Details>
-			<LastUpdate>04/07/2018</LastUpdate>
+			<LastUpdate>14/09/2018</LastUpdate>
 		</Translator>
 
 		<Translator2>

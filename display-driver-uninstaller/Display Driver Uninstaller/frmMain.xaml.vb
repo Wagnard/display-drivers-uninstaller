@@ -167,6 +167,9 @@ Public Class frmMain
 			Languages.TranslateForm(Me)
 
 			GetGPUDetails(False)
+
+			'Combobox does not translate themselve, we must push the updated ItemsSource.
+			cbSelectedType_Changed(cbSelectedType, Nothing)
 		End If
 	End Sub
 
@@ -271,8 +274,8 @@ Public Class frmMain
 
 		Try
 			'cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
-			cbSelectedType.ItemsSource = {"---Select device type---", "Audio", "GPU"}
-			cbSelectedGPU.ItemsSource = {"Select device", "Nvidia_test", "AMD_test", "Intel_test"}
+			cbSelectedType.ItemsSource = {Languages.GetTranslation("frmMain", "Options_Type", "Options1"), Languages.GetTranslation("frmMain", "Options_Type", "Options2"), Languages.GetTranslation("frmMain", "Options_Type", "Options3")}
+			cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_GPU", "Options1"), Languages.GetTranslation("frmMain", "Options_GPU", "Options2"), Languages.GetTranslation("frmMain", "Options_GPU", "Options3"), Languages.GetTranslation("frmMain", "Options_GPU", "Options4")} 'the order is important, check Appsettings.vb
 			'cbSelectedType.ItemsSource = [Enum].GetValues(GetType(CleanType))
 
 
@@ -1145,9 +1148,13 @@ Public Class frmMain
 
 	Private Sub cbSelectedType_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedType.SelectionChanged
 
+		cbSelectedType.ItemsSource = {Languages.GetTranslation("frmMain", "Options_Type", "Options1"), Languages.GetTranslation("frmMain", "Options_Type", "Options2"), Languages.GetTranslation("frmMain", "Options_Type", "Options3")}
+
 		Select Case cbSelectedType.SelectedIndex
 			Case 0
 				Application.Settings.SelectedType = CleanType.None
+				cbSelectedGPU.IsEnabled = True
+				cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_GPU", "Options1"), Languages.GetTranslation("frmMain", "Options_GPU", "Options2"), Languages.GetTranslation("frmMain", "Options_GPU", "Options3"), Languages.GetTranslation("frmMain", "Options_GPU", "Options4")} 'the order is important, check Appsettings.vb
 				cbSelectedGPU.SelectedIndex = 0
 				cbSelectedGPU.IsEnabled = False
 

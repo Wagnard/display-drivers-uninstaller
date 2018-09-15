@@ -137,6 +137,11 @@
 			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 			<Text16>A critical error occured from Windows that is preventing the correct removal of drivers. As a security measure, DDU will not continue the files and registry removal. You must fix your system issue(s) before using DDU.</Text16>
 		</Messages>
+		<Options_Type>
+			<Options1>---Select device type---</Options1>
+			<Options2>Audio</Options2>
+			<Options3>GPU</Options3>
+		</Options_Type>
 		<Options_GPU>
 			<Options1>---Select device---</Options1>
 			<Options2>NVIDIA</Options2>
