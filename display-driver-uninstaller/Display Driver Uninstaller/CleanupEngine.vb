@@ -868,6 +868,7 @@ Public Class CleanupEngine
 										ServiceInstaller.Uninstall(service)
 									Catch ex As Exception
 										Application.Log.AddException(ex)
+										Continue For
 									End Try
 
 
@@ -881,6 +882,17 @@ Public Class CleanupEngine
 											Exit While
 										End If
 									End While
+									Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\Setup\FirstBoot\Services", True)
+										If regkey4 IsNot Nothing Then
+											Try
+												Deletesubregkey(regkey4, service)
+											Catch exARG As ArgumentException
+												'Do nothing, can happen (Not found)
+											Catch ex As Exception
+												Application.Log.AddException(ex)
+											End Try
+										End If
+									End Using
 								End If
 
 								'Verify that the service was indeed removed via registry.

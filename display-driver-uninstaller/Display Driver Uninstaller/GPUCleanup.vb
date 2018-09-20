@@ -2926,6 +2926,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("nvdisplaycontainer") Or
 								   child2.ToLower.Contains("ansel.") Or
 								   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvab") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("network.service") AndAlso config.RemoveGFE Or
@@ -3300,19 +3301,22 @@ Public Class GPUCleanup
 												Try
 													Select Case True
 														Case StrContainsAny(wantedvalue, True, sysdrv & "program files (x86)\nvidia corporation\physx\common;")
-															wantedvalue = wantedvalue.Replace(sysdrv & "program files (x86)\nvidia corporation\physx\common;", "")
+															wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "program files (x86)\nvidia corporation\physx\common;", "")
 															Try
 																regkey.SetValue(child, wantedvalue)
 															Catch ex As Exception
+																Application.Log.AddException(ex)
 															End Try
-														Case StrContainsAny(wantedvalue, True, ";" + sysdrv & "program files (x86)\nvidia corporation\physx\common")
-															wantedvalue = wantedvalue.Replace(";" + sysdrv & "program files (x86)\nvidia corporation\physx\common", "")
+														Case StrContainsAny(wantedvalue, True, ";" & sysdrv & "program files (x86)\nvidia corporation\physx\common")
+															wantedvalue = wantedvalue.Replace(";" & sysdrv.ToLower & "program files (x86)\nvidia corporation\physx\common", "")
 															Try
 																regkey.SetValue(child, wantedvalue)
 															Catch ex As Exception
+																Application.Log.AddException(ex)
 															End Try
 													End Select
 												Catch ex As Exception
+													Application.Log.AddException(ex)
 												End Try
 											End If
 										Next
@@ -3325,30 +3329,30 @@ Public Class GPUCleanup
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
+			Application.Log.AddMessage("End System environement path cleanup")
 		End If
 		'-------------------------------------
 		'end system environement patch cleanup
 		'-------------------------------------
-		Application.Log.AddMessage("End System environement path cleanup")
+
 
 		Try
-			sysdrv = sysdrv.ToUpper
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 			  "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", True)
 				If regkey IsNot Nothing Then
 					wantedvalue = regkey.GetValue("AppInit_DLLs", String.Empty).ToString   'Will need to consider the comma in the future for multiple value
 					If IsNullOrWhitespace(wantedvalue) = False Then
 						Select Case True
-							Case wantedvalue.Contains(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
-								wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+							Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
+								wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 								regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-							Case wantedvalue.Contains(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
-								wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+							Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
+								wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
 								regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-							Case wantedvalue.Contains(sysdrv & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
-								wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+							Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
+								wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 								regkey.SetValue("AppInit_DLLs", wantedvalue)
 						End Select
 					End If
@@ -3360,7 +3364,6 @@ Public Class GPUCleanup
 					End Try
 				End If
 			End Using
-			sysdrv = sysdrv.ToLower
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
@@ -3374,16 +3377,16 @@ Public Class GPUCleanup
 						wantedvalue = regkey.GetValue("AppInit_DLLs", String.Empty).ToString
 						If IsNullOrWhitespace(wantedvalue) = False Then
 							Select Case True
-								Case wantedvalue.Contains(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
-									wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+								Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
+									wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 									regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-								Case wantedvalue.Contains(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
-									wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+								Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
+									wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
 									regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-								Case wantedvalue.Contains(sysdrv & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
-									wantedvalue = wantedvalue.Replace(sysdrv & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+								Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
+									wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 									regkey.SetValue("AppInit_DLLs", wantedvalue)
 							End Select
 						End If
@@ -4438,9 +4441,55 @@ Public Class GPUCleanup
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" &
 		  "Display\shellex\PropertySheetHandlers", True)
 			If regkey IsNot Nothing Then
+				Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, "NVIDIA CPL Extension", True)
+					If subregkey IsNot Nothing Then
+						wantedvalue = subregkey.GetValue("NVIDIA CPL Extension", String.Empty).ToString
+						If Not IsNullOrWhitespace(wantedvalue) Then
+							Using regkey2 As RegistryKey = Registry.Users
+								If regkey2 IsNot Nothing Then
+									For Each child As String In regkey2.GetSubKeyNames
+										If IsNullOrWhitespace(child) Then Continue For
+										Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey2, child & "\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Cached", True)
+											If regkey3 IsNot Nothing Then
+												For Each valuename As String In regkey3.GetValueNames
+													If IsNullOrWhitespace(valuename) Then Continue For
+													If StrContainsAny(valuename, True, wantedvalue) Then
+														Try
+															Deletevalue(regkey3, valuename)
+														Catch exARG As ArgumentException
+															'nothing to do,it probably doesn't exit.
+														Catch ex As Exception
+															Application.Log.AddException(ex)
+														End Try
+													End If
+												Next
+											End If
+										End Using
+									Next
+								End If
+							End Using
+						End If
+					End If
+				End Using
 				Try
 					Deletesubregkey(regkey, "NVIDIA CPL Extension")
+				Catch exARG As ArgumentException
+					'nothing to do,it probably doesn't exit.
 				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
+			End If
+		End Using
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "SOFTWARE\Microsoft\Windows\CurrentVersion\Controls Folder\" &
+		  "Display\shellex\PropertySheetHandlers", True)
+			If regkey IsNot Nothing Then
+				Try
+					Deletesubregkey(regkey, "NVIDIA CPL Extension")
+				Catch exARG As ArgumentException
+					'nothing to do,it probably doesn't exit.
+				Catch ex As Exception
+					Application.Log.AddException(ex)
 				End Try
 			End If
 		End Using
@@ -4459,6 +4508,7 @@ Public Class GPUCleanup
 									Try
 										Deletevalue(regkey2, childs)
 									Catch ex As Exception
+										Application.Log.AddException(ex)
 									End Try
 								End If
 							Next
@@ -4953,6 +5003,7 @@ Public Class GPUCleanup
 						If IsNullOrWhitespace(child) = False Then
 							If (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("nvab") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE) Or
@@ -5035,7 +5086,9 @@ Public Class GPUCleanup
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("drs") Or
+					 child.ToLower.Contains("nv_cache") Or
 					 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvab") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("netservice") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("crashdumps") AndAlso config.RemoveGFE) Or
@@ -5116,6 +5169,7 @@ Public Class GPUCleanup
 					   child.ToLower.Contains("ansel") Or
 					   child.ToLower.Contains("3d vision") Or
 					   child.ToLower.Contains("led visualizer") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("nvab") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("netservice") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvstreamc") AndAlso config.RemoveGFE Or
@@ -5151,6 +5205,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("msvcruntime") Or
 								   child2.ToLower.Contains("ansel.") Or
 								   child2.ToLower.Contains("display.gfexperience") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvab") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("osc.") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("osclib.") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.nvirusb") Or
@@ -5231,14 +5286,14 @@ Public Class GPUCleanup
 		End If
 
 		If IntPtr.Size = 8 Then
-			filePath = Environment.GetFolderPath _
-			  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\NVIDIA Corporation"
+			filePath = config.Paths.ProgramFilesx86 & "NVIDIA Corporation"
 			If FileIO.ExistsDir(filePath) Then
 				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("3d vision") Or
 						 child.ToLower.Contains("coprocmanager") Or
 						 child.ToLower.Contains("led visualizer") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("nvab") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("osc") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("netservice") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvidia geforce experience") AndAlso config.RemoveGFE Or
