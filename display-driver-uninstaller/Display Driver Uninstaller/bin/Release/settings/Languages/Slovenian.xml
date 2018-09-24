@@ -137,6 +137,11 @@
 			<Text15>Ni bilo opravljenih sprememb. Windows Nastavitve namestitve naprave so bile že nastavljene na Privzeto.</Text15>
 			<Text16>V sistemu Windows je prišlo do kritične napake, ki preprečuje pravilno odstranitev gonilnikov. Kot varnostni ukrep DDU ne bo nadaljeval z odstranjevanjem datotek in registra. Pred uporabo DDU morate odpraviti težave s sistemom.</Text16>
 		</Messages>
+		<Options_Type>
+			<Options1>---Izberi vrsto naprave---</Options1>
+			<Options2>Zvočna kartica</Options2>
+			<Options3>Grafična kartica (GPU)</Options3>
+		</Options_Type>
 		<Options_GPU>
 			<Options1>---Izberi napravo---</Options1>
 			<Options2>NVIDIA</Options2>
@@ -194,7 +199,7 @@
 		</UpdateLog>
 	</frmMain>
 
-	<frmOptions Text="Options">
+	<frmOptions Text="Možnosti">
 		<btnClose>
 			<Text>Zapri</Text>
 		</btnClose>
@@ -232,7 +237,7 @@
 			<Text>Odstrani uporabljenega in neobstoječe monitorje (priporočeno)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Odstrani AMD Avdio Bus</Text>
+			<Text>Odstrani AMD zvočno vodilo</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
 			<Text>Odstrani mapo gonilnikov "C:\AMD" (NI priporočljivo)</Text>
@@ -309,7 +314,7 @@
 		</Messages>
 	</frmLaunch>
 
-	<frmLog Text="Extended log">
+	<frmLog Text="Razširjen dnevnik">
 		<btnClose>
 			<Text>Zapri</Text>
 		</btnClose>
@@ -338,13 +343,13 @@
 		</errorsMenuItem>
 	</frmLog>
 
-	<frmSystemRestore Text="System Restore">
+	<frmSystemRestore Text="Obnovitev sistema">
 		<lblSystemRestore>
 			<Text>Poskus ustvarjanja točke obnovitve sistema.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="About">
+	<frmAbout Text="Vizitka">
 		<btnClose>
 			<Text>Zapri</Text>
 		</btnClose>
@@ -443,7 +448,7 @@
 		<Translator>
 			<User>Jadran Rudec</User>
 			<Details>jrudec@gmail.com</Details>
-			<LastUpdate>14/09/2018</LastUpdate>
+			<LastUpdate>21/09/2018</LastUpdate>
 		</Translator>
 
 		<Translator2>
