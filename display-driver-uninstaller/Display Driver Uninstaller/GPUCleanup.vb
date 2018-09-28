@@ -3905,6 +3905,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("_display.optimus") Or
 						 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
 						 child.ToLower.Contains("_display.nvirusb") Or
+						 child.ToLower.Contains("_nvabhub") Or
 						 child.ToLower.Contains("_display.physx") Or
 						 child.ToLower.Contains("_display.update") AndAlso removegfe Or
 						 child.ToLower.Contains("_osc") AndAlso removegfe Or
