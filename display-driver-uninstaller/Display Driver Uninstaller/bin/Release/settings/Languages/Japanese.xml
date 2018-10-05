@@ -130,7 +130,24 @@
       <Text13>水色の回復画面で次のように選択する必要があります:「オプションの選択」→「トラブルシューティング」→「詳細オプション」→「スタートアップ設定」→ 再起動</Text13>
       <Text14>再起動を待機中です、DDUを使用する前に再起動してください。</Text14>
       <Text15>変更は行われませんでした。Windowsデバイスのインストール設定は既に既定値にセットされています。</Text15>
+      <Text16>ドライバーが正しく削除されないというWindowsからの重大なエラーが発生しました。 セキュリティ対策として、DDUはファイルとレジストリの削除を続行しません。 DDUを使用する前に、システムの問題を修正する必要があります。</Text16>
     </Messages>
+    <Options_Type>
+      <Options1>---デバイスタイプの選択---</Options1>
+      <Options2>オーディオ</Options2>
+      <Options3>GPU</Options3>
+    </Options_Type>
+    <Options_GPU>
+      <Options1>---デバイスの選択---</Options1>
+      <Options2>NVIDIA</Options2>
+      <Options3>AMD</Options3>
+      <Options4>INTEL</Options4>
+    </Options_GPU>
+    <Options_AUDIO>
+      <Options1>---デバイスの選択---</Options1>
+      <Options2>REALTEK (開発中)</Options2>
+      <Options3>SOUNDBLASTER (開発中)</Options3>
+    </Options_AUDIO>
     <UpdateLog>
       <Text1>Driver Storeのクリーンアップを実行中（OEMの削除）...</Text1>
       <Text2>ディレクトリをクリーンアップ</Text2>
@@ -340,7 +357,10 @@
       <Text>以下の翻訳者、及びリストされていない翻訳者に大きな感謝を!</Text>
     </lblTranslators>
     <lblPatron>
-      <Text>以下の支援者、及びリストされていない支援者に大きな感謝を!</Text>
+      <Text>以下の支援者、及びリストされていない支援者に大きな感謝を!
+      
+        -honnmaguro (本マグロ)  (Since 2018-03-16)
+</Text>
     </lblPatron>
   </frmAbout>
   <Misc>
@@ -415,7 +435,7 @@
     <Translator>
       <User>DH ◆OmegaWBPUI</User>
       <Details>DH.OmegaWBPUI@gmail.com</Details>
-      <LastUpdate>16/07/2018</LastUpdate>
+      <LastUpdate>04/10/2018</LastUpdate>
     </Translator>
   </LanguageTranslators>
 </DisplayDriverUninstaller>
