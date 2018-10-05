@@ -1,5 +1,5 @@
 Requirement:
--Windows XP up to Windows 10 Creator update 1803 (anything higher is at your own risk)
+-Windows XP up to Windows 10 Creator update 1809 (anything higher is at your own risk)
 -NVIDIA, AMD, Intel GPUs
 -Microsoft .NET Framework 3.0 or higher
 

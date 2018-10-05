@@ -5088,6 +5088,7 @@ Public Class GPUCleanup
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("drs") Or
 					 child.ToLower.Contains("nv_cache") Or
+					 child.ToLower.Contains("umdlogs") Or
 					 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvab") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
