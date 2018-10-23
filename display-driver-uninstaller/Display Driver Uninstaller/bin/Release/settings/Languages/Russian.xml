@@ -135,8 +135,24 @@
 			<Text13>Вам нужно выбрать на экране восстановления системы: Диагностика -&gt; Дополнительные параметры -&gt; Параметры загрузки</Text13>
 			<Text14>Пожалуйста перезагрузитесь перед использованием DDU</Text14>
 			<Text15>Не было внесено никаких изменений. Параметры установки устройств Windows установлены по умолчанию.</Text15>
+			<Text16>В Windows произошла критическая ошибка, препятствующая правильному удалению драйверов. В качестве меры безопасности DDU не будет продолжать удаление файлов и реестра. Перед использованием DDU необходимо устранить системные проблемы.</Text16>
 		</Messages>
-
+		<Options_Type>
+			<Options1>---Выберите тип устройства---</Options1>
+			<Options2>Аудио</Options2>
+			<Options3>Графический процессор</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Выберите тип устройства---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Выберите тип устройства---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>Выполняется чистка хранилища драйверов...</Text1>
 			<Text2>Чистка папки...</Text2>
@@ -253,7 +269,13 @@
 			<Text>Удалить библиотеки Vulkan API</Text>
 			<Tooltip>Не рекомендуется, если у вас установлено две разные видеокарты с поддержкой Vulkan API.</Tooltip>
 		</lblVulkan>
-	</frmOptions>
+    <lblPreventWinUpdate>
+      <Text>Запретить загрузку драйверов из "Центра обновления Windows" при поиске "Windows" драйвера для устройства.</Text>
+      <Tooltip>Эта опция будет запрещает "Windows / Диспетчеру устройств", проверять наличие обновления драйверов в "Windows Update". 
+               Note: Это не мешает "Центру обновления Windows",  загружать/установить новые драйверы.
+               Note2: Также *настоятельно * рекомендуется отменить это изменение после завершения использования DDU и переустановки драйвера GPU,так как могут возникнуть проблемы с установкой другого устройства.</Tooltip>
+     </lblPreventWinUpdate>
+  </frmOptions>
 
     <frmLaunch Text="Настройка запуска программы">
 		<btnAccept>
@@ -409,9 +431,9 @@
 		</Translator>
 
 		<Translator2>
-			<User>Danis Miryasov 
-            (E-mail: miryasov.danis@yandex.ru)</User>
-			<LastUpdate>06/01/2018</LastUpdate>
+			<User>Danis Miryasov
+                  (E-mail:miryasov.danis@yandex.ru)</User>
+			<LastUpdate>21/10/2018</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 
