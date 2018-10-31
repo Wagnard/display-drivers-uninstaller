@@ -2210,6 +2210,11 @@ Public Class CleanupEngine
 	End Sub
 
 	Private Sub Threaddata1(ByRef ThreadFinished As Boolean, ByVal filepath As String, ByVal driverfiles As String(), ByVal donotremoveamdhdaudiobusfiles As Boolean)
+		If Not Security.Principal.WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+		End If
+
 		ThreadFinished = False
 		If filepath IsNot Nothing Then
 			If FileIO.ExistsDir(filepath) Then

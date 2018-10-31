@@ -1,5 +1,6 @@
 ﻿Imports System.DirectoryServices
 Imports System.IO
+Imports System.Security.Principal
 Imports System.Threading
 Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
@@ -6019,17 +6020,17 @@ Public Class GPUCleanup
 			End If
 		End Using
 		If config.WinIs64 Then
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\WOW6432Node\Khronos\OpenCL\Vendors", True)
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetValueNames()
-							If IsNullOrWhitespace(child) = False Then
-								If StrContainsAny(child, True, "amdocl") AndAlso config.SelectedGPU = GPUVendor.AMD Then
-									Try
-										Deletevalue(regkey, child)
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-									End Try
-								End If
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\WOW6432Node\Khronos\OpenCL\Vendors", True)
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetValueNames()
+						If IsNullOrWhitespace(child) = False Then
+							If StrContainsAny(child, True, "amdocl") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+								Try
+									Deletevalue(regkey, child)
+								Catch ex As Exception
+									Application.Log.AddException(ex)
+								End Try
+							End If
 							If StrContainsAny(child, True, "nvopencl") AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
 								Try
 									Deletevalue(regkey, child)
@@ -6045,31 +6046,54 @@ Public Class GPUCleanup
 								End Try
 							End If
 						End If
-						Next
-						If regkey.GetValueNames().Length = 0 Then
-							Try
-								Deletesubregkey(Registry.LocalMachine, "Software\WOW6432Node\Khronos\OpenCL")
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-							End Try
-						End If
-
-						Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Khronos", True)
-							If subregkey IsNot Nothing Then
-								If subregkey.GetSubKeyNames().Length = 0 Then
-									Try
-										Deletesubregkey(Registry.LocalMachine, "Software\WOW6432Node\Khronos")
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-									End Try
-								End If
-							End If
-						End Using
+					Next
+					If regkey.GetValueNames().Length = 0 Then
+						Try
+							Deletesubregkey(Registry.LocalMachine, "Software\WOW6432Node\Khronos\OpenCL")
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 					End If
-				End Using
-			End If
 
-			FilePath = System.Environment.SystemDirectory
+					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Khronos", True)
+						If subregkey IsNot Nothing Then
+							If subregkey.GetSubKeyNames().Length = 0 Then
+								Try
+									Deletesubregkey(Registry.LocalMachine, "Software\WOW6432Node\Khronos")
+								Catch ex As Exception
+									Application.Log.AddException(ex)
+								End Try
+							End If
+						End If
+					End Using
+				End If
+			End Using
+		End If
+
+		FilePath = System.Environment.SystemDirectory
+		files = IO.Directory.GetFiles(FilePath + "\", "vulkan-1*.dll")
+		For i As Integer = 0 To files.Length - 1
+			If Not IsNullOrWhitespace(files(i)) Then
+				Try
+					Delete(files(i))
+				Catch ex As Exception
+				End Try
+			End If
+		Next
+
+		files = IO.Directory.GetFiles(FilePath + "\", "vulkaninfo*.*")
+		For i As Integer = 0 To files.Length - 1
+			If Not IsNullOrWhitespace(files(i)) Then
+				Try
+					Delete(files(i))
+				Catch ex As Exception
+				End Try
+			End If
+		Next
+
+
+		If IntPtr.Size = 8 Then
+			FilePath = Environment.GetEnvironmentVariable("windir") + "\SysWOW64"
 			files = IO.Directory.GetFiles(FilePath + "\", "vulkan-1*.dll")
 			For i As Integer = 0 To files.Length - 1
 				If Not IsNullOrWhitespace(files(i)) Then
@@ -6089,30 +6113,7 @@ Public Class GPUCleanup
 					End Try
 				End If
 			Next
-
-
-			If IntPtr.Size = 8 Then
-				FilePath = Environment.GetEnvironmentVariable("windir") + "\SysWOW64"
-				files = IO.Directory.GetFiles(FilePath + "\", "vulkan-1*.dll")
-				For i As Integer = 0 To files.Length - 1
-					If Not IsNullOrWhitespace(files(i)) Then
-						Try
-							Delete(files(i))
-						Catch ex As Exception
-						End Try
-					End If
-				Next
-
-				files = IO.Directory.GetFiles(FilePath + "\", "vulkaninfo*.*")
-				For i As Integer = 0 To files.Length - 1
-					If Not IsNullOrWhitespace(files(i)) Then
-						Try
-							Delete(files(i))
-						Catch ex As Exception
-						End Try
-					End If
-				Next
-			End If
+		End If
 
 	End Sub
 
@@ -6140,6 +6141,11 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub Threaddata1(ByRef ThreadFinised As Boolean, ByVal driverfiles As String())
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+		End If
+
 		ThreadFinised = False
 		CleanupEngine.Folderscleanup(driverfiles)
 		ThreadFinised = True
@@ -6154,18 +6160,33 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub CLSIDCleanThread(ByRef ThreadFinised As Boolean, ByVal Clsidleftover As String())
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+		End If
+
 		ThreadFinised = False
 		CleanupEngine.Clsidleftover(Clsidleftover)
 		ThreadFinised = True
 	End Sub
 
 	Private Sub InstallerCleanThread(ByRef ThreadFinised As Boolean, ByVal Packages As String(), config As ThreadSettings)
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+		End If
+
 		ThreadFinised = False
 		CleanupEngine.Installer(Packages, config)
 		ThreadFinised = True
 	End Sub
 
 	Private Sub ClassrootCleanThread(ByRef ThreadFinised As Boolean, ByVal Classroot As String())
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+		End If
+
 		ThreadFinised = False
 		CleanupEngine.ClassRoot(Classroot)
 		ThreadFinised = True

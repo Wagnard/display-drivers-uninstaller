@@ -103,6 +103,7 @@
     </Compile>
     <Compile Include="AppSettings.vb" />
     <Compile Include="LogEntry.vb" />
+    <Compile Include="Win32\ImpersonateLoggedOnUser.vb" />
     <Compile Include="Win32\ServiceInstaller.vb" />
     <Compile Include="Win32\SetupAPI.vb" />
     <Compile Include="DebugWindow.xaml.vb">
@@ -201,7 +202,6 @@
   <ItemGroup>
     <Resource Include="Resources\amd_logo.png" />
     <Resource Include="Resources\nvidia_logo.png" />
-    <Resource Include="Resources\paexec.exe" />
     <Resource Include="Resources\btn_donate_LG.gif" />
   </ItemGroup>
   <ItemGroup>

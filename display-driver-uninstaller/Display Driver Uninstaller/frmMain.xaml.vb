@@ -394,6 +394,11 @@ Public Class frmMain
 #Region "Cleaning Threads"
 
 	Private Sub CleaningThread_Work(ByVal config As ThreadSettings)
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+		End If
+
 		Try
 			If config Is Nothing Then
 				Throw New ArgumentNullException("config", "Null ThreadSettings in CleaningWorker as e.Argument!")

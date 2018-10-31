@@ -7,9 +7,11 @@ Imports System.Text
 Imports Display_Driver_Uninstaller.Win32
 Imports System.Security.Principal
 Imports Microsoft.Win32
+Imports System.Runtime.InteropServices
 
 Class Application
 	Dim CleanupEngine As New CleanupEngine
+
 #Region "Visit links URLs"
 
 	Private Const URL_DONATE As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
@@ -277,55 +279,55 @@ Class Application
 			'Here we remove the modification done by DDU to allow PAEXEC (system impersonalisation tools)
 			'And Task scheduler service (allowing task removal)
 
-			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-					If regkey IsNot Nothing Then
-						regkey.DeleteSubKeyTree("PAexec")
-					End If
-				End Using
-			Catch ex As Exception
-				Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PAExec)!")
-			End Try
+			'Try
+			'	Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+			'		If regkey IsNot Nothing Then
+			'			regkey.DeleteSubKeyTree("PAexec")
+			'		End If
+			'	End Using
+			'Catch ex As Exception
+			'	Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PAExec)!")
+			'End Try
 
-			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-					If regkey IsNot Nothing Then
-						regkey.DeleteSubKeyTree("PAexec")
-					End If
-				End Using
-			Catch ex As Exception
-				Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (PAExec)!")
-			End Try
+			'Try
+			'	Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+			'		If regkey IsNot Nothing Then
+			'			regkey.DeleteSubKeyTree("PAexec")
+			'		End If
+			'	End Using
+			'Catch ex As Exception
+			'	Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (PAExec)!")
+			'End Try
 
-			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-					If regkey IsNot Nothing Then
-						regkey.DeleteSubKeyTree("Schedule")
-					End If
-				End Using
-			Catch ex As Exception
-				Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (Schedule)!")
-			End Try
+			'Try
+			'	Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+			'		If regkey IsNot Nothing Then
+			'			regkey.DeleteSubKeyTree("Schedule")
+			'		End If
+			'	End Using
+			'Catch ex As Exception
+			'	Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (Schedule)!")
+			'End Try
 
-			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-					If regkey IsNot Nothing Then
-						regkey.DeleteSubKeyTree("Schedule")
-					End If
-				End Using
-			Catch ex As Exception
-				Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (Schedule)!")
-			End Try
+			'Try
+			'	Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+			'		If regkey IsNot Nothing Then
+			'			regkey.DeleteSubKeyTree("Schedule")
+			'		End If
+			'	End Using
+			'Catch ex As Exception
+			'	Log.AddException(ex, "Failed to remove '\SafeBoot\Network' RegistryKey (Schedule)!")
+			'End Try
 
-			Try
-				Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-					If regkey IsNot Nothing Then
-						regkey.DeleteSubKeyTree("PNP_TDI")
-					End If
-				End Using
-			Catch ex As Exception
-				Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PNP_TDI)!")
-			End Try
+			'Try
+			'	Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+			'		If regkey IsNot Nothing Then
+			'			regkey.DeleteSubKeyTree("PNP_TDI")
+			'		End If
+			'	End Using
+			'Catch ex As Exception
+			'	Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (PNP_TDI)!")
+			'End Try
 
 			SaveData()
 		Finally
@@ -487,23 +489,11 @@ Class Application
 			End If
 
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				If ExtractPAExec() Then             ' Extract PAExec to \x64 or \x86 dir
-					If LaunchAsSystem() Then
-						' Launched as System, close this instance, True = close, false = continue
-						Log.SaveToFile()
-						Me.Shutdown(0)
-						Exit Sub
-					End If
+				If LaunchAsSystem() Then
+					' Launched as System, close this instance, True = close, false = continue
 				End If
 			End If
 
-			Try
-				' These are only needed to set ONCE during App lifetime
-				ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME)
-
-			Catch ex As Exception
-				Log.AddException(ex, "AddPriviliges failed!" & CRLF & ">> AppStart()")
-			End Try
 		Catch ex As Exception
 			Log.AddException(ex, "Some part of application startup failed!" & CRLF & ">> Application_Startup()")
 			Log.SaveToFile()    ' Save to file
@@ -518,6 +508,7 @@ Class Application
 
 		LaunchMainWindow()
 	End Sub
+
 
 	Private Function WinUpdatePending() As Boolean
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired")
@@ -612,108 +603,6 @@ Class Application
 		Application.Settings.WinVersion = version
 	End Sub
 
-	Private Function ExtractPAExec() As Boolean
-		Try
-			Dim isWinXP As Boolean = (Settings.WinVersion = OSVersion.WinXP Or Settings.WinVersion = OSVersion.WinXPPro_Server2003)
-			Dim dir As String = Paths.AppBase & If(Settings.WinIs64, "x64\", "x86\")
-
-			Application.Paths.CreateDirectories(dir)
-
-			Try
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-					If regkey IsNot Nothing Then
-						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
-							regSubKey.SetValue("", "Service")
-						End Using
-					End If
-				End Using
-			Catch ex As Exception
-				Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAExec!")
-				Return False
-			End Try
-
-			Try
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-					If regkey IsNot Nothing Then
-						Using regSubKey As RegistryKey = regkey.CreateSubKey("PAexec", RegistryKeyPermissionCheck.ReadWriteSubTree)
-							regSubKey.SetValue("", "Service")
-						End Using
-					End If
-				End Using
-			Catch ex As Exception
-				Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for PAExec!")
-				Return False
-			End Try
-
-			Try
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-					If regkey IsNot Nothing Then
-						Using regSubKey As RegistryKey = regkey.CreateSubKey("Schedule", RegistryKeyPermissionCheck.ReadWriteSubTree)
-							regSubKey.SetValue("", "Service")
-						End Using
-					End If
-				End Using
-			Catch ex As Exception
-				Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for Schedule!")
-				Return False
-			End Try
-
-			Try
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-					If regkey IsNot Nothing Then
-						Using regSubKey As RegistryKey = regkey.CreateSubKey("Schedule", RegistryKeyPermissionCheck.ReadWriteSubTree)
-							regSubKey.SetValue("", "Service")
-						End Using
-					End If
-				End Using
-			Catch ex As Exception
-				Log.AddException(ex, "Failed to set '\SafeBoot\Network' RegistryKey for Schedule!")
-				Return False
-			End Try
-
-			Try
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-					If regkey IsNot Nothing Then
-						Using regSubKey As RegistryKey = regkey.CreateSubKey("PNP_TDI", RegistryKeyPermissionCheck.ReadWriteSubTree)
-							regSubKey.SetValue("", "Driver Group")
-						End Using
-					End If
-				End Using
-			Catch ex As Exception
-				Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for Schedule!")
-				Return False
-			End Try
-
-
-			Try
-				If FileIO.ExistsFile(dir & "paexec.exe") Then
-					Using ms As MemoryStream = New MemoryStream(My.Resources.paexec)
-						Using fs As FileStream = File.OpenRead(dir & "paexec.exe")
-							If Tools.CompareStreams(ms, fs) Then
-								Return True     ' paexec.exe already exists and checksum(MD5) matches
-							End If
-						End Using
-					End Using
-				End If
-			Catch ex As Exception
-				Log.AddException(ex, "Checking for existing PAExec failed!")
-			End Try
-
-			File.WriteAllBytes(dir & "paexec.exe", My.Resources.paexec)
-
-			If Not FileIO.ExistsFile(dir & "paexec.exe") Then
-				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text4"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
-				Return False
-			End If
-
-
-			Return True
-		Catch ex As Exception
-			Log.AddException(ex, "Extracting PAExec failed!")
-			Return False
-		End Try
-	End Function
-
 	Private Function LaunchAsSystem() As Boolean
 		'here I check if the process is running on system user account. if not, make it so.
 		'This code checks to see which mode Windows has booted up in.
@@ -795,12 +684,7 @@ Class Application
 		End If
 
 		'Dim args() As String = New String() {"stop PAExec", "delete PAExec", "interrogate PAExec"}
-		Try
-			StopService("PAExec")
-			DeleteService("PAExec")
-		Catch ex As Exception
-			Log.AddException(ex, "Error when trying to stop/remove paexec on startup")
-		End Try
+
 		'For Each arg As String In args
 		'	Using process As Process = New Process() With
 		'	 {
@@ -817,25 +701,15 @@ Class Application
 		'		Thread.Sleep(10)
 		'	End Using
 		'Next
-		Log.AddMessage("Starting DDU with system right with " & Paths.AppBase & If(Settings.WinIs64, "x64\", "x86\") & "paexec.exe", "-noname -i -s " & Chr(34) & Paths.AppExeFile & Chr(34) + " " & LaunchOptions.Arguments)
-		Using process As Process = New Process() With
-		  {
-		   .StartInfo = New ProcessStartInfo(Paths.AppBase & If(Settings.WinIs64, "x64\", "x86\") & "paexec.exe", "-noname -i -s " & Chr(34) & Paths.AppExeFile & Chr(34) + " " & LaunchOptions.Arguments) With
-		   {
-		 .UseShellExecute = False,
-		 .CreateNoWindow = True,
-		 .RedirectStandardOutput = False
-		   }
-		  }
-
-			Try
-				process.Start()
-				process.Close()
-			Catch ex As Exception
-				Log.AddException(ex, "(PAExec) Failed to start process as System user!")
-				Return False
-			End Try
-		End Using
+		Try
+			' These are only needed to set ONCE during App lifetime
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+			'ACL.AddPriviliges(ACL.SE.ASSIGNPRIMARYTOKEN_NAME, ACL.SE.AUDIT_NAME, ACL.SE.BACKUP_NAME, ACL.SE.CHANGE_NOTIFY_NAME, ACL.SE.CREATE_GLOBAL_NAME, ACL.SE.CREATE_PAGEFILE_NAME, ACL.SE.CREATE_PERMANENT_NAME, ACL.SE.CREATE_TOKEN_NAME, ACL.SE.DEBUG_NAME, ACL.SE.ENABLE_DELEGATION_NAME, ACL.SE.IMPERSONATE_NAME, ACL.SE.INCREAQUOTA_NAME, ACL.SE.INC_BAPRIORITY_NAME, ACL.SE.LOAD_DRIVER_NAME, ACL.SE.LOCK_MEMORY_NAME, ACL.SE.MACHINE_ACCOUNT_NAME, ACL.SE.MANAGE_VOLUME_NAME, ACL.SE.PROF_SINGLE_PROCESS_NAME, ACL.SE.REMOTE_SHUTDOWN_NAME, ACL.SE.RESTORE_NAME, ACL.SE.SECURITY_NAME, ACL.SE.SHUTDOWN_NAME, ACL.SE.SYSTEMTIME_NAME, ACL.SE.SYSTEM_ENVIRONMENT_NAME, ACL.SE.SYSTEM_PROFILE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.UNDOCK_NAME, ACL.SE.UNSOLICITED_INPUT_NAME)
+			ImpersonateLoggedOnUser.Taketoken()
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+		Catch ex As Exception
+			Log.AddException(ex, "AddPriviliges failed!" & CRLF & ">> AppStart()")
+		End Try
 
 		Return True
 	End Function
