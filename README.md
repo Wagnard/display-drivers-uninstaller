@@ -1,5 +1,5 @@
 # display-drivers-uninstaller
-Display Driver Uninstaller (DDU) / Cleaner made for Display Drivers.(NVIDIA/AMD/INTEL)
+Display Driver Uninstaller (DDU) / Cleaner made for Display Drivers (NVIDIA/AMD/INTEL) and Audio drivers (Realtek)
 
 
 Display Driver Uninstaller is a driver removal utility that can help you completely uninstall AMD/NVIDIA/INTEL graphics card drivers and packages from your system, trying to remove all leftovers (including registry keys, folders and files, driver store). 
@@ -36,4 +36,4 @@ Windows XP up to 10 is supported X86/X64 (Windows 10 insider preview is at your 
 
 DOWNLOAD : (note: some anti-virus report false positive sometime.) 
 
-Official download at http://www.wagnardsoft.com
+Official download at https://www.wagnardsoft.com
