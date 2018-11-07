@@ -2559,24 +2559,7 @@ Public Class GPUCleanup
 			Next
 		End If
 
-		If config.RemoveVulkan Then
-			filePath = config.Paths.ProgramFiles + "VulkanRT"
-			If FileIO.ExistsDir(filePath) Then
 
-				Delete(filePath)
-
-			End If
-
-			If IntPtr.Size = 8 Then
-				filePath = Application.Paths.ProgramFilesx86 + "VulkanRT"
-				If FileIO.ExistsDir(filePath) Then
-
-					Delete(filePath)
-
-				End If
-			End If
-
-		End If
 
 		While Thread1Finished <> True
 			Thread.Sleep(500)
@@ -5145,14 +5128,6 @@ Public Class GPUCleanup
 			End If
 		End If
 
-		If config.RemoveVulkan Then
-			filePath = config.Paths.ProgramFiles + "VulkanRT"
-			If FileIO.ExistsDir(filePath) Then
-
-				Delete(filePath)
-
-			End If
-		End If
 
 		If IntPtr.Size = 8 Then
 			filePath = config.Paths.ProgramFilesx86 & "NVIDIA Corporation"
@@ -5216,17 +5191,6 @@ Public Class GPUCleanup
 			If IntPtr.Size = 8 Then
 				filePath = Environment.GetFolderPath _
 				 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
-				If FileIO.ExistsDir(filePath) Then
-
-					Delete(filePath)
-
-				End If
-			End If
-		End If
-
-		If config.RemoveVulkan Then
-			If IntPtr.Size = 8 Then
-				filePath = Application.Paths.ProgramFilesx86 + "VulkanRT"
 				If FileIO.ExistsDir(filePath) Then
 
 					Delete(filePath)
@@ -6113,6 +6077,25 @@ Public Class GPUCleanup
 					End Try
 				End If
 			Next
+		End If
+
+		If config.RemoveVulkan Then
+			FilePath = config.Paths.ProgramFiles + "VulkanRT"
+			If FileIO.ExistsDir(FilePath) Then
+
+				Delete(FilePath)
+
+			End If
+
+			If IntPtr.Size = 8 Then
+				FilePath = Application.Paths.ProgramFilesx86 + "VulkanRT"
+				If FileIO.ExistsDir(FilePath) Then
+
+					Delete(FilePath)
+
+				End If
+			End If
+
 		End If
 
 	End Sub

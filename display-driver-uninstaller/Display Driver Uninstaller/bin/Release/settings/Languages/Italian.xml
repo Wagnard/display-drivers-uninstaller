@@ -130,7 +130,22 @@
 			<Text14>DDU ha rilevato un riavvio in sospeso, riavviare prima di utilizzare il programma.</Text14>
 			<Text15>Non è effettuata alcuna modifica sulle impostazioni di installazione del dispositivo.</Text15>
 		</Messages>
-
+		<Options_Type>
+			<Options1>---Seleziona driver da rimuovere---</Options1>
+			<Options2>Scheda Audio</Options2>
+			<Options3>Scheda Video</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Seleziona dispositivo---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Select dispositivo---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
@@ -191,7 +206,7 @@
 			<Text>Opzioni driver AMD</Text>
 		</lblAmdspecific>
 		<lblAdvancedO>
-			<Text>Avanzate (Cambia queste opzioni a tuo rischio!)</Text>
+			<Text>Avanzate</Text>
 		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Varie</Text>
@@ -250,6 +265,12 @@
 			<Text>Usa SetupAPI *Sperimentale*</Text>
 			<Tooltip>Usa SetupAPI invece dello strumento esterno DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
+		<lblPreventWinUpdate>
+      <Text>Impedisci il download dei driver da "Windows Update" quando Windows cerca un driver per un dispositivo.</Text>
+      <Tooltip>Questa opzione negherà a "Windows / Gestione dispositivi" di verificare driver aggiornati su "Windows Update".
+               NOTA: Questo non impedisce a "Windows Update" di scaricare / installare nuovi driver.
+               NOTA 2: È *ALTAMENTE* raccomandato di annullare questa modifica dopo aver terminato di utilizzare DDU e aver reinstallato il driver GPU o si potrebbero avere un problemi con l'installazione dei driver di altri dispositivi.</Tooltip>
+        </lblPreventWinUpdate>
 	</frmOptions>
 
 	<frmLaunch Text="Display Driver Uninstaller (DDU)">
@@ -404,7 +425,7 @@
 		<Translator>
 			<User>Juicedjuiced14</User>
 			<Details></Details>
-			<LastUpdate>09/01/2018</LastUpdate>
+			<LastUpdate>04 NOV 2018</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

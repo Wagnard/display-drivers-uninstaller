@@ -11,6 +11,8 @@ Public Class ImpersonateLoggedOnUser
 
 	Public Declare Function DuplicateToken Lib "advapi32.dll" (ByVal ExistingTokenHandle As IntPtr, ByVal SECURITY_IMPERSONATION_LEVEL As Integer, ByRef DuplicateTokenHandle As IntPtr) As Boolean
 
+	Private Declare Auto Function RevertToSelf Lib "advapi32.dll" () As Long
+
 	Declare Function ImpersonateLoggedOnUser Lib "advapi32.dll" (ByVal hToken As Integer) As Integer
 
 	Public Const TOKEN_DUPLICATE As Integer = 2
@@ -53,6 +55,15 @@ Public Class ImpersonateLoggedOnUser
 		Else
 			Dim s As String = String.Format("OpenProcess Failed {0}, privilege not held", Marshal.GetLastWin32Error())
 			Throw New Exception(s)
+		End If
+	End Sub
+
+	Public Shared Sub ReleaseToken()
+		RevertToSelf()
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			Application.Log.AddWarningMessage("Reverting Impersonalisation failed!")
+		Else
+			Application.Log.AddMessage("Reverting the Impersonalisation is successful !")
 		End If
 	End Sub
 

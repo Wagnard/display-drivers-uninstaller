@@ -460,6 +460,8 @@ Public Class frmMain
 				SetupAPI.ReScanDevices()
 			End If
 
+			ImpersonateLoggedOnUser.ReleaseToken()
+
 			EnableControls(True)
 
 			If Not config.Silent And Not config.Restart And Not config.Shutdown Then
@@ -470,6 +472,7 @@ Public Class frmMain
 			End If
 
 			If config.Restart Then
+
 				'Application.RestartComputer()
 				WinAPI.OpenVisitLink(" -CleanComplete -Restart")
 				CloseDDU()
@@ -482,6 +485,8 @@ Public Class frmMain
 				CloseDDU()
 				Exit Sub
 			End If
+
+
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
@@ -595,6 +600,7 @@ Public Class frmMain
 
 			'EnableDriverSearch(True, True)
 			SystemRestore()
+
 		End If
 	End Sub
 

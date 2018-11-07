@@ -141,7 +141,22 @@
 			<Text15> Aucun changement n'a été effectué. Les paramètres d'installation des périphérique Windows sont déjà définis par défaut.</Text15>
 			<Text16>Une erreur critique s'est produite à partir de Windows qui empêche la suppression des pilotes. Par mesure de sécurité, DDU ne poursuivra pas la suppression des fichiers et du registre. Vous devez corriger les problèmes de votre système avant d'utiliser DDU.</Text16>
 		</Messages>
-
+		<Options_Type>
+			<Options1>---Choisir type de péripherique---</Options1>
+			<Options2>Audio</Options2>
+			<Options3>GPU</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Choisir périphérique---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Choisir périphérique---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
 			<Text2>Cleaning Directory</Text2>
@@ -258,6 +273,12 @@
 			<Text>Utiliser SetupAPI *Experimental*</Text>
 			<Tooltip>Utiliser SetupAPI à la place de l'outil externe DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
+		    <lblPreventWinUpdate>
+      <Text>Empêchez le téléchargement de pilotes à partir de "Windows Update" lorsque "Windows" recherche un pilote pour un périphérique.</Text>
+      <Tooltip>En termes simples, cette option empêche "Windows / Gestionnaire de périphériques" de vérifier la mise à jour du pilote sur "Windows Update".
+               Remarque: Cela n'empêche pas "Windows Update" de télécharger / installer de nouveaux pilotes.
+               Remarque2: Il est également * fortement * recommandé de décocher cette option après avoir fini d'utiliser DDU et d'avoir réinstallé le pilote du processeur graphique.</Tooltip>
+     </lblPreventWinUpdate>
 	</frmOptions>
 
 	<frmLaunch Text="Options de démarrage">
