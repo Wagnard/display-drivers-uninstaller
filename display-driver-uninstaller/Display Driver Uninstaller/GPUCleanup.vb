@@ -5,6 +5,8 @@ Imports System.Threading
 Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
 Imports WinForm = System.Windows.Forms
+Imports System.Runtime
+Imports Windows.Management.Deployment
 
 Public Class GPUCleanup
 
@@ -41,7 +43,7 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
 		UpdateTextMethod(UpdateTextTranslated(22))
 
-
+		ImpersonateLoggedOnUser.ReleaseToken()
 
 		'SpeedUP the removal of the NVIDIA adapter due to how the NVIDIA installer work.
 		'Also fix a possible permission problem when removing the driver via SetupAPI
@@ -354,6 +356,7 @@ Public Class GPUCleanup
 				End If
 			End If
 		End If
+		ImpersonateLoggedOnUser.Taketoken()
 
 		If config.SelectedGPU = GPUVendor.AMD Then
 			Cleanamdserviceprocess()
@@ -2884,6 +2887,143 @@ Public Class GPUCleanup
 
 
 		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg"))
+		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If win10 Then
+			Try
+				Try
+					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+						If regkey IsNot Nothing Then
+							Using regSubKey As RegistryKey = regkey.CreateSubKey("AppXSvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+								regSubKey.SetValue("", "Service")
+							End Using
+							Using regSubKey As RegistryKey = regkey.CreateSubKey("camsvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+								regSubKey.SetValue("", "Service")
+							End Using
+							Using regSubKey As RegistryKey = regkey.CreateSubKey("clipSVC", RegistryKeyPermissionCheck.ReadWriteSubTree)
+								regSubKey.SetValue("", "Service")
+							End Using
+							Using regSubKey As RegistryKey = regkey.CreateSubKey("Wsearch", RegistryKeyPermissionCheck.ReadWriteSubTree)
+								regSubKey.SetValue("", "Service")
+							End Using
+						End If
+					End Using
+				Catch ex As Exception
+					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAExec!")
+				End Try
+
+				Try
+					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+						If regkey IsNot Nothing Then
+							Using regSubKey As RegistryKey = regkey.CreateSubKey("AppXSvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+								regSubKey.SetValue("", "Service")
+							End Using
+							Using regSubKey As RegistryKey = regkey.CreateSubKey("camsvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+								regSubKey.SetValue("", "Service")
+							End Using
+							Using regSubKey As RegistryKey = regkey.CreateSubKey("clipSVC", RegistryKeyPermissionCheck.ReadWriteSubTree)
+								regSubKey.SetValue("", "Service")
+							End Using
+							Using regSubKey As RegistryKey = regkey.CreateSubKey("Wsearch", RegistryKeyPermissionCheck.ReadWriteSubTree)
+								regSubKey.SetValue("", "Service")
+							End Using
+						End If
+					End Using
+				Catch ex As Exception
+					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAExec!")
+				End Try
+
+				Dim packageManager As Windows.Management.Deployment.PackageManager = New Windows.Management.Deployment.PackageManager()
+				Dim deploymentOperation As Windows.Foundation.IAsyncOperationWithProgress(Of DeploymentResult, DeploymentProgress) = packageManager.RemovePackageAsync("NVIDIACorp.NVIDIAControlPanel_8.1.949.0_x64__56jybvy8sckqj")
+				'Dim opCompletedEvent As ManualResetEvent = New ManualResetEvent(False)
+				'			End Function
+				'Windows.Foundation.IAsyncAction() = packageManager.RemovePackageAsync("NVIDIACorp.NVIDIAControlPanel_8.1.949.0_x64__56jybvy8sckqj")
+
+				Dim DeploymentEnded As Boolean = False
+
+				While Not DeploymentEnded
+
+					If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
+						'	Dim deploymentResult As Windows.Management.Deployment.DeploymentResult = deploymentOperation.GetResults()
+						'	Console.WriteLine("Removal Error: {0}", deploymentOperation.ErrorCode)
+						'	Console.WriteLine("Detailed Error Text: {0}", deploymentResult.ErrorText)
+
+						'ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Canceled Then
+						Application.Log.AddMessage("NVCP DCH remove failed.")
+						DeploymentEnded = True
+					ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
+						'	Console.WriteLine("Removal succeeded!")
+						'Else
+						Application.Log.AddMessage("NVCP DCH removed.")
+						DeploymentEnded = True
+						'	Console.WriteLine("Removal status unknown")
+					End If
+				End While
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			Finally
+				Try
+					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+						If regkey IsNot Nothing Then
+							regkey.DeleteSubKeyTree("AppXSvc")
+							regkey.DeleteSubKeyTree("camsvc")
+							regkey.DeleteSubKeyTree("clipSVC")
+							regkey.DeleteSubKeyTree("Wsearch")
+						End If
+					End Using
+				Catch ex As Exception
+					Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
+				End Try
+				Try
+					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+						If regkey IsNot Nothing Then
+							regkey.DeleteSubKeyTree("AppXSvc")
+							regkey.DeleteSubKeyTree("camsvc")
+							regkey.DeleteSubKeyTree("clipSVC")
+							regkey.DeleteSubKeyTree("Wsearch")
+						End If
+					End Using
+				Catch ex As Exception
+					Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
+				End Try
+			End Try
+		End If
+		ImpersonateLoggedOnUser.Taketoken()
+		'If win10 Then
+		'	Application.Log.AddMessage("Starting removal of NVCP APPX")
+		'	'Create the runspace.
+		'	Using R As System.Management.Automation.Runspaces.Runspace =
+		'	System.Management.Automation.Runspaces.RunspaceFactory.CreateRunspace()
+
+		'		'Create the pipeline
+		'		Using P As System.Management.Automation.Runspaces.Pipeline = R.CreatePipeline()
+
+		'			'Open the runspace.
+		'			R.Open()
+
+		'			'Create each command (in this case just one)...
+		'			P.Commands.AddScript("Get-AppxPackage *nvidiacorp* |Remove-AppxPackage")
+		'			'Dim Cmd As New System.Management.Automation.Runspaces.Command("Get-AppxPackage *nvidiacorp* |Remove-AppxPackage", True)
+
+		'			'...and add it to the pipeline.
+		'			'P.Commands.Add(Cmd)
+
+		'			'Execute the commands and get the response.
+		'			Dim Result As System.Collections.ObjectModel.Collection(Of
+		'			System.Management.Automation.PSObject) = P.Invoke()
+
+		'			'Close the runspace.
+		'			R.Close()
+
+		'			'Display the result in the console window.
+		'			For Each O As System.Management.Automation.PSObject In Result
+		'				'Console.WriteLine(O.ToString())
+		'				Application.Log.AddMessage(O.ToString)
+		'			Next
+
+		'		End Using
+		'	End Using
+		'End If
 
 		'for GFE removal only
 		If removegfe Then
@@ -3714,13 +3854,13 @@ Public Class GPUCleanup
 														If regkey4 IsNot Nothing Then
 															For Each subkeys In regkey4.GetSubKeyNames
 																If IsNullOrWhitespace(subkeys) Then Continue For
-																If StrContainsAny(subkeys, True, "configs", "cache", "extensions", "relationships", "stripped") Then
+																If StrContainsAny(subkeys, True, "configs", "cache", "extensions", "relationships", "stripped", "drivers") Then
 																	Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkey4, subkeys, True)
 																		If regkey5 IsNot Nothing Then
 																			For Each ValueNames As String In regkey5.GetValueNames
 																				If IsNullOrWhitespace(ValueNames) Then Continue For
 																				If StrContainsAny(ValueNames, True, "ansel", "display", "gfexperience", "hdaudio", "nvabhub", "nvbackend", "nvcontainer", "nvnode", "nvplugin",
-																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio") Then
+																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio", "oem") Then
 																					Try
 																						Deletevalue(regkey5, ValueNames)
 																					Catch ex As Exception

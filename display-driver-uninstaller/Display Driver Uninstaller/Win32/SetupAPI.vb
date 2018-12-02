@@ -1334,17 +1334,25 @@ Namespace Win32
    <[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
 
-		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+		<DllImport("CfgMgr32.dll", SetLastError:=True)>
 		Private Shared Function CM_Get_Device_ID(
-  <[In]()> ByVal dnDevInst As UInt32,
-  <[Out](), MarshalAs(UnmanagedType.LPWStr)> ByVal Buffer As StringBuilder,
-  <[In]()> ByRef BufferLen As UInt32,
-  <[In]()> ByVal ulFlags As UInt32) As UInt32
+		<[In]()> ByVal dnDevInst As UInt32,
+		<[Out]()> ByVal Buffer As StringBuilder,
+		<[In]()> ByRef BufferLen As UInt32,
+		<[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
+
+		'<DllImport("CfgMgr32.dll", SetLastError:=True)>
+		'Private Shared Function CM_Get_Device_ID(
+		'ByVal dnDevInst As UInteger,
+		'<[Out]()> ByVal Buffer As StringBuilder,
+		'ByRef BufferLen As UInteger,
+		'ByVal Optional ulFlags As UInteger = 0) As Integer
+		'End Function
 
 		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CM_Get_Device_ID_Size(
-  <[Out]()> ByRef pulLen As UInt32,
+  <[Out]()> ByRef pulLen As UInteger,
   <[In]()> ByVal dnDevInst As UInt32,
   <[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
@@ -2821,8 +2829,8 @@ Namespace Win32
 		End Sub
 
 		Private Shared Function GetDeviceID(ByVal devInst As UInt32) As String
-			Dim result As UInt32 = 0UI
-			Dim reqSize As UInt32 = 0UI
+			Dim result As UInteger = 0UI
+			Dim reqSize As UInteger = 0UI
 
 			If CM_Get_Device_ID_Size(reqSize, devInst, 0UI) <> CR.SUCCESS Then
 				Throw New Win32Exception()
@@ -2832,7 +2840,7 @@ Namespace Win32
 				Throw New Win32Exception(GetInt32(Errors.NO_SUCH_DEVINST))
 			End If
 
-			reqSize += 2UI	'terminating NULL
+			reqSize += 2UI  'terminating NULL
 
 			Dim deviceID As New StringBuilder(GetInt32(reqSize))
 
@@ -2840,6 +2848,7 @@ Namespace Win32
 
 			If result <> CR.SUCCESS Then
 				Throw New Win32Exception()
+				'Microsoft.VisualBasic.MsgBox(result)
 			End If
 
 			Return deviceID.ToString()

@@ -193,8 +193,8 @@ Public Class frmMain
 			.DataContext = Me.DataContext
 			.Icon = Me.Icon
 			.SizeToContent = SizeToContent.WidthAndHeight
-			.ResizeMode = Windows.ResizeMode.CanResizeWithGrip
-			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+			.ResizeMode = ResizeMode.CanResizeWithGrip
+			.WindowStartupLocation = WindowStartupLocation.CenterOwner
 		End With
 
 		frmOptions.ShowDialog()
@@ -242,9 +242,9 @@ Public Class frmMain
 			.Owner = Me
 			.DataContext = Me.DataContext
 			.Icon = Me.Icon
-			.ResizeMode = Windows.ResizeMode.CanResizeWithGrip
-			.WindowStyle = Windows.WindowStyle.SingleBorderWindow
-			.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+			.ResizeMode = ResizeMode.CanResizeWithGrip
+			.WindowStyle = WindowStyle.SingleBorderWindow
+			.WindowStartupLocation = WindowStartupLocation.CenterOwner
 		End With
 
 		frmLog.ShowDialog()
@@ -833,12 +833,12 @@ Public Class frmMain
 			Dim frmSystemRestore As New frmSystemRestore
 
 			With frmSystemRestore
-				.WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+				.WindowStartupLocation = WindowStartupLocation.CenterOwner
 				.Background = Me.Background
 				.Owner = Me
 				.DataContext = Me.DataContext
-				.ResizeMode = Windows.ResizeMode.NoResize
-				.WindowStyle = Windows.WindowStyle.ToolWindow
+				.ResizeMode = ResizeMode.NoResize
+				.WindowStyle = WindowStyle.ToolWindow
 			End With
 
 			frmSystemRestore.ShowDialog()

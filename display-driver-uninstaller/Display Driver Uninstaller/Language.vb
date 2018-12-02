@@ -645,7 +645,7 @@ notFound:
 	End Function
 
 	Public Shared Sub CheckLanguageFiles()
-		Using sfd As Windows.Forms.SaveFileDialog = New Windows.Forms.SaveFileDialog
+		Using sfd As Forms.SaveFileDialog = New Forms.SaveFileDialog
 			sfd.Title = "Select path for log file"
 			sfd.AddExtension = True
 			sfd.FilterIndex = 1

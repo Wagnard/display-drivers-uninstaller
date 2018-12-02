@@ -118,15 +118,15 @@ Public Class frmLog
 				   .Width = Me.ActualWidth,
 				   .Height = Me.ActualHeight,
 				   .WindowState = Me.WindowState,
-				   .WindowStartupLocation = Windows.WindowStartupLocation.CenterOwner
+				   .WindowStartupLocation = WindowStartupLocation.CenterOwner
 				  }
 
-				newLogWindow.btnOpenLog.Visibility = Windows.Visibility.Collapsed
+				newLogWindow.btnOpenLog.Visibility = Visibility.Collapsed
 				newLogWindow.lbLog.DataContext = newLog.LogEntries
-				newLogWindow.tbOpenedLog.Visibility = Windows.Visibility.Visible
+				newLogWindow.tbOpenedLog.Visibility = Visibility.Visible
 				newLogWindow.tbOpenedLog.Text = ofd.FileName
 
-				Me.Visibility = Windows.Visibility.Hidden
+				Me.Visibility = Visibility.Hidden
 
 				newLogWindow.ShowDialog()
 
@@ -136,7 +136,7 @@ Public Class frmLog
 				Me.Top = newLogWindow.Top
 				Me.Left = newLogWindow.Left
 
-				Me.Visibility = Windows.Visibility.Visible
+				Me.Visibility = Visibility.Visible
 
 
 				newLog.Clear()

@@ -35,7 +35,7 @@ Class Application
 		End Set
 	End Property
 
-	Private Shared m_dispatcher As Windows.Threading.Dispatcher
+	Private Shared m_dispatcher As System.Windows.Threading.Dispatcher
 	Private Shared m_isDataSaved As Boolean = False
 	Private Shared m_allowSaveData As Boolean = False
 	Private Shared m_Data As Data
