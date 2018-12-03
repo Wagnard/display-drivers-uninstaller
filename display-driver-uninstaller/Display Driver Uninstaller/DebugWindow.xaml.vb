@@ -572,7 +572,7 @@ Public Class DebugWindow
 				paths = FileIO.GetDirectories(path, wildCard, subFolders)
 			End If
 
-			Application.Current.Dispatcher.Invoke(DirectCast(Sub() Count = paths.Count, ThreadStart), Windows.Threading.DispatcherPriority.DataBind)
+			Application.Current.Dispatcher.Invoke(DirectCast(Sub() Count = paths.Count, ThreadStart), Threading.DispatcherPriority.DataBind)
 
 			Dim attr As UInt32 = 0UI
 
@@ -592,7 +592,7 @@ Public Class DebugWindow
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		Finally
-			Application.Current.Dispatcher.Invoke(DirectCast(Sub() ThreadDone(), ThreadStart), Windows.Threading.DispatcherPriority.DataBind)
+			Application.Current.Dispatcher.Invoke(DirectCast(Sub() ThreadDone(), ThreadStart), Threading.DispatcherPriority.DataBind)
 		End Try
 	End Sub
 
@@ -613,7 +613,7 @@ Public Class DebugWindow
 	End Sub
 
 	Private Sub Queue(ByVal method As [Delegate], ByVal ParamArray args() As Object)
-		Application.Current.Dispatcher.Invoke(method, Windows.Threading.DispatcherPriority.Background, args)
+		Application.Current.Dispatcher.Invoke(method, Threading.DispatcherPriority.Background, args)
 	End Sub
 
 	Private Sub btnCancel_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnCancel.Click
