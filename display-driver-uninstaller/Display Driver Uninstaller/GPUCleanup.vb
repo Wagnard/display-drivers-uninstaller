@@ -2887,51 +2887,56 @@ Public Class GPUCleanup
 
 
 		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg"))
-		ImpersonateLoggedOnUser.ReleaseToken()
 
+
+		'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
 		If win10 Then
+			ImpersonateLoggedOnUser.ReleaseToken()  'Will not work if we impersonate "SYSTEM"
 			Try
-				Try
-					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-						If regkey IsNot Nothing Then
-							Using regSubKey As RegistryKey = regkey.CreateSubKey("AppXSvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
-								regSubKey.SetValue("", "Service")
+				Select Case System.Windows.Forms.SystemInformation.BootMode
+					Case System.Windows.Forms.BootMode.FailSafe
+						Try
+							Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+								If regkey IsNot Nothing Then
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("AppXSvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("camsvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("clipSVC", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("Wsearch", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+								End If
 							End Using
-							Using regSubKey As RegistryKey = regkey.CreateSubKey("camsvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
-								regSubKey.SetValue("", "Service")
+						Catch ex As Exception
+							Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for APPXSvc,etc...!")
+						End Try
+					Case System.Windows.Forms.BootMode.FailSafeWithNetwork
+						Try
+							Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+								If regkey IsNot Nothing Then
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("AppXSvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("camsvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("clipSVC", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("Wsearch", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+								End If
 							End Using
-							Using regSubKey As RegistryKey = regkey.CreateSubKey("clipSVC", RegistryKeyPermissionCheck.ReadWriteSubTree)
-								regSubKey.SetValue("", "Service")
-							End Using
-							Using regSubKey As RegistryKey = regkey.CreateSubKey("Wsearch", RegistryKeyPermissionCheck.ReadWriteSubTree)
-								regSubKey.SetValue("", "Service")
-							End Using
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAExec!")
-				End Try
-
-				Try
-					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-						If regkey IsNot Nothing Then
-							Using regSubKey As RegistryKey = regkey.CreateSubKey("AppXSvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
-								regSubKey.SetValue("", "Service")
-							End Using
-							Using regSubKey As RegistryKey = regkey.CreateSubKey("camsvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
-								regSubKey.SetValue("", "Service")
-							End Using
-							Using regSubKey As RegistryKey = regkey.CreateSubKey("clipSVC", RegistryKeyPermissionCheck.ReadWriteSubTree)
-								regSubKey.SetValue("", "Service")
-							End Using
-							Using regSubKey As RegistryKey = regkey.CreateSubKey("Wsearch", RegistryKeyPermissionCheck.ReadWriteSubTree)
-								regSubKey.SetValue("", "Service")
-							End Using
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for PAExec!")
-				End Try
+						Catch ex As Exception
+							Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for APPXSvc,etc...!")
+						End Try
+				End Select
 
 				Dim packageManager As Windows.Management.Deployment.PackageManager = New Windows.Management.Deployment.PackageManager()
 				Dim deploymentOperation As Windows.Foundation.IAsyncOperationWithProgress(Of DeploymentResult, DeploymentProgress) = packageManager.RemovePackageAsync("NVIDIACorp.NVIDIAControlPanel_8.1.949.0_x64__56jybvy8sckqj")
@@ -2962,68 +2967,58 @@ Public Class GPUCleanup
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			Finally
-				Try
-					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-						If regkey IsNot Nothing Then
-							regkey.DeleteSubKeyTree("AppXSvc")
-							regkey.DeleteSubKeyTree("camsvc")
-							regkey.DeleteSubKeyTree("clipSVC")
-							regkey.DeleteSubKeyTree("Wsearch")
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
-				End Try
-				Try
-					Using regkey As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-						If regkey IsNot Nothing Then
-							regkey.DeleteSubKeyTree("AppXSvc")
-							regkey.DeleteSubKeyTree("camsvc")
-							regkey.DeleteSubKeyTree("clipSVC")
-							regkey.DeleteSubKeyTree("Wsearch")
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
-				End Try
+				Select Case System.Windows.Forms.SystemInformation.BootMode
+					Case System.Windows.Forms.BootMode.FailSafe
+
+						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+							If regkey IsNot Nothing Then
+								Try
+									Deletesubregkey(regkey, "AppXSvc")
+									Deletesubregkey(regkey, "camsvc")
+									Deletesubregkey(regkey, "clipSVC")
+									Deletesubregkey(regkey, "Wsearch")
+								Catch ex As Exception
+									Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
+								End Try
+							End If
+						End Using
+
+					Case System.Windows.Forms.BootMode.FailSafeWithNetwork
+
+						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+							If regkey IsNot Nothing Then
+								Try
+									Deletesubregkey(regkey, "AppXSvc")
+									Deletesubregkey(regkey, "camsvc")
+									Deletesubregkey(regkey, "clipSVC")
+									Deletesubregkey(regkey, "Wsearch")
+								Catch ex As Exception
+									Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
+								End Try
+							End If
+						End Using
+				End Select
 			End Try
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
+				If regkey IsNot Nothing Then
+					For Each ValueName As String In regkey.GetValueNames
+						If IsNullOrWhitespace(ValueName) Then Continue For
+						If StrContainsAny(ValueName, True, "nvidiacontrolpanel") Then
+							Try
+								Deletevalue(regkey, ValueName)
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
+						End If
+					Next
+				End If
+			End Using
 		End If
-		ImpersonateLoggedOnUser.Taketoken()
-		'If win10 Then
-		'	Application.Log.AddMessage("Starting removal of NVCP APPX")
-		'	'Create the runspace.
-		'	Using R As System.Management.Automation.Runspaces.Runspace =
-		'	System.Management.Automation.Runspaces.RunspaceFactory.CreateRunspace()
 
-		'		'Create the pipeline
-		'		Using P As System.Management.Automation.Runspaces.Pipeline = R.CreatePipeline()
-
-		'			'Open the runspace.
-		'			R.Open()
-
-		'			'Create each command (in this case just one)...
-		'			P.Commands.AddScript("Get-AppxPackage *nvidiacorp* |Remove-AppxPackage")
-		'			'Dim Cmd As New System.Management.Automation.Runspaces.Command("Get-AppxPackage *nvidiacorp* |Remove-AppxPackage", True)
-
-		'			'...and add it to the pipeline.
-		'			'P.Commands.Add(Cmd)
-
-		'			'Execute the commands and get the response.
-		'			Dim Result As System.Collections.ObjectModel.Collection(Of
-		'			System.Management.Automation.PSObject) = P.Invoke()
-
-		'			'Close the runspace.
-		'			R.Close()
-
-		'			'Display the result in the console window.
-		'			For Each O As System.Management.Automation.PSObject In Result
-		'				'Console.WriteLine(O.ToString())
-		'				Application.Log.AddMessage(O.ToString)
-		'			Next
-
-		'		End Using
-		'	End Using
-		'End If
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+		End If
 
 		'for GFE removal only
 		If removegfe Then
@@ -3870,13 +3865,20 @@ Public Class GPUCleanup
 																			Next
 																			If regkey5.ValueCount = 0 Then
 																				Try
-																					Deletesubregkey(regkey2.OpenSubKey(child2, True), subkeys)
+																					Deletesubregkey(regkey4, subkeys)
 																				Catch ex As Exception
 																					Application.Log.AddException(ex)
 																				End Try
 																			End If
 																		End If
 																	End Using
+																End If
+																If StrContainsAny(subkeys, True, "pending") Then
+																	Try
+																		Deletesubregkey(regkey4, subkeys)
+																	Catch ex As Exception
+																		Application.Log.AddException(ex)
+																	End Try
 																End If
 															Next
 															If regkey4.SubKeyCount = 0 Then
