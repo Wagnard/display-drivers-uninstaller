@@ -6,7 +6,7 @@ Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
 Imports WinForm = System.Windows.Forms
 Imports System.Runtime
-Imports Windows.Management.Deployment
+
 
 Public Class GPUCleanup
 
@@ -2891,128 +2891,7 @@ Public Class GPUCleanup
 
 		'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
 		If win10 Then
-			ImpersonateLoggedOnUser.ReleaseToken()  'Will not work if we impersonate "SYSTEM"
-			Try
-				Select Case System.Windows.Forms.SystemInformation.BootMode
-					Case System.Windows.Forms.BootMode.FailSafe
-						Try
-							Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-								If regkey IsNot Nothing Then
-									Using regSubKey As RegistryKey = regkey.CreateSubKey("AppXSvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
-										regSubKey.SetValue("", "Service")
-									End Using
-									Using regSubKey As RegistryKey = regkey.CreateSubKey("camsvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
-										regSubKey.SetValue("", "Service")
-									End Using
-									Using regSubKey As RegistryKey = regkey.CreateSubKey("clipSVC", RegistryKeyPermissionCheck.ReadWriteSubTree)
-										regSubKey.SetValue("", "Service")
-									End Using
-									Using regSubKey As RegistryKey = regkey.CreateSubKey("Wsearch", RegistryKeyPermissionCheck.ReadWriteSubTree)
-										regSubKey.SetValue("", "Service")
-									End Using
-								End If
-							End Using
-						Catch ex As Exception
-							Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for APPXSvc,etc...!")
-						End Try
-					Case System.Windows.Forms.BootMode.FailSafeWithNetwork
-						Try
-							Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-								If regkey IsNot Nothing Then
-									Using regSubKey As RegistryKey = regkey.CreateSubKey("AppXSvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
-										regSubKey.SetValue("", "Service")
-									End Using
-									Using regSubKey As RegistryKey = regkey.CreateSubKey("camsvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
-										regSubKey.SetValue("", "Service")
-									End Using
-									Using regSubKey As RegistryKey = regkey.CreateSubKey("clipSVC", RegistryKeyPermissionCheck.ReadWriteSubTree)
-										regSubKey.SetValue("", "Service")
-									End Using
-									Using regSubKey As RegistryKey = regkey.CreateSubKey("Wsearch", RegistryKeyPermissionCheck.ReadWriteSubTree)
-										regSubKey.SetValue("", "Service")
-									End Using
-								End If
-							End Using
-						Catch ex As Exception
-							Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for APPXSvc,etc...!")
-						End Try
-				End Select
-
-				Dim packageManager As Windows.Management.Deployment.PackageManager = New Windows.Management.Deployment.PackageManager()
-				Dim deploymentOperation As Windows.Foundation.IAsyncOperationWithProgress(Of DeploymentResult, DeploymentProgress) = packageManager.RemovePackageAsync("NVIDIACorp.NVIDIAControlPanel_8.1.949.0_x64__56jybvy8sckqj")
-				'Dim opCompletedEvent As ManualResetEvent = New ManualResetEvent(False)
-				'			End Function
-				'Windows.Foundation.IAsyncAction() = packageManager.RemovePackageAsync("NVIDIACorp.NVIDIAControlPanel_8.1.949.0_x64__56jybvy8sckqj")
-
-				Dim DeploymentEnded As Boolean = False
-
-				While Not DeploymentEnded
-
-					If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
-						'	Dim deploymentResult As Windows.Management.Deployment.DeploymentResult = deploymentOperation.GetResults()
-						'	Console.WriteLine("Removal Error: {0}", deploymentOperation.ErrorCode)
-						'	Console.WriteLine("Detailed Error Text: {0}", deploymentResult.ErrorText)
-
-						'ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Canceled Then
-						Application.Log.AddMessage("NVCP DCH remove failed.")
-						DeploymentEnded = True
-					ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
-						'	Console.WriteLine("Removal succeeded!")
-						'Else
-						Application.Log.AddMessage("NVCP DCH removed.")
-						DeploymentEnded = True
-						'	Console.WriteLine("Removal status unknown")
-					End If
-				End While
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			Finally
-				Select Case System.Windows.Forms.SystemInformation.BootMode
-					Case System.Windows.Forms.BootMode.FailSafe
-
-						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
-							If regkey IsNot Nothing Then
-								Try
-									Deletesubregkey(regkey, "AppXSvc")
-									Deletesubregkey(regkey, "camsvc")
-									Deletesubregkey(regkey, "clipSVC")
-									Deletesubregkey(regkey, "Wsearch")
-								Catch ex As Exception
-									Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
-								End Try
-							End If
-						End Using
-
-					Case System.Windows.Forms.BootMode.FailSafeWithNetwork
-
-						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
-							If regkey IsNot Nothing Then
-								Try
-									Deletesubregkey(regkey, "AppXSvc")
-									Deletesubregkey(regkey, "camsvc")
-									Deletesubregkey(regkey, "clipSVC")
-									Deletesubregkey(regkey, "Wsearch")
-								Catch ex As Exception
-									Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
-								End Try
-							End If
-						End Using
-				End Select
-			End Try
-			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
-				If regkey IsNot Nothing Then
-					For Each ValueName As String In regkey.GetValueNames
-						If IsNullOrWhitespace(ValueName) Then Continue For
-						If StrContainsAny(ValueName, True, "nvidiacontrolpanel") Then
-							Try
-								Deletevalue(regkey, ValueName)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-							End Try
-						End If
-					Next
-				End If
-			End Using
+			CleanupEngine.RemoveAppx("NVIDIAControlPanel")
 		End If
 
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
@@ -5793,6 +5672,11 @@ Public Class GPUCleanup
 		UpdateTextMethod(UpdateTextTranslated(5))
 
 		Application.Log.AddMessage("Cleaning registry")
+
+		'Removal of the (DCH) from the Window Store. (In progress...)
+		If win10 Then
+			CleanupEngine.RemoveAppx("IntelGraphicsControlPanel")
+		End If
 
 		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
 

@@ -83,11 +83,16 @@ Public Class AUDIOCleanup
 	End Sub
 
 	Private Sub CleanRealtek(ByVal config As ThreadSettings)
-
+		Dim win10 As Boolean = frmMain.win10
 		Dim packages As String()
 		Dim wantedvalue As String = Nothing
 
 		Application.Log.AddMessage("Cleaning known Regkeys")
+
+		'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
+		If win10 Then
+			CleanupEngine.RemoveAppx("RealtekAudioControl")
+		End If
 
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 

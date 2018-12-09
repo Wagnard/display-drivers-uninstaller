@@ -85,6 +85,9 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="Windows.ApplicationModel">
+      <HintPath>..\..\..\..\..\..\..\..\..\Windows\System32\WinMetadata\Windows.ApplicationModel.winmd</HintPath>
+    </Reference>
     <Reference Include="Windows.Foundation">
       <HintPath>..\..\..\..\..\..\..\..\..\Windows\System32\WinMetadata\Windows.Foundation.winmd</HintPath>
       <Private>False</Private>
