@@ -193,7 +193,7 @@ Public Class GPUCleanup
 			CleanupEngine.Cleandriverstore(config)
 		End If
 
-		'Here I remove 3dVision USB Adapter.
+		'Here I remove 3dVision USB Adapter and USB type C(RTX).
 		If config.SelectedGPU = GPUVendor.Nvidia Then
 
 			Try
@@ -209,6 +209,10 @@ Public Class GPUCleanup
 				  "USB\VID_0955&PID_700C",
 				  "USB\VID_0955&PID_700D&MI_00",
 				  "USB\VID_0955&PID_700E&MI_00"}
+				Dim USBTypeC As String() =
+					{"PCI\VEN_10DE&DEV_1AD7",
+					"PCI \ VEN_10DE&DEV_1AD9",
+					"PCI\VEN_10DE&DEV_1ADB"}
 
 				'3dVision Removal
 				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", Nothing, False)
@@ -221,7 +225,16 @@ Public Class GPUCleanup
 					found.Clear()
 				End If
 
-
+				'USB Type C Removal
+				found = SetupAPI.GetDevices("usb", Nothing, False)
+				If found.Count > 0 Then
+					For Each d As SetupAPI.Device In found
+						If StrContainsAny(d.HardwareIDs(0), True, USBTypeC) Then
+							SetupAPI.UninstallDevice(d)
+						End If
+					Next
+					found.Clear()
+				End If
 
 				'NVIDIA SHIELD Wireless Controller Trackpad
 				found = SetupAPI.GetDevices("mouse", Nothing, False)
