@@ -2592,7 +2592,7 @@ Public Class CleanupEngine
 						catalog = ""
 					End Try
 				End If
-				If StrContainsAny(oem.Class, True, "display") Or StrContainsAny(oem.Class, True, "media") Then
+				If StrContainsAny(oem.Class, True, "display") Or StrContainsAny(oem.Class, True, "media") Or StrContainsAny(oem.Class, True, "extension") Then
 					SetupAPI.RemoveInf(oem, True)
 				Else
 					If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.

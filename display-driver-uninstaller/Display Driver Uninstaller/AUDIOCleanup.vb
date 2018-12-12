@@ -6,7 +6,7 @@ Public Class AUDIOCleanup
 	Dim CleanupEngine As New CleanupEngine
 
 	Public Sub Start(ByVal config As ThreadSettings)
-
+		Dim win10 As Boolean = frmMain.win10
 		Dim vendidexpected As String = ""
 		Select Case config.SelectedAUDIO
 			Case AudioVendor.Realtek
@@ -52,13 +52,31 @@ Public Class AUDIOCleanup
 			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False)
 			If found.Count > 0 Then
 				For Each d As SetupAPI.Device In found
-					If StrContainsAny(d.FriendlyName, True, "realtek high definition audio") Then
+					If StrContainsAny(d.FriendlyName, True, "realtek high definition audio", "Realtek(R) Audio") Then
 						SetupAPI.UninstallDevice(d)
 					End If
 				Next
 				found.Clear()
 			End If
 		End If
+
+		'Removing Software components (DCH stuff, win10+)
+		If win10 Then
+
+			If config.SelectedAUDIO = AudioVendor.Realtek Then
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
+				If found.Count > 0 Then
+					For Each d As SetupAPI.Device In found
+						If StrContainsAny(d.FriendlyName, True, "realtek") Then
+							SetupAPI.UninstallDevice(d)
+						End If
+					Next
+					found.Clear()
+				End If
+			End If
+		End If
+
+		CleanupEngine.Cleandriverstore(config)
 
 		Select Case config.SelectedAUDIO
 			Case AudioVendor.Realtek
@@ -170,6 +188,80 @@ Public Class AUDIOCleanup
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
+		End If
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
+			"Software", True)
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames()
+					If IsNullOrWhitespace(child) Then Continue For
+					If StrContainsAny(child, True, "realtek") Then
+						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+							If regkey2 IsNot Nothing Then
+								For Each child2 As String In regkey2.GetSubKeyNames()
+									If IsNullOrWhitespace(child2) Then Continue For
+									If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection") Then
+										Try
+											Deletesubregkey(regkey2, child2)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
+								Next
+								If regkey2.SubKeyCount = 0 Then
+									Try
+										Deletesubregkey(regkey, child)
+									Catch ex As Exception
+									End Try
+								Else
+									For Each data As String In regkey2.GetSubKeyNames()
+										If IsNullOrWhitespace(data) Then Continue For
+										Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
+									Next
+								End If
+							End If
+						End Using
+					End If
+				Next
+			End If
+		End Using
+
+		If IntPtr.Size = 8 Then
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
+	"Software\WOW6432Node", True)
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(child) Then Continue For
+						If StrContainsAny(child, True, "realtek") Then
+							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+								If regkey2 IsNot Nothing Then
+									For Each child2 As String In regkey2.GetSubKeyNames()
+										If IsNullOrWhitespace(child2) Then Continue For
+										If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection") Then
+											Try
+												Deletesubregkey(regkey2, child2)
+											Catch ex As Exception
+												Application.Log.AddException(ex)
+											End Try
+										End If
+									Next
+									If regkey2.SubKeyCount = 0 Then
+										Try
+											Deletesubregkey(regkey, child)
+										Catch ex As Exception
+										End Try
+									Else
+										For Each data As String In regkey2.GetSubKeyNames()
+											If IsNullOrWhitespace(data) Then Continue For
+											Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
+										Next
+									End If
+								End If
+							End Using
+						End If
+					Next
+				End If
+			End Using
 		End If
 
 	End Sub
