@@ -1235,7 +1235,7 @@ Public Class GPUCleanup
 												For Each childf As String In FileIO.GetDirectories(filePath)
 													If IsNullOrWhitespace(childf) Then Continue For
 
-													If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
+													If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim", "Performance Profile Client") Then
 														Delete(childf)
 													End If
 												Next
@@ -1254,7 +1254,7 @@ Public Class GPUCleanup
 										For Each child2 As String In regkey2.GetSubKeyNames()
 											If IsNullOrWhitespace(child2) Then Continue For
 
-											If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages", "distribution",
+											If StrContainsAny(child2, True, "A464", "ati catalyst", "ati mcat", "avt", "ccc", "cnext", "amd app sdk", "packages", "distribution", "ppc",
 											   "wirelessdisplay", "hydravision", "avivo", "ati display driver", "installed drivers", "steadyvideo", "amd dvr", "ati problem report wizard", "amd problem report wizard", "cnbranding") Then
 												Try
 													Deletesubregkey(regkey2, child2)
@@ -1307,7 +1307,7 @@ Public Class GPUCleanup
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-							If StrContainsAny(child, True, "eeu", "fuel", "cn", "chill", "mftvdecoder", "dvr", "gpu", "amdanalytics") Then
+							If StrContainsAny(child, True, "eeu", "fuel", "cn", "chill", "mftvdecoder", "dvr", "gpu", "amdanalytics", "ppc") Then
 								Try
 									Deletesubregkey(regkey, child)
 								Catch ex As Exception
@@ -1838,7 +1838,12 @@ Public Class GPUCleanup
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 						If regkey2 IsNot Nothing Then
 							If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-								If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater") Then
+								If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater", "AMDLinkUpdate") Then
+									Deletesubregkey(regkey, child)
+								End If
+							End If
+							If Not IsNullOrWhitespace(regkey2.GetValue("Path", String.Empty).ToString) Then
+								If StrContainsAny(regkey2.GetValue("Path", String.Empty).ToString, True, "\StartCN", "\StartCNBM") Then
 									Deletesubregkey(regkey, child)
 								End If
 							End If
@@ -1854,7 +1859,7 @@ Public Class GPUCleanup
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
 							If IsNullOrWhitespace(child) Then Continue For
-							If StrContainsAny(child, True, "AMD Updater", "StartCN", "StartDVR") Then
+							If StrContainsAny(child, True, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM") Then
 								For Each ScheduleChild As String In schedule.GetSubKeyNames
 									If IsNullOrWhitespace(ScheduleChild) Then Continue For
 									Try
@@ -2259,8 +2264,7 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If child.ToLower.Contains("kdb") Or
-					   child.ToLower.Contains("fuel") Then
+					If StrContainsAny(child, True, "kdb", "ppc", "fuel") Then
 
 						Delete(child)
 
@@ -2454,7 +2458,7 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim") Then
+					If StrContainsAny(child, True, "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim", "performance profile client") Then
 
 						Delete(child)
 
