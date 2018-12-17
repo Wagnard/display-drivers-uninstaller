@@ -54,7 +54,7 @@ Public Class GPUCleanup
 					For Each child As String In regkey.GetSubKeyNames
 						If IsNullOrWhitespace(child) Then Continue For
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
-							'This is not an error that we do nothing here, it is oply to trigger the persmission check on the previous line.
+							'This is not a typo, it is only to trigger the persmission check on the previous line.
 						End Using
 					Next
 				End If
@@ -76,7 +76,7 @@ Public Class GPUCleanup
 								If StrContainsAny(compatibleid, True, "PCI\CC_040300") Then
 									Application.Log.AddMessage("Removing AMD HD Audio Bus (amdkmafd)")
 
-									Win32.SetupAPI.UninstallDevice(SystemDevice)
+									SetupAPI.UninstallDevice(SystemDevice)
 								End If
 							Next
 
@@ -148,12 +148,50 @@ Public Class GPUCleanup
 		' ----------------------
 
 		Try
-			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False)
-			If found.Count > 0 Then
-				For Each d As SetupAPI.Device In found
-					Win32.SetupAPI.UninstallDevice(d)
+			Dim Mainfound As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False)
+			If Mainfound.Count > 0 Then
+				For Each d As SetupAPI.Device In Mainfound
+					If d IsNot Nothing Then
+						Dim Audiofound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False, True)
+						If Audiofound.Count > 0 Then
+							For Each d2 As SetupAPI.Device In Audiofound
+								If d2 IsNot Nothing Then
+									For Each Parent In d2.ParentDevices
+										If Parent IsNot Nothing Then
+											If StrContainsAny(Parent.DeviceID, True, d.DeviceID) Then
+												'AudioEndpoints Removal
+												Dim Audioendpointfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False)
+												If Audioendpointfound.Count > 0 Then
+													For Each d3 As SetupAPI.Device In Audioendpointfound
+														If d3 IsNot Nothing Then
+															For Each Parent2 In d3.ParentDevices
+																If Parent2 IsNot Nothing Then
+																	If StrContainsAny(Parent2.DeviceID, True, d2.DeviceID) Then
+																		SetupAPI.UninstallDevice(d3) 'Removing the audioenpoint associated with the device we are trying to remove.
+																	End If
+																End If
+															Next
+														End If
+													Next
+													Audioendpointfound.Clear()
+												End If
+
+												UpdateTextMethod(UpdateTextTranslated(24))
+												Application.Log.AddMessage("Executing SetupAPI Remove Audio controler.")
+												SetupAPI.UninstallDevice(d2) 'Removing the Audiocard associated with the device we are trying to remove.
+											End If
+										End If
+									Next
+									UpdateTextMethod(UpdateTextTranslated(25))
+									Application.Log.AddMessage("SetupAPI Remove Audio controler Complete.")
+								End If
+							Next
+							Audiofound.Clear()
+						End If
+						SetupAPI.UninstallDevice(d)
+					End If
 				Next
-				found.Clear()
+				Mainfound.Clear()
 			End If
 		Catch ex As Exception
 			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -161,33 +199,11 @@ Public Class GPUCleanup
 			config.GPURemovedSuccess = False
 			Exit Sub
 		End Try
+
 		UpdateTextMethod(UpdateTextTranslated(23))
 		Application.Log.AddMessage("SetupAPI Display Driver removal: Complete.")
 
-
 		CleanupEngine.Cleandriverstore(config)
-
-		UpdateTextMethod(UpdateTextTranslated(24))
-		Application.Log.AddMessage("Executing SetupAPI Remove Audio controler.")
-
-		Try
-			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False)
-			If found.Count > 0 Then
-				For Each d As SetupAPI.Device In found
-					SetupAPI.UninstallDevice(d)
-				Next
-				found.Clear()
-			End If
-		Catch ex As Exception
-			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-			Application.Log.AddException(ex)
-		End Try
-
-		UpdateTextMethod(UpdateTextTranslated(25))
-
-
-		Application.Log.AddMessage("SetupAPI Remove Audio controler Complete.")
-
 
 		If config.SelectedGPU <> GPUVendor.Intel Then
 			CleanupEngine.Cleandriverstore(config)
@@ -262,42 +278,9 @@ Public Class GPUCleanup
 
 				End If
 
-				'nVidia AudioEndpoints Removal
-				found = SetupAPI.GetDevices("audioendpoint", Nothing, False)
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						If StrContainsAny(d.FriendlyName, True, "nvidia virtual audio device", "nvidia high definition audio") Then
-							SetupAPI.UninstallDevice(d)
-						End If
-					Next
-					found.Clear()
-				End If
-
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-			End Try
-		End If
-
-		If config.SelectedGPU = GPUVendor.AMD Then
-			' ------------------------------
-			' Removing some of AMD AudioEndpoints
-			' ------------------------------
-			Application.Log.AddMessage("Removing AMD Audio Endpoints")
-			Try
-				'AMD AudioEndpoints Removal
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint")
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						If StrContainsAny(d.FriendlyName, True, "amd high definition audio device", "digital audio (hdmi) (high definition audio device)") Then
-							SetupAPI.UninstallDevice(d)
-						End If
-					Next
-					found.Clear()
-				End If
-			Catch ex As Exception
-				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
-				Application.Log.AddException(ex)
 			End Try
 		End If
 
@@ -2458,7 +2441,7 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim", "performance profile client") Then
+					If StrContainsAny(child, True, "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim", "performance profile client", "wvr") Then
 
 						Delete(child)
 
@@ -3596,6 +3579,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("_nvbackend") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvplugin") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvtelemetry") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_ngxcore") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvvhci") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvdisplaycontainer") Or
 						 child.ToLower.Contains("_displaydriveranalyzer") Or
@@ -4604,7 +4588,7 @@ Public Class GPUCleanup
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 						If regkey2 IsNot Nothing Then
 							If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-								If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NVIDIA Profile Updater", "NVIDIA telemetry monitor", "NVIDIA crash and telemetry reporter", "batteryboost") AndAlso config.RemoveGFE Then
+								If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NVIDIA Profile Updater", "NVIDIA telemetry monitor", "NVIDIA crash and telemetry reporter", "batteryboost", "nvngx") AndAlso config.RemoveGFE Then
 									Deletesubregkey(regkey, child)
 								End If
 							End If
@@ -4620,7 +4604,7 @@ Public Class GPUCleanup
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
 							If IsNullOrWhitespace(child) Then Continue For
-							If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NvBatteryBoostCheckOnLogon") AndAlso config.RemoveGFE Then
+							If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NvBatteryBoostCheckOnLogon", "nvngx") AndAlso config.RemoveGFE Then
 								For Each ScheduleChild As String In schedule.GetSubKeyNames
 									If IsNullOrWhitespace(ScheduleChild) Then Continue For
 									Try
@@ -5001,6 +4985,7 @@ Public Class GPUCleanup
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("updatus") Or
 					 child.ToLower.Contains("shimgen") Or
+					 (child.ToLower.Contains("ngx") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("grid") AndAlso config.RemoveGFE) Then
 
 						Delete(child)
@@ -5132,6 +5117,7 @@ Public Class GPUCleanup
 					   child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("nvidia ngx") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvdlisr") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvgsync") Or

@@ -2002,7 +2002,7 @@ Namespace Win32
 
 			Return Nothing
 		End Function
-		Public Shared Function GetDevices(ByVal className As String, Optional ByVal vendorID As String = Nothing, Optional ByVal includeSiblings As Boolean = True) As List(Of Device)
+		Public Shared Function GetDevices(ByVal className As String, Optional ByVal vendorID As String = Nothing, Optional ByVal includeSiblings As Boolean = True, Optional ByVal includeParents As Boolean = False) As List(Of Device)
 			Try
 				If IsNullOrWhitespace(className) Then
 					Throw New ArgumentNullException("className")
@@ -2080,6 +2080,14 @@ Namespace Win32
 									Next
 								End If
 
+								If includeParents Then
+									For Each dev As Device In Devices
+										GetParents(dev)
+										If dev.ParentDevices IsNot Nothing AndAlso dev.ParentDevices.Length > 0 Then
+											UpdateDevicesByID(dev.ParentDevices)
+										End If
+									Next
+								End If
 								UpdateDevicesByID(Devices)
 							End If
 
@@ -2926,6 +2934,60 @@ Namespace Win32
 			End Try
 		End Sub
 
+		Private Shared Sub GetParents(ByVal device As Device)
+			Try
+				Dim result As UInt32
+				Dim devInstParent As UInt32 = 0UI
+				Dim devInstChild As UInt32 = 0UI
+				Dim parentDevices As New List(Of Device)(5)
+				Dim contains As Boolean = False
+
+
+				result = CM_Get_Parent(devInstParent, device.devInst, 0UI)
+					contains = False
+
+					If result = CR.SUCCESS Then
+						If devInstParent <> device.devInst Then
+							parentDevices.Add(
+						  New Device() With {
+						   .devInst = devInstParent
+						  })
+						End If
+
+						If devInstParent <> device.devInst Then
+							For Each parent As Device In parentDevices
+								If parent.devInst = devInstParent Then
+									contains = True
+									Exit For
+								End If
+							Next
+
+							If Not contains Then
+								parentDevices.Add(
+									 New Device() With
+									 {
+									   .devInst = devInstParent
+									 })
+							End If
+						End If
+
+						devInstChild = devInstParent
+					ElseIf result = CR.NO_SUCH_DEVINST Then
+						Return
+					Else
+						Throw New Win32Exception(GetLastWin32Error())
+					End If
+
+				If parentDevices.Count > 0 Then
+					device.ParentDevices = parentDevices.ToArray()
+				Else : device.ParentDevices = Nothing
+				End If
+
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Getting device's parents has failed!")
+			End Try
+		End Sub
+
 		Private Shared Function RebootRequired(ByVal infoSet As SafeDeviceHandle, ByVal ptrDevInfo As IntPtr, ByVal device As Device) As Boolean
 			If device Is Nothing Then
 				Return False
@@ -3006,6 +3068,7 @@ Namespace Win32
 			Private _deviceID As String
 			Private _driverInfo As DriverInfo()
 			Private _siblingDevices() As Device
+			Private _parentDevices() As Device
 
 			Private _rebootRequired As Boolean = False
 			Private _installStateStr As String = Nothing
@@ -3127,6 +3190,15 @@ Namespace Win32
 				End Get
 				Friend Set(value As Device())
 					_siblingDevices = value
+				End Set
+			End Property
+
+			Public Property ParentDevices As Device()
+				Get
+					Return _parentDevices
+				End Get
+				Friend Set(value As Device())
+					_parentDevices = value
 				End Set
 			End Property
 
@@ -3265,6 +3337,7 @@ Namespace Win32
 			Friend Sub New()
 				_driverInfo = Nothing
 				_siblingDevices = Nothing
+				_parentDevices = Nothing
 				_oemInfs = Nothing
 			End Sub
 

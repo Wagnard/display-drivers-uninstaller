@@ -27,16 +27,53 @@ Public Class AUDIOCleanup
 		UpdateTextMethod(UpdateTextTranslated(22))
 
 		'----------------------------------
-		'Removing the Audio card-----------
+		'Identifying the Audio card--------
 		'----------------------------------
-
 		Try
-			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False)
-			If found.Count > 0 Then
-				For Each d As SetupAPI.Device In found
-					SetupAPI.UninstallDevice(d)
+			Dim Mainfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False)
+			If Mainfound.Count > 0 Then
+				For Each d As SetupAPI.Device In Mainfound
+
+					'Removing Audio endpoints
+					If config.SelectedAUDIO = AudioVendor.Realtek Then
+						Dim AudioEnpointfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False, True)
+						If AudioEnpointfound.Count > 0 Then
+							For Each d2 As SetupAPI.Device In AudioEnpointfound
+								If d2 IsNot Nothing Then
+									For Each Parent In d2.ParentDevices
+										If Parent IsNot Nothing Then
+											If StrContainsAny(Parent.DeviceID, True, d.DeviceID) Then
+												SetupAPI.UninstallDevice(d2) 'Removing the audioenpoint associated with the device we are trying to remove.
+											End If
+										End If
+									Next
+								End If
+							Next
+							AudioEnpointfound.Clear()
+						End If
+					End If
+
+					'Removing Software components (DCH stuff, win10+)
+					If win10 Then
+						If config.SelectedAUDIO = AudioVendor.Realtek Then
+							Dim SCfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
+							If SCfound.Count > 0 Then
+								For Each d3 As SetupAPI.Device In SCfound
+									For Each Parent In d3.ParentDevices
+										If Parent IsNot Nothing Then
+											If StrContainsAny(Parent.DeviceID, True, d.DeviceID) Then
+												SetupAPI.UninstallDevice(d3)
+											End If
+										End If
+									Next
+								Next
+								SCfound.Clear()
+							End If
+						End If
+					End If
+					SetupAPI.UninstallDevice(d) 'Removing the audio card
 				Next
-				found.Clear()
+				Mainfound.Clear()
 			End If
 		Catch ex As Exception
 			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -47,34 +84,20 @@ Public Class AUDIOCleanup
 
 		Application.Log.AddMessage("SetupAPI Remove Audio controler Complete.")
 
-		'Removing Audio endpoints
-		If config.SelectedAUDIO = AudioVendor.Realtek Then
-			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False)
-			If found.Count > 0 Then
-				For Each d As SetupAPI.Device In found
-					If StrContainsAny(d.FriendlyName, True, "realtek high definition audio", "Realtek(R) Audio") Then
-						SetupAPI.UninstallDevice(d)
-					End If
-				Next
-				found.Clear()
-			End If
-		End If
-
-		'Removing Software components (DCH stuff, win10+)
-		If win10 Then
-
-			If config.SelectedAUDIO = AudioVendor.Realtek Then
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						If StrContainsAny(d.FriendlyName, True, "realtek") Then
-							SetupAPI.UninstallDevice(d)
-						End If
-					Next
-					found.Clear()
-				End If
-			End If
-		End If
+		''Removing Software components (DCH stuff, win10+)
+		'If win10 Then
+		'	If config.SelectedAUDIO = AudioVendor.Realtek Then
+		'		Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
+		'		If found.Count > 0 Then
+		'			For Each d As SetupAPI.Device In found
+		'				If StrContainsAny(d.FriendlyName, True, "realtek") Then ' Need verifications.
+		'					SetupAPI.UninstallDevice(d)
+		'				End If
+		'			Next
+		'			found.Clear()
+		'		End If
+		'	End If
+		'End If
 
 		CleanupEngine.Cleandriverstore(config)
 
@@ -264,6 +287,19 @@ Public Class AUDIOCleanup
 			End Using
 		End If
 
+		Try
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Run", True)
+				If regkey IsNot Nothing Then
+					Try
+						Deletevalue(regkey, "RtkAudUService")
+					Catch ex As Exception
+					End Try
+				End If
+			End Using
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+
 	End Sub
 
 	Private Sub CleanRealtekFolders(ByVal config As ThreadSettings)
@@ -378,4 +414,7 @@ Public Class AUDIOCleanup
 		CleanupEngine.Deletesubregkey(value1, value2)
 	End Sub
 
+	Private Sub Deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
+		CleanupEngine.Deletevalue(value1, value2)
+	End Sub
 End Class

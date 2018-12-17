@@ -103,19 +103,19 @@
 			<Text>Patron</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Resmi DDU Web Sitesini Ziyaret Edin.</Text>
+			<Text>Resmi DDU Web Sitesini Ziyaret Edin</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>SVN Web Sitesini Ziyaret Edin.</Text>
+			<Text>SVN Web Sitesini Ziyaret Edin</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Guru3D NVIDIA Konusunu Ziyaret Edin.</Text>
+			<Text>Guru3D NVIDIA Başlığını Ziyaret Edin</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Guru3D AMD Konusunu Ziyaret Edin.</Text>
+			<Text>Guru3D AMD Başlığını Ziyaret Edin</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Geforce Konusunu Ziyaret Edin.</Text>
+			<Text>Geforce Başlığını Ziyaret Edin</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
@@ -136,6 +136,11 @@
 			<Text15>Hiçbir değişiklik yapılmadı. Windows aygıt yükleme ayarları zaten varsayılan olarak ayarlanmış.</Text15>
 			<Text16>Windows'dan, sürücülerin doğru şekilde kaldırılmasını engelleyen kritik bir hata oluştu. Güvenlik önlemi olarak DDU, dosya ve kayıt defterinin kaldırılmasına devam etmeyecektir. DDU kullanmadan önce sistem sorununuzu çözmelisiniz.</Text16>
 		</Messages>
+		<Options_Type>
+			<Options1>---Cihazı Seçin---</Options1>
+			<Options2>Ses Kartı</Options2>
+			<Options3>Ekran Kartı</Options3>
+		</Options_Type>
 		<Options_GPU>
 			<Options1>---GPU Cihazını Seç---</Options1>
 			<Options2>NVIDIA</Options2>
@@ -162,7 +167,7 @@
 			<Text12>GPU #</Text12>
 			<Text13>Algılanan</Text13>
 			<Text14>GPU Aygıt Kimliği</Text14>
-			<Text15>Algılanan Sürücü(ler) Sürüm(ler)</Text15>
+			<Text15>Algılanan Sürücü(ler)Sürüm(ler)</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF Bölümü</Text17>
 			<Text18>GPU düzgün yüklü değil</Text18>
@@ -216,13 +221,13 @@
 			<Text>"C:\NVidia" Sürücü klasörlerini sil (Tavsiye edilmez)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Önyükleme yolunda günlük dosyalarına kaydet (Tavsiye edilen).</Text>
+			<Text>Önyükleme yolunda günlük dosyalarına kaydet (Tavsiye edilen)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
-			<Text>PhysX'i Sil.</Text>
+			<Text>PhysX'i Sil</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
-			<Text>3DTV Play'i Sil.</Text>
+			<Text>3DTV Play'i Sil</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
 			<Text>Sistem geri yükleme noktası oluştur (İzin veriliyorsa)</Text>
@@ -231,40 +236,40 @@
 			<Text>Mevcut olan veya olmayan monitörleri kaldır (Önerilen)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>AMD Audio Bus'ı Sil.</Text>
+			<Text>AMD Audio Bus'ı Sil</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
 			<Text>"C:\AMD" Sürücü klasörlerini sil (Tavsiye edilmez)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>AMDKMPFD Sürücü/Filtre sil. (AMD chipset için yedeklemeniz tavsiye edilir)</Text>
+			<Text>AMDKMPFD Sürücü/Filtre sil (AMD chipset için yedeklemeniz tavsiye edilir)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Başlangıçta Güvenli Mod mesaj kutusu göster (Güvenli Mod'u manuel olarak test edene kadar önerilmez)</Text>
 			<Tooltip>Çalışmıyor olup olmadığını görmek için bilgisayarınızı daha önce güvenli modda başlatmamışsanız önerilmez. Bu seçenek bir önyükleme döngüsüne, siyah ekrana ve muhtemelen daha fazlasına neden olabilir.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Yapılandırma dosyalarını Romaing klasöründe sakla.</Text>
+			<Text>Yapılandırma dosyalarını Romaing klasöründe sakla</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Başlangıçta otomatik olarak DDU güncellemelerini kontrol edin. (Önerilen)</Text>
+			<Text>Başlangıçta otomatik olarak DDU güncellemelerini kontrol edin (Önerilen)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Geforce Experience (GFE) Kaldır.</Text>
+			<Text>Geforce Experience (GFE) Kaldır</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>AMD Crimson Shader Önbellek klasörünü sil.</Text>
+			<Text>AMD Crimson Shader Önbellek klasörünü sil</Text>
 			<Tooltip>
-				Shader önbellek veri nedeniyle (hızlı veya görsel bozulma)grafiksel anormal bozukluk varsa tavsiye edilir.
+				Shader önbellek veri nedeniyle (hızlı veya görsel bozulma) grafiksel anormal bozukluk varsa tavsiye edilir.
 				Eğer NVidia gibi bir marka için de kullanıyorsanız tavsiye edilir.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>Vulkan Runtime Kaldır</Text>
-			<Tooltip>Eğer Vulkan API Kullanan 2 Farklı GPU Yeteneği Varsa Tavsiye Edilmez.</Tooltip>
+			<Tooltip>Eğer Vulkan API Kullanan 2 Farklı GPU Yeteneği Varsa Tavsiye Edilmez</Tooltip>
 		</lblVulkan>
 	    <lblPreventWinUpdate>
-            <Text>"Windows" bir aygıt için bir sürücü aradığında, "Windows güncellemesinden" sürücülerin indirilmesini önleyin.</Text>
+            <Text>"Windows" bir aygıt için bir sürücü aradığında, "Windows güncellemesinden" sürücülerin indirilmesini önleyin</Text>
             <Tooltip>Bu seçenek, kolayca "Windows / Aygıt Yöneticisi"nin "Windows Update"den sürücü güncellemesini kontrol etmesini engeller.
 					 Not: Bu, "Windows Update"nin yeni sürücüleri indirmesini / yüklemesini engellemez. 
 					 Not2: DDU'yu kullanmayı bitirdikten ve GPU sürücünüzü yeniden yükledikten sonra bu değişikliği geri almak büyük önem arz etmektedir. Diğer sürücülerin yüklenmesine engel olabilir.</Tooltip>
@@ -275,7 +280,7 @@
 		<btnAccept>
 			<Text>Başlat</Text>
 			<Text2>
-				Güvenli modda yeniden başlatın.
+				Güvenli modda yeniden başlatın
 			</Text2>
 		</btnAccept>
 		<btnClose>
@@ -426,7 +431,7 @@
 		<Translator>
 			<User>murat5038</User>
 			<Details>Kaspersky Turkey Moderator</Details>
-			<LastUpdate>15.09.2018</LastUpdate>
+			<LastUpdate>01.12.2018</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
