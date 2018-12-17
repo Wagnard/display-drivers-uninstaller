@@ -2092,7 +2092,7 @@ Namespace Win32
 							End If
 
 							Dim logEntry As LogEntry = Application.Log.CreateEntry()
-							logEntry.Message = String.Format("Devices found: {0}", Devices.Count.ToString())
+							logEntry.Message = String.Format("Device(s) found: {0}", Devices.Count.ToString())
 							logEntry.Add("-> className", className)
 							logEntry.Add("-> vendorID", If(IsNullOrWhitespace(vendorID), "<empty>", vendorID))
 							logEntry.Add("-> includeSiblings", includeSiblings.ToString())
@@ -2132,7 +2132,8 @@ Namespace Win32
 				End If
 
 				Dim logEntry As LogEntry = Application.Log.CreateEntry()
-				logEntry.Message = String.Concat("Beginning of uninstalling device:", CRLF, ">> ", device.Description)
+				logEntry.Message = String.Concat("Beginning of uninstalling device:", CRLF, ">> ", If(device.FriendlyName, device.Description))
+
 				logEntry.AddDevices(True, device)
 
 				Application.Log.Add(logEntry)

@@ -30,6 +30,8 @@ Public Class AUDIOCleanup
 		'Identifying the Audio card--------
 		'----------------------------------
 		Try
+			UpdateTextMethod(UpdateTextTranslated(24))
+			Application.Log.AddMessage("Executing SetupAPI Remove Audio controler.")
 			Dim Mainfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False)
 			If Mainfound.Count > 0 Then
 				For Each d As SetupAPI.Device In Mainfound
@@ -73,8 +75,11 @@ Public Class AUDIOCleanup
 					End If
 					SetupAPI.UninstallDevice(d) 'Removing the audio card
 				Next
+
 				Mainfound.Clear()
 			End If
+			UpdateTextMethod(UpdateTextTranslated(25))
+			Application.Log.AddMessage("SetupAPI Remove Audio controler Complete.")
 		Catch ex As Exception
 			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 			Application.Log.AddException(ex)
