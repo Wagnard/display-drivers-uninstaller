@@ -277,7 +277,7 @@ Public Class GPUCleanup
 					Next
 					found.Clear()
 				End If
-				Application.Log.AddMessage("SetupAPI Remove GPU(s) Complete.")
+				Application.Log.AddMessage("SetupAPI Remove 3dVision USB Adapter Complete.")
 
 				'USB Type C Removal
 				Application.Log.AddMessage("Executing SetupAPI Remove USB type C(RTX).")
