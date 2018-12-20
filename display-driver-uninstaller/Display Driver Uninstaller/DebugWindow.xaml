@@ -48,6 +48,20 @@
 
 				<TextBlock />
 
+				<StackPanel>
+					<TextBlock FontWeight="Bold" Text="Parent:    " />
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding ParentDevices}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
+
 				<DockPanel LastChildFill="true">
 					<TextBlock FontWeight="Bold" Text="Install State:    " />
 					<TextBlock Text="{Binding Path=InstallStateStr, Mode=OneWay}" />

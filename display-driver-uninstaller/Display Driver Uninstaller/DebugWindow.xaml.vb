@@ -127,9 +127,9 @@ Public Class DebugWindow
 		Dim found As List(Of SetupAPI.Device)
 
 		If cbFilterDev.SelectedIndex = 0 Then
-			found = SetupAPI.GetDevices(tbFilterDev.Text, Nothing, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False))
+			found = SetupAPI.GetDevices(tbFilterDev.Text, Nothing, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False), True)
 		ElseIf cbFilterDev.SelectedItem IsNot Nothing Then
-			found = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False))
+			found = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False), True)
 		Else
 			found = New List(Of SetupAPI.Device)(0)
 		End If
@@ -259,7 +259,6 @@ Public Class DebugWindow
 		sb.AppendLine("ClassName: " & If(IsNullOrWhitespace(device.ClassName), "<empty>", device.ClassName))
 		sb.AppendLine("ClassGuid: " & If(IsNullOrWhitespace(device.ClassGuid), "<empty>", device.ClassGuid))
 		sb.AppendLine("DeviceID: " & If(IsNullOrWhitespace(device.DeviceID), "<empty>", device.DeviceID))
-
 		sb.AppendLine("InstallState: " & If(IsNullOrWhitespace(device.InstallStateStr), device.InstallState.ToString(), device.InstallStateStr))
 
 		sb.AppendLine("RebootRequired: " & If(device.RebootRequired, "Yes", "No"))
@@ -331,6 +330,18 @@ Public Class DebugWindow
 			sb.AppendLine(String.Empty)
 		Else
 			sb.AppendLine("LowerFilters: <empty>")
+		End If
+
+		If device.ParentDevices IsNot Nothing AndAlso device.ParentDevices.Length > 0 Then
+			sb.AppendLine("ParentDevices:")
+
+			For Each d2 As SetupAPI.Device In device.ParentDevices
+				sb.AppendLine(vbTab + If(d2.FriendlyName, d2.Description))
+				sb.AppendLine(vbTab + If(d2.DeviceID, "-"))
+			Next
+
+		Else
+			sb.AppendLine("ParentDevices: <empty>")
 		End If
 
 

@@ -1512,7 +1512,7 @@ Namespace Win32
 
 #Region "Functions"
 
-		Public Shared Function TEST_GetDevices(ByVal filter As String, ByVal text As String, ByVal includeSiblings As Boolean) As List(Of Device)
+		Public Shared Function TEST_GetDevices(ByVal filter As String, ByVal text As String, ByVal includeSiblings As Boolean, ByVal includeparents As Boolean) As List(Of Device)
 			Dim Devices As List(Of Device) = New List(Of Device)(500)
 
 			Try
@@ -1661,6 +1661,15 @@ Namespace Win32
 
 										If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
 											UpdateDevicesByID(dev.SiblingDevices)
+										End If
+									Next
+								End If
+
+								If includeparents Then
+									For Each dev As Device In Devices
+										GetParents(dev)
+										If dev.ParentDevices IsNot Nothing AndAlso dev.ParentDevices.Length > 0 Then
+											UpdateDevicesByID(dev.ParentDevices)
 										End If
 									Next
 								End If
@@ -2955,25 +2964,7 @@ Namespace Win32
 						  })
 						End If
 
-						If devInstParent <> device.devInst Then
-							For Each parent As Device In parentDevices
-								If parent.devInst = devInstParent Then
-									contains = True
-									Exit For
-								End If
-							Next
-
-							If Not contains Then
-								parentDevices.Add(
-									 New Device() With
-									 {
-									   .devInst = devInstParent
-									 })
-							End If
-						End If
-
-						devInstChild = devInstParent
-					ElseIf result = CR.NO_SUCH_DEVINST Then
+				ElseIf result = CR.NO_SUCH_DEVINST Then
 						Return
 					Else
 						Throw New Win32Exception(GetLastWin32Error())
