@@ -126,15 +126,15 @@
 			<Text4>PAExec ni mogoče najti. Prosimo, glejte dnevnik.</Text4>
 			<Text5>Display Driver Uninstaller (DDU) veliko spreminja vaš register. DDU bo samodejno ustvaril obnovitveno točko sistema (samo v običajnem načinu).</Text5>
 			<Text6>V enem od modulov je prišlo do težave. Pošljite dnevnike DDU razvijalcu programa.</Text6>
-			<Text7>DDU je zaznal, da imate prenosni prenosnik AMD (Enduro ali enakovreden). DDU še ni v celoti združljiv in preizkušen s sistemi Enduro. Uporabite na lastno odgovornost.</Text7>
+			<Text7>DDU je zaznal, da imate prenosnik AMD (Enduro ali enakovreden). DDU še ni v celoti združljiv in preizkušen s sistemi Enduro. Uporabite na lastno odgovornost.</Text7>
 			<Text8>DDU je zaznal, da NISTE v varnem načinu... Za boljše čiščenje brez težav je priporočljivo, da ponovno zaženete računalnik v varnem načinu.</Text8>
-			<Text9>Nastavitve Windows Namestitev naprave so bile spremenjene v NE namesti samodejno gonilnike..</Text9>
+			<Text9>Nastavitve Windows 'Namestitev naprave' so bile spremenjene v NE namesti samodejno gonilnike..</Text9>
 			<Text10>Čista odstranitev je dokončana. Ali želite zdaj zapreti program?</Text10>
-			<Text11>Windows Nastavitve mamestitve naprave so bile spremenjene v Samodejno namesti gonilnike.</Text11>
+			<Text11>Windows 'Nastavitve namestitve naprave' so bile spremenjene v Samodejno namesti gonilnike.</Text11>
 			<Text12>Niste v varnem načinu. Zelo priporočljivo je, da vnovič zaženete računalnik v varnem načinu, v izogib morebitnih težav. Ali želite zdaj vnovič zagnati računalnik v varnem načinu?</Text12>
-			<Text13>To morate izbrati na modrem zaslonu, za obnovitev : Odpravljanje težav -&gt; Napredne možnosti -&gt; Nastavitve zagona.</Text13>
+			<Text13>To morate izbrati na modrem zaslonu: Odpravljanje težav -&gt; Napredne možnosti -&gt; Nastavitve zagona.</Text13>
 			<Text14>Ponovni zagon je na čakanju. Preden uporabite DDU, vnovič zaženite računalnik</Text14>
-			<Text15>Ni bilo opravljenih sprememb. Windows Nastavitve namestitve naprave so bile že nastavljene na Privzeto.</Text15>
+			<Text15>Ni bilo opravljenih sprememb. Windows 'Nastavitve namestitve naprave' so bile že nastavljene na Privzeto.</Text15>
 			<Text16>V sistemu Windows je prišlo do kritične napake, ki preprečuje pravilno odstranitev gonilnikov. Kot varnostni ukrep DDU ne bo nadaljeval z odstranjevanjem datotek in registra. Pred uporabo DDU morate odpraviti težave s sistemom.</Text16>
 		</Messages>
 		<Options_Type>
@@ -190,7 +190,7 @@
 			<Text34>Začetek čiščenja LocalMachine ,Installer\Products</Text34>
 			<Text35>Koneck čiščenja LocalMachine ,Installer\Products</Text35>
 			<Text36>Začetek čiščenja CurrentUser ,Installer\Products</Text36>
-			<Text37>Koneck čiščenja CurrentUser ,Installer\Products</Text37>
+			<Text37>Konec čiščenja CurrentUser ,Installer\Products</Text37>
 			<Text38>Čiščenje procesov/storitev...</Text38>
 			<Text39>Čiščenje procesovi/storitev je dokončano</Text39>
 			<Text40>Izbrisan.</Text40>
@@ -436,7 +436,7 @@
 
 				Z uporabo programa DDU ste postali uporabnik programa DDU ("Uporabnik"). Ta pogodba začne veljati takoj, ko uporabite program za odstranitev gonilnika..
 
-				Z uporabo DDU se strinjate da ne boste obtoževali programa DDU ali njegovih ustvarjalcev in povezanih podjetij zaradi škodljivih ali negativnih vplivov na vaš računalnik.
+				Z uporabo DDU se strinjate, da ne boste obtoževali programa DDU ali njegovih ustvarjalcev in povezanih podjetij zaradi škodljivih ali negativnih vplivov na vaš računalnik.
 
 				Z uporabo DDU potrjujete, da NVIDIA ("NVIDIA, GeForce") niti Advanced Micro Devices ("AMD, Radeon") nimajo ničesar
 				s tem programom in nikakor niso podružnice DDU ali njegovih ustvarjalcev.
@@ -448,13 +448,14 @@
 		<Translator>
 			<User>Jadran Rudec</User>
 			<Details>jrudec@gmail.com</Details>
-			<LastUpdate>21/09/2018</LastUpdate>
+			<LastUpdate>21/12/2018</LastUpdate>
 		</Translator>
 
 		<Translator2>
 			<User>---</User>
 			<LastUpdate>---</LastUpdate>
 		</Translator2>
+
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

@@ -216,11 +216,13 @@ Public Class LogEntry
 			Add("DevInst", d.devInst.ToString())
 			Add("InstallState", If(Not IsNullOrWhitespace(d.InstallStateStr), d.InstallStateStr, "-"))
 			Add(KvP.Empty)
-			For Each d2 As Win32.SetupAPI.Device In d.ParentDevices
-				Add("ParentDevice", If(d2.FriendlyName, d2.Description))
-				Add("Parent DeviceID", If(d2.DeviceID, "-"))
-				Add(KvP.Empty)
-			Next
+			If d.ParentDevices IsNot Nothing Then
+				For Each d2 As Win32.SetupAPI.Device In d.ParentDevices
+					Add("ParentDevice", If(d2.FriendlyName, d2.Description))
+					Add("Parent DeviceID", If(d2.DeviceID, "-"))
+					Add(KvP.Empty)
+				Next
+			End If
 			Add("SiblingDevices", If(d.SiblingDevices Is Nothing, "0", d.SiblingDevices.Length.ToString()))
 			Add(KvP.Empty)
 

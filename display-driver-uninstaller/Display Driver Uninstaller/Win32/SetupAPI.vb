@@ -1879,7 +1879,7 @@ Namespace Win32
 
 		' RESERVED FOR CLEANING FROM CODE
 
-		Public Shared Function GetDevicesByCHID(ByVal text As String, ByVal includeSiblings As Boolean) As List(Of Device)	'Get devices by Compatible Hardware IDs
+		Public Shared Function GetDevicesByCHID(ByVal text As String, ByVal includeSiblings As Boolean, ByVal includeParents As Boolean) As List(Of Device)  'Get devices by Compatible Hardware IDs
 			Dim Devices As List(Of Device) = New List(Of Device)(500)
 
 			Try
@@ -1978,6 +1978,15 @@ Namespace Win32
 
 										If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
 											UpdateDevicesByID(dev.SiblingDevices)
+										End If
+									Next
+								End If
+
+								If includeParents Then
+									For Each dev As Device In Devices
+										GetParents(dev)
+										If dev.ParentDevices IsNot Nothing AndAlso dev.ParentDevices.Length > 0 Then
+											UpdateDevicesByID(dev.ParentDevices)
 										End If
 									Next
 								End If

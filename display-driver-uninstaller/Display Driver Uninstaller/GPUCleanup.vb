@@ -221,7 +221,7 @@ Public Class GPUCleanup
 
 		Try
 			Application.Log.AddMessage("Executing SetupAPI Remove GPU(s).")
-			Dim Mainfound As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False)
+			Dim Mainfound As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False, True)
 			If Mainfound.Count > 0 Then
 				For Each d As SetupAPI.Device In Mainfound
 					If d IsNot Nothing Then
@@ -3625,6 +3625,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
 						 child.ToLower.Contains("_update.core") AndAlso removegfe Or
 						 child.ToLower.Contains("nvidiastereo") Or
+						 child.ToLower.Contains("_usbc") Or
 						 child.ToLower.Contains("_ansel") Or
 						 child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
 						 child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
