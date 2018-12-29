@@ -104,19 +104,19 @@
 			<Text>Покровител</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Отворяне на официалната страница на DDU</Text>
+			<Text>Отваряне на официалната страница на DDU</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Отворяне на SVN страницата</Text>
+			<Text>Отваряне на SVN страницата</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Отворяне на темата за NVIDIA в Guru3d</Text>
+			<Text>Отваряне на темата за NVIDIA в Guru3d</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Отворяне на темата за AMD в Guru3d</Text>
+			<Text>Отваряне на темата за AMD в Guru3d</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Отворяне на темата за Geforce</Text>
+			<Text>Отваряне на темата за Geforce</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
@@ -130,14 +130,29 @@
 			<Text8>DDU засече, че НЕ сте в безопасен режим (Safe Mode). За по-добро почистване се препоръчва да рестартирате в безопасен режим.</Text8>
 			<Text9>DDU промени настройка, която предотвратява драйвъри да бъдат автоматично изтегляни от Windows Update. Можете да върнете настройката по подразбиране, ако желаете, но СЛЕД инсталацията на новия драйвър.</Text9>
 			<Text10>Почистването завърши! Желаете ли да затворите програмата?</Text10>
-			<Text11>Настройките на Windows за инсталиране нустройства са променени автоматично да бъдат инсталирани драйвъри.</Text11>
+			<Text11>Настройките на Windows за инсталиране на устройства са променени автоматично да бъдат инсталирани драйвъри.</Text11>
 			<Text12>Не сте в безопасен режим (Safe Mode). Силно се препоръчва да рестартирате в безопасен режим, за да избегнете възможни проблеми. Искате ли да рестартирате в безопасен режим сега?</Text12>
 			<Text13>Ето какво трябва да изберете на синия екран за възстановяване: Отстраняване на неизправности -&gt; Разширени опции -&gt; Настройки за стартиране.</Text13>
 			<Text14>Има рестартиране, което е на изчакване. Моля, рестартирайте, преди да използвате DDU.</Text14>
 			<Text15>Не беше направена промяна. Настройките на Windows за инсталиране на устройства са вече по подразбиране.</Text15>
 			<Text16>DDU се натъкна на критична грешка, която предотвратява премахването на драйвъри. Като мярка за сигурност, DDU няма да продължи с премахването на файлове и стойности в системния регистър. Трябва да отстраните проблемите с Вашата система, преди да използвате DDU отново.</Text16>
 		</Messages>
-
+		<Options_Type>
+			<Options1>--- Изберете типа на устройството ---</Options1>
+			<Options2>Audio</Options2>
+			<Options3>GPU</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>--- Изберете устройството ---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>--- Изберете устройството ---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>Почистване на хранилището за драйвъри (изтриване на OEM)...</Text1>
 			<Text2>Почистване на директория...</Text2>
@@ -184,7 +199,7 @@
 		</UpdateLog>
 	</frmMain>
 
-	<frmOptions Text="Options">
+	<frmOptions Text="Настройки">
 		<btnClose>
 			<Text>Затвори</Text>
 		</btnClose>
@@ -254,9 +269,15 @@
 			<Text>Премахвай средата за изпълнение (runtime) на Vulkan</Text>
 			<Tooltip>Не се препоръчва, ако разполагате с две различни видео карти, способни да използват Vulkan интерфейса.</Tooltip>
 		</lblVulkan>
-	</frmOptions>
-
-	<frmLaunch Text="Launch option">
+    <lblPreventWinUpdate>
+      <Text>Предотврати изтеглянето на драйвъри от Windows update, когато Windows търси драйвър за устройство.</Text>
+      <Tooltip>Тази опция забранява на Windows и Диспечера на устройства да проверяват в Windows Update за по-нова версия на драйвър на вече инсталирано устройство. 
+               Забележка: Това не предотвратява Windows Update да изтегля и инсталира нови драйвъри. 
+               Зебележка 2: Също така е *СИЛНО* препоръчително да промените настройката обртано, след като сте използвали DDU и сте инсталирали отново драйвъра за видео картата. В противен случай можете да имате проблеми с инсталациита на други устройства.</Tooltip>
+     </lblPreventWinUpdate>
+  </frmOptions>
+   
+	<frmLaunch Text="Настройки за стартиране">
 		<btnAccept>
 			<Text>Стартиране</Text>
 			<Text2>
@@ -293,7 +314,7 @@
 		</Messages>
 	</frmLaunch>
 
-	<frmLog Text="Extended log">
+	<frmLog Text="Разширен дневник">
 		<btnClose>
 			<Text>Затвори</Text>
 		</btnClose>
@@ -322,13 +343,13 @@
 		</errorsMenuItem>
 	</frmLog>
 
-	<frmSystemRestore Text="System Restore">
+	<frmSystemRestore Text="Възстановяване на системата">
 		<lblSystemRestore>
 			<Text>Опит за създаване на точка на възстановяване...</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="About">
+	<frmAbout Text="Относно">
 		<btnClose>
 			<Text>Затвори</Text>
 		</btnClose>
@@ -348,10 +369,11 @@
 			<Text>Големи благодарности на следните преводачи, както и на онези, които не са споменати!</Text>
 		</lblTranslators>
 		<lblPatron>
-			<Text>Големи благодарности на следния покровител, както и на онези, които не са споменати!
+			<Text>
+		Големи благодарности на следния покровител, както и на онези, които не са споменати!
 				  
-				  -honnmaguro   (от 16.03.2018)  
-			</Text>
+		-honnmaguro   (от 16.03.2018)  
+	  </Text>
 		</lblPatron>
 	</frmAbout>
 
@@ -423,7 +445,7 @@
 		<Translator>
 			<User>Night_Raven</User>
 			<Details>SoftVisia.com</Details>
-			<LastUpdate>13.05.2018</LastUpdate>
+			<LastUpdate>23.12.2018</LastUpdate>
 		</Translator>
 		
 		<Translator2>
