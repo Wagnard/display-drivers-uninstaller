@@ -16,7 +16,7 @@ Restrictions
 
 You agree not to, and you will not permit others to:
 
-license, sell, rent, lease, assign, distribute, transmit, host, outsource, disclose or otherwise commercially exploit the Application or make the Application available to any third party.
+license, sell, rent, lease, assign, host, disclose or otherwise commercially exploit the Application,
 remove, alter or obscure any proprietary notice (including any notice of copyright or trademark) of Display Driver Uninstaller (DDU) or its affiliates, partners, suppliers or the licensors of the Application.
 
 Your Suggestions
