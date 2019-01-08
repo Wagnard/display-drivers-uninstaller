@@ -337,16 +337,16 @@ Public Class frmMain
 				Application.Log.AddException(ex)
 			End Try
 
-			If WindowsIdentity.GetCurrent().IsSystem Then
-				Select Case WinForm.SystemInformation.BootMode
-					Case WinForm.BootMode.FailSafe
-						Application.Log.AddMessage("We are in Safe Mode")
-					Case WinForm.BootMode.FailSafeWithNetwork
-						Application.Log.AddMessage("We are in Safe Mode with Networking")
-					Case WinForm.BootMode.Normal
-						Application.Log.AddMessage("We are not in Safe Mode")
-				End Select
-			End If
+
+			Select Case WinForm.SystemInformation.BootMode
+				Case WinForm.BootMode.FailSafe
+					Application.Log.AddMessage("We are in Safe Mode")
+				Case WinForm.BootMode.FailSafeWithNetwork
+					Application.Log.AddMessage("We are in Safe Mode with Networking")
+				Case WinForm.BootMode.Normal
+					Application.Log.AddMessage("We are not in Safe Mode")
+			End Select
+
 
 			GetOemInfo()
 

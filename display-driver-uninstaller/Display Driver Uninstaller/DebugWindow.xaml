@@ -61,6 +61,19 @@
 				</StackPanel>
 
 				<TextBlock />
+				<StackPanel>
+					<TextBlock FontWeight="Bold" Text="Child:    " />
+
+					<ItemsControl Margin="20,0,0,0" ItemsSource="{Binding ChildDevices}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+
+				<TextBlock />
 
 				<DockPanel LastChildFill="true">
 					<TextBlock FontWeight="Bold" Text="Install State:    " />

@@ -26,57 +26,52 @@ Public Class AUDIOCleanup
 		Application.Log.AddMessage("Uninstalling " + config.SelectedAUDIO.ToString() + " driver ...")
 		UpdateTextMethod(UpdateTextTranslated(22))
 
-		'----------------------------------
-		'Identifying the Audio card--------
-		'----------------------------------
+		'----------------------------------------------------------------------------------
+		'--Identifying and removing the Audio card + AudioEndpoint+SoftwareComponent(DCH)--
+		'----------------------------------------------------------------------------------
 		Try
 			UpdateTextMethod(UpdateTextTranslated(24))
 			Application.Log.AddMessage("Executing SetupAPI Remove Audio controler.")
-			Dim Mainfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False)
-			If Mainfound.Count > 0 Then
-				For Each d As SetupAPI.Device In Mainfound
+			Dim AudioDevices As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False)
+			If AudioDevices.Count > 0 Then
+				For Each AudioDevice As SetupAPI.Device In AudioDevices
 
 					'Removing Audio endpoints
-					If config.SelectedAUDIO = AudioVendor.Realtek Then
-						Dim AudioEnpointfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False, True)
-						If AudioEnpointfound.Count > 0 Then
-							For Each d2 As SetupAPI.Device In AudioEnpointfound
-								If d2 IsNot Nothing Then
-									For Each Parent In d2.ParentDevices
-										If Parent IsNot Nothing Then
-											If StrContainsAny(Parent.DeviceID, True, d.DeviceID) Then
-												SetupAPI.UninstallDevice(d2) 'Removing the audioenpoint associated with the device we are trying to remove.
-											End If
+					Dim AudioEnpointfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False, True)
+					If AudioEnpointfound.Count > 0 Then
+						For Each d2 As SetupAPI.Device In AudioEnpointfound
+							If d2 IsNot Nothing Then
+								For Each Parent In d2.ParentDevices
+									If Parent IsNot Nothing Then
+										If StrContainsAny(Parent.DeviceID, True, AudioDevice.DeviceID) Then
+											SetupAPI.UninstallDevice(d2) 'Removing the audioenpoint associated with the device we are trying to remove.
 										End If
-									Next
-								End If
-							Next
-							AudioEnpointfound.Clear()
-						End If
+									End If
+								Next
+							End If
+						Next
+						AudioEnpointfound.Clear()
 					End If
 
 					'Removing Software components (DCH stuff, win10+)
 					If win10 Then
-						If config.SelectedAUDIO = AudioVendor.Realtek Then
-							Dim SCfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
-							If SCfound.Count > 0 Then
-								For Each d3 As SetupAPI.Device In SCfound
-									For Each Parent In d3.ParentDevices
-										If Parent IsNot Nothing Then
-											If StrContainsAny(Parent.DeviceID, True, d.DeviceID) Then
-												SetupAPI.UninstallDevice(d3)
-											End If
+						Dim SCfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
+						If SCfound.Count > 0 Then
+							For Each d3 As SetupAPI.Device In SCfound
+								For Each Parent In d3.ParentDevices
+									If Parent IsNot Nothing Then
+										If StrContainsAny(Parent.DeviceID, True, AudioDevice.DeviceID) Then
+											SetupAPI.UninstallDevice(d3)
 										End If
-									Next
+									End If
 								Next
-								SCfound.Clear()
-							End If
+							Next
+							SCfound.Clear()
 						End If
 					End If
-					SetupAPI.UninstallDevice(d) 'Removing the audio card
+					SetupAPI.UninstallDevice(AudioDevice) 'Removing the audio card
 				Next
-
-				Mainfound.Clear()
+				AudioDevices.Clear()
 			End If
 			UpdateTextMethod(UpdateTextTranslated(25))
 			Application.Log.AddMessage("SetupAPI Remove Audio controler Complete.")
@@ -85,24 +80,7 @@ Public Class AUDIOCleanup
 			Application.Log.AddException(ex)
 		End Try
 
-		UpdateTextMethod(UpdateTextTranslated(25))
-
-		Application.Log.AddMessage("SetupAPI Remove Audio controler Complete.")
-
-		''Removing Software components (DCH stuff, win10+)
-		'If win10 Then
-		'	If config.SelectedAUDIO = AudioVendor.Realtek Then
-		'		Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
-		'		If found.Count > 0 Then
-		'			For Each d As SetupAPI.Device In found
-		'				If StrContainsAny(d.FriendlyName, True, "realtek") Then ' Need verifications.
-		'					SetupAPI.UninstallDevice(d)
-		'				End If
-		'			Next
-		'			found.Clear()
-		'		End If
-		'	End If
-		'End If
+		System.Threading.Thread.Sleep(10)
 
 		CleanupEngine.Cleandriverstore(config)
 
@@ -123,7 +101,7 @@ Public Class AUDIOCleanup
 
 		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\services.cfg"))
 
-		KillProcess("RtkNGUI64")
+		KillProcess("RtkNGUI64", "RtkAudUService64", "audiodg")
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
 		System.Threading.Thread.Sleep(10)
 	End Sub

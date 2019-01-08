@@ -344,6 +344,17 @@ Public Class DebugWindow
 			sb.AppendLine("ParentDevices: <empty>")
 		End If
 
+		If device.ChildDevices IsNot Nothing AndAlso device.ChildDevices.Length > 0 Then
+			sb.AppendLine("ChildDevices:")
+
+			For Each d2 As SetupAPI.Device In device.ChildDevices
+				sb.AppendLine(vbTab + If(d2.FriendlyName, d2.Description))
+				sb.AppendLine(vbTab + If(d2.DeviceID, "-"))
+			Next
+
+		Else
+			sb.AppendLine("ParentDevices: <empty>")
+		End If
 
 		If device.CapabilitiesStr IsNot Nothing AndAlso device.CapabilitiesStr.Length > 0 Then
 			sb.AppendLine("Capabilities:")
