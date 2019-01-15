@@ -32,7 +32,7 @@ Public Class AUDIOCleanup
 		Try
 			UpdateTextMethod(UpdateTextTranslated(24))
 			Application.Log.AddMessage("Executing SetupAPI Remove Audio controler.")
-			Dim AudioDevices As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False)
+			Dim AudioDevices As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False, True)
 			If AudioDevices.Count > 0 Then
 				For Each AudioDevice As SetupAPI.Device In AudioDevices
 
@@ -41,7 +41,7 @@ Public Class AUDIOCleanup
 					If AudioEnpointfound.Count > 0 Then
 						For Each d2 As SetupAPI.Device In AudioEnpointfound
 							If d2 IsNot Nothing Then
-								For Each Parent In d2.ParentDevices
+								For Each Parent As SetupAPI.Device In d2.ParentDevices
 									If Parent IsNot Nothing Then
 										If StrContainsAny(Parent.DeviceID, True, AudioDevice.DeviceID) Then
 											SetupAPI.UninstallDevice(d2) 'Removing the audioenpoint associated with the device we are trying to remove.
@@ -58,7 +58,7 @@ Public Class AUDIOCleanup
 						Dim SCfound As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
 						If SCfound.Count > 0 Then
 							For Each d3 As SetupAPI.Device In SCfound
-								For Each Parent In d3.ParentDevices
+								For Each Parent As SetupAPI.Device In d3.ParentDevices
 									If Parent IsNot Nothing Then
 										If StrContainsAny(Parent.DeviceID, True, AudioDevice.DeviceID) Then
 											SetupAPI.UninstallDevice(d3)
@@ -68,6 +68,11 @@ Public Class AUDIOCleanup
 							Next
 							SCfound.Clear()
 						End If
+						For Each Parent As SetupAPI.Device In AudioDevice.ParentDevices
+							If Parent IsNot Nothing Then
+								SetupAPI.UninstallDevice(Parent) 'Removing the Audio bus.
+							End If
+						Next
 					End If
 					SetupAPI.UninstallDevice(AudioDevice) 'Removing the audio card
 				Next

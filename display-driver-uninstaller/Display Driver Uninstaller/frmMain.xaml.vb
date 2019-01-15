@@ -606,15 +606,15 @@ Public Class frmMain
 
 	Private Sub StartThread(ByVal config As ThreadSettings)
 		Try
-			If System.Diagnostics.Debugger.IsAttached Then          'TODO: remove when tested
-				Dim logEntry As New LogEntry() With {.Message = "Used settings for cleaning!"}
+			'If System.Diagnostics.Debugger.IsAttached Then          'TODO: remove when tested
+			Dim logEntry As New LogEntry() With {.Message = "Used settings for cleaning!"}
 
-				For Each p As PropertyInfo In config.GetType().GetProperties(BindingFlags.Public Or BindingFlags.Instance)
-					logEntry.Add(p.Name, If(p.GetValue(config, Nothing) IsNot Nothing, p.GetValue(config, Nothing).ToString(), "-"))
-				Next
+			For Each p As PropertyInfo In config.GetType().GetProperties(BindingFlags.Public Or BindingFlags.Instance)
+				logEntry.Add(p.Name, If(p.GetValue(config, Nothing) IsNot Nothing, p.GetValue(config, Nothing).ToString(), "-"))
+			Next
 
-				Application.Log.Add(logEntry)
-			End If
+			Application.Log.Add(logEntry)
+			'End If
 
 			If cleaningThread IsNot Nothing AndAlso cleaningThread.IsAlive Then
 				Throw New ArgumentException("cleaningThread", "Thread already exists and is busy!")
