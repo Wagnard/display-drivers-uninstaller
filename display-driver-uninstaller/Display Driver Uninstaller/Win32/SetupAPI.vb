@@ -1334,21 +1334,13 @@ Namespace Win32
    <[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
 
-		<DllImport("CfgMgr32.dll", SetLastError:=True)>
+		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CM_Get_Device_ID(
 		<[In]()> ByVal dnDevInst As UInt32,
 		<[Out]()> ByVal Buffer As StringBuilder,
-		<[In]()> ByRef BufferLen As UInt32,
+		<[In]()> ByVal BufferLen As UInt32,
 		<[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
-
-		'<DllImport("CfgMgr32.dll", SetLastError:=True)>
-		'Private Shared Function CM_Get_Device_ID(
-		'ByVal dnDevInst As UInteger,
-		'<[Out]()> ByVal Buffer As StringBuilder,
-		'ByRef BufferLen As UInteger,
-		'ByVal Optional ulFlags As UInteger = 0) As Integer
-		'End Function
 
 		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CM_Get_Device_ID_Size(

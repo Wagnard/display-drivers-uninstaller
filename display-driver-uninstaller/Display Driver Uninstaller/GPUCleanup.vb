@@ -114,7 +114,9 @@ Public Class GPUCleanup
 
 						SetupAPI.UninstallDevice(AudioDevice) 'Removing the audio card
 
-						If (config.SelectedGPU = GPUVendor.AMD) AndAlso (config.RemoveAMDAudioBus) Then
+						If (config.SelectedGPU = GPUVendor.AMD) AndAlso (Not config.RemoveAMDAudioBus) Then
+							'do nothing
+						Else
 							For Each Parent As SetupAPI.Device In AudioDevice.ParentDevices
 								If Parent IsNot Nothing Then
 									SetupAPI.UninstallDevice(Parent) 'Removing the Audio bus.
@@ -4853,7 +4855,8 @@ Public Class GPUCleanup
 			If filePath IsNot Nothing Then
 				For Each child As String In FileIO.GetFiles(filePath)
 					If IsNullOrWhitespace(child) = False Then
-						If StrContainsAny(child, True, "geforce experience.lnk") AndAlso config.RemoveGFE Then
+						If (StrContainsAny(child, True, "geforce experience.lnk") AndAlso config.RemoveGFE) Or
+							(StrContainsAny(child, True, "3d vision photo viewer")) Then
 
 							Delete(child)
 
