@@ -1484,9 +1484,9 @@ Namespace Win32
    <[In](), [Optional]()> ByVal DeviceInfoData As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 		End Function
 
-		<DllImport("setupapi.dll", CharSet:=CharSet.Ansi, SetLastError:=True)>
+		<DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function SetupUninstallOEMInf(
-   <[In](), MarshalAs(UnmanagedType.LPStr)> ByVal InfFileName As String,
+   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal InfFileName As String,
    <[In]()> ByVal Flags As UInt32,
    <[In]()> ByVal Reserved As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 		End Function

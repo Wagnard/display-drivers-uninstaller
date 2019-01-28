@@ -89,7 +89,7 @@ Public Class AppSettings
 
 	Private m_remCrimsonCache As DependencyProperty = RegDP("RemoveCrimsonCache", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remAMDDirs As DependencyProperty = RegDP("RemoveAMDDirs", GetType(Boolean), GetType(AppSettings), False)
-	Private m_remAMDAudioBus As DependencyProperty = RegDP("RemoveAMDAudioBus", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remAudioBus As DependencyProperty = RegDP("RemoveAudioBus", GetType(Boolean), GetType(AppSettings), False)
 	Private m_remAMDKMPFD As DependencyProperty = RegDP("RemoveAMDKMPFD", GetType(Boolean), GetType(AppSettings), True)
 
 	Private m_remNvidiaDirs As DependencyProperty = RegDP("RemoveNvidiaDirs", GetType(Boolean), GetType(AppSettings), False)
@@ -237,12 +237,12 @@ Public Class AppSettings
 			SetValue(m_remAMDDirs, value)
 		End Set
 	End Property
-	Public Property RemoveAMDAudioBus As Boolean
+	Public Property RemoveAudioBus As Boolean
 		Get
-			Return CBool(GetValue(m_remAMDAudioBus))
+			Return CBool(GetValue(m_remAudioBus))
 		End Get
 		Set(value As Boolean)
-			SetValue(m_remAMDAudioBus, value)
+			SetValue(m_remAudioBus, value)
 		End Set
 	End Property
 	Public Property RemoveAMDKMPFD As Boolean
@@ -469,7 +469,7 @@ Public Class AppSettings
 						.WriteElementString("RemoveMonitors", RemoveMonitors.ToString())
 						.WriteElementString("RemoveCrimsonCache", RemoveCrimsonCache.ToString())
 						.WriteElementString("RemoveAMDDirs", RemoveAMDDirs.ToString())
-						.WriteElementString("RemoveAMDAudioBus", RemoveAMDAudioBus.ToString())
+						.WriteElementString("RemoveAudioBus", RemoveAudioBus.ToString())
 						.WriteElementString("RemoveAMDKMPFD", RemoveAMDKMPFD.ToString())
 						.WriteElementString("RemoveNvidiaDirs", RemoveNvidiaDirs.ToString())
 						.WriteElementString("RemovePhysX", RemovePhysX.ToString())
@@ -596,8 +596,8 @@ Public Class AppSettings
 							Case "removeamddirs"
 								RemoveAMDDirs = Boolean.Parse(KvP.Value)
 
-							Case "removeamdaudiobus"
-								RemoveAMDAudioBus = Boolean.Parse(KvP.Value)
+							Case "removeaudiobus"
+								RemoveAudioBus = Boolean.Parse(KvP.Value)
 
 							Case "removeamdkmpfd"
 								RemoveAMDKMPFD = Boolean.Parse(KvP.Value)

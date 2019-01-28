@@ -64,7 +64,7 @@
                     <UniformGrid DockPanel.Dock="Top" Rows="4">
                         <CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" />
                         <CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" />
-                        <CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAMDAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" />
+                        <CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" />
                         <CheckBox x:Name="lblRemCrimsonCache" IsChecked="{Binding RemoveCrimsonCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemCrimsonCache" />
                     </UniformGrid>
                 </DockPanel>

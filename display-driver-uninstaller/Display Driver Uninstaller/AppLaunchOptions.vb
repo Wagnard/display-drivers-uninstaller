@@ -22,7 +22,7 @@ Public Class AppLaunchOptions
 
 	Public Property RemoveCrimsonCache As Boolean = False
 	Public Property RemoveAMDDirs As Boolean = False
-	Public Property RemoveAMDAudioBus As Boolean = False
+	Public Property RemoveAudioBus As Boolean = False
 	Public Property RemoveAMDKMPFD As Boolean = False
 
 	Public Property RemoveNvidiaDirs As Boolean = False

@@ -8,9 +8,11 @@ Public Class AUDIOCleanup
 	Public Sub Start(ByVal config As ThreadSettings)
 		Dim win10 As Boolean = frmMain.win10
 		Dim vendidexpected As String = ""
+		Dim VendidSC As String() = Nothing
+
 		Select Case config.SelectedAUDIO
 			Case AudioVendor.Realtek
-				vendidexpected = "VEN_10EC"
+				vendidexpected = "VEN_10EC" : VendidSC = {"VEN_10EC"}
 			Case AudioVendor.SoundBlaster
 				vendidexpected = "VEN_1102"
 			Case AudioVendor.None
@@ -68,13 +70,15 @@ Public Class AUDIOCleanup
 							Next
 							SCfound.Clear()
 						End If
-						For Each Parent As SetupAPI.Device In AudioDevice.ParentDevices
-							If Parent IsNot Nothing Then
-								SetupAPI.UninstallDevice(Parent) 'Removing the Audio bus.
-							End If
-						Next
+						If config.RemoveAudioBus Then
+							For Each Parent As SetupAPI.Device In AudioDevice.ParentDevices
+								If Parent IsNot Nothing Then
+									SetupAPI.UninstallDevice(Parent) 'Removing the Audio bus.
+								End If
+							Next
+						End If
 					End If
-					SetupAPI.UninstallDevice(AudioDevice) 'Removing the audio card
+						SetupAPI.UninstallDevice(AudioDevice) 'Removing the audio card
 				Next
 				AudioDevices.Clear()
 			End If
@@ -84,6 +88,35 @@ Public Class AUDIOCleanup
 			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 			Application.Log.AddException(ex)
 		End Try
+
+		'Removing Audio endpoints
+		If config.SelectedAUDIO = AudioVendor.Realtek Then
+			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False)
+			If found.Count > 0 Then
+				For Each d As SetupAPI.Device In found
+					If StrContainsAny(d.FriendlyName, True, "realtek high definition audio", "Realtek(R) Audio") Then
+						SetupAPI.UninstallDevice(d)
+					End If
+				Next
+				found.Clear()
+			End If
+		End If
+
+		'Removing Software components (DCH stuff, win10+) (no parents, because old device is removed. SafeMode behavior)
+		If win10 Then
+
+			If config.SelectedAUDIO = AudioVendor.Realtek Then
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
+				If found.Count > 0 Then
+					For Each d As SetupAPI.Device In found
+						If StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
+							SetupAPI.UninstallDevice(d)
+						End If
+					Next
+					found.Clear()
+				End If
+			End If
+		End If
 
 		System.Threading.Thread.Sleep(10)
 
