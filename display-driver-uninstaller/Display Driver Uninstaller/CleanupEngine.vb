@@ -360,7 +360,7 @@ Public Class CleanupEngine
 														For Each childfile As String In regkeyRoot.GetSubKeyNames()
 															If IsNullOrWhitespace(childfile) Then Continue For
 
-															If childfile.EndsWith("file", StringComparison.OrdinalIgnoreCase) Then
+															If childfile.ToLower.EndsWith("file", StringComparison.OrdinalIgnoreCase) Then
 
 																Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, childfile)
 																	If regkey5 IsNot Nothing Then

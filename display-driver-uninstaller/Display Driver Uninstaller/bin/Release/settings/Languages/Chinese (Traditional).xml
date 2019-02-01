@@ -1,89 +1,81 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="zh-CHT" Text="Chinese (Traditional)">
+<?xml version="1.0" encoding="UTF-8"?>
+<DisplayDriverUninstaller ISO="zh-Hant" Text="正體中文" >
 	<!--
-		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
-		for quick guide
+		參閱「\Settings\Languages\_For translators - ReadMe.txt」
+		取得翻譯簡明教學。
 	-->
-
-	<frmMain Text="Display Driver Uninstaller (DDU)">
+	
+	<frmMain Text="顯示卡驅動程式解除安裝工具（DDU)">
 		<btnCleanRestart>
 			<Text>
-				清理並重新啟動
-				(強烈建議)
+				清除並重新啟動
+				（強烈建議）
 			</Text>
 			<Tooltip>
-				解除安裝目前和先前的驅動程式，然後將電腦重新啟動。
-				(強烈建議)
+				解除安裝目前及先前的驅動程式，並重新啟動。
+				（強烈建議）
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				清理，但「不要」重新啟動
-				(可能會導致黑屏等問題)
+				清除但「不要」重新啟動
+				（可能導致顯示黑色畫面等問題）
 			</Text>
 			<Tooltip>
-				解除安裝目前和先前的驅動程式，但「不要」將電腦重新啟動。
-				(可能會導致黑屏等問題)
+				解除安裝目前及先前的驅動程式，但「不要」重新啟動。
+				（可能導致顯示黑色畫面等問題）
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
-				清理並關機
-				(為了安裝新的顯示卡)
+				清除並關機
+				（用於安裝新的顯示卡時）
 			</Text>
 			<Tooltip>
-				解除安裝目前和先前的驅動程式，不重新掃瞄新硬體並直接關機
-				(為了安裝新的顯示卡)
+				解除安裝目前及先前的驅動程式，但不要重新掃描新硬體並直接關機
+				（用於安裝新的顯示卡時）
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Remove "GeForce Experience" display driver installer cache/files.
-				(Note: Drivers won't be removed)
+				移除 GeForce Experience 驅動程式安裝工具產生的快取及檔案。
+				（注意：不會移除現有的驅動程式）
 			</Text>
 			<Tooltip>
-				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+				通常用於清除舊版 GeForce Experience 安裝驅動程式後留下的無用資源。
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				將 Windows Update 自動安裝驅
-				動程式設成預設值。
+				將 Windows Update 自動安裝驅動程式設成預設值
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>偵測到的 Windows 版本：</Text>
+			<Text>偵測到的系統版本：</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** 您喜歡 DDU? 不妨考慮捐贈，這將有助於進一步研究與開發。 ***</Text>
+			<Text>*** 喜歡 DDU 嗎？不妨考慮捐助，這將助於我們進一步研究與開發。***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>記錄：</Text>
+			<Text>記錄</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>選擇顯示卡驅動程式：</Text>
+			<Text>選擇顯示卡驅動程式</Text>
 		</lblSelectedGPU>
-
 		<lblLanguage>
 			<Text>選擇語言</Text>
 		</lblLanguage>
-		<Label9>
-			<Text>注意:您將為操作本工具造成的損壞或錯誤自行承擔責任。</Text>
-		</Label9>
-		<Label10>
-			<Text>建議在安全模式下使用 DDU。</Text>
-		</Label10>
 
 		<lblUpdate>
-			<Text>檢查更新中...</Text>
-			<Text2>找不到更新，程式為最新版本。</Text2>
-			<Text3>找到更新!請更新成最新版本以取得更多的支援。</Text3>
-			<Text4>無法擷取更新!</Text4>
+			<Text>正在檢查更新…</Text>
+			<Text2>未找到新更新。已為最新版本。</Text2>
+			<Text3>找到更新！請更新至最新版本以取得更多支援。</Text3>
+			<Text4>無法擷取更新！</Text4>
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>我們的合作夥伴提供</Text>
-			<Tooltip>您可以從「選項」選單將這停用。</Tooltip>
+			<Text>我們的合作夥伴提供的優惠（建議使用）</Text>
+			<Tooltip>您可從「選項」停用此區塊。</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
@@ -99,7 +91,7 @@
 			<Text>連結</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>服務條款(ToS)</Text>
+			<Text>服務條款（ToS)</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
 			<Text>關於</Text>
@@ -107,83 +99,103 @@
 		<TranslatorsMenuItem>
 			<Text>譯者</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>贊助者</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>造訪官方 DDU 網站</Text>
+			<Text>造訪 DDU 官方網站</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>造訪 SVN 網站</Text>
+			<Text>造訪 GitHub</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>造訪 Guru3d NVIDIA 討論串</Text>
+			<Text>造訪 Guru3D NVIDIA 論壇上的討論串</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>造訪 Guru3d AMD 討論串</Text>
+			<Text>造訪 Guru3D AMD 論壇上的討論串</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>造訪 Geforce 討論串</Text>
+			<Text>造訪 GeForce 論壇上的討論串</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
-			<Text1>有更新可用!立即造訪 DDU 網站嗎?</Text1>
-			<Text2>最新版本比較舊版本有更多的支援。報告錯誤前請檢查較新的版本。</Text2>
-			<Text3>您未以系統管理員權限執行 DDU。該應用程式將立即結束。</Text3>
-			<Text4>無法找到 ddudr，請參考記錄以獲取更多詳細資料。</Text4>
-			<Text5>Display Driver Uninstaller (DDU) 正在大量修改與顯示卡有關的系統登錄資料。為了防止出錯，DDU 嘗試自動建立系統還原點(僅在正常模式)。</Text5>
-			<Text6>本軟體其中一個模組發生問題，請將您的 DDU 記錄發送給開發人員。</Text6>
-			<Text7>DDU 偵測到您有 AMD 雙顯卡筆記型電腦(Enduro 或相關產品)，DDU 尚不完全相容/測試於 Enduro 系統，請自行斟酌使用。</Text7>
-			<Text8>DDU 偵測到您不在安全模式下...為了沒有問題的更好地清理，建議您重新啟動進入安全模式</Text8>
-			<Text9>DDU 已變更設定來防止 Windows Update 自動下載驅動程式。如果您想在安裝新的驅動程式後讓 Windows Update 自動下載驅動程式，您可以將此設回預設值。</Text9>
-			<Text10>已完成完整的解除安裝!您要馬上結束嗎?</Text10>
-			<Text11>完成！</Text11>
-			<Text12>您不是在安全模式下。強烈建議您重新啟動進入安全模式，以避免可能發生的問題。要馬上重新啟動進入安全模式嗎?</Text12>
-			<Text13>這裡就是您需要選擇藍色修復畫面:疑難排解 -&gt; 進階選項 -&gt; 啟動設定。</Text13>
-			<Text14>正在等候重新開機，請在使用 DDU 前重新開機</Text14>
-			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
+			<Text1>有可用更新！是否造訪 DDU 網站？</Text1>
+			<Text2>最新版本能取得更多支援。請再進行錯誤報告前確認軟體是否為最新版本。</Text2>
+			<Text3>您未以管理員權限開啟 DDU。程式現在將退出。</Text3>
+			<Text4>找不到 PAExec。請確認記錄。</Text4>
+			<Text5>顯示卡驅動程式解除安裝工具（DDU) 將對您的登錄碼進行大量編輯。DDU 將嘗試自動建立系統還原點（僅一般模式可用）。</Text5>
+			<Text6>一個模組發生問題，請將 DDU 記錄檔傳送給開發者。</Text6>
+			<Text7>DDU 偵測到您正使用雙顯卡 AMD 筆記型電腦（Enduro 或相關產品），DDU 尚未測試及完整支援 Enduro 系統。請自行承擔風險。</Text7>
+			<Text8>DDU 偵測到您不處於安全模式…為了避免清除過程發生問題，建議您重新啟動至安全模式。</Text8>
+			<Text9>Windows 裝置安裝設定已設為「不自動安裝驅動程式」。</Text9>
+			<Text10>完整解除安裝成功！是否退出程式？</Text10>
+			<Text11>Windows 裝置安裝設定已設為「自動安裝驅動程式」。</Text11>
+			<Text12>您目前不處於安全模式。十分建議您重新啟動至安全模式以避免可能發生的問題。是否現在就重新啟動至安全模式？</Text12>
+			<Text13>進入藍色修復畫面後，請依照以下步驟：疑難排解 -&gt; 進階選項 -&gt; 啟動設定。</Text13>
+			<Text14>現有等待中的重新啟動程序，請在使用 DDU 前先重新啟動。</Text14>
+			<Text15>系統未變更。Windows 裝置安裝設定已回復預設值。</Text15>
+			<Text16>正常移除驅動程式時 Windows 發生嚴重錯誤。為確保安全，DDU 將停止刪除檔案及登錄碼。您必須在使用 DDU 前修正系統問題。</Text16>
 		</Messages>
-
+		<Options_Type>
+			<Options1>---選擇裝置類型---</Options1>
+			<Options2>音效卡</Options2>
+			<Options3>顯示卡</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---選擇裝置---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>Intel</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---選擇裝置---</Options1>
+			<Options2>REALTEK（開發中）</Options2>
+			<Options3>Sound Blaster（開發中）</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
-			<Text1>執行 Driver 存儲區清理中(刪除 OEM 驅動的步驟)...</Text1>
-			<Text2>清理目錄中</Text2>
-			<Text3>清理已知的登錄機碼中... 可能需要 1-2 分鐘</Text3>
-			<Text4>清理 UpdatusUser 使用者帳戶(如果存在)</Text4>
-			<Text5>清理目錄中</Text5>
-			<Text6>開始清理系統登錄</Text6>
-			<Text7>系統登錄清理完畢</Text7>
-			<Text8>開始移除 NVIDIA Optimus UpperFilter(如果存在)</Text8>
-			<Text9>掃瞄新裝置中...</Text9>
-			<Text10>清理解除安裝完成！</Text10>
-			<Text11>DDU 版本：</Text11>
+			<Text1>執行驅動程式存放區清除程序（刪除 OEM 檔案…）</Text1>
+			<Text2>正在清除目錄</Text2>
+			<Text3>正在清除已知的登錄碼…可能需要一到兩分鐘。</Text3>
+			<Text4>正在清除 UpdatusUser 使用者帳號（若存在）。</Text4>
+			<Text5>正在清除目錄</Text5>
+			<Text6>開始登錄碼清除程序</Text6>
+			<Text7>清除登錄碼完成</Text7>
+			<Text8>開始移除 NVIDIA Optimus UpperFilter（若已安裝）。</Text8>
+			<Text9>正在掃描新裝置…</Text9>
+			<Text10>完整解除安裝完成！</Text10>
+			<Text11>DDU 版本</Text11>
 			<Text12>顯示卡 #</Text12>
-			<Text13>檢測到：</Text13>
-			<Text14>顯示卡裝置 ID：</Text14>
-			<Text15>偵測到的驅動程式版本：</Text15>
+			<Text13>偵測到</Text13>
+			<Text14>GPU DeviceId (裝置 ID)</Text14>
+			<Text15>偵測到的驅動程式版本</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF 區段</Text17>
-			<Text18>顯示卡未正確安裝：</Text18>
-			<Text19>刪除一些特別的資料夾，這可能需要一些時間...</Text19>
-			<Text20>清理開始...</Text20>
+			<Text18>未正確安裝顯示卡</Text18>
+			<Text19>正在刪除特殊資料夾，這可能需要一些時間…</Text19>
+			<Text20>開始清除…</Text20> 
 			<Text21>解除安裝中</Text21>
 			<Text22>驅動程式</Text22>
-			<Text23>執行 ddudr 移除中，請稍候(這可能需要幾分鐘)</Text23>
-			<Text24>顯示卡已從裝置管理員中移除。</Text24>
-			<Text25>正在執行 DDUDR 移除音訊控制器</Text25>
-			<Text26>HD 音訊介面卡移除成功！</Text26>
-			<Text27>3D Vision USB 介面卡已從裝置管理員中移除。</Text27>
-			<Text28>顯示器和隱藏的顯示器移除成功！</Text28>
-			<Text29>ddudr 移除完成</Text29>
-			<Text30>開始清理 S-1-5-xx 區域</Text30>
-			<Text31>S-1-5-xx 區域清理完畢</Text31>
-			<Text32>開始清理 Classesroot ,installer\products</Text32>
-			<Text33>Classesroot ,installer\products 清理完畢</Text33>
-			<Text34>開始清理 localmachine ,installer\products</Text34>
-			<Text35>localmachine ,installer\products 清理完畢</Text35>
-			<Text36>開始清理 currentuser ,installer\products</Text36>
-			<Text37>currentuser ,installer\products 清理完畢</Text37>
-			<Text38>清理進程/服務中...</Text38>
-			<Text39>進程/服務清理完成</Text39>
+			<Text23>正在執行 SetupAPI 的移除程序，請稍候…（可能需要幾分鐘）</Text23>
+			<Text24>已從裝置管理員移除顯示卡。</Text24>
+			<Text25>正在執行 SetupAPI 移除音訊控制器程序</Text25>
+			<Text26>已移除 HD audio 介面卡！</Text26>
+			<Text27>已從裝置管理員移除 3D Vision USB 介面卡。</Text27>
+			<Text28>已移除包含隱藏顯示器在內的顯示器！</Text28>
+			<Text29>SetupAPI 移除成功</Text29>
+			<Text30>開始清除 S-1-5-xx 區域</Text30>
+			<Text31>清除 S-1-5-xx 區域完成</Text31>
+			<!--Text32-37: FUZZY -->
+			<Text32>開始清除 HKEY_CLASSES_ROOT 中的 Installer\Products 機碼</Text32>
+			<Text33>清除 HKEY_CLASSES_ROOT 中的 Installer\Products 機碼完成</Text33>
+			<Text34>開始清除 HKEY_LOCAL_MACHINE 中的 Installer\Products 機碼</Text34>
+			<Text35>清除 HKEY_LOCAL_MACHINE 中的 Installer\Products 機碼完成</Text35>
+			<Text36>開始清除 HKEY_CURRENT_USER 中的 Installer\Products 機碼</Text36>
+			<Text37>清除 HKEY_CURRENT_USER 中的 Installer\Products 機碼完成</Text37>
+			<Text38>正在清除處理程序／服務…</Text38>
+			<Text39>處理程序／服務已成功清除</Text39>
 			<Text40>已刪除。</Text40>
-			<Text41>數值已移除。</Text41>
-			<Text42>檔案已刪除。</Text42>
+			<Text41>已移除數值。</Text41>
+			<Text42>已刪除檔案。</Text42>
 		</UpdateLog>
 	</frmMain>
 
@@ -192,22 +204,25 @@
 			<Text>關閉</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>顯示我們的合作伙伴提供</Text>
+			<Text>顯示來自我們合作夥伴的優惠</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA 特定選項</Text>
+			<Text>NVIDIA 專用選項</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD 特定選項</Text>
+			<Text>AMD 專用選項</Text>
 		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>進階選項（請自行承擔修改所帶來的後果）</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>一般選項</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>移除 "C:\nVidia" 驅動程式資料夾(不建議)</Text>
+			<Text>移除「C:\NVIDIA」驅動程式資料夾（不建議）</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>在啟動路徑下儲存記錄檔(建議採用)</Text>
+			<Text>在啟動路徑下儲存記錄檔（強烈建議）</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>移除 PhysX</Text>
@@ -216,55 +231,60 @@
 			<Text>移除 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
-			<Text>建立系統還原點(如果允許的話)</Text>
+			<Text>建立系統還原點（若允許）</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>刪除當前和非當前顯示器（建議使用）</Text>
+			<Text>移除存在和不存在的顯示器（建議）</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>移除 AMD Audio Bus</Text>
+			<Text>移除 AMD Audio 匯流排</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>移除 "C:\AMD" 驅動程式資料夾(不建議)</Text>
+			<Text>移除「C:\AMD」驅動程式資料夾（不建議）</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>刪除驅動程式/篩選 AMDKMPFD (建議備份 AMD 晶片組)</Text>
+			<Text>清除 AMDKMPFD 篩選器驅動程式（建議 AMD 芯片組使用者先備份）</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>在啟動時顯示安全模式訊息方塊</Text>
+			<Text>開啟安全模式對話框（不建議，除非你已手動進入過安全模式）</Text>
+			<Tooltip>
+				若您從未將電腦重新啟動至安全模式並檢查是否可用，則不建議開啟。
+				這個選項可能造成反覆重新啟動、顯示黑色畫面及更多問題。
+			</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>將設定檔存放在漫遊資料夾</Text>
+			<Text>在 roaming 資料夾儲存組態設定檔案</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>啟動時自動檢查 DDU 更新(建議)</Text>
+			<Text>開啟時自動檢查 DDU 更新（建議）</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>移除 Geforce Experience (GFE)</Text>
+			<Text>移除 GeForce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>移除 AMD Crimson Shader 快取資料夾</Text>
+			<Text>移除 AMD Crimson Shader Cache 資料夾</Text>
 			<Tooltip>
-				建議如果有損壞的著色器快取資料引起的圖形化異常(速度或視覺效果損毀)。
-				此外建議如果您切換到另一個像 nVidia 這樣的品牌。
+				若因毀損的著色器快取導致顯示異常（怪異速度或畫面毀損）則建議開啟。
+				同時建議您改用 NVIDIA。
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>移除 Vulkan 執行階段</Text>
-			<Tooltip>不建議，如果您有 2 不同 GPU 支援使用 Vulkan 應用程式開發介面。</Tooltip>
+			<Tooltip>若您有多個 GPU 使用 Vulkan API 則不建議開啟。</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>使用 SetupAPI *實驗性*</Text>
-			<Tooltip>使用 SetupAPI 而不是外部工具 DDUDR (DEVCON)</Tooltip>
-		</lblUseSetupAPI>
-	</frmOptions>
+    <lblPreventWinUpdate>
+      <Text>禁止 Windows 掃描硬體後自動使用 Windows Update 下載驅動程式</Text>
+      <Tooltip>簡言之，開啟此選項將會阻止 Windows／裝置管理員自動使用 Windows Update 檢查驅動程式更新
+               備註：此選項不會禁止 Windows Update 下載或安裝新驅動程式。
+               備註二：建議您於使用 DDU 並重新安裝驅動程式後取消此變更，否則使用新裝置時可能發生問題。</Tooltip>
+     </lblPreventWinUpdate>
+  </frmOptions>
 
 	<frmLaunch Text="啟動選項">
 		<btnAccept>
 			<Text>啟動</Text>
 			<Text2>
-				重新開機成
-				安全模式
+				重新啟動至安全模式
 			</Text2>
 		</btnAccept>
 		<btnClose>
@@ -275,28 +295,28 @@
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				您目前不在安全模式下。強烈建議重新啟動進入安全模式以
-				避免可能出現的問題。
+				您目前不處於安全模式。十分建議您重新
+				啟動至安全模式以避免可能發生的問題。
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Windows 8/8.1/10 使用者重要注意事項:
-				需要您的 Windows 「密碼」!(PIN 在安全模式下無法運作)
-				如果您遺失或不知道請立即結束!
+				Windows 8/8.1/10 使用者請注意：
+				您必須使用 Windows「密碼」登入！（PIN 碼在安全模式下無法運作）
+				若您忘記或不知道密碼，請立即退出程式！
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
-			<Item1>正常模式</Item1>
-			<Item2>安全模式(建議選項)</Item2>
-			<Item3>安全模式 (含網路功能)</Item3>
+			<Item1>正常開機模式</Item1>
+			<Item2>安全模式（建議）</Item2>
+			<Item3>安全模式（含網路功能）</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+			<Text1>DDU 會關閉已知將影響程序的程式（例如 MSI Afterburner 及 RTSS）。</Text1>
 		</Messages>
 	</frmLaunch>
 
-	<frmLog Text="Extended log">
+	<frmLog Text="延伸記錄">
 		<btnClose>
 			<Text>關閉</Text>
 		</btnClose>
@@ -308,11 +328,11 @@
 			<Text>選項</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>複製已啟用</Text>
+			<Text>複製啟用的選項</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
-			<Text>篩選</Text>
+			<Text>篩選器</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
 			<Text>顯示事件</Text>
@@ -325,13 +345,13 @@
 		</errorsMenuItem>
 	</frmLog>
 
-	<frmSystemRestore Text="System Restore">
+	<frmSystemRestore Text="系統還原">
 		<lblSystemRestore>
-			<Text>試圖建立一個系統還原點。</Text>
+			<Text>嘗試建立系統還原點。</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="About">
+	<frmAbout Text="關於">
 		<btnClose>
 			<Text>關閉</Text>
 		</btnClose>
@@ -339,88 +359,117 @@
 			<Text>關於</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>服務條款 (ToS)</Text>
+			<Text>服務條款（ToS）</Text>
 		</btnTos>
 		<btnTranslators>
 			<Text>譯者</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>贊助者</Text>
+		</btnPatron>
 		<lblTranslators>
-			<Text>非常感謝以下譯者，以及那些未列出的人員!</Text>
+			<Text>十分感謝以下的翻譯者，且也十分感謝有貢獻但未列在此列表的其他人！</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>
+        非常感謝以下的贊助者們，也十分感謝有捐助但未列在此處的各位！
+
+        - honnmaguro (自 2018-03-16)
+      </Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
 		<About>
 			<Text>
-				Display Driver Uninstaller (DDU) / 顯示卡(GPU)驅動程式(NVIDIA/AMD)清除工具
+				顯示卡驅動程式解除安裝工具（DDU）／GPU 驅動清道夫（NVIDIA／AMD）
 
-				本軟體的作用就是從裝置管理員移除顯示卡/GPU 驅動程式和從 Windows 驅動程式存放區移除目前和
-				所有前導參照的驅動程式，以及移除 NVIDIA/AMD 安裝的服務。
+				本軟體用途為從裝置管理員移除顯示／GPU 驅動程式，並移除 Windows 驅
+				動程式存放區中現有的驅動程式，包含 NVIDIA／AMD 提供的其他服務。
+				
+				使用此工具後的效果相似於 Windows 的全新安裝狀態。
 
-				當您使用本工具後，其效果等同於 Windows「全新安裝」狀態下的嶄新系統。
+				本工具與「Driver Sweeper」* 十分相似，並提供上文提及的額外功能。
+				
+				若您在安裝任何版本的顯示卡驅動程式時遇到問題，不妨試試多人試用且成功的 DDU。
 
-				本工具的作用很像 "Driver Sweeper"，而且多了上文所提到的額外清理。
+				使用建議：
 
-				如果您在安裝舊版或新版顯示卡驅動程式時遇到了問題，不妨試一試 DDU，本工具已幫很多人
-				解決過類似問題。
+				- 本工具能用於正常開機模式，但安全模式仍是使用 DDU 最穩定的選擇。
 
-				建議用法：
+				- 我們歡迎來自各方的意見，告訴我們此程式是否幫上了忙。
 
-				-本工具可以在正常模式下使用，但安全模式永遠是追求絕對穩定的最好選擇。
+				- 建立備份或系統還原點（但實際上應足夠安全）。
+				
+				- 若本工具成功解決您（曾）遇到的驅動程式障礙，歡迎分享結果。
 
-
-				-我們想收集大家的意見反應，告訴我們它是成功與否。
-
-				-製作備份或系統還原點(但通常它應該是非常安全的)。
-
-				-如果本工具解決了您目前或者曾經遇過的驅動程式問題，請分享您的結果給大家。
-
-				請記住，NVIDIA、AMD 和微軟不對您或您的電腦負任何損害賠償，因此 DDU 以及其建立者也不應
-				負任何損害賠償。
+				請記住，NVIDIA、AMD、或 Microsoft 都不對您或您的電腦的任何損失與損害負上任何責任，
+				因此 DDU 創始人及其團隊也不付負上任何責任。
 				-------------------------------
 
-				由 Wagnard 建立
+				由 Wagnard 創始。
 
-				共同擁有者：Shady757
+				開發人員： Wagnard, Devmltk, Shady7557
 
-				測試人員：Dellon132
+				測試員：Dellon132
 
-				Logo 設計：juanchacin
+				圖示設計：juanchacin
 
-				正體中文編譯：丹楓
+				十分感謝 Jackalito 捐助 AMD 7850。
 
-				非常感謝 Jackalito 捐贈 AMD 7850。
+				感謝 Helge Klein (http://helgeklein.com/setacl/) for the permission to use his Program with DDU "SetAcl"
 
-				感謝 Helge Klein (http://helgeklein.com/setacl/)：使用他程式的使用權限 DDU "SetAcl"
+				非常感謝花時間進行測試的各位：Gamer1291 (Optimus)、Octopuss (AMD Enduro)、nedooo` (花費時間偵錯)
+				Extraordinary (測試臭蟲修復)
 
-				非常感謝他們花時間進行測試：Gamer1291(optimus)、Octopuss(Amd 耐力測試)、nedooo'(花了時間與作者一起調試)
-				Extraordinary(測試錯誤修復)
+				感謝為了測試而差點毀了電腦的各位。（特別感謝 Dellon132）
 
-				感謝任何為了測試本工具，把他們電腦置於危險之中的人(特別感謝 Dellon132)
-
-				* DDU，它的創作者和附屬不以任何方式隸屬於 Driver Sweeper 或其創造者。
+				* DDU、其創始人及附屬不以任何型式隸屬於 Driver Sweeper 及其創始人。
 			</Text>
 		</About>
+
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") 使用者授權合約
 
-				您透過使用 DDU 軟體成為 DDU 的使用者("User")。本授權合約在您開始使用 DDU 軟體解除安裝驅動程式後生效。
+				您透過使用 DDU 成為 DDU 的使用者 ("User")。本授權合約在您開始使用 DDU 解除安裝驅動程式後生效。
 
-				使用 DDU 軟體即表示您放棄追究 DDU 開發者及附屬人員相關責任的權利，即使 DDU 軟體對您電腦造成了負面影響甚至損壞。
+				使用 DDU 即表示您放棄追究 DDU 開發者及附屬人員相關責任的權利，即便 DDU 對您的電腦造成了負面影響甚至損壞。
 
-				使用 DDU 軟體即表明您已被告知 NVIDIA ("NVIDIA, GeForce")和 Advanced Micro Devices ("AMD， Radeon")均未參與本軟體的開發，
-				也與 DDU 軟體及其開發者們無關。
+				使用 DDU 即表明您已被告知 NVIDIA ("NVIDIA, GeForce") 和 Advanced Micro Devices ("AMD， Radeon") 均未參與本軟體的開發，
+				也與 DDU 及其開發者們無關。
 			</Text>
 		</Tos>
 	</Misc>
 
 	<LanguageTranslators>
+	
 		<Translator>
-			<User>Danfong Hsieh（丹楓）</User>
-			<Details>Chinese Traditional translator 正體中文譯者</Details>
-			<LastUpdate>10/06/2016</LastUpdate>
+			<User>Hugwalk</User>
+			<Details>
+				Chinese (Traditional) translator 正體中文譯者
+				感謝 pan93412 的協助。
+				以丹楓之版本作為參考製作出目前版本。
+			</Details>
+			<LastUpdate>30/01/2019</LastUpdate>
 		</Translator>
+
+		<Translator2>
+			<User>pan93412</User>
+			<Details>
+				Chinese (Traditional) translator 正體中文譯者
+			</Details>
+			<LastUpdate>30/01/2019</LastUpdate>
+		</Translator2>
+
+		<Translator3>
+			<User>Danfong Hsieh（丹楓）</User>
+			<Details>
+				Chinese (Traditional) translator 正體中文譯者
+			</Details>
+			<LastUpdate>10/06/2016</LastUpdate>
+		</Translator3>
+				
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

@@ -12,11 +12,11 @@ Public Class AUDIOCleanup
 
 		Select Case config.SelectedAUDIO
 			Case AudioVendor.Realtek
-				vendidexpected = "VEN_10EC" : VendidSC = {"VEN_10EC"}
+				vendidexpected = "VEN_10EC" : VendidSC = {"VEN_10EC&ASIO", "VEN_10EC&AID", "VEN_10EC&SID", "VEN_10EC&HID"}
 			Case AudioVendor.SoundBlaster
-				vendidexpected = "VEN_1102"
+				vendidexpected = "VEN_1102" : VendidSC = {"VEN_1102"}
 			Case AudioVendor.None
-				vendidexpected = "NONE"
+				vendidexpected = "NONE" : VendidSC = {"NONE"}
 		End Select
 
 		If vendidexpected = "NONE" Then

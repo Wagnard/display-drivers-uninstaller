@@ -1934,7 +1934,7 @@ Public Class GPUCleanup
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 						If regkey2 IsNot Nothing Then
 							If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-								If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater", "AMDLinkUpdate") Then
+								If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater", "AMDLinkUpdate", "ModifyLinkUpdate") Then
 									Deletesubregkey(regkey, child)
 								End If
 							End If
@@ -1955,7 +1955,7 @@ Public Class GPUCleanup
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
 							If IsNullOrWhitespace(child) Then Continue For
-							If StrContainsAny(child, True, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM") Then
+							If StrContainsAny(child, True, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM", "ModifyLinkUpdate") Then
 								For Each ScheduleChild As String In schedule.GetSubKeyNames
 									If IsNullOrWhitespace(ScheduleChild) Then Continue For
 									Try
