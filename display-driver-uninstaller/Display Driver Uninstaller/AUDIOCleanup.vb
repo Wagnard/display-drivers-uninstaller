@@ -158,7 +158,7 @@ Public Class AUDIOCleanup
 
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\classroot.cfg"))  '// add each line as String Array.
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\classroot.cfg"), config)  '// add each line as String Array.
 
 		CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\clsidleftover.cfg"))
 

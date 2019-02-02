@@ -279,7 +279,7 @@ Public Class CleanupEngine
 		End If
 	End Sub
 
-	Public Sub ClassRoot(ByVal classroots As String())
+	Public Sub ClassRoot(ByVal classroots As String(), config As ThreadSettings)
 
 		Dim wantedvalue As String = Nothing
 		Dim wantedvalue2 As String = Nothing
@@ -296,162 +296,166 @@ Public Class CleanupEngine
 
 						For Each croot As String In classroots
 							If IsNullOrWhitespace(croot) Then Continue For
+							If StrContainsAny(croot, True, "GeforceExperience") AndAlso Not config.RemoveGFE Then
+								'do nothing
+							Else
 
-							If child.StartsWith(croot, StringComparison.OrdinalIgnoreCase) Then
-								Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, child & "\CLSID")
-									If regkey2 IsNot Nothing Then
-										wantedvalue = TryCast(regkey2.GetValue("", String.Empty), String)
+								If child.StartsWith(croot, StringComparison.OrdinalIgnoreCase) Then
+									Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, child & "\CLSID")
+										If regkey2 IsNot Nothing Then
+											wantedvalue = TryCast(regkey2.GetValue("", String.Empty), String)
 
-										If IsNullOrWhitespace(wantedvalue) Then Continue For
+											If IsNullOrWhitespace(wantedvalue) Then Continue For
 
-										Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "CLSID\" & wantedvalue)
-											If regkey3 IsNot Nothing Then
-												appid = TryCast(regkey3.GetValue("AppID", String.Empty), String)
+											Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "CLSID\" & wantedvalue)
+												If regkey3 IsNot Nothing Then
+													appid = TryCast(regkey3.GetValue("AppID", String.Empty), String)
 
-												If Not IsNullOrWhitespace(appid) Then
+													If Not IsNullOrWhitespace(appid) Then
 
-													Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "AppID", True)
-														If regkey4 IsNot Nothing Then
+														Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "AppID", True)
+															If regkey4 IsNot Nothing Then
+																Try
+																	Deletesubregkey(regkey4, appid)
+																Catch exARG As ArgumentException
+																	'Do nothing, can happen (Not found)
+																Catch ex As Exception
+																	Application.Log.AddException(ex)
+																End Try
+															End If
+														End Using
+													End If
+												End If
+											End Using
+
+											Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "CLSID\" & wantedvalue & "\TypeLib")
+												If regkey3 IsNot Nothing Then
+													typelib = TryCast(regkey3.GetValue("", String.Empty), String)
+
+													If Not IsNullOrWhitespace(typelib) Then
+														Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "TypeLib", True)
+															If regkey4 IsNot Nothing Then
+																Try
+																	Deletesubregkey(regkey4, typelib)
+																Catch exARG As ArgumentException
+																	'Do nothing, can happen (Not found)
+																Catch ex As Exception
+																	Application.Log.AddException(ex)
+																End Try
+															End If
+														End Using
+													End If
+												End If
+											End Using
+
+											Using crkey As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "CLSID", True)
+												If crkey IsNot Nothing Then
+													For Each wantedvaluekey In crkey.GetSubKeyNames
+														If IsNullOrWhitespace(wantedvaluekey) Then Continue For
+
+														If StrContainsAny(wantedvaluekey, True, wantedvalue) Then
 															Try
-																Deletesubregkey(regkey4, appid)
-															Catch exARG As ArgumentException
-																'Do nothing, can happen (Not found)
+																Deletesubregkey(crkey, wantedvalue)
 															Catch ex As Exception
 																Application.Log.AddException(ex)
 															End Try
-														End If
-													End Using
-												End If
-											End If
-										End Using
 
-										Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "CLSID\" & wantedvalue & "\TypeLib")
-											If regkey3 IsNot Nothing Then
-												typelib = TryCast(regkey3.GetValue("", String.Empty), String)
+															For Each childfile As String In regkeyRoot.GetSubKeyNames()
+																If IsNullOrWhitespace(childfile) Then Continue For
 
-												If Not IsNullOrWhitespace(typelib) Then
-													Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "TypeLib", True)
-														If regkey4 IsNot Nothing Then
-															Try
-																Deletesubregkey(regkey4, typelib)
-															Catch exARG As ArgumentException
-																'Do nothing, can happen (Not found)
-															Catch ex As Exception
-																Application.Log.AddException(ex)
-															End Try
-														End If
-													End Using
-												End If
-											End If
-										End Using
+																If childfile.ToLower.EndsWith("file", StringComparison.OrdinalIgnoreCase) Then
 
-										Using crkey As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "CLSID", True)
-											If crkey IsNot Nothing Then
-												For Each wantedvaluekey In crkey.GetSubKeyNames
-													If IsNullOrWhitespace(wantedvaluekey) Then Continue For
+																	Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, childfile)
+																		If regkey5 IsNot Nothing Then
+																			For Each shellEX As String In regkey5.GetSubKeyNames
+																				If IsNullOrWhitespace(shellEX) Then Continue For
 
-													If StrContainsAny(wantedvaluekey, True, wantedvalue) Then
-														Try
-															Deletesubregkey(crkey, wantedvalue)
-														Catch ex As Exception
-															Application.Log.AddException(ex)
-														End Try
+																				If StrContainsAny(shellEX, True, "shellex") Then
+																					Using regkey6 As RegistryKey = MyRegistry.OpenSubKey(regkey5, shellEX & "\ContextMenuHandlers", True)
+																						If regkey6 IsNot Nothing Then
+																							For Each ShExt As String In regkey6.GetSubKeyNames
+																								If IsNullOrWhitespace(ShExt) Then Continue For
 
-														For Each childfile As String In regkeyRoot.GetSubKeyNames()
-															If IsNullOrWhitespace(childfile) Then Continue For
-
-															If childfile.ToLower.EndsWith("file", StringComparison.OrdinalIgnoreCase) Then
-
-																Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, childfile)
-																	If regkey5 IsNot Nothing Then
-																		For Each shellEX As String In regkey5.GetSubKeyNames
-																			If IsNullOrWhitespace(shellEX) Then Continue For
-
-																			If StrContainsAny(shellEX, True, "shellex") Then
-																				Using regkey6 As RegistryKey = MyRegistry.OpenSubKey(regkey5, shellEX & "\ContextMenuHandlers", True)
-																					If regkey6 IsNot Nothing Then
-																						For Each ShExt As String In regkey6.GetSubKeyNames
-																							If IsNullOrWhitespace(ShExt) Then Continue For
-
-																							If StrContainsAny(ShExt, True, "openglshext", "nvappshext") Then
-																								Using regkey7 As RegistryKey = MyRegistry.OpenSubKey(regkey6, ShExt)
-																									If regkey7 IsNot Nothing Then
-																										wantedvalue2 = TryCast(regkey7.GetValue("", String.Empty), String)
-																										If Not IsNullOrWhitespace(wantedvalue2) Then
-																											If StrContainsAny(wantedvalue2, True, wantedvalue) Then
-																												Try
-																													Deletesubregkey(regkey6, ShExt)
-																												Catch ex As Exception
-																													Application.Log.AddException(ex)
-																												End Try
+																								If StrContainsAny(ShExt, True, "openglshext", "nvappshext") Then
+																									Using regkey7 As RegistryKey = MyRegistry.OpenSubKey(regkey6, ShExt)
+																										If regkey7 IsNot Nothing Then
+																											wantedvalue2 = TryCast(regkey7.GetValue("", String.Empty), String)
+																											If Not IsNullOrWhitespace(wantedvalue2) Then
+																												If StrContainsAny(wantedvalue2, True, wantedvalue) Then
+																													Try
+																														Deletesubregkey(regkey6, ShExt)
+																													Catch ex As Exception
+																														Application.Log.AddException(ex)
+																													End Try
+																												End If
 																											End If
 																										End If
-																									End If
-																								End Using
-																							End If
-																						Next
-																					End If
-																				End Using
-																			End If
-																		Next
-																	End If
-																End Using
-															End If
-														Next
-													End If
-												Next
-											End If
-										End Using
+																									End Using
+																								End If
+																							Next
+																						End If
+																					End Using
+																				End If
+																			Next
+																		End If
+																	End Using
+																End If
+															Next
+														End If
+													Next
+												End If
+											End Using
 
 
-										'here I remove the mediafoundationkeys if present
-										'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
+											'here I remove the mediafoundationkeys if present
+											'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
 
-										Using regkeyM As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "MediaFoundation\Transforms", True)
-											If regkeyM IsNot Nothing Then
-												Try
-													Deletesubregkey(regkeyM, (wantedvalue.Replace("{", "")).Replace("}", ""))
-												Catch exARG As ArgumentException
-													'Do nothing, can happen (Not found)
-												Catch ex As Exception
-													Application.Log.AddException(ex)
-												End Try
-											End If
-										End Using
-
-
-										Using regkeyM As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True)
-											If regkeyM IsNot Nothing Then
-												Try
-													Deletesubregkey(regkeyM, (wantedvalue.Replace("{", "")).Replace("}", ""))
-												Catch exARG As ArgumentException
-													'Do nothing, can happen (Not found)
-												Catch ex As Exception
-													Application.Log.AddException(ex)
-												End Try
-											End If
-										End Using
+											Using regkeyM As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "MediaFoundation\Transforms", True)
+												If regkeyM IsNot Nothing Then
+													Try
+														Deletesubregkey(regkeyM, (wantedvalue.Replace("{", "")).Replace("}", ""))
+													Catch exARG As ArgumentException
+														'Do nothing, can happen (Not found)
+													Catch ex As Exception
+														Application.Log.AddException(ex)
+													End Try
+												End If
+											End Using
 
 
-										Using regkeyM As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True)
-											If regkeyM IsNot Nothing Then
-												Try
-													Deletesubregkey(regkeyM, (wantedvalue.Replace("{", "")).Replace("}", ""))
-												Catch exARG As ArgumentException
-													'Do nothing, can happen (Not found)
-												Catch ex As Exception
-													Application.Log.AddException(ex)
-												End Try
-											End If
-										End Using
-									End If
-								End Using
+											Using regkeyM As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "MediaFoundation\Transforms\Categories\f79eac7d-e545-4387-bdee-d647d7bde42a", True)
+												If regkeyM IsNot Nothing Then
+													Try
+														Deletesubregkey(regkeyM, (wantedvalue.Replace("{", "")).Replace("}", ""))
+													Catch exARG As ArgumentException
+														'Do nothing, can happen (Not found)
+													Catch ex As Exception
+														Application.Log.AddException(ex)
+													End Try
+												End If
+											End Using
 
-								Try
-									Deletesubregkey(regkeyRoot, child)
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-								End Try
+
+											Using regkeyM As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "MediaFoundation\Transforms\Categories\d6c02d4b-6833-45b4-971a-05a4b04bab91", True)
+												If regkeyM IsNot Nothing Then
+													Try
+														Deletesubregkey(regkeyM, (wantedvalue.Replace("{", "")).Replace("}", ""))
+													Catch exARG As ArgumentException
+														'Do nothing, can happen (Not found)
+													Catch ex As Exception
+														Application.Log.AddException(ex)
+													End Try
+												End If
+											End Using
+										End If
+									End Using
+
+									Try
+										Deletesubregkey(regkeyRoot, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
 							End If
 						Next
 					Next

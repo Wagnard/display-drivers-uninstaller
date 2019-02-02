@@ -583,7 +583,7 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\classroot.cfg"))  '// add each line as String Array.
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\classroot.cfg"), config)  '// add each line as String Array.
 
 
 		'-----------------
@@ -3006,7 +3006,7 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg"))
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg"), config)
 
 
 		'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
@@ -3676,7 +3676,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("_display.optimus") Or
 						 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
 						 child.ToLower.Contains("_display.nvirusb") Or
-						 child.ToLower.Contains("_nvabhub") Or
+						 child.ToLower.Contains("_nvabhub") AndAlso removegfe Or
 						 child.ToLower.Contains("_display.physx") Or
 						 child.ToLower.Contains("_display.update") AndAlso removegfe Or
 						 child.ToLower.Contains("_osc") AndAlso removegfe Or
@@ -3758,8 +3758,8 @@ Public Class GPUCleanup
 								For Each child2 As String In regkey2.GetSubKeyNames()
 									If IsNullOrWhitespace(child2) Then Continue For
 
-									If StrContainsAny(child2, True, "global", "nvbackend", "nvcontrolpanel2", "nvidia control panel", "nvcontainer") Or
-									  (StrContainsAny(child2, True, "nvidia update core") AndAlso removegfe) Then
+									If StrContainsAny(child2, True, "global", "nvbackend", "nvcontrolpanel2", "nvidia control panel") Or
+									  (StrContainsAny(child2, True, "nvidia update core", "nvcontainer") AndAlso removegfe) Then
 
 										Try
 											Deletesubregkey(regkey2, child2)
@@ -3837,15 +3837,15 @@ Public Class GPUCleanup
 											End Using
 										End If
 									End If
-									If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd", "nvidia updatus") Or
-									(StrContainsAny(child2, True, "installer2", "nvstream", "nvtray", "nvcontainer", "nvdisplay.container") AndAlso removegfe) Then
+									If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd", "nvidia updatus") OrElse
+									(StrContainsAny(child2, True, "nvstream", "nvtray", "nvcontainer", "nvdisplay.container") AndAlso removegfe) Then
 
 										Select Case Not removephysx AndAlso StrContainsAny(child2, True, "physx")
 											Case True
 												'Do nothing
 											Case False
 
-												If StrContainsAny(child2, True, "installer2") Then
+												If StrContainsAny(child2, True, "installer2") AndAlso config.RemoveGFE Then
 													Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey2, child2, True)
 														If regkey4 IsNot Nothing Then
 															For Each subkeys In regkey4.GetSubKeyNames
@@ -4282,7 +4282,7 @@ Public Class GPUCleanup
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
 					If IsNullOrWhitespace(child) Then Continue For
-					If StrContainsAny(child, True, "nvcontainer.exe", "nvidia geforce experience", "nvnodejslauncher", "nvidia share.exe", "nvidia web helper.exe", "nvidia.steamlauncher.exe", "nvoawrappercache.exe", "nvprofileupdater", "nvshim", "nvsphelper", "nvstreamer", "nvtelemetrycontainer", "nvtmmon", "nvtmrep", "oawrapper") Then
+					If StrContainsAny(child, True, "nvcontainer.exe", "nvidia geforce experience", "nvnodejslauncher", "nvidia share.exe", "nvidia web helper.exe", "nvidia.steamlauncher.exe", "nvoawrappercache.exe", "nvprofileupdater", "nvshim", "nvsphelper", "nvstreamer", "nvtelemetrycontainer", "nvtmmon", "nvtmrep", "oawrapper") AndAlso removegfe Then
 						Try
 							Deletesubregkey(regkey, child)
 						Catch ex As Exception
@@ -5116,7 +5116,7 @@ Public Class GPUCleanup
 				End If
 			Next
 			Try
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If FileIO.CountDirectories(filePath) = 0 AndAlso config.RemoveGFE Then
 
 					Delete(filePath)
 
@@ -5191,7 +5191,7 @@ Public Class GPUCleanup
 				End If
 			Next
 			Try
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If FileIO.CountDirectories(filePath) = 0 AndAlso (FileIO.CountFiles(filePath) = 0 AndAlso config.RemoveGFE) Then
 
 					Delete(filePath)
 
@@ -5500,7 +5500,7 @@ Public Class GPUCleanup
 		For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
 			If IsNullOrWhitespace(filepaths) Then Continue For
 			filePath = filepaths + "\AppData\Local\Temp\NvidiaLogging"
-			If FileIO.ExistsDir(filePath) Then
+			If FileIO.ExistsDir(filePath) AndAlso config.RemoveGFE Then
 				Try
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
@@ -5805,7 +5805,7 @@ Public Class GPUCleanup
 
 		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\classroot.cfg")) '// add each line as String Array.
+		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\classroot.cfg"), config) '// add each line as String Array.
 
 		CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\interface.cfg")) '// add each line as String Array.
 
@@ -6410,14 +6410,14 @@ Public Class GPUCleanup
 		ThreadFinised = True
 	End Sub
 
-	Private Sub ClassrootCleanThread(ByRef ThreadFinised As Boolean, ByVal Classroot As String())
+	Private Sub ClassrootCleanThread(ByRef ThreadFinised As Boolean, ByVal Classroot As String(), config As ThreadSettings)
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 
 		ThreadFinised = False
-		CleanupEngine.ClassRoot(Classroot)
+		CleanupEngine.ClassRoot(Classroot, config)
 		ThreadFinised = True
 	End Sub
 
