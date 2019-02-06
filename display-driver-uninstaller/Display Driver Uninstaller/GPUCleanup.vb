@@ -5188,6 +5188,11 @@ Public Class GPUCleanup
 						Delete(child)
 
 					End If
+					If child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE Then
+
+						Delete(child)
+
+					End If
 				End If
 			Next
 			Try
