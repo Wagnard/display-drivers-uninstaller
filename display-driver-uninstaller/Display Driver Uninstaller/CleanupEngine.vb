@@ -1311,6 +1311,7 @@ Public Class CleanupEngine
 		Dim wantedvalue2 As String
 		Dim appid As String = Nothing
 		Dim typelib As String = Nothing
+		Dim childlist As New List(Of String)
 
 		Application.Log.AddMessage("Begin clsidleftover CleanUP")
 
@@ -1326,7 +1327,7 @@ Public Class CleanupEngine
 									For i As Integer = 0 To clsidleftover.Length - 1
 										If Not IsNullOrWhitespace(clsidleftover(i)) Then
 											If StrContainsAny(wantedvalue, True, clsidleftover(i)) Then
-
+												childlist.Add(child)
 												appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
 												If Not IsNullOrWhitespace(appid) Then
 													Try
@@ -1350,30 +1351,6 @@ Public Class CleanupEngine
 																Application.Log.AddException(ex)
 															End Try
 														End If
-													End If
-												End Using
-
-												Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface", True)
-													If reginterface IsNot Nothing Then
-														For Each interfacechild As String In reginterface.GetSubKeyNames
-															If IsNullOrWhitespace(interfacechild) Then Continue For
-															Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
-																If reginterface2 IsNot Nothing Then
-																	If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
-																		wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
-																		If Not IsNullOrWhitespace(wantedvalue2) Then
-																			If StrContainsAny(wantedvalue2, True, child) Then
-																				Try
-																					Deletesubregkey(reginterface, interfacechild)
-																				Catch ex As Exception
-																					Application.Log.AddException(ex, "Interface Removal via InProcServer32")
-																				End Try
-																			End If
-																		End If
-																	End If
-																End If
-															End Using
-														Next
 													End If
 												End Using
 
@@ -1665,12 +1642,39 @@ Public Class CleanupEngine
 							End If
 						End Using
 					Next
+					Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface", True)
+						If reginterface IsNot Nothing Then
+							For Each interfacechild As String In reginterface.GetSubKeyNames
+								If IsNullOrWhitespace(interfacechild) Then Continue For
+								Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
+									If reginterface2 IsNot Nothing Then
+										If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
+											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
+											If Not IsNullOrWhitespace(wantedvalue2) Then
+												For Each item As String In childlist
+													If IsNullOrWhitespace(item) Then Continue For
+													If StrContainsAny(wantedvalue2, True, item) Then
+														Try
+															Deletesubregkey(reginterface, interfacechild)
+														Catch ex As Exception
+															Application.Log.AddException(ex, "Interface Removal via InProcServer32")
+														End Try
+													End If
+												Next
+											End If
+										End If
+									End If
+								End Using
+							Next
+						End If
+					End Using
 				End If
 			End Using
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
 
+		childlist.Clear()
 
 		If IntPtr.Size = 8 Then
 			Try
@@ -1685,7 +1689,7 @@ Public Class CleanupEngine
 										For i As Integer = 0 To clsidleftover.Length - 1
 											If Not IsNullOrWhitespace(clsidleftover(i)) Then
 												If StrContainsAny(wantedvalue, True, clsidleftover(i)) Then
-
+													childlist.Add(child)
 													appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
 													If Not IsNullOrWhitespace(appid) Then
 														Try
@@ -1711,29 +1715,6 @@ Public Class CleanupEngine
 															End If
 														End If
 													End Using
-
-													Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface", True)
-														If reginterface IsNot Nothing Then
-															For Each interfacechild As String In reginterface.GetSubKeyNames
-																If IsNullOrWhitespace(interfacechild) Then Continue For
-																Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
-																	If reginterface2 IsNot Nothing Then
-																		If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
-																			wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
-																			If StrContainsAny(wantedvalue2, True, child) Then
-																				Try
-																					Deletesubregkey(reginterface, interfacechild)
-																				Catch ex As Exception
-																					Application.Log.AddException(ex, "Interface Removal via InProcServer32")
-																				End Try
-																			End If
-																		End If
-																	End If
-																End Using
-															Next
-														End If
-													End Using
-
 
 													'here I remove the mediafoundationkeys if present
 													'f79eac7d-e545-4387-bdee-d647d7bde42a is the Encoder section. Same on all windows version.
@@ -2023,12 +2004,38 @@ Public Class CleanupEngine
 								End If
 							End Using
 						Next
+						Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface", True)
+							If reginterface IsNot Nothing Then
+								For Each interfacechild As String In reginterface.GetSubKeyNames
+									If IsNullOrWhitespace(interfacechild) Then Continue For
+									Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
+										If reginterface2 IsNot Nothing Then
+											If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
+												wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
+												For Each item As String In childlist
+													If IsNullOrWhitespace(item) Then Continue For
+													If StrContainsAny(wantedvalue2, True, item) Then
+														Try
+															Deletesubregkey(reginterface, interfacechild)
+														Catch ex As Exception
+															Application.Log.AddException(ex, "Interface Removal via InProcServer32")
+														End Try
+													End If
+												Next
+											End If
+										End If
+									End Using
+								Next
+							End If
+						End Using
 					End If
 				End Using
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
 		End If
+
+		childlist.Clear()
 
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "AppID", True)

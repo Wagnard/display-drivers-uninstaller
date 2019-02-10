@@ -377,6 +377,13 @@ Public Class frmMain
 
 			End Select
 		End If
+
+		ImpersonateLoggedOnUser.Taketoken()
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			MsgBox("Could not impersonate the SYSTEM account, it is NOT recommended to use DDU in this state.")
+		End If
+		ImpersonateLoggedOnUser.ReleaseToken()
+
 	End Sub
 
 	Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing

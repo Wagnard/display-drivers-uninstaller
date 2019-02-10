@@ -6393,15 +6393,15 @@ Public Class GPUCleanup
 		CleanupEngine.Deletevalue(value1, value2)
 	End Sub
 
-	Private Sub CLSIDCleanThread(ByRef ThreadFinised As Boolean, ByVal Clsidleftover As String())
+	Private Sub CLSIDCleanThread(ByRef ThreadFinished As Boolean, ByVal Clsidleftover As String())
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 
-		ThreadFinised = False
+		ThreadFinished = False
 		CleanupEngine.Clsidleftover(Clsidleftover)
-		ThreadFinised = True
+		ThreadFinished = True
 	End Sub
 
 	Private Sub InstallerCleanThread(ByRef ThreadFinised As Boolean, ByVal Packages As String(), config As ThreadSettings)

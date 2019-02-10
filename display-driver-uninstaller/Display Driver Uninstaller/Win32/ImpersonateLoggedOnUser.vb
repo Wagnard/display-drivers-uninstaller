@@ -24,37 +24,57 @@ Public Class ImpersonateLoggedOnUser
 	Public Shared Sub Taketoken()
 		Dim hToken As IntPtr = IntPtr.Zero
 		Dim dupeTokenHandle As IntPtr = IntPtr.Zero
-		Dim proc As Process() = Process.GetProcessesByName("LSASS")
+		'Dim procs As Process() = Process.GetProcessesByName("LSASS")
+		Dim procs As Process() = Process.GetProcesses()
 		Application.Log.AddMessage("Trying to impersonate the SYSTEM account...")
-		If OpenProcessToken(proc(0).Handle, TOKEN_QUERY Or TOKEN_IMPERSONATE Or TOKEN_DUPLICATE, hToken) <> 0 Then
-			Dim newId As WindowsIdentity = New WindowsIdentity(hToken)
-
+		If procs IsNot Nothing AndAlso procs.Length > 0 Then
 			Try
-				Const SecurityImpersonation As Integer = 2
-				dupeTokenHandle = DupeToken(hToken, SecurityImpersonation)
+				For Each proc As Process In procs
+					If IsNullOrWhitespace(proc.ToString) Then Continue For
+					Try
+						If OpenProcessToken(proc.Handle, TOKEN_QUERY Or TOKEN_IMPERSONATE Or TOKEN_DUPLICATE, hToken) <> 0 Then
+							Dim newId As WindowsIdentity = New WindowsIdentity(hToken)
 
-				If IntPtr.Zero = dupeTokenHandle Then
-					Dim s As String = String.Format("Dup failed {0}, privilege not held", Marshal.GetLastWin32Error())
-					Throw New Exception(s)
-				End If
 
-				Dim impersonatedUser As WindowsImpersonationContext = newId.Impersonate()
-				Dim accountToken As IntPtr = WindowsIdentity.GetCurrent().Token
+							Const SecurityImpersonation As Integer = 2
+							dupeTokenHandle = DupeToken(hToken, SecurityImpersonation)
 
-				ImpersonateLoggedOnUser(CInt((hToken)))
+							If IntPtr.Zero = dupeTokenHandle Then
+								Dim s As String = String.Format("Dup failed {0}, privilege not held", Marshal.GetLastWin32Error())
+								Throw New Exception(s)
+							End If
 
-				If WindowsIdentity.GetCurrent().IsSystem Then
-					Application.Log.AddMessage("SYSTEM account impersonalisation successful")
-				Else
-					Application.Log.AddWarningMessage("SYSTEM account impersonalisation failed ! Cleanup may not be efficient. ")
-				End If
+							Dim impersonatedUser As WindowsImpersonationContext = newId.Impersonate()
+							Dim accountToken As IntPtr = WindowsIdentity.GetCurrent().Token
 
+							ImpersonateLoggedOnUser(CInt((hToken)))
+
+							If WindowsIdentity.GetCurrent().IsSystem Then
+								Exit For
+							Else
+								RevertToSelf()
+							End If
+						Else
+							Dim s As String = String.Format("OpenProcess Failed {0}, privilege not held", Marshal.GetLastWin32Error())
+							'Throw New Exception(s)
+
+						End If
+					Catch exARG As SystemException
+						'access denied ,can happen, just continue checking the next process.
+					Catch ex As Exception
+						Application.Log.AddMessage(ex.Message + ex.StackTrace)
+					End Try
+				Next
+			Catch ex As Exception
+				Application.Log.AddMessage(ex.Message + ex.StackTrace)
 			Finally
 				CloseHandle(hToken)
 			End Try
+		End If
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			Application.Log.AddMessage("SYSTEM account impersonalisation successful")
 		Else
-			Dim s As String = String.Format("OpenProcess Failed {0}, privilege not held", Marshal.GetLastWin32Error())
-			Throw New Exception(s)
+			Application.Log.AddWarningMessage("SYSTEM account impersonalisation failed ! Cleanup may not be efficient. ")
 		End If
 	End Sub
 
