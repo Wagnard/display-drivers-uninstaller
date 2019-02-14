@@ -435,6 +435,7 @@ Public Class frmMain
 
 	Private Sub CleaningThread_Completed(ByVal config As ThreadSettings)
 		Try
+			ImpersonateLoggedOnUser.ReleaseToken()
 			Application.Log.AddMessage("Clean uninstall completed!" & CRLF & ">> GPU: " & config.SelectedGPU.ToString())
 
 			If Not config.Success AndAlso config.GPURemovedSuccess Then

@@ -3856,7 +3856,7 @@ Public Class GPUCleanup
 																			For Each ValueNames As String In regkey5.GetValueNames
 																				If IsNullOrWhitespace(ValueNames) Then Continue For
 																				If StrContainsAny(ValueNames, True, "ansel", "display", "gfexperience", "hdaudio", "nvabhub", "nvbackend", "nvcontainer", "nvnode", "nvplugin",
-																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio", "oem") Then
+																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio", "oem", "msvcruntime") Then
 																					Try
 																						Deletevalue(regkey5, ValueNames)
 																					Catch ex As Exception
