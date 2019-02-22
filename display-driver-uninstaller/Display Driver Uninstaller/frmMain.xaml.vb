@@ -344,7 +344,7 @@ Public Class frmMain
 				Case WinForm.BootMode.FailSafeWithNetwork
 					Application.Log.AddMessage("We are in Safe Mode with Networking")
 				Case WinForm.BootMode.Normal
-					Application.Log.AddMessage("We are not in Safe Mode")
+					Application.Log.AddWarningMessage("We are not in Safe Mode")
 			End Select
 
 

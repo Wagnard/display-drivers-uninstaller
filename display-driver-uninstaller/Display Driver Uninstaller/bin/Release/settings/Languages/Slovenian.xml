@@ -38,7 +38,7 @@
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Odstrani "GeForce Experience" medpomnilnik nameščevalca grafičnih gonilnikov in datoteke.
+				Odstrani "GeForce Experience" predpomnilnik nameščevalca grafičnih gonilnikov in datoteke.
 				(Opomba: Gonilniki ne bodo odstranjeni)
 			</Text>
 			<Tooltip>
@@ -127,7 +127,7 @@
 			<Text5>Display Driver Uninstaller (DDU) veliko spreminja vaš register. DDU bo samodejno ustvaril obnovitveno točko sistema (samo v običajnem načinu).</Text5>
 			<Text6>V enem od modulov je prišlo do težave. Pošljite dnevnike DDU razvijalcu programa.</Text6>
 			<Text7>DDU je zaznal, da imate prenosnik AMD (Enduro ali enakovreden). DDU še ni v celoti združljiv in preizkušen s sistemi Enduro. Uporabite na lastno odgovornost.</Text7>
-			<Text8>DDU je zaznal, da NISTE v varnem načinu... Za boljše čiščenje brez težav je priporočljivo, da ponovno zaženete računalnik v varnem načinu.</Text8>
+			<Text8>DDU je zaznal, da NISTE v varnem načinu... Za boljše čiščenje brez težav je priporočljivo, da vnovič zaženete računalnik v varnem načinu.</Text8>
 			<Text9>Nastavitve Windows 'Namestitev naprave' so bile spremenjene v NE namesti samodejno gonilnike..</Text9>
 			<Text10>Čista odstranitev je dokončana. Ali želite zdaj zapreti program?</Text10>
 			<Text11>Windows 'Nastavitve namestitve naprave' so bile spremenjene v Samodejno namesti gonilnike.</Text11>
@@ -140,7 +140,7 @@
 		<Options_Type>
 			<Options1>---Izberi vrsto naprave---</Options1>
 			<Options2>Zvočna kartica</Options2>
-			<Options3>Grafična kartica (GPU)</Options3>
+			<Options3>Grafična kartica (GPE)</Options3>
 		</Options_Type>
 		<Options_GPU>
 			<Options1>---Izberi napravo---</Options1>
@@ -165,19 +165,19 @@
 			<Text9>Iskanje nove naprave...</Text9>
 			<Text10>Čista odstranitev je končana!</Text10>
 			<Text11>Različica DDU</Text11>
-			<Text12>GPU št.</Text12>
+			<Text12>GPE št.</Text12>
 			<Text13>Zaznana</Text13>
-			<Text14>DeviceId grafičnega procesorja (GPU)</Text14>
+			<Text14>ID naprave grafičnega procesorja (GPE)</Text14>
 			<Text15>Različica zaznanega gonilnika</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF oddelek</Text17>
-			<Text18>Grafični procesor (GPU) ni pravilno nameščen</Text18>
+			<Text18>Grafični procesor (GPE) ni pravilno nameščen</Text18>
 			<Text19>Brisanje nekaterih posebnih map, lahko traja nekaj časa...</Text19>
 			<Text20>Čiščenje se je začelo...</Text20>
 			<Text21>Odstranjevanje</Text21>
 			<Text22>gonilnik</Text22>
 			<Text23>Izvedba odstranitve SetupAPI. Počakajte (lahko traja nekaj minut)</Text23>
-			<Text24>Odstranjene GPU iz Upravitelja naprav.</Text24>
+			<Text24>Odstranjene GPE iz Upravitelja naprav.</Text24>
 			<Text25>Izvedba odstranitve SetupAPI Avdio krmilnika.</Text25>
 			<Text26>HD zvočne kartice so odstranjene!</Text26>
 			<Text27>USB katica 3D Vision je odstranjena iz Upravitelkja naprav.</Text27>
@@ -259,9 +259,9 @@
 			<Text>Odstrani GeForce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>Odstrani mapo medpomnilnika AMD Crimson Shader</Text>
+			<Text>Odstrani mapo predpomnilnika AMD Crimson Shader</Text>
 			<Tooltip>
-				Priporočljivo, če obstaja grafična nepravilnost (hitrost ali okvara slike), ki je posledica poškodovanih podatkov medpomnilnika AMD Crimson Shader.
+				Priporočljivo, če obstaja grafična nepravilnost (hitrost ali okvara slike), ki je posledica poškodovanih podatkov predpomnilnika AMD Crimson Shader.
 				Priporočamo tudi, če preklopite na drugo znamko grafične kartice, kot je NVIDIA.
 			</Tooltip>
 		</lblRemCrimsonCache>
@@ -273,7 +273,7 @@
       <Text>Prepreči prenos gonilnikov iz "Windows update", ko "Windows" išče gonilnik naprave.</Text>
       <Tooltip>Preprosto povedano, bo ta možnost preprečila, da "Windows/Device Manager" preverja posodobitve v "Windows Update". 
                Opomba: To ne preprečuje "Windows Update" prenos/namestitev novih gonilnikov. 
-               Opomba2: Prav tako je *ZELO* priporočeno, da povrnete to spremembo, ko končate z uporabo programa DDU in ponovno namestite gonilnik za vaš GPU ali imate težave z namestitvijo druge naprave.</Tooltip>
+               Opomba2: Prav tako je *ZELO* priporočeno, da povrnete to spremembo, ko končate z uporabo programa DDU in ponovno namestite gonilnik vašega grafičnega procesorja (GPE) ali imate težave z namestitvijo druge naprave.</Tooltip>
      </lblPreventWinUpdate>
   </frmOptions>
 
@@ -281,7 +281,7 @@
 		<btnAccept>
 			<Text>Zaženi</Text>
 			<Text2>
-				Vnovič zaženi računalnik v
+				Vnovič zaženi računalnik
 				Varnem načinu
 			</Text2>
 		</btnAccept>
@@ -326,7 +326,7 @@
 			<Text>Možnosti</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Kopiranje je omogočeno</Text>
+			<Text>Kopiranje omogočeno</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
@@ -372,7 +372,9 @@
 			<Text>
         Velika zahvala naslednjemu pokrovitelju in tudi tistim, ki niso na seznamu!
 
-        -honnmaguro   (že od 13.03.2018)
+        -honnmaguro    (že od 13.03.2018)
+ 		-ZaoDaDong     (že od 06.02.2019)
+		-Alberto Bursi (dolgo časa donator/podpornik)
       </Text>
 		</lblPatron>
 	</frmAbout>
@@ -380,9 +382,9 @@
 	<Misc>
 		<About>
 			<Text>
-				Display Driver Uninstaller (DDU) / Cleaner je bil ustvarjen za grafične (GPU) gonilnike. (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU)/Čistilec je bil ustvarjen za grafične (GPE) gonilnike. (NVIDIA/AMD)
 
-				Kaj naredi je, da odstrani grafični/GPU gonilnike iz Upravitelja naprav Windows ter odstrani trenutne in
+				Kaj naredi je, da odstrani grafične/GPE gonilnike iz Upravitelja naprav Windows ter odstrani trenutne in
 				prejšnje gonilnike iz shrambe gonilnikov Windows, skupaj z odstranitvijo NVIDIA/AMD storitev.
 
 				Trenutni učinek po uporabi tega orodja bo podoben kot, če bi bil sistem Windows v stanju "Na novo nameščen".
@@ -390,22 +392,22 @@
 				To orodje deluje podobno kot "Driver Sweeper"*in ima vse zgoraj dodatno omenjeno.
 
 				Če imate težave pri nameščanju starejšega ali novejšega gonilnika, ga preizkusite, ker ima nekaj poročil, 
-        ki jih lahko popravi.
+                ki jih lahko popravi.
 
 				PRIPOROČENA UPORABA:
 
 				- Orodje je mogoče uporabiti v normalnem načinu, vendar je pri uporabi DDU za absolutno 
-        stabilnost vedno najboljši Varen način.
+                  stabilnost vedno najboljši Varen način.
 
 				- Radi bi zbrali povratne informacije od vsakogar. Povejte nam, če je bil uspešen ali ne.
 
 				- Naredite varnostno kopijo ali obnovitveno točko sistema. (To običajno mora biti precej varno.)
 
 				- Če imate ali ste imeli težave z gonilnikom in vam je to orodje pomagalo pri nekaterihtežavah, ki ste jih
-        ali jih trenutno doživljate, delite z drugimi svoje rezultate.
+                  ali jih trenutno doživljate, delite z drugimi svoje rezultate.
 
 				Vedite, da NVIDIA, AMD niti Microsoft niso odgovorni za vašo kakršno škodo ali okvaro vašega 
-        računalnika in na noben način niso podružnice DDU ali njegovih ustvarjalcev.
+                računalnika in na noben način niso podružnice DDU ali njegovih ustvarjalcev.
 				-------------------------------
 
 				Ustvaril Wagnard.
@@ -448,14 +450,13 @@
 		<Translator>
 			<User>Jadran Rudec</User>
 			<Details>jrudec@gmail.com</Details>
-			<LastUpdate>21/12/2018</LastUpdate>
+			<LastUpdate>15/02/2019</LastUpdate>
 		</Translator>
 
 		<Translator2>
-			<User>---</User>
-			<LastUpdate>---</LastUpdate>
+			<User></User>
+			<LastUpdate></LastUpdate>
 		</Translator2>
-
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>
