@@ -94,12 +94,14 @@ Public Class AppLaunchOptions
 					Case StrContainsAny(Argument, True, "-Restart") : Restart = True
 					Case StrContainsAny(Argument, True, "-NoSafeModeMsg") : NoSafeModeMsg = True
 					Case StrContainsAny(Argument, True, "-cleancomplete") : CleanComplete = True
-
 					Case StrContainsAny(Argument, True, "-CleanNvidia") : CleanNvidia = True
 					Case StrContainsAny(Argument, True, "-CleanAmd") : CleanAmd = True
 					Case StrContainsAny(Argument, True, "-CleanIntel") : CleanIntel = True
 					Case StrContainsAny(Argument, True, "-CleanRealtek") : CleanRealtek = True
 					Case StrContainsAny(Argument, True, "-CleanSoundBlaster") : CleanSoundBlaster = True
+
+					Case StrContainsAny(Argument, True, "-RemovePhysx") : RemovePhysX = True
+					Case StrContainsAny(Argument, True, "-RemoveGFE") : RemoveGFE = True
 
 						'	TODO: Add cmdline args for those RemoveXXXX properties
 						'	Case StrContainsAny(Argument, True, "-RemNvidiaDirs") : RemoveNvidiaDirs = True
