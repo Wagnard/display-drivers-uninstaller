@@ -369,6 +369,23 @@ Public Class frmMain
 			Application.Log.AddException(ex, "frmMain loading caused error!")
 		End Try
 
+		If Application.Settings.FirstTimeLaunch AndAlso Not Application.LaunchOptions.Silent Then
+			MsgBox("This seems to be the first time you launch DDU, let's look at the options.")
+			Dim frmOptions As New frmOptions
+
+			With frmOptions
+				.Owner = Me
+				.Background = Me.Background
+				.DataContext = Me.DataContext
+				.Icon = Me.Icon
+				.SizeToContent = SizeToContent.WidthAndHeight
+				.ResizeMode = ResizeMode.CanResizeWithGrip
+				.WindowStartupLocation = WindowStartupLocation.CenterOwner
+			End With
+
+			frmOptions.ShowDialog()
+		End If
+
 		If Not Application.LaunchOptions.Silent Then
 			Select Case System.Windows.Forms.SystemInformation.BootMode
 

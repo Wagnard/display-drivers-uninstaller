@@ -105,12 +105,13 @@ Public Class AppSettings
 	Private m_removevulkan As DependencyProperty = RegDP("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
 	Private m_showoffer As DependencyProperty = RegDP("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
     Private m_enablesafemodedialog As DependencyProperty = RegDP("EnableSafeModeDialog", GetType(Boolean), GetType(AppSettings), False)
-    Private m_PreventWinUpdate As DependencyProperty = RegDP("PreventWinUpdate", GetType(Boolean), GetType(AppSettings), False)
+	Private m_PreventWinUpdate As DependencyProperty = RegDP("PreventWinUpdate", GetType(Boolean), GetType(AppSettings), False)
+	Private m_FirstTimeLaunch As DependencyProperty = RegDP("FirstTimeLaunch", GetType(Boolean), GetType(AppSettings), False)
 
 #End Region
 
 #Region "Public Properties"
-    Public Property AppName As String ' Name of application (DDU)
+	Public Property AppName As String ' Name of application (DDU)
 		Get
 			Return CStr(GetValue(m_appname))
 		End Get
@@ -346,18 +347,27 @@ Public Class AppSettings
         End Set
     End Property
 
-    Public Property PreventWinUpdate As Boolean
-        Get
-            Return CBool(GetValue(m_PreventWinUpdate))
-        End Get
-        Set(value As Boolean)
-            SetValue(m_PreventWinUpdate, value)
-        End Set
-    End Property
+	Public Property PreventWinUpdate As Boolean
+		Get
+			Return CBool(GetValue(m_PreventWinUpdate))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_PreventWinUpdate, value)
+		End Set
+	End Property
+
+	Public Property FirstTimeLaunch As Boolean
+		Get
+			Return CBool(GetValue(m_FirstTimeLaunch))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_FirstTimeLaunch, value)
+		End Set
+	End Property
 
 #End Region
 
-    Private Sub UpdateWinText(ByVal version As OSVersion)
+	Private Sub UpdateWinText(ByVal version As OSVersion)
 		If WinVersion = version Then
 			Return
 		End If
@@ -421,9 +431,13 @@ Public Class AppSettings
 	Public Sub Load()
 		If Load(Path.Combine(Application.Paths.Roaming, String.Format("{0}\Settings.xml", AppName.Replace(" ", "")))) Then
 			UseRoamingConfig = True
-		Else
-			Load(Path.Combine(Application.Paths.Settings, "Settings.xml"))
+
+		ElseIf Load(Path.Combine(Application.Paths.Settings, "Settings.xml")) Then
+
 			UseRoamingConfig = False
+
+		Else 'Fisrt time launch, no config found
+			FirstTimeLaunch = True
 		End If
 	End Sub
 
