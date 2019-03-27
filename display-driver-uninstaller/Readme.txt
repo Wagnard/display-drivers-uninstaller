@@ -1,7 +1,7 @@
 Requirement:
--Windows XP up to Windows 10 Creator update 1809 (anything higher is at your own risk)
+-Windows Vista SP2 up to Windows 10 Creator update 1809 (anything higher is at your own risk)
 -NVIDIA, AMD, Intel GPUs
--Microsoft .NET Framework 3.0 or higher
+-Microsoft .NET Framework 4.5 or higher
 
 Recommended usage:
 -You MUST disconnect your internet or completely block Windows Update when running DDU until you have re-installed your new drivers.
