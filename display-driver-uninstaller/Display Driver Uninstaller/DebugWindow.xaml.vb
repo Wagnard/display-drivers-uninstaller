@@ -12,6 +12,7 @@ Imports Display_Driver_Uninstaller.Win32
 Imports System.Threading
 
 Public Class DebugWindow
+	Dim FileIO As New FileIO
 	Private _devices As ObservableCollection(Of SetupAPI.Device) = New ObservableCollection(Of SetupAPI.Device)
 
 	Public ReadOnly Property Devices As ObservableCollection(Of SetupAPI.Device)
@@ -663,6 +664,7 @@ Public Class DebugWindow
 	End Sub
 
 	Private Sub menuFileIODelete_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles menuFileIODelete.Click
+
 		If lbPaths.SelectedItem Is Nothing Then
 			Return
 		End If

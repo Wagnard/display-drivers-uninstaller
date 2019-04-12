@@ -11,6 +11,7 @@ Imports Microsoft.Win32
 Imports Display_Driver_Uninstaller.Win32
 
 Public Module Tools
+	Dim FileIO As New FileIO
 	' 9 = vbTAB --- 10 = vbLF --- 11 = vbVerticalTab --- 12 = vbFormFeed --- 13 = vbCR --- 32 = SPACE
 	Private ReadOnly whiteSpaceChars As Char() = New Char() {ChrW(9), ChrW(10), ChrW(11), ChrW(12), ChrW(13), ChrW(32)}
 
@@ -46,7 +47,7 @@ Public Module Tools
 					If wantedValue IsNot Nothing AndAlso wantedValue.Length > 0 AndAlso Not IsNullOrWhitespace(wantedValue(0)) Then
 						Return wantedValue(0)
 					Else
-						Return Globalization.CultureInfo.InstalledUICulture.Name	'Return en-US, en-GB, fr-FR etc.
+						Return Globalization.CultureInfo.InstalledUICulture.Name    'Return en-US, en-GB, fr-FR etc.
 					End If
 				Else
 					' DevMltk: Don't have PreferredUILanguages.. but have:
@@ -59,16 +60,16 @@ Public Module Tools
 							If wantedValue IsNot Nothing AndAlso wantedValue.Length > 0 AndAlso Not IsNullOrWhitespace(wantedValue(0)) Then
 								Return wantedValue(0)
 							Else
-								Return Globalization.CultureInfo.InstalledUICulture.Name	'Return en-US, en-GB, fr-FR etc.
+								Return Globalization.CultureInfo.InstalledUICulture.Name    'Return en-US, en-GB, fr-FR etc.
 							End If
 						End If
 					End Using
 				End If
 			End Using
 
-			Return "en-US"	  'Return en-US (English) by default if nothing found.
+			Return "en-US"    'Return en-US (English) by default if nothing found.
 		Catch ex As Exception
-			Return "en-US"	  'Return en-US (English) by default if error
+			Return "en-US"    'Return en-US (English) by default if error
 		End Try
 	End Function
 
@@ -144,7 +145,7 @@ Public Module Tools
 
 			For Each s As String In Str
 				If Not IsNullOrWhitespace(s) Then
-					If text.IndexOf(s, comparison) <> -1 Then	' -1 = NOT FOUND
+					If text.IndexOf(s, comparison) <> -1 Then   ' -1 = NOT FOUND
 						Return True
 					End If
 				End If

@@ -11,11 +11,16 @@ Imports System.Runtime
 Public Class GPUCleanup
 
 	Dim CleanupEngine As New CleanupEngine
+	Dim FileIO As New FileIO
 	Dim winxp As Boolean = frmMain.winxp
 	Dim win10 As Boolean = frmMain.win10
 	Dim win8higher As Boolean = frmMain.win8higher
 	Dim sysdrv As String = Application.Paths.SystemDrive
 	Dim donotremoveamdhdaudiobusfiles As Boolean = frmMain.donotremoveamdhdaudiobusfiles
+	Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
+	Dim timer As System.Timers.Timer = New System.Timers.Timer
+
+
 
 	Public Sub Start(ByVal config As ThreadSettings)
 		Dim Array As String()
@@ -479,6 +484,8 @@ Public Class GPUCleanup
 			Cleannvidiaserviceprocess(config)
 			Cleannvidia(config)
 			Cleannvidiafolders(config)
+			CleanupEngine.RemoveRegDeviceSoftware("NVIDIA CoInstaller Display.Driver")
+
 		End If
 
 		If config.SelectedGPU = GPUVendor.Intel Then
@@ -489,7 +496,6 @@ Public Class GPUCleanup
 
 		CleanupEngine.Cleandriverstore(config)
 		CleanupEngine.Fixregistrydriverstore(config)
-
 
 		config.Success = True
 
@@ -564,7 +570,13 @@ Public Class GPUCleanup
 		 "ThumbnailExtractionHost",
 		 "jusched")
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
-		System.Threading.Thread.Sleep(10)
+		timer.Interval = 10
+		timer.AutoReset = False
+		While True
+			timer.Start()
+			objAuto.WaitOne()
+			Exit While
+		End While
 	End Sub
 
 	Private Sub Cleanamd(ByVal config As ThreadSettings)
@@ -574,6 +586,8 @@ Public Class GPUCleanup
 		Dim filePath As String = Nothing
 		Dim packages As String()
 		Dim Thread2Finished As Boolean = False
+
+
 		UpdateTextMethod(UpdateTextTranslated(2))
 		Application.Log.AddMessage("Cleaning known Regkeys")
 
@@ -2049,14 +2063,20 @@ Public Class GPUCleanup
 		'End Select
 
 		'Killing Explorer.exe to help releasing file that were open.
+		timer.Interval = 500
+		timer.AutoReset = False
 		While Thread2Finished <> True
-			Thread.Sleep(500)
+			timer.Start()
+			objAuto.WaitOne()
 		End While
+
 		Application.Log.AddMessage("Killing Explorer.exe")
 		KillProcess("explorer")
 
 	End Sub
-
+	Private Sub TimerElapsed(source As Object, e As System.Timers.ElapsedEventArgs)
+		objAuto.Set()
+	End Sub
 	Private Sub Cleanamdfolders(ByVal config As ThreadSettings)
 		Dim filePath As String = Nothing
 		Dim removedxcache As Boolean = config.RemoveCrimsonCache
@@ -2675,9 +2695,11 @@ Public Class GPUCleanup
 		End If
 
 
-
+		timer.Interval = 500
+		timer.AutoReset = False
 		While Thread1Finished <> True
-			Thread.Sleep(500)
+			timer.Start()
+			objAuto.WaitOne()
 		End While
 
 	End Sub
@@ -2987,7 +3009,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub Cleannvidia(ByVal config As ThreadSettings)
-
+		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
 		Dim wantedvalue As String = Nothing
 		Dim wantedvalue2 As String = Nothing
 		Dim removegfe As Boolean = config.RemoveGFE
@@ -3058,11 +3080,14 @@ Public Class GPUCleanup
 		'-----------------
 		'interface cleanup
 		'-----------------
-
+		timer.Interval = 500
+		timer.AutoReset = True
 		While Thread2Finished <> True
+			timer.Start()
+			objAuto.WaitOne()
 			Application.Log.AddMessage("Waiting for MainRegCleanThread")
-			Thread.Sleep(500)
 		End While
+
 
 		If removegfe Then 'When removing GFE only
 			CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
@@ -4819,10 +4844,12 @@ Public Class GPUCleanup
 		'                  SetServiceStartupType("Schedule", OldValue)
 		'              End If
 		'      End Select
-
+		timer.Interval = 500
+		timer.AutoReset = False
 		While Thread2Finished <> True Or Thread3Finished <> True
+			timer.Start()
+			objAuto.WaitOne()
 			Application.Log.AddMessage("Waiting for InstallerCleanThread")
-			Thread.Sleep(500)
 		End While
 
 		UpdateTextMethod("End of Registry Cleaning")
@@ -5788,10 +5815,12 @@ Public Class GPUCleanup
 			Application.Log.AddException(ex)
 		End Try
 
+		timer.Interval = 500
+		timer.AutoReset = False
 		While Thread1Finished <> True Or Thread2Finished <> True
-			Thread.Sleep(500)
+			timer.Start()
+			objAuto.WaitOne()
 		End While
-
 	End Sub
 
 	Private Sub cleanintel(ByVal config As ThreadSettings)
@@ -6370,6 +6399,7 @@ Public Class GPUCleanup
 	End Function
 
 	Private Sub Delete(ByVal filename As String)
+
 		FileIO.Delete(filename)
 		CleanupEngine.RemoveSharedDlls(filename)
 	End Sub

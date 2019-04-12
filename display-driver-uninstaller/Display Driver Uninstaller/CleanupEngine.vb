@@ -10,7 +10,9 @@ Imports Windows
 
 
 Public Class CleanupEngine
-
+	Dim FileIO As New FileIO
+	Dim objAuto As System.Threading.AutoResetEvent = New System.Threading.AutoResetEvent(False)
+	Dim timer As System.Timers.Timer = New System.Timers.Timer
 	'	Private win8higher As Boolean = frmMain.win8higher
 
 	Private Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
@@ -200,6 +202,7 @@ Public Class CleanupEngine
 									End If
 								End Using
 
+
 								'Win 10 (1803)
 								For Each regkeyusers As String In Registry.Users.GetSubKeyNames
 									If IsNullOrWhitespace(regkeyusers) Then Continue For
@@ -241,7 +244,7 @@ Public Class CleanupEngine
 									Deletesubregkey(regkey, "Wsearch")
 								Catch ex As Exception
 									Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
-								End Try
+                                End Try
 							End If
 						End Using
 
@@ -269,6 +272,25 @@ Public Class CleanupEngine
 			ImpersonateLoggedOnUser.Taketoken()
 			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
+	End Sub
+
+	Public Sub RemoveRegDeviceSoftware(ByVal value As String)
+		'Asked by NVIDIA for DCH drivers
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\DeviceSoftware", True)
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetSubKeyNames
+					If child IsNot Nothing Then
+						If StrContainsAny(child, True, value) Then
+							Try
+								Deletesubregkey(regkey, child)
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
+						End If
+					End If
+				Next
+			End If
+		End Using
 	End Sub
 
 	Public Sub Deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String)
@@ -1022,7 +1044,13 @@ Public Class CleanupEngine
 
 	End Sub
 
+	Private Sub TimerElapsed(source As Object, e As System.Timers.ElapsedEventArgs)
+		objAuto.Set()
+	End Sub
+
 	Public Sub Cleanserviceprocess(ByVal services As String())
+		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
+		timer.AutoReset = False
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services", False)
@@ -1050,7 +1078,10 @@ Public Class CleanupEngine
 									While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
 										If ServiceInstaller.GetServiceStatus(service) <> ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
 											waits += 1
-											System.Threading.Thread.Sleep(100)
+											timer.Interval = 100
+											timer.Start()
+											objAuto.WaitOne()
+											'System.Threading.Thread.Sleep(100)
 										Else
 											Exit While
 										End If
@@ -1081,8 +1112,10 @@ Public Class CleanupEngine
 							End If
 						End If
 					End Using
-
-					System.Threading.Thread.Sleep(10)
+					timer.Interval = 10
+					timer.Start()
+					objAuto.WaitOne()
+					'System.Threading.Thread.Sleep(10)
 				Next
 			End If
 		End Using
@@ -2293,7 +2326,8 @@ Public Class CleanupEngine
 	End Sub
 
 	Public Sub Folderscleanup(ByVal driverfiles As String())
-
+		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
+		timer.AutoReset = False
 		Dim winxp = frmMain.winxp
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 		Dim Thread1Finished = False
@@ -2338,7 +2372,10 @@ Public Class CleanupEngine
 		thread7.Start()
 
 		While Thread1Finished <> True Or Thread2Finished <> True Or Thread3Finished <> True Or Thread4Finished <> True Or Thread5Finished <> True Or Thread7Finished <> True Or Thread8Finished <> True
-			Thread.Sleep(500)
+			timer.Interval = 500
+			timer.Start()
+			objAuto.WaitOne()
+			'Thread.Sleep(500)
 		End While
 
 	End Sub

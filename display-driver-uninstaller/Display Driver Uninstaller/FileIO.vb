@@ -15,7 +15,8 @@ Public Class FileIO
 	Private Shared ReadOnly INVALID_HANDLE As IntPtr = New IntPtr(-1)
 
 #End Region
-
+	Dim objAuto As System.Threading.AutoResetEvent = New System.Threading.AutoResetEvent(False)
+	Dim timer As System.Timers.Timer = New System.Timers.Timer
 #Region "Enums"
 
 	<Flags()>
@@ -343,7 +344,7 @@ Public Class FileIO
 
 #Region "Functions"
 
-	Public Shared Sub Delete(ByVal fileName As String)
+	Public Sub Delete(ByVal fileName As String)
 		DeleteInternal(fileName, False)
 	End Sub
 
@@ -355,19 +356,19 @@ Public Class FileIO
 		Return GetFileAttributes(fileName)
 	End Function
 
-	Public Shared Function ExistsFile(ByVal fileName As String) As Boolean
+	Public Function ExistsFile(ByVal fileName As String) As Boolean
 		Dim isDir As Boolean = True
 
 		Return (Exists(fileName, isDir) AndAlso Not isDir)
 	End Function
 
-	Public Shared Function ExistsDir(ByVal dirName As String) As Boolean
+	Public Function ExistsDir(ByVal dirName As String) As Boolean
 		Dim isDir As Boolean = False
 
 		Return (Exists(dirName, isDir) AndAlso isDir)
 	End Function
 
-	Public Shared Function CountFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = True) As Int32
+	Public Function CountFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = True) As Int32
 		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
 			wildCard = "*"
 		End If
@@ -375,7 +376,7 @@ Public Class FileIO
 		Return GetFileCount(directory, wildCard, searchSubDirs)
 	End Function
 
-	Public Shared Function CountDirectories(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = True) As Int32
+	Public Function CountDirectories(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = True) As Int32
 		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
 			wildCard = "*"
 		End If
@@ -383,7 +384,7 @@ Public Class FileIO
 		Return GetDirCount(directory, wildCard, searchSubDirs)
 	End Function
 
-	Public Shared Function GetFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
+	Public Function GetFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
 		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
 			wildCard = "*"
 		End If
@@ -391,7 +392,7 @@ Public Class FileIO
 		Return GetFileNames(directory, wildCard, searchSubDirs, False, False, False)
 	End Function
 
-	Public Shared Function GetDirectories(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
+	Public Function GetDirectories(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
 		If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
 			wildCard = "*"
 		End If
@@ -400,8 +401,13 @@ Public Class FileIO
 	End Function
 
 
+	Private Sub TimerElapsed(source As Object, e As System.Timers.ElapsedEventArgs)
+		objAuto.Set()
+	End Sub
 
-	Private Shared Sub DeleteInternal(ByVal fileName As String, ByVal fixedAcl As Boolean)
+	Private Sub DeleteInternal(ByVal fileName As String, ByVal fixedAcl As Boolean)
+
+		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
 		If IsNullOrWhitespace(fileName) Then
 			Return
 		End If
@@ -415,7 +421,7 @@ Public Class FileIO
 		End If
 
 		Try
-			errCode = SetAttributes(uncFileName, FILE_ATTRIBUTES.NORMAL, isDir)		' restores attributes, checks does it exist, check is dir or file
+			errCode = SetAttributes(uncFileName, FILE_ATTRIBUTES.NORMAL, isDir)     ' restores attributes, checks does it exist, check is dir or file
 
 			If errCode <> Errors.ACCESS_DENIED Then
 
@@ -438,7 +444,7 @@ Public Class FileIO
 					End If
 				End If
 
-				If isDir Then		' fileName is directory
+				If isDir Then       ' fileName is directory
 					If RemoveDirectory(uncFileName) Then
 						Application.Log.AddMessage(String.Concat("Deleted directory:", CRLF, fileName))
 						Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), uncFileName.Substring(UNC_PREFIX.Length), uncFileName))
@@ -465,11 +471,13 @@ Public Class FileIO
 						'System.Threading.Thread.Sleep(10)		' Windows is slow... takes bit time to files be deleted.
 
 						Dim waits As Int32 = 0
-
-						While waits < 30						 'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
+						timer.Interval = 100
+						timer.AutoReset = False
+						While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
 							If GetFileCount(uncFileName, "*", True) > 0 Then
 								waits += 1
-								System.Threading.Thread.Sleep(100)
+								timer.Start()
+								objAuto.WaitOne()
 							Else
 								Exit While
 							End If
@@ -486,8 +494,8 @@ Public Class FileIO
 					ElseIf errCode <> 0UI Then
 						Throw New Win32Exception(GetInt32(errCode))
 					End If
-				Else				' fileName is file
-					If StrContainsAny(uncFileName, True, "icons.ttf") Then	 'This is a workaround for FONTS that are in-use. No idea how to really fix.
+				Else                ' fileName is file
+					If StrContainsAny(uncFileName, True, "icons.ttf") Then   'This is a workaround for FONTS that are in-use. No idea how to really fix.
 						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts", True)
 							If regkey IsNot Nothing Then
 								For Each childs As String In regkey.GetValueNames
@@ -500,7 +508,11 @@ Public Class FileIO
 						End Using
 						MoveFileEx(Path.GetPathRoot(fileName) & "deleteme.tmp", Nothing, MoveFileFlags.MOVEFILE_DELAY_UNTIL_REBOOT) ' This will delete de file after reboot
 						MoveFileEx(uncFileName, Path.GetPathRoot(fileName) & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING) ' This move the file.
-						System.Threading.Thread.Sleep(100) ' To let the time for the file move to take effect.
+						timer.Interval = 100
+						timer.AutoReset = False
+						timer.Start()
+						objAuto.WaitOne()
+						'System.Threading.Thread.Sleep(100) ' To let the time for the file move to take effect.
 						Return
 					Else
 						If DeleteFile(uncFileName) Then
@@ -578,7 +590,7 @@ Public Class FileIO
 		End Try
 	End Sub
 
-	Private Shared Function Exists(ByVal fileName As String, ByRef isDirectory As Boolean) As Boolean
+	Private Function Exists(ByVal fileName As String, ByRef isDirectory As Boolean) As Boolean
 		If Not fileName.StartsWith(UNC_PREFIX) Then
 			fileName = UNC_PREFIX & fileName
 		End If
@@ -592,7 +604,7 @@ Public Class FileIO
 		Return True
 	End Function
 
-	Private Shared Function GetFilesToDeleteInternal(ByVal fileName As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal searchFiles As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
+	Private Function GetFilesToDeleteInternal(ByVal fileName As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal searchFiles As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
 		GetFilesToDeleteInternal = New List(Of String)(0)
 
 		If IsNullOrWhitespace(fileName) Then
@@ -701,17 +713,17 @@ Public Class FileIO
 		End Try
 	End Function
 
-	Private Shared Function GetFileCount(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean) As Int32
+	Private Function GetFileCount(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean) As Int32
 		Return GetFileNames(directory, wildCard, searchSubDirs, True, False, False).Count
 	End Function
 
-	Private Shared Function GetDirCount(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean) As Int32
+	Private Function GetDirCount(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean) As Int32
 		Return GetDirNames(directory, wildCard, searchSubDirs, True, False, False).Count
 	End Function
 
 
 
-	Private Shared Function GetFileNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
+	Private Function GetFileNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
 		Dim fileNames As New List(Of String)(100)
 		Dim findData As New WIN32_FIND_DATA
 		Dim findHandle As IntPtr
@@ -819,7 +831,7 @@ Public Class FileIO
 		Return fileNames
 	End Function
 
-	Private Shared Function GetDirNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
+	Private Function GetDirNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
 		Dim dirNames As New List(Of String)(100)
 		Dim findData As New WIN32_FIND_DATA
 		Dim findHandle As New IntPtr
@@ -922,7 +934,7 @@ Public Class FileIO
 
 
 
-	Private Shared Function GetLongPath(ByVal path As String) As String
+	Private Function GetLongPath(ByVal path As String) As String
 		Dim sb As New StringBuilder
 		Dim requiredSize As UInt32 = GetLongPathName(If(path.StartsWith(UNC_PREFIX), path, UNC_PREFIX & path), sb, 0UI)
 
@@ -951,7 +963,7 @@ Public Class FileIO
 		Return sb.ToString()
 	End Function
 
-	Private Shared Function SetAttributes(ByVal filePath As String, ByVal fileAttributes As FILE_ATTRIBUTES, ByRef isDirectory As Boolean) As UInt32
+	Private Function SetAttributes(ByVal filePath As String, ByVal fileAttributes As FILE_ATTRIBUTES, ByRef isDirectory As Boolean) As UInt32
 		Dim fileAttr As UInt32 = GetFileAttributes(filePath)
 
 		If fileAttr = Errors.INVALID_FILE_ATTRIBUTES Then     'Doesn't exists
@@ -966,7 +978,7 @@ Public Class FileIO
 		Return 0UI
 	End Function
 
-	Private Shared Function GetAttributes(ByVal filePath As String, ByRef isDirectory As Boolean) As UInt32
+	Private Function GetAttributes(ByVal filePath As String, ByRef isDirectory As Boolean) As UInt32
 		Dim fileAttr As UInt32 = GetFileAttributes(filePath)
 
 		If fileAttr = Errors.INVALID_FILE_ATTRIBUTES Then     'Doesn't exists
@@ -978,12 +990,12 @@ Public Class FileIO
 	End Function
 
 #End Region
-	Private Shared Sub Deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
+	Private Sub Deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
 		Dim cleanupengine As New CleanupEngine
 		cleanupengine.Deletevalue(value1, value2)
 	End Sub
 
-	Private Shared Sub Removeshareddll(ByVal value1 As String)
+	Private Sub Removeshareddll(ByVal value1 As String)
 		Dim cleanupengine As New CleanupEngine
 		cleanupengine.RemoveSharedDlls(value1)
 	End Sub

@@ -4,6 +4,7 @@ Imports Microsoft.Win32
 Public Class AUDIOCleanup
 	'todo
 	Dim CleanupEngine As New CleanupEngine
+	Dim FileIO As New FileIO
 
 	Public Sub Start(ByVal config As ThreadSettings)
 		Dim win10 As Boolean = frmMain.win10
