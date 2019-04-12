@@ -27,6 +27,7 @@ Public Class GPUCleanup
 		Dim VendCHIDGPU As String = ""
 		Dim vendidexpected As String = ""
 		Dim VendidSC As String() = Nothing
+		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
 
 		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
 
@@ -1227,7 +1228,7 @@ Public Class GPUCleanup
 						For Each child As String In regkey.GetValueNames()
 							If IsNullOrWhitespace(child) Then Continue For
 
-							If StrContainsAny(child, True, "radeonsettings.exe") Then
+							If StrContainsAny(child, True, "radeonsettings.exe", "amdrsserv.exe") Then
 								Try
 									Deletevalue(regkey, child)
 								Catch ex As Exception
@@ -3009,7 +3010,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub Cleannvidia(ByVal config As ThreadSettings)
-		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
+
 		Dim wantedvalue As String = Nothing
 		Dim wantedvalue2 As String = Nothing
 		Dim removegfe As Boolean = config.RemoveGFE
@@ -5750,7 +5751,7 @@ Public Class GPUCleanup
 												For Each Keyname As String In regkey2.GetValueNames
 													If IsNullOrWhitespace(Keyname) Then Continue For
 
-													If StrContainsAny(Keyname, True, "nvstlink.exe", "nvstview.exe", "nvcpluir.dll", "nvcplui.exe") Or
+													If StrContainsAny(Keyname, True, "nvstlink.exe", "nvstview.exe", "nvcpluir.dll", "nvcplui.exe", "mcu.exe") Or
 													 (StrContainsAny(Keyname, True, "gfexperience.exe", "nvidia share.exe") AndAlso config.RemoveGFE) Then
 														Try
 															Deletevalue(regkey2, Keyname)
