@@ -3909,7 +3909,16 @@ Public Class GPUCleanup
 																End If
 															Next
 															If regkey4.SubKeyCount = 0 Then
-																Deletesubregkey(regkey2, child2)
+																Try
+																	Deletesubregkey(regkey2, child2)
+																Catch ex As Exception
+																	Application.Log.AddException(ex)
+																End Try
+															Else
+																For Each data As String In regkey4.GetSubKeyNames()
+																	If IsNullOrWhitespace(data) Then Continue For
+																	Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey4.ToString + "\ --> " + data)
+																Next
 															End If
 														End If
 													End Using
@@ -5290,6 +5299,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("display.driver") Or
 								   child2.ToLower.Contains("displaydriveranalyzer") Or
 								   child2.ToLower.Contains("display.optimus") Or
+								   child2.ToLower.Contains("ngxcore.") Or
 								   child2.ToLower.Contains("msvcruntime") Or
 								   child2.ToLower.Contains("ansel.") Or
 								   child2.ToLower.Contains("nvdisplaycontainer") Or

@@ -42,7 +42,7 @@
 				(Not: Sürücüyü kaldırmaz)
 			</Text>
 			<Tooltip>
-				Bu, HDD/SSD'den GFE/Sürücü yükleyicisinin kaldıramadığı dosyaları kaldırır.
+				Bu, HDD/SSD'den GFE/Sürücü yükleyicisinin kaldıramadığı dosyaları kaldırır(Eski GFE sürümleri).
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
@@ -167,7 +167,7 @@
 			<Text12>GPU #</Text12>
 			<Text13>Algılanan</Text13>
 			<Text14>GPU Aygıt Kimliği</Text14>
-			<Text15>Algılanan Sürücü(ler)Sürüm(ler)</Text15>
+			<Text15>Algılanan Sürüm(ler)</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF Bölümü</Text17>
 			<Text18>GPU düzgün yüklü değil</Text18>
@@ -182,8 +182,8 @@
 			<Text27>3D Vision USB Adaptörü Aygıt Yöneticisinden kaldırıldı.</Text27>
 			<Text28>Monitörler ve Gizli monitörler kaldırıldı!</Text28>
 			<Text29>SetupAPI kaldırma işlemi tamamlandı.</Text29>
-			<Text30>Başlatıldı S-1-5-xx bölge temizleme</Text30>
-			<Text31>Bitti S-1-5-xx bölge temizliği tamamlandı</Text31>
+			<Text30>S-1-5-xx bölge temizliği başlatıldı</Text30>
+			<Text31>S-1-5-xx bölge temizliği tamamlandı.</Text31>
 			<Text32>Classesroot ,yükleyici ve ürünleri temizleme başlatıldı...</Text32>
 			<Text33>Classesroot ,yükleyici ve ürünleri temizleme tamamlandı.</Text33>
 			<Text34>Başlatıldı ,LocalMachine yükleyici ve ürünleri temizleme başlatıldı...</Text34>
@@ -271,7 +271,7 @@
 	    <lblPreventWinUpdate>
             <Text>"Windows" bir aygıt için bir sürücü aradığında, "Windows güncellemesinden" sürücülerin indirilmesini önleyin</Text>
             <Tooltip>Bu seçenek, kolayca "Windows / Aygıt Yöneticisi"nin "Windows Update"den sürücü güncellemesini kontrol etmesini engeller.
-					 Not: Bu, "Windows Update"nin yeni sürücüleri indirmesini / yüklemesini engellemez. 
+					 Not1: Bu, "Windows Update"nin yeni sürücüleri indirmesini / yüklemesini engellemez. 
 					 Not2: DDU'yu kullanmayı bitirdikten ve GPU sürücünüzü yeniden yükledikten sonra bu değişikliği geri almak büyük önem arz etmektedir. Diğer sürücülerin yüklenmesine engel olabilir.</Tooltip>
         </lblPreventWinUpdate>
 	</frmOptions>
@@ -308,7 +308,7 @@
 			<Item3>Ağ ile Güvenli Mod</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+			<Text1>DDU'ya, müdahale ettiği bilinen programları kapatır (MSI Afterburner ve RTSS gibi).</Text1>
 		</Messages>
 	</frmLaunch>
 
@@ -370,7 +370,10 @@
 			<Text>
 			Aşağıdaki Patron ve ayrıca listelenmemiş olanlar için çok teşekkürler!
 				  
-			-honnmaguro  (2018-03-16'dan beri)  
+			-honnmaguro  (2018-03-16'dan beri) 
+			-honnmaguro  (2018-03-16'dan beri)
+			-ZaoDaDong   (2019-02-06'dan beri)
+			-Alberto Bursi	
 			</Text>
 		</lblPatron>
 	</frmAbout>
