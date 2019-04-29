@@ -38,7 +38,7 @@
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Odstranit instalační soubory/cache grafického ovladače "GeForce Experience".
+				Odstranit instalační soubory/cache ovladačů vytvořené programem "GeForce Experience".
 				(Poznámka: Ovladače nebudou odebrány)
 			</Text>
 			<Tooltip>
@@ -48,7 +48,7 @@
 		<btnWuRestore>
 			<Text>
 				Použít výchozí Nastavení instalace zařízení 
-        (instalovat ovladače automaticky)
+        		(instalovat ovladače automaticky)
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
@@ -135,9 +135,24 @@
 			<Text13>Musíte vybrat následující věci na modré obrazovce obnovení: Odstranit potíže -&gt; Upřesnit možnosti -&gt; Nastavení spouštění.</Text13>
 			<Text14>Čeká se na restart systému, prosíme, restartujte systém před použitím DDU</Text14>
 			<Text15>Žádná změna nebyla provedena. Nastavení instalace zařízení již byly nastaveny na výchozí hodnoty.</Text15>
-      <Text16>Kritická chyba Windows znemožňuje správné odebrání ovladačů. DDU nebude z bezpečnostních důvodů pokračovat v odstraňování souborů a záznamů registru. Před použitím DDU vyřešte problém(y) s vašim systémem.</Text16>
+      		<Text16>Kritická chyba Windows znemožňuje správné odebrání ovladačů. DDU nebude z bezpečnostních důvodů pokračovat v odstraňování souborů a záznamů registru. Před použitím DDU vyřešte problém(y) s vašim systémem.</Text16>
 		</Messages>
-
+<Options_Type>
+			<Options1>---Vyberte druh zařízení---</Options1>
+			<Options2>Audio</Options2>
+			<Options3>GPU</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Vyberte zařízení---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Vyberte zařízení---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>Executing Driver Store cleanup (Delete OEM step)...</Text1>
 			<Text2>Cleaning directory</Text2>
@@ -201,7 +216,7 @@
 			<Text>Pokročilá nastavení (Změna na vlastní nebezpečí)</Text>
 		</lblAdvancedO>
 		<lblGeneral>
-			<Text>Obecné možnost</Text>
+			<Text>Obecné možnosti</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
 			<Text>Odstranit složky ovladačů v "C:\NVIDIA" (NEDOPORUČENO)</Text>
@@ -232,7 +247,7 @@
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Povolit dialog Nouzového režimu (Nedoporučeno, dokud jste Nouzový režim neotestovali manuálně)</Text>
-      <Tooltip>Nedoporučeno, pokud jste nikdy neotestovali, zda nouzový režim funguje. Tato možnost může způsobit nekonečné zapínání, černou obrazovku atp.</Tooltip>
+      		<Tooltip>Nedoporučeno, pokud jste nikdy neotestovali, zda nouzový režim funguje. Tato možnost může způsobit nekonečné zapínání, černou obrazovku atp.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Skladovat konfigurační soubor ve složce roaming</Text>
@@ -254,6 +269,12 @@
 			<Text>Odstranit Vulkan Runtime</Text>
 			<Tooltip>Není doporučeno v případě, že vlastníte 2 odlišné grafické karty podporující Vulkan API.</Tooltip>
 		</lblVulkan>
+		<lblPreventWinUpdate>
+      <Text>Zabránit stažení ovladačů přes službu "Windows update", když "Windows" vyhledá ovladač pro zařízení.</Text>
+      <Tooltip>Zjednodušeně, tato možnost zakáže "systému Windows/Správci zařízení" vyhledat aktualizace ovladače přes "Windows Update". 
+               Poznámka: Tato možnost nezabrání službě "Windows Update" stažení/instalaci nových ovladačů. 
+               Poznámka 2: Zároveň je *VYSOCE* doporučeno vrácení této změny po tom, co dokončíte používání DDU a reinstalujete ovladač grafické karty, jinak můžete mít problém s instalací jiných zařízení.</Tooltip>
+     </lblPreventWinUpdate>
 	</frmOptions>
 
 	<frmLaunch Text="Možnosti spuštění">
@@ -348,9 +369,12 @@
 			<Text>Velké poděkování patří následujícím překladatelům včetně těch, kteří nejsou uvedeni!</Text>
 		</lblTranslators>
 		<lblPatron>
-			<Text>Velké poděkování patří následujícím Patronům včetně těch, kteří nejsou uvedeni!
+			<Text>
+				Velké poděkování patří následujícím Patronům včetně těch, kteří nejsou uvedeni!
       
-				  -honnmaguro   (Od 16.03.2018)  
+				-honnmaguro   (Od 16.03.2018) 
+				-ZaoDaDong   (Od 06.02.2019)
+				-Alberto Bursi (dlouhodobý dárce/podporovatel)
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -377,22 +401,22 @@
 
 				- Rádi bychom od Vás dostali zpětnou vazbu. Řekněte nám, jestli Vám nástroj pomohl či nikoliv.
         
-        - Vytvořte zálohu OS nebo alespoň bod obnovy (Ale obvykle by to mělo být bezpečné.)
+       			- Vytvořte zálohu OS nebo alespoň bod obnovy (Ale obvykle by to mělo být bezpečné.)
 
 				- Pokud se potýkáte, nebo jste se někdy potýkali, s problémy s ovladači a tento nástroj Vám pomohl, neváhejte
 				se s námi podělit o výsledky.
 
 				Mějte na paměti, že NVIDIA, AMD ani Microsoft nenesou zodpovědnost za případné škody
-        na vašem počítači, protože nemají s DDU či jeho tvůrci co dočinění.
+       			na vašem počítači, protože nemají s DDU či jeho tvůrci co dočinění.
 				-------------------------------
 
 				Vytvořil Wagnard.
 
 				Programátoři: Wagnard, Devmltk, Shady7557
 
-				Tester : Dellon132
+				Tester: Dellon132
 
-				Loga : juanchacin
+				Loga: juanchacin
 
 				Velké poděkování patří Jackalito za věnování AMD 7850.
 
@@ -424,8 +448,8 @@
 	<LanguageTranslators>
 		<Translator>
 			<User>Jan 'ThatJohnS' Szotkowski</User>
-			<Details>@czjohns / contact@thatjohns.eu</Details>
-			<LastUpdate>14.4.2018</LastUpdate>
+			<Details>thatjohns.eu</Details>
+			<LastUpdate>29.4.2019</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
