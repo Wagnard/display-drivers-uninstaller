@@ -2575,12 +2575,12 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-                    If StrContainsAny(child, True, "ccc2", "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim", "performance profile client", "wvr") Then
+					If StrContainsAny(child, True, "ccc2", "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim", "performance profile client", "wvr") Then
 
-                        Delete(child)
+						Delete(child)
 
-                    End If
-                End If
+					End If
+				End If
 			Next
 			Try
 				If FileIO.CountDirectories(filePath) = 0 Then
@@ -5105,6 +5105,7 @@ Public Class GPUCleanup
 							 (child.ToLower.Contains("nvtmrep") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("gfesdk") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("ansel") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvbatteryboostcheck") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvetwlog")) Or
@@ -5194,6 +5195,7 @@ Public Class GPUCleanup
 					 (child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("driverdumps") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("displaydriverras") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 
 						Delete(child)
