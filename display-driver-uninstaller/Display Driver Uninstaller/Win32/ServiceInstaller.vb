@@ -355,7 +355,7 @@ Public NotInheritable Class ServiceInstaller
 
 			Using ptrService As SafeServiceHandle = OpenService(scm.DangerousGetHandle, serviceName, SERVICE.ALL_ACCESS Or ACL.ACCESS_RIGHTS.DELETE)
 				If ptrService.IsInvalid Then
-					Throw New Exception("Service not installed! -" & serviceName)
+					Throw New Exception("Service not installed! - " & serviceName)
 				End If
 
 				StopService(serviceName)
