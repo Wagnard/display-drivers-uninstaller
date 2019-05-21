@@ -10,9 +10,9 @@ Imports Windows
 
 
 Public Class CleanupEngine
-	Dim FileIO As New FileIO
+
 	Dim objAuto As System.Threading.AutoResetEvent = New System.Threading.AutoResetEvent(False)
-	Dim timer As System.Timers.Timer = New System.Timers.Timer
+
 	'	Private win8higher As Boolean = frmMain.win8higher
 
 	Private Function UpdateTextMethodmessagefn(ByRef number As Integer) As String
@@ -56,6 +56,7 @@ Public Class CleanupEngine
 
 
 	Public Sub RemoveSharedDlls(ByVal directorypath As String)
+		Dim FileIO As New FileIO
 		If Not IsNullOrWhitespace(directorypath) AndAlso Not FileIO.ExistsDir(directorypath) Then
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
 				If regkey IsNot Nothing Then
@@ -1049,8 +1050,9 @@ Public Class CleanupEngine
 	End Sub
 
 	Public Sub Cleanserviceprocess(ByVal services As String())
-		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
-		timer.AutoReset = False
+		Dim timer As System.Timers.Timer = New System.Timers.Timer
+		AddHandler Timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
+		Timer.AutoReset = False
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services", False)
@@ -1078,8 +1080,8 @@ Public Class CleanupEngine
 									While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
 										If ServiceInstaller.GetServiceStatus(service) <> ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
 											waits += 1
-											timer.Interval = 100
-											timer.Start()
+											Timer.Interval = 100
+											Timer.Start()
 											objAuto.WaitOne()
 											'System.Threading.Thread.Sleep(100)
 										Else
@@ -1112,8 +1114,8 @@ Public Class CleanupEngine
 							End If
 						End If
 					End Using
-					timer.Interval = 10
-					timer.Start()
+					Timer.Interval = 10
+					Timer.Start()
 					objAuto.WaitOne()
 					'System.Threading.Thread.Sleep(10)
 				Next
@@ -2326,18 +2328,18 @@ Public Class CleanupEngine
 	End Sub
 
 	Public Sub Folderscleanup(ByVal driverfiles As String())
-		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
-		timer.AutoReset = False
+		Dim timer As System.Timers.Timer = New System.Timers.Timer
+		AddHandler Timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
+		Timer.AutoReset = False
 		Dim winxp = frmMain.winxp
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 		Dim Thread1Finished = False
 		Dim Thread2Finished = False
-		Dim Thread3Finished = True
+		Dim Thread3Finished = False
 		Dim Thread4Finished = False
-		Dim Thread5Finished = True
+		Dim Thread5Finished = False
 		Dim Thread7Finished = False
-		Dim Thread8Finished = True
-
+		Dim Thread8Finished = False
 
 
 		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, Application.Paths.System32, driverfiles, donotremoveamdhdaudiobusfiles))
@@ -2348,34 +2350,37 @@ Public Class CleanupEngine
 
 
 		If winxp Then
-			Thread3Finished = False
+
 			Dim thread3 As Thread = New Thread(Sub() Threaddata1(Thread3Finished, Application.Paths.System32 & "drivers\dllcache\", driverfiles, donotremoveamdhdaudiobusfiles))
 			thread3.Start()
+		Else
+			Thread3Finished = True
 		End If
 
 		Dim thread4 As Thread = New Thread(Sub() Threaddata1(Thread4Finished, Application.Paths.WinDir, driverfiles, donotremoveamdhdaudiobusfiles))
 		thread4.Start()
 
 		If IntPtr.Size = 8 Then
-			Thread8Finished = False
-			Thread5Finished = False
+
 
 			Dim thread8 As Thread = New Thread(Sub() Threaddata1(Thread8Finished, Application.Paths.SysWOW64, driverfiles, donotremoveamdhdaudiobusfiles))
 			thread8.Start()
 
 			Dim thread5 As Thread = New Thread(Sub() Threaddata1(Thread5Finished, Application.Paths.SysWOW64 & "Drivers\", driverfiles, donotremoveamdhdaudiobusfiles))
 			thread5.Start()
-
+		Else
+			Thread8Finished = True
+			Thread5Finished = True
 		End If
 
 		Dim thread7 As Thread = New Thread(Sub() Threaddata1(Thread7Finished, Application.Paths.WinDir & "Prefetch\", driverfiles, donotremoveamdhdaudiobusfiles))
 		thread7.Start()
 
 		While Thread1Finished <> True Or Thread2Finished <> True Or Thread3Finished <> True Or Thread4Finished <> True Or Thread5Finished <> True Or Thread7Finished <> True Or Thread8Finished <> True
+
 			timer.Interval = 500
 			timer.Start()
 			objAuto.WaitOne()
-			'Thread.Sleep(500)
 		End While
 
 	End Sub
@@ -2385,14 +2390,15 @@ Public Class CleanupEngine
 			ImpersonateLoggedOnUser.Taketoken()
 			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
-
+		Dim FileIO As New FileIO
 		ThreadFinished = False
 		If filepath IsNot Nothing Then
 			If FileIO.ExistsDir(filepath) Then
 				For Each child As String In FileIO.GetFiles(filepath)
 					If IsNullOrWhitespace(child) Then Continue For
-					If StrContainsAny(child, True, driverfiles) Then
+					If StrContainsAny(child, True, driverfiles) AndAlso Not StrContainsAny(child, True, "wnvapi.dll") Then  ' Special exception for a file that sould not be removed.
 						Try
+							Application.Log.AddWarningMessage(child)
 							Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
@@ -2532,11 +2538,13 @@ Public Class CleanupEngine
 	End Sub
 
 	Private Sub Delete(ByVal filename As String)
+		Dim FileIO As New FileIO
 		FileIO.Delete(filename)
 		RemoveSharedDlls(filename)
 	End Sub
 
 	Public Sub Cleandriverstore(ByVal config As ThreadSettings)
+		Dim FileIO As New FileIO
 		Dim catalog As String = ""
 		Dim CurrentProvider As String() = Nothing
 		UpdateTextMethod("Executing Driver Store cleanUP(finding OEM step)...")
@@ -2609,6 +2617,7 @@ Public Class CleanupEngine
 	Public Sub Fixregistrydriverstore(ByVal config As ThreadSettings)
 		Dim win8higher As Boolean = frmMain.win8higher
 		Dim donotremoveamdhdaudiobusfiles As Boolean = frmMain.donotremoveamdhdaudiobusfiles
+		Dim FileIO As New FileIO
 		'Windows 8 + only
 		'This should fix driver installation problem reporting that a file is not found.
 		'It is usually caused by Windows somehow losing track of the driver store , This intend to help it a bit.

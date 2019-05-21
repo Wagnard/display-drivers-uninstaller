@@ -10,7 +10,6 @@ Imports System.Runtime
 
 Public Class GPUCleanup
 
-	Dim CleanupEngine As New CleanupEngine
 	Dim FileIO As New FileIO
 	Dim winxp As Boolean = frmMain.winxp
 	Dim win10 As Boolean = frmMain.win10
@@ -23,6 +22,7 @@ Public Class GPUCleanup
 
 
 	Public Sub Start(ByVal config As ThreadSettings)
+		Dim CleanupEngine As New CleanupEngine
 		Dim Array As String()
 		Dim VendCHIDGPU As String = ""
 		Dim vendidexpected As String = ""
@@ -537,7 +537,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub Cleanamdserviceprocess()
-
+		Dim CleanupEngine As New CleanupEngine
 		Application.Log.AddMessage("Cleaning Process/Services...")
 
 		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\AMD\services.cfg"))    '// add each line as String Array.
@@ -581,7 +581,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub Cleanamd(ByVal config As ThreadSettings)
-
+		Dim CleanupEngine As New CleanupEngine
 		Dim wantedvalue As String = Nothing
 		Dim wantedvalue2 As String = Nothing
 		Dim filePath As String = Nothing
@@ -2909,7 +2909,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub Cleannvidiaserviceprocess(ByVal config As ThreadSettings)
-
+		Dim CleanupEngine As New CleanupEngine
 		Application.Log.AddMessage("Cleaning Process/Services...")
 
 		If FileIO.ExistsFile(config.Paths.AppBase & "settings\NVIDIA\services.cfg") Then
@@ -3010,7 +3010,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub Cleannvidia(ByVal config As ThreadSettings)
-
+		Dim CleanupEngine As New CleanupEngine
 		Dim wantedvalue As String = Nothing
 		Dim wantedvalue2 As String = Nothing
 		Dim removegfe As Boolean = config.RemoveGFE
@@ -5837,7 +5837,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub cleanintel(ByVal config As ThreadSettings)
-
+		Dim CleanupEngine As New CleanupEngine
 		Dim wantedvalue As String = Nothing
 		Dim packages As String()
 
@@ -6126,7 +6126,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub cleanintelserviceprocess()
-
+		Dim CleanupEngine As New CleanupEngine
 		Application.Log.AddMessage("Cleaning Process/Services...")
 		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\services.cfg")) '// add each line as String Array.
 
@@ -6135,7 +6135,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub cleanintelfolders()
-
+		Dim CleanupEngine As New CleanupEngine
 		Dim filePath As String = Nothing
 
 		UpdateTextMethod(UpdateTextTranslated(4))
@@ -6412,31 +6412,33 @@ Public Class GPUCleanup
 	End Function
 
 	Private Sub Delete(ByVal filename As String)
-
+		Dim CleanupEngine As New CleanupEngine
 		FileIO.Delete(filename)
 		CleanupEngine.RemoveSharedDlls(filename)
 	End Sub
 
 	Private Sub Threaddata1(ByRef ThreadFinised As Boolean, ByVal driverfiles As String())
+		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
-
-		ThreadFinised = False
 		CleanupEngine.Folderscleanup(driverfiles)
 		ThreadFinised = True
 	End Sub
 
 	Private Sub Deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
+		Dim CleanupEngine As New CleanupEngine
 		CleanupEngine.Deletesubregkey(value1, value2)
 	End Sub
 
 	Private Sub Deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
+		Dim CleanupEngine As New CleanupEngine
 		CleanupEngine.Deletevalue(value1, value2)
 	End Sub
 
 	Private Sub CLSIDCleanThread(ByRef ThreadFinished As Boolean, ByVal Clsidleftover As String())
+		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
@@ -6448,6 +6450,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub InstallerCleanThread(ByRef ThreadFinised As Boolean, ByVal Packages As String(), config As ThreadSettings)
+		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
@@ -6459,6 +6462,7 @@ Public Class GPUCleanup
 	End Sub
 
 	Private Sub ClassrootCleanThread(ByRef ThreadFinised As Boolean, ByVal Classroot As String(), config As ThreadSettings)
+		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)

@@ -16,7 +16,7 @@ Public Class FileIO
 
 #End Region
 	Dim objAuto As System.Threading.AutoResetEvent = New System.Threading.AutoResetEvent(False)
-	Dim timer As System.Timers.Timer = New System.Timers.Timer
+
 #Region "Enums"
 
 	<Flags()>
@@ -406,7 +406,7 @@ Public Class FileIO
 	End Sub
 
 	Private Sub DeleteInternal(ByVal fileName As String, ByVal fixedAcl As Boolean)
-
+		Dim timer As System.Timers.Timer = New System.Timers.Timer
 		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
 		If IsNullOrWhitespace(fileName) Then
 			Return

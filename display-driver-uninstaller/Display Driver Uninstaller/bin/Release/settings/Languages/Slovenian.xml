@@ -47,7 +47,7 @@
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Nastavi nastavitve Windows Namestitev naprave na privzeto
+				Nastavi na privzeto Windows nastavitve 'Namestitev naprave' 
 				(samodejno namesti gonilnike)
 			</Text>
 		</btnWuRestore>
@@ -184,11 +184,11 @@
 			<Text28>Monitorji in skriti monitorji so odstranjeni!</Text28>
 			<Text29>SetupAPI odstranitev je dokončana</Text29>
 			<Text30>Začetek čiščenja območja S-1-5-xx</Text30>
-			<Text31>Koneck čiščenja območja S-1-5-xx</Text31>
+			<Text31>Konec čiščenja območja S-1-5-xx</Text31>
 			<Text32>Začetek čiščenja ClassesRoot ,Installer\Products</Text32>
-			<Text33>Koneck čiščenja ClassesRoot ,Installer\Products</Text33>
+			<Text33>Konec čiščenja ClassesRoot ,Installer\Products</Text33>
 			<Text34>Začetek čiščenja LocalMachine ,Installer\Products</Text34>
-			<Text35>Koneck čiščenja LocalMachine ,Installer\Products</Text35>
+			<Text35>Konec čiščenja LocalMachine ,Installer\Products</Text35>
 			<Text36>Začetek čiščenja CurrentUser ,Installer\Products</Text36>
 			<Text37>Konec čiščenja CurrentUser ,Installer\Products</Text37>
 			<Text38>Čiščenje procesov/storitev...</Text38>
@@ -281,7 +281,7 @@
 		<btnAccept>
 			<Text>Zaženi</Text>
 			<Text2>
-				Vnovič zaženi računalnik
+				Vnovič zaženi računalnik v
 				Varnem načinu
 			</Text2>
 		</btnAccept>
@@ -372,7 +372,7 @@
 			<Text>
         Velika zahvala naslednjemu pokrovitelju in tudi tistim, ki niso na seznamu!
 
-        -honnmaguro    (že od 13.03.2018)
+        -honnmaguro    (že od 16.03.2018)
  		-ZaoDaDong     (že od 06.02.2019)
 		-Alberto Bursi (dolgo časa donator/podpornik)
       </Text>
@@ -450,7 +450,7 @@
 		<Translator>
 			<User>Jadran Rudec</User>
 			<Details>jrudec@gmail.com</Details>
-			<LastUpdate>15/02/2019</LastUpdate>
+			<LastUpdate>09/05/2019</LastUpdate>
 		</Translator>
 
 		<Translator2>
