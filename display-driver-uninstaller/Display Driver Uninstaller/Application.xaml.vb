@@ -21,7 +21,7 @@ Class Application
 	Private Const URL_GURU3D_NVIDIA As String = "http://forums.guru3d.com/showthread.php?t=379506"
 	Private Const URL_GEFORCE As String = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
 	Private Const URL_SVN As String = "https://github.com/Wagnard/display-drivers-uninstaller"
-	Private Const URL_OFFER As String = "https://www.driverdr.com/lp/update-display-drivers.html"
+	Private Const URL_OFFER As String = "https://www.drivereasy.com/update-display-drivers"
 
 #End Region
 
