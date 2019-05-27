@@ -2398,7 +2398,6 @@ Public Class CleanupEngine
 					If IsNullOrWhitespace(child) Then Continue For
 					If StrContainsAny(child, True, driverfiles) AndAlso Not StrContainsAny(child, True, "wnvapi.dll") Then  ' Special exception for a file that sould not be removed.
 						Try
-							Application.Log.AddWarningMessage(child)
 							Delete(child)
 						Catch ex As Exception
 							Application.Log.AddException(ex)
