@@ -155,6 +155,24 @@ Public Module Tools
 		Return False
 	End Function
 
+	''' <summary>Check if text contains Equal of the given parameters</summary>
+	Public Function StrEqual(ByVal text As String, ByVal ignoreCase As Boolean, ParamArray Str As String()) As Boolean
+		If IsNullOrWhitespace(text) Then Return False
+
+		If Str IsNot Nothing And Str.Length > 0 Then
+
+			For Each s As String In Str
+				If Not IsNullOrWhitespace(s) Then
+					If String.Equals(text, s, If(ignoreCase, StringComparison.OrdinalIgnoreCase, StringComparison.Ordinal)) Then
+						Return True
+					End If
+				End If
+            Next
+		End If
+
+		Return False
+	End Function
+
 
 	' <Extension()>
 	Public Function GetDescription(ByVal EnumConstant As [Enum]) As String

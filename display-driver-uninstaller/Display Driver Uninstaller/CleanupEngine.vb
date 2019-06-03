@@ -1293,7 +1293,7 @@ Public Class CleanupEngine
 									If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd.sys")) Then
 										For Each child As String In regkey.GetSubKeyNames()
 											If IsNullOrWhitespace(child) = False Then
-												If child.ToLower.Replace("/", "\").Contains("\" + driverfiles(i).ToLower) Then
+												If StrContainsAny(child.Replace("/", "\"), True, driverfiles(i)) Then
 													Try
 														Deletesubregkey(regkey, child)
 													Catch ex As Exception
@@ -1317,7 +1317,7 @@ Public Class CleanupEngine
 									If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
 										For Each child As String In regkey.GetValueNames()
 											If IsNullOrWhitespace(child) = False Then
-												If child.ToLower.Contains(driverfiles(i).ToLower) Then
+												If StrContainsAny(child, True, driverfiles(i)) Then
 													Try
 														Deletevalue(regkey, child)
 													Catch ex As Exception
@@ -2396,7 +2396,7 @@ Public Class CleanupEngine
 			If FileIO.ExistsDir(filepath) Then
 				For Each child As String In FileIO.GetFiles(filepath)
 					If IsNullOrWhitespace(child) Then Continue For
-					If StrContainsAny(child, True, driverfiles) AndAlso Not StrContainsAny(child, True, "wnvapi.dll") Then  ' Special exception for a file that sould not be removed.
+					If StrContainsAny(child, True, driverfiles) AndAlso Not StrContainsAny(child, True, "wnvapi.dll") Then
 						Try
 							Delete(child)
 						Catch ex As Exception

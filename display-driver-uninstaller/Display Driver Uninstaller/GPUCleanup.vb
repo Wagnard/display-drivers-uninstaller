@@ -5108,7 +5108,9 @@ Public Class GPUCleanup
 							 (child.ToLower.Contains("ansel") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvbatteryboostcheck") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("scanner") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvetwlog")) Or
+							 (child.ToLower.Contains("nv_cache") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
 
@@ -5181,6 +5183,7 @@ Public Class GPUCleanup
 					 (child.ToLower.Contains("nvab") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("netservice") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("rx") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("crashdumps") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstream") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
@@ -5227,11 +5230,15 @@ Public Class GPUCleanup
 						Delete(child)
 
 					End If
-					If child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE Then
 
-						Delete(child)
+				End If
+			Next
+			For Each child As String In FileIO.GetFiles(filePath)
+				If IsNullOrWhitespace(child) Then Continue For
+				If child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE Then
 
-					End If
+					Delete(child)
+
 				End If
 			Next
 			Try
@@ -5243,6 +5250,10 @@ Public Class GPUCleanup
 					For Each data As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+					Next
+					For Each data As String In FileIO.GetFiles(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
+						Application.Log.AddWarningMessage("Remaining file(s) found " + " : " + filePath + "\ --> " + data)
 					Next
 				End If
 			Catch ex As Exception

@@ -495,7 +495,7 @@ Public Class FileIO
 						Throw New Win32Exception(GetInt32(errCode))
 					End If
 				Else                ' fileName is file
-					If StrContainsAny(uncFileName, True, "icons.ttf") Then   'This is a workaround for FONTS that are in-use. No idea how to really fix.
+					If StrContainsAny(uncFileName, True, "\icons.ttf") Then   'This is a workaround for FONTS that are in-use. No idea how to really fix.
 						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts", True)
 							If regkey IsNot Nothing Then
 								For Each childs As String In regkey.GetValueNames
