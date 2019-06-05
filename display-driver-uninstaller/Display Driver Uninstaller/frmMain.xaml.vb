@@ -111,10 +111,15 @@ Public Class frmMain
 		End Try
 	End Function
 
+	Private Sub SaveData()
+		Application.SaveData()
+	End Sub
+
 	Private Sub CloseDDU()
 		If Not Dispatcher.CheckAccess() Then
 			Dispatcher.BeginInvoke(Sub() CloseDDU())
 		Else
+			SaveData()
 			Try
 				Close()
 			Catch ex As Exception
@@ -443,7 +448,6 @@ Public Class frmMain
 
 		Catch ex As Exception
 			Application.Log.AddException(ex)
-			Application.Log.SaveToFile()    ' Save to file
 			Microsoft.VisualBasic.MsgBox(ex.Message + ex.StackTrace)
 			config.Success = False
 		Finally
