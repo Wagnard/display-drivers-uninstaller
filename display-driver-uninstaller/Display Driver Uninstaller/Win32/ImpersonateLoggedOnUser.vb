@@ -1,6 +1,7 @@
 ﻿Imports System.Runtime.InteropServices
 Imports System.Security
 Imports System.Security.Principal
+Imports Display_Driver_Uninstaller.Win32
 
 Public Class ImpersonateLoggedOnUser
 	<SuppressUnmanagedCodeSecurityAttribute()>
@@ -27,6 +28,8 @@ Public Class ImpersonateLoggedOnUser
 		'Dim procs As Process() = Process.GetProcessesByName("LSASS")
 		Dim procs As Process() = Process.GetProcesses()
 		Application.Log.AddMessage("Trying to impersonate the SYSTEM account...")
+		ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+
 		If procs IsNot Nothing AndAlso procs.Length > 0 Then
 			Try
 				For Each proc As Process In procs
@@ -50,6 +53,7 @@ Public Class ImpersonateLoggedOnUser
 							ImpersonateLoggedOnUser(CInt((hToken)))
 
 							If WindowsIdentity.GetCurrent().IsSystem Then
+								ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 								Exit For
 							Else
 								RevertToSelf()

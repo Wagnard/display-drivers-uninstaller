@@ -271,7 +271,6 @@ Public Class CleanupEngine
 		End If
 		If Not Security.Principal.WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
-			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 	End Sub
 
@@ -1050,9 +1049,10 @@ Public Class CleanupEngine
 	End Sub
 
 	Public Sub Cleanserviceprocess(ByVal services As String())
+		ImpersonateLoggedOnUser.Taketoken()
 		Dim timer As System.Timers.Timer = New System.Timers.Timer
-		AddHandler Timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
-		Timer.AutoReset = False
+		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
+		timer.AutoReset = False
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services", False)
@@ -1080,8 +1080,8 @@ Public Class CleanupEngine
 									While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
 										If ServiceInstaller.GetServiceStatus(service) <> ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
 											waits += 1
-											Timer.Interval = 100
-											Timer.Start()
+											timer.Interval = 100
+											timer.Start()
 											objAuto.WaitOne()
 											'System.Threading.Thread.Sleep(100)
 										Else
@@ -1114,8 +1114,8 @@ Public Class CleanupEngine
 							End If
 						End If
 					End Using
-					Timer.Interval = 10
-					Timer.Start()
+					timer.Interval = 10
+					timer.Start()
 					objAuto.WaitOne()
 					'System.Threading.Thread.Sleep(10)
 				Next
@@ -1149,10 +1149,18 @@ Public Class CleanupEngine
 									If serviceValue.Equals(service, StringComparison.OrdinalIgnoreCase) Then
 										Try
 											Deletesubregkey(regkey, child)
-											Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
-											Exit For
 										Catch ex As Exception
 										End Try
+										Try
+											Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+										Catch ex As Exception
+										End Try
+										Try
+											'Also remove the HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\DirectX keys associated to it.
+											Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\DirectX\" & child)
+										Catch ex As Exception
+										End Try
+										Exit For
 									End If
 
 								Next
@@ -1164,7 +1172,10 @@ Public Class CleanupEngine
 										Try
 											Deletesubregkey(regkey, child)
 											Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)
+										Catch ex As ArgumentException
+											'not found.
 										Catch ex As Exception
+											Application.Log.AddException(ex)
 										End Try
 									End If
 								End Using
@@ -1173,8 +1184,10 @@ Public Class CleanupEngine
 					Next
 				End If
 			End Using
+			ImpersonateLoggedOnUser.ReleaseToken()
 		Catch ex As Exception
 			Application.Log.AddException(ex)
+			ImpersonateLoggedOnUser.ReleaseToken()
 		End Try
 	End Sub
 
@@ -2388,7 +2401,6 @@ Public Class CleanupEngine
 	Private Sub Threaddata1(ByRef ThreadFinished As Boolean, ByVal filepath As String, ByVal driverfiles As String(), ByVal donotremoveamdhdaudiobusfiles As Boolean)
 		If Not Security.Principal.WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
-			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 		Dim FileIO As New FileIO
 		ThreadFinished = False
@@ -2546,6 +2558,7 @@ Public Class CleanupEngine
 		Dim FileIO As New FileIO
 		Dim catalog As String = ""
 		Dim CurrentProvider As String() = Nothing
+
 		UpdateTextMethod("Executing Driver Store cleanUP(finding OEM step)...")
 		Application.Log.AddMessage("Executing Driver Store cleanUP(Find OEM)...")
 		'Check the driver from the driver store  ( oemxx.inf)
@@ -2617,6 +2630,9 @@ Public Class CleanupEngine
 		Dim win8higher As Boolean = frmMain.win8higher
 		Dim donotremoveamdhdaudiobusfiles As Boolean = frmMain.donotremoveamdhdaudiobusfiles
 		Dim FileIO As New FileIO
+
+		ImpersonateLoggedOnUser.Taketoken()
+
 		'Windows 8 + only
 		'This should fix driver installation problem reporting that a file is not found.
 		'It is usually caused by Windows somehow losing track of the driver store , This intend to help it a bit.
@@ -2726,6 +2742,7 @@ Public Class CleanupEngine
 					End If
 			End Select
 		End If
+		ImpersonateLoggedOnUser.ReleaseToken()
 	End Sub
 
 

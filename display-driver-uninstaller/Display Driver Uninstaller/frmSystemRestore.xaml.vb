@@ -94,10 +94,10 @@ Public Class frmSystemRestore
 	End Sub
 
     Private Sub CloseDDU()
-        If Not Dispatcher.CheckAccess() Then
-            Dispatcher.BeginInvoke(Sub() CloseDDU())
-        Else
-            Try
+		If Not Dispatcher.CheckAccess() Then
+			Dispatcher.BeginInvoke(Sub() CloseDDU())
+		Else
+			Try
                 Me.Close()
             Catch ex As Exception
                 Application.Log.AddException(ex)

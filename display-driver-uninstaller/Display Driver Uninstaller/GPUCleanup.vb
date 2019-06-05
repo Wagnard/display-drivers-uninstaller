@@ -142,7 +142,7 @@ Public Class GPUCleanup
 
 
 
-
+		ImpersonateLoggedOnUser.Taketoken()
 		'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
 		Try
 			donotremoveamdhdaudiobusfiles = False
@@ -179,6 +179,7 @@ Public Class GPUCleanup
 			Application.Log.AddException(ex)
 			donotremoveamdhdaudiobusfiles = True  ' A security if the code to check fail.
 		End Try
+		ImpersonateLoggedOnUser.ReleaseToken()
 
 		If config.SelectedGPU = GPUVendor.Nvidia Then
 			'nVidia AudioEndpoints Removal
@@ -471,12 +472,11 @@ Public Class GPUCleanup
 				End If
 			End If
 		End If
-		ImpersonateLoggedOnUser.Taketoken()
+
 
 		If config.SelectedGPU = GPUVendor.AMD Then
-			Cleanamdserviceprocess()
+			Cleanamdserviceprocess(config)
 			Cleanamd(config)
-
 			Cleanamdfolders(config)
 		End If
 
@@ -536,11 +536,15 @@ Public Class GPUCleanup
 		  "nvidiaInspector")
 	End Sub
 
-	Private Sub Cleanamdserviceprocess()
+	Private Sub Cleanamdserviceprocess(ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
+		Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\services.cfg")
+
+		ImpersonateLoggedOnUser.Taketoken()
+
 		Application.Log.AddMessage("Cleaning Process/Services...")
 
-		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\AMD\services.cfg"))    '// add each line as String Array.
+		CleanupEngine.Cleanserviceprocess(services)    '// add each line as String Array.
 
 		Dim killpid As New ProcessStartInfo
 		killpid.FileName = "cmd.exe"
@@ -578,6 +582,7 @@ Public Class GPUCleanup
 			objAuto.WaitOne()
 			Exit While
 		End While
+		ImpersonateLoggedOnUser.ReleaseToken()
 	End Sub
 
 	Private Sub Cleanamd(ByVal config As ThreadSettings)
@@ -585,9 +590,14 @@ Public Class GPUCleanup
 		Dim wantedvalue As String = Nothing
 		Dim wantedvalue2 As String = Nothing
 		Dim filePath As String = Nothing
-		Dim packages As String()
+		Dim packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg")   '// add each line as String Array.
 		Dim Thread2Finished As Boolean = False
+		Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\classroot.cfg")
+		Dim reginterface As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\interface.cfg")
+		Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\clsidleftover.cfg")
+		Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")
 
+		ImpersonateLoggedOnUser.Taketoken()
 
 		UpdateTextMethod(UpdateTextTranslated(2))
 		Application.Log.AddMessage("Cleaning known Regkeys")
@@ -598,7 +608,7 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\classroot.cfg"), config)  '// add each line as String Array.
+		CleanupEngine.ClassRoot(classroot, config)  '// add each line as String Array.
 
 
 		'-----------------
@@ -607,7 +617,7 @@ Public Class GPUCleanup
 
 
 
-		CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\interface.cfg"))    '// add each line as String Array.
+		CleanupEngine.Interfaces(reginterface)    '// add each line as String Array.
 
 		Application.Log.AddMessage("Instance class cleanUP")
 		Try
@@ -790,7 +800,7 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("AppID and clsidleftover cleanUP")
 		'old dcom 
 
-		Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\clsidleftover.cfg")))
+		Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, clsidleftover))
 		thread2.Start()
 
 		Application.Log.AddMessage("Record CleanUP")
@@ -954,7 +964,7 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg"))   '// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(driverfiles)   '// add each line as String Array.
 
 		Try
 
@@ -1635,7 +1645,7 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Removing known Packages")
 
-		packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg")   '// add each line as String Array.
+
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 			"Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -1671,7 +1681,7 @@ Public Class GPUCleanup
 		End Try
 
 		If IntPtr.Size = 8 Then
-			packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg")   '// add each line as String Array.
+
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 				 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -1705,7 +1715,7 @@ Public Class GPUCleanup
 			End Try
 		End If
 
-		CleanupEngine.Installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg"), config)
+		CleanupEngine.Installer(packages, config)
 
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
@@ -2073,7 +2083,7 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Killing Explorer.exe")
 		KillProcess("explorer")
-
+		ImpersonateLoggedOnUser.ReleaseToken()
 	End Sub
 	Private Sub TimerElapsed(source As Object, e As System.Timers.ElapsedEventArgs)
 		objAuto.Set()
@@ -2082,7 +2092,9 @@ Public Class GPUCleanup
 		Dim filePath As String = Nothing
 		Dim removedxcache As Boolean = config.RemoveCrimsonCache
 		Dim Thread1Finished = False
+		Dim driverfiles = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")
 
+		ImpersonateLoggedOnUser.Taketoken()
 		'Delete AMD data Folders
 		UpdateTextMethod(UpdateTextTranslated(1))
 
@@ -2099,7 +2111,7 @@ Public Class GPUCleanup
 		'Delete driver files
 		'delete OpenCL
 
-		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")))
+		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, driverfiles))
 		thread1.Start()
 
 
@@ -2381,7 +2393,7 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "kdb", "ppc", "fuel") Then
+					If StrContainsAny(child, True, "kdb", "ppc", "fuel", "installuep") Then
 
 						Delete(child)
 
@@ -2478,6 +2490,7 @@ Public Class GPUCleanup
 							 child.ToLower.Contains("fuel") Or
 							  child.ToLower.Contains("dvr") Or
 							 removedxcache AndAlso child.ToLower.Contains("dxcache") Or
+							 removedxcache AndAlso child.ToLower.Contains("vkcache") Or
 							 removedxcache AndAlso child.ToLower.Contains("glcache") Then
 
 								Delete(child)
@@ -2575,10 +2588,13 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "ccc2", "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim", "performance profile client", "wvr") Then
+					If StrContainsAny(child, True, "ccc2", "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim", "performance profile client", "wvr", "installuep") Then
 
 						Delete(child)
 
+					End If
+					If child.ToLower.EndsWith("\a") Then
+						Delete(child)
 					End If
 				End If
 			Next
@@ -2702,7 +2718,7 @@ Public Class GPUCleanup
 			timer.Start()
 			objAuto.WaitOne()
 		End While
-
+		ImpersonateLoggedOnUser.ReleaseToken()
 	End Sub
 
 	Private Sub CleanEnvironementPath(ByVal valuesToRemove() As String)
@@ -2904,27 +2920,22 @@ Public Class GPUCleanup
 		UpdateTextMethod(UpdateTextTranslated(28))
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
-			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 	End Sub
 
 	Private Sub Cleannvidiaserviceprocess(ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
+		Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\services.cfg")
+		Dim gfeservices As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg")
+
+		ImpersonateLoggedOnUser.Taketoken()
+
 		Application.Log.AddMessage("Cleaning Process/Services...")
 
-		If FileIO.ExistsFile(config.Paths.AppBase & "settings\NVIDIA\services.cfg") Then
-			CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\services.cfg"))
-		Else
-			Microsoft.VisualBasic.MsgBox(config.Paths.AppBase & "settings\NVIDIA\services.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
-		End If
-
+		CleanupEngine.Cleanserviceprocess(services)
 
 		If config.RemoveGFE Then
-			If FileIO.ExistsFile(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg") Then
-				CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg"))
-			Else
-				Microsoft.VisualBasic.MsgBox(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg does not exist. please reinstall DDU", MsgBoxStyle.Critical)
-			End If
+			CleanupEngine.Cleanserviceprocess(gfeservices)
 		End If
 
 		'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
@@ -2948,8 +2959,10 @@ Public Class GPUCleanup
 			End If
 
 		Catch ex As Exception
+			ImpersonateLoggedOnUser.ReleaseToken()
 		End Try
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
+		ImpersonateLoggedOnUser.ReleaseToken()
 	End Sub
 
 	Private Sub old_Temporarynvidiaspeedup(ByVal config As ThreadSettings)   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
@@ -3018,6 +3031,16 @@ Public Class GPUCleanup
 
 		Dim Thread2Finished As Boolean = False
 		Dim Thread3Finished As Boolean = False
+		Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg")
+		Dim clsidleftoverGFE As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverGFE.cfg")
+		Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftover.cfg")
+		Dim packages As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\packages.cfg")
+		Dim reginterfaceGFE As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interfaceGFE.cfg")
+		Dim reginterface As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interface.cfg")
+		Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")
+		Dim gfedriverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")
+
+		ImpersonateLoggedOnUser.Taketoken()
 		'-----------------
 		'Registry Cleaning
 		'-----------------
@@ -3029,7 +3052,7 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg"), config)
+		CleanupEngine.ClassRoot(classroot, config)
 
 
 		'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
@@ -3039,19 +3062,18 @@ Public Class GPUCleanup
 
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
-			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 
 		'for GFE removal only
 		If removegfe Then
-			Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverGFE.cfg")))
+			Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, clsidleftoverGFE))
 			thread2.Start()
 		Else
-			Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftover.cfg")))
+			Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, clsidleftover))
 			thread2.Start()
 		End If
 
-		Dim thread3 As Thread = New Thread(Sub() InstallerCleanThread(Thread3Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\packages.cfg"), config))
+		Dim thread3 As Thread = New Thread(Sub() InstallerCleanThread(Thread3Finished, packages, config))
 		thread3.Start()
 
 		'------------------------------
@@ -3091,9 +3113,9 @@ Public Class GPUCleanup
 
 
 		If removegfe Then 'When removing GFE only
-			CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interfaceGFE.cfg")) '// add each line as String Array.
+			CleanupEngine.Interfaces(reginterfaceGFE) '// add each line as String Array.
 		Else
-			CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interface.cfg"))  '// add each line as String Array.
+			CleanupEngine.Interfaces(reginterface)  '// add each line as String Array.
 		End If
 
 		Application.Log.AddMessage("Finished dcom/clsid/appid/typelib/interface cleanup")
@@ -3101,10 +3123,10 @@ Public Class GPUCleanup
 		'end of deleting dcom stuff
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg"))  '// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(driverfiles)  '// add each line as String Array.
 
 		If removegfe Then
-			CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")) '// add each line as String Array.
+			CleanupEngine.Pnplockdownfiles(gfedriverfiles) '// add each line as String Array.
 		End If
 		'Cleaning PNPRessources.  'Will fix this later, its not efficent clean at all. (Wagnard)
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos", False)
@@ -3309,6 +3331,7 @@ Public Class GPUCleanup
 																								Try
 																									Deletesubregkey(subregkey2, childinsubregkey2)
 																								Catch ex As Exception
+																									Application.Log.AddException(ex)
 																								End Try
 																							End If
 																						End If
@@ -4877,13 +4900,16 @@ Public Class GPUCleanup
 		Dim removephysx As Boolean = config.RemovePhysX
 		Dim Thread1Finished = False
 		Dim Thread2Finished = False
+		Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")
+		Dim gfedriverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")
 
+		ImpersonateLoggedOnUser.Taketoken()
 
-		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")))
+		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, driverfiles))
 		thread1.Start()
 
 		If config.RemoveGFE Then
-			Dim thread2 As Thread = New Thread(Sub() Threaddata1(Thread2Finished, IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")))
+			Dim thread2 As Thread = New Thread(Sub() Threaddata1(Thread2Finished, gfedriverfiles))
 			thread2.Start()
 		Else
 			Thread2Finished = True
@@ -5845,14 +5871,21 @@ Public Class GPUCleanup
 			timer.Start()
 			objAuto.WaitOne()
 		End While
+		ImpersonateLoggedOnUser.ReleaseToken()
 	End Sub
 
 	Private Sub cleanintel(ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
 		Dim wantedvalue As String = Nothing
-		Dim packages As String()
+		Dim packages As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packages.cfg")
+		Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\classroot.cfg")
+		Dim reginterface As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\interface.cfg")
+		Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\clsidleftover.cfg")
+		Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\driverfiles.cfg")
 
 		UpdateTextMethod(UpdateTextTranslated(5))
+
+		ImpersonateLoggedOnUser.Taketoken()
 
 		Application.Log.AddMessage("Cleaning registry")
 
@@ -5861,13 +5894,13 @@ Public Class GPUCleanup
 			CleanupEngine.RemoveAppx("IntelGraphicsControlPanel")
 		End If
 
-		CleanupEngine.Pnplockdownfiles(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\driverfiles.cfg")) '// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(driverfiles) '// add each line as String Array.
 
-		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\classroot.cfg"), config) '// add each line as String Array.
+		CleanupEngine.ClassRoot(classroot, config) '// add each line as String Array.
 
-		CleanupEngine.Interfaces(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\interface.cfg")) '// add each line as String Array.
+		CleanupEngine.Interfaces(reginterface) '// add each line as String Array.
 
-		CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\clsidleftover.cfg")) '// add each line as String Array.
+		CleanupEngine.Clsidleftover(clsidleftover) '// add each line as String Array.
 
 		If config.RemoveVulkan Then
 			CleanVulkan(config)
@@ -6014,10 +6047,9 @@ Public Class GPUCleanup
 			Application.Log.AddException(ex)
 		End Try
 
-		CleanupEngine.Installer(IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packages.cfg"), config)
+		CleanupEngine.Installer(packages, config)
 
 		If IntPtr.Size = 8 Then
-			packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packages.cfg") '// add each line as String Array.
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
 					If regkey IsNot Nothing Then
@@ -6078,7 +6110,6 @@ Public Class GPUCleanup
 			If win8higher Then
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR", True)
 					If regkey IsNot Nothing Then
-						Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\classroot.cfg")
 						For Each child As String In regkey.GetSubKeyNames()
 							If Not IsNullOrWhitespace(child) Then
 								For i As Integer = 0 To classroot.Length - 1
@@ -6134,26 +6165,35 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("Killing Explorer.exe")
 
 		KillProcess("explorer")
+		ImpersonateLoggedOnUser.ReleaseToken()
 	End Sub
 
 	Private Sub cleanintelserviceprocess()
 		Dim CleanupEngine As New CleanupEngine
+		Dim services As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\services.cfg")
+
+		ImpersonateLoggedOnUser.Taketoken()
+
 		Application.Log.AddMessage("Cleaning Process/Services...")
-		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\services.cfg")) '// add each line as String Array.
+		CleanupEngine.Cleanserviceprocess(services) '// add each line as String Array.
 
 		KillProcess("IGFXEM")
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
+		ImpersonateLoggedOnUser.ReleaseToken()
 	End Sub
 
 	Private Sub cleanintelfolders()
 		Dim CleanupEngine As New CleanupEngine
 		Dim filePath As String = Nothing
+		Dim driverfiles As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg")
 
 		UpdateTextMethod(UpdateTextTranslated(4))
 
+		ImpersonateLoggedOnUser.Taketoken()
+
 		Application.Log.AddMessage("Cleaning Directory")
 
-		CleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg"))      '// add each line as String Array.
+		CleanupEngine.Folderscleanup(driverfiles)      '// add each line as String Array.
 
 		filePath = System.Environment.SystemDirectory
 		Dim files() As String = IO.Directory.GetFiles(filePath + "\", "igfxcoin*.*")
@@ -6231,7 +6271,7 @@ Public Class GPUCleanup
 				End If
 			End If
 		End If
-
+		ImpersonateLoggedOnUser.ReleaseToken()
 	End Sub
 
 	Private Sub CleanVulkan(ByRef config As ThreadSettings)
@@ -6242,28 +6282,27 @@ Public Class GPUCleanup
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Khronos\OpenCL\Vendors", True)
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetValueNames()
-					If IsNullOrWhitespace(child) = False Then
-						If StrContainsAny(child, True, "amdocl") AndAlso config.SelectedGPU = GPUVendor.AMD Then
-							Try
-								Deletevalue(regkey, child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-							End Try
-						End If
-						If StrContainsAny(child, True, "nvopencl") AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
-							Try
-								Deletevalue(regkey, child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-							End Try
-						End If
-						If StrContainsAny(child, True, "intelopencl") AndAlso config.SelectedGPU = GPUVendor.Intel Then
-							Try
-								Deletevalue(regkey, child)
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-							End Try
-						End If
+					If IsNullOrWhitespace(child) Then Continue For
+					If StrContainsAny(child, True, "amdocl") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+						Try
+							Deletevalue(regkey, child)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					End If
+					If StrContainsAny(child, True, "nvopencl") AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
+						Try
+							Deletevalue(regkey, child)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					End If
+					If StrContainsAny(child, True, "intelopencl") AndAlso config.SelectedGPU = GPUVendor.Intel Then
+						Try
+							Deletevalue(regkey, child)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 					End If
 				Next
 				If regkey.GetValueNames().Length = 0 Then
@@ -6273,20 +6312,45 @@ Public Class GPUCleanup
 						Application.Log.AddException(ex)
 					End Try
 				End If
-
-				Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Khronos", True)
-					If subregkey IsNot Nothing Then
-						If subregkey.GetSubKeyNames().Length = 0 Then
-							Try
-								Deletesubregkey(Registry.LocalMachine, "Software\Khronos")
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-							End Try
-						End If
-					End If
-				End Using
 			End If
 		End Using
+
+		Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Khronos\vulkan\Drivers", True)
+			If regkey2 IsNot Nothing Then
+				For Each child As String In regkey2.GetValueNames
+					If IsNullOrWhitespace(child) Then Continue For
+					If StrContainsAny(child, True, "amd-vulkan64") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+						Try
+							Deletevalue(regkey2, child)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					End If
+				Next
+				If regkey2.GetValueNames().Length = 0 Then
+					Try
+						Deletesubregkey(Registry.LocalMachine, "Software\Khronos\vulkan\Drivers")
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				End If
+			End If
+		End Using
+
+
+		Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Khronos", True)
+			If subregkey IsNot Nothing Then
+				If subregkey.GetSubKeyNames().Length = 0 Then
+					Try
+						Deletesubregkey(Registry.LocalMachine, "Software\Khronos")
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				End If
+			End If
+		End Using
+
+
 		If config.WinIs64 Then
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\WOW6432Node\Khronos\OpenCL\Vendors", True)
 				If regkey IsNot Nothing Then
@@ -6322,20 +6386,43 @@ Public Class GPUCleanup
 							Application.Log.AddException(ex)
 						End Try
 					End If
-
-					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Khronos", True)
-						If subregkey IsNot Nothing Then
-							If subregkey.GetSubKeyNames().Length = 0 Then
-								Try
-									Deletesubregkey(Registry.LocalMachine, "Software\WOW6432Node\Khronos")
-								Catch ex As Exception
-									Application.Log.AddException(ex)
-								End Try
-							End If
-						End If
-					End Using
 				End If
 			End Using
+
+			Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\WOW6432Node\Khronos\vulkan\Drivers", True)
+				If regkey2 IsNot Nothing Then
+					For Each child As String In regkey2.GetValueNames
+						If IsNullOrWhitespace(child) Then Continue For
+						If StrContainsAny(child, True, "amd-vulkan32") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+							Try
+								Deletevalue(regkey2, child)
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
+						End If
+					Next
+					If regkey2.GetValueNames().Length = 0 Then
+						Try
+							Deletesubregkey(Registry.LocalMachine, "Software\Khronos\vulkan\Drivers")
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					End If
+				End If
+			End Using
+
+			Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Khronos", True)
+				If subregkey IsNot Nothing Then
+					If subregkey.GetSubKeyNames().Length = 0 Then
+						Try
+							Deletesubregkey(Registry.LocalMachine, "Software\WOW6432Node\Khronos")
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					End If
+				End If
+			End Using
+
 		End If
 
 		FilePath = System.Environment.SystemDirectory
@@ -6432,7 +6519,6 @@ Public Class GPUCleanup
 		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
-			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 		CleanupEngine.Folderscleanup(driverfiles)
 		ThreadFinised = True
@@ -6452,7 +6538,6 @@ Public Class GPUCleanup
 		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
-			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 
 		ThreadFinished = False
@@ -6464,7 +6549,6 @@ Public Class GPUCleanup
 		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
-			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 
 		ThreadFinised = False
@@ -6476,7 +6560,6 @@ Public Class GPUCleanup
 		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
-			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 
 		ThreadFinised = False

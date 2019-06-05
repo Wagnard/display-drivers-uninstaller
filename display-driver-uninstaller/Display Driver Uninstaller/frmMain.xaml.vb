@@ -420,7 +420,6 @@ Public Class frmMain
 	Private Sub CleaningThread_Work(ByVal config As ThreadSettings)
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
-			ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 		End If
 
 		Try
@@ -444,6 +443,8 @@ Public Class frmMain
 
 		Catch ex As Exception
 			Application.Log.AddException(ex)
+			Application.Log.SaveToFile()    ' Save to file
+			Microsoft.VisualBasic.MsgBox(ex.Message + ex.StackTrace)
 			config.Success = False
 		Finally
 			CleaningThread_Completed(config)
@@ -457,7 +458,7 @@ Public Class frmMain
 
 			If Not config.Success AndAlso config.GPURemovedSuccess Then
 				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), "Error!", MessageBoxButton.OK, MessageBoxImage.Error)
-
+				Application.Log.SaveToFile()    ' Save to file
 				'Scan for new hardware to not let users into a non working state.
 				SetupAPI.ReScanDevices()
 
@@ -467,7 +468,7 @@ Public Class frmMain
 
 			If Not config.GPURemovedSuccess Then
 				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text16"), "Error!", MessageBoxButton.OK, MessageBoxImage.Error)
-
+				Application.Log.SaveToFile()    ' Save to file
 				'Scan for new hardware to not let users into a non working state.
 				SetupAPI.ReScanDevices()
 
