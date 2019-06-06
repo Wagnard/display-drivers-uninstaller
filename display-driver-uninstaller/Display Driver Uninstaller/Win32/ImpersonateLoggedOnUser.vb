@@ -53,7 +53,7 @@ Public Class ImpersonateLoggedOnUser
 							ImpersonateLoggedOnUser(CInt((hToken)))
 
 							If WindowsIdentity.GetCurrent().IsSystem Then
-								ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+								'ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 								Exit For
 							Else
 								RevertToSelf()

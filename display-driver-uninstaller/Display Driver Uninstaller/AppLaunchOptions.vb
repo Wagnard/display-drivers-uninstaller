@@ -18,6 +18,8 @@ Public Class AppLaunchOptions
 	Public Property CleanRealtek As Boolean = False
 	Public Property CleanSoundBlaster As Boolean = False
 
+	Public Property PreventWinUpdateArg As Boolean = False
+
 	Public Property RemoveMonitors As Boolean = False
 
 	Public Property RemoveCrimsonCache As Boolean = False
@@ -100,6 +102,7 @@ Public Class AppLaunchOptions
 					Case StrContainsAny(Argument, True, "-CleanRealtek") : CleanRealtek = True
 					Case StrContainsAny(Argument, True, "-CleanSoundBlaster") : CleanSoundBlaster = True
 
+					Case StrContainsAny(Argument, True, "-PreventWinUpdate") : PreventWinUpdateArg = True
 					Case StrContainsAny(Argument, True, "-RemovePhysx") : RemovePhysX = True
 					Case StrContainsAny(Argument, True, "-RemoveGFE") : RemoveGFE = True
 

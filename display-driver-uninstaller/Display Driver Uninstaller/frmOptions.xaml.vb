@@ -13,9 +13,9 @@
     Private Sub Chk_lblPreventWinUpdate(sender As Object, e As RoutedEventArgs) Handles lblPreventWinUpdate.Click
 
 		If lblPreventWinUpdate.IsChecked Then
-			frmMain.EnableDriverSearch(False, False)
+			frmMain.EnableDriverSearch(False)
 		Else
-			frmMain.EnableDriverSearch(True, False)
+			frmMain.EnableDriverSearch(True)
 		End If
 
 	End Sub

@@ -163,7 +163,7 @@ Public Class frmMain
 	End Sub
 
 	Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
-		EnableDriverSearch(True, False)
+		EnableDriverSearch(True)
 	End Sub
 
 	Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
@@ -398,6 +398,10 @@ Public Class frmMain
 					Microsoft.VisualBasic.MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text8"), MsgBoxStyle.Information, Application.Settings.AppName)
 
 			End Select
+		End If
+
+		If Application.LaunchOptions.PreventWinUpdateArg Then
+			EnableDriverSearch(False)
 		End If
 
 		ImpersonateLoggedOnUser.Taketoken()
@@ -902,7 +906,7 @@ Public Class frmMain
 		End Try
 	End Sub
 
-	Public Shared Sub EnableDriverSearch(ByVal enable As Boolean, ByVal silent As Boolean)
+	Public Shared Sub EnableDriverSearch(ByVal enable As Boolean)
 		Dim version As OSVersion = Application.Settings.WinVersion
 
 		If Not enable Then
@@ -918,14 +922,14 @@ Public Class frmMain
 						If regValue <> If(enable, 1, 0) Then
 							regkey.SetValue("SearchOrderConfig", If(enable, 1, 0), RegistryValueKind.DWord)
 
-							If Not silent Then
+							If Not Application.LaunchOptions.Silent Then
 								If enable Then
 									MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
 								Else
 									MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
 								End If
 							End If
-						ElseIf enable <> False AndAlso Not silent Then
+						ElseIf enable <> False AndAlso Not Application.LaunchOptions.Silent Then
 							MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
 						End If
 					End If
@@ -945,14 +949,14 @@ Public Class frmMain
 							If regValue <> If(enable, 0, 1) Then
 								regkey.SetValue("DontSearchWindowsUpdate", If(enable, 0, 1), RegistryValueKind.DWord)
 
-								If Not silent Then
+								If Not Application.LaunchOptions.Silent Then
 									If enable Then
 										MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
 									Else
 										MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
 									End If
 								End If
-							ElseIf enable <> False AndAlso Not silent Then
+							ElseIf enable <> False AndAlso Not Application.LaunchOptions.Silent Then
 								MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
 							End If
 						End If
