@@ -7,7 +7,7 @@ Imports System.Threading
 Imports Windows.Foundation
 Imports Windows.Management.Deployment
 Imports Windows
-
+Imports System.Security.Principal
 
 Public Class CleanupEngine
 
@@ -162,7 +162,7 @@ Public Class CleanupEngine
 				'Windows.Foundation.IAsyncAction() = packageManager.RemovePackageAsync("NVIDIACorp.NVIDIAControlPanel_8.1.949.0_x64__56jybvy8sckqj")
 				Dim DeploymentEnded As Boolean = False
 				Dim packageManager As PackageManager = New PackageManager()
-				Dim packages As IEnumerable(Of ApplicationModel.Package) = CType(PackageManager.FindPackages(), IEnumerable(Of ApplicationModel.Package))
+				Dim packages As IEnumerable(Of ApplicationModel.Package) = CType(packageManager.FindPackages(), IEnumerable(Of ApplicationModel.Package))
 
 				For Each package In packages
 					If package IsNot Nothing Then
@@ -245,7 +245,7 @@ Public Class CleanupEngine
 									Deletesubregkey(regkey, "Wsearch")
 								Catch ex As Exception
 									Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
-                                End Try
+								End Try
 							End If
 						End Using
 
@@ -1184,10 +1184,17 @@ Public Class CleanupEngine
 					Next
 				End If
 			End Using
-			ImpersonateLoggedOnUser.ReleaseToken()
+
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
+
 		Catch ex As Exception
 			Application.Log.AddException(ex)
-			ImpersonateLoggedOnUser.ReleaseToken()
+
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 		End Try
 	End Sub
 
@@ -2342,8 +2349,8 @@ Public Class CleanupEngine
 
 	Public Sub Folderscleanup(ByVal driverfiles As String())
 		Dim timer As System.Timers.Timer = New System.Timers.Timer
-		AddHandler Timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
-		Timer.AutoReset = False
+		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
+		timer.AutoReset = False
 		Dim winxp = frmMain.winxp
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 		Dim Thread1Finished = False
@@ -2742,7 +2749,11 @@ Public Class CleanupEngine
 					End If
 			End Select
 		End If
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
+
 	End Sub
 
 

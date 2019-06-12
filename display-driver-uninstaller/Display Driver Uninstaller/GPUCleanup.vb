@@ -50,7 +50,9 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
 		UpdateTextMethod(UpdateTextTranslated(22))
 
-		ImpersonateLoggedOnUser.ReleaseToken()
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
 
 		'SpeedUP the removal of the NVIDIA adapter due to how the NVIDIA installer work.
 		'Also fix a possible permission problem when removing the driver via SetupAPI
@@ -179,7 +181,10 @@ Public Class GPUCleanup
 			Application.Log.AddException(ex)
 			donotremoveamdhdaudiobusfiles = True  ' A security if the code to check fail.
 		End Try
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
 
 		If config.SelectedGPU = GPUVendor.Nvidia Then
 			'nVidia AudioEndpoints Removal
@@ -582,7 +587,11 @@ Public Class GPUCleanup
 			objAuto.WaitOne()
 			Exit While
 		End While
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
+
 	End Sub
 
 	Private Sub Cleanamd(ByVal config As ThreadSettings)
@@ -800,8 +809,8 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("AppID and clsidleftover cleanUP")
 		'old dcom 
 
-		Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, clsidleftover))
-		thread2.Start()
+		CLSIDCleanThread(Thread2Finished, clsidleftover)
+
 
 		Application.Log.AddMessage("Record CleanUP")
 
@@ -884,6 +893,11 @@ Public Class GPUCleanup
 		If config.RemoveVulkan Then
 			CleanVulkan(config)
 		End If
+
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+		End If
+
 		Application.Log.AddMessage("ngenservice Clean")
 
 		'----------------------
@@ -2083,7 +2097,11 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Killing Explorer.exe")
 		KillProcess("explorer")
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
+
 	End Sub
 	Private Sub TimerElapsed(source As Object, e As System.Timers.ElapsedEventArgs)
 		objAuto.Set()
@@ -2111,8 +2129,8 @@ Public Class GPUCleanup
 		'Delete driver files
 		'delete OpenCL
 
-		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, driverfiles))
-		thread1.Start()
+		Threaddata1(Thread1Finished, driverfiles)
+
 
 
 		filePath = Environment.GetEnvironmentVariable("windir")
@@ -2718,7 +2736,11 @@ Public Class GPUCleanup
 			timer.Start()
 			objAuto.WaitOne()
 		End While
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
+
 	End Sub
 
 	Private Sub CleanEnvironementPath(ByVal valuesToRemove() As String)
@@ -2884,12 +2906,12 @@ Public Class GPUCleanup
 
 	Private Sub Checkpcieroot(ByVal config As ThreadSettings)   'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
 		Dim win10 As Boolean = frmMain.win10
+
 		If WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.ReleaseToken()
 		End If
+
 		UpdateTextMethod(UpdateTextTranslated(7))
-
-
 
 		Try
 			Application.Log.AddMessage("Starting the removal of nVidia Optimus UpperFilter if present.")
@@ -2918,9 +2940,7 @@ Public Class GPUCleanup
 		End Try
 
 		UpdateTextMethod(UpdateTextTranslated(28))
-		If Not WindowsIdentity.GetCurrent().IsSystem Then
-			ImpersonateLoggedOnUser.Taketoken()
-		End If
+
 	End Sub
 
 	Private Sub Cleannvidiaserviceprocess(ByVal config As ThreadSettings)
@@ -2928,7 +2948,9 @@ Public Class GPUCleanup
 		Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\services.cfg")
 		Dim gfeservices As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg")
 
-		ImpersonateLoggedOnUser.Taketoken()
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+		End If
 
 		Application.Log.AddMessage("Cleaning Process/Services...")
 
@@ -2959,10 +2981,16 @@ Public Class GPUCleanup
 			End If
 
 		Catch ex As Exception
-			ImpersonateLoggedOnUser.ReleaseToken()
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 		End Try
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
+
 	End Sub
 
 	Private Sub old_Temporarynvidiaspeedup(ByVal config As ThreadSettings)   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
@@ -3040,7 +3068,10 @@ Public Class GPUCleanup
 		Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")
 		Dim gfedriverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")
 
-		ImpersonateLoggedOnUser.Taketoken()
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+		End If
+
 		'-----------------
 		'Registry Cleaning
 		'-----------------
@@ -3054,6 +3085,9 @@ Public Class GPUCleanup
 
 		CleanupEngine.ClassRoot(classroot, config)
 
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
 
 		'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
 		If win10 Then
@@ -3066,15 +3100,15 @@ Public Class GPUCleanup
 
 		'for GFE removal only
 		If removegfe Then
-			Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, clsidleftoverGFE))
-			thread2.Start()
+			CLSIDCleanThread(Thread2Finished, clsidleftoverGFE)
+
 		Else
-			Dim thread2 As Thread = New Thread(Sub() CLSIDCleanThread(Thread2Finished, clsidleftover))
-			thread2.Start()
+			CLSIDCleanThread(Thread2Finished, clsidleftover)
+
 		End If
 
-		Dim thread3 As Thread = New Thread(Sub() InstallerCleanThread(Thread3Finished, packages, config))
-		thread3.Start()
+		InstallerCleanThread(Thread3Finished, packages, config)
+
 
 		'------------------------------
 		'Clean the rebootneeded message
@@ -3493,6 +3527,10 @@ Public Class GPUCleanup
 
 		If config.RemoveVulkan Then
 			CleanVulkan(config)
+		End If
+
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
 		End If
 
 		Try
@@ -4893,6 +4931,10 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("Killing Explorer.exe")
 		KillProcess("explorer")
 
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
+
 	End Sub
 
 	Private Sub Cleannvidiafolders(ByVal config As ThreadSettings)
@@ -4903,14 +4945,16 @@ Public Class GPUCleanup
 		Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")
 		Dim gfedriverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")
 
-		ImpersonateLoggedOnUser.Taketoken()
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+		End If
 
-		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, driverfiles))
-		thread1.Start()
+		Threaddata1(Thread1Finished, driverfiles)
+
 
 		If config.RemoveGFE Then
-			Dim thread2 As Thread = New Thread(Sub() Threaddata1(Thread2Finished, gfedriverfiles))
-			thread2.Start()
+			Threaddata1(Thread2Finished, gfedriverfiles)
+
 		Else
 			Thread2Finished = True
 		End If
@@ -5871,7 +5915,11 @@ Public Class GPUCleanup
 			timer.Start()
 			objAuto.WaitOne()
 		End While
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
+
 	End Sub
 
 	Private Sub cleanintel(ByVal config As ThreadSettings)
@@ -5885,7 +5933,9 @@ Public Class GPUCleanup
 
 		UpdateTextMethod(UpdateTextTranslated(5))
 
-		ImpersonateLoggedOnUser.Taketoken()
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+		End If
 
 		Application.Log.AddMessage("Cleaning registry")
 
@@ -5904,6 +5954,10 @@ Public Class GPUCleanup
 
 		If config.RemoveVulkan Then
 			CleanVulkan(config)
+		End If
+
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
 		End If
 
 		Try
@@ -6165,21 +6219,31 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("Killing Explorer.exe")
 
 		KillProcess("explorer")
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
+
 	End Sub
 
 	Private Sub cleanintelserviceprocess()
 		Dim CleanupEngine As New CleanupEngine
 		Dim services As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\services.cfg")
 
-		ImpersonateLoggedOnUser.Taketoken()
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+		End If
 
 		Application.Log.AddMessage("Cleaning Process/Services...")
 		CleanupEngine.Cleanserviceprocess(services) '// add each line as String Array.
 
 		KillProcess("IGFXEM")
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
+
 	End Sub
 
 	Private Sub cleanintelfolders()
@@ -6188,8 +6252,9 @@ Public Class GPUCleanup
 		Dim driverfiles As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg")
 
 		UpdateTextMethod(UpdateTextTranslated(4))
-
-		ImpersonateLoggedOnUser.Taketoken()
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+		End If
 
 		Application.Log.AddMessage("Cleaning Directory")
 
@@ -6271,13 +6336,21 @@ Public Class GPUCleanup
 				End If
 			End If
 		End If
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
+
 	End Sub
 
 	Private Sub CleanVulkan(ByRef config As ThreadSettings)
 
 		Dim FilePath As String = Nothing
 		Dim files() As String = Nothing
+
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+		End If
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Khronos\OpenCL\Vendors", True)
 			If regkey IsNot Nothing Then
@@ -6403,7 +6476,7 @@ Public Class GPUCleanup
 					Next
 					If regkey2.GetValueNames().Length = 0 Then
 						Try
-							Deletesubregkey(Registry.LocalMachine, "Software\Khronos\vulkan\Drivers")
+							Deletesubregkey(Registry.LocalMachine, "Software\WOW6432Node\Khronos\vulkan\Drivers")
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 						End Try
@@ -6487,6 +6560,10 @@ Public Class GPUCleanup
 				End If
 			End If
 
+		End If
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
 		End If
 
 	End Sub

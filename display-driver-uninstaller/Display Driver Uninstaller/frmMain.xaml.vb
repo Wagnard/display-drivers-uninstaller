@@ -408,7 +408,10 @@ Public Class frmMain
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			MsgBox("Could not impersonate the SYSTEM account, it is NOT recommended to use DDU in this state.")
 		End If
-		ImpersonateLoggedOnUser.ReleaseToken()
+
+		If WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.ReleaseToken()
+		End If
 
 	End Sub
 
@@ -461,7 +464,11 @@ Public Class frmMain
 
 	Private Sub CleaningThread_Completed(ByVal config As ThreadSettings)
 		Try
-			ImpersonateLoggedOnUser.ReleaseToken()
+
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
+
 			Application.Log.AddMessage("Clean uninstall completed!" & CRLF & ">> GPU: " & config.SelectedGPU.ToString())
 
 			If Not config.Success AndAlso config.GPURemovedSuccess Then
@@ -494,7 +501,9 @@ Public Class frmMain
 				SetupAPI.ReScanDevices()
 			End If
 
-			ImpersonateLoggedOnUser.ReleaseToken()
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 
 			EnableControls(True)
 
