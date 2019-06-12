@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="pl-PL" Text="Polski">
-	<!--Update date 04.07.2018-->
+	<!--Update date 010.06.2016-->
 
 	<frmMain Text="Display Driver Uninstaller">
 		<btnCleanRestart>
@@ -131,7 +131,22 @@
 			<Text14>Oczekiwanie na ponowne uruchomienie, uruchom ponownie przed użyciem DDU</Text14>
 			<Text15>Nie dokonano żadnych zmian. Ustawienia instalacji sterowników z Windows Update są już ustawione domyślnie</Text15>
 		</Messages>
-
+	    <Options_Type>
+			<Options1>---Wybierz typ urządzenia---</Options1>
+			<Options2>Audio</Options2>
+			<Options3>GPU</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Wybierz urządzenie---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Wybierz urządzenie---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>Rozpoczynanie usuwania sterowników (etap OEM)...</Text1>
 			<Text2>Usuwanie folderu</Text2>
