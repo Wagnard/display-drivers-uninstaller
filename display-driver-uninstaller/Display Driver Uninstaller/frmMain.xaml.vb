@@ -375,7 +375,13 @@ Public Class frmMain
 		End Try
 
 		If Application.Settings.FirstTimeLaunch AndAlso Not Application.LaunchOptions.Silent Then
-			MsgBox("This seems to be the first time you launch DDU, let's look at the options.")
+			Microsoft.VisualBasic.MsgBox("This seems to be the first time you launch DDU." & vbNewLine &
+				"Before using please know that by using DDU : " & vbNewLine & vbNewLine &
+			"1- Depending on your problems and configurations, it could help or make things worse." & vbNewLine &
+			"2- You should have a backup" & vbNewLine &
+			"3- You should read the license, Readme and ToS." & vbNewLine &
+			"4- We are not responsible for any damage or loss of data of any kind." & vbNewLine &
+			"5- We are always willing to help if there is a problem")
 			Dim frmOptions As New frmOptions
 
 			With frmOptions
@@ -464,7 +470,7 @@ Public Class frmMain
 
 	Private Sub CleaningThread_Completed(ByVal config As ThreadSettings)
 		Try
-
+			
 			If WindowsIdentity.GetCurrent().IsSystem Then
 				ImpersonateLoggedOnUser.ReleaseToken()
 			End If

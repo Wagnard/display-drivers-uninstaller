@@ -3295,6 +3295,7 @@ Public Class GPUCleanup
 													Try
 														Deletevalue(regkey, child)
 													Catch ex As Exception
+														Application.Log.AddException(ex)
 													End Try
 												End If
 											Next
@@ -3552,6 +3553,7 @@ Public Class GPUCleanup
 														Try
 															Deletesubregkey(regkey2, child2)
 														Catch ex As Exception
+															Application.Log.AddException(ex)
 														End Try
 													Else
 														Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child + "\" + child2, True)
