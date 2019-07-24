@@ -5393,6 +5393,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("osc.") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("osclib.") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.nvirusb") Or
+								   child2.ToLower.Contains("usbc.") Or
 								   child2.ToLower.Contains("display.physx") AndAlso config.RemovePhysX Or
 								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.gamemonitor") AndAlso config.RemoveGFE Or
