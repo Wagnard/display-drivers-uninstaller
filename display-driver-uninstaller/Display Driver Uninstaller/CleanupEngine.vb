@@ -174,12 +174,12 @@ Public Class CleanupEngine
 
 								If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
 
-									Application.Log.AddMessage("NVCP DCH remove failed.")
+									Application.Log.AddMessage(package.Id.FullName + " package removal failed.")
 									DeploymentEnded = True
 									WasRemoved = False
 								ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
 
-									Application.Log.AddMessage("NVCP DCH removed.")
+									Application.Log.AddMessage(package.Id.FullName + " package removed.")
 									DeploymentEnded = True
 									WasRemoved = True
 
@@ -435,7 +435,8 @@ Public Class CleanupEngine
 								End If
 							End If
 						Next
-						If child.ToLower.EndsWith("file", StringComparison.OrdinalIgnoreCase) Then
+						If child.ToLower.EndsWith("file", StringComparison.OrdinalIgnoreCase) AndAlso
+							config.SelectedType = CleanType.GPU AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
 
 							Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, child)
 								If regkey5 IsNot Nothing Then
