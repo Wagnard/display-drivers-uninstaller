@@ -5183,6 +5183,7 @@ Public Class GPUCleanup
 							 (child.ToLower.Contains("scanner") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("nvetwlog")) Or
 							 (child.ToLower.Contains("nv_cache") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("gfnruntimesdk") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
 
@@ -5271,6 +5272,7 @@ Public Class GPUCleanup
 					 (child.ToLower.Contains("driverdumps") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("displaydriverras") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvprofileupdaterplugin") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 
 						Delete(child)
@@ -5521,6 +5523,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("nvinstallerutil") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvgsync") Or
 						 child.ToLower.Contains("nvidia updatus") Or
 						 child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
