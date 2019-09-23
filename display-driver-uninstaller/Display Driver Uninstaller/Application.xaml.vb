@@ -719,8 +719,6 @@ Class Application
 			SystemRestore(Nothing) 'we try to do a system restore if allowed before going into safemode.
 			Log.AddMessage("Restarting in safemode")
 
-
-
 			Using process As Process = New Process() With
 			  {
 			   .StartInfo = New ProcessStartInfo(Paths.System32 & "BCDEDIT", If(withNetwork, "/set safeboot network", "/set safeboot minimal")) With

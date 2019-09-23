@@ -3,7 +3,7 @@ Imports Microsoft.Win32
 
 Public Class frmSystemRestore
 	Implements IDisposable
-
+	Dim objAuto As System.Threading.AutoResetEvent = New System.Threading.AutoResetEvent(False)
 	Private disposed As Boolean
     Private ReadOnly canClose2 As New EventWaitHandle(True, EventResetMode.ManualReset) ' Thread safe!
 
@@ -12,9 +12,12 @@ Public Class frmSystemRestore
 	End Sub
 
     Private Sub CreateSystemRestore()
-        canClose2.Reset()
+		Dim timer As System.Timers.Timer = New System.Timers.Timer
+		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
 
-        Try
+		canClose2.Reset()
+
+		Try
             Try
                 Using regKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore", RegistryKeyPermissionCheck.ReadWriteSubTree, Security.AccessControl.RegistryRights.SetValue)
                     If regKey IsNot Nothing Then
@@ -27,42 +30,55 @@ Public Class frmSystemRestore
 
             Dim result As Int64 = 0
 
-            ' RESTORE_TYPE.CHECKPOINT is used be System  (which also overrides Description)
-            Win32.SystemRestore.StartRestore("DDU Restore Point", Win32.SystemRestore.RESTORE_TYPE.MODIFY_SETTINGS, result)
+			' RESTORE_TYPE.CHECKPOINT is used be System  (which also overrides Description)
+			Win32.SystemRestore.StartRestore("DDU Restore Point", Win32.SystemRestore.RESTORE_TYPE.CHECKPOINT, result)
 
-            Win32.SystemRestore.EndRestore(result)
 
-            Application.Log.AddMessage("Restore Point Created")
+			Win32.SystemRestore.EndRestore(result)
 
-            'Application.Log.AddMessage("Trying to Create a System Restored Point")
-            'Dim oScope As New ManagementScope("\\localhost\root\default")
-            'Dim oPath As New ManagementPath("SystemRestore")
-            'Dim oGetOp As New ObjectGetOptions()
-            'Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
+			Application.Log.AddMessage("Restore Point Created")
 
-            'Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
-            'oInParams("Description") = "DDU System Restored Point"
-            'oInParams("RestorePointType") = 12UI ' MODIFY_SETTINGS
-            'oInParams("EventType") = 100UI
 
-            'Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
+			'Added a timer here because some recent windows 10 update would not create the restore point if we reboot immediately after we try to create.
+			'This also avoid some VSS error message in the event log.
+			timer.Interval = 5000
+			timer.AutoReset = False
 
-            'Dim errCode As UInt32 = CUInt(oOutParams("ReturnValue"))
+			timer.Start()
+			objAuto.WaitOne()
 
-            'If errCode <> 0UI Then
-            '	Throw New COMException("System Restored Point Could not be Created!", Win32.GetInt32(errCode))
-            'End If
 
-            'Application.Log.AddMessage("System Restored Point Created. Code: " + errCode.ToString())
+			'Application.Log.AddMessage("Trying to Create a System Restored Point")
+			'Dim oScope As New ManagementScope("\\localhost\root\default")
+			'Dim oPath As New ManagementPath("SystemRestore")
+			'Dim oGetOp As New ObjectGetOptions()
+			'Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
 
-        Catch ex As Exception
+			'Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
+			'oInParams("Description") = "DDU System Restored Point"
+			'oInParams("RestorePointType") = 12UI ' MODIFY_SETTINGS
+			'oInParams("EventType") = 100UI
+
+			'Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
+
+			'Dim errCode As UInt32 = CUInt(oOutParams("ReturnValue"))
+
+			'If errCode <> 0UI Then
+			'	Throw New COMException("System Restored Point Could not be Created!", Win32.GetInt32(errCode))
+			'End If
+
+			'Application.Log.AddMessage("System Restored Point Created. Code: " + errCode.ToString())
+
+		Catch ex As Exception
             Application.Log.AddWarning(ex, "System Restored Point could not be Created!")
         Finally
             canClose2.Set()
             CloseDDU()
         End Try
     End Sub
-
+	Private Sub TimerElapsed(source As Object, e As System.Timers.ElapsedEventArgs)
+		objAuto.Set()
+	End Sub
 	Private Sub frmSystemRestore_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles MyBase.Closing
 		If Not canClose2.WaitOne(0) Then
 			e.Cancel = True

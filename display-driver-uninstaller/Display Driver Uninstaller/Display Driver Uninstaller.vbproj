@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Display_Driver_Uninstaller</RootNamespace>
     <AssemblyName>Display Driver Uninstaller</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <MyType>Custom</MyType>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

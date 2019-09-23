@@ -980,58 +980,69 @@ Public Class GPUCleanup
 
 		CleanupEngine.Pnplockdownfiles(driverfiles)   '// add each line as String Array.
 
-		Try
-
-			Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
-		Catch ex As Exception
-		End Try
-
-		Try
-			Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
-		Catch ex As Exception
-		End Try
-
-		Try
-			Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
-		Catch ex As Exception
-		End Try
-
-		Try
-			Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
-		Catch ex As Exception
-		End Try
-
-		Try
-			Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\amdkmdap")
-		Catch ex As Exception
-		End Try
-
-		If IntPtr.Size = 8 Then
+		If config.RemoveVulkan Then
 			Try
-				Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
-			Catch ex As Exception
-			End Try
 
-			Try
-				Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
+				Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos")
 			Catch ex As Exception
 			End Try
 		End If
 
-		Try
-			Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
-		Catch ex As Exception
-		End Try
+		If config.SelectedGPU = GPUVendor.AMD Then
+			Try
+				Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD")
+			Catch ex As Exception
+			End Try
 
-		Try
-			Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
-		Catch ex As Exception
-		End Try
+			Try
+				Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\ATI Technologies")
+			Catch ex As Exception
+			End Try
 
-		Try
-			Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
-		Catch ex As Exception
-		End Try
+			Try
+				Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord")
+			Catch ex As Exception
+			End Try
+
+			Try
+				Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\amdkmdap")
+			Catch ex As Exception
+			End Try
+
+			Try
+				Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\AMD\EEU")
+			Catch ex As Exception
+			End Try
+
+			Try
+				Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnable")
+			Catch ex As Exception
+			End Try
+
+			Try
+				Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SYSTEM\CurrentControlSet\Services\Atierecord\eRecordEnablePopups")
+			Catch ex As Exception
+			End Try
+
+		End If
+
+		If IntPtr.Size = 8 Then
+			If config.RemoveVulkan Then
+				Try
+					Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\Khronos")
+				Catch ex As Exception
+				End Try
+			End If
+
+			If config.SelectedGPU = GPUVendor.AMD Then
+				Try
+					Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Wow6432Node\ATI\ACE")
+				Catch ex As Exception
+				End Try
+			End If
+		End If
+
+
 
 		'---------------------------------------------
 		'Cleaning of Legacy_AMDKMDAG+ on win7 and lower
