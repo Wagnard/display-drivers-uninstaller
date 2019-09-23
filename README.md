@@ -38,7 +38,7 @@ Windows XP up to 10 is supported X86/X64 (Windows 10 insider preview is at your 
 DDU (V18.0.0.5 and higher)
 System Requirements:
 
-.NET framework 4.5 or higher.
+.NET framework 4.6 or higher.
 
 Windows Vista_SP2 up to 10 is supported X86/X64 (Windows 10 insider preview is at your own risk)
 
