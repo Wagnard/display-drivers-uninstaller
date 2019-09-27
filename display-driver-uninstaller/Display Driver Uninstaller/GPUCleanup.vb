@@ -7,7 +7,6 @@ Imports Microsoft.Win32
 Imports WinForm = System.Windows.Forms
 Imports System.Runtime
 
-
 Public Class GPUCleanup
 
 	Dim FileIO As New FileIO
@@ -2574,6 +2573,33 @@ Public Class GPUCleanup
 				End Try
 			End If
 
+			filePath = filepaths + "\AppData\Local\D3DSCache"
+			If winxp Then
+				filePath = filepaths + "\Local Settings\Application Data\D3DSCache"
+			End If
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							Delete(child)
+						End If
+					Next
+					If FileIO.CountDirectories(filePath) = 0 Then
+
+						Delete(filePath)
+
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				Catch ex As Exception
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+				End Try
+			End If
+
 			filePath = filepaths + "\AppData\LocalLow\AMD"
 			If winxp Then
 				filePath = filepaths + "\Local Settings\Application Data\AMD"  'need check in the future.
@@ -2585,6 +2611,7 @@ Public Class GPUCleanup
 							If child.ToLower.Contains("cn") Or
 							 child.ToLower.Contains("fuel") Or
 							 removedxcache AndAlso child.ToLower.Contains("dxcache") Or
+							 removedxcache AndAlso child.ToLower.Contains("vkcache") Or
 							 removedxcache AndAlso child.ToLower.Contains("glcache") Then
 
 								Delete(child)

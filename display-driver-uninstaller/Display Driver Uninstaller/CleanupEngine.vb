@@ -2416,7 +2416,7 @@ Public Class CleanupEngine
 			If FileIO.ExistsDir(filepath) Then
 				For Each child As String In FileIO.GetFiles(filepath)
 					If IsNullOrWhitespace(child) Then Continue For
-					If StrContainsAny(child, True, driverfiles) AndAlso Not StrContainsAny(child, True, "wnvapi.dll") Then
+					If StrContainsAny(child, True, driverfiles) Then
 						Try
 							Delete(child)
 						Catch ex As Exception
@@ -2425,6 +2425,13 @@ Public Class CleanupEngine
 					End If
 				Next
 			End If
+			For Each driverfile As String In driverfiles
+				If IsNullOrWhitespace(driverfile) Then Continue For
+				If Not FileIO.ExistsFile(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile)) Then
+					RemoveSharedDlls(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile))
+				End If
+			Next
+
 		End If
 		ThreadFinished = True
 	End Sub
@@ -2559,7 +2566,6 @@ Public Class CleanupEngine
 	Private Sub Delete(ByVal filename As String)
 		Dim FileIO As New FileIO
 		FileIO.Delete(filename)
-		RemoveSharedDlls(filename)
 	End Sub
 
 	Public Sub Cleandriverstore(ByVal config As ThreadSettings)

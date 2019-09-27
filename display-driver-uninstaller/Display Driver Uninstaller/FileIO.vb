@@ -314,7 +314,7 @@ Public Class FileIO
 			sb.Append(UNC_PREFIX)
 
 			For Each dir As String In dirs
-				If dir.Contains(":") Then		' Drive
+				If dir.Contains(":") Then   ' Drive
 					sb.Append(dir)
 					Continue For
 				End If
@@ -323,7 +323,7 @@ Public Class FileIO
 
 				fileAttr = GetFileAttributes(sb.ToString())
 
-				If fileAttr = Errors.INVALID_FILE_ATTRIBUTES Then	'Doesn't exists
+				If fileAttr = Errors.INVALID_FILE_ATTRIBUTES Then   'Doesn't exists
 					CreateDirectory(sb.ToString(), IntPtr.Zero)
 				End If
 			Next
@@ -517,7 +517,7 @@ Public Class FileIO
 					Else
 						If DeleteFile(uncFileName) Then
 							Application.Log.AddMessage(String.Concat("Deleted file:", CRLF, fileName))
-							Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), uncFileName.Substring(UNC_PREFIX.Length), uncFileName))
+							'Removeshareddll(If(uncFileName.StartsWith(UNC_PREFIX), uncFileName.Substring(UNC_PREFIX.Length), uncFileName))
 							Return
 						Else
 							errCode = GetLastWin32ErrorU()
