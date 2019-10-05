@@ -5407,6 +5407,7 @@ Public Class GPUCleanup
 					   child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvidia ngx") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("nvprofileupdater") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvdlisr") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvgsync") Or
@@ -5562,6 +5563,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvinstallerutil") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("nvprofileupdater") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvgsync") Or
 						 child.ToLower.Contains("nvidia updatus") Or
 						 child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
