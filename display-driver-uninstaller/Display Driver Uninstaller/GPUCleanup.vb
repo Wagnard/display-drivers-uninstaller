@@ -3391,6 +3391,16 @@ Public Class GPUCleanup
 																	If subregkey2 IsNot Nothing Then
 																		For Each childinsubregkey2 As String In subregkey2.GetSubKeyNames()
 																			If IsNullOrWhitespace(childinsubregkey2) Then Continue For
+																			If StrContainsAny(childinsubregkey2, True, "89cc76a4-f226-4d4b-a040-6e9a1da9b882") Then
+																				'This is a key that is installed with the nvidia driver and have the same name on any computer.
+																				'There is no relatation that allow to detect it with any logic and thus I remove it directly.
+																				Try
+																					Deletesubregkey(subregkey2, childinsubregkey2)
+																					Continue For
+																				Catch ex As Exception
+																					Application.Log.AddException(ex)
+																				End Try
+																			End If
 																			Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey2, childinsubregkey2)
 																				If regkey3 IsNot Nothing Then
 																					For Each childinsubregkey2value As String In regkey3.GetValueNames()
