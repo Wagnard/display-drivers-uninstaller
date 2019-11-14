@@ -617,7 +617,11 @@ Class Application
 				'This is the same as Safe Mode
 
 				If Not isWinXP Then
-					Using process As Process = New Process() With
+
+					If Settings.UsedBCD Then
+						'don't use BCDEDIT if it was not used to get into safe mode.
+
+						Using process As Process = New Process() With
 					  {
 					   .StartInfo = New ProcessStartInfo(Paths.System32 & "BCDEDIT", " /deletevalue safeboot") With
 					   {
@@ -626,18 +630,18 @@ Class Application
 					 .RedirectStandardOutput = False
 					   }
 					  }
-						Try
+							Try
 
-							process.Start()
-							process.WaitForExit()
-							process.Close()
-
-						Catch ex As Exception
-							Log.AddException(ex, "Failed to use BCDEDIT! - " & Paths.System32 & "BCDEDIT")
-						End Try
-					End Using
+								process.Start()
+								process.WaitForExit()
+								process.Close()
+								Settings.UsedBCD = False
+							Catch ex As Exception
+								Log.AddException(ex, "Failed to use BCDEDIT! - " & Paths.System32 & "BCDEDIT")
+							End Try
+						End Using
+					End If
 				End If
-
 			Case System.Windows.Forms.BootMode.Normal
 				' added iselevated so this will not try to boot into safe mode/boot menu without admin rights,
 				' as even with the admin check on startup it was for some reason still trying to gain registry access 
@@ -664,9 +668,11 @@ Class Application
 								Exit Select
 
 							Case 1 'SafeMode
+								Settings.UsedBCD = True
 								Return RestartToSafemode(False)
 
 							Case 2 'SafeMode with network
+								Settings.UsedBCD = True
 								Return RestartToSafemode(True)
 
 							Case Else '-1 = Close

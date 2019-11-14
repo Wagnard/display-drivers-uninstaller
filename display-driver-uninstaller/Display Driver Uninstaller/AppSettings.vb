@@ -107,6 +107,7 @@ Public Class AppSettings
     Private m_enablesafemodedialog As DependencyProperty = RegDP("EnableSafeModeDialog", GetType(Boolean), GetType(AppSettings), False)
 	Private m_PreventWinUpdate As DependencyProperty = RegDP("PreventWinUpdate", GetType(Boolean), GetType(AppSettings), False)
 	Private m_FirstTimeLaunch As DependencyProperty = RegDP("FirstTimeLaunch", GetType(Boolean), GetType(AppSettings), False)
+	Private m_UsedBCD As DependencyProperty = RegDP("UsedBCD", GetType(Boolean), GetType(AppSettings), False)
 
 #End Region
 
@@ -365,6 +366,15 @@ Public Class AppSettings
 		End Set
 	End Property
 
+	Public Property UsedBCD As Boolean
+		Get
+			Return CBool(GetValue(m_UsedBCD))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_UsedBCD, value)
+		End Set
+	End Property
+
 #End Region
 
 	Private Sub UpdateWinText(ByVal version As OSVersion)
@@ -496,10 +506,11 @@ Public Class AppSettings
 						.WriteElementString("RemoveVulkan", RemoveVulkan.ToString())
 						.WriteElementString("ShowOffer", ShowOffer.ToString())
 						.WriteElementString("EnableSafeModeDialog", EnableSafeModeDialog.ToString())
-                        .WriteElementString("PreventWinUpdate", PreventWinUpdate.ToString())
+						.WriteElementString("PreventWinUpdate", PreventWinUpdate.ToString())
+						.WriteElementString("UsedBCD", UsedBCD.ToString())
 
 
-                        .WriteEndElement()
+						.WriteEndElement()
 
 						.WriteEndElement()
 						.WriteEndDocument()
@@ -650,9 +661,12 @@ Public Class AppSettings
                                 EnableSafeModeDialog = Boolean.Parse(KvP.Value)
 
                             Case "preventwinupdate"
-                                PreventWinUpdate = Boolean.Parse(KvP.Value)
+								PreventWinUpdate = Boolean.Parse(KvP.Value)
 
-                        End Select
+							Case "usedbcd"
+								UsedBCD = Boolean.Parse(KvP.Value)
+
+						End Select
 					Next
 
 					reader.Close()
