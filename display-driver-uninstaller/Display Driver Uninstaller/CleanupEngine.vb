@@ -1065,6 +1065,10 @@ Public Class CleanupEngine
 						If regkey2 IsNot Nothing Then
 							If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(service, True, "amdkmafd")) Then
 
+								If WindowsIdentity.GetCurrent().IsSystem Then
+									ImpersonateLoggedOnUser.ReleaseToken()
+								End If
+
 								If ServiceInstaller.GetServiceStatus(service) = ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
 									'Service is not present
 								Else
@@ -1089,6 +1093,11 @@ Public Class CleanupEngine
 											Exit While
 										End If
 									End While
+
+									If Not WindowsIdentity.GetCurrent().IsSystem Then
+										ImpersonateLoggedOnUser.Taketoken()
+									End If
+
 									Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\Setup\FirstBoot\Services", True)
 										If regkey4 IsNot Nothing Then
 											Try

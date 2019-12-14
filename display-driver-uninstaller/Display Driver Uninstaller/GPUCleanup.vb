@@ -69,6 +69,11 @@ Public Class GPUCleanup
 			End Using
 		End If
 
+		'Theses service need to be disabled if we remove the AMD driver or in normal mode, the device removal wil be counter immediately by the device reinstallation.
+		If config.SelectedGPU = GPUVendor.AMD Then
+			CleanupEngine.Cleanserviceprocess({"AMD External Events Utility", "ATI External Events Utility"})
+			KillProcess("radeonsoftware")
+		End If
 
 		'------------------------------------------------------------------------------------
 		' Removing the Audio associated with the GPU + AudioEndpoint+SoftwareComponent(DCH)--
@@ -291,6 +296,7 @@ Public Class GPUCleanup
 
 							Application.Log.AddMessage("SetupAPI: Remove SoftwareComponent Complete.")
 						End If
+						'	SetupAPI.EnableDevice(GPU, False)
 						SetupAPI.UninstallDevice(GPU) 'Then we remove the GPU itself.
 					End If
 				Next
@@ -304,8 +310,6 @@ Public Class GPUCleanup
 			config.GPURemovedSuccess = False
 			Exit Sub
 		End Try
-
-
 
 		CleanupEngine.Cleandriverstore(config)
 
@@ -577,7 +581,8 @@ Public Class GPUCleanup
 		 "HydraMD",
 		 "RadeonSettings",
 		 "ThumbnailExtractionHost",
-		 "jusched")
+		 "jusched",
+		 "radeonsoftware")
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
 		timer.Interval = 10
 		timer.AutoReset = False
@@ -1983,12 +1988,12 @@ Public Class GPUCleanup
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 						If regkey2 IsNot Nothing Then
 							If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-								If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater", "AMDLinkUpdate", "ModifyLinkUpdate") Then
+								If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater", "AMDLinkUpdate", "ModifyLinkUpdate", "AMDInstallUEP", "AMDInstallLauncher") Then
 									Deletesubregkey(regkey, child)
 								End If
 							End If
 							If Not IsNullOrWhitespace(regkey2.GetValue("Path", String.Empty).ToString) Then
-								If StrContainsAny(regkey2.GetValue("Path", String.Empty).ToString, True, "\StartCN", "\StartCNBM") Then
+								If StrContainsAny(regkey2.GetValue("Path", String.Empty).ToString, True, "\StartCN", "\StartCNBM", "\AMD ThankingURL") Then
 									Deletesubregkey(regkey, child)
 								End If
 							End If
@@ -2004,7 +2009,7 @@ Public Class GPUCleanup
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
 							If IsNullOrWhitespace(child) Then Continue For
-							If StrContainsAny(child, True, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM", "ModifyLinkUpdate") Then
+							If StrContainsAny(child, True, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM", "ModifyLinkUpdate", "AMD ThankingURL", "AMDInstallLauncher", "AMDInstallUEP") Then
 								For Each ScheduleChild As String In schedule.GetSubKeyNames
 									If IsNullOrWhitespace(ScheduleChild) Then Continue For
 									Try
@@ -2392,6 +2397,14 @@ Public Class GPUCleanup
 		End If
 
 		filePath = Environment.GetFolderPath _
+		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Radeon Software"
+		If FileIO.ExistsDir(filePath) Then
+
+			Delete(filePath)
+
+		End If
+
+		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\ATI"
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
@@ -2517,6 +2530,7 @@ Public Class GPUCleanup
 							If child.ToLower.Contains("cn") Or
 							 child.ToLower.Contains("fuel") Or
 							  child.ToLower.Contains("dvr") Or
+							 child.ToLower.Contains("radeonsoftware") Or
 							 removedxcache AndAlso child.ToLower.Contains("dxcache") Or
 							 removedxcache AndAlso child.ToLower.Contains("vkcache") Or
 							 removedxcache AndAlso child.ToLower.Contains("glcache") Then

@@ -1880,6 +1880,147 @@ Namespace Win32
 
 		' RESERVED FOR CLEANING FROM CODE
 
+		Public Shared Sub EnableDevice(ByVal device As Device, ByVal enable As Boolean)
+			If Not IsAdmin Then
+				Throw New SecurityException("Admin priviliges required!")
+			End If
+
+			If device.devInst = 0UI Then
+				Application.Log.AddWarningMessage("Empty devInst!")
+				Return
+			End If
+
+			Try
+				Dim nullGuid As Guid = Guid.Empty
+				Dim hardwareIds(0) As String
+				Dim found As Boolean = False
+				Dim d As Device = Nothing
+				Dim devInst As UInt32 = 0UI
+				Dim errCode As UInt32 = 0UI
+
+				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(nullGuid, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
+					If infoSet.IsInvalid Then
+						Throw New Win32Exception()
+					End If
+
+					Dim ptrDevInfo As StructPtr = Nothing
+					Try
+						If Is64 Then
+							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
+						Else
+							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
+						End If
+
+						Dim i As UInt32 = 0UI
+
+						While True
+							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
+								errCode = GetLastWin32ErrorU()
+
+								If errCode = Errors.NO_MORE_ITEMS Then
+									Exit While
+								Else
+									Throw New Win32Exception(GetInt32(errCode))
+								End If
+							End If
+
+							i += 1UI
+
+							If Is64 Then
+								devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+							Else
+								devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+							End If
+
+
+							If devInst = device.devInst Then
+								d = New Device() With
+								{
+								 .devInst = devInst,
+								 .Description = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.DEVICEDESC),
+								 .ClassGuid = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASSGUID),
+								 .CompatibleIDs = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS)
+								}
+
+								GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d, True)
+
+								found = True
+
+							End If
+
+
+							If found Then
+								Exit While
+							End If
+						End While
+
+						If Not found OrElse d Is Nothing Then
+							Return
+						End If
+
+						Dim cfgFlags As UInt32 = GetUInt32Property(infoSet, ptrDevInfo.Ptr, SPDRP.CONFIGFLAGS)
+
+						If Not enable AndAlso ((cfgFlags And CONFIGFLAGS.DISABLED) = CONFIGFLAGS.DISABLED) Then
+							Application.Log.AddWarningMessage("Device is already disabled!", "Device disable")
+							Return
+						ElseIf enable AndAlso ((cfgFlags And CONFIGFLAGS.DISABLED) <> CONFIGFLAGS.DISABLED) Then
+							Application.Log.AddWarningMessage("Device is already enabled!", "Device enable")
+							Return
+						End If
+
+						Dim ptrSetParams As StructPtr = Nothing
+
+						Try
+							If (Is64) Then
+								ptrSetParams = New StructPtr(New SP_PROPCHANGE_PARAMS_X64() With
+								{
+								 .StateChange = If(enable, DICS.ENABLE, DICS.DISABLE),
+								 .Scope = DICS_FLAG.GLOBAL,
+								 .HwProfile = 0UI,
+								 .ClassInstallHeader = New SP_CLASSINSTALL_HEADER_X64() With
+								 {
+								  .cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_CLASSINSTALL_HEADER_X64))),
+								  .InstallFunction = DIF.PROPERTYCHANGE
+								 }
+								})
+							Else
+								ptrSetParams = New StructPtr(New SP_PROPCHANGE_PARAMS_X86() With
+								{
+								 .StateChange = If(enable, DICS.ENABLE, DICS.DISABLE),
+								 .Scope = DICS_FLAG.GLOBAL,
+								 .HwProfile = 0UI,
+								 .ClassInstallHeader = New SP_CLASSINSTALL_HEADER_X86() With
+								 {
+								  .cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_CLASSINSTALL_HEADER_X86))),
+								  .InstallFunction = DIF.PROPERTYCHANGE
+								 }
+								})
+							End If
+
+							If Not SetupDiSetClassInstallParams(infoSet, ptrDevInfo.Ptr, ptrSetParams.Ptr, ptrSetParams.ObjSizeU) Then
+								Throw New Win32Exception()
+							End If
+
+							If Not SetupDiChangeState(infoSet, ptrDevInfo.Ptr) Then
+								Throw New Win32Exception()
+							End If
+
+						Finally
+							If ptrSetParams IsNot Nothing Then
+								ptrSetParams.Dispose()
+							End If
+						End Try
+					Finally
+						If ptrDevInfo IsNot Nothing Then
+							ptrDevInfo.Dispose()
+						End If
+					End Try
+				End Using
+			Catch ex As Exception
+				ShowException(ex)
+			End Try
+		End Sub
+
 		Public Shared Function GetDevicesByCHID(ByVal text As String, ByVal includeSiblings As Boolean, ByVal includeParents As Boolean, ByVal includechilds As Boolean) As List(Of Device)  'Get devices by Compatible Hardware IDs
 			Dim Devices As List(Of Device) = New List(Of Device)(500)
 
@@ -2255,6 +2396,10 @@ Namespace Win32
 							For Each inf As Inf In device.OemInfs
 								If Not inf.FileExists Then
 									Continue For
+								End If
+
+								If ptrDevInfo IsNot Nothing Then
+									ptrDevInfo.Dispose()
 								End If
 
 								RemoveInf(inf, True)
