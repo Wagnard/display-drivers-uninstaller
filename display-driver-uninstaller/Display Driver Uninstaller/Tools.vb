@@ -38,6 +38,10 @@ Public Module Tools
 		End Using
 	End Function
 
+	Public Function IsNet45OrNewer() As Boolean
+		Return Type.[GetType]("System.Reflection.ReflectionContext", False) IsNot Nothing
+	End Function
+
 	Public Function PreferredUILanguages() As String
 		Try
 			Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Control Panel\Desktop", False)
