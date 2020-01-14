@@ -139,17 +139,17 @@
 		</Messages>
 		<Options_Type>
 			<Options1>---Выберите тип устройства---</Options1>
-			<Options2>Аудио</Options2>
-			<Options3>Графический процессор</Options3>
+			<Options2>Звуковая карта</Options2>
+			<Options3>Видеокарта</Options3>
 		</Options_Type>
 		<Options_GPU>
-			<Options1>---Выберите тип устройства---</Options1>
+			<Options1>---Выберите производителя устройства---</Options1>
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
 		</Options_GPU>
 		<Options_AUDIO>
-			<Options1>---Выберите тип устройства---</Options1>
+			<Options1>---Выберите производителя устройства---</Options1>
 			<Options2>REALTEK (WIP)</Options2>
 			<Options3>SOUNDBLASTER (WIP)</Options3>
 		</Options_AUDIO>
@@ -204,7 +204,7 @@
 			<Text>Закрыть</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Показывать предложения от наших партнёров</Text>
+			<Text>Показывать предложения от наших партнёров (реклама)</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>Параметры драйверов NVIDIA</Text>
@@ -259,14 +259,14 @@
 			<Text>Удалить GeForce Experience</Text>
 		</lblRemGFE>
 		<lblRemCrimsonCache>
-			<Text>Удалить папку кэширования шейдеров AMD Crimson</Text>
+			<Text>Удалить папку с кэшем шейдеров AMD </Text>
 			<Tooltip>
 				Рекомендуется, если наблюдаются графические аномалии (скорость или визуальные искажения), вызванное поврежденными данными кэша шейдеров.
 				Также рекомендуется, если вы переключаетесь на видеокарту другого бренда, например NVIDIA.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Удалить библиотеки Vulkan API</Text>
+			<Text>Удалить библиотеки Vulkan Runtime</Text>
 			<Tooltip>Не рекомендуется, если у вас установлено две разные видеокарты с поддержкой Vulkan API.</Tooltip>
 		</lblVulkan>
     <lblPreventWinUpdate>
@@ -279,7 +279,7 @@
 
     <frmLaunch Text="Настройка запуска программы">
 		<btnAccept>
-			<Text>Запустить нормальный режим</Text>
+			<Text>Запуститься в нормальном режиме</Text>
 			
 
 
@@ -433,7 +433,7 @@
 		<Translator2>
 			<User>Danis Miryasov
                   (E-mail:miryasov.danis@yandex.ru)</User>
-			<LastUpdate>21/10/2018</LastUpdate>
+			<LastUpdate>08/01/2020</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 

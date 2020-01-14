@@ -1069,7 +1069,7 @@ Public Class CleanupEngine
 									ImpersonateLoggedOnUser.ReleaseToken()
 								End If
 
-								If ServiceInstaller.GetServiceStatus(service) = ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
+								If ServiceInstaller.GetServiceStatus(service) = Nothing Then
 									'Service is not present
 								Else
 									Try
@@ -1083,7 +1083,7 @@ Public Class CleanupEngine
 									Dim waits As Int32 = 0
 
 									While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
-										If ServiceInstaller.GetServiceStatus(service) <> ServiceInstaller.SERVICE_STATE.NOT_FOUND Then
+										If ServiceInstaller.GetServiceStatus(service) <> Nothing Then
 											waits += 1
 											timer.Interval = 100
 											timer.Start()
@@ -1175,7 +1175,7 @@ Public Class CleanupEngine
 
 								Next
 							Else
-								'Here, if subregkey is nothing, it mean \video doesnt exist and is no \0000, we can delete it.
+								'Here, if subregkey is nothing, it mean \video doesnt exist and there is no \0000, we can delete it.
 								'this is a general cleanUP we could say.
 								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\0000")
 									If regkey3 Is Nothing Then
@@ -1261,11 +1261,6 @@ Public Class CleanupEngine
 			End Using
 		Next
 
-	End Sub
-
-	Public Sub DeleteService(ByVal service As String)
-		Dim servicearray As String() = New String() {service}
-		Cleanserviceprocess(servicearray)
 	End Sub
 
 	Public Sub PrePnplockdownfiles(ByVal oeminf As String)

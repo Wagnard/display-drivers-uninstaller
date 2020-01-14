@@ -5,7 +5,6 @@ Imports System.Threading
 Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
 Imports WinForm = System.Windows.Forms
-Imports System.Runtime
 
 Public Class GPUCleanup
 
@@ -53,27 +52,106 @@ Public Class GPUCleanup
 			ImpersonateLoggedOnUser.ReleaseToken()
 		End If
 
-		'SpeedUP the removal of the NVIDIA adapter due to how the NVIDIA installer work.
-		'Also fix a possible permission problem when removing the driver via SetupAPI
-		If config.SelectedGPU = GPUVendor.Nvidia Then
-			'Temporarynvidiaspeedup(config)
-			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "software\nvidia corporation", True)
-				If regkey IsNot Nothing Then
-					For Each child As String In regkey.GetSubKeyNames
-						If IsNullOrWhitespace(child) Then Continue For
-						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
-							'This is not a typo, it is only to trigger the persmission check on the previous line.
-						End Using
-					Next
-				End If
-			End Using
-		End If
 
-		'Theses service need to be disabled if we remove the AMD driver or in normal mode, the device removal wil be counter immediately by the device reinstallation.
-		If config.SelectedGPU = GPUVendor.AMD Then
-			CleanupEngine.Cleanserviceprocess({"AMD External Events Utility", "ATI External Events Utility"})
-			KillProcess("radeonsoftware")
-		End If
+		'Removing the services except for the "device driver services"
+		'Theses service(s) need to be disabled. Ex: if we remove the AMD driver in normal mode, the device removal will be counter immediately by the device reinstallation.
+
+		Application.Log.AddMessage("Removing the service(s) except for the <device driver services>")
+
+		Select Case config.SelectedGPU
+
+			Case GPUVendor.AMD
+				Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\services.cfg")
+
+				For Each service As String In services
+					If IsNullOrWhitespace(service) Then Continue For
+
+					If ServiceInstaller.GetServiceStatus(service, False) = Nothing Then
+						'Service is not present
+					Else
+						Try
+							ServiceInstaller.Uninstall(service)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
+					End If
+				Next
+
+				KillProcess("radeonsoftware")    'This avoid an error message when the device is removed.
+
+			Case GPUVendor.Nvidia
+
+				Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\services.cfg")
+
+				If config.RemoveGFE Then
+					Dim gfeservices As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg")
+
+					For Each service As String In gfeservices
+						If IsNullOrWhitespace(service) Then Continue For
+
+						If ServiceInstaller.GetServiceStatus(service, False) = Nothing Then
+							'Service is not present
+						Else
+							Try
+								ServiceInstaller.Uninstall(service)
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
+
+						End If
+					Next
+
+				End If
+
+				For Each service As String In services
+					If IsNullOrWhitespace(service) Then Continue For
+
+					If ServiceInstaller.GetServiceStatus(service, False) = Nothing Then
+						'Service is not present
+					Else
+						Try
+							ServiceInstaller.Uninstall(service)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
+					End If
+				Next
+
+				'Fix a possible permission problem when removing the driver via SetupAPI
+				'Temporarynvidiaspeedup(config)
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "software\nvidia corporation", True)
+					If regkey IsNot Nothing Then
+						For Each child As String In regkey.GetSubKeyNames
+							If IsNullOrWhitespace(child) Then Continue For
+							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+								'This is not a typo, it is only to trigger the persmission check on the previous line.
+							End Using
+						Next
+					End If
+				End Using
+
+			Case GPUVendor.Intel
+
+				Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\services.cfg")
+
+				For Each service As String In services
+					If IsNullOrWhitespace(service) Then Continue For
+
+					If ServiceInstaller.GetServiceStatus(service, False) = Nothing Then
+						'Service is not present
+					Else
+						Try
+							ServiceInstaller.Uninstall(service)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
+					End If
+				Next
+
+		End Select
 
 		'------------------------------------------------------------------------------------
 		' Removing the Audio associated with the GPU + AudioEndpoint+SoftwareComponent(DCH)--

@@ -1,11 +1,9 @@
-﻿Imports System
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.Runtime.InteropServices
 Imports System.Security
-Imports System.Threading
 Imports Microsoft.Win32.SafeHandles
-
 Imports Display_Driver_Uninstaller.Win32
+Imports System.ServiceProcess
 
 ' https://msdn.microsoft.com/en-us/library/windows/desktop/ms685974(v=vs.85).aspx
 
@@ -247,7 +245,6 @@ Public NotInheritable Class ServiceInstaller
 
 #End Region
 
-
 #Region "Structures"
 
 	<StructLayout(LayoutKind.Sequential)>
@@ -346,7 +343,6 @@ Public NotInheritable Class ServiceInstaller
 #End Region
 
 
-
 	Public Shared Sub Uninstall(ByVal serviceName As String)
 		Using scm As SafeServiceHandle = OpenSCManager(SC_MANAGER.CONNECT)
 			If scm.IsInvalid Then
@@ -362,7 +358,8 @@ Public NotInheritable Class ServiceInstaller
 
 				If Not DeleteService(ptrService.DangerousGetHandle) Then
 					Throw New Exception("Could not delete service " & Marshal.GetLastWin32Error())
-					Microsoft.VisualBasic.MsgBox(Marshal.GetLastWin32Error)
+				Else
+					Application.Log.AddMessage("Service : " & serviceName & " removed.")
 				End If
 			End Using
 		End Using
@@ -380,206 +377,76 @@ Public NotInheritable Class ServiceInstaller
 		End Using
 	End Function
 
-
-	'Public Shared Sub StartService(serviceName As String)
-	'	Dim scm As IntPtr = OpenSCManager(SC_MANAGER.CONNECT)
-
-	'	Try
-	'		Dim service As IntPtr = OpenService(scm, serviceName, SERVICE.QUERY_STATUS Or SERVICE.START)
-	'		If service = IntPtr.Zero Then
-	'			Throw New Exception("Could not open service.")
-	'		End If
-
-	'		Try
-	'			StartService(service)
-	'		Finally
-	'			CloseServiceHandle(service)
-	'		End Try
-	'	Finally
-	'		CloseServiceHandle(scm)
-	'	End Try
-	'End Sub
-
-	'Public Shared Sub StopService(serviceName As String)
-	'	Dim scm As IntPtr = OpenSCManager(SC_MANAGER.CONNECT)
-
-	'	Try
-	'		Dim service As IntPtr = OpenService(scm, serviceName, SERVICE.QUERY_STATUS Or SERVICE.[STOP])
-	'		If service = IntPtr.Zero Then
-	'			Throw New Exception("Could not open service.")
-	'		End If
-
-	'		Try
-	'			StopService(service)
-	'		Finally
-	'			CloseServiceHandle(service)
-	'		End Try
-	'	Finally
-	'		CloseServiceHandle(scm)
-	'	End Try
-	'End Sub
-
-	Public Shared Sub StartService(ByVal serviceName As String)
-		Using scm As SafeServiceHandle = OpenSCManager(SC_MANAGER.CONNECT)
-			If scm.IsInvalid Then
-				Throw New Win32Exception()
-			End If
-
-			Using ptrService As SafeServiceHandle = OpenService(scm.DangerousGetHandle, serviceName, SERVICE.QUERY_STATUS Or SERVICE.START)
-				If ptrService.IsInvalid OrElse Not StartService(ptrService.DangerousGetHandle, 0UI, Nothing) Then
-					Application.Log.AddException(New Win32Exception(GetLastWin32Error(), "Failed to start service!"))
-				End If
-
-				If Not WaitForServiceStatus(ptrService, SERVICE_STATE.RUNNING) Then
-					Application.Log.AddWarningMessage("Failed to start service: " & serviceName & " (timeout)!")
-				Else
-					Application.Log.AddMessage("Service: " & serviceName & " is successfully started!")
-				End If
-			End Using
-		End Using
-	End Sub
-
-	'Private Shared Sub StartService(service As IntPtr)
-	'	Dim status As New SERVICE_STATUS()
-
-	'	StartService(service, 0, Nothing)
-
-	'	Dim changedStatus As Boolean = WaitForServiceStatus(service, SERVICE_STATE.START_PENDING, SERVICE_STATE.RUNNING)
-
-	'	If Not changedStatus Then
-	'		Throw New Exception("Unable to start service")
-	'	End If
-	'End Sub
-
-	Private Shared Sub StopService(ByVal ptrService As SafeServiceHandle, ByVal serviceName As String)
-		Dim statusProcess As New SERVICE_STATUS_PROCESS
-		Dim requiredSize As UInt32 = 0UI
-
-		If Not QueryServiceStatusEx(ptrService.DangerousGetHandle, SERVICE_STATE_TYPE.PROCESS_INFO, statusProcess, CUInt(Marshal.SizeOf(statusProcess)), requiredSize) Then
-			Throw New Win32Exception(GetLastWin32Error(), "Failed to query service status!")
-		End If
-
-		Dim status As New SERVICE_STATUS
-
-		Select Case status.dwCurrentState
-			Case SERVICE_STATE.STOP_PENDING
-				WaitForServiceStatus(ptrService, SERVICE_STATE.STOPPED)
-
-			Case SERVICE_STATE.STOPPED
-				Return
-
-			Case SERVICE_STATE.CONTINUE_PENDING,
-			 SERVICE_STATE.START_PENDING,
-			 SERVICE_STATE.PAUSE_PENDING,
-			 SERVICE_STATE.RUNNING
-				ControlService(ptrService.DangerousGetHandle, SERVICE_CONTROL.SERVICE_CONTROL_STOP, status)
-
-			Case Else
-				ControlService(ptrService.DangerousGetHandle, SERVICE_CONTROL.SERVICE_CONTROL_STOP, status)
-		End Select
-
-		If Not WaitForServiceStatus(ptrService, SERVICE_STATE.STOPPED) Then
-			Application.Log.AddWarningMessage("Failed to stop service: " & serviceName & " (timeout)!")
-		Else
-			Application.Log.AddMessage("Service: " & serviceName & " is successfully stopped!")
-		End If
-
-		Return
-	End Sub
-
-	Public Shared Sub StopService(ByVal serviceName As String)
-		Using scm As SafeServiceHandle = OpenSCManager(SC_MANAGER.CONNECT)
-			If scm.IsInvalid Then
-				Throw New Win32Exception()
-			End If
-
-			Using ptrService As SafeServiceHandle = OpenService(scm.DangerousGetHandle, serviceName, SERVICE.QUERY_STATUS Or SERVICE.STOP)
-				If ptrService.IsInvalid Then
-					Dim errcode As Int32 = GetLastWin32Error()
-
-					If errcode <> 0UI Then
-						Application.Log.AddException(New Win32Exception(errcode), "Failed to stop service!")
+	Public Shared Sub StartService(ByVal service As String)
+		For Each svc As ServiceController In ServiceController.GetServices()
+			Using svc
+				If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
+					If svc.Status = ServiceControllerStatus.Stopped Then
+						Try
+							svc.Start()
+							svc.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(5))
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 					End If
-
-					Return
 				End If
-
-				StopService(ptrService, serviceName)
 			End Using
-		End Using
+		Next
 	End Sub
 
-	'Private Shared Sub StopService(service As IntPtr)
-	'	Dim status As New SERVICE_STATUS()
 
-	'	ControlService(service, SERVICE_CONTROL.SERVICE_CONTROL_STOP, status)
+	Public Shared Sub StopService(ByVal service As String)
+		For Each svc As ServiceController In ServiceController.GetServices()
+			Using svc
+				If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
+					If svc.Status <> ServiceControllerStatus.Stopped AndAlso svc.Status <> ServiceControllerStatus.StopPending Then
+						Try
+							svc.Stop()
+							svc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(10))
+							Application.Log.AddMessage("Service : " & service & " stopped.")
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 
-	'	Dim changedStatus As Boolean = WaitForServiceStatus(service, SERVICE_STATE.STOP_PENDING, SERVICE_STATE.STOPPED)
-
-	'	If Not changedStatus Then
-	'		Throw New ApplicationException("Unable to stop service")
-	'	End If
-	'End Sub
-
-	Public Shared Function GetServiceStatus(ByVal serviceName As String) As SERVICE_STATE
-		Using scm As SafeServiceHandle = OpenSCManager(SC_MANAGER.CONNECT)
-			If scm.IsInvalid Then
-				Throw New Win32Exception()
-			End If
-
-			Using ptrService As SafeServiceHandle = OpenService(scm.DangerousGetHandle, serviceName, SERVICE.QUERY_STATUS)
-				If ptrService.IsInvalid Then
-					Return SERVICE_STATE.NOT_FOUND
+					End If
 				End If
-
-				Dim status As New SERVICE_STATUS_PROCESS
-				Dim requiredSize As UInt32 = 0UI
-
-				If Not QueryServiceStatusEx(ptrService.DangerousGetHandle, SERVICE_STATE_TYPE.PROCESS_INFO, status, CUInt(Marshal.SizeOf(status)), requiredSize) Then
-					Throw New Win32Exception("Failed to query service status!")
-				End If
-
-				Return status.dwCurrentState
 			End Using
-		End Using
-	End Function
+		Next
+	End Sub
 
-	Private Shared Function WaitForServiceStatus(ByVal ptrService As SafeServiceHandle, desiredStatus As SERVICE_STATE) As Boolean
-		Dim status As New SERVICE_STATUS_PROCESS
-		Dim requiredSize As UInt32 = 0UI
-
-		If Not QueryServiceStatusEx(ptrService.DangerousGetHandle, SERVICE_STATE_TYPE.PROCESS_INFO, status, CUInt(Marshal.SizeOf(status)), requiredSize) Then
-			Throw New Win32Exception("Failed to query service status!")
-		End If
-
-		If status.dwCurrentState = desiredStatus Then
-			Return True
-		End If
-
-
-		Dim tickCount As Int32 = Environment.TickCount
-		Dim checkPoint As UInt32 = status.dwCheckPoint
-		Dim waitTime As Int32 = Math.Max(Math.Min(CInt(status.dwWaitHint \ 10UI), 10000), 1000)
-
-		While status.dwCurrentState <> desiredStatus
-			Thread.Sleep(100)
-
-			If Not QueryServiceStatusEx(ptrService.DangerousGetHandle, SERVICE_STATE_TYPE.PROCESS_INFO, status, CUInt(Marshal.SizeOf(status)), requiredSize) Then
-				Throw New Win32Exception("Failed to query service status!")
-			End If
-
-			If status.dwCheckPoint > checkPoint Then
-				tickCount = Environment.TickCount
-				checkPoint = status.dwCheckPoint
-			Else
-				If Environment.TickCount - tickCount > status.dwWaitHint Then
-					Exit While
+	Public Shared Function GetServiceStatus(ByVal serviceName As String, Optional getdevice As Boolean = True) As ServiceControllerStatus
+		For Each svc As ServiceController In ServiceController.GetServices()
+			Using svc
+				If svc.ServiceName.Equals(serviceName, StringComparison.OrdinalIgnoreCase) Then
+					Try
+						Return svc.Status
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+						Exit For
+					End Try
+					Exit For
 				End If
-			End If
-		End While
+			End Using
+		Next
+		If getdevice Then
 
-		Return (status.dwCurrentState = desiredStatus)
+			For Each svc As ServiceController In ServiceController.GetDevices()
+				Using svc
+					If svc.ServiceName.Equals(serviceName, StringComparison.OrdinalIgnoreCase) Then
+						Try
+							Return svc.Status
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+							Exit For
+						End Try
+						Exit For
+					End If
+				End Using
+			Next
+		End If
+		Return Nothing
 	End Function
+
 
 	Private Shared Function OpenSCManager(ByVal rights As SC_MANAGER) As SafeServiceHandle
 		Dim scm As SafeServiceHandle = OpenSCManager(IntPtr.Zero, Nothing, rights)

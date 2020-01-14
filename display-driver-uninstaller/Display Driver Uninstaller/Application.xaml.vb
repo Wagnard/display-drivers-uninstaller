@@ -341,11 +341,11 @@ Class Application
 		'	IsDebug = True
 		'End If
 
-		If Not IsNet45OrNewer() Then
-			Microsoft.VisualBasic.MsgBox("Minimum requirement is Microsoft .NET Framework 4.5. Please update your current .NET Framework.")
-			Me.Shutdown()
-			Exit Sub
-		End If
+		'If Not IsNet45OrNewer() Then
+		'	Microsoft.VisualBasic.MsgBox("Minimum requirement is Microsoft .NET Framework 4.5. Please update your current .NET Framework.")
+		'	Me.Shutdown()
+		'	Exit Sub
+		'End If
 
 		Dim info As LogEntry = Log.CreateEntry(Nothing, "The following paths are detected.")
 		info.Type = LogType.Event
@@ -868,16 +868,6 @@ Class Application
 	'	-> frmMain_Initialized			(Nothing is actually loaded yet, controls not even added to Window yet)		<-- Don't use
 	'	-> frmMain_Loaded				(UI elements added to Window and loaded, but not rendered!)					<-- Use only for Non-UI stuff which are fast to do
 	'	-> frmMain_ContentRendered		(UI is completely ready for use, dimensions of each control aligned etc.)	<-- Anything else
-
-	Private Sub StartService(ByVal service As String)
-		CleanupEngine.StartService(service)
-	End Sub
-	Private Sub StopService(ByVal service As String)
-		CleanupEngine.StopService(service)
-	End Sub
-	Private Sub DeleteService(ByVal service As String)
-		CleanupEngine.DeleteService(service)
-	End Sub
 End Class
 
 Public Class Data
