@@ -56,7 +56,7 @@ Public Class GPUCleanup
 		'Removing the services except for the "device driver services"
 		'Theses service(s) need to be disabled. Ex: if we remove the AMD driver in normal mode, the device removal will be counter immediately by the device reinstallation.
 
-		Application.Log.AddMessage("Removing the service(s) except for the <device driver services>")
+		Application.Log.AddMessage("Removing service(s) except for the <device driver service(s)>")
 
 		Select Case config.SelectedGPU
 
@@ -77,8 +77,10 @@ Public Class GPUCleanup
 
 					End If
 				Next
-
+				KillProcess("auepmaster")
 				KillProcess("radeonsoftware")    'This avoid an error message when the device is removed.
+				KillProcess("amdow")    'This avoid an error message when the device is removed.
+				KillProcess("amdrsserv")    'This avoid an error message when the device is removed.
 
 			Case GPUVendor.Nvidia
 

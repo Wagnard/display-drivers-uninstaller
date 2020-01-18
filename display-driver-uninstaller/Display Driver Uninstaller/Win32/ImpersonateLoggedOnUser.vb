@@ -54,6 +54,7 @@ Public Class ImpersonateLoggedOnUser
 
 							If WindowsIdentity.GetCurrent().IsSystem Then
 								'ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+								Application.Log.AddMessage("SYSTEM account impersonalisation successful with process: " + proc.ProcessName)
 								Exit For
 							Else
 								RevertToSelf()
@@ -76,7 +77,7 @@ Public Class ImpersonateLoggedOnUser
 			End Try
 		End If
 		If WindowsIdentity.GetCurrent().IsSystem Then
-			Application.Log.AddMessage("SYSTEM account impersonalisation successful")
+			'nothing to do.
 		Else
 			Application.Log.AddWarningMessage("SYSTEM account impersonalisation failed ! Cleanup may not be efficient. ")
 		End If
