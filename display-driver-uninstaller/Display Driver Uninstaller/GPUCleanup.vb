@@ -415,8 +415,9 @@ Public Class GPUCleanup
 				  "USB\VID_0955&PID_700E&MI_00"}
 				Dim USBTypeC As String() =
 					{"PCI\VEN_10DE&DEV_1AD7",
-					"PCI \ VEN_10DE&DEV_1AD9",
-					"PCI\VEN_10DE&DEV_1ADB"}
+					"PCI\VEN_10DE&DEV_1AD9",
+					"PCI\VEN_10DE&DEV_1ADB",
+					"PCI\VEN_10DE&DEV_1AED"}
 
 				'3dVision Removal
 				Application.Log.AddMessage("Executing SetupAPI: Remove 3dVision USB Adapter.")
