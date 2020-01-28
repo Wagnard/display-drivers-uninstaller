@@ -1,6 +1,5 @@
 ﻿Imports System.Runtime.InteropServices
 Imports System.Security
-Imports System.Security.Principal
 Imports Display_Driver_Uninstaller.Win32
 
 Public Class ImpersonateLoggedOnUser
@@ -36,7 +35,7 @@ Public Class ImpersonateLoggedOnUser
 					If IsNullOrWhitespace(proc.ToString) Then Continue For
 					Try
 						If OpenProcessToken(proc.Handle, TOKEN_QUERY Or TOKEN_IMPERSONATE Or TOKEN_DUPLICATE, hToken) <> 0 Then
-							Dim newId As WindowsIdentity = New WindowsIdentity(hToken)
+							Dim newId As Principal.WindowsIdentity = New Principal.WindowsIdentity(hToken)
 
 
 							Const SecurityImpersonation As Integer = 2
@@ -47,12 +46,12 @@ Public Class ImpersonateLoggedOnUser
 								Throw New Exception(s)
 							End If
 
-							Dim impersonatedUser As WindowsImpersonationContext = newId.Impersonate()
-							Dim accountToken As IntPtr = WindowsIdentity.GetCurrent().Token
+							Dim impersonatedUser As Principal.WindowsImpersonationContext = newId.Impersonate()
+							Dim accountToken As IntPtr = Principal.WindowsIdentity.GetCurrent().Token
 
 							ImpersonateLoggedOnUser(CInt((hToken)))
 
-							If WindowsIdentity.GetCurrent().IsSystem Then
+							If Principal.WindowsIdentity.GetCurrent().IsSystem Then
 								'ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 								Application.Log.AddMessage("SYSTEM account impersonalisation successful with process: " + proc.ProcessName)
 								Exit For
@@ -76,7 +75,7 @@ Public Class ImpersonateLoggedOnUser
 				CloseHandle(hToken)
 			End Try
 		End If
-		If WindowsIdentity.GetCurrent().IsSystem Then
+		If Principal.WindowsIdentity.GetCurrent().IsSystem Then
 			'nothing to do.
 		Else
 			Application.Log.AddWarningMessage("SYSTEM account impersonalisation failed ! Cleanup may not be efficient. ")
@@ -85,7 +84,7 @@ Public Class ImpersonateLoggedOnUser
 
 	Public Shared Sub ReleaseToken()
 		RevertToSelf()
-		If WindowsIdentity.GetCurrent().IsSystem Then
+		If Principal.WindowsIdentity.GetCurrent().IsSystem Then
 			Application.Log.AddWarningMessage("Reverting Impersonalisation failed!")
 		Else
 			Application.Log.AddMessage("Reverting the Impersonalisation is successful !")

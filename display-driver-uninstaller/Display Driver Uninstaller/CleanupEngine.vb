@@ -6,7 +6,6 @@ Imports System.ServiceProcess
 Imports System.Threading
 Imports Windows.Foundation
 Imports Windows.Management.Deployment
-Imports Windows
 Imports System.Security.Principal
 
 Public Class CleanupEngine
@@ -105,7 +104,7 @@ Public Class CleanupEngine
 		Dim win10 As Boolean = frmMain.win10
 		Dim WasRemoved As Boolean = False
 		If win10 Then
-			If Security.Principal.WindowsIdentity.GetCurrent().IsSystem Then
+			If WindowsIdentity.GetCurrent().IsSystem Then
 				ImpersonateLoggedOnUser.ReleaseToken()  'Will not work if we impersonate "SYSTEM"
 				'ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 			End If
@@ -162,7 +161,7 @@ Public Class CleanupEngine
 				'Windows.Foundation.IAsyncAction() = packageManager.RemovePackageAsync("NVIDIACorp.NVIDIAControlPanel_8.1.949.0_x64__56jybvy8sckqj")
 				Dim DeploymentEnded As Boolean = False
 				Dim packageManager As PackageManager = New PackageManager()
-				Dim packages As IEnumerable(Of ApplicationModel.Package) = CType(packageManager.FindPackages(), IEnumerable(Of ApplicationModel.Package))
+				Dim packages As IEnumerable(Of Windows.ApplicationModel.Package) = CType(packageManager.FindPackages(), IEnumerable(Of Windows.ApplicationModel.Package))
 
 				For Each package In packages
 					If package IsNot Nothing Then
@@ -269,7 +268,7 @@ Public Class CleanupEngine
 				End Select
 			End Try
 		End If
-		If Not Security.Principal.WindowsIdentity.GetCurrent().IsSystem Then
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 		End If
 	End Sub
@@ -2411,7 +2410,7 @@ Public Class CleanupEngine
 	End Sub
 
 	Private Sub Threaddata1(ByRef ThreadFinished As Boolean, ByVal filepath As String, ByVal driverfiles As String(), ByVal donotremoveamdhdaudiobusfiles As Boolean)
-		If Not Security.Principal.WindowsIdentity.GetCurrent().IsSystem Then
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 		End If
 		Dim FileIO As New FileIO
