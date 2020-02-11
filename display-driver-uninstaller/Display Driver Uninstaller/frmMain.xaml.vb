@@ -878,6 +878,10 @@ Public Class frmMain
 	End Sub
 
 	Private Sub SystemRestore()
+		If Application.LaunchOptions.NoRestorePoint Then
+			Exit Sub
+		End If
+
 		If Application.Settings.CreateRestorePoint AndAlso System.Windows.Forms.SystemInformation.BootMode = Forms.BootMode.Normal Then
 			Dim frmSystemRestore As New frmSystemRestore
 

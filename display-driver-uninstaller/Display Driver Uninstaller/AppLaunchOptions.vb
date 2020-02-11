@@ -22,6 +22,8 @@ Public Class AppLaunchOptions
 
 	Public Property RemoveMonitors As Boolean = False
 
+	Public Property NoRestorePoint As Boolean = False
+
 	Public Property RemoveCrimsonCache As Boolean = False
 	Public Property RemoveAMDDirs As Boolean = False
 	Public Property RemoveAudioBus As Boolean = False
@@ -103,6 +105,7 @@ Public Class AppLaunchOptions
 					Case StrContainsAny(Argument, True, "-CleanSoundBlaster") : CleanSoundBlaster = True
 
 					Case StrContainsAny(Argument, True, "-PreventWinUpdate") : PreventWinUpdateArg = True
+					Case StrContainsAny(Argument, True, "-NoRestorePoint") : NoRestorePoint = True
 					Case StrContainsAny(Argument, True, "-RemovePhysx") : RemovePhysX = True
 					Case StrContainsAny(Argument, True, "-RemoveGFE") : RemoveGFE = True
 

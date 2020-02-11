@@ -47,12 +47,12 @@
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Definir instalação automática de
-				controladores no Windows para padrão
+				Definir instalação automática de controladores no Windows para padrão
+				(instalar automaticamente)
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Versão do Windows Detectada</Text>
+			<Text>Sistema operativo detectado:</Text>
 		</lblWinVersion>
 		<lblDonate>
 			<Text>*** Gosta do DDU? Considere uma Doação, ela irá ajudar o desenvolvimento do programa. ***</Text>
@@ -100,6 +100,9 @@
 		<TranslatorsMenuItem>
 			<Text>Tradutores</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Patronos</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visite a página oficial do DDU</Text>
 		</VisitDDUHomeMenuItem>
@@ -132,8 +135,24 @@
 			<Text13>Eis o que precisa seleccionar no ecrã azul de recuperação : Resolução de Problemas -&gt; opções avançadas -&gt; Definições de Arranque.</Text13>
 			<Text14>Existe um Reinício pendente, por favor reinicie antes de usar o DDU</Text14>
 			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
+			<Text16>Ocorreu um erro crítico do Windows que está a impedir a remoção correcta dos controladores. Como medida de segurança, o DDU não vai continuar a remoção dos ficheiros e do registo. Deve reparar o(s) problema(s) do sistema antes de utilizar o DDU.</Text16>
 		</Messages>
-
+		<Options_Type>
+			<Options1>---Seleccine o tipo de dispositivo---</Options1>
+			<Options2>Áudio</Options2>
+			<Options3>GPU</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Seleccionar dispositivo---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Seleccionar dispositivo---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>A Executar a limpeza do Armazenamento de Controladores(Passo Eliminar OEM)...</Text1>
 			<Text2>A Limpar Pasta</Text2>
@@ -193,6 +212,9 @@
 		<lblAmdspecific>
 			<Text>Opções Específicas AMD</Text>
 		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>Opções avançadas (Altere por sua conta e risco)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Opções Gerais</Text>
 		</lblGeneral>
@@ -209,7 +231,7 @@
 			<Text>Remover 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
-			<Text>Criar um Ponto de Restauro do Sistema (se permitido)</Text>
+			<Text>Criar um ponto de restauro do sistema (se permitido)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
 			<Text>Remover monitores existentes e não existentes (Recomendado)</Text>
@@ -221,10 +243,11 @@
 			<Text>Remover pastas de controladores "C:\AMD" (NÃO recomendado)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Remover o controlador/filtro AMDKMPFD (Recomenda-se uma cópia de segurança do chipset AMD).</Text>
+			<Text>Remover o controlador/filtro AMDKMPFD (Recomenda-se uma cópia de segurança para chipset AMD).</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Mostrar caixa de mensagem Modo Segurança ao iniciar</Text>
+			<Text>Activar diálogo Modo Segurança ao iniciar (Não recomendado até testar o Modo Segurança manualmente)</Text>
+			<Tooltip>Não recomendado se nunca iniciou o seu computador em modo segurança para ver se funciona. Esta opção pode causar a reinicios repetidos, ecrã negro e possivelmente mais problemas.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Guardar ficheiro de configuração na pasta roaming</Text>
@@ -244,8 +267,14 @@
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>Remover Vulkan Runtime</Text>
-			<Tooltip>Não Recomendado Se Tiver 2 GPUs Diferentes Capazes De Usar o API Vulkan.</Tooltip>
+			<Tooltip>Não recomendado se tiver 2 GPUs diferentes capazes de usar o API Vulkan.</Tooltip>
 		</lblVulkan>
+	<lblPreventWinUpdate>
+      <Text>Prevenir transferência de controladores do "Windows update" quando o "Windows" procura um controlador para um dispositivo.</Text>
+      <Tooltip>Esta opção irá impedir que o "Windows/Device Manager" procure actualizações de controladores no "Windows Update". 
+               Nota: Isto não impede o "Windows Update" de transferir/instalar novos controladores. 
+               Nota2: Também é *ALTAMENTE* recomendado reverter esta alteração depois de ter acabado de usar o DDU e reinstalado o controlador do GPU ou poderá vir a ter problemas com a instalação de outros dispositivos.</Tooltip>
+     </lblPreventWinUpdate>	
 	</frmOptions>
 
 	<frmLaunch Text="Opção de Arranque">
@@ -265,7 +294,7 @@
 		<lblNotSafeMode>
 			<Text>
 				Se não está em modo segurança. É altamente recomendado
-				que reinicie para Modo Segurança para evitar possíveis problemas.
+				que reinicie em Modo Segurança para evitar possíveis problemas.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
@@ -281,7 +310,7 @@
 			<Item3>Modo Segurança Com Rede</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+			<Text1>O DDU encerrou programas conhecidos por interferir (como o MSI Afterburner e RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
 
@@ -333,9 +362,23 @@
 		<btnTranslators>
 			<Text>Tradutores</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>Patronos</Text>
+		</btnPatron>
 		<lblTranslators>
 			<Text>Muito obrigado aos seguintes tradutores e também aos que não constam da lista!</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>
+				Muito obrigado aos seguintes Patronos e também aos que não constam da lista!
+
+				-honnmaguro   (Desde 2018-03-16)
+				-ZaoDaDong   (Desde 2019-02-06)
+				-Alberto Bursi (doador de longa data/apoiante)
+				-Kaseb (Desde 2019-09-05)
+				-Frank Brown (Desde 2019-10-31)
+			</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
@@ -349,7 +392,7 @@
 
 				O efeito resultante do uso desta ferramenta é semelhante ao estado de uma "Nova Instalação" do Windows.
 
-				Esta ferramenta actua de modo semelhante ao "Driver Sweeper", e possui todos os extras acima mencionados.
+				Esta ferramenta actua de modo semelhante ao "Driver Sweeper"*, e possui todos os extras acima mencionados.
 
 				Se tiver problemas com a instalação de controladores novos ou antigos, experimente-o pois existe informação
 				de que o DDU corrige esses problemas.
@@ -400,7 +443,7 @@
 				Ao utilizar o DDU concorda em não acusar o DDU ou os seus criadores e afiliados, de danificar ou afectar negativamente o seu PC.
 
 				Ao utilizar o DDU reconhece que a NVIDIA ("NVIDIA, GeForce") e a Advanced Micro Devices ("AMD, Radeon") não têm
-				nada a ver com este programa, e não são, de maneira nenhuma, afiliados do DDU ou seus criadores.
+				nada a ver com este programa, e não são, de maneira alguma, afiliados do DDU ou dos seus criadores.
 			</Text>
 		</Tos>
 	</Misc>
@@ -409,7 +452,7 @@
 		<Translator>
 			<User>Luis Neves</User>
 			<Details>luis.a.neves@sapo.pt</Details>
-			<LastUpdate>21/01/2017</LastUpdate>
+			<LastUpdate>28/01/2020</LastUpdate>
 		</Translator>
 
 		<Translator2>
