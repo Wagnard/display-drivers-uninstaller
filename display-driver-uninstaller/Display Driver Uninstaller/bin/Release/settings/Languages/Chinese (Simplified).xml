@@ -44,8 +44,8 @@
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				恢复 Windows 更新的默认设置
-				(自动安装驱动程序)
+				恢复 "设备安装设置" 的默认设置
+				(自动执行下载并安装驱动程序)
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
