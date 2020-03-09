@@ -27,11 +27,6 @@ Public Class GPUCleanup
 		Dim VendidSC As String() = Nothing
 		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
 
-		'kill processes that read GPU stats, like RTSS, MSI Afterburner, EVGA Prec X to prevent invalid readings
-
-		KillProcess()
-		'this shouldn't be slow, so it isn't on a thread/background worker
-
 		Select Case config.SelectedGPU
 			Case GPUVendor.Nvidia : vendidexpected = "VEN_10DE" : VendCHIDGPU = "VEN_10DE&CC_03" : VendidSC = {"VEN_10DE"}
 			Case GPUVendor.AMD : vendidexpected = "VEN_1002" : VendCHIDGPU = "VEN_1002&CC_03" : VendidSC = {"VEN_1002"}
