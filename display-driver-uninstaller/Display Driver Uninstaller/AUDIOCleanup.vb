@@ -9,7 +9,7 @@ Public Class AUDIOCleanup
 	Public Sub Start(ByVal config As ThreadSettings)
 		Dim win10 As Boolean = frmMain.win10
 		Dim vendidexpected As String = ""
-		Dim VendidSC As String() = Nothing
+		Dim VendidSC As String() = Nothing   ' "SoftwareComponent" Vendor ID
 
 		Select Case config.SelectedAUDIO
 			Case AudioVendor.Realtek

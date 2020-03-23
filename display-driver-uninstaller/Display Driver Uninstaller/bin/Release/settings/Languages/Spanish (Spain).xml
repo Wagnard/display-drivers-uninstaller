@@ -277,7 +277,7 @@
      </lblPreventWinUpdate>
   </frmOptions>
 
-	<frmLaunch Text="Launch option">
+	<frmLaunch Text="Opción de Arranque">
 		<btnAccept>
 			<Text>Arranque</Text>
 			<Text2>
@@ -454,7 +454,7 @@
 		<Translator>
 			<User>Jackalito</User>
 			<Details>Traductor</Details>
-			<LastUpdate>20/12/2018</LastUpdate>
+			<LastUpdate>12/03/2020</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
