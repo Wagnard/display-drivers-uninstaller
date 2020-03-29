@@ -734,7 +734,7 @@ Class Application
 
 			Using process As Process = New Process() With
 			  {
-			   .StartInfo = New ProcessStartInfo(Paths.System32 & "BCDEDIT", If(withNetwork, "/set safeboot network", "/set safeboot minimal")) With
+			   .StartInfo = New ProcessStartInfo(Paths.System32 & "BCDEDIT", If(withNetwork, "/set {current} safeboot network", "/set {current} safeboot minimal")) With
 			   {
 			 .UseShellExecute = False,
 			 .CreateNoWindow = True,

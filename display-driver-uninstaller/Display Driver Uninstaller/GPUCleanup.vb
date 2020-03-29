@@ -3218,7 +3218,7 @@ Public Class GPUCleanup
 		End If
 
 		'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
-		If win10 Then
+		If win10 AndAlso config.RemoveNVCP Then
 			CleanupEngine.RemoveAppx("NVIDIAControlPanel")
 		End If
 

@@ -258,6 +258,9 @@
 		<lblRemGFE>
 			<Text>Remove GeForce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVCP>
+			<Text>(DCH driver only) Remove the NVIDIA Control Panel installed from the Microsoft Store</Text>
+		</lblRemNVCP>
 		<lblRemCrimsonCache>
 			<Text>Remove AMD Crimson Shader Cache folder</Text>
 			<Tooltip>
