@@ -386,12 +386,6 @@ Public Class GPUCleanup
 			Exit Sub
 		End Try
 
-		CleanupEngine.Cleandriverstore(config)
-
-		If config.SelectedGPU <> GPUVendor.Intel Then
-			CleanupEngine.Cleandriverstore(config)
-		End If
-
 		'Here I remove 3dVision USB Adapter and USB type C(RTX).
 		If config.SelectedGPU = GPUVendor.Nvidia Then
 
@@ -497,6 +491,10 @@ Public Class GPUCleanup
 		End If
 
 		Application.Log.AddMessage("SetupAPI: Remove Audio/HDMI Complete")
+
+		If config.SelectedGPU <> GPUVendor.Intel Then
+			CleanupEngine.Cleandriverstore(config)
+		End If
 
 		'removing monitor and hidden monitor
 
