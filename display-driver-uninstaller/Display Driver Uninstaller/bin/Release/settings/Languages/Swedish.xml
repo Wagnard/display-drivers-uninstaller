@@ -75,7 +75,7 @@
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Erbjudanden från våra partners</Text>
+			<Text>Erbjudanden från våra partners. (Rekommenderat)</Text>
 			<Tooltip>Du kan stänga av detta i Alternativmenyn.</Tooltip>
 		</lblOffer>
 
@@ -101,7 +101,7 @@
 			<Text>Översättare</Text>
 		</TranslatorsMenuItem>
 		<PatronMenuItem>
-			<Text>Donator</Text>
+			<Text>Donatorer</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Besök officiell DDU webbplats</Text>
@@ -137,7 +137,22 @@
 			<Text15>Ingen ändring gjordes. Windows Enhetsinstallationsinställningar var redan satta till standard.</Text15>
             <Text16>Ett kritiskt fel i Windows förhindrar borttagning av drivrutiner. Som en säkerhetsåtgärd, kommer DDU inte att fortsätta att ta bort i filer och registret. Du måste fixa dina systemproblem innan DDU används.</Text16>
 		</Messages>
-
+		<Options_Type>
+			<Options1>---Välj enhetstyp---</Options1>
+			<Options2>Ljud</Options2>
+			<Options3>Grafik</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Välj enhet---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Välj enhet---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>Kör drivrutinsrensning(Ta bort OEM steg)...</Text1>
 			<Text2>Rensar katalog</Text2>
@@ -146,7 +161,7 @@
 			<Text5>Rensar katalog</Text5>
 			<Text6>Startar Registerrensning</Text6>
 			<Text7>Klar med rensning av Registret</Text7>
-			<Text8>Startar bortagning av nVidia Optimus UpperFilter om det finns.</Text8>
+			<Text8>Startar bortagning av NVIDIA Optimus UpperFilter om det finns.</Text8>
 			<Text9>Letar efter ny enhet...</Text9>
 			<Text10>Ren avinstallering färdig!</Text10>
 			<Text11>DDU Version</Text11>
@@ -184,7 +199,7 @@
 		</UpdateLog>
 	</frmMain>
 
-	<frmOptions Text="Options">
+	<frmOptions Text="Inställningar">
 		<btnClose>
 			<Text>Stäng</Text>
 		</btnClose>
@@ -204,7 +219,7 @@
 			<Text>Generella alternativ</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Rensa "C:\nVidia" Drivrutinskataloger (INTE rekommenderat)</Text>
+			<Text>Rensa "C:\NVIDIA" Drivrutinskataloger (INTE rekommenderat)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>Spara loggfiler i startkatalogen (rekommenderas)</Text>
@@ -243,11 +258,14 @@
 		<lblRemGFE>
 			<Text>Ta bort Geforce Experience (GFE)</Text>
 		</lblRemGFE>
+<lblRemNVCP>
+			<Text>(bara DCH-drivrutin) Ta bort NVIDIA Kontrollpanel installerat från Microsoft Store</Text>
+		</lblRemNVCP>
 		<lblRemCrimsonCache>
 			<Text>Ta bort AMD Crimson Skuggningscachekatalog</Text>
 			<Tooltip>
 				Rekommenderas om det finns grafikfel (hastighet eller visuell korruption) orsakat av korrupt skuggningscachedata.
-				Också rekommenderat om du byter till ett annat varumärke som nVidia.
+				Också rekommenderat om du byter till ett annat varumärke som NVIDIA.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
@@ -299,7 +317,7 @@
 		</Messages>
 	</frmLaunch>
 
-	<frmLog Text="Extended log">
+	<frmLog Text="Utökad logg">
 		<btnClose>
 			<Text>Stäng</Text>
 		</btnClose>
@@ -355,10 +373,14 @@
 		</lblTranslators>
 		<lblPatron>
 			<Text>
-        Stort tack till följande Donator och också även till de som inte listas!
+        Stort tack till följande Donatorer och också även till de som inte listas!
 
         -honnmaguro   (Sedan 2018-03-16)
-      </Text>
+        -ZaoDaDong   (Sedan 2019-02-06)
+		-Alberto Bursi (lång tids donator/supporter)
+		-Kaseb (Sedan 2019-09-05)
+		-Frank Brown (Sedan 2019-10-31)
+    </Text>
 		</lblPatron>
 	</frmAbout>
 
@@ -410,7 +432,7 @@ Tack till Helge Klein (http://helgeklein.com/setacl/) : för tillståndet att an
 
 				Tack till alla som utsatte sina system för risker. (speciellt tack till Dellon132)
 
-				*DDU, dess skapare och partners är på inget sätt förknippade med Driver Sweeper, eller dess skapare.Thanks to anyone who put their system at risk. (special thanks to Dellon132)
+				*DDU, dess skapare och partners är på inget sätt förknippade med Driver Sweeper, eller dess skapare.
 			</Text>
 		</About>
 
@@ -432,7 +454,7 @@ Tack till Helge Klein (http://helgeklein.com/setacl/) : för tillståndet att an
 		<Translator>
 			<User>Hans Eriksson</User>
 			<Details>hans.ericson@bredband.net</Details>
-			<LastUpdate>18/07/2018</LastUpdate>
+			<LastUpdate>08/05/2020</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
