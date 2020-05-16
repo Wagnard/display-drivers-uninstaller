@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="en-US" Text="English" >
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -101,7 +101,7 @@
 			<Text>Translators</Text>
 		</TranslatorsMenuItem>
 		<PatronMenuItem>
-			<Text>Patron</Text>
+			<Text>Patrons</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visit official DDU website</Text>
@@ -366,14 +366,14 @@
 			<Text>Translators</Text>
 		</btnTranslators>
 		<btnPatron>
-			<Text>Patron</Text>
+			<Text>Patrons</Text>
 		</btnPatron>
 		<lblTranslators>
 			<Text>Big thanks to the following translators and also those who aren't listed!</Text>
 		</lblTranslators>
 		<lblPatron>
 			<Text>
-				Big thanks to the following Patron and also those who aren't listed!
+				Big thanks to the following Patrons and also those who aren't listed!
 
 				-honnmaguro   (Since 2018-03-16)
 				-ZaoDaDong   (Since 2019-02-06)
