@@ -32,7 +32,7 @@ Public Class ImpersonateLoggedOnUser
 		If procs IsNot Nothing AndAlso procs.Length > 0 Then
 			Try
 				For Each proc As Process In procs
-					If IsNullOrWhitespace(proc.ToString) Then Continue For
+					If IsNullOrWhitespace(proc.ToString) OrElse proc.ProcessName.ToLower = "searchfilterhost" Then Continue For
 					Try
 						If OpenProcessToken(proc.Handle, TOKEN_QUERY Or TOKEN_IMPERSONATE Or TOKEN_DUPLICATE, hToken) <> 0 Then
 							Dim newId As Principal.WindowsIdentity = New Principal.WindowsIdentity(hToken)

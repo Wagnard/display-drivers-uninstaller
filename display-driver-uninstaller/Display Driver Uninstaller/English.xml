@@ -219,10 +219,10 @@
 			<Text>General Options</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Remove "C:\NVIDIA" driver folders (NOT recommended)</Text>
+			<Text>Remove "C:\NVIDIA" driver folders.</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Save log files in startup path (Highly recommended)</Text>
+			<Text>Save log files in startup path. (Highly recommended)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Remove PhysX</Text>
@@ -240,7 +240,7 @@
 			<Text>Remove AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Remove "C:\AMD" driver folders (NOT recommended)</Text>
+			<Text>Remove "C:\AMD" driver folders.</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Remove the driver/filter AMDKMPFD (A backup is recommended for AMD chipset)</Text>

@@ -15,7 +15,7 @@ Imports System.Windows
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("Wagnardsoft")>
 <Assembly: AssemblyProduct("Display Driver Uninstaller")>
-<Assembly: AssemblyCopyright("Copyright Wagnardsoft ©  2019")>
+<Assembly: AssemblyCopyright("Copyright Wagnardsoft ©  2020")>
 <Assembly: AssemblyTrademark("")> 
 <Assembly: ComVisible(false)>
 

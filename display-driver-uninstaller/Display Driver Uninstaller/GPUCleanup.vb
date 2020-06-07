@@ -6567,6 +6567,81 @@ Public Class GPUCleanup
 			End If
 		End Using
 
+		For Each users As String In Registry.Users.GetSubKeyNames()
+			If IsNullOrWhitespace(users) Then Continue For
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, users & "\Software", True)
+				If regkey IsNot Nothing Then
+					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Khronos\OpenCL\Vendors", True)
+						If regkey2 IsNot Nothing Then
+							For Each child As String In regkey2.GetValueNames()
+								If IsNullOrWhitespace(child) Then Continue For
+								If StrContainsAny(child, True, "amdocl") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+									Try
+										Deletevalue(regkey2, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+								If StrContainsAny(child, True, "nvopencl") AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
+									Try
+										Deletevalue(regkey2, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+								If StrContainsAny(child, True, "intelopencl") AndAlso config.SelectedGPU = GPUVendor.Intel Then
+									Try
+										Deletevalue(regkey2, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+							Next
+							If regkey2.GetValueNames().Length = 0 Then
+								Try
+									Deletesubregkey(regkey, "Khronos\OpenCL")
+								Catch ex As Exception
+									Application.Log.AddException(ex)
+								End Try
+							End If
+						End If
+					End Using
+
+					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Khronos\vulkan\Drivers", True)
+						If regkey2 IsNot Nothing Then
+							For Each child As String In regkey2.GetValueNames
+								If IsNullOrWhitespace(child) Then Continue For
+								If StrContainsAny(child, True, "amd-vulkan64") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+									Try
+										Deletevalue(regkey2, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+							Next
+							If regkey2.GetValueNames().Length = 0 Then
+								Try
+									Deletesubregkey(regkey, "Khronos\vulkan\Drivers")
+								Catch ex As Exception
+									Application.Log.AddException(ex)
+								End Try
+							End If
+						End If
+					End Using
+					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, "Khronos", True)
+						If subregkey IsNot Nothing Then
+							If subregkey.GetSubKeyNames().Length = 0 Then
+								Try
+									Deletesubregkey(regkey, "Khronos")
+								Catch ex As Exception
+									Application.Log.AddException(ex)
+								End Try
+							End If
+						End If
+					End Using
+				End If
+			End Using
+		Next
 
 		If config.WinIs64 Then
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\WOW6432Node\Khronos\OpenCL\Vendors", True)
@@ -6640,6 +6715,81 @@ Public Class GPUCleanup
 				End If
 			End Using
 
+			For Each users As String In Registry.Users.GetSubKeyNames()
+				If IsNullOrWhitespace(users) Then Continue For
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, users & "\Software\Wow6432Node", True)
+					If regkey IsNot Nothing Then
+						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Khronos\OpenCL\Vendors", True)
+							If regkey2 IsNot Nothing Then
+								For Each child As String In regkey2.GetValueNames()
+									If IsNullOrWhitespace(child) Then Continue For
+									If StrContainsAny(child, True, "amdocl") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+										Try
+											Deletevalue(regkey2, child)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
+									If StrContainsAny(child, True, "nvopencl") AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
+										Try
+											Deletevalue(regkey2, child)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
+									If StrContainsAny(child, True, "intelopencl") AndAlso config.SelectedGPU = GPUVendor.Intel Then
+										Try
+											Deletevalue(regkey2, child)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
+								Next
+								If regkey2.GetValueNames().Length = 0 Then
+									Try
+										Deletesubregkey(regkey, "Khronos\OpenCL")
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+							End If
+						End Using
+
+						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Khronos\vulkan\Drivers", True)
+							If regkey2 IsNot Nothing Then
+								For Each child As String In regkey2.GetValueNames
+									If IsNullOrWhitespace(child) Then Continue For
+									If StrContainsAny(child, True, "amd-vulkan64") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+										Try
+											Deletevalue(regkey2, child)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
+								Next
+								If regkey2.GetValueNames().Length = 0 Then
+									Try
+										Deletesubregkey(regkey, "Khronos\vulkan\Drivers")
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+							End If
+						End Using
+						Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, "Khronos", True)
+							If subregkey IsNot Nothing Then
+								If subregkey.GetSubKeyNames().Length = 0 Then
+									Try
+										Deletesubregkey(regkey, "Khronos")
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+							End If
+						End Using
+					End If
+				End Using
+			Next
 		End If
 
 		FilePath = System.Environment.SystemDirectory

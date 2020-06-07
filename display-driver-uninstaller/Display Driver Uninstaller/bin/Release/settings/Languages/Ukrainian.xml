@@ -8,7 +8,7 @@
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
 			<Text>
-				Очистити та перезавантажити
+				Видалити та перезавантажити
 				(настійно рекомендовано)
 			</Text>
 			<Tooltip>
@@ -18,7 +18,7 @@
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				Очистити БЕЗ перезавантаження
+				Видалити БЕЗ перезавантаження
 				(може спричинити проблеми,
 				подібні до "чорного екрана")
 			</Text>
@@ -105,7 +105,7 @@
 			<Text>Перекладачі</Text>
 		</TranslatorsMenuItem>
 		<PatronMenuItem>
-			<Text>Покровитель</Text>
+			<Text>Меценати</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Відвідайте веб-сайт DDU</Text>
@@ -182,21 +182,21 @@
 			<Text22>драйвер</Text22>
 			<Text23>Виконання видалення SetupAPI. Зачекайте (це може зайняти кілька хвилин)</Text23>
 			<Text24>Графічні процесори видалено з диспетчера пристроїв.</Text24>
-			<Text25>Виконання видалення SetupAPI аудіо контролера.</Text25>
+			<Text25>Виконання видалення SetupAPI контролера аудіо.</Text25>
 			<Text26>HD аудіо адаптери видалено!</Text26>
 			<Text27>Адаптер 3D Vision USB видалено з диспетчера пристроїв.</Text27>
 			<Text28>Монітори та приховані монітори видалено!</Text28>
 			<Text29>Видалення SetupAPI завершено</Text29>
-			<Text30>Запуск очищення регіону S-1-5-xx</Text30>
-			<Text31>Кінець очищення регіону S-1-5-xx</Text31>
-			<Text32>Початок очищення Classesroot ,installer\products</Text32>
-			<Text33>Кінець очищення  Classesroot ,installer\products</Text33>
-			<Text34>Початок очищення localmachine ,installer\products</Text34>
-			<Text35>Кінець очищення  localmachine ,installer\products</Text35>
-			<Text36>Початок очищення currentuser ,installer\products</Text36>
-			<Text37>Кінець очищення  currentuser ,installer\products</Text37>
-			<Text38>Очищення processes/services...</Text38>
-			<Text39>Очищення processes/services завершено</Text39>
+			<Text30>Розпочато очищення ідентифікаторів безпеки</Text30>
+			<Text31>Завершено очищення ідентифікаторів безпеки</Text31>
+			<Text32>Розпочато очищення гілки CLASSESROOT</Text32>
+			<Text33>Завершено очищення гілки CLASSESROOT</Text33>
+			<Text34>Розпочато очищення гілки LOCALMACHINE</Text34>
+			<Text35>Завершено очищення гілки LOCALMACHINE</Text35>
+			<Text36>Розпочато очищення гілки CURRENTUSER</Text36>
+			<Text37>Завершено очищення гілки CURRENTUSER</Text37>
+			<Text38>Очищення процесів/служб...</Text38>
+			<Text39>Очищення процесів/служб завершено</Text39>
 			<Text40>Видалено.</Text40>
 			<Text41>Значення видалено.</Text41>
 			<Text42>Файл видалено.</Text42>
@@ -211,10 +211,10 @@
 			<Text>Показувати пропозиції від наших партнерів</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>Папаметри, специфічні для NVIDIA</Text>
+			<Text>Параметри, специфічні для NVIDIA</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>Папаметри, специфічні для AMD</Text>
+			<Text>Параметри, специфічні для AMD</Text>
 		</lblAmdspecific>
 		<lblAdvancedO>
 			<Text>Додаткові параметри (змінюйте на свій страх і ризик)</Text>
@@ -223,7 +223,7 @@
 			<Text>Загальні параметри</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Видалити папку драйверів "C:\nVidia" (НЕ рекомендовано)</Text>
+			<Text>Видалити папку драйверів "C:\NVIDIA" (НЕ рекомендовано)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>Зберігати файли журналу в папці запуску (настійно рекомендовано)</Text>
@@ -257,7 +257,7 @@
 			</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Зберігати файл конфігурації у папці переміщення</Text>
+			<Text>Зберігати файл конфігурації у переміщуваній папці</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
 			<Text>Автоматично перевіряти наявність оновлень при запуску DDU (рекомендовано)</Text>
@@ -265,6 +265,9 @@
 		<lblRemGFE>
 			<Text>Видалити Geforce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVCP>
+			<Text>Видалити панель керування NVIDIA, інстальовану з Microsoft Store (тільки драйвер DCH)</Text>
+		</lblRemNVCP>
 		<lblRemCrimsonCache>
 			<Text>Видалити папку AMD Crimson Shader Cache</Text>
 			<Tooltip>
@@ -371,16 +374,16 @@
 			<Text>Перекладачі</Text>
 		</btnTranslators>
 		<btnPatron>
-			<Text>Покровитель</Text>
+			<Text>Меценати</Text>
 		</btnPatron>
 		<lblTranslators>
 			<Text> Щиро дякуємо переліченим перекладачам та тим, кого не перелічено!</Text>
 		</lblTranslators>
 		<lblPatron>
 			<Text>
-	 Велике спасибі нижченаведеному покровителю, а також тим, кого не перелічено!
+				Щиро дякуємо переліченим меценатам та тим, кого не перелічено!
 	 
-	 -honnmaguro   (Since 2018-03-16)  
+				— honnmaguro  (з 16/03/2018)
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -444,7 +447,7 @@
 		<Translator>
 			<User>YuriPet</User>
 			<Details>yuripet@gmail.com</Details>
-			<LastUpdate>20/09/2018</LastUpdate>
+			<LastUpdate>18/05/2020</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
