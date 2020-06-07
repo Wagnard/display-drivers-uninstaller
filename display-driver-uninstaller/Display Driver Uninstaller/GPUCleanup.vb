@@ -3146,7 +3146,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvab") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE AndAlso config.RemovePhysX Or
 								   child2.ToLower.Contains("network.service") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("miracast.virtualaudio") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
@@ -5538,7 +5538,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("display.gamemonitor") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE AndAlso config.RemovePhysX Or
 								   child2.ToLower.Contains("network.service") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("miracast.virtualaudio") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or
