@@ -93,7 +93,7 @@ Public Class AppSettings
 	Private m_remAMDKMPFD As DependencyProperty = RegDP("RemoveAMDKMPFD", GetType(Boolean), GetType(AppSettings), False)
 
 	Private m_remNvidiaDirs As DependencyProperty = RegDP("RemoveNvidiaDirs", GetType(Boolean), GetType(AppSettings), True)
-	Private m_remPhysX As DependencyProperty = RegDP("RemovePhysX", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remPhysX As DependencyProperty = RegDP("RemovePhysX", GetType(Boolean), GetType(AppSettings), False)
 	Private m_rem3DtvPlay As DependencyProperty = RegDP("Remove3DTVPlay", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remGFE As DependencyProperty = RegDP("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remNVCP As DependencyProperty = RegDP("RemoveNVCP", GetType(Boolean), GetType(AppSettings), True)
