@@ -2,7 +2,6 @@
 Imports Microsoft.Win32
 Imports Display_Driver_Uninstaller.Win32
 Imports System.Security.AccessControl
-Imports System.ServiceProcess
 Imports System.Threading
 Imports Windows.Foundation
 Imports Windows.Management.Deployment
@@ -101,6 +100,7 @@ Public Class CleanupEngine
 	End Sub
 
 	Public Sub RemoveAppx(ByVal AppxToRemove As String)
+		Dim ServiceInstaller As New ServiceInstaller
 		Dim win10 As Boolean = frmMain.win10
 		Dim WasRemoved As Boolean = False
 		If win10 Then
@@ -231,10 +231,10 @@ Public Class CleanupEngine
 			Finally
 				Select Case System.Windows.Forms.SystemInformation.BootMode
 					Case System.Windows.Forms.BootMode.FailSafe
-						StopService("AppXSvc")
-						StopService("camsvc")
-						StopService("clipSVC")
-						StopService("Wsearch")
+						ServiceInstaller.StopService("AppXSvc")
+						ServiceInstaller.StopService("camsvc")
+						ServiceInstaller.StopService("clipSVC")
+						ServiceInstaller.StopService("Wsearch")
 						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
 							If regkey IsNot Nothing Then
 								Try
@@ -249,10 +249,10 @@ Public Class CleanupEngine
 						End Using
 
 					Case System.Windows.Forms.BootMode.FailSafeWithNetwork
-						StopService("AppXSvc")
-						StopService("camsvc")
-						StopService("clipSVC")
-						StopService("Wsearch")
+						ServiceInstaller.StopService("AppXSvc")
+						ServiceInstaller.StopService("camsvc")
+						ServiceInstaller.StopService("clipSVC")
+						ServiceInstaller.StopService("Wsearch")
 						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
 							If regkey IsNot Nothing Then
 								Try
@@ -1049,6 +1049,7 @@ Public Class CleanupEngine
 	End Sub
 
 	Public Sub Cleanserviceprocess(ByVal services As String())
+		Dim ServiceInstaller As New ServiceInstaller
 		ImpersonateLoggedOnUser.Taketoken()
 		Dim timer As System.Timers.Timer = New System.Timers.Timer
 		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
@@ -1109,17 +1110,6 @@ Public Class CleanupEngine
 										End If
 									End Using
 								End If
-
-								'Verify that the service was indeed removed via registry.
-								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
-									If regkey3 IsNot Nothing Then
-
-										Application.Log.AddWarningMessage("Failed to remove the service : " & service)
-									Else
-
-										Application.Log.AddMessage("Service : " & service & " removed.")
-									End If
-								End Using
 							End If
 						End If
 					End Using
@@ -1207,24 +1197,6 @@ Public Class CleanupEngine
 		End Try
 	End Sub
 
-	Public Sub StartService(ByVal service As String)
-
-		For Each svc As ServiceController In ServiceController.GetServices()
-			Using svc
-				If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
-					If svc.Status = ServiceControllerStatus.Stopped Then
-						Try
-							svc.Start()
-							svc.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(5))
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-					End If
-				End If
-			End Using
-		Next
-
-	End Sub
 	Public Function CheckServiceStartupType(ByVal service As String) As String
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services\" & service, False)
 			If regkey IsNot Nothing Then
@@ -1240,26 +1212,6 @@ Public Class CleanupEngine
 				regkey.SetValue("Start", value, RegistryValueKind.DWord)
 			End If
 		End Using
-	End Sub
-
-	Public Sub StopService(ByVal service As String)
-
-		For Each svc As ServiceController In ServiceController.GetServices()
-			Using svc
-				If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
-					If svc.Status <> ServiceControllerStatus.Stopped Then
-						Try
-							svc.Stop()
-							svc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5))
-						Catch ex As Exception
-							Application.Log.AddException(ex)
-						End Try
-
-					End If
-				End If
-			End Using
-		Next
-
 	End Sub
 
 	Public Sub PrePnplockdownfiles(ByVal oeminf As String)

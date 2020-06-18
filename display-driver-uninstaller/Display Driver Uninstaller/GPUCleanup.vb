@@ -21,6 +21,7 @@ Public Class GPUCleanup
 
 	Public Sub Start(ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
+		Dim ServiceInstaller As New ServiceInstaller
 		Dim Array As String()
 		Dim VendCHIDGPU As String = ""
 		Dim vendidexpected As String = ""

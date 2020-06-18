@@ -44,6 +44,7 @@ Public Class frmMain
 
 	Dim CheckUpdate As New CheckUpdate
 	Dim CleanupEngine As New CleanupEngine
+	Dim ServiceInstaller As New ServiceInstaller
 	Dim GPUCleanup As New GPUCleanup
 	Dim AUDIOCleanup As New AUDIOCleanup
 	Dim enduro As Boolean = False
@@ -1072,7 +1073,7 @@ Public Class frmMain
 	End Function
 
 	Private Sub StartService(ByVal service As String)
-		CleanupEngine.StartService(service)
+		ServiceInstaller.StartService(service)
 	End Sub
 	Private Function CheckServiceStartupType(ByVal service As String) As String
 		Return CleanupEngine.CheckServiceStartupType(service)
@@ -1082,7 +1083,7 @@ Public Class frmMain
 		CleanupEngine.SetServiceStartupType(service, value)
 	End Sub
 	Private Sub StopService(ByVal service As String)
-		CleanupEngine.StopService(service)
+		ServiceInstaller.StopService(service)
 	End Sub
 
 	' "Universal" solution, can be used for Nvidia/Intel too
