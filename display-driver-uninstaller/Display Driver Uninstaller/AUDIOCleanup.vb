@@ -184,9 +184,7 @@ Public Class AUDIOCleanup
 									If IsNullOrWhitespace(packages(i)) Then Continue For
 									If StrContainsAny(wantedvalue, True, packages(i)) Then
 										Try
-											If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
-												Deletesubregkey(regkey, child)
-											End If
+											Deletesubregkey(regkey, child)
 										Catch ex As Exception
 											Application.Log.AddException(ex)
 										End Try
