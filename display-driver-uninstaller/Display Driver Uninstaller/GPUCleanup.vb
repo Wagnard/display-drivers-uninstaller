@@ -205,8 +205,13 @@ Public Class GPUCleanup
 
 						If config.RemoveAudioBus Then
 							For Each Parent As SetupAPI.Device In AudioDevice.ParentDevices
-								If Parent IsNot Nothing Then
-									SetupAPI.UninstallDevice(Parent) 'Removing the Audio bus.
+								If Parent IsNot Nothing Then 'TODO : Parent.ChildDevices.Length < 1
+									Dim audiobusList As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Parent.DeviceID, False, True, True)
+									For Each audiobus As SetupAPI.Device In audiobusList
+										If audiobus IsNot Nothing AndAlso audiobus.ChildDevices.Length < 2 Then
+											SetupAPI.UninstallDevice(audiobus) 'Removing the Audio bus.
+										End If
+									Next
 								End If
 							Next
 						End If
@@ -6087,6 +6092,7 @@ Public Class GPUCleanup
 		'Removal of the (DCH) from the Window Store. (In progress...)
 		If win10 Then
 			CleanupEngine.RemoveAppx("IntelGraphicsControlPanel")
+			CleanupEngine.RemoveAppx("IntelGraphicsExperience")
 		End If
 
 		CleanupEngine.Pnplockdownfiles(driverfiles) '// add each line as String Array.

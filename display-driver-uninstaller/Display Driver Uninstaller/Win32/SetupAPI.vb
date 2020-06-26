@@ -1323,7 +1323,7 @@ Namespace Win32
 		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CM_Get_Child(
    <[Out]()> ByRef pdnDevInst As UInt32,
-   <[In]()> ByVal DevInst As UInt32,
+   <[In]()> ByVal dnDevInst As UInt32,
    <[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
 
