@@ -238,12 +238,12 @@ Public Class AUDIOCleanup
 			If regkey IsNot Nothing Then
 				For Each child As String In regkey.GetSubKeyNames()
 					If IsNullOrWhitespace(child) Then Continue For
-					If StrContainsAny(child, True, "realtek") Then
+					If StrContainsAny(child, True, "realtek", "ASIO") Then
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 							If regkey2 IsNot Nothing Then
 								For Each child2 As String In regkey2.GetSubKeyNames()
 									If IsNullOrWhitespace(child2) Then Continue For
-									If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection") Then
+									If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection", "Realtek ASIO") Then
 										Try
 											Deletesubregkey(regkey2, child2)
 										Catch ex As Exception
@@ -275,12 +275,12 @@ Public Class AUDIOCleanup
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) Then Continue For
-						If StrContainsAny(child, True, "realtek") Then
+						If StrContainsAny(child, True, "realtek", "ASIO") Then
 							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 								If regkey2 IsNot Nothing Then
 									For Each child2 As String In regkey2.GetSubKeyNames()
 										If IsNullOrWhitespace(child2) Then Continue For
-										If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection") Then
+										If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection", "Realtek ASIO") Then
 											Try
 												Deletesubregkey(regkey2, child2)
 											Catch ex As Exception
