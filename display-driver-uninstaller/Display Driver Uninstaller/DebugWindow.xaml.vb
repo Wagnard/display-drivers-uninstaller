@@ -128,7 +128,7 @@ Public Class DebugWindow
 		Dim found As List(Of SetupAPI.Device)
 
 		If cbFilterDev.SelectedIndex = 0 Then
-			found = SetupAPI.GetDevices(tbFilterDev.Text, Nothing, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False), True)
+			found = SetupAPI.GetDevices(tbFilterDev.Text, Nothing, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False), True, True)
 		ElseIf cbFilterDev.SelectedItem IsNot Nothing Then
 			found = SetupAPI.TEST_GetDevices(cbFilterDev.SelectedItem.ToString(), tbFilterDev.Text, If(chbSearchSiblings.IsChecked.HasValue, chbSearchSiblings.IsChecked.Value, False), True)
 		Else
@@ -506,7 +506,7 @@ Public Class DebugWindow
 		End If
 	End Sub
 
-	Private Sub btnReScanDevices_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnReScanDevices.Click
+	Private Sub btnReScanDevices_Click(sender As Object, e As System.Windows.RoutedEventArgs) Handles btnReScanDevices.Click
 		SetupAPI.ReScanDevices()
 		MessageBox.Show("Done!")
 	End Sub
@@ -554,7 +554,7 @@ Public Class DebugWindow
 		Dim path As String = tbPath.Text
 		Dim wildCard As String = tbWildCards.Text
 		Dim subFolders As Boolean = If(chkSubFolders.IsChecked.HasValue, chkSubFolders.IsChecked.Value, False)
-	
+
 		btnGetFiles.IsEnabled = False
 		btnGetFolders.IsEnabled = False
 

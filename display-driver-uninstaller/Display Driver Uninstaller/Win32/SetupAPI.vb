@@ -1337,7 +1337,7 @@ Namespace Win32
 		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CM_Get_Device_ID(
 		<[In]()> ByVal dnDevInst As UInt32,
-		<[Out]()> ByVal Buffer As StringBuilder,
+		<[In]()> ByVal Buffer As String,
 		<[In]()> ByVal BufferLen As UInt32,
 		<[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
@@ -3024,6 +3024,7 @@ Namespace Win32
 			Dim result As UInteger = 0UI
 			Dim reqSize As UInteger = 0UI
 
+
 			If CM_Get_Device_ID_Size(reqSize, devInst, 0UI) <> CR.SUCCESS Then
 				Throw New Win32Exception()
 			End If
@@ -3032,9 +3033,10 @@ Namespace Win32
 				Throw New Win32Exception(GetInt32(Errors.NO_SUCH_DEVINST))
 			End If
 
-			reqSize += 2UI  'terminating NULL
+			'reqSize += 2UI  'terminating NULL
 
-			Dim deviceID As New StringBuilder(GetInt32(reqSize))
+			'Dim deviceID As New StringBuilder(GetInt32(reqSize))
+			Dim deviceID As String = New String(ChrW(0), CInt(reqSize))
 
 			result = CM_Get_Device_ID(devInst, deviceID, reqSize, 0UI)
 
@@ -3043,7 +3045,7 @@ Namespace Win32
 				'Microsoft.VisualBasic.MsgBox(result)
 			End If
 
-			Return deviceID.ToString()
+			Return deviceID
 		End Function
 
 		Private Shared Sub GetSiblings(ByVal device As Device)
