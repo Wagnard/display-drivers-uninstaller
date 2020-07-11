@@ -1337,14 +1337,14 @@ Namespace Win32
 		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CM_Get_Device_ID(
 		<[In]()> ByVal dnDevInst As UInt32,
-		<[In]()> ByVal Buffer As String,
-		<[In]()> ByVal BufferLen As UInt32,
+		<[In]()> ByVal Buffer As IntPtr,
+		<[In]()> ByVal BufferLen As Int32,
 		<[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
 
 		<DllImport("CfgMgr32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function CM_Get_Device_ID_Size(
-  <[Out]()> ByRef pulLen As UInteger,
+  <[Out]()> ByRef pulLen As Integer,
   <[In]()> ByVal dnDevInst As UInt32,
   <[In]()> ByVal ulFlags As UInt32) As UInt32
 		End Function
@@ -3021,8 +3021,7 @@ Namespace Win32
 		End Sub
 
 		Private Shared Function GetDeviceID(ByVal devInst As UInt32) As String
-			Dim result As UInteger = 0UI
-			Dim reqSize As UInteger = 0UI
+			Dim reqSize As Integer = 0
 
 
 			If CM_Get_Device_ID_Size(reqSize, devInst, 0UI) <> CR.SUCCESS Then
@@ -3033,17 +3032,18 @@ Namespace Win32
 				Throw New Win32Exception(GetInt32(Errors.NO_SUCH_DEVINST))
 			End If
 
-			'reqSize += 2UI  'terminating NULL
+			Dim StrPtr As IntPtr = Marshal.AllocHGlobal((reqSize + 1) * Marshal.SystemDefaultCharSize)
 
-			'Dim deviceID As New StringBuilder(GetInt32(reqSize))
-			Dim deviceID As String = New String(ChrW(0), CInt(reqSize))
-
-			result = CM_Get_Device_ID(devInst, deviceID, reqSize, 0UI)
+			Dim result As UInteger = CM_Get_Device_ID(devInst, StrPtr, reqSize, 0UI)
 
 			If result <> CR.SUCCESS Then
 				Throw New Win32Exception()
 				'Microsoft.VisualBasic.MsgBox(result)
 			End If
+
+			Dim deviceID As String = Marshal.PtrToStringAuto(StrPtr, reqSize)
+
+			Marshal.FreeHGlobal(StrPtr)
 
 			Return deviceID
 		End Function
