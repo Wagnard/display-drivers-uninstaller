@@ -70,7 +70,16 @@
                     </UniformGrid>
                 </DockPanel>
 
-                <DockPanel Grid.Row="2" Margin="10,10,10,0" DockPanel.Dock="Top">
+				<DockPanel Grid.Row="2" Margin="10,10,10,10" DockPanel.Dock="Top">
+					<Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
+					<Label DockPanel.Dock="Top" x:Name="lblIntelspecific" Content="lblIntelspecific" FontWeight="Bold" FontSize="14" />
+
+					<UniformGrid DockPanel.Dock="Top" Rows="1">
+						<CheckBox x:Name="lblRemINTELCP" IsChecked="{Binding RemoveINTELCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemINTELCP" />
+					</UniformGrid>
+				</DockPanel>
+
+				<DockPanel Grid.Row="2" Margin="10,10,10,0" DockPanel.Dock="Top">
                     <Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
                     <Label DockPanel.Dock="Top" x:Name="lblAdvancedO" Content="lblAdvancedO" FontWeight="Bold" FontSize="14" />
 

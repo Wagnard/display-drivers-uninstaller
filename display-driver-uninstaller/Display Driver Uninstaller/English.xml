@@ -212,6 +212,9 @@
 		<lblAmdspecific>
 			<Text>AMD Specific Options</Text>
 		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>INTEL Specific Options</Text>
+		</lblINTELspecific>
 		<lblAdvancedO>
 			<Text>Advanced Options (Change at your own risks)</Text>
 		</lblAdvancedO>
@@ -259,8 +262,11 @@
 			<Text>Remove GeForce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemNVCP>
-			<Text>(DCH driver only) Remove the NVIDIA Control Panel installed from the Microsoft Store</Text>
+			<Text>(DCH driver) Remove the NVIDIA Control Panel installed from the Microsoft Store</Text>
 		</lblRemNVCP>
+		<lblRemINTELCP>
+			<Text>(DCH driver) Remove the INTEL Control Panel installed from the Microsoft Store</Text>
+		</lblRemINTELCP>
 		<lblRemCrimsonCache>
 			<Text>Remove AMD Crimson Shader Cache folder</Text>
 			<Tooltip>

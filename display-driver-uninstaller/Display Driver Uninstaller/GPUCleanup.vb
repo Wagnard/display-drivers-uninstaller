@@ -6090,7 +6090,7 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("Cleaning registry")
 
 		'Removal of the (DCH) from the Window Store. (In progress...)
-		If win10 Then
+		If win10 AndAlso config.RemoveINTELCP Then
 			CleanupEngine.RemoveAppx("IntelGraphicsControlPanel")
 			CleanupEngine.RemoveAppx("IntelGraphicsExperience")
 		End If
