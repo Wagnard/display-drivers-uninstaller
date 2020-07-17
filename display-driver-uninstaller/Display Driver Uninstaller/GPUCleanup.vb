@@ -6550,6 +6550,13 @@ Public Class GPUCleanup
 							Application.Log.AddException(ex)
 						End Try
 					End If
+					If StrContainsAny(child, True, "nv-vk64") AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
+						Try
+							Deletevalue(regkey2, child)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					End If
 				Next
 				If regkey2.GetValueNames().Length = 0 Then
 					Try
@@ -6619,6 +6626,13 @@ Public Class GPUCleanup
 							For Each child As String In regkey2.GetValueNames
 								If IsNullOrWhitespace(child) Then Continue For
 								If StrContainsAny(child, True, "amd-vulkan64") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+									Try
+										Deletevalue(regkey2, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+								If StrContainsAny(child, True, "nv-vk64") AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
 									Try
 										Deletevalue(regkey2, child)
 									Catch ex As Exception
@@ -6699,6 +6713,13 @@ Public Class GPUCleanup
 								Application.Log.AddException(ex)
 							End Try
 						End If
+						If StrContainsAny(child, True, "nv-vk") AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
+							Try
+								Deletevalue(regkey2, child)
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
+						End If
 					Next
 					If regkey2.GetValueNames().Length = 0 Then
 						Try
@@ -6766,7 +6787,14 @@ Public Class GPUCleanup
 							If regkey2 IsNot Nothing Then
 								For Each child As String In regkey2.GetValueNames
 									If IsNullOrWhitespace(child) Then Continue For
-									If StrContainsAny(child, True, "amd-vulkan64") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+									If StrContainsAny(child, True, "amd-vulkan32") AndAlso config.SelectedGPU = GPUVendor.AMD Then
+										Try
+											Deletevalue(regkey2, child)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
+									If StrContainsAny(child, True, "nv-vk") AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
 										Try
 											Deletevalue(regkey2, child)
 										Catch ex As Exception
