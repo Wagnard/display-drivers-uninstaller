@@ -48,6 +48,7 @@
 		<btnWuRestore>
 			<Text>
 				Windows Otomatik Sürücü yüklemeyi varsayılan olarak ayarla
+				(Sürücüleri otomatik şekilde kurar)
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
@@ -182,14 +183,14 @@
 			<Text27>3D Vision USB Adaptörü Aygıt Yöneticisinden kaldırıldı.</Text27>
 			<Text28>Monitörler ve Gizli monitörler kaldırıldı!</Text28>
 			<Text29>SetupAPI kaldırma işlemi tamamlandı.</Text29>
-			<Text30>S-1-5-xx bölge temizliği başlatıldı</Text30>
-			<Text31>S-1-5-xx bölge temizliği tamamlandı.</Text31>
-			<Text32>Classesroot ,yükleyici ve ürünleri temizleme başlatıldı...</Text32>
-			<Text33>Classesroot ,yükleyici ve ürünleri temizleme tamamlandı.</Text33>
-			<Text34>Başlatıldı ,LocalMachine yükleyici ve ürünleri temizleme başlatıldı...</Text34>
-			<Text35>LocalMachine ,yükleyici ve ürünleri temizleme tamamlandı.</Text35>
-			<Text36>Başlatıldı ,varsayılan kullanıcı yükleyici ve ürünleri temizleme başlatıldı...</Text36>
-			<Text37>Varsayılan ,kullanıcı yükleyici ve ürünleri temizleme tamamlandı.</Text37>
+			<Text30>S-1-5-xx bölgesinin temizliği başlatıldı...</Text30>
+			<Text31>S-1-5-xx bölgesinin temizliği tamamlandı.</Text31>
+			<Text32>Classesroot ,installer\products temizliği başlatıldı...</Text32>
+			<Text33>Classesroot ,installer\products temizliği tamamlandı.</Text33>
+			<Text34>LocalMachine ,installer\products temizliği başlatıldı...</Text34>
+			<Text35>LocalMachine ,installer\products temizliği tamamlandı.</Text35>
+			<Text36>Currentuser ,installer\products temizliği başlatıldı...</Text36>
+			<Text37>Currentuser ,installer\products temizliği tamamlandı.</Text37>
 			<Text38>İşlemler ve servisler temizleniyor...</Text38>
 			<Text39>İşlemler ve servisler temizlendi.</Text39>
 			<Text40>Silindi.</Text40>
@@ -206,11 +207,14 @@
 			<Text>Ortakların Tekliflerini Göster</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Seçenekleri</Text>
+			<Text>NVIDIA Özel Seçenekleri</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Seçenekleri</Text>
+			<Text>AMD Özel Seçenekleri</Text>
 		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>INTEL Özel Seçenekleri</Text>
+		</lblINTELspecific>
 		<lblAdvancedO>
 			<Text>Gelişmiş Seçenekler (Değiştirmeniz riskli olabilir)</Text>
 		</lblAdvancedO>
@@ -218,7 +222,7 @@
 			<Text>Genel Seçenekler</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>"C:\NVidia" Sürücü klasörlerini sil (Tavsiye edilmez)</Text>
+			<Text>"C:\NVidia" Sürücü klasörlerini sil</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>Önyükleme yolunda günlük dosyalarına kaydet (Tavsiye edilen)</Text>
@@ -239,7 +243,7 @@
 			<Text>AMD Audio Bus'ı Sil</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>"C:\AMD" Sürücü klasörlerini sil (Tavsiye edilmez)</Text>
+			<Text>"C:\AMD" Sürücü klasörünü sil</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>AMDKMPFD Sürücü/Filtre sil (AMD chipset için yedeklemeniz tavsiye edilir)</Text>
@@ -257,6 +261,12 @@
 		<lblRemGFE>
 			<Text>Geforce Experience (GFE) Kaldır</Text>
 		</lblRemGFE>
+		<lblRemNVCP>
+			<Text>Microsoft Store'dan yüklenen NVIDIA Kontrol Panelini kaldır (DCH sürücü)</Text>
+		</lblRemNVCP>
+		<lblRemINTELCP>
+			<Text>Microsoft Store'dan yüklenen INTEL Kontrol Panelini kaldır (DCH sürücü)</Text>
+		</lblRemINTELCP>
 		<lblRemCrimsonCache>
 			<Text>AMD Crimson Shader Önbellek klasörünü sil</Text>
 			<Tooltip>
@@ -268,12 +278,12 @@
 			<Text>Vulkan Runtime Kaldır</Text>
 			<Tooltip>Eğer Vulkan API Kullanan 2 Farklı GPU Yeteneği Varsa Tavsiye Edilmez</Tooltip>
 		</lblVulkan>
-	    <lblPreventWinUpdate>
-            <Text>"Windows" bir aygıt için bir sürücü aradığında, "Windows güncellemesinden" sürücülerin indirilmesini önleyin</Text>
-            <Tooltip>Bu seçenek, kolayca "Windows / Aygıt Yöneticisi"nin "Windows Update"den sürücü güncellemesini kontrol etmesini engeller.
-					 Not1: Bu, "Windows Update"nin yeni sürücüleri indirmesini / yüklemesini engellemez. 
-					 Not2: DDU'yu kullanmayı bitirdikten ve GPU sürücünüzü yeniden yükledikten sonra bu değişikliği geri almak büyük önem arz etmektedir. Diğer sürücülerin yüklenmesine engel olabilir.</Tooltip>
-        </lblPreventWinUpdate>
+		<lblPreventWinUpdate>
+			<Text>"Windows" bir aygıt için sürücü ararken, sürücülerin "Windows Update" ile indirilmesini önleyin.</Text>
+			<Tooltip>Bu seçenek kısaca, "Windows/Aygıt Yöneticisi"nin "Windows Update"den sürücü güncellemelerinin kontrol edilmesini engeller.
+				Not1: Bu, "Windows Update"nin yeni sürücüleri indirmesini/yüklemesini engellemez. 
+				Not2: DDU kullanmayı bitirdikten ve GPU sürücünüzü yeniden yükledikten sonra bu değişikliği geri almak büyük önem arz etmektedir. Diğer sürücülerin yüklenmesine engel olabilir.</Tooltip>
+		</lblPreventWinUpdate>
 	</frmOptions>
 
 	<frmLaunch Text="Başlatma Seçeneği">
@@ -368,12 +378,13 @@
 		</lblTranslators>
 		<lblPatron>
 			<Text>
-			Aşağıdaki Patron ve ayrıca listelenmemiş olanlar için çok teşekkürler!
+				Aşağıdaki Patron ve ayrıca listelenmemiş olanlar için çok teşekkürler!
 				  
-			-honnmaguro  (2018-03-16'dan beri) 
-			-honnmaguro  (2018-03-16'dan beri)
-			-ZaoDaDong   (2019-02-06'dan beri)
-			-Alberto Bursi	
+				-honnmaguro  	(2018-03-16'dan beri) 
+				-ZaoDaDong		(2019-02-06'dan beri)
+				-Alberto Bursi	(uzun süredir bağışçı/destekçi)
+				-Kaseb			(2019-09-05'dan beri)
+				-Frank Brown	(2019-10-31'dan beri)
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -381,21 +392,30 @@
 	<Misc>
 		<About>
 			<Text>
-				Bu program ne işe yarar?
+				(DDU)Ekran Sürücüsü Kaldırıcı / (NVIDIA/AMD/INTEL) Görüntü sürücülerini (GPU) kaldırmak için yapılmıştır.
 
-				Eski sürücü sorunlarını ya da daha yeni kuruyorsanız ve yüklenenmeme gibi bir durumda bu sorunları giderir.
+				Yaptığı şey: GPU sürücüsünü Aygıt Yöneticisi'nden kaldırmak,
+				Windows Sürücüsü deposundan mevcut ve tüm emsal ekran sürücülerini (NVIDIA/AMD/INTEL), hizmetlerini kaldırmaktır.
+				
+				Bu aracı kullandıktan sonra etkisi, Windows'u yeni kurmuş gibi "Yeni sürücü" kurmanızı sağlar.
+				
+				Bu araç "Driver Sweeper"* gibi davranır ve yukarıda belirtilen tüm ekstralara sahiptir.
+				
+				Eski bir sürücüyü veya daha yeni bir sürücüyü kurarken herhangi bir sorun yaşarsanız, 
+				bu sorunları gidermek için sorunları giderdiğine dair raporlar olduğu için bu aracı kullanabilirsiniz.
 
 				ÖNERİLEN KULLANIM:
 
-				- Aracı windows normal modda da kullanabilirsiniz. Güvenli Mod tercihen kullanabilirsiniz.
+				- Aracı windows normal modda da kullanabilirsiniz. Ancak daha kararlı olması için güvenli modda kullanınız.
 
-				- Biz görüşlerinizi almak istiyoruz. Başarılı ya da değil yine de bize söyleyin.
-				Ayrıca eğer yeni bir sorun varsa geri dönebilmek için bir geri yükleme noktası oluşturun.
+				- Biz görüşlerinizi almak istiyoruz. Başarılı ya da değil yine de bize söyleyebilirsiniz.
+				
+				- Ayrıca eğer yeni bir sorun varsa geri dönebilmek için bir geri yükleme noktası oluşturun.
 
-				- Eğer bir sorununuz varsa bu program sizin sorununuza yardımcı oldu veya olmadı ise lütfen paylaşın.
+				- Eğer bir sorununuz varsa bu program sizin sorununuza yardımcı oldu veya olmadı ise lütfen sonucu bizimle paylaşın.
 
-				NVIDIA / AMD / Intel bu program ile ilgisi olduğunu unutmayın, biz NVIDIA / AMD / Intel içindir. İşe yaramazsa sorumlu değildir.
-				Sisteminizde herhangi bir hasar veya hata olduğunda sorumlu değildir.
+				NVIDIA, AMD veya Microsoft'un size veya bilgisayarınıza herhangi bir zarardan sorumlu tutulamayacağını ve
+				hiçbir şekilde DDU'nun veya kurucularının bir üyesi olmadığını unutmayın.
 				-------------------------------
 
 				Wagnard tarafından düzenlendi.
@@ -406,14 +426,15 @@
 
 				Logo yapımcı: juanchacin
 
-				-Jackalito'ya AMD 7850'yi bize bağladığındna dolayı çok teşekkürler.
-				-Programımız olan DDU "SetAcl"(http://helgeklein.com/setacl/) özelliği için verdiği izinden dolayı Helge Klein'a teşekkürler.
-				-Sorunları çözen ve test eden Gamer1291 (optimus), Octopuss (Amd Enduro), nedooo'ya çok teşekkürler.
-				-Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
+				Jackalito'ya AMD 7850'yi bize bağladığındna dolayı çok teşekkürler.
+				
+				Programımız olan DDU "SetAcl"(http://helgeklein.com/setacl/) özelliği için verdiği izinden dolayı Helge Klein'a teşekkürler.
+				
+				Sorunları çözen ve test eden Gamer1291 (optimus), Octopuss (Amd Enduro), nedooo'ya çok teşekkürler.
+				
+				Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
 
 				*DDU, Driver Sweeper yapımcı veya kurucuları ile alakası yoktur.
-
-				Çevirmen: murat5038
 			</Text>
 		</About>
 
@@ -434,7 +455,7 @@
 		<Translator>
 			<User>murat5038</User>
 			<Details>Kaspersky Turkey Moderator</Details>
-			<LastUpdate>01.12.2018</LastUpdate>
+			<LastUpdate>18.07.2020</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

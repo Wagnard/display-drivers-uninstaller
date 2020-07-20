@@ -104,19 +104,19 @@
 			<Text>Pokrovitelj</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Obiščite uradno spletno stran DDU</Text>
+			<Text>Obisk uradne spletne strani DDU</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Obiščite spletno stran SVN</Text>
+			<Text>Obisk spletne strani SVN</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Obiščite nit Guru3d NVIDIA</Text>
+			<Text>Obisk niti Guru3d NVIDIA</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Obiščite nit Guru3d AMD</Text>
+			<Text>Obisk niti Guru3d AMD</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Obiščite nit GeForce</Text>
+			<Text>Obisk niti GeForce</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
@@ -172,7 +172,7 @@
 			<Text16>INF</Text16>
 			<Text17>INF oddelek</Text17>
 			<Text18>Grafični procesor (GPE) ni pravilno nameščen</Text18>
-			<Text19>Brisanje nekaterih posebnih map, lahko traja nekaj časa...</Text19>
+			<Text19>Brisanje nekaterih posebnih map lahko traja nekaj časa...</Text19>
 			<Text20>Čiščenje se je začelo...</Text20>
 			<Text21>Odstranjevanje</Text21>
 			<Text22>gonilnik</Text22>
@@ -207,11 +207,14 @@
 			<Text>Prikaži ponudbe naših partnerjev</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>NVIDIA Posebne možnosti</Text>
+			<Text>Posebne možnosti NVIDIA </Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>AMD Posebne možnosti</Text>
+			<Text>Posebne možnosti AMD</Text>
 		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>Posebne možnosti INTEL</Text>
+		</lblINTELspecific>
 		<lblAdvancedO>
 			<Text>Napredne možnosti (Sprememba na lastno odgovornost)</Text>
 		</lblAdvancedO>
@@ -258,6 +261,12 @@
 		<lblRemGFE>
 			<Text>Odstrani GeForce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVCP>
+			<Text>(DCH gonilnik) Odstrani nameščeno nadzorno ploščo NVIDIA iz Microsoft trgovine</Text>
+		</lblRemNVCP>
+		<lblRemINTELCP>
+			<Text>(DCH gonilnik) Odstrani nameščeno nadzorno ploščo INTEL iz Microsoft trgovine</Text>
+		</lblRemINTELCP>
 		<lblRemCrimsonCache>
 			<Text>Odstrani mapo predpomnilnika AMD Crimson Shader</Text>
 			<Tooltip>
@@ -375,7 +384,9 @@
         -honnmaguro    (že od 16.03.2018)
  		-ZaoDaDong     (že od 06.02.2019)
 		-Alberto Bursi (dolgo časa donator/podpornik)
-      </Text>
+	    -Kaseb (že od 2019-09-05)
+		-Frank Brown (že od 2019-10-31		
+			</Text>
 		</lblPatron>
 	</frmAbout>
 
@@ -433,7 +444,7 @@
 
 		<Tos>
 			<Text> 
-             UPORABNIŠKA POGODBA
+				UPORABNIŠKA POGODBA
 				Display Driver Uninstaller ("DDU")
 
 				Z uporabo programa DDU ste postali uporabnik programa DDU ("Uporabnik"). Ta pogodba začne veljati takoj, ko uporabite program za odstranitev gonilnika..
@@ -450,7 +461,7 @@
 		<Translator>
 			<User>Jadran Rudec</User>
 			<Details>jrudec@gmail.com</Details>
-			<LastUpdate>09/05/2019</LastUpdate>
+			<LastUpdate>05/09/2019</LastUpdate>
 		</Translator>
 
 		<Translator2>
