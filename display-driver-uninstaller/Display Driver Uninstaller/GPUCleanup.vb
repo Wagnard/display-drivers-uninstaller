@@ -472,6 +472,19 @@ Public Class GPUCleanup
 						found.Clear()
 					End If
 					Application.Log.AddMessage("SetupAPI: Remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Complete .")
+
+					' NVIDIA NvModuleTracker Device Removal
+					Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA NvModuleTracker Device.")
+					found = SetupAPI.GetDevices("NvModuleTracker", Nothing, False)
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVMODULETRACKER") Then
+								SetupAPI.UninstallDevice(d)
+							End If
+						Next
+						found.Clear()
+					End If
+					Application.Log.AddMessage("SetupAPI: Remove NVIDIA NvModuleTracker Device Complete .")
 				End If
 
 			Catch ex As Exception
@@ -3946,6 +3959,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
 						 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso removegfe Or
 						 child.ToLower.Contains("_osc") AndAlso removegfe Or
+						 child.ToLower.Contains("_nvmoduletracker.driver") AndAlso removegfe Or
 						 child.ToLower.Contains("_nvcontainer") AndAlso config.RemoveGFE Then
 							If removephysx = False AndAlso child.ToLower.Contains("physx") Then
 								Continue For
@@ -4095,7 +4109,7 @@ Public Class GPUCleanup
 																			For Each ValueNames As String In regkey5.GetValueNames
 																				If IsNullOrWhitespace(ValueNames) Then Continue For
 																				If StrContainsAny(ValueNames, True, "ansel", "display", "gfexperience", "hdaudio", "nvabhub", "nvbackend", "nvcontainer", "nvnode", "nvplugin",
-																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio", "oem", "msvcruntime", "NGXCore", "USBC") Then
+																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio", "oem", "msvcruntime", "NGXCore", "USBC", "nvmoduletracker.driver") Then
 																					Try
 																						Deletevalue(regkey5, ValueNames)
 																					Catch ex As Exception
@@ -5490,7 +5504,6 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			Dim hit As Boolean = False
 			For Each child As String In FileIO.GetDirectories(filePath)
-				hit = False
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("control panel client") Or
 					   child.ToLower.Contains("display") Or
@@ -5568,6 +5581,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvvhci") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvmoduletracker.driver") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("hdaudio.driver") AndAlso config.RemoveGFE Then
 
 
@@ -5609,6 +5623,8 @@ Public Class GPUCleanup
 
 									If Not hit Then
 										Delete(child2)
+									Else
+										hit = False
 									End If
 
 								End If
