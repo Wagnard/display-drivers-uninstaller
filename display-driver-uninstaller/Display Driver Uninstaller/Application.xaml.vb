@@ -341,11 +341,11 @@ Class Application
 		'	IsDebug = True
 		'End If
 
-		'If Not IsNet45OrNewer() Then
-		'	Microsoft.VisualBasic.MsgBox("Minimum requirement is Microsoft .NET Framework 4.5. Please update your current .NET Framework.")
-		'	Me.Shutdown()
-		'	Exit Sub
-		'End If
+		If Not IsNet45OrNewer() Then
+			Microsoft.VisualBasic.MsgBox("Minimum requirement is Microsoft .NET Framework 4.5. Please update your current .NET Framework.")
+			Me.Shutdown()
+			Exit Sub
+		End If
 
 		Dim info As LogEntry = Log.CreateEntry(Nothing, "The following paths are detected.")
 		info.Type = LogType.Event
