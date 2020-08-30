@@ -4710,20 +4710,25 @@ Public Class GPUCleanup
 
 
 		If config.Remove3DTVPlay Then
-			Try
-				Deletesubregkey(Registry.ClassesRoot, "mpegfile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
-			Catch ex As Exception
-			End Try
-			Try
-				Deletesubregkey(Registry.ClassesRoot, "WMVFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
-			Catch ex As Exception
-			End Try
-			Try
-				Deletesubregkey(Registry.ClassesRoot, "AVIFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
-			Catch ex As Exception
-			End Try
+			If MyRegistry.OpenSubKey(Registry.ClassesRoot, "mpegfile\shellex\ContextMenuHandlers\NvPlayOnMyTV", False) IsNot Nothing Then
+				Try
+					Deletesubregkey(Registry.ClassesRoot, "mpegfile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
+				Catch ex As Exception
+				End Try
+			End If
+			If MyRegistry.OpenSubKey(Registry.ClassesRoot, "WMVFile\shellex\ContextMenuHandlers\NvPlayOnMyTV", False) IsNot Nothing Then
+				Try
+					Deletesubregkey(Registry.ClassesRoot, "WMVFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
+				Catch ex As Exception
+				End Try
+			End If
+			If MyRegistry.OpenSubKey(Registry.ClassesRoot, "AVIFile\shellex\ContextMenuHandlers\NvPlayOnMyTV", False) IsNot Nothing Then
+				Try
+					Deletesubregkey(Registry.ClassesRoot, "AVIFile\shellex\ContextMenuHandlers\NvPlayOnMyTV")
+				Catch ex As Exception
+				End Try
+			End If
 		End If
-
 		'-----------------------------
 		'Shell extensions\approved
 		'-----------------------------
@@ -4780,15 +4785,15 @@ Public Class GPUCleanup
 								End If
 							End Using
 						End If
+						Try
+							Deletesubregkey(regkey, "NVIDIA CPL Extension")
+						Catch exARG As ArgumentException
+							'nothing to do,it probably doesn't exit.
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
 					End If
 				End Using
-				Try
-					Deletesubregkey(regkey, "NVIDIA CPL Extension")
-				Catch exARG As ArgumentException
-					'nothing to do,it probably doesn't exit.
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
 			End If
 		End Using
 
@@ -4853,74 +4858,90 @@ Public Class GPUCleanup
 		'Shell ext
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Directory\background\shellex\ContextMenuHandlers", True)
 			If regkey IsNot Nothing Then
-				Try
-					Deletesubregkey(regkey, "NvCplDesktopContext")
-				Catch ex As Exception
-				End Try
-
-				Try
-					Deletesubregkey(regkey, "00nView")
-				Catch ex As Exception
-				End Try
+				If regkey.OpenSubKey("NvCplDesktopContext") IsNot Nothing Then
+					Try
+						Deletesubregkey(regkey, "NvCplDesktopContext")
+					Catch ex As Exception
+					End Try
+				End If
+				If regkey.OpenSubKey("00nView") IsNot Nothing Then
+					Try
+						Deletesubregkey(regkey, "00nView")
+					Catch ex As Exception
+					End Try
+				End If
 			End If
-		End Using
+        End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Classes\Directory\background\shellex\ContextMenuHandlers", True)
 			If regkey IsNot Nothing Then
-				Try
-					Deletesubregkey(regkey, "NvCplDesktopContext")
-				Catch ex As Exception
-				End Try
-
-				Try
-					Deletesubregkey(regkey, "00nView")
-				Catch ex As Exception
-				End Try
+				If regkey.OpenSubKey("NvCplDesktopContext") IsNot Nothing Then
+					Try
+						Deletesubregkey(regkey, "NvCplDesktopContext")
+					Catch ex As Exception
+					End Try
+				End If
+				If regkey.OpenSubKey("00nView") IsNot Nothing Then
+					Try
+						Deletesubregkey(regkey, "00nView")
+					Catch ex As Exception
+					End Try
+				End If
 			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".avi\shellex", True)
 			If regkey IsNot Nothing Then
-				Try
-					Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
-				Catch ex As Exception
-				End Try
+				If regkey.OpenSubKey("{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
+					Try
+						Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+					Catch ex As Exception
+					End Try
+				End If
 			End If
-		End Using
+        End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpe\shellex", True)
 			If regkey IsNot Nothing Then
-				Try
-					Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
-				Catch ex As Exception
-				End Try
+				If regkey.OpenSubKey("{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
+					Try
+						Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+					Catch ex As Exception
+					End Try
+				End If
 			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpeg\shellex", True)
 			If regkey IsNot Nothing Then
-				Try
-					Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
-				Catch ex As Exception
-				End Try
+				If regkey.OpenSubKey("{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
+					Try
+						Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+					Catch ex As Exception
+					End Try
+				End If
 			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpg\shellex", True)
 			If regkey IsNot Nothing Then
-				Try
-					Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
-				Catch ex As Exception
-				End Try
+				If regkey.OpenSubKey("{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
+					Try
+						Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+					Catch ex As Exception
+					End Try
+				End If
 			End If
 		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".wmv\shellex", True)
 			If regkey IsNot Nothing Then
-				Try
-					Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
-				Catch ex As Exception
-				End Try
+				If regkey.OpenSubKey("{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
+					Try
+						Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
+					Catch ex As Exception
+					End Try
+				End If
 			End If
 		End Using
 
@@ -4958,10 +4979,12 @@ Public Class GPUCleanup
 			End If
 		End Using
 
-		Try
-			Deletesubregkey(Registry.ClassesRoot, ".tvp")  'CrazY_Milojko
-		Catch ex As Exception
-		End Try
+		If MyRegistry.OpenSubKey(Registry.ClassesRoot, ".tvp") IsNot Nothing Then
+			Try
+				Deletesubregkey(Registry.ClassesRoot, ".tvp")  'CrazY_Milojko
+			Catch ex As Exception
+			End Try
+		End If
 
 		'Task Scheduler cleanUP 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
@@ -6941,7 +6964,9 @@ Public Class GPUCleanup
 
 	Private Sub Delete(ByVal filename As String)
 		Dim CleanupEngine As New CleanupEngine
-		FileIO.Delete(filename)
+		If FileIO.ExistsFile(filename) OrElse FileIO.ExistsDir(filename) Then
+			FileIO.Delete(filename)
+		End If
 		CleanupEngine.RemoveSharedDlls(filename)
 	End Sub
 

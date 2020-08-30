@@ -57,7 +57,7 @@ Public Class CleanupEngine
 		Dim FileIO As New FileIO
 		If Not IsNullOrWhitespace(directorypath) AndAlso Not FileIO.ExistsDir(directorypath) Then
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
-				If regkey IsNot Nothing Then
+				If regkey IsNot Nothing AndAlso regkey.GetValue(If(Not directorypath.EndsWith("\"), directorypath & "\", directorypath)) IsNot Nothing Then
 					Try
 						Deletevalue(regkey, If(Not directorypath.EndsWith("\"), directorypath & "\", directorypath))
 					Catch exARG As ArgumentException
@@ -70,7 +70,7 @@ Public Class CleanupEngine
 
 			If Not directorypath.EndsWith("\") Then
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
-					If regkey IsNot Nothing Then
+					If regkey IsNot Nothing AndAlso regkey.GetValue(directorypath) IsNot Nothing Then
 						Try
 							Deletevalue(regkey, directorypath)
 						Catch exARG As ArgumentException
@@ -83,7 +83,7 @@ Public Class CleanupEngine
 
 				If IntPtr.Size = 8 Then
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs", True)
-						If regkey IsNot Nothing Then
+						If regkey IsNot Nothing AndAlso regkey.GetValue(directorypath) IsNot Nothing Then
 							Try
 								Deletevalue(regkey, directorypath)
 							Catch exARG As ArgumentException
@@ -2520,7 +2520,9 @@ Public Class CleanupEngine
 
 	Private Sub Delete(ByVal filename As String)
 		Dim FileIO As New FileIO
-		FileIO.Delete(filename)
+		If FileIO.ExistsFile(filename) OrElse FileIO.ExistsDir(filename) Then
+			FileIO.Delete(filename)
+		End If
 	End Sub
 
 	Public Sub Cleandriverstore(ByVal config As ThreadSettings)
