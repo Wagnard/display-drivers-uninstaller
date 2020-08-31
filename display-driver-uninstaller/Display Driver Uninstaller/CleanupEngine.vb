@@ -167,13 +167,33 @@ Public Class CleanupEngine
 					If package IsNot Nothing Then
 						If IsNullOrWhitespace(package.Id.FullName) Then Continue For
 						If StrContainsAny(package.Id.FullName, True, AppxToRemove) Then
-							Dim deploymentOperation As IAsyncOperationWithProgress(Of DeploymentResult, DeploymentProgress) = packageManager.RemovePackageAsync(package.Id.FullName)
+							Dim deploymentOperation As IAsyncOperationWithProgress(Of DeploymentResult, DeploymentProgress) = packageManager.DeprovisionPackageForAllUsersAsync(package.Id.FamilyName)
 
 							While Not DeploymentEnded
 
 								If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
+									Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
+									Application.Log.AddMessage(package.Id.FullName + " package deprovision failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
+									DeploymentEnded = True
+									WasRemoved = False
+								ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
 
-									Application.Log.AddMessage(package.Id.FullName + " package removal failed.")
+									Application.Log.AddMessage(package.Id.FullName + "  package deprovisioned.")
+									DeploymentEnded = True
+									WasRemoved = True
+
+								End If
+							End While
+
+							DeploymentEnded = False
+
+							deploymentOperation = packageManager.RemovePackageAsync(package.Id.FullName, RemovalOptions.RemoveForAllUsers)
+
+							While Not DeploymentEnded
+
+								If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
+									Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
+									Application.Log.AddMessage(package.Id.FullName + " package removal failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
 									DeploymentEnded = True
 									WasRemoved = False
 								ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
@@ -184,6 +204,7 @@ Public Class CleanupEngine
 
 								End If
 							End While
+
 							If WasRemoved Then
 
 								'Win 10 (1809)
@@ -1166,8 +1187,9 @@ Public Class CleanupEngine
 							Else
 								'Here, if subregkey is nothing, it mean \video doesnt exist and there is no \0000, we can delete it.
 								'this is a general cleanUP we could say.
-								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\0000")
-									If regkey3 Is Nothing Then
+								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, False)
+									If regkey3 IsNot Nothing AndAlso regkey3.SubKeyCount = 0 Then
+
 										Try
 											Deletesubregkey(regkey, child)
 											Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child)

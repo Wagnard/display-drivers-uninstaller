@@ -6258,22 +6258,26 @@ Public Class GPUCleanup
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Run", True)
 				If regkey IsNot Nothing Then
-					Try
-						Deletevalue(regkey, "IgfxTray")
-					Catch ex As Exception
-					End Try
-
-					Try
-						Deletevalue(regkey, "Persistence")
-					Catch ex As Exception
-					End Try
-
-					Try
-						Deletevalue(regkey, "HotKeysCmds")
-					Catch ex As Exception
-					End Try
+					If regkey.GetValue("IgfxTray") IsNot Nothing Then
+						Try
+							Deletevalue(regkey, "IgfxTray")
+						Catch ex As Exception
+						End Try
+					End If
+					If regkey.GetValue("Persistence") IsNot Nothing Then
+						Try
+							Deletevalue(regkey, "Persistence")
+						Catch ex As Exception
+						End Try
+					End If
+					If regkey.GetValue("HotKeysCmds") IsNot Nothing Then
+						Try
+							Deletevalue(regkey, "HotKeysCmds")
+						Catch ex As Exception
+						End Try
+					End If
 				End If
-			End Using
+            End Using
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
@@ -6412,6 +6416,13 @@ Public Class GPUCleanup
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
+
+		If MyRegistry.OpenSubKey(Registry.ClassesRoot, ".igp", False) IsNot Nothing Then
+			Try
+				Deletesubregkey(Registry.ClassesRoot, ".igp")
+			Catch ex As Exception
+			End Try
+		End If
 
 		UpdateTextMethod(UpdateTextTranslated(6))
 		Application.Log.AddMessage("Killing Explorer.exe")
