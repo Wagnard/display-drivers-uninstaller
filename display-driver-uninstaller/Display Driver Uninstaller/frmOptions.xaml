@@ -62,11 +62,12 @@
                     <Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
                     <Label DockPanel.Dock="Top" x:Name="lblAmdspecific" Content="lblAmdspecific" FontWeight="Bold" FontSize="14" />
 
-                    <UniformGrid DockPanel.Dock="Top" Rows="4">
+                    <UniformGrid DockPanel.Dock="Top" Rows="5">
                         <CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" />
                         <CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" />
                         <CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" />
                         <CheckBox x:Name="lblRemCrimsonCache" IsChecked="{Binding RemoveCrimsonCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemCrimsonCache" />
+						<CheckBox x:Name="lblRemAMDCP" IsChecked="{Binding RemoveAMDCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDCP" />
                     </UniformGrid>
                 </DockPanel>
 

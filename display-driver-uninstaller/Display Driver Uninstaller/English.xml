@@ -267,6 +267,9 @@
 		<lblRemINTELCP>
 			<Text>(DCH driver) Remove the INTEL Control Panel installed from the Microsoft Store</Text>
 		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>(DCH driver) Remove the AMD Control Panel installed from the Microsoft Store</Text>
+		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>Remove AMD Crimson Shader Cache folder</Text>
 			<Tooltip>

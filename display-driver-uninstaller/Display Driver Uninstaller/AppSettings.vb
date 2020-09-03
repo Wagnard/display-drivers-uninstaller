@@ -98,6 +98,7 @@ Public Class AppSettings
 	Private m_remGFE As DependencyProperty = RegDP("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remNVCP As DependencyProperty = RegDP("RemoveNVCP", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remINTELCP As DependencyProperty = RegDP("RemoveINTELCP", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remAMDCP As DependencyProperty = RegDP("RemoveAMDCP", GetType(Boolean), GetType(AppSettings), True)
 
 	' Settings
 	Private m_UseRoamingCfg As DependencyProperty = RegDP("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
@@ -306,6 +307,14 @@ Public Class AppSettings
 		End Get
 		Set(value As Boolean)
 			SetValue(m_remINTELCP, value)
+		End Set
+	End Property
+	Public Property RemoveAMDCP As Boolean
+		Get
+			Return CBool(GetValue(m_remAMDCP))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_remAMDCP, value)
 		End Set
 	End Property
 
@@ -521,6 +530,7 @@ Public Class AppSettings
 						.WriteElementString("RemoveGFE", RemoveGFE.ToString())
 						.WriteElementString("RemoveNVCP", RemoveNVCP.ToString())
 						.WriteElementString("RemoveINTELCP", RemoveINTELCP.ToString())
+						.WriteElementString("RemoveAMDCP", RemoveINTELCP.ToString())
 						.WriteElementString("UseRoamingConfig", UseRoamingConfig.ToString())
 						.WriteElementString("CheckUpdates", CheckUpdates.ToString())
 						.WriteElementString("CreateRestorePoint", CreateRestorePoint.ToString())
@@ -665,6 +675,9 @@ Public Class AppSettings
 								RemoveNVCP = Boolean.Parse(KvP.Value)
 
 							Case "removeintelcp"
+								RemoveINTELCP = Boolean.Parse(KvP.Value)
+
+							Case "removeamdcp"
 								RemoveINTELCP = Boolean.Parse(KvP.Value)
 
 							Case "useroamingconfig"

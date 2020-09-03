@@ -717,6 +717,11 @@ Public Class GPUCleanup
 		CleanupEngine.ClassRoot(classroot, config)  '// add each line as String Array.
 
 
+		'Removal of the (DCH) AMD control panel comming from the Window Store. (In progress...)
+		If win10 AndAlso config.RemoveAMDCP Then
+			CleanupEngine.RemoveAppx("AMDRadeonSoftware")
+		End If
+
 		'-----------------
 		'interface cleanup
 		'-----------------

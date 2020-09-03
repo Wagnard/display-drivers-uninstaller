@@ -78,7 +78,7 @@ Public Class ImpersonateLoggedOnUser
 		If Principal.WindowsIdentity.GetCurrent().IsSystem Then
 			'nothing to do.
 		Else
-			Application.Log.AddWarningMessage("SYSTEM account impersonalisation failed ! Cleanup may not be efficient. ")
+			Application.Log.AddWarningMessage("SYSTEM account impersonalisation failed ! Cleanup may not be efficient.")
 		End If
 	End Sub
 
