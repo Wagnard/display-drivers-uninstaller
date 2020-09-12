@@ -102,6 +102,7 @@ Public Class CleanupEngine
 	Public Sub RemoveAppx(ByVal AppxToRemove As String)
 		Dim ServiceInstaller As New ServiceInstaller
 		Dim win10 As Boolean = frmMain.win10
+		Dim win10_1809 As Boolean = frmMain.win10_1809
 		Dim WasRemoved As Boolean = False
 		If win10 Then
 			If WindowsIdentity.GetCurrent().IsSystem Then
@@ -162,72 +163,57 @@ Public Class CleanupEngine
 				Dim DeploymentEnded As Boolean = False
 				Dim packageManager As PackageManager = New PackageManager()
 				Dim packages As IEnumerable(Of Windows.ApplicationModel.Package) = CType(packageManager.FindPackages(), IEnumerable(Of Windows.ApplicationModel.Package))
+				Dim deploymentOperation As IAsyncOperationWithProgress(Of DeploymentResult, DeploymentProgress)
 
 				For Each package In packages
 					If package IsNot Nothing Then
 						If IsNullOrWhitespace(package.Id.FullName) Then Continue For
 						If StrContainsAny(package.Id.FullName, True, AppxToRemove) Then
-							Dim deploymentOperation As IAsyncOperationWithProgress(Of DeploymentResult, DeploymentProgress) = packageManager.DeprovisionPackageForAllUsersAsync(package.Id.FamilyName)
 
-							While Not DeploymentEnded
+							If win10_1809 Then
+								deploymentOperation = packageManager.DeprovisionPackageForAllUsersAsync(package.Id.FamilyName)  'Only avail since Win 10 (1809)
 
-								If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
-									Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
-									Application.Log.AddMessage(package.Id.FullName + " package deprovision failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
-									DeploymentEnded = True
-									WasRemoved = False
-								ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
+								While Not DeploymentEnded
 
-									Application.Log.AddMessage(package.Id.FullName + "  package deprovisioned.")
-									DeploymentEnded = True
-									WasRemoved = True
+									If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
+										Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
+										Application.Log.AddMessage(package.Id.FullName + " package deprovision failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
+										DeploymentEnded = True
+										WasRemoved = False
+									ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
 
-								End If
-							End While
+										Application.Log.AddMessage(package.Id.FullName + "  package deprovisioned.")
+										DeploymentEnded = True
+										WasRemoved = True
 
-							DeploymentEnded = False
+									End If
+								End While
+
+								DeploymentEnded = False
+							End If
 
 							deploymentOperation = packageManager.RemovePackageAsync(package.Id.FullName, RemovalOptions.RemoveForAllUsers)
 
-							While Not DeploymentEnded
+								While Not DeploymentEnded
 
-								If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
-									Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
-									Application.Log.AddMessage(package.Id.FullName + " package removal failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
-									DeploymentEnded = True
-									WasRemoved = False
-								ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
+									If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
+										Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
+										Application.Log.AddMessage(package.Id.FullName + " package removal failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
+										DeploymentEnded = True
+										WasRemoved = False
+									ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
 
-									Application.Log.AddMessage(package.Id.FullName + " package removed.")
-									DeploymentEnded = True
-									WasRemoved = True
+										Application.Log.AddMessage(package.Id.FullName + " package removed.")
+										DeploymentEnded = True
+										WasRemoved = True
 
-								End If
-							End While
-
-							If WasRemoved Then
-
-								'Win 10 (1809)
-								Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
-									If regkey IsNot Nothing Then
-										For Each ValueName As String In regkey.GetValueNames
-											If IsNullOrWhitespace(ValueName) Then Continue For
-											If StrContainsAny(ValueName, True, package.Id.FamilyName) Then  'Not working need fixing
-												Try
-													Deletevalue(regkey, ValueName)
-												Catch ex As Exception
-													Application.Log.AddException(ex)
-												End Try
-											End If
-										Next
 									End If
-								End Using
+								End While
 
+								If WasRemoved Then
 
-								'Win 10 (1803)
-								For Each regkeyusers As String In Registry.Users.GetSubKeyNames
-									If IsNullOrWhitespace(regkeyusers) Then Continue For
-									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, regkeyusers & "\Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
+									'Win 10 (1809)
+									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
 										If regkey IsNot Nothing Then
 											For Each ValueName As String In regkey.GetValueNames
 												If IsNullOrWhitespace(ValueName) Then Continue For
@@ -241,10 +227,29 @@ Public Class CleanupEngine
 											Next
 										End If
 									End Using
-								Next
+
+
+									'Win 10 (1803)
+									For Each regkeyusers As String In Registry.Users.GetSubKeyNames
+										If IsNullOrWhitespace(regkeyusers) Then Continue For
+										Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, regkeyusers & "\Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
+											If regkey IsNot Nothing Then
+												For Each ValueName As String In regkey.GetValueNames
+													If IsNullOrWhitespace(ValueName) Then Continue For
+													If StrContainsAny(ValueName, True, package.Id.FamilyName) Then  'Not working need fixing
+														Try
+															Deletevalue(regkey, ValueName)
+														Catch ex As Exception
+															Application.Log.AddException(ex)
+														End Try
+													End If
+												Next
+											End If
+										End Using
+									Next
+								End If
 							End If
 						End If
-					End If
 				Next
 
 			Catch ex As Exception

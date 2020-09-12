@@ -11,6 +11,7 @@ Public Class GPUCleanup
 	Dim FileIO As New FileIO
 	Dim winxp As Boolean = frmMain.winxp
 	Dim win10 As Boolean = frmMain.win10
+	Dim win10_1809 As Boolean = frmMain.win10_1809
 	Dim win8higher As Boolean = frmMain.win8higher
 	Dim sysdrv As String = Application.Paths.SystemDrive
 	Dim donotremoveamdhdaudiobusfiles As Boolean = frmMain.donotremoveamdhdaudiobusfiles

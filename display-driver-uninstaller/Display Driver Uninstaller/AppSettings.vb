@@ -83,6 +83,7 @@ Public Class AppSettings
 	Private m_winVersionText As DependencyProperty = RegDP("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
 	Private m_winIs64 As DependencyProperty = RegDP("WinIs64", GetType(Boolean), GetType(AppSettings), False)
 	Private m_processKilled As DependencyProperty = RegDP("ProcessKilled", GetType(Boolean), GetType(AppSettings), False)
+	Private m_win10_1809 As DependencyProperty = RegDP("Win10_1809", GetType(Boolean), GetType(AppSettings), False)
 
 	' Removals
 	Private m_remMonitors As DependencyProperty = RegDP("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
@@ -163,6 +164,15 @@ Public Class AppSettings
 		End Get
 		Set(value As Boolean)
 			SetValue(m_processKilled, value)
+		End Set
+	End Property
+
+	Public Property Win10_1809 As Boolean
+		Get
+			Return CBool(GetValue(m_win10_1809))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_win10_1809, value)
 		End Set
 	End Property
 
@@ -425,10 +435,13 @@ Public Class AppSettings
 				Using regkey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
 					If regkey IsNot Nothing Then
 						Dim regValue As String = regkey.GetValue("CurrentMajorVersionNumber", String.Empty).ToString()
-
+						Dim regValue2 As String = regkey.GetValue("Currentbuild", String.Empty).ToString()
 						If Not IsNullOrWhitespace(regValue) AndAlso regValue.Equals("10") Then
 							version = OSVersion.Win10
 							Application.Settings.WinVersionText = "Windows 10"
+							If Not IsNullOrWhitespace(regValue2) AndAlso regValue2 >= "17763" Then
+								Win10_1809 = True
+							End If
 						End If
 					End If
 				End Using

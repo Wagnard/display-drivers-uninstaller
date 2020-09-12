@@ -35,6 +35,7 @@ Public Class frmMain
 
 	Public Shared win8higher As Boolean = Application.Settings.WinVersion > OSVersion.Win7
 	Public Shared win10 As Boolean = Application.Settings.WinVersion = OSVersion.Win10
+	Public Shared win10_1809 As Boolean = Application.Settings.Win10_1809
 	Public Shared winxp As Boolean = Application.Settings.WinVersion < OSVersion.WinVista
 	Public Shared SharedlbLog As ListBox
 
@@ -717,6 +718,7 @@ Public Class frmMain
 			info.Message = "System Information"
 			info.Add("DDU Version", Application.Settings.AppVersion.ToString())
 			info.Add("OS", Application.Settings.WinVersionText)
+			info.Add("Win 10 1809+ ?", Application.Settings.Win10_1809.ToString())
 			info.Add("Architecture", If(Application.Settings.WinIs64, "x64", "x86"))
 
 			Try
