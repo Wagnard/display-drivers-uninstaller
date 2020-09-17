@@ -99,7 +99,7 @@ Public Class CleanupEngine
 
 	End Sub
 
-	Public Sub RemoveAppx(ByVal AppxToRemove As String)
+	Public Sub RemoveAppx1809(ByVal AppxToRemove As String)
 		Dim ServiceInstaller As New ServiceInstaller
 		Dim win10 As Boolean = frmMain.win10
 		Dim win10_1809 As Boolean = frmMain.win10_1809
@@ -191,6 +191,184 @@ Public Class CleanupEngine
 
 								DeploymentEnded = False
 							End If
+
+							deploymentOperation = packageManager.RemovePackageAsync(package.Id.FullName, RemovalOptions.RemoveForAllUsers)
+
+							While Not DeploymentEnded
+
+								If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
+									Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
+									Application.Log.AddMessage(package.Id.FullName + " package removal failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
+									DeploymentEnded = True
+									WasRemoved = False
+								ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
+
+									Application.Log.AddMessage(package.Id.FullName + " package removed.")
+									DeploymentEnded = True
+									WasRemoved = True
+
+								End If
+							End While
+
+							If WasRemoved Then
+
+								'Win 10 (1809)
+								Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
+									If regkey IsNot Nothing Then
+										For Each ValueName As String In regkey.GetValueNames
+											If IsNullOrWhitespace(ValueName) Then Continue For
+											If StrContainsAny(ValueName, True, package.Id.FamilyName) Then  'Not working need fixing
+												Try
+													Deletevalue(regkey, ValueName)
+												Catch ex As Exception
+													Application.Log.AddException(ex)
+												End Try
+											End If
+										Next
+									End If
+								End Using
+
+
+								'Win 10 (1803)
+								For Each regkeyusers As String In Registry.Users.GetSubKeyNames
+									If IsNullOrWhitespace(regkeyusers) Then Continue For
+									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, regkeyusers & "\Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
+										If regkey IsNot Nothing Then
+											For Each ValueName As String In regkey.GetValueNames
+												If IsNullOrWhitespace(ValueName) Then Continue For
+												If StrContainsAny(ValueName, True, package.Id.FamilyName) Then  'Not working need fixing
+													Try
+														Deletevalue(regkey, ValueName)
+													Catch ex As Exception
+														Application.Log.AddException(ex)
+													End Try
+												End If
+											Next
+										End If
+									End Using
+								Next
+							End If
+						End If
+					End If
+				Next
+
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			Finally
+				Select Case System.Windows.Forms.SystemInformation.BootMode
+					Case System.Windows.Forms.BootMode.FailSafe
+						ServiceInstaller.StopService("AppXSvc")
+						ServiceInstaller.StopService("camsvc")
+						ServiceInstaller.StopService("clipSVC")
+						ServiceInstaller.StopService("Wsearch")
+						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+							If regkey IsNot Nothing Then
+								Try
+									Deletesubregkey(regkey, "AppXSvc")
+									Deletesubregkey(regkey, "camsvc")
+									Deletesubregkey(regkey, "clipSVC")
+									Deletesubregkey(regkey, "Wsearch")
+								Catch ex As Exception
+									Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
+								End Try
+							End If
+						End Using
+
+					Case System.Windows.Forms.BootMode.FailSafeWithNetwork
+						ServiceInstaller.StopService("AppXSvc")
+						ServiceInstaller.StopService("camsvc")
+						ServiceInstaller.StopService("clipSVC")
+						ServiceInstaller.StopService("Wsearch")
+						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+							If regkey IsNot Nothing Then
+								Try
+									Deletesubregkey(regkey, "AppXSvc")
+									Deletesubregkey(regkey, "camsvc")
+									Deletesubregkey(regkey, "clipSVC")
+									Deletesubregkey(regkey, "Wsearch")
+								Catch ex As Exception
+									Application.Log.AddException(ex, "Failed to remove '\SafeBoot\Minimal' RegistryKey (AppXSvc)!")
+								End Try
+							End If
+						End Using
+				End Select
+			End Try
+		End If
+		If Not WindowsIdentity.GetCurrent().IsSystem Then
+			ImpersonateLoggedOnUser.Taketoken()
+		End If
+	End Sub
+
+	Public Sub RemoveAppx(ByVal AppxToRemove As String)
+		Dim ServiceInstaller As New ServiceInstaller
+		Dim win10 As Boolean = frmMain.win10
+		Dim win10_1809 As Boolean = frmMain.win10_1809
+		Dim WasRemoved As Boolean = False
+		If win10 Then
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()  'Will not work if we impersonate "SYSTEM"
+				'ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+			End If
+
+			Try
+				Select Case System.Windows.Forms.SystemInformation.BootMode
+					Case System.Windows.Forms.BootMode.FailSafe
+						Try
+							Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal", True)
+								If regkey IsNot Nothing Then
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("AppXSvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("camsvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("clipSVC", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("Wsearch", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+								End If
+							End Using
+						Catch ex As Exception
+							Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for APPXSvc,etc...!")
+						End Try
+					Case System.Windows.Forms.BootMode.FailSafeWithNetwork
+						Try
+							Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
+								If regkey IsNot Nothing Then
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("AppXSvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("camsvc", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("clipSVC", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+									Using regSubKey As RegistryKey = regkey.CreateSubKey("Wsearch", RegistryKeyPermissionCheck.ReadWriteSubTree)
+										regSubKey.SetValue("", "Service")
+									End Using
+								End If
+							End Using
+						Catch ex As Exception
+							Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for APPXSvc,etc...!")
+						End Try
+				End Select
+
+
+				'Dim opCompletedEvent As ManualResetEvent = New ManualResetEvent(False)
+				'			End Function
+				'Windows.Foundation.IAsyncAction() = packageManager.RemovePackageAsync("NVIDIACorp.NVIDIAControlPanel_8.1.949.0_x64__56jybvy8sckqj")
+				Dim DeploymentEnded As Boolean = False
+				Dim packageManager As PackageManager = New PackageManager()
+				Dim packages As IEnumerable(Of Windows.ApplicationModel.Package) = CType(packageManager.FindPackages(), IEnumerable(Of Windows.ApplicationModel.Package))
+				Dim deploymentOperation As IAsyncOperationWithProgress(Of DeploymentResult, DeploymentProgress)
+
+				For Each package In packages
+					If package IsNot Nothing Then
+						If IsNullOrWhitespace(package.Id.FullName) Then Continue For
+						If StrContainsAny(package.Id.FullName, True, AppxToRemove) Then
 
 							deploymentOperation = packageManager.RemovePackageAsync(package.Id.FullName, RemovalOptions.RemoveForAllUsers)
 

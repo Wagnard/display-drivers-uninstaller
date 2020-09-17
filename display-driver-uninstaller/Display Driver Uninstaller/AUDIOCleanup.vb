@@ -154,9 +154,12 @@ Public Class AUDIOCleanup
 
 		'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
 		If win10 Then
-			CleanupEngine.RemoveAppx("RealtekAudioControl")
+			If CanDeprovisionPackageForAllUsersAsync() Then
+				CleanupEngine.RemoveAppx1809("RealtekAudioControl")
+			Else
+				CleanupEngine.RemoveAppx("RealtekAudioControl")
+			End If
 		End If
-
 		Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
 		CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\classroot.cfg"), config)  '// add each line as String Array.

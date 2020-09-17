@@ -720,7 +720,11 @@ Public Class GPUCleanup
 
 		'Removal of the (DCH) AMD control panel comming from the Window Store. (In progress...)
 		If win10 AndAlso config.RemoveAMDCP Then
-			CleanupEngine.RemoveAppx("AMDRadeonSoftware")
+			If CanDeprovisionPackageForAllUsersAsync() Then
+				CleanupEngine.RemoveAppx1809("AMDRadeonSoftware")
+			Else
+				CleanupEngine.RemoveAppx("AMDRadeonSoftware")
+			End If
 		End If
 
 		'-----------------
@@ -3250,7 +3254,11 @@ Public Class GPUCleanup
 
 		'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
 		If win10 AndAlso config.RemoveNVCP Then
-			CleanupEngine.RemoveAppx("NVIDIAControlPanel")
+			If CanDeprovisionPackageForAllUsersAsync() Then
+				CleanupEngine.RemoveAppx1809("NVIDIAControlPanel")
+			Else
+				CleanupEngine.RemoveAppx("NVIDIAControlPanel")
+			End If
 		End If
 
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
@@ -6144,11 +6152,16 @@ Public Class GPUCleanup
 
 		'Removal of the (DCH) from the Window Store. (In progress...)
 		If win10 AndAlso config.RemoveINTELCP Then
-			CleanupEngine.RemoveAppx("IntelGraphicsControlPanel")
-			CleanupEngine.RemoveAppx("IntelGraphicsExperience")
+			If CanDeprovisionPackageForAllUsersAsync() Then
+				CleanupEngine.RemoveAppx1809("IntelGraphicsControlPanel")
+				CleanupEngine.RemoveAppx1809("IntelGraphicsExperience")
+			Else
+				CleanupEngine.RemoveAppx("IntelGraphicsControlPanel")
+				CleanupEngine.RemoveAppx("IntelGraphicsExperience")
+			End If
 		End If
 
-		CleanupEngine.Pnplockdownfiles(driverfiles) '// add each line as String Array.
+			CleanupEngine.Pnplockdownfiles(driverfiles) '// add each line as String Array.
 
 		CleanupEngine.ClassRoot(classroot, config) '// add each line as String Array.
 
