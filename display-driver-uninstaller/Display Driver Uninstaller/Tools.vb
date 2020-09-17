@@ -4,9 +4,7 @@ Imports System.Text
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 Imports System.Security.Cryptography
-
 Imports System.Windows.Forms
-
 Imports Microsoft.Win32
 Imports Display_Driver_Uninstaller.Win32
 
@@ -40,6 +38,11 @@ Public Module Tools
 
 	Public Function IsNet45OrNewer() As Boolean
 		Return Type.[GetType]("System.Reflection.ReflectionContext", False) IsNot Nothing
+	End Function
+	Public Function CanDeprovisionPackageForAllUsersAsync() As Boolean
+		Dim packageManager As Windows.Management.Deployment.PackageManager = New Windows.Management.Deployment.PackageManager
+		Dim type As Type = packageManager.GetType
+		Return type.GetMethod("DeprovisionPackageForAllUsersAsync") IsNot Nothing
 	End Function
 
 	Public Function PreferredUILanguages() As String

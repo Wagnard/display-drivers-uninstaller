@@ -170,7 +170,7 @@ Public Class CleanupEngine
 						If IsNullOrWhitespace(package.Id.FullName) Then Continue For
 						If StrContainsAny(package.Id.FullName, True, AppxToRemove) Then
 
-							If win10_1809 Then
+							If win10_1809 AndAlso CanDeprovisionPackageForAllUsersAsync() Then
 								deploymentOperation = packageManager.DeprovisionPackageForAllUsersAsync(package.Id.FamilyName)  'Only avail since Win 10 (1809)
 
 								While Not DeploymentEnded
@@ -194,26 +194,45 @@ Public Class CleanupEngine
 
 							deploymentOperation = packageManager.RemovePackageAsync(package.Id.FullName, RemovalOptions.RemoveForAllUsers)
 
-								While Not DeploymentEnded
+							While Not DeploymentEnded
 
-									If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
-										Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
-										Application.Log.AddMessage(package.Id.FullName + " package removal failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
-										DeploymentEnded = True
-										WasRemoved = False
-									ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
+								If deploymentOperation.Status = Windows.Foundation.AsyncStatus.[Error] Then
+									Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
+									Application.Log.AddMessage(package.Id.FullName + " package removal failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
+									DeploymentEnded = True
+									WasRemoved = False
+								ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
 
-										Application.Log.AddMessage(package.Id.FullName + " package removed.")
-										DeploymentEnded = True
-										WasRemoved = True
+									Application.Log.AddMessage(package.Id.FullName + " package removed.")
+									DeploymentEnded = True
+									WasRemoved = True
 
+								End If
+							End While
+
+							If WasRemoved Then
+
+								'Win 10 (1809)
+								Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
+									If regkey IsNot Nothing Then
+										For Each ValueName As String In regkey.GetValueNames
+											If IsNullOrWhitespace(ValueName) Then Continue For
+											If StrContainsAny(ValueName, True, package.Id.FamilyName) Then  'Not working need fixing
+												Try
+													Deletevalue(regkey, ValueName)
+												Catch ex As Exception
+													Application.Log.AddException(ex)
+												End Try
+											End If
+										Next
 									End If
-								End While
+								End Using
 
-								If WasRemoved Then
 
-									'Win 10 (1809)
-									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
+								'Win 10 (1803)
+								For Each regkeyusers As String In Registry.Users.GetSubKeyNames
+									If IsNullOrWhitespace(regkeyusers) Then Continue For
+									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, regkeyusers & "\Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
 										If regkey IsNot Nothing Then
 											For Each ValueName As String In regkey.GetValueNames
 												If IsNullOrWhitespace(ValueName) Then Continue For
@@ -227,29 +246,10 @@ Public Class CleanupEngine
 											Next
 										End If
 									End Using
-
-
-									'Win 10 (1803)
-									For Each regkeyusers As String In Registry.Users.GetSubKeyNames
-										If IsNullOrWhitespace(regkeyusers) Then Continue For
-										Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, regkeyusers & "\Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
-											If regkey IsNot Nothing Then
-												For Each ValueName As String In regkey.GetValueNames
-													If IsNullOrWhitespace(ValueName) Then Continue For
-													If StrContainsAny(ValueName, True, package.Id.FamilyName) Then  'Not working need fixing
-														Try
-															Deletevalue(regkey, ValueName)
-														Catch ex As Exception
-															Application.Log.AddException(ex)
-														End Try
-													End If
-												Next
-											End If
-										End Using
-									Next
-								End If
+								Next
 							End If
 						End If
+					End If
 				Next
 
 			Catch ex As Exception
