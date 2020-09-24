@@ -309,7 +309,6 @@ Public Class CleanupEngine
 				ImpersonateLoggedOnUser.ReleaseToken()  'Will not work if we impersonate "SYSTEM"
 				'ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 			End If
-
 			Try
 				Select Case System.Windows.Forms.SystemInformation.BootMode
 					Case System.Windows.Forms.BootMode.FailSafe
@@ -370,7 +369,7 @@ Public Class CleanupEngine
 						If IsNullOrWhitespace(package.Id.FullName) Then Continue For
 						If StrContainsAny(package.Id.FullName, True, AppxToRemove) Then
 
-							deploymentOperation = packageManager.RemovePackageAsync(package.Id.FullName, RemovalOptions.RemoveForAllUsers)
+							deploymentOperation = packageManager.RemovePackageAsync(package.Id.FullName, If(win10_1809, RemovalOptions.RemoveForAllUsers, Nothing))
 
 							While Not DeploymentEnded
 
