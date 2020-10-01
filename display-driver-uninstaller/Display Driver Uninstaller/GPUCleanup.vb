@@ -3875,6 +3875,7 @@ Public Class GPUCleanup
 							 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
 							 child.ToLower.Contains("_display.nvirusb") Or
 							 child.ToLower.Contains("_display.physx") AndAlso removephysx Or
+							 child.ToLower.Contains("_frameviewsdk") AndAlso removegfe Or
 							 child.ToLower.Contains("_display.update") AndAlso removegfe Or
 							 child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
 							 child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
@@ -3940,6 +3941,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("_display.controlpanel") Or
 						 child.ToLower.Contains("_display.driver") Or
 						 child.ToLower.Contains("_display.optimus") Or
+						 child.ToLower.Contains("_frameviewsdk") AndAlso removegfe Or
 						 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
 						 child.ToLower.Contains("_display.nvirusb") Or
 						 child.ToLower.Contains("_nvabhub") AndAlso removegfe Or
@@ -4123,7 +4125,7 @@ Public Class GPUCleanup
 																			For Each ValueNames As String In regkey5.GetValueNames
 																				If IsNullOrWhitespace(ValueNames) Then Continue For
 																				If StrContainsAny(ValueNames, True, "ansel", "display", "gfexperience", "hdaudio", "nvabhub", "nvbackend", "nvcontainer", "nvnode", "nvplugin",
-																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio", "oem", "msvcruntime", "NGXCore", "USBC", "nvmoduletracker.driver") Then
+																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio", "oem", "msvcruntime", "NGXCore", "USBC", "nvmoduletracker.driver", "FrameViewSdk") Then
 																					Try
 																						Deletevalue(regkey5, ValueNames)
 																					Catch ex As Exception
@@ -5453,6 +5455,7 @@ Public Class GPUCleanup
 					If child.ToLower.Contains("drs") Or
 					 child.ToLower.Contains("nv_cache") Or
 					 child.ToLower.Contains("umdlogs") Or
+					 child.ToLower.Contains("nvtopps") Or
 					 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvab") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
@@ -5549,7 +5552,9 @@ Public Class GPUCleanup
 					   child.ToLower.Contains("nvsmi") Or
 					   child.ToLower.Contains("opencl") Or
 					   child.ToLower.Contains("ansel") Or
+					   child.ToLower.Contains("nvtopps") Or
 					   child.ToLower.Contains("3d vision") Or
+					   child.ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("led visualizer") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvab") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("netservice") AndAlso config.RemoveGFE Or
@@ -5597,6 +5602,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("osclib.") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.nvirusb") Or
 								   child2.ToLower.Contains("usbc.") Or
+								   child2.ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.physx") AndAlso config.RemovePhysX Or
 								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.gamemonitor") AndAlso config.RemoveGFE Or
@@ -5640,6 +5646,12 @@ Public Class GPUCleanup
 															End If
 															If IsNullOrWhitespace(regkey2.GetValue("UninstallString_Hidden", String.Empty).ToString) = False Then
 																If StrContainsAny(regkey2.GetValue("UninstallString_Hidden", String.Empty).ToString, True, child2) Then
+
+																	hit = True
+																End If
+															End If
+															If IsNullOrWhitespace(regkey2.GetValue("UninstallString", String.Empty).ToString) = False Then
+																If StrContainsAny(regkey2.GetValue("UninstallString", String.Empty).ToString, True, child2) Then
 
 																	hit = True
 																End If
@@ -5716,6 +5728,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("led visualizer") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvab") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("osc") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("netservice") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvidia geforce experience") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvstreamc") AndAlso config.RemoveGFE Or
