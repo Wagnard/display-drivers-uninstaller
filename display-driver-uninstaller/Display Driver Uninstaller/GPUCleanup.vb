@@ -1436,6 +1436,27 @@ Public Class GPUCleanup
 		End Try
 
 		Try
+
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\AUEP", True)
+				If regkey IsNot Nothing Then
+					If regkey.SubKeyCount = 0 Then
+						Try
+							Deletesubregkey(Registry.LocalMachine, "Software\AUEP")
+						Catch ex As Exception
+						End Try
+					Else
+						For Each data As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
+						Next
+					End If
+				End If
+			End Using
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+
+		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\ATI Technologies", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
