@@ -124,7 +124,7 @@
 			<Text2>En son sürümden daha eski sürümlerde sınırlı destek veriyoruz. Hata bildirmeden önce yeni bir sürüme geçin.</Text2>
 			<Text3>Yönetici ayrıcalıklarına sahip olarak DDU'yu kullanmıyorsunuz. Uygulamadan şimdi çıkılacak.</Text3>
 			<Text4>PAExec bulunamıyor. Lütfen günlüğe bakın.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) kayıt çok değiştiriyor. DDU otomatik olarak sistem geri yükleme noktası oluşturmaya çalışak. (Normal modda geçerli)</Text5>
+			<Text5>Display Driver Uninstaller (DDU) kayıt defterini çok değiştiriyor. DDU otomatik olarak sistem geri yükleme noktası oluşturmaya çalışacak. (Normal modda geçerli)</Text5>
 			<Text6>Bir modülün içinde bir hata oluştu, DDU günlüklerinizi geliştiricilere gönderebilirsiniz.</Text6>
 			<Text7>DDU (Enduro veya eşdeğeri) bir AMD Laptop tespit edildi, DDU henüz tam olarak uyumlu değil / Enduro sistemlerinde kullanmak kendi sorumluluğunuzdadır.</Text7>
 			<Text8>DDU'yu güvenli mod içinde çalıştırmadığınız tespit edildi... Daha iyi silme işlemi için güvenli moda girmeniz tavsiye edilir. Yeniden başlatıp güvenli moda girin.</Text8>
@@ -267,6 +267,9 @@
 		<lblRemINTELCP>
 			<Text>Microsoft Store'dan yüklenen INTEL Kontrol Panelini kaldır (DCH sürücü)</Text>
 		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>Microsoft Store'dan yüklenen AMD Kontrol Panelini kaldır (DCH sürücü)</Text>
+		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>AMD Crimson Shader Önbellek klasörünü sil</Text>
 			<Tooltip>
@@ -385,6 +388,7 @@
 				-Alberto Bursi	(uzun süredir bağışçı/destekçi)
 				-Kaseb			(2019-09-05'dan beri)
 				-Frank Brown	(2019-10-31'dan beri)
+				-Sergey Bolshakow (Since 2020-09-10)
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -426,15 +430,19 @@
 
 				Logo yapımcı: juanchacin
 
-				Jackalito'ya AMD 7850'yi bize bağladığındna dolayı çok teşekkürler.
+				Jackalito'ya AMD 7850'yi bize bağışladığından dolayı çok teşekkürler.
+				
+				
+				
 				
 				Programımız olan DDU "SetAcl"(http://helgeklein.com/setacl/) özelliği için verdiği izinden dolayı Helge Klein'a teşekkürler.
 				
 				Sorunları çözen ve test eden Gamer1291 (optimus), Octopuss (Amd Enduro), nedooo'ya çok teşekkürler.
 				
+				
 				Test için kendi sistemlerini riske sokan herkese teşekkürler. (Dellon132'a özel teşekkürler)
 
-				*DDU, Driver Sweeper yapımcı veya kurucuları ile alakası yoktur.
+				*DDU, Driver Sweeper yapımcı veya kurucuları ile alakası yoktur.																				
 			</Text>
 		</About>
 
@@ -446,7 +454,8 @@
 
 				DDU'yu kullanarak bilgisayarınıza gelebilecek tüm sorunları kabul etmiş olur ve suçlama talebinde bulunamazsınız.
 
-				DDU'yu kullanarak, NVIDIA ("NVIDIA, GeForce") Advanced Micro Devices ("AMD, Radeon") sahip olduğunuzu kabul etmiş olursunuz.
+				DDU'yu kullanarak, NVIDIA'nın ("NVIDIA, GeForce") veya Advanced Micro Devices'ın ("AMD, Radeon") bu programla
+				herhangi bir ilgisi olmadığını ve hiçbir şekilde DDU'nun veya onun yaratıcılarının bağlı kuruluşlarının olmadığını kabul etmiş olursunuz.
 			</Text>
 		</Tos>
 	</Misc>
@@ -455,7 +464,7 @@
 		<Translator>
 			<User>murat5038</User>
 			<Details>Kaspersky Turkey Moderator</Details>
-			<LastUpdate>18.07.2020</LastUpdate>
+			<LastUpdate>15.10.2020</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
