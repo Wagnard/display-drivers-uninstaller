@@ -594,7 +594,7 @@ Public Class GPUCleanup
 		If config.SelectedGPU = GPUVendor.Intel Then
 			cleanintelserviceprocess()
 			cleanintel(config)
-			cleanintelfolders()
+			cleanintelfolders(config)
 		End If
 
 		CleanupEngine.Cleandriverstore(config)
@@ -6508,7 +6508,7 @@ Public Class GPUCleanup
 
 	End Sub
 
-	Private Sub cleanintelfolders()
+	Private Sub cleanintelfolders(ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
 		Dim filePath As String = Nothing
 		Dim driverfiles As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg")
@@ -6558,7 +6558,9 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "shadercache") Then
+					If StrContainsAny(child, True, "shadercache") Or
+					  StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Or
+						StrContainsAny(child, True, "ags") Then
 
 						Delete(child)
 
@@ -6599,13 +6601,77 @@ Public Class GPUCleanup
 			End If
 		End If
 
+		For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
+			If IsNullOrWhitespace(filepaths) Then Continue For
+			filePath = filepaths + "\AppData\LocalLow\Intel"
+			If winxp Then
+				filePath = filepaths + "\Local Settings\Application Data\Intel"  'need check in the future.
+			End If
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							If child.ToLower.Contains("shadercache") Then
+
+								Delete(child)
+
+							End If
+						End If
+					Next
+					If FileIO.CountDirectories(filePath) = 0 Then
+
+						Delete(filePath)
+
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				Catch ex As Exception
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+				End Try
+			End If
+
+			filePath = filepaths + "\AppData\Local\Intel"
+
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							If child.ToLower.Contains("gcc") AndAlso config.RemoveINTELCP Then
+
+								Delete(child)
+
+							End If
+						End If
+					Next
+					If FileIO.CountDirectories(filePath) = 0 Then
+
+						Delete(filePath)
+
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				Catch ex As Exception
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+				End Try
+			End If
+
+		Next
+
 		If WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.ReleaseToken()
 		End If
 
 	End Sub
 
-	Private Sub CleanVulkan(ByRef config As ThreadSettings)
+	Private Sub CleanVulkan(ByVal config As ThreadSettings)
 
 		Dim FilePath As String = Nothing
 		Dim files() As String = Nothing
