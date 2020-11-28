@@ -2537,6 +2537,14 @@ Public Class GPUCleanup
 		End If
 
 		filePath = Environment.GetFolderPath _
+		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Bug Report Tool"
+		If FileIO.ExistsDir(filePath) Then
+
+			Delete(filePath)
+
+		End If
+
+		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\ATI"
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
