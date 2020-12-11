@@ -267,6 +267,9 @@
 		<lblRemINTELCP>
 			<Text>(DCH gonilnik) Odstrani nameščeno nadzorno ploščo INTEL iz Microsoft trgovine</Text>
 		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>(DCH gonilnik) Odstrani nameščeno nadzorno ploščo AMD iz Microsoft trgovine</Text>
+		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>Odstrani mapo predpomnilnika AMD Crimson Shader</Text>
 			<Tooltip>
@@ -386,6 +389,7 @@
 		-Alberto Bursi (dolgo časa donator/podpornik)
 	    -Kaseb (že od 2019-09-05)
 		-Frank Brown (že od 2019-10-31		
+	    -Sergey Bolshakow (že od 2020-09-10)
 			</Text>
 		</lblPatron>
 	</frmAbout>
