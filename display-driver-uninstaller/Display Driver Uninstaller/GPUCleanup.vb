@@ -208,13 +208,15 @@ Public Class GPUCleanup
 							For Each Parent As SetupAPI.Device In AudioDevice.ParentDevices
 								If Parent IsNot Nothing Then 'TODO : Parent.ChildDevices.Length < 1
 									Dim audiobusList As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Parent.DeviceID, False, True, True)
-									For Each audiobus As SetupAPI.Device In audiobusList
-										If audiobus IsNot Nothing AndAlso audiobus.ChildDevices.Length < 2 Then
-											SetupAPI.UninstallDevice(audiobus) 'Removing the Audio bus.
-										End If
-									Next
+									If audiobusList.Count > 0 Then
+										For Each audiobus As SetupAPI.Device In audiobusList
+											If audiobus IsNot Nothing AndAlso audiobus.ChildDevices.Length < 2 Then
+												SetupAPI.UninstallDevice(audiobus) 'Removing the Audio bus.
+											End If
+										Next
+									End If
 								End If
-							Next
+                            Next
 						End If
 					End If
 				Next
@@ -1215,7 +1217,7 @@ Public Class GPUCleanup
 											Try
 												Deletesubregkey(regkey, child)
 											Catch ex As Exception
-												Application.Log.AddException(ex)
+												Application.Log.AddExceptionWithValues(ex, "Path: " + regkey.ToString + " Key : " + child)
 											End Try
 										End If
 										If child.Contains("Path") Then
@@ -1258,6 +1260,7 @@ Public Class GPUCleanup
 
 														End Select
 													Catch ex As Exception
+														Application.Log.AddException(ex)
 													End Try
 												End If
 											End If
@@ -4001,6 +4004,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("_nvvhci") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvdisplaycontainer") Or
 						 child.ToLower.Contains("_displaydriveranalyzer") Or
+						 child.ToLower.Contains("_nvdisplay.messagebus") Or
 						 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
 						 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso removegfe Or
 						 child.ToLower.Contains("_osc") AndAlso removegfe Or
@@ -5608,6 +5612,7 @@ Public Class GPUCleanup
 					   child.ToLower.Contains("nvdlisr") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvgsync") Or
 					   child.ToLower.Contains("nvupdate") Or
+					   child.ToLower.Contains("wksserviceplugin") Or
 					   child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 
 						Delete(child)
@@ -5631,6 +5636,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("osclib.") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.nvirusb") Or
 								   child2.ToLower.Contains("usbc.") Or
+								   child2.ToLower.Contains("nvdisplay.messagebus") Or
 								   child2.ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.physx") AndAlso config.RemovePhysX Or
 								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
