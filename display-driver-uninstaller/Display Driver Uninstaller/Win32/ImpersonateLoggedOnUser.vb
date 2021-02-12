@@ -26,17 +26,27 @@ Public Class ImpersonateLoggedOnUser
 		Dim dupeTokenHandle As IntPtr = IntPtr.Zero
 		'Dim procs As Process() = Process.GetProcessesByName("LSASS")
 		Dim procs As Process() = Process.GetProcesses()
-		Application.Log.AddMessage("Trying to impersonate the SYSTEM account...")
-		ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+		Dim logEntry As New LogEntry() With {.Message = "Trying to impersonate the SYSTEM account..."}
+		logEntry.Type = LogType.Warning
+
+		ACL.AddPriviliges(ACL.SE.DEBUG_NAME, ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 
 		If procs IsNot Nothing AndAlso procs.Length > 0 Then
 			Try
+				logEntry.Add("Number of process to check", procs.Length.ToString)
+
 				For Each proc As Process In procs
 					If IsNullOrWhitespace(proc.ToString) OrElse proc.ProcessName.ToLower = "searchfilterhost" Then Continue For
 					Try
 						If OpenProcessToken(proc.Handle, TOKEN_QUERY Or TOKEN_IMPERSONATE Or TOKEN_DUPLICATE, hToken) <> 0 Then
 							Dim newId As Principal.WindowsIdentity = New Principal.WindowsIdentity(hToken)
 
+							If Not newId.IsSystem Then
+								logEntry.Add(proc.ProcessName, "Skipping : " + newId.User.ToString)
+								Continue For
+							Else
+								logEntry.Add(proc.ProcessName, newId.User.ToString)
+							End If
 
 							Const SecurityImpersonation As Integer = 2
 							dupeTokenHandle = DupeToken(hToken, SecurityImpersonation)
@@ -53,9 +63,12 @@ Public Class ImpersonateLoggedOnUser
 
 							If Principal.WindowsIdentity.GetCurrent().IsSystem Then
 								'ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
-								Application.Log.AddMessage("SYSTEM account impersonalisation successful with process: " + proc.ProcessName)
+								logEntry.Add(proc.ProcessName, "SYSTEM account impersonalisation SUCCESS")
+								logEntry.Type = LogType.Event
+								logEntry.Message = logEntry.Message + " SUCCESS !"
 								Exit For
 							Else
+								logEntry.Add(proc.ProcessName, "Didn't work")
 								RevertToSelf()
 							End If
 						Else
@@ -63,8 +76,9 @@ Public Class ImpersonateLoggedOnUser
 							'Throw New Exception(s)
 
 						End If
-					Catch exARG As SystemException
+					Catch exARG As ComponentModel.Win32Exception
 						'access denied ,can happen, just continue checking the next process.
+						logEntry.Add(proc.ProcessName, exARG.Message)
 					Catch ex As Exception
 						Application.Log.AddMessage(ex.Message + ex.StackTrace)
 					End Try
@@ -74,12 +88,18 @@ Public Class ImpersonateLoggedOnUser
 			Finally
 				CloseHandle(hToken)
 			End Try
+		Else
+			logEntry.Type = LogType.Warning
+			logEntry.Message = logEntry.Message + " FAILED ! (Cleanup may not be efficient.)"
+			logEntry.Add("Process is either NULL of there is none detected.")
 		End If
+
 		If Principal.WindowsIdentity.GetCurrent().IsSystem Then
 			'nothing to do.
 		Else
-			Application.Log.AddWarningMessage("SYSTEM account impersonalisation failed ! Cleanup may not be efficient.")
+			logEntry.Message = logEntry.Message + " FAILED ! (Cleanup may not be efficient.)"
 		End If
+		Application.Log.Add(logEntry)
 	End Sub
 
 	Public Shared Sub ReleaseToken()
