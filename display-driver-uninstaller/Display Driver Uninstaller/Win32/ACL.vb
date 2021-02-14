@@ -433,7 +433,7 @@ Namespace Win32
 						   New LUID_AND_ATTRIBUTES() With
 						   {
 						 .Luid = luid,
-						 .Attributes = If(enable, SE_PRIVILEGE.ENABLED, SE_PRIVILEGE.REMOVED)
+						 .Attributes = If(enable, SE_PRIVILEGE.ENABLED, Nothing)  'Nothing will disable the privilege instead of removing
 						   }
 						  }
 						 })

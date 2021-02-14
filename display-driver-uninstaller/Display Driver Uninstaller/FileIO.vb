@@ -591,8 +591,9 @@ Public Class FileIO
 	End Sub
 
 	Private Function Exists(ByVal fileName As String, ByRef isDirectory As Boolean) As Boolean
-		If Not fileName.StartsWith(UNC_PREFIX) Then
-			fileName = UNC_PREFIX & fileName
+		'Here we add the UNC prefix if it was not there and also ONLY if it's not a network/SMB path.
+		If Not fileName.StartsWith(UNC_PREFIX) AndAlso Not fileName.StartsWith("\\") Then
+			fileName = UNC_PREFIX & If(fileName.StartsWith("\\"), fileName.Remove(0, 1), fileName)
 		End If
 
 		Dim fileAttr As UInt32 = GetAttributes(fileName, isDirectory)
