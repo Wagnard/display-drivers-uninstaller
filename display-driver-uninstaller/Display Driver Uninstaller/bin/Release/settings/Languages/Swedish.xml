@@ -191,8 +191,8 @@
 			<Text35>Avsluta localmachine ,installering\produktrensning</Text35>
 			<Text36>Starta currentuser ,installering\produktrensning</Text36>
 			<Text37>Avsluta currentuser ,installering\produktrensning</Text37>
-			<Text38>Rensar Process/Service...</Text38>
-			<Text39>Process/Service rensning färdig</Text39>
+			<Text38>Rensar Processer/Servicer...</Text38>
+			<Text39>Processer/Servicer rensning färdig</Text39>
 			<Text40>Borttagen.</Text40>
 			<Text41>Värde borttaget.</Text41>
 			<Text42>Fil borttagen.</Text42>
@@ -212,6 +212,9 @@
 		<lblAmdspecific>
 			<Text>AMD Specifika alternativ</Text>
 		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>INTEL Specifika alternativ</Text>
+		</lblINTELspecific>
 		<lblAdvancedO>
 			<Text>Avancerade alternativ (Ändra på egen risk)</Text>
 		</lblAdvancedO>
@@ -219,7 +222,7 @@
 			<Text>Generella alternativ</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Rensa "C:\NVIDIA" Drivrutinskataloger (INTE rekommenderat)</Text>
+			<Text>Ta bort "C:\NVIDIA" Drivrutinskataloger (INTE rekommenderat)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>Spara loggfiler i startkatalogen (rekommenderas)</Text>
@@ -259,8 +262,14 @@
 			<Text>Ta bort Geforce Experience (GFE)</Text>
 		</lblRemGFE>
 <lblRemNVCP>
-			<Text>(bara DCH-drivrutin) Ta bort NVIDIA Kontrollpanel installerat från Microsoft Store</Text>
+			<Text>(DCH-drivrutin) Ta bort NVIDIA Kontrollpanel installerat från Microsoft Store</Text>
 		</lblRemNVCP>
+		<lblRemINTELCP>
+			<Text>(DCH-drivrutin) Ta bort INTEL Kontrollpanel installerat från Microsoft Store</Text>
+		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>(DCH-drivrutin) Ta bort AMD Kontrollpanel installerat från Microsoft Store</Text>
+		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>Ta bort AMD Crimson Skuggningscachekatalog</Text>
 			<Tooltip>
@@ -380,6 +389,7 @@
 		-Alberto Bursi (lång tids donator/supporter)
 		-Kaseb (Sedan 2019-09-05)
 		-Frank Brown (Sedan 2019-10-31)
+        -Sergey Bolshakow (Sedan 2020-09-10)
     </Text>
 		</lblPatron>
 	</frmAbout>
@@ -454,7 +464,7 @@ Tack till Helge Klein (http://helgeklein.com/setacl/) : för tillståndet att an
 		<Translator>
 			<User>Hans Eriksson</User>
 			<Details>hans.ericson@bredband.net</Details>
-			<LastUpdate>08/05/2020</LastUpdate>
+			<LastUpdate>15/02/2021</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
