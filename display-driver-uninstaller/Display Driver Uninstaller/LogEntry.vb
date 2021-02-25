@@ -216,6 +216,16 @@ Public Class LogEntry
 			Add("DevInst", d.devInst.ToString())
 			Add("InstallState", If(Not IsNullOrWhitespace(d.InstallStateStr), d.InstallStateStr, "-"))
 			Add(KvP.Empty)
+			If d.LowerFilters IsNot Nothing AndAlso d.LowerFilters.Length > 0 Then
+				Add("Lower Filters", String.Join(Environment.NewLine, d.LowerFilters))
+				Add(KvP.Empty)
+			End If
+
+			If d.UpperFilters IsNot Nothing AndAlso d.UpperFilters.Length > 0 Then
+				Add("Upper Filters", String.Join(Environment.NewLine, d.UpperFilters))
+				Add(KvP.Empty)
+			End If
+
 			If d.ParentDevices IsNot Nothing Then
 				For Each d2 As Win32.SetupAPI.Device In d.ParentDevices
 					Add("ParentDevice", If(d2.FriendlyName, d2.Description))

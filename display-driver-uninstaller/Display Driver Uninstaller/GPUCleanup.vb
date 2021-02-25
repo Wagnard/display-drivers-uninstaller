@@ -3114,7 +3114,7 @@ Public Class GPUCleanup
 			If found.Count > 0 Then
 				For Each d As SetupAPI.Device In found
 					If StrContainsAny(d.HardwareIDs(0), True, "VEN_8086") Then
-						If d.UpperFilters IsNot Nothing AndAlso d.UpperFilters.Length > 0 AndAlso StrContainsAny(d.UpperFilters(0), True, "nvpciflt", "nvkflt") Then
+						If d.UpperFilters IsNot Nothing AndAlso d.UpperFilters.Length > 0 AndAlso StrContainsAny(String.Join(",", d.UpperFilters), True, "nvpciflt", "nvkflt") Then
 							If d.OemInfs.Length > 0 AndAlso (Not IsNullOrWhitespace(d.OemInfs(0).ToString)) AndAlso FileIO.ExistsFile(d.OemInfs(0).ToString) Then
 								SetupAPI.UpdateDeviceInf(d, d.OemInfs(0).ToString, True)
 							Else
