@@ -4,9 +4,9 @@ Imports System.ComponentModel
 Imports System.Runtime.InteropServices
 Imports System.Security.AccessControl
 Imports System.Security.Principal
-
 Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
+Imports System.Threading
 
 Public Class FileIO
 #Region "Consts"
@@ -15,7 +15,7 @@ Public Class FileIO
 	Private Shared ReadOnly INVALID_HANDLE As IntPtr = New IntPtr(-1)
 
 #End Region
-	Dim objAuto As System.Threading.AutoResetEvent = New System.Threading.AutoResetEvent(False)
+	Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 
 #Region "Enums"
 
@@ -400,14 +400,7 @@ Public Class FileIO
 		Return GetDirNames(directory, wildCard, searchSubDirs, False, False, False)
 	End Function
 
-
-	Private Sub TimerElapsed(source As Object, e As System.Timers.ElapsedEventArgs)
-		objAuto.Set()
-	End Sub
-
 	Private Sub DeleteInternal(ByVal fileName As String, ByVal fixedAcl As Boolean)
-		Dim timer As System.Timers.Timer = New System.Timers.Timer
-		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
 		If IsNullOrWhitespace(fileName) Then
 			Return
 		End If
@@ -471,13 +464,10 @@ Public Class FileIO
 						'System.Threading.Thread.Sleep(10)		' Windows is slow... takes bit time to files be deleted.
 
 						Dim waits As Int32 = 0
-						timer.Interval = 100
-						timer.AutoReset = False
 						While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
 							If GetFileCount(uncFileName, "*", True) > 0 Then
 								waits += 1
-								timer.Start()
-								objAuto.WaitOne()
+								objAuto.WaitOne(100)
 							Else
 								Exit While
 							End If
@@ -508,10 +498,7 @@ Public Class FileIO
 						End Using
 						MoveFileEx(Path.GetPathRoot(fileName) & "deleteme.tmp", Nothing, MoveFileFlags.MOVEFILE_DELAY_UNTIL_REBOOT) ' This will delete de file after reboot
 						MoveFileEx(uncFileName, Path.GetPathRoot(fileName) & "deleteme.tmp", MoveFileFlags.MOVEFILE_REPLACE_EXISTING) ' This move the file.
-						timer.Interval = 100
-						timer.AutoReset = False
-						timer.Start()
-						objAuto.WaitOne()
+						objAuto.WaitOne(100)
 						'System.Threading.Thread.Sleep(100) ' To let the time for the file move to take effect.
 						Return
 					Else

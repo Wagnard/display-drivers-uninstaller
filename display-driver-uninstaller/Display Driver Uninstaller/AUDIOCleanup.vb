@@ -125,7 +125,7 @@ Public Class AUDIOCleanup
 
 		Select Case config.SelectedAUDIO
 			Case AudioVendor.Realtek
-				CleanRealtekserviceprocess()
+				CleanRealtekserviceprocess(config)
 				CleanRealtek(config)
 				CleanRealtekFolders(config)
 			Case AudioVendor.SoundBlaster
@@ -135,10 +135,10 @@ Public Class AUDIOCleanup
 		config.Success = True
 	End Sub
 
-	Private Sub CleanRealtekserviceprocess()
+	Private Sub CleanRealtekserviceprocess(ByVal config As ThreadSettings)
 		Application.Log.AddMessage("Cleaning Process/Services...")
 
-		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\services.cfg"))
+		CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\services.cfg"), config)
 
 		KillProcess("RtkNGUI64", "RtkAudUService64", "audiodg")
 		Application.Log.AddMessage("Process/Services CleanUP Complete")

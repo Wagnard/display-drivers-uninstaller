@@ -9,7 +9,7 @@ Imports System.Security.Principal
 
 Public Class CleanupEngine
 
-	Dim objAuto As System.Threading.AutoResetEvent = New System.Threading.AutoResetEvent(False)
+	Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 
 	'	Private win8higher As Boolean = frmMain.win8higher
 
@@ -1338,78 +1338,65 @@ Public Class CleanupEngine
 
 	End Sub
 
-	Private Sub TimerElapsed(source As Object, e As System.Timers.ElapsedEventArgs)
-		objAuto.Set()
-	End Sub
-
-	Public Sub Cleanserviceprocess(ByVal services As String())
+	Public Sub Cleanserviceprocess(ByVal services As String(), config As ThreadSettings)
 		Dim ServiceInstaller As New ServiceInstaller
 		ImpersonateLoggedOnUser.Taketoken()
-		Dim timer As System.Timers.Timer = New System.Timers.Timer
-		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
-		timer.AutoReset = False
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services", False)
 			If regkey IsNot Nothing Then
 				For Each service As String In services
 					If IsNullOrWhitespace(service) Then Continue For
-
+					If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(service, True, "amdkmafd")) Then Continue For
+					If config.RemoveAMDKMPFD = False AndAlso StrContainsAny(service, True, "amdkmpfd") Then Continue For
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
 						If regkey2 IsNot Nothing Then
-							If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(service, True, "amdkmafd")) Then
+							If WindowsIdentity.GetCurrent().IsSystem Then
+								ImpersonateLoggedOnUser.ReleaseToken()
+							End If
 
-								If WindowsIdentity.GetCurrent().IsSystem Then
-									ImpersonateLoggedOnUser.ReleaseToken()
-								End If
-
-								If ServiceInstaller.GetServiceStatus(service) = Nothing Then
-									'Service is not present
-								Else
-									Try
-										ServiceInstaller.Uninstall(service)
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-										Continue For
-									End Try
+							If ServiceInstaller.GetServiceStatus(service) = Nothing Then
+								'Service is not present
+							Else
+								Try
+									ServiceInstaller.Uninstall(service)
+								Catch ex As Exception
+									Application.Log.AddException(ex)
+									Continue For
+								End Try
 
 
-									Dim waits As Int32 = 0
+								Dim waits As Int32 = 0
 
-									While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
-										If ServiceInstaller.GetServiceStatus(service) <> Nothing Then
-											waits += 1
-											timer.Interval = 100
-											timer.Start()
-											objAuto.WaitOne()
-											'System.Threading.Thread.Sleep(100)
-										Else
-											Exit While
-										End If
-									End While
-
-									If Not WindowsIdentity.GetCurrent().IsSystem Then
-										ImpersonateLoggedOnUser.Taketoken()
+								While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
+									If ServiceInstaller.GetServiceStatus(service) <> Nothing Then
+										waits += 1
+										objAuto.WaitOne(100)
+										'System.Threading.Thread.Sleep(100)
+									Else
+										Exit While
 									End If
+								End While
 
-									Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\Setup\FirstBoot\Services", True)
-										If regkey4 IsNot Nothing Then
-											Try
-												Deletesubregkey(regkey4, service)
-											Catch exARG As ArgumentException
-												'Do nothing, can happen (Not found)
-											Catch ex As Exception
-												Application.Log.AddException(ex)
-											End Try
-										End If
-									End Using
+								If Not WindowsIdentity.GetCurrent().IsSystem Then
+									ImpersonateLoggedOnUser.Taketoken()
 								End If
+
+								Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\Setup\FirstBoot\Services", True)
+									If regkey4 IsNot Nothing Then
+										Try
+											Deletesubregkey(regkey4, service)
+										Catch exARG As ArgumentException
+											'Do nothing, can happen (Not found)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
+								End Using
 							End If
 						End If
 					End Using
-					timer.Interval = 10
-					timer.Start()
-					objAuto.WaitOne()
+					objAuto.WaitOne(10)
 					'System.Threading.Thread.Sleep(10)
 				Next
 			End If
@@ -1614,7 +1601,6 @@ Public Class CleanupEngine
 	Public Sub Clsidleftover(ByVal clsidleftover As String())
 
 		Dim wantedvalue As String
-		Dim wantedvalue2 As String
 		Dim appid As String = Nothing
 		Dim typelib As String = Nothing
 		Dim childlist As New List(Of String)
@@ -2573,9 +2559,6 @@ Public Class CleanupEngine
 	End Sub
 
 	Public Sub Folderscleanup(ByVal driverfiles As String())
-		Dim timer As System.Timers.Timer = New System.Timers.Timer
-		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
-		timer.AutoReset = False
 		Dim winxp = frmMain.winxp
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 		Dim Thread1Finished = False
@@ -2622,10 +2605,7 @@ Public Class CleanupEngine
 		thread7.Start()
 
 		While Thread1Finished <> True Or Thread2Finished <> True Or Thread3Finished <> True Or Thread4Finished <> True Or Thread5Finished <> True Or Thread7Finished <> True Or Thread8Finished <> True
-
-			timer.Interval = 500
-			timer.Start()
-			objAuto.WaitOne()
+			objAuto.WaitOne(500)
 		End While
 
 	End Sub

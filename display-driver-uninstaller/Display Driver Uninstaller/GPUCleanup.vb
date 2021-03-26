@@ -16,7 +16,6 @@ Public Class GPUCleanup
 	Dim sysdrv As String = Application.Paths.SystemDrive
 	Dim donotremoveamdhdaudiobusfiles As Boolean = frmMain.donotremoveamdhdaudiobusfiles
 	Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
-	Dim timer As System.Timers.Timer = New System.Timers.Timer
 
 
 
@@ -27,7 +26,6 @@ Public Class GPUCleanup
 		Dim VendCHIDGPU As String = ""
 		Dim vendidexpected As String = ""
 		Dim VendidSC As String() = Nothing
-		AddHandler timer.Elapsed, New System.Timers.ElapsedEventHandler(AddressOf TimerElapsed)
 
 		Select Case config.SelectedGPU
 			Case GPUVendor.Nvidia : vendidexpected = "VEN_10DE" : VendCHIDGPU = "VEN_10DE&CC_03" : VendidSC = {"VEN_10DE"}
@@ -571,7 +569,7 @@ Public Class GPUCleanup
 			If config.Restart Or config.Shutdown Then
 				If Not Checkamdkmpfd() Then
 					UpdateTextMethod("Start - Check for AMDKMPFD service.")
-					CleanupEngine.Cleanserviceprocess({"amdkmpfd"})
+					CleanupEngine.Cleanserviceprocess({"amdkmpfd"}, config)
 					UpdateTextMethod("End - Check for AMDKMPFD service.")
 				End If
 			End If
@@ -594,7 +592,7 @@ Public Class GPUCleanup
 		End If
 
 		If config.SelectedGPU = GPUVendor.Intel Then
-			cleanintelserviceprocess()
+			cleanintelserviceprocess(config)
 			cleanintel(config)
 			cleanintelfolders(config)
 		End If
@@ -648,7 +646,7 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Cleaning Process/Services...")
 
-		CleanupEngine.Cleanserviceprocess(services)    '// add each line as String Array.
+		CleanupEngine.Cleanserviceprocess(services, config)    '// add each line as String Array.
 
 		Dim killpid As New ProcessStartInfo
 		killpid.FileName = "cmd.exe"
@@ -680,11 +678,9 @@ Public Class GPUCleanup
 		 "jusched",
 		 "radeonsoftware")
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
-		timer.Interval = 10
-		timer.AutoReset = False
+
 		While True
-			timer.Start()
-			objAuto.WaitOne()
+			objAuto.WaitOne(10)
 			Exit While
 		End While
 
@@ -705,6 +701,7 @@ Public Class GPUCleanup
 		Dim reginterface As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\interface.cfg")
 		Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\clsidleftover.cfg")
 		Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")
+		Dim driverfiles2 As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles2.cfg")
 
 		ImpersonateLoggedOnUser.Taketoken()
 
@@ -1087,7 +1084,12 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-		CleanupEngine.Pnplockdownfiles(driverfiles)   '// add each line as String Array.
+		If config.RemoveAMDKMPFD Then
+			CleanupEngine.Pnplockdownfiles(driverfiles)   '// add each line as String Array.
+		Else
+			CleanupEngine.Pnplockdownfiles(driverfiles2)
+		End If
+
 
 		If config.RemoveVulkan Then
 			Try
@@ -1512,7 +1514,10 @@ Public Class GPUCleanup
 												For Each childf As String In FileIO.GetDirectories(filePath)
 													If IsNullOrWhitespace(childf) Then Continue For
 
-													If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim", "Performance Profile Client") Then
+													If StrContainsAny(childf, True, "ati.ace", "cnext", "cim", "Performance Profile Client") Then
+														Delete(childf)
+													End If
+													If config.RemoveAMDKMPFD AndAlso StrContainsAny(childf, True, "amdkmpfd") Then
 														Delete(childf)
 													End If
 												Next
@@ -1720,7 +1725,12 @@ Public Class GPUCleanup
 													For Each childf As String In FileIO.GetDirectories(filePath)
 														If IsNullOrWhitespace(childf) Then Continue For
 
-														If StrContainsAny(childf, True, "ati.ace", "cnext", "amdkmpfd", "cim") Then
+														If StrContainsAny(childf, True, "ati.ace", "cnext", "cim") Then
+
+															Delete(childf)
+
+														End If
+														If config.RemoveAMDKMPFD AndAlso StrContainsAny(childf, True, "amdkmpfd") Then
 
 															Delete(childf)
 
@@ -2230,11 +2240,9 @@ Public Class GPUCleanup
 		'End Select
 
 		'Killing Explorer.exe to help releasing file that were open.
-		timer.Interval = 500
-		timer.AutoReset = False
+
 		While Thread2Finished <> True
-			timer.Start()
-			objAuto.WaitOne()
+			objAuto.WaitOne(500)
 		End While
 
 		Application.Log.AddMessage("Killing Explorer.exe")
@@ -2245,14 +2253,13 @@ Public Class GPUCleanup
 		End If
 
 	End Sub
-	Private Sub TimerElapsed(source As Object, e As System.Timers.ElapsedEventArgs)
-		objAuto.Set()
-	End Sub
+
 	Private Sub Cleanamdfolders(ByVal config As ThreadSettings)
 		Dim filePath As String = Nothing
 		Dim removedxcache As Boolean = config.RemoveCrimsonCache
 		Dim Thread1Finished = False
 		Dim driverfiles = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")
+		Dim driverfiles2 = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles2.cfg")
 
 		ImpersonateLoggedOnUser.Taketoken()
 		'Delete AMD data Folders
@@ -2270,10 +2277,11 @@ Public Class GPUCleanup
 
 		'Delete driver files
 		'delete OpenCL
-
-		Threaddata1(Thread1Finished, driverfiles)
-
-
+		If config.RemoveAMDKMPFD Then
+			Threaddata1(Thread1Finished, driverfiles)
+		Else
+			Threaddata1(Thread1Finished, driverfiles2)
+		End If
 
 		filePath = Environment.GetEnvironmentVariable("windir")
 		Try
@@ -2924,12 +2932,8 @@ Public Class GPUCleanup
 			Next
 		End If
 
-
-		timer.Interval = 500
-		timer.AutoReset = False
 		While Thread1Finished <> True
-			timer.Start()
-			objAuto.WaitOne()
+			objAuto.WaitOne(500)
 		End While
 
 		If WindowsIdentity.GetCurrent().IsSystem Then
@@ -3150,10 +3154,10 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Cleaning Process/Services...")
 
-		CleanupEngine.Cleanserviceprocess(services)
+		CleanupEngine.Cleanserviceprocess(services, config)
 
 		If config.RemoveGFE Then
-			CleanupEngine.Cleanserviceprocess(gfeservices)
+			CleanupEngine.Cleanserviceprocess(gfeservices, config)
 		End If
 
 		'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
@@ -3337,11 +3341,9 @@ Public Class GPUCleanup
 		'-----------------
 		'interface cleanup
 		'-----------------
-		timer.Interval = 500
-		timer.AutoReset = True
+
 		While Thread2Finished <> True
-			timer.Start()
-			objAuto.WaitOne()
+			objAuto.WaitOne(500)
 			Application.Log.AddMessage("Waiting for MainRegCleanThread")
 		End While
 
@@ -5154,11 +5156,9 @@ Public Class GPUCleanup
 		'                  SetServiceStartupType("Schedule", OldValue)
 		'              End If
 		'      End Select
-		timer.Interval = 500
-		timer.AutoReset = False
+
 		While Thread2Finished <> True Or Thread3Finished <> True
-			timer.Start()
-			objAuto.WaitOne()
+			objAuto.WaitOne(500)
 			Application.Log.AddMessage("Waiting for InstallerCleanThread")
 		End While
 
@@ -6169,11 +6169,8 @@ Public Class GPUCleanup
 			Application.Log.AddException(ex)
 		End Try
 
-		timer.Interval = 500
-		timer.AutoReset = False
 		While Thread1Finished <> True Or Thread2Finished <> True
-			timer.Start()
-			objAuto.WaitOne()
+			objAuto.WaitOne(500)
 		End While
 
 		If WindowsIdentity.GetCurrent().IsSystem Then
@@ -6503,7 +6500,7 @@ Public Class GPUCleanup
 
 	End Sub
 
-	Private Sub cleanintelserviceprocess()
+	Private Sub cleanintelserviceprocess(ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
 		Dim services As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\services.cfg")
 
@@ -6512,7 +6509,7 @@ Public Class GPUCleanup
 		End If
 
 		Application.Log.AddMessage("Cleaning Process/Services...")
-		CleanupEngine.Cleanserviceprocess(services) '// add each line as String Array.
+		CleanupEngine.Cleanserviceprocess(services, config) '// add each line as String Array.
 
 		KillProcess("IGFXEM")
 		Application.Log.AddMessage("Process/Services CleanUP Complete")

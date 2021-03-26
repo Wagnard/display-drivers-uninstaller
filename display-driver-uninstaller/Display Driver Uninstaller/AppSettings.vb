@@ -265,7 +265,7 @@ Public Class AppSettings
 			Return CBool(GetValue(m_remAMDKMPFD))
 		End Get
 		Set(value As Boolean)
-			SetValue(m_remAMDKMPFD, value)
+			SetValue(m_remAMDKMPFD, False)  'Temporary disabled until teted further.
 		End Set
 	End Property
 
