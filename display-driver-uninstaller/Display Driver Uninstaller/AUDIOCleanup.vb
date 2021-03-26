@@ -331,7 +331,7 @@ Public Class AUDIOCleanup
 
 		Application.Log.AddMessage("Cleaning Directories (Please Wait...)")
 
-		CleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\driverfiles.cfg"))
+		CleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\driverfiles.cfg"), config)
 
 		filePath = config.Paths.ProgramFiles + "Realtek"
 		If FileIO.ExistsDir(filePath) Then

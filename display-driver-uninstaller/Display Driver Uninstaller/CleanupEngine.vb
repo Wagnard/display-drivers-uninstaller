@@ -1347,7 +1347,7 @@ Public Class CleanupEngine
 			If regkey IsNot Nothing Then
 				For Each service As String In services
 					If IsNullOrWhitespace(service) Then Continue For
-					If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(service, True, "amdkmafd")) Then Continue For
+					If (config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles) AndAlso StrContainsAny(service, True, "amdkmafd") Then Continue For
 					If config.RemoveAMDKMPFD = False AndAlso StrContainsAny(service, True, "amdkmpfd") Then Continue For
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
 						If regkey2 IsNot Nothing Then
@@ -1496,7 +1496,7 @@ Public Class CleanupEngine
 		End Using
 	End Sub
 
-	Public Sub PrePnplockdownfiles(ByVal oeminf As String)
+	Public Sub PrePnplockdownfiles(ByVal oeminf As String, ByVal config As ThreadSettings)
 		Dim win8higher = frmMain.win8higher
 		Dim processinfo As New ProcessStartInfo
 		Dim process As New Process
@@ -1508,7 +1508,7 @@ Public Class CleanupEngine
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
 					If regkey IsNot Nothing Then
 						If Not IsNullOrWhitespace(oeminf) Then
-							If Not (donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(oeminf, True, "amdkmafd.sys")) Then
+							If Not (config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles) AndAlso StrContainsAny(oeminf, True, "amdkmafd.sys") Then
 								For Each child As String In regkey.GetSubKeyNames()
 									If IsNullOrWhitespace(child) Then Continue For
 
@@ -1533,7 +1533,7 @@ Public Class CleanupEngine
 
 	End Sub
 
-	Public Sub Pnplockdownfiles(ByVal driverfiles As String())
+	Public Sub Pnplockdownfiles(ByVal driverfiles As String(), ByVal config As ThreadSettings)
 
 		Dim winxp = frmMain.winxp
 		Dim win8higher = frmMain.win8higher
@@ -1548,7 +1548,7 @@ Public Class CleanupEngine
 						If regkey IsNot Nothing Then
 							For i As Integer = 0 To driverfiles.Length - 1
 								If Not IsNullOrWhitespace(driverfiles(i)) Then
-									If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd.sys")) Then
+									If Not (config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles) AndAlso driverfiles(i).ToLower.Contains("amdkmafd.sys") Then
 										For Each child As String In regkey.GetSubKeyNames()
 											If IsNullOrWhitespace(child) = False Then
 												If StrContainsAny(child.Replace("/", "\"), True, driverfiles(i)) Then
@@ -1572,7 +1572,7 @@ Public Class CleanupEngine
 						If regkey IsNot Nothing Then
 							For i As Integer = 0 To driverfiles.Length - 1
 								If Not IsNullOrWhitespace(driverfiles(i)) Then
-									If Not (donotremoveamdhdaudiobusfiles AndAlso driverfiles(i).ToLower.Contains("amdkmafd")) Then
+									If Not (config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles) AndAlso driverfiles(i).ToLower.Contains("amdkmafd") Then
 										For Each child As String In regkey.GetValueNames()
 											If IsNullOrWhitespace(child) = False Then
 												If StrContainsAny(child, True, driverfiles(i)) Then
@@ -2558,7 +2558,7 @@ Public Class CleanupEngine
 		Application.Log.AddMessage("END Interface CleanUP")
 	End Sub
 
-	Public Sub Folderscleanup(ByVal driverfiles As String())
+	Public Sub Folderscleanup(ByVal driverfiles As String(), ByVal config As ThreadSettings)
 		Dim winxp = frmMain.winxp
 		Dim donotremoveamdhdaudiobusfiles = frmMain.donotremoveamdhdaudiobusfiles
 		Dim Thread1Finished = False
@@ -2570,38 +2570,38 @@ Public Class CleanupEngine
 		Dim Thread8Finished = False
 
 
-		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, Application.Paths.System32, driverfiles, donotremoveamdhdaudiobusfiles))
+		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, Application.Paths.System32, driverfiles, If(config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles, True, False)))
 		thread1.Start()
 
-		Dim thread2 As Thread = New Thread(Sub() Threaddata1(Thread2Finished, Application.Paths.System32 & "drivers\", driverfiles, donotremoveamdhdaudiobusfiles))
+		Dim thread2 As Thread = New Thread(Sub() Threaddata1(Thread2Finished, Application.Paths.System32 & "drivers\", driverfiles, If(config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles, True, False)))
 		thread2.Start()
 
 
 		If winxp Then
 
-			Dim thread3 As Thread = New Thread(Sub() Threaddata1(Thread3Finished, Application.Paths.System32 & "drivers\dllcache\", driverfiles, donotremoveamdhdaudiobusfiles))
+			Dim thread3 As Thread = New Thread(Sub() Threaddata1(Thread3Finished, Application.Paths.System32 & "drivers\dllcache\", driverfiles, If(config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles, True, False)))
 			thread3.Start()
 		Else
 			Thread3Finished = True
 		End If
 
-		Dim thread4 As Thread = New Thread(Sub() Threaddata1(Thread4Finished, Application.Paths.WinDir, driverfiles, donotremoveamdhdaudiobusfiles))
+		Dim thread4 As Thread = New Thread(Sub() Threaddata1(Thread4Finished, Application.Paths.WinDir, driverfiles, If(config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles, True, False)))
 		thread4.Start()
 
 		If IntPtr.Size = 8 Then
 
 
-			Dim thread8 As Thread = New Thread(Sub() Threaddata1(Thread8Finished, Application.Paths.SysWOW64, driverfiles, donotremoveamdhdaudiobusfiles))
+			Dim thread8 As Thread = New Thread(Sub() Threaddata1(Thread8Finished, Application.Paths.SysWOW64, driverfiles, If(config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles, True, False)))
 			thread8.Start()
 
-			Dim thread5 As Thread = New Thread(Sub() Threaddata1(Thread5Finished, Application.Paths.SysWOW64 & "Drivers\", driverfiles, donotremoveamdhdaudiobusfiles))
+			Dim thread5 As Thread = New Thread(Sub() Threaddata1(Thread5Finished, Application.Paths.SysWOW64 & "Drivers\", driverfiles, If(config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles, True, False)))
 			thread5.Start()
 		Else
 			Thread8Finished = True
 			Thread5Finished = True
 		End If
 
-		Dim thread7 As Thread = New Thread(Sub() Threaddata1(Thread7Finished, Application.Paths.WinDir & "Prefetch\", driverfiles, donotremoveamdhdaudiobusfiles))
+		Dim thread7 As Thread = New Thread(Sub() Threaddata1(Thread7Finished, Application.Paths.WinDir & "Prefetch\", driverfiles, If(config.RemoveAudioBus = False OrElse donotremoveamdhdaudiobusfiles, True, False)))
 		thread7.Start()
 
 		While Thread1Finished <> True Or Thread2Finished <> True Or Thread3Finished <> True Or Thread4Finished <> True Or Thread5Finished <> True Or Thread7Finished <> True Or Thread8Finished <> True
@@ -2621,6 +2621,7 @@ Public Class CleanupEngine
 				For Each child As String In FileIO.GetFiles(filepath)
 					If IsNullOrWhitespace(child) Then Continue For
 					If StrContainsAny(child, True, driverfiles) Then
+						If donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(child, True, "amdkmafd") Then Continue For
 						Try
 							Delete(child)
 						Catch ex As Exception
@@ -2836,7 +2837,7 @@ Public Class CleanupEngine
 			End If
 			'check if the oem was removed to process to the pnplockdownfile if necessary
 			If frmMain.win8higher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
-				PrePnplockdownfiles(catalog)
+				PrePnplockdownfiles(catalog, config)
 			End If
 		Next
 
@@ -2928,7 +2929,7 @@ Public Class CleanupEngine
 								Dim dirinfo As New System.IO.DirectoryInfo(child)
 								If dirinfo.Name.ToLower.StartsWith("c030") Or
 								 StrContainsAny(dirinfo.Name, True, "atihdwt6.inf") Or
-								 (Not donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(dirinfo.Name, True, "amdkmafd.inf")) Then
+								 (config.RemoveAudioBus AndAlso Not donotremoveamdhdaudiobusfiles AndAlso StrContainsAny(dirinfo.Name, True, "amdkmafd.inf")) Then
 									Try
 										Delete(child)
 									Catch ex As Exception

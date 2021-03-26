@@ -1085,9 +1085,9 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
 		If config.RemoveAMDKMPFD Then
-			CleanupEngine.Pnplockdownfiles(driverfiles)   '// add each line as String Array.
+			CleanupEngine.Pnplockdownfiles(driverfiles, config)   '// add each line as String Array.
 		Else
-			CleanupEngine.Pnplockdownfiles(driverfiles2)
+			CleanupEngine.Pnplockdownfiles(driverfiles2, config)
 		End If
 
 
@@ -2278,9 +2278,9 @@ Public Class GPUCleanup
 		'Delete driver files
 		'delete OpenCL
 		If config.RemoveAMDKMPFD Then
-			Threaddata1(Thread1Finished, driverfiles)
+			Threaddata1(Thread1Finished, driverfiles, config)
 		Else
-			Threaddata1(Thread1Finished, driverfiles2)
+			Threaddata1(Thread1Finished, driverfiles2, config)
 		End If
 
 		filePath = Environment.GetEnvironmentVariable("windir")
@@ -2809,7 +2809,17 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "ccc2", "prw", "amdkmpfd", "cnext", "amdkmafd", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim", "performance profile client", "wvr", "installuep") Then
+					If StrContainsAny(child, True, "ccc2", "prw", "cnext", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim", "performance profile client", "wvr", "installuep") Then
+
+						Delete(child)
+
+					End If
+					If config.RemoveAudioBus AndAlso StrContainsAny(child, True, "amdkmafd") Then
+
+						Delete(child)
+
+					End If
+					If config.RemoveAMDKMPFD AndAlso StrContainsAny(child, True, "amdkmpfd") Then
 
 						Delete(child)
 
@@ -3069,7 +3079,6 @@ Public Class GPUCleanup
 								If regkey2 IsNot Nothing Then
 									For Each child2 As String In regkey2.GetSubKeyNames()
 										If IsNullOrWhitespace(child2) Then Continue For
-
 										Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey2, child2)
 											If regkey3 IsNot Nothing Then
 												Dim array As String() = TryCast(regkey3.GetValue("LowerFilters"), String())
@@ -3088,7 +3097,6 @@ Public Class GPUCleanup
 												End If
 											End If
 										End Using
-
 									Next
 								End If
 							End Using
@@ -3099,7 +3107,6 @@ Public Class GPUCleanup
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
-
 		Return False
 	End Function
 
@@ -3359,10 +3366,10 @@ Public Class GPUCleanup
 		'end of deleting dcom stuff
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-		CleanupEngine.Pnplockdownfiles(driverfiles)  '// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(driverfiles, config)  '// add each line as String Array.
 
 		If removegfe Then
-			CleanupEngine.Pnplockdownfiles(gfedriverfiles) '// add each line as String Array.
+			CleanupEngine.Pnplockdownfiles(gfedriverfiles, config) '// add each line as String Array.
 		End If
 		'Cleaning PNPRessources.  'Will fix this later, its not efficent clean at all. (Wagnard)
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos", False)
@@ -5188,11 +5195,11 @@ Public Class GPUCleanup
 			ImpersonateLoggedOnUser.Taketoken()
 		End If
 
-		Threaddata1(Thread1Finished, driverfiles)
+		Threaddata1(Thread1Finished, driverfiles, config)
 
 
 		If config.RemoveGFE Then
-			Threaddata1(Thread2Finished, gfedriverfiles)
+			Threaddata1(Thread2Finished, gfedriverfiles, config)
 
 		Else
 			Thread2Finished = True
@@ -6207,7 +6214,7 @@ Public Class GPUCleanup
 			End If
 		End If
 
-			CleanupEngine.Pnplockdownfiles(driverfiles) '// add each line as String Array.
+		CleanupEngine.Pnplockdownfiles(driverfiles, config) '// add each line as String Array.
 
 		CleanupEngine.ClassRoot(classroot, config) '// add each line as String Array.
 
@@ -6532,7 +6539,7 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Cleaning Directory")
 
-		CleanupEngine.Folderscleanup(driverfiles)      '// add each line as String Array.
+		CleanupEngine.Folderscleanup(driverfiles, config)      '// add each line as String Array.
 
 		filePath = System.Environment.SystemDirectory
 		Dim files() As String = IO.Directory.GetFiles(filePath + "\", "igfxcoin*.*")
@@ -7112,12 +7119,12 @@ Public Class GPUCleanup
 		CleanupEngine.RemoveSharedDlls(filename)
 	End Sub
 
-	Private Sub Threaddata1(ByRef ThreadFinised As Boolean, ByVal driverfiles As String())
+	Private Sub Threaddata1(ByRef ThreadFinised As Boolean, ByVal driverfiles As String(), ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 		End If
-		CleanupEngine.Folderscleanup(driverfiles)
+		CleanupEngine.Folderscleanup(driverfiles, config)
 		ThreadFinised = True
 	End Sub
 
