@@ -680,51 +680,7 @@ Public Class CleanupEngine
 							End Using
 						End If
 					Next
-					'Interface removal via CLSID childlist
-					Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface", True)
-						If reginterface IsNot Nothing Then
-							For Each interfacechild As String In reginterface.GetSubKeyNames
-								If IsNullOrWhitespace(interfacechild) Then Continue For
-								Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
-									If reginterface2 IsNot Nothing Then
-										If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
-											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue2) Then
-												For Each item As String In childlist
-													If IsNullOrWhitespace(item) Then Continue For
-													If StrContainsAny(wantedvalue2, True, item) Then
-														Try
-															Deletesubregkey(reginterface, interfacechild)
-															Exit For
-														Catch ex As Exception
-															Application.Log.AddException(ex, "Interface Removal via ClassRoot/CLSID")
-														End Try
-													End If
-												Next
-											End If
-										End If
-										'Interface Removal via Typelib list
-										If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
-											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue2) Then
-												For Each item As String In typelibList
-													If IsNullOrWhitespace(item) Then Continue For
-													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib\" + item) Is Nothing Then
-														Try
-															Deletesubregkey(reginterface, interfacechild)
-															Exit For
-														Catch ex As Exception
-															Application.Log.AddException(ex, "Interface Removal via ClassRoot/tpyelib")
-														End Try
-													End If
-												Next
-											End If
-										End If
-									End If
-								End Using
-							Next
-						End If
-					End Using
+					InterfaceRemovalWithValue(childlist, typelibList, False)
 				End If
 			End Using
 		Catch ex As Exception
@@ -733,34 +689,9 @@ Public Class CleanupEngine
 
 		childlist.Clear()
 		'I do not clear the typelib because when the normal typelib is removed, the WOW6432Node typelib also get removed by windows.
+		'So the interfaces of theses must also be.
 
 		If IntPtr.Size = 8 Then
-			' DevMltk: I think there was typo?    Yes look like so. nice catch. (Wagnard)
-			'
-			' Orginal code:
-			'
-			'Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot,"Wow6432Node", True)		<--- regkey = 'HKEY_CLASSES_ROOT\Wow6432Node'
-			'	If regkey IsNot Nothing Then
-			'		
-			'		For Each child As String In regkey.GetSubKeyNames()					<--- all subkeys of 'HKEY_CLASSES_ROOT\Wow6432Node'
-			'			If IsNullOrWhitespace(child) = False Then
-			'				For i As Integer = 0 To ClassRoot.Length - 1
-			'					If Not IsNullOrWhitespace(ClassRoot(i)) Then
-			'						If child.ToLower.StartsWith(ClassRoot(i).ToLower) Then
-			'							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot,child & "\CLSID")		 <-- ???
-			'							
-			'
-			'	child is subkey of 'HKEY_CLASSES_ROOT\Wow6432Node'
-			'		=> HKEY_CLASSES_ROOT\Wow6432Node\"child"
-			'
-			'	but ???
-			'	Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot,child & "\CLSID")
-			'		=> HKEY_CLASSES_ROOT\"child"\CLSID		<--- shouldn't child be under \Wow6432Node ?
-			'
-			'
-			'	Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey,child & "\CLSID")	<-- I Think this it should be, revert if I'm missing something there. Line 8311
-			'		=> HKEY_CLASSES_ROOT\Wow6432Node\"child"\CLSID			
-
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node", True)
 					If regkey IsNot Nothing Then
@@ -885,47 +816,7 @@ Public Class CleanupEngine
 								End If
 							Next
 						Next
-						Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface", True)
-							If reginterface IsNot Nothing Then
-								For Each interfacechild As String In reginterface.GetSubKeyNames
-									If IsNullOrWhitespace(interfacechild) Then Continue For
-									Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
-										If reginterface2 IsNot Nothing Then
-											'Interface removal for the CLSID childlist.
-											If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
-												wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
-												For Each item As String In childlist
-													If IsNullOrWhitespace(item) Then Continue For
-													If StrContainsAny(wantedvalue2, True, item) Then
-														Try
-															Deletesubregkey(reginterface, interfacechild)
-															Exit For
-														Catch ex As Exception
-															Application.Log.AddException(ex, "Interface Removal via Classroot/CLSID childlist")
-														End Try
-													End If
-												Next
-											End If
-											'Interface removal for the Typelib list.
-											If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
-												wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
-												For Each item As String In typelibList
-													If IsNullOrWhitespace(item) Then Continue For
-													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\TypeLib\" + item) Is Nothing Then
-														Try
-															Deletesubregkey(reginterface, interfacechild)
-															Exit For
-														Catch ex As Exception
-															Application.Log.AddException(ex, "Interface Removal via ClassRoot/Typelist")
-														End Try
-													End If
-												Next
-											End If
-										End If
-									End Using
-								Next
-							End If
-						End Using
+						InterfaceRemovalWithValue(childlist, typelibList, True)
 					End If
 				End Using
 			Catch ex As Exception
@@ -935,6 +826,110 @@ Public Class CleanupEngine
 		childlist.Clear()
 		typelibList.Clear()
 		Application.Log.AddMessage("End ClassRoot CleanUP")
+	End Sub
+
+	Private Sub InterfaceRemovalWithValue(ByVal childlist As List(Of String), ByVal typelibList As List(Of String), ByVal wow6432 As Boolean)
+		Dim wantedvalue2 As String
+		If Not wow6432 Then
+			Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface", True)
+				If reginterface IsNot Nothing Then
+					For Each interfacechild As String In reginterface.GetSubKeyNames
+						If IsNullOrWhitespace(interfacechild) Then Continue For
+						Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
+							If reginterface2 IsNot Nothing Then
+								If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
+									If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
+										wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
+										If Not IsNullOrWhitespace(wantedvalue2) Then
+											For Each item As String In childlist
+												If IsNullOrWhitespace(item) Then Continue For
+												If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\" + item) Is Nothing Then
+													Try
+														Deletesubregkey(reginterface, interfacechild)
+														Exit For
+													Catch ex As Exception
+														Application.Log.AddException(ex, "Interface Removal via ClassRoot/CLSID")
+													End Try
+												End If
+											Next
+										End If
+									End If
+								End If
+								'Interface Removal via Typelib list
+								If typelibList IsNot Nothing AndAlso typelibList.Count > 0 Then
+									If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
+										wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
+										If Not IsNullOrWhitespace(wantedvalue2) Then
+											For Each item As String In typelibList
+												If IsNullOrWhitespace(item) Then Continue For
+												If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib\" + item) Is Nothing Then
+													Try
+														Deletesubregkey(reginterface, interfacechild)
+														Exit For
+													Catch ex As Exception
+														Application.Log.AddException(ex, "Interface Removal via ClassRoot/tpyelib")
+													End Try
+												End If
+											Next
+										End If
+									End If
+								End If
+							End If
+                        End Using
+					Next
+				End If
+			End Using
+		Else
+			Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface", True)
+				If reginterface IsNot Nothing Then
+					For Each interfacechild As String In reginterface.GetSubKeyNames
+						If IsNullOrWhitespace(interfacechild) Then Continue For
+						Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
+							If reginterface2 IsNot Nothing Then
+								'Interface removal for the CLSID childlist.
+								If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
+									If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
+										wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
+										If Not IsNullOrWhitespace(wantedvalue2) Then
+											For Each item As String In childlist
+												If IsNullOrWhitespace(item) Then Continue For
+												If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\CLSID\" + item) Is Nothing Then
+													Try
+														Deletesubregkey(reginterface, interfacechild)
+														Exit For
+													Catch ex As Exception
+														Application.Log.AddException(ex, "Interface Removal via Classroot/CLSID childlist")
+													End Try
+												End If
+											Next
+										End If
+									End If
+								End If
+								'Interface removal for the Typelib list.
+								If typelibList IsNot Nothing AndAlso typelibList.Count > 0 Then
+									If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
+										wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
+										If Not IsNullOrWhitespace(wantedvalue2) Then
+											For Each item As String In typelibList
+												If IsNullOrWhitespace(item) Then Continue For
+												If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\TypeLib\" + item) Is Nothing Then
+													Try
+														Deletesubregkey(reginterface, interfacechild)
+														Exit For
+													Catch ex As Exception
+														Application.Log.AddException(ex, "Interface Removal via ClassRoot/Typelist")
+													End Try
+												End If
+											Next
+										End If
+									End If
+								End If
+							End If
+						End Using
+					Next
+				End If
+			End Using
+		End If
 	End Sub
 
 	Public Sub Installer(ByVal packages As String(), config As ThreadSettings)
@@ -1960,51 +1955,7 @@ Public Class CleanupEngine
 							End If
 						End Using
 					Next
-					'Interface removal via CLSID childlist
-					Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface", True)
-						If reginterface IsNot Nothing Then
-							For Each interfacechild As String In reginterface.GetSubKeyNames
-								If IsNullOrWhitespace(interfacechild) Then Continue For
-								Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
-									If reginterface2 IsNot Nothing Then
-										If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
-											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue2) Then
-												For Each item As String In childlist
-													If IsNullOrWhitespace(item) Then Continue For
-													If StrContainsAny(wantedvalue2, True, item) Then
-														Try
-															Deletesubregkey(reginterface, interfacechild)
-															Exit For
-														Catch ex As Exception
-															Application.Log.AddException(ex, "Interface Removal via InProcServer32/CLSID")
-														End Try
-													End If
-												Next
-											End If
-										End If
-										'Interface Removal via Typelib list
-										If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
-											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue2) Then
-												For Each item As String In typelibList
-													If IsNullOrWhitespace(item) Then Continue For
-													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib\" + item) Is Nothing Then
-														Try
-															Deletesubregkey(reginterface, interfacechild)
-															Exit For
-														Catch ex As Exception
-															Application.Log.AddException(ex, "Interface Removal via InProcServer32/tpyelib")
-														End Try
-													End If
-												Next
-											End If
-										End If
-									End If
-								End Using
-							Next
-						End If
-					End Using
+					InterfaceRemovalWithValue(childlist, typelibList, False)
 				End If
 			End Using
 		Catch ex As Exception
@@ -2348,47 +2299,7 @@ Public Class CleanupEngine
 								End If
 							End Using
 						Next
-						Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface", True)
-							If reginterface IsNot Nothing Then
-								For Each interfacechild As String In reginterface.GetSubKeyNames
-									If IsNullOrWhitespace(interfacechild) Then Continue For
-									Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
-										If reginterface2 IsNot Nothing Then
-											'Interface removal for the CLSID childlist.
-											If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
-												wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
-												For Each item As String In childlist
-													If IsNullOrWhitespace(item) Then Continue For
-													If StrContainsAny(wantedvalue2, True, item) Then
-														Try
-															Deletesubregkey(reginterface, interfacechild)
-															Exit For
-														Catch ex As Exception
-															Application.Log.AddException(ex, "Interface Removal via InProcServer32/CLSID childlist")
-														End Try
-													End If
-												Next
-											End If
-											'Interface removal for the Typelib list.
-											If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
-												wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
-												For Each item As String In typelibList
-													If IsNullOrWhitespace(item) Then Continue For
-													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\TypeLib\" + item) Is Nothing Then
-														Try
-															Deletesubregkey(reginterface, interfacechild)
-															Exit For
-														Catch ex As Exception
-															Application.Log.AddException(ex, "Interface Removal via InProcServer32/Typelist")
-														End Try
-													End If
-												Next
-											End If
-										End If
-									End Using
-								Next
-							End If
-						End Using
+						InterfaceRemovalWithValue(childlist, typelibList, True)
 					End If
 				End Using
 			Catch ex As Exception
@@ -2543,60 +2454,11 @@ Public Class CleanupEngine
 							Next
 						End Using
 					Next
-					Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface", True)
-						If reginterface IsNot Nothing Then
-							For Each interfacechild As String In reginterface.GetSubKeyNames
-								If IsNullOrWhitespace(interfacechild) Then Continue For
-								Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
-									If reginterface2 IsNot Nothing Then
-										'Interface Removal via Typelib list
-										If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
-											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue2) Then
-												For Each item As String In typelibList
-													If IsNullOrWhitespace(item) Then Continue For
-													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib\" + item) Is Nothing Then
-														Try
-															Deletesubregkey(reginterface, interfacechild)
-															Exit For
-														Catch ex As Exception
-															Application.Log.AddException(ex, "Interface Removal via ClassRoot/tpyelib")
-														End Try
-													End If
-												Next
-											End If
-										End If
-									End If
-								End Using
-							Next
-						End If
-					End Using
-					Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface", True)
-						If reginterface IsNot Nothing Then
-							For Each interfacechild As String In reginterface.GetSubKeyNames
-								If IsNullOrWhitespace(interfacechild) Then Continue For
-								Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
-									If reginterface2 IsNot Nothing Then
-										'Interface removal for the Typelib list.
-										If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
-											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
-											For Each item As String In typelibList
-												If IsNullOrWhitespace(item) Then Continue For
-												If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\TypeLib\" + item) Is Nothing Then
-													Try
-														Deletesubregkey(reginterface, interfacechild)
-														Exit For
-													Catch ex As Exception
-														Application.Log.AddException(ex, "Interface Removal via InProcServer32/Typelist")
-													End Try
-												End If
-											Next
-										End If
-									End If
-								End Using
-							Next
-						End If
-					End Using
+					InterfaceRemovalWithValue(Nothing, typelibList, False)
+
+					If IntPtr.Size = 8 Then
+						InterfaceRemovalWithValue(Nothing, typelibList, True)
+					End If
 					typelibList.Clear()
 				End If
 			End Using
