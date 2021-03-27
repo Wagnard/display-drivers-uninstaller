@@ -14,7 +14,6 @@ Public Class GPUCleanup
 	Dim win10_1809 As Boolean = frmMain.win10_1809
 	Dim win8higher As Boolean = frmMain.win8higher
 	Dim sysdrv As String = Application.Paths.SystemDrive
-	Dim donotremoveamdhdaudiobusfiles As Boolean = frmMain.donotremoveamdhdaudiobusfiles
 	Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 
 
@@ -233,7 +232,7 @@ Public Class GPUCleanup
 		ImpersonateLoggedOnUser.Taketoken()
 		'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
 		Try
-			donotremoveamdhdaudiobusfiles = False
+			frmMain.donotremoveamdhdaudiobusfiles = False
 			Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
 				If subregkey IsNot Nothing Then
 					For Each child2 As String In subregkey.GetSubKeyNames()
@@ -252,7 +251,7 @@ Public Class GPUCleanup
 
 												If StrContainsAny(entry, True, "amdkmafd") Then
 													Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
-													donotremoveamdhdaudiobusfiles = True
+													frmMain.donotremoveamdhdaudiobusfiles = True
 												End If
 											Next
 										End If
@@ -265,7 +264,7 @@ Public Class GPUCleanup
 			End Using
 		Catch ex As Exception
 			Application.Log.AddException(ex)
-			donotremoveamdhdaudiobusfiles = True  ' A security if the code to check fail.
+			frmMain.donotremoveamdhdaudiobusfiles = True  ' A security if the code to check fail.
 		End Try
 
 		If WindowsIdentity.GetCurrent().IsSystem Then
@@ -701,7 +700,8 @@ Public Class GPUCleanup
 		Dim reginterface As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\interface.cfg")
 		Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\clsidleftover.cfg")
 		Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")
-		Dim driverfiles2 As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles2.cfg")
+		Dim driverfilesKMPFD As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfilesKMPFD.cfg")
+		Dim driverfilesKMAFD As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfilesKMAFD.cfg")
 
 		ImpersonateLoggedOnUser.Taketoken()
 
@@ -1084,12 +1084,15 @@ Public Class GPUCleanup
 
 		Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
+		CleanupEngine.Pnplockdownfiles(driverfiles, config)   '// add each line as String Array.
+
 		If config.RemoveAMDKMPFD Then
-			CleanupEngine.Pnplockdownfiles(driverfiles, config)   '// add each line as String Array.
-		Else
-			CleanupEngine.Pnplockdownfiles(driverfiles2, config)
+			CleanupEngine.Pnplockdownfiles(driverfilesKMPFD, config)
 		End If
 
+		If config.RemoveAudioBus AndAlso frmMain.donotremoveamdhdaudiobusfiles = False Then
+			CleanupEngine.Pnplockdownfiles(driverfilesKMAFD, config)
+		End If
 
 		If config.RemoveVulkan Then
 			Try
@@ -2258,8 +2261,11 @@ Public Class GPUCleanup
 		Dim filePath As String = Nothing
 		Dim removedxcache As Boolean = config.RemoveCrimsonCache
 		Dim Thread1Finished = False
+		Dim Thread2Finished = False
+		Dim Thread3Finished = False
 		Dim driverfiles = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")
-		Dim driverfiles2 = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles2.cfg")
+		Dim driverfilesKMPFD = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfilesKMPFD.cfg")
+		Dim driverfilesKMAFD = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfilesKMAFD.cfg")
 
 		ImpersonateLoggedOnUser.Taketoken()
 		'Delete AMD data Folders
@@ -2277,11 +2283,21 @@ Public Class GPUCleanup
 
 		'Delete driver files
 		'delete OpenCL
+
+		Threaddata1(Thread1Finished, driverfiles, config)
+
 		If config.RemoveAMDKMPFD Then
-			Threaddata1(Thread1Finished, driverfiles, config)
+			Threaddata1(Thread2Finished, driverfilesKMPFD, config)
 		Else
-			Threaddata1(Thread1Finished, driverfiles2, config)
+			Thread2Finished = True
 		End If
+
+		If config.RemoveAudioBus AndAlso frmMain.donotremoveamdhdaudiobusfiles = False Then
+			Threaddata1(Thread3Finished, driverfilesKMAFD, config)
+		Else
+			Thread3Finished = True
+		End If
+
 
 		filePath = Environment.GetEnvironmentVariable("windir")
 		Try
@@ -2814,7 +2830,7 @@ Public Class GPUCleanup
 						Delete(child)
 
 					End If
-					If config.RemoveAudioBus AndAlso StrContainsAny(child, True, "amdkmafd") Then
+					If (config.RemoveAudioBus AndAlso frmMain.donotremoveamdhdaudiobusfiles = False) AndAlso StrContainsAny(child, True, "amdkmafd") Then
 
 						Delete(child)
 
@@ -2942,7 +2958,7 @@ Public Class GPUCleanup
 			Next
 		End If
 
-		While Thread1Finished <> True
+		While Thread1Finished <> True Or Thread2Finished <> True Or Thread3Finished <> True
 			objAuto.WaitOne(500)
 		End While
 
