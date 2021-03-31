@@ -1599,7 +1599,7 @@ Public Class GPUCleanup
 								End Try
 							End If
 							If StrContainsAny(child, True, "install") Then  'Just a safety here....
-								If regkey.OpenSubKey(child).SubKeyCount = 0 Then
+								If MyRegistry.OpenSubKey(regkey, child).SubKeyCount = 0 Then
 									Try
 										Deletesubregkey(regkey, child)
 									Catch ex As Exception
@@ -4933,13 +4933,13 @@ Public Class GPUCleanup
 		'Shell ext
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Directory\background\shellex\ContextMenuHandlers", True)
 			If regkey IsNot Nothing Then
-				If regkey.OpenSubKey("NvCplDesktopContext") IsNot Nothing Then
+				If MyRegistry.OpenSubKey(regkey, "NvCplDesktopContext") IsNot Nothing Then
 					Try
 						Deletesubregkey(regkey, "NvCplDesktopContext")
 					Catch ex As Exception
 					End Try
 				End If
-				If regkey.OpenSubKey("00nView") IsNot Nothing Then
+				If MyRegistry.OpenSubKey(regkey, "00nView") IsNot Nothing Then
 					Try
 						Deletesubregkey(regkey, "00nView")
 					Catch ex As Exception
@@ -4950,13 +4950,13 @@ Public Class GPUCleanup
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Classes\Directory\background\shellex\ContextMenuHandlers", True)
 			If regkey IsNot Nothing Then
-				If regkey.OpenSubKey("NvCplDesktopContext") IsNot Nothing Then
+				If MyRegistry.OpenSubKey(regkey, "NvCplDesktopContext") IsNot Nothing Then
 					Try
 						Deletesubregkey(regkey, "NvCplDesktopContext")
 					Catch ex As Exception
 					End Try
 				End If
-				If regkey.OpenSubKey("00nView") IsNot Nothing Then
+				If MyRegistry.OpenSubKey(regkey, "00nView") IsNot Nothing Then
 					Try
 						Deletesubregkey(regkey, "00nView")
 					Catch ex As Exception
@@ -4967,7 +4967,7 @@ Public Class GPUCleanup
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".avi\shellex", True)
 			If regkey IsNot Nothing Then
-				If regkey.OpenSubKey("{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
+				If MyRegistry.OpenSubKey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
 					Try
 						Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
 					Catch ex As Exception
@@ -4978,7 +4978,7 @@ Public Class GPUCleanup
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpe\shellex", True)
 			If regkey IsNot Nothing Then
-				If regkey.OpenSubKey("{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
+				If MyRegistry.OpenSubKey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
 					Try
 						Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
 					Catch ex As Exception
@@ -4989,7 +4989,7 @@ Public Class GPUCleanup
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpeg\shellex", True)
 			If regkey IsNot Nothing Then
-				If regkey.OpenSubKey("{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
+				If MyRegistry.OpenSubKey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
 					Try
 						Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
 					Catch ex As Exception
@@ -5000,7 +5000,7 @@ Public Class GPUCleanup
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpg\shellex", True)
 			If regkey IsNot Nothing Then
-				If regkey.OpenSubKey("{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
+				If MyRegistry.OpenSubKey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
 					Try
 						Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
 					Catch ex As Exception
@@ -5011,7 +5011,7 @@ Public Class GPUCleanup
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".wmv\shellex", True)
 			If regkey IsNot Nothing Then
-				If regkey.OpenSubKey("{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
+				If MyRegistry.OpenSubKey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
 					Try
 						Deletesubregkey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}")
 					Catch ex As Exception
