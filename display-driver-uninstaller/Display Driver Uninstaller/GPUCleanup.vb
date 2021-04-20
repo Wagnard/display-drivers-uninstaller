@@ -72,6 +72,7 @@ Public Class GPUCleanup
 					End If
 				Next
 				KillProcess("auepmaster")
+				KillProcess("cncmd")    'This avoid an error message when the device is removed.
 				KillProcess("radeonsoftware")    'This avoid an error message when the device is removed.
 				KillProcess("amdow")    'This avoid an error message when the device is removed.
 				KillProcess("amdrsserv")    'This avoid an error message when the device is removed.
@@ -306,6 +307,30 @@ Public Class GPUCleanup
 				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 				Application.Log.AddException(ex)
 			End Try
+
+			' -----------------------------------
+			' Removing AMD Streaming Audio Device 
+			' -----------------------------------
+			Application.Log.AddMessage("Removing AMD Streaming Audio Device")
+			Try
+				'AMD AudioEndpoints Removal
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media")
+				If found.Count > 0 Then
+					For Each d As SetupAPI.Device In found
+						If d IsNot Nothing Then
+							If StrContainsAny(d.HardwareIDs(0), True, "ROOT\AMDSAFD") Then
+								SetupAPI.UninstallDevice(d)
+							End If
+						End If
+					Next
+					found.Clear()
+				End If
+			Catch ex As Exception
+				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+				Application.Log.AddException(ex)
+			End Try
+
+
 		End If
 
 		'-----------------------
@@ -2572,6 +2597,14 @@ Public Class GPUCleanup
 		End If
 
 		filePath = Environment.GetFolderPath _
+		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD link for Windows"
+		If FileIO.ExistsDir(filePath) Then
+
+			Delete(filePath)
+
+		End If
+
+		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\ATI"
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
@@ -2601,7 +2634,7 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "kdb", "ppc", "fuel", "installuep") Then
+					If StrContainsAny(child, True, "kdb", "ppc", "fuel", "installuep", "uxg") Then
 
 						Delete(child)
 
@@ -2698,6 +2731,7 @@ Public Class GPUCleanup
 							 child.ToLower.Contains("fuel") Or
 							  child.ToLower.Contains("dvr") Or
 							 child.ToLower.Contains("radeonsoftware") Or
+							  child.ToLower.Contains("link") Or
 							 removedxcache AndAlso child.ToLower.Contains("dxcache") Or
 							 removedxcache AndAlso child.ToLower.Contains("vkcache") Or
 							 removedxcache AndAlso child.ToLower.Contains("glcache") Then
