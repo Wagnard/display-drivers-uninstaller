@@ -208,7 +208,7 @@ Public Class GPUCleanup
 									Dim audiobusList As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Parent.DeviceID, False, True, True)
 									If audiobusList.Count > 0 Then
 										For Each audiobus As SetupAPI.Device In audiobusList
-											If audiobus IsNot Nothing AndAlso audiobus.ChildDevices.Length < 2 Then
+											If audiobus IsNot Nothing AndAlso (audiobus.ChildDevices Is Nothing OrElse audiobus.ChildDevices.Length < 2) Then
 												SetupAPI.UninstallDevice(audiobus) 'Removing the Audio bus.
 											End If
 										Next
