@@ -6258,9 +6258,11 @@ Public Class GPUCleanup
 			If CanDeprovisionPackageForAllUsersAsync() Then
 				CleanupEngine.RemoveAppx1809("IntelGraphicsControlPanel")
 				CleanupEngine.RemoveAppx1809("IntelGraphicsExperience")
+				CleanupEngine.RemoveAppx1809("IntelGraphicsCommandCenter")
 			Else
 				CleanupEngine.RemoveAppx("IntelGraphicsControlPanel")
 				CleanupEngine.RemoveAppx("IntelGraphicsExperience")
+				CleanupEngine.RemoveAppx1809("IntelGraphicsCommandCenter")
 			End If
 		End If
 
