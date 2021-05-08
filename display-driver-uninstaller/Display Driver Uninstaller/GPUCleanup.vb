@@ -1422,14 +1422,25 @@ Public Class GPUCleanup
 		Try
 			For Each users As String In Registry.Users.GetSubKeyNames()
 				If IsNullOrWhitespace(users) Then Continue For
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, users & "\Software", True)
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, users & "\Software\AMD", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) Then Continue For
-							If child.StartsWith("AMD") Then
+							If StrContainsAny(child, True, "AIM", "CN", "DVR", "HKIDs") Then
 								Deletesubregkey(regkey, child)
 							End If
 						Next
+						If regkey.SubKeyCount = 0 Then
+							Try
+								Deletesubregkey(Registry.Users, users & "Software\AMD")
+							Catch ex As Exception
+							End Try
+						Else
+							For Each data As String In regkey.GetSubKeyNames()
+								If IsNullOrWhitespace(data) Then Continue For
+								Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey.ToString + "\ --> " + data)
+							Next
+						End If
 					End If
 				End Using
 			Next

@@ -391,7 +391,7 @@
 				-Frank Brown (Sedan 2019-10-31)
 				-Sergey Bolshakow (Sedan 2020-09-10)
 				-James Tiller (Sedan 2021-04-03)
-				-Paulo Henrique (Since 2021-04-19)
+                -Paulo Henrique (Sedan 2021-04-19)
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -466,7 +466,7 @@ Tack till Helge Klein (http://helgeklein.com/setacl/) : för tillståndet att an
 		<Translator>
 			<User>Hans Eriksson</User>
 			<Details>hans.ericson@bredband.net</Details>
-			<LastUpdate>15/02/2021</LastUpdate>
+			<LastUpdate>08/05/2021</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
