@@ -32,7 +32,7 @@ Public Class frmAbout
                     Case 1 : Text = Languages.GetTranslation("Misc", "About", "Text")
                     Case 2 : Text = Languages.GetTranslation("Misc", "Tos", "Text")
 					Case 3 : Text = Languages.GetTranslation("frmAbout", "lblTranslators", "Text")
-					Case 4 : Text = Languages.GetTranslation("frmAbout", "lblPatron", "Text")
+					Case 4 : Text = Languages.GetTranslation("frmAbout", "lblPatron", "Text", True)
 					Case Else : Text = Nothing
 				End Select
 

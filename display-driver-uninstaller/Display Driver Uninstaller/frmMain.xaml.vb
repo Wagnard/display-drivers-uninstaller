@@ -176,7 +176,8 @@ Public Class frmMain
 			GetGPUDetails(False)
 
 			'Combobox does not translate themselve, we must push the updated ItemsSource.
-			cbSelectedType_Changed(cbSelectedType, Nothing)
+			cbSelectedType.ItemsSource = {Languages.GetTranslation("frmMain", "Options_Type", "Options1"), Languages.GetTranslation("frmMain", "Options_Type", "Options2"), Languages.GetTranslation("frmMain", "Options_Type", "Options3")}
+			cbSelectedType.SelectedIndex = 0
 		End If
 	End Sub
 
@@ -1214,8 +1215,6 @@ Public Class frmMain
 	End Sub
 
 	Private Sub cbSelectedType_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedType.SelectionChanged
-
-		cbSelectedType.ItemsSource = {Languages.GetTranslation("frmMain", "Options_Type", "Options1"), Languages.GetTranslation("frmMain", "Options_Type", "Options2"), Languages.GetTranslation("frmMain", "Options_Type", "Options3")}
 
 		Select Case cbSelectedType.SelectedIndex
 			Case 0

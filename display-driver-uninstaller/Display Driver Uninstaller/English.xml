@@ -384,14 +384,15 @@
 			<Text>
 				Big thanks to the following Patrons and also those who aren't listed!
 
-				-honnmaguro   (Since 2018-03-16)
-				-ZaoDaDong   (Since 2019-02-06)
-				-Alberto Bursi (long time donator/supporter)
-				-Kaseb (Since 2019-09-05)
-				-Frank Brown (Since 2019-10-31)
-				-Sergey Bolshakow (Since 2020-09-10)
-				-James Tiller (Since 2021-04-03)
-				-Paulo Henrique (Since 2021-04-19)
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
 			</Text>
 		</lblPatron>
 	</frmAbout>
