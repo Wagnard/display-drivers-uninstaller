@@ -6722,7 +6722,7 @@ Public Class GPUCleanup
 				Try
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
-							If child.ToLower.Contains("gcc") AndAlso config.RemoveINTELCP Then
+							If StrContainsAny(child, True, "gcc", "games", "cuipromotions") AndAlso config.RemoveINTELCP Then
 
 								Delete(child)
 
