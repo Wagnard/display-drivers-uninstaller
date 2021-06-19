@@ -5399,15 +5399,8 @@ Public Class GPUCleanup
 			Try
 				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
-						If (child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE) Or
-						 (child.ToLower.Contains("nvosc.") AndAlso config.RemoveGFE) Or
-						 (child.ToLower.Contains("shareconnect") AndAlso config.RemoveGFE) Or
-						 (child.ToLower.Contains("nvgs") AndAlso config.RemoveGFE) Or
-						 (child.ToLower.Contains("glcache") AndAlso config.RemoveGFE) Or
-						 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Then
-
+						If StrContainsAny(child, True, "nvbackend", "nvosc", "shareconnect", "nvgs", "glcache", "gfexperience", "DXCache") Then
 							Delete(child)
-
 						End If
 					End If
 				Next

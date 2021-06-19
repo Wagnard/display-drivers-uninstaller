@@ -1,5 +1,5 @@
 Requirement:
--Windows Vista SP2 up to Windows 10 update 1909 (anything higher is at your own risk)
+-Windows Vista SP2 up to Windows 10 21H1 (19043.xxx May 2021) (anything higher is at your own risk)
 -NVIDIA, AMD, Intel GPUs
 -Microsoft .NET Framework 4.5 or higher
 
