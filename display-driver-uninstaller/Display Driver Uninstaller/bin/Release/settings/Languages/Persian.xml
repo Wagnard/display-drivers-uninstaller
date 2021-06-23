@@ -1,0 +1,473 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="fa-IR" Text="Persian (فارسی)" >
+	<!--
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
+
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<btnCleanRestart>
+			<Text>
+				حذف و راه اندازی مجدد
+				(توصیه شده)
+			</Text>
+			<Tooltip>
+				درایورهای فعلی و قبلی را حذف نصب کن، سپس رایانه را مجدداً راه اندازی کن.
+				(توصیه شده)
+			</Tooltip>
+		</btnCleanRestart>
+		<btnClean>
+			<Text>
+				حذف بدون راه اندازی مجدد
+				(ممکن است مشکلاتی مانند صفحه سیاه ایجاد شود)
+			</Text>
+			<Tooltip>
+				درایورهای فعلی و قبلی را حذف نصب کن، اما رایانه را مجدداً راه اندازی نکن.
+				(ممکن است مشکلاتی مانند صفحه سیاه ایجاد شود)
+			</Tooltip>
+		</btnClean>
+		<btnCleanShutdown>
+			<Text>
+				حذف و خاموش کردن
+				(برای نصب کارت گرافیک جدید)
+			</Text>
+			<Tooltip>
+				درایورهای فعلی و قبلی را حذف نصب کن و کامپیوتر را بدون هیچگونه اسکن مجدد خاموش کن
+				(برای نصب کارت گرافیک جدید)
+			</Tooltip>
+		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				حافظه پنهان و پرونده های نصب درایور نمایشگر جی-فورس را حذف کن.
+				(توجه: درایورها حذف نخواهند شد)
+			</Text>
+			<Tooltip>
+				به منظور آزاد کردن فضای ذخیره سازی، از این گزینه برای حذف پوشه حافظه پنهان استفاده می‌شود.
+			</Tooltip>
+		</btnCleanGfeDownloads>
+		<btnWuRestore>
+			<Text>
+				تنظیمات دستگاه را به طور پیش فرض تنظیم کن
+				(درایورها را به طور خودکار نصب کن)
+			</Text>
+		</btnWuRestore>
+		<lblWinVersion>
+			<Text>سیستم عامل شناسایی شده:</Text>
+		</lblWinVersion>
+		<lblDonate>
+			<Text>*** اگر برنامه را دوست دارید ، می توانید برای ادامه توسعه آن به ما کمک کنید ***</Text>
+		</lblDonate>
+		<lblLog>
+			<Text>ورود به سیستم</Text>
+		</lblLog>
+		<lblSelectedGPU>
+			<Text>درایور گرافیک انتخاب شده است</Text>
+		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>زبان انتخاب شده</Text>
+		</lblLanguage>
+
+		<lblUpdate>
+			<Text>در حال بررسی به روزرسانی ها ...</Text>
+			<Text2>هیچ به روزرسانی یافت نشد، برنامه به روز است</Text2>
+			<Text3>به روزرسانی جدید نرم افزار موجود است! توصیه می شود نرم افزار را به آخرین نسخه به روز کنید زیرا پشتیبانی فنی برای نسخه های قدیمی محدود است</Text3>
+			<Text4>در این زمان نمی توان به روزرسانی ها را دریافت کرد!</Text4>
+		</lblUpdate>
+
+		<lblOffer>
+			<Text>پیشنهادات از شرکای ما</Text>
+			<Tooltip>این را می توانید در منوی گزینه ها غیرفعال کنید.</Tooltip>
+		</lblOffer>
+
+		<OptionsMenuItem>
+			<Text>گزینه ها</Text>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>اطلاعات</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>ورود به سیستم تمدید شده</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>پیوندها</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>(ToS) شرایط خدمات</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
+			<Text>درباره</Text>
+		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>مترجمان</Text>
+		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>مشتریان</Text>
+		</PatronMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>به وب سایت رسمی برنامه مراجعه کنید</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>سایت بازدید از SVN</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>بازدید از موضوع Guru3d NVIDIA</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>بازدید از موضوع Guru3d AMD</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>بازدید از موضوع Geforce</Text>
+		</VisitGeforceMenuItem>
+
+		<Messages>
+			<Text1>به روز رسانی در دسترس است! اکنون از وب سایت DDU بازدید می کنید؟</Text1>
+			<Text2>نسخه های قدیمی این نرم افزار پشتیبانی محدودی دارند ، باید قبل از گزارش اشکالات از وجود نسخه های جدیدتر اطمینان حاصل کنید.</Text2>
+			<Text3>این برنامه باید با امتیازات مدیریتی اجرا شود. اکنون برنامه متوقف خواهد شد.</Text3>
+			<Text4>PAExec پیدا نشد ، لطفاً گزارش برنامه را ببینید.</Text4>
+			<Text5>این برنامه چندین تغییر در رجیستری سیستم ایجاد می کند. برنامه به طور خودکار نقطه بازیابی سیستم را ایجاد می کند (فقط حالت عادی)</Text5>
+			<Text6>هنگام اجرای برنامه مشکلی پیش آمد ، لطفاً گزارش برنامه را برای توسعه دهنده ارسال کنید</Text6>
+			<Text7>لپ تاپ شما دارای دو کارت گرافیک (سیستم AMD Enduro یا معادل آن) است و این نرم افزار کاملاً با سیستم های Enduro سازگار نیست. فقط با مسئولیت خود از این نرم افزار استفاده کنید.</Text7>
+			<Text8>شما اکنون در حالت ایمن سیستم نیستید... برای بهترین نتیجه و بدون خطا، توصیه می شود مجدداً راه اندازی کنید و وارد حالت ایمن شوید.</Text8>
+			<Text9>برنامه نصب درایورها را به طور خودکار در تنظیمات ویندوز برای نصب درایور متوقف کرده است.</Text9>
+			<Text10>مراحل تمیزکاری کاملاً به پایان رسیده است! آیا می خواهید از برنامه خارج شوید؟</Text10>
+			<Text11>تنظیمات نصب ویندوز برای نصب خودکار درایورها تغییر کرده است.</Text11>
+			<Text12>شما در حالت ایمن نیستید. توصیه می شود برای جلوگیری از بروز مشکلات احتمالی ، در حالت ایمن مجدداً راه اندازی کنید. اکنون در حالت ایمن مجدداً راه اندازی می شود؟</Text12>
+			<Text13>این چیزی است که شما باید در صفحه بازیابی آبی انتخاب کنید: عیب یابی -&gt;؛ گزینه های پیشرفته -&gt;؛ تنظیمات راه اندازی.</Text13>
+			<Text14>راه اندازی مجدد سیستم در انتظار است، قبل از استفاده از برنامه سیستم را مجدداً راه اندازی کنید.</Text14>
+			<Text15>هیچ تغییری ایجاد نشده است. تنظیمات ویندوز برای نصب درایورها در حالت تنظیمات پیش فرض است.</Text15>
+			<Text16>یک خطای مهلک توسط سیستم عامل ویندوز رخ داده است که از حذف کردن صحیح تعاریف توسط برنامه جلوگیری می کند. برای احتیاط ، برنامه به حذف پرونده ه مربوط به سیستم ادامه نخواهد داد. قبل از استفاده از نرم افزار ابتدا باید مشکل سیستم برطرف شود.</Text16>
+		</Messages>
+		<Options_Type>
+			<Options1>---نوع دستگاه را انتخاب کنید---</Options1>
+			<Options2>Audio (صوتی)</Options2>
+			<Options3>GPU (واحد پردازش ویدئو)</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---درایور را انتخاب کنید---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---درایور را انتخاب کنید---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
+		<UpdateLog>
+			<Text1>اجرای پاکسازی فروشگاه درایور (حذف مرحله نصب شده) ...</Text1>
+			<Text2>پاک سازی فهرست</Text2>
+			<Text3>پاک سازی کلیدهای ریجستری شناخته شده ... ممکن است یک یا دو دقیقه طول بکشد.</Text3>
+			<Text4>پاک کردن حساب کاربران UpdatusUser در صورت وجود.</Text4>
+			<Text5>پاک سازی فهرست</Text5>
+			<Text6>شروع پاکسازی رجیستری</Text6>
+			<Text7>پاک سازی رجیستری به پایان رسید</Text7>
+			<Text8>شروع حذف NVIDIA Optimus UpperFilter در صورت وجود.</Text8>
+			<Text9>در حال اسکن برای دستگاه جدید...</Text9>
+			<Text10>پاک سازی انجام شد</Text10>
+			<Text11>نسخه‌ی نرم افزار</Text11>
+			<Text12>واحد پردازش ویدئو #</Text12>
+			<Text13>شناسایی شده</Text13>
+			<Text14>واحد پردازش ویدئو DeviceId</Text14>
+			<Text15>نسخه (های) درایور شناسایی شده</Text15>
+			<Text16>INF</Text16>
+			<Text17>بخش INF</Text17>
+			<Text18>واحد پردازش ویدئو به درستی نصب نشده است</Text18>
+			<Text19>برخی از پوشه های خصوصی حذف می شوند ، ممکن است مدتی طول بکشد ...</Text19>
+			<Text20>پاکسازی آغاز شد...</Text20>
+			<Text21>حذف نصب</Text21>
+			<Text22>درایور</Text22>
+			<Text23>SetupAPI حذف شده است ، ممکن است چند دقیقه طول بکشد</Text23>
+			<Text24>واحد پردازش ویدئو (ها) از مدیریت دستگاه حذف شد.</Text24>
+			<Text25>کنترل کننده میزان صدا توسط SetupAPI برداشته می شود</Text25>
+			<Text26>آداپتورهای صوتی با کیفیت بالا برداشته شده اند!</Text26>
+			<Text27>آداپتور USB 3D Vision از مدیر دستگاه حذف شده است</Text27>
+			<Text28>نمایشگرها و صفحه های مخفی حذف شده اند!</Text28>
+			<Text29>SetupAPI حذف شد</Text29>
+			<Text30>شروع پاکسازی منطقه S-1-5-xx</Text30>
+			<Text31>پایان پاکسازی منطقه S-1-5-xx</Text31>
+			<Text32>شروع حذف Classesroot ,installer\products</Text32>
+			<Text33>پایان حذف Classesroot ,installer\products</Text33>
+			<Text34>شروع حذف localmachine ,installer\products</Text34>
+			<Text35>پایان حذف localmachine ,installer\products</Text35>
+			<Text36>شروع حذف currentuser ,installer\products</Text36>
+			<Text37>پایان حذف currentuser ,installer\products</Text37>
+			<Text38>پاک سازی عملیات / خدمات...</Text38>
+			<Text39>پاک سازی فرایندها / خدمات کامل شد</Text39>
+			<Text40>حذف شده.</Text40>
+			<Text41>مقدار حذف شده.</Text41>
+			<Text42>پرونده حذف شده.</Text42>
+		</UpdateLog>
+	</frmMain>
+
+	<frmOptions Text="گزینه ها">
+		<btnClose>
+			<Text>بستن</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>نمایش لیست پیشنهادهای شرکای ما</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>گزینه های خاص NVIDIA</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>گزینه های خاص AMD</Text>
+		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>گزینه های خاص INTEL</Text>
+		</lblINTELspecific>
+		<lblAdvancedO>
+			<Text>(گزینه های پیشرفته (تنظیمات را با احتیاط تغییر دهید</Text>
+		</lblAdvancedO>
+		<lblGeneral>
+			<Text>گزینه های عمومی</Text>
+		</lblGeneral>
+		<lblRemNvidiaDirs>
+			<Text>(این عمل توصیه نمی شود) "C:\NVIDIA" حذف پوشه</Text>
+		</lblRemNvidiaDirs>
+		<lblSaveLogs>
+			<Text>(ذخیره پرونده های ورود به سیستم در مسیر برنامه (بسیار توصیه می شود</Text>
+		</lblSaveLogs>
+		<lblRemPhysX>
+			<Text>PhysX حذف</Text>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
+			<Text>3DTV Play حذف</Text>
+		</lblRem3DtvPlay>
+		<lblCreateRestorePoint>
+			<Text>(ایجاد یک نقطه بازیابی سیستم (اگر مجاز باشد</Text>
+		</lblCreateRestorePoint>
+		<lblRemMonitors>
+			<Text>(صفحات متصل یا آفلاین را حذف کنید (توصیه می شود</Text>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
+			<Text>AMD Audio Bus حذف</Text>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
+			<Text>(این عمل توصیه نمی شود) "C:\AMD" حذف یک پوشه</Text>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
+			<Text>(AMD chipset برای تهیه نسخه پشتیبان توصیه می شود در صورت استفاده) AMDKMPFD حذف تعریف/فیلتر</Text>
+		</lblRemAMDKMPFD>
+		<lblShowSafeModeMsg>
+			<Text>(هنگام ورود به سیستم گزینه ورود به حالت ایمن را نشان می‌دهد (این کار تا زمانی که ابتدا حالت ایمن را مستقیماً بررسی نکنید توصیه نمی شود</Text>
+			<Tooltip>توصیه نمی شود اگر کامپیوتر خود را به حالت ایمن راه اندازی نکردید. این گزینه می تواند باعث ایجاد یک حلقه بوت ، صفحه سیاه و احتمالاً موارد بیشتر شود.</Tooltip>
+		</lblShowSafeModeMsg>
+		<lblUseRoamingCfg>
+			<Text>فایل پیکربندی را در پوشه رومینگ ذخیره کن</Text>
+		</lblUseRoamingCfg>
+		<lblCheckUpdates>
+			<Text>(در هر بار راه اندازی نرم افزار، به روزرسانی های نرم افزار را بررسی کن (توصیه می شود</Text>
+		</lblCheckUpdates>
+		<lblRemGFE>
+			<Text>Geforce Experience (GFE) حذف</Text>
+		</lblRemGFE>
+		<lblRemNVCP>
+			<Text>(DCH driver) Remove the NVIDIA Control Panel installed from the Microsoft Store</Text>
+		</lblRemNVCP>
+		<lblRemINTELCP>
+			<Text>(DCH driver) Remove the INTEL Control Panel installed from the Microsoft Store</Text>
+		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>(DCH driver) Remove the AMD Control Panel installed from the Microsoft Store</Text>
+		</lblRemAMDCP>
+		<lblRemCrimsonCache>
+			<Text>AMD Crimson Shader حذف پوشه حافظه نهان</Text>
+			<Tooltip>
+				این گزینه در صورت وجود مشکلات ارائه گرافیک (سرعت نمایش یا اشکالات دیگر) که به دلیل خرابی در حافظه پنهان است، وجود دارد.
+				همچنین توصیه می شود به مارک دیگری مانند انودیا روی بیاورید
+			</Tooltip>
+		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Vulkan Runtime حذف</Text>
+			<Tooltip>در صورت داشتن دو کارت گرافیک که توانایی استفاده از Vulkan API را دارند ، این گزینه توصیه نمی شود.</Tooltip>
+		</lblVulkan>
+    <lblPreventWinUpdate>
+      <Text>وقتی ویندوز به دنبال درایورهای یک دستگاه خاص است، از بارگیری درایورها از طریق آپدیت ویندوز جلوگیری کنید</Text>
+      <Tooltip>در کوتاه مدت ، این گزینه "Windows / Device Manager" را برای بررسی به روزرسانی درایور در "Windows Update" انکار می کند. 
+               توجه: این گذینه از "ویندوز آپدیت" برای بارگیری / نصب درایورهای جدید جلوگیری نمی کند.
+              توجه 2: همچنین * به شدت * توصیه می شود که پس از پایان استفاده از این نرم افزار و نصب مجدد درایورواحد پردازش ویدئویی خود، این تغییر را برگردانید یا ممکن است با نصب دستگاه دیگر مشکلی داشته باشید.</Tooltip>
+     </lblPreventWinUpdate>
+  </frmOptions>
+
+	<frmLaunch Text="گزینه راه اندازی">
+		<btnAccept>
+			<Text>راه اندازی</Text>
+			<Text2>
+				راه اندازی مجدد در
+				حالت ایمن
+			</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>بستن</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>گزینه راه اندازی</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>
+				شما در حالت ایمن نیستید. بسیار توصیه می شود
+				برای جلوگیری از بروز مشکلات احتمالی ، در حالت ایمن راه اندازی مجدد کنید.
+			</Text>
+		</lblNotSafeMode>
+		<lblWinPasswordWarn>
+			<Text>
+				نکته مهم برای کاربران ویندوز 8 / 8.1 / 10:
+				(رمز عبور سیستم عامل مورد نیاز است! (پین در حالت ایمن کار نمی کند
+				اگر آن را گم کردید یا آن را نمی دانید ، بلافاصله ترک کنید!
+			</Text>
+		</lblWinPasswordWarn>
+		<cbBootOption>
+			<Item1>طبیعی</Item1>
+			<Item2>(حالت ایمن (توصیه می شود</Item2>
+			<Item3>حالت امن با شبکه</Item3>
+		</cbBootOption>
+		<Messages>
+			<Text1>(این برنامه با برنامه هایی تداخل دارند (مانند MSI Afterburner و RTSS</Text1>
+		</Messages>
+	</frmLaunch>
+
+	<frmLog Text="ورود به سیستم تمدید شده">
+		<btnClose>
+			<Text>بستن</Text>
+		</btnClose>
+		<btnOpenLog>
+			<Text>باز کردن ورود به سیستم</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>گزینه ها</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>امکان کپی</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>فیلترها</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>نمایش رویدادها</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>نشان دادن هشدارها</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>نمایش خطاها</Text>
+		</errorsMenuItem>
+	</frmLog>
+
+	<frmSystemRestore Text="بازگرداندن سیستم">
+		<lblSystemRestore>
+			<Text>تلاش برای ایجاد یک نقطه بازیابی سیستم.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="درباره">
+		<btnClose>
+			<Text>بستن</Text>
+		</btnClose>
+		<btnAbout>
+			<Text>درباره</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>(ToS) شرایط خدمات</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>مترجمان</Text>
+		</btnTranslators>
+		<btnPatron>
+			<Text>مشتریان</Text>
+		</btnPatron>
+		<lblTranslators>
+			<Text>!با تشکر فراوان از مترجمان زیر و همچنین کسانی که در لیست ذکر نشده اند</Text>
+		</lblTranslators>
+		<lblPatron>
+			<Text>
+				!با تشکر فراوان از مشتریان زیر و همچنین کسانی که در لیست نیستند
+
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+			</Text>
+		</lblPatron>
+	</frmAbout>
+
+	<Misc>
+		<About>
+			<Text>
+				Display Driver Uninstaller (DDU) / Cleaner made for Display (GPU) Drivers. (NVIDIA/AMD)
+
+				عملکرد این برنامه حذف نصب درایور کارت گرافیک از دستگاه مدیریت است،
+				و همچنین علاوه بر توقف خدمات، کارت انودیا یا از اِی‌دی‌اِم، همه پرونده های مربوط به تعریف را در سیستم عامل حذف کنید.
+				
+				هدف این برنامه پاک سازی کامل سیستم از تعریف کارت گرافیک است. گویی سیستم تازه نصب شده است.
+				
+				این برنامه مشابه درایور سویپر* است اما دارای ویژگیهای دیگری است که قبلاً به آنها اشاره شد.
+				
+				اگر هنگام نصب درایورهای قدیمی یا جدید به مشکلی برخوردید، لطفاً آنها را به ما گزارش دهید تا در نسخه های جدید بتوانیم آنها را برطرف کنیم.
+				
+				نحوه استفاده از برنامه:
+				
+				- این برنامه را می توان در حالت عادی سیستم عامل استفاده کرد. اما استفاده از آن در حالت ایمن ترجیح داده می شود.
+				
+				- ما از نظرات و پیشنهادات جدید استقبال می کنیم ، لطفاً در صورت داشتن نکته به ما اطلاع دهید.
+				
+				در صورت بروز هرگونه مشکلی که ممکن است پس از استفاده به وجود بیاید، همیشه یک نسخه پشتیبان از سیستم یا یک نقطه بازیابی سیستم را نگه دارید.
+				
+				- اگر در شناسایی کارت گرافیک خود با مشکلی روبرو شدید و پس از استفاده از این برنامه مشکل برطرف شد، لطفاً با ما در میان بگذارید
+				تجربه شما و هر پیشنهادی که دوست دارید در مورد آن بدانیم
+				
+				لطفا توجه داشته باشید که NVIDIA ، AMD ، Microsoft
+				مسئولیت خساراتی که ممکن است در نتیجه استفاده از این برنامه به دستگاه شما وارد شود، ما مسئول این کار را برعهده نمی گیریم و برنامه به این شرکتها وابسته نیست و برنامه سازان کارمندان آنها هستند.
+				-------------------------------
+				
+				طراحی شده توسط: Wagnard.
+				
+				رمزگذاران: Wagnard ، Devmltk ، Shady7557
+				
+				نرم افزار آزمایش شده توسط: Dellon132
+				
+				طراحی لوگو: juanchacin
+				
+				با تشکر فراوان از Jackalito برای اهدای کارت گرافیک 7850 AMD.
+				
+				ترجمه فارسی: مهران رفیعی / ایران - تهران
+				
+				با تشکر ویژه از Helge Klein (http://helgeklein.com/setacl/) برای اجازه دادن به ما برای استفاده از نرم افزار "SetAcl" و ادغام آن با این نرم افزار
+				
+				با تشکر فراوان از همه کسانی که در امتحان برنامه مشارکت داشتند: Gamer1291 (optimus) ، Octopuss (Amd Enduro) ، nedooo` (با من اشکال زدایی کرد)
+				(فوق العاده (آزمایش رفع اشکال
+			</Text>
+		</About>
+
+		<Tos>
+			<Text>
+				Display Driver Uninstaller ("DDU") توافقنامه مجوز
+
+				هنگام اجرای نرم افزار شما به عنوان یک کاربر رسمی نرم افزار در نظر گرفته می شوید. بنابراین ، این موافقتنامه درحال اجرا است که شما از این نرم افزار برای حذف و پاک سازی درایورهای دستگاه خود استفاده نمایید.
+
+				با استفاده از این نرم افزار موافقت می کنید که این نرم افزار یا سازندگان آن و شرکتهای وابسته را به آسیب رساندن یا تأثیر منفی به رایانه شخصی خود متهم نمی کنید.
+
+				هنگام استفاده از این نرم افزار ، تأیید می کنید که NVIDIA ("NVIDIA، GeForce") و / یا دستگاه های ریز پیشرفته ("AMD ، Radeon")
+				هیچ ارتباطی با این برنامه، یا با برنامه ریز آن و هر کسی که در کار آن مشارکت داشته باشند، ندارد.
+			</Text>
+		</Tos>
+	</Misc>
+
+	<LanguageTranslators>
+		<Translator>
+			<User>Mehran Rafiee</User>
+			<Details>
+			mr.mehran230@gmail.com
+			</Details>
+			<LastUpdate>23/06/2021</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
+
+</DisplayDriverUninstaller>
