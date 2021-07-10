@@ -3979,6 +3979,7 @@ Public Class GPUCleanup
 							 child.ToLower.Contains("_display.nvirusb") Or
 							 child.ToLower.Contains("_display.physx") AndAlso removephysx Or
 							 child.ToLower.Contains("_frameviewsdk") AndAlso removegfe Or
+							 child.ToLower.Contains("_gpxcommon.oss") AndAlso removegfe Or
 							 child.ToLower.Contains("_display.update") AndAlso removegfe Or
 							 child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
 							 child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
@@ -4045,6 +4046,7 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("_display.driver") Or
 						 child.ToLower.Contains("_display.optimus") Or
 						 child.ToLower.Contains("_frameviewsdk") AndAlso removegfe Or
+						 child.ToLower.Contains("_gpxcommon.oss") AndAlso removegfe Or
 						 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
 						 child.ToLower.Contains("_display.nvirusb") Or
 						 child.ToLower.Contains("_nvabhub") AndAlso removegfe Or
@@ -4226,12 +4228,12 @@ Public Class GPUCleanup
 																If StrContainsAny(subkeys, True, "configs", "cache", "extensions", "relationships", "stripped", "drivers") Then
 																	Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkey4, subkeys, True)
 																		If regkey5 IsNot Nothing Then
-																			For Each ValueNames As String In regkey5.GetValueNames
-																				If IsNullOrWhitespace(ValueNames) Then Continue For
-																				If StrContainsAny(ValueNames, True, "ansel", "display", "gfexperience", "hdaudio", "nvabhub", "nvbackend", "nvcontainer", "nvnode", "nvplugin",
-																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio", "oem", "msvcruntime", "NGXCore", "USBC", "nvmoduletracker.driver", "FrameViewSdk") Then
+																			For Each ValueName As String In regkey5.GetValueNames
+																				If IsNullOrWhitespace(ValueName) Then Continue For
+																				If StrContainsAny(ValueName, True, "ansel", "display", "gfexperience", "hdaudio", "nvabhub", "nvbackend", "nvcontainer", "nvnode", "nvplugin",
+																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio", "oem", "msvcruntime", "NGXCore", "USBC", "nvmoduletracker.driver", "FrameViewSdk", "GpxCommon.Oss") Then
 																					Try
-																						Deletevalue(regkey5, ValueNames)
+																						Deletevalue(regkey5, ValueName)
 																					Catch ex As Exception
 																						Application.Log.AddException(ex)
 																					End Try
@@ -5399,7 +5401,7 @@ Public Class GPUCleanup
 			Try
 				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
-						If StrContainsAny(child, True, "nvbackend", "nvosc", "shareconnect", "nvgs", "glcache", "gfexperience", "DXCache") Then
+						If StrContainsAny(child, True, "nvbackend", "nvosc", "shareconnect", "nvgs", "glcache", "gfexperience", "DXCache", "FrameViewSdk") Then
 							Delete(child)
 						End If
 					End If
@@ -5482,6 +5484,7 @@ Public Class GPUCleanup
 							 (child.ToLower.Contains("nvetwlog")) Or
 							 (child.ToLower.Contains("nv_cache") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("gfnruntimesdk") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
 
@@ -5700,6 +5703,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("usbc.") Or
 								   child2.ToLower.Contains("nvdisplay.messagebus") Or
 								   child2.ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("gpxcommon.oss") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.physx") AndAlso config.RemovePhysX Or
 								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.gamemonitor") AndAlso config.RemoveGFE Or
