@@ -2173,7 +2173,7 @@ Public Class GPUCleanup
 								End If
 							End If
 							If Not IsNullOrWhitespace(regkey2.GetValue("Path", String.Empty).ToString) Then
-								If StrContainsAny(regkey2.GetValue("Path", String.Empty).ToString, True, "\StartCN", "\StartCNBM", "\AMD ThankingURL") Then
+								If StrContainsAny(regkey2.GetValue("Path", String.Empty).ToString, True, "\StartCN", "\StartCNBM", "\AMD ThankingURL", "\StartAUEP") Then
 									Deletesubregkey(regkey, child)
 								End If
 							End If
@@ -2189,7 +2189,7 @@ Public Class GPUCleanup
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
 							If IsNullOrWhitespace(child) Then Continue For
-							If StrContainsAny(child, True, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM", "ModifyLinkUpdate", "AMD ThankingURL", "AMDInstallLauncher", "AMDInstallUEP") Then
+							If StrContainsAny(child, True, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM", "ModifyLinkUpdate", "AMD ThankingURL", "AMDInstallLauncher", "AMDInstallUEP", "StartAUEP") Then
 								For Each ScheduleChild As String In schedule.GetSubKeyNames
 									If IsNullOrWhitespace(ScheduleChild) Then Continue For
 									Try
