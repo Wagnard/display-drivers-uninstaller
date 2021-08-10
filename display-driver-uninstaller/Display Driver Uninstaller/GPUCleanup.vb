@@ -214,7 +214,7 @@ Public Class GPUCleanup
 										Next
 									End If
 								End If
-                            Next
+							Next
 						End If
 					End If
 				Next
@@ -1426,14 +1426,15 @@ Public Class GPUCleanup
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) Then Continue For
-							If StrContainsAny(child, True, "AIM", "CN", "DVR", "HKIDs") Then
+							If StrContainsAny(child, True, "AIM", "CN", "DVR", "HKIDs", "MOBILE", "SCENE") Then
 								Deletesubregkey(regkey, child)
 							End If
 						Next
 						If regkey.SubKeyCount = 0 Then
 							Try
-								Deletesubregkey(Registry.Users, users & "Software\AMD")
+								Deletesubregkey(Registry.Users, users & "\Software\AMD")
 							Catch ex As Exception
+								Application.Log.AddException(ex)
 							End Try
 						Else
 							For Each data As String In regkey.GetSubKeyNames()
@@ -1466,6 +1467,7 @@ Public Class GPUCleanup
 						Try
 							Deletesubregkey(Registry.LocalMachine, "Software\ATI")
 						Catch ex As Exception
+							Application.Log.AddException(ex)
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
@@ -1487,6 +1489,7 @@ Public Class GPUCleanup
 						Try
 							Deletesubregkey(Registry.LocalMachine, "Software\AUEP")
 						Catch ex As Exception
+							Application.Log.AddException(ex)
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
@@ -1628,7 +1631,7 @@ Public Class GPUCleanup
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-							If StrContainsAny(child, True, "eeu", "fuel", "cn", "chill", "mftvdecoder", "dvr", "gpu", "amdanalytics", "ppc") Then
+							If StrContainsAny(child, True, "eeu", "fuel", "cn", "chill", "mftvdecoder", "dvr", "gpu", "amdanalytics", "ppc", "DU", "DUTrack") Then
 								Try
 									Deletesubregkey(regkey, child)
 								Catch ex As Exception
@@ -1648,6 +1651,7 @@ Public Class GPUCleanup
 						Try
 							Deletesubregkey(Registry.LocalMachine, "Software\AMD")
 						Catch ex As Exception
+							Application.Log.AddException(ex)
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
@@ -4993,7 +4997,7 @@ Public Class GPUCleanup
 					End Try
 				End If
 			End If
-        End Using
+		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Classes\Directory\background\shellex\ContextMenuHandlers", True)
 			If regkey IsNot Nothing Then
@@ -5021,7 +5025,7 @@ Public Class GPUCleanup
 					End Try
 				End If
 			End If
-        End Using
+		End Using
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".mpe\shellex", True)
 			If regkey IsNot Nothing Then
@@ -6409,7 +6413,7 @@ Public Class GPUCleanup
 						End Try
 					End If
 				End If
-            End Using
+			End Using
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
