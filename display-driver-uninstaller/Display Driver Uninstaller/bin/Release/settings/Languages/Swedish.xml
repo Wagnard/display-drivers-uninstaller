@@ -384,14 +384,17 @@
 			<Text>
         Stort tack till följande Donatorer och också även till de som inte listas!
 
-				-honnmaguro   (Sedan 2018-03-16)
-				-ZaoDaDong   (Sedan 2019-02-06)
-				-Alberto Bursi (långtidsdonator/supporter)
-				-Kaseb (Sedan 2019-09-05)
-				-Frank Brown (Sedan 2019-10-31)
-				-Sergey Bolshakow (Sedan 2020-09-10)
-				-James Tiller (Sedan 2021-04-03)
-                -Paulo Henrique (Sedan 2021-04-19)
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Fabio
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -466,7 +469,7 @@ Tack till Helge Klein (http://helgeklein.com/setacl/) : för tillståndet att an
 		<Translator>
 			<User>Hans Eriksson</User>
 			<Details>hans.ericson@bredband.net</Details>
-			<LastUpdate>08/05/2021</LastUpdate>
+			<LastUpdate>20/08/2021</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
