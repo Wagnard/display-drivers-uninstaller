@@ -259,11 +259,11 @@ Class Application
 		Try
 			If frmMain.workThread IsNot Nothing Then                    ' workThread running, cleaning in progress!
 				' Should take few milliseconds...	
-				If frmMain.workThread.IsAlive Then Thread.Sleep(200)
-				If frmMain.workThread.IsAlive Then Thread.Sleep(2000)
+				If frmMain.workThread.Status = Tasks.TaskStatus.Running Then Thread.Sleep(200)
+				If frmMain.workThread.Status = Tasks.TaskStatus.Running Then Thread.Sleep(2000)
 
 				' workThread still running!
-				If frmMain.workThread.IsAlive Then
+				If frmMain.workThread.Status = Tasks.TaskStatus.Running Then
 					e.Cancel = True
 					Exit Sub
 				End If

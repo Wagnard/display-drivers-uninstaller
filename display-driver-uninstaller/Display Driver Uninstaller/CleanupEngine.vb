@@ -6,6 +6,7 @@ Imports System.Threading
 Imports Windows.Foundation
 Imports Windows.Management.Deployment
 Imports System.Security.Principal
+Imports System.Threading.Tasks
 
 Public Class CleanupEngine
 
@@ -829,104 +830,107 @@ Public Class CleanupEngine
 	End Sub
 
 	Private Sub InterfaceRemovalWithValue(ByVal childlist As List(Of String), ByVal typelibList As List(Of String), ByVal wow6432 As Boolean)
-		Dim wantedvalue2 As String
 		If Not wow6432 Then
 			Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface", True)
 				If reginterface IsNot Nothing Then
-					For Each interfacechild As String In reginterface.GetSubKeyNames
-						If IsNullOrWhitespace(interfacechild) Then Continue For
-						Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
-							If reginterface2 IsNot Nothing Then
-								If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
-									If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
-										wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
-										If Not IsNullOrWhitespace(wantedvalue2) Then
-											For Each item As String In childlist
-												If IsNullOrWhitespace(item) Then Continue For
-												If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\" + item) Is Nothing Then
-													Try
-														Deletesubregkey(reginterface, interfacechild)
-														Exit For
-													Catch ex As Exception
-														Application.Log.AddException(ex, "Interface Removal via ClassRoot/CLSID")
-													End Try
-												End If
-											Next
+					Parallel.ForEach(reginterface.GetSubKeyNames(),
+						Sub(interfacechild)
+							If IsNullOrWhitespace(interfacechild) Then Return
+							Dim wantedvalue2 As String
+							Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
+								If reginterface2 IsNot Nothing Then
+									If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
+										If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
+											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
+											If Not IsNullOrWhitespace(wantedvalue2) Then
+												For Each item As String In childlist
+													If IsNullOrWhitespace(item) Then Continue For
+													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\" + item) Is Nothing Then
+														Try
+															Deletesubregkey(reginterface, interfacechild)
+															Exit For
+														Catch ex As Exception
+															Application.Log.AddException(ex, "Interface Removal via ClassRoot/CLSID")
+														End Try
+													End If
+												Next
+											End If
+										End If
+									End If
+									'Interface Removal via Typelib list
+									If typelibList IsNot Nothing AndAlso typelibList.Count > 0 Then
+										If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
+											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
+											If Not IsNullOrWhitespace(wantedvalue2) Then
+												For Each item As String In typelibList
+													If IsNullOrWhitespace(item) Then Continue For
+													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib\" + item) Is Nothing Then
+														Try
+															Deletesubregkey(reginterface, interfacechild)
+															Exit For
+														Catch ex As Exception
+															Application.Log.AddException(ex, "Interface Removal via ClassRoot/tpyelib")
+														End Try
+													End If
+												Next
+											End If
 										End If
 									End If
 								End If
-								'Interface Removal via Typelib list
-								If typelibList IsNot Nothing AndAlso typelibList.Count > 0 Then
-									If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
-										wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
-										If Not IsNullOrWhitespace(wantedvalue2) Then
-											For Each item As String In typelibList
-												If IsNullOrWhitespace(item) Then Continue For
-												If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib\" + item) Is Nothing Then
-													Try
-														Deletesubregkey(reginterface, interfacechild)
-														Exit For
-													Catch ex As Exception
-														Application.Log.AddException(ex, "Interface Removal via ClassRoot/tpyelib")
-													End Try
-												End If
-											Next
-										End If
-									End If
-								End If
-							End If
-                        End Using
-					Next
+							End Using
+						End Sub)
 				End If
 			End Using
 		Else
 			Using reginterface As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface", True)
 				If reginterface IsNot Nothing Then
-					For Each interfacechild As String In reginterface.GetSubKeyNames
-						If IsNullOrWhitespace(interfacechild) Then Continue For
-						Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
-							If reginterface2 IsNot Nothing Then
-								'Interface removal for the CLSID childlist.
-								If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
-									If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
-										wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
-										If Not IsNullOrWhitespace(wantedvalue2) Then
-											For Each item As String In childlist
-												If IsNullOrWhitespace(item) Then Continue For
-												If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\CLSID\" + item) Is Nothing Then
-													Try
-														Deletesubregkey(reginterface, interfacechild)
-														Exit For
-													Catch ex As Exception
-														Application.Log.AddException(ex, "Interface Removal via Classroot/CLSID childlist")
-													End Try
-												End If
-											Next
+					Parallel.ForEach(reginterface.GetSubKeyNames(),
+						Sub(interfacechild)
+							If IsNullOrWhitespace(interfacechild) Then Return
+							Dim wantedvalue2 As String
+							Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
+								If reginterface2 IsNot Nothing Then
+									'Interface removal for the CLSID childlist.
+									If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
+										If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
+											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
+											If Not IsNullOrWhitespace(wantedvalue2) Then
+												For Each item As String In childlist
+													If IsNullOrWhitespace(item) Then Continue For
+													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\CLSID\" + item) Is Nothing Then
+														Try
+															Deletesubregkey(reginterface, interfacechild)
+															Exit For
+														Catch ex As Exception
+															Application.Log.AddException(ex, "Interface Removal via Classroot/CLSID childlist")
+														End Try
+													End If
+												Next
+											End If
+										End If
+									End If
+									'Interface removal for the Typelib list.
+									If typelibList IsNot Nothing AndAlso typelibList.Count > 0 Then
+										If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
+											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
+											If Not IsNullOrWhitespace(wantedvalue2) Then
+												For Each item As String In typelibList
+													If IsNullOrWhitespace(item) Then Continue For
+													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\TypeLib\" + item) Is Nothing Then
+														Try
+															Deletesubregkey(reginterface, interfacechild)
+															Exit For
+														Catch ex As Exception
+															Application.Log.AddException(ex, "Interface Removal via ClassRoot/Typelist")
+														End Try
+													End If
+												Next
+											End If
 										End If
 									End If
 								End If
-								'Interface removal for the Typelib list.
-								If typelibList IsNot Nothing AndAlso typelibList.Count > 0 Then
-									If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
-										wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
-										If Not IsNullOrWhitespace(wantedvalue2) Then
-											For Each item As String In typelibList
-												If IsNullOrWhitespace(item) Then Continue For
-												If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\TypeLib\" + item) Is Nothing Then
-													Try
-														Deletesubregkey(reginterface, interfacechild)
-														Exit For
-													Catch ex As Exception
-														Application.Log.AddException(ex, "Interface Removal via ClassRoot/Typelist")
-													End Try
-												End If
-											Next
-										End If
-									End If
-								End If
-							End If
-						End Using
-					Next
+							End Using
+						End Sub)
 				End If
 			End Using
 		End If
@@ -2375,62 +2379,61 @@ Public Class CleanupEngine
 		'clean orphan typelib.....
 		Application.Log.AddMessage("Orphan cleanUp")
 		Try
-			Dim value As String = Nothing
-
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib", True)
 				If regkey IsNot Nothing Then
-					For Each child As String In regkey.GetSubKeyNames()
-						If IsNullOrWhitespace(child) Then Continue For
+					Parallel.ForEach(regkey.GetSubKeyNames(),
+						Sub(child)
+							If IsNullOrWhitespace(child) Then Return
+							Dim value As String = Nothing
+							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+								If regkey2 Is Nothing Then Return
 
-						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-							If regkey2 Is Nothing Then Continue For
+								For Each child2 As String In regkey2.GetSubKeyNames()
+									If IsNullOrWhitespace(child2) Then Continue For
 
-							For Each child2 As String In regkey2.GetSubKeyNames()
-								If IsNullOrWhitespace(child2) Then Continue For
+									Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey2, child2)
+										If regkey3 Is Nothing Then Continue For
 
-								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey2, child2)
-									If regkey3 Is Nothing Then Continue For
+										For Each child3 As String In regkey3.GetSubKeyNames()
+											If IsNullOrWhitespace(child3) Then Continue For
 
-									For Each child3 As String In regkey3.GetSubKeyNames()
-										If IsNullOrWhitespace(child3) Then Continue For
+											Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey3, child3)
+												If regkey4 Is Nothing Then Continue For
 
-										Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey3, child3)
-											If regkey4 Is Nothing Then Continue For
+												For Each child4 As String In regkey4.GetSubKeyNames()
+													If IsNullOrWhitespace(child4) Then Continue For
 
-											For Each child4 As String In regkey4.GetSubKeyNames()
-												If IsNullOrWhitespace(child4) Then Continue For
+													Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkey4, child4)
+														If regkey5 Is Nothing Then Continue For
 
-												Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkey4, child4)
-													If regkey5 Is Nothing Then Continue For
+														value = TryCast(regkey5.GetValue("", String.Empty), String)    'Can also be UInt32 btw! (Usualy abnormal from personal experience,but still should be managed in the future)
 
-													value = TryCast(regkey5.GetValue("", String.Empty), String)    'Can also be UInt32 btw! (Usualy abnormal from personal experience,but still should be managed in the future)
+														If IsNullOrWhitespace(value) Then Continue For
 
-													If IsNullOrWhitespace(value) Then Continue For
+														For Each clsIdle As String In clsidleftover
+															If IsNullOrWhitespace(clsIdle) Then Continue For
 
-													For Each clsIdle As String In clsidleftover
-														If IsNullOrWhitespace(clsIdle) Then Continue For
-
-														If StrContainsAny(value, True, clsIdle) Then
-															Try
-																Deletesubregkey(regkey, child)
-																typelibList.Add(child)
-																Application.Log.AddMessage(child + " for " + clsIdle)
-																Exit For
-															Catch exARG As ArgumentException
-																'Do nothing, can happen (Not found)
-															Catch ex As Exception
-																Application.Log.AddException(ex)
-															End Try
-														End If
-													Next
-												End Using
-											Next
-										End Using
-									Next
-								End Using
-							Next
-						End Using
-					Next
+															If StrContainsAny(value, True, clsIdle) Then
+																Try
+																	Deletesubregkey(regkey, child)
+																	typelibList.Add(child)
+																	Application.Log.AddMessage(child + " for " + clsIdle)
+																	Exit For
+																Catch exARG As ArgumentException
+																	'Do nothing, can happen (Not found)
+																Catch ex As Exception
+																	Application.Log.AddException(ex)
+																End Try
+															End If
+														Next
+													End Using
+												Next
+											End Using
+										Next
+									End Using
+								Next
+							End Using
+						End Sub)
 					InterfaceRemovalWithValue(Nothing, typelibList, False)
 
 					If IntPtr.Size = 8 Then
@@ -2451,66 +2454,18 @@ Public Class CleanupEngine
 		Application.Log.AddMessage("Start Interface CleanUP")
 
 		Try
-			Dim wantedvalue As String
-			Dim typelib As String = Nothing
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface", True)
 				If regkey IsNot Nothing Then
-					For Each child As String In regkey.GetSubKeyNames()
-						If IsNullOrWhitespace(child) Then Continue For
-
-						Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface\" & child, False)
-
-							If subregkey IsNot Nothing Then
-								wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-								If IsNullOrWhitespace(wantedvalue) Then Continue For
-
-								For Each iface As String In interfaces
-									If IsNullOrWhitespace(iface) Then Continue For
-
-									If StrContainsAny(wantedvalue, True, iface) Then
-
-										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, "Typelib", True)
-											If regkey2 IsNot Nothing Then
-												typelib = TryCast(regkey2.GetValue("", String.Empty), String)
-												If IsNullOrWhitespace(typelib) Then Continue For
-
-												Try
-													Deletesubregkey(regkey2, typelib)
-												Catch ex As Exception
-												End Try
-											End If
-										End Using
-
-										Try
-											Deletesubregkey(regkey, child)
-										Catch ex As Exception
-										End Try
-									End If
-								Next
-							End If
-						End Using
-					Next
-				End If
-			End Using
-		Catch ex As Exception
-			Application.Log.AddException(ex)
-		End Try
-
-		If IntPtr.Size = 8 Then
-
-			Try
-				Dim wantedvalue As String
-				Dim typelib As String = Nothing
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface", True)
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) Then Continue For
-
-							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface\" & child, False)
+					Parallel.ForEach(regkey.GetSubKeyNames(),
+						Sub(child)
+							If IsNullOrWhitespace(child) Then Return
+							Dim wantedvalue As String
+							Dim typelib As String = Nothing
+							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface\" & child, False)
 
 								If subregkey IsNot Nothing Then
 									wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-									If IsNullOrWhitespace(wantedvalue) Then Continue For
+									If IsNullOrWhitespace(wantedvalue) Then Return
 
 									For Each iface As String In interfaces
 										If IsNullOrWhitespace(iface) Then Continue For
@@ -2537,7 +2492,55 @@ Public Class CleanupEngine
 									Next
 								End If
 							End Using
-						Next
+						End Sub)
+				End If
+			End Using
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+
+		If IntPtr.Size = 8 Then
+
+			Try
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface", True)
+					If regkey IsNot Nothing Then
+						Parallel.ForEach(regkey.GetSubKeyNames(),
+							Sub(child)
+								If IsNullOrWhitespace(child) Then Return
+								Dim wantedvalue As String
+								Dim typelib As String = Nothing
+								Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface\" & child, False)
+
+									If subregkey IsNot Nothing Then
+										wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
+										If IsNullOrWhitespace(wantedvalue) Then Return
+
+										For Each iface As String In interfaces
+											If IsNullOrWhitespace(iface) Then Continue For
+
+											If StrContainsAny(wantedvalue, True, iface) Then
+
+												Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, "Typelib", True)
+													If regkey2 IsNot Nothing Then
+														typelib = TryCast(regkey2.GetValue("", String.Empty), String)
+														If IsNullOrWhitespace(typelib) Then Continue For
+
+														Try
+															Deletesubregkey(regkey2, typelib)
+														Catch ex As Exception
+														End Try
+													End If
+												End Using
+
+												Try
+													Deletesubregkey(regkey, child)
+												Catch ex As Exception
+												End Try
+											End If
+										Next
+									End If
+								End Using
+							End Sub)
 					End If
 				End Using
 			Catch ex As Exception
@@ -2551,61 +2554,55 @@ Public Class CleanupEngine
 
 	Public Sub Folderscleanup(ByVal driverfiles As String(), ByVal config As ThreadSettings)
 		Dim winxp = frmMain.winxp
-		Dim Thread1Finished = False
-		Dim Thread2Finished = False
-		Dim Thread3Finished = False
-		Dim Thread4Finished = False
-		Dim Thread5Finished = False
-		Dim Thread7Finished = False
-		Dim Thread8Finished = False
 
+		Dim TaskList = New List(Of Tasks.Task)()
 
-		Dim thread1 As Thread = New Thread(Sub() Threaddata1(Thread1Finished, Application.Paths.System32, driverfiles))
-		thread1.Start()
+		'tasks.Add(Threading.Tasks.Task(Of Integer).Factory.StartNew(Sub() Threaddata1(Thread1Finished, Application.Paths.System32, driverfiles)))
 
-		Dim thread2 As Thread = New Thread(Sub() Threaddata1(Thread2Finished, Application.Paths.System32 & "drivers\", driverfiles))
-		thread2.Start()
+		Dim thread1 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(Application.Paths.System32, driverfiles))
 
+		TaskList.Add(thread1)
+
+		Dim thread2 As Tasks.Task = Tasks.Task.Run(Sub() Threaddata1(Application.Paths.System32 & "drivers\", driverfiles))
+
+		TaskList.Add(thread2)
 
 		If winxp Then
 
-			Dim thread3 As Thread = New Thread(Sub() Threaddata1(Thread3Finished, Application.Paths.System32 & "drivers\dllcache\", driverfiles))
-			thread3.Start()
-		Else
-			Thread3Finished = True
+			Dim thread3 As Tasks.Task = Tasks.Task.Run(Sub() Threaddata1(Application.Paths.System32 & "drivers\dllcache\", driverfiles))
+			TaskList.Add(thread3)
+
 		End If
 
-		Dim thread4 As Thread = New Thread(Sub() Threaddata1(Thread4Finished, Application.Paths.WinDir, driverfiles))
-		thread4.Start()
+		Dim thread4 As Tasks.Task = Tasks.Task.Run(Sub() Threaddata1(Application.Paths.WinDir, driverfiles))
+		TaskList.Add(thread4)
 
 		If IntPtr.Size = 8 Then
 
 
-			Dim thread8 As Thread = New Thread(Sub() Threaddata1(Thread8Finished, Application.Paths.SysWOW64, driverfiles))
-			thread8.Start()
+			Dim thread8 As Tasks.Task = Tasks.Task.Run(Sub() Threaddata1(Application.Paths.SysWOW64, driverfiles))
+			TaskList.Add(thread8)
 
-			Dim thread5 As Thread = New Thread(Sub() Threaddata1(Thread5Finished, Application.Paths.SysWOW64 & "Drivers\", driverfiles))
-			thread5.Start()
-		Else
-			Thread8Finished = True
-			Thread5Finished = True
+			Dim thread5 As Tasks.Task = Tasks.Task.Run(Sub() Threaddata1(Application.Paths.SysWOW64 & "Drivers\", driverfiles))
+			TaskList.Add(thread5)
 		End If
 
-		Dim thread7 As Thread = New Thread(Sub() Threaddata1(Thread7Finished, Application.Paths.WinDir & "Prefetch\", driverfiles))
-		thread7.Start()
+		Dim thread7 As Tasks.Task = Tasks.Task.Run(Sub() Threaddata1(Application.Paths.WinDir & "Prefetch\", driverfiles))
+		TaskList.Add(thread7)
 
-		While Thread1Finished <> True Or Thread2Finished <> True Or Thread3Finished <> True Or Thread4Finished <> True Or Thread5Finished <> True Or Thread7Finished <> True Or Thread8Finished <> True
-			objAuto.WaitOne(500)
-		End While
+		Tasks.Task.WaitAll(TaskList.ToArray())
+
+		'While Thread1Finished <> True Or Thread2Finished <> True Or Thread3Finished <> True Or Thread4Finished <> True Or Thread5Finished <> True Or Thread7Finished <> True Or Thread8Finished <> True
+		'	objAuto.WaitOne(500)
+		'End While
 
 	End Sub
 
-	Private Sub Threaddata1(ByRef ThreadFinished As Boolean, ByVal filepath As String, ByVal driverfiles As String())
+	Private Sub Threaddata1(filepath As String, ByVal driverfiles As String())
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 		End If
 		Dim FileIO As New FileIO
-		ThreadFinished = False
 		If filepath IsNot Nothing Then
 			If FileIO.ExistsDir(filepath) Then
 				For Each child As String In FileIO.GetFiles(filepath)
@@ -2627,7 +2624,6 @@ Public Class CleanupEngine
 			Next
 
 		End If
-		ThreadFinished = True
 	End Sub
 
 	Public Sub TestDelete(ByVal folder As String, config As ThreadSettings)

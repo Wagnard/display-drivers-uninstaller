@@ -25,8 +25,8 @@ Imports WinForm = System.Windows.Forms
 Imports Display_Driver_Uninstaller.Win32
 
 Public Class frmMain
-	Friend Shared cleaningThread As Thread = Nothing
-	Friend Shared workThread As Thread = Nothing
+	Friend Shared cleaningThread As Tasks.Task = Nothing
+	Friend Shared workThread As Tasks.Task = Nothing
 
 	Dim identity As WindowsIdentity = WindowsIdentity.GetCurrent()
 	Dim principal As WindowsPrincipal = New WindowsPrincipal(identity)
@@ -362,13 +362,7 @@ Public Class frmMain
 			If Application.LaunchOptions.HasCleanArg Then
 				Dim config As New ThreadSettings(True)
 
-				workThread = New Thread(Sub() ThreadTask(config)) With
-				{
-				 .CurrentCulture = New Globalization.CultureInfo("en-US"),
-				 .CurrentUICulture = New Globalization.CultureInfo("en-US"),
-				 .Name = "workThread",
-				 .IsBackground = True
-				}
+				workThread = New Tasks.Task(Sub() ThreadTask(config))
 
 				workThread.Start()
 			End If
@@ -426,7 +420,7 @@ Public Class frmMain
 
 	Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
 		Try
-			If cleaningThread IsNot Nothing AndAlso cleaningThread.IsAlive Then
+			If cleaningThread IsNot Nothing AndAlso cleaningThread.Status = Tasks.TaskStatus.Running Then
 				e.Cancel = True
 				Exit Sub
 			End If
@@ -545,6 +539,9 @@ Public Class frmMain
 	End Sub
 
 	Private Sub ThreadTask(ByVal config As ThreadSettings)
+
+		Dim autoresetevent As New AutoResetEvent(False)
+
 		Try
 			config.PreventClose = True
 
@@ -559,8 +556,8 @@ Public Class frmMain
 
 					StartThread(config)
 
-					While cleaningThread.IsAlive
-						Thread.Sleep(200)
+					While cleaningThread.Status = Tasks.TaskStatus.Running
+						autoresetevent.WaitOne(200)
 					End While
 				End If
 
@@ -573,8 +570,8 @@ Public Class frmMain
 
 					StartThread(config)
 
-					While cleaningThread.IsAlive
-						Thread.Sleep(200)
+					While cleaningThread.Status = Tasks.TaskStatus.Running
+						autoresetevent.WaitOne(200)
 					End While
 				End If
 
@@ -586,8 +583,8 @@ Public Class frmMain
 
 					StartThread(config)
 
-					While cleaningThread.IsAlive
-						Thread.Sleep(200)
+					While cleaningThread.Status = Tasks.TaskStatus.Running
+						autoresetevent.WaitOne(200)
 					End While
 				End If
 
@@ -599,8 +596,8 @@ Public Class frmMain
 
 					StartThread(config)
 
-					While cleaningThread.IsAlive
-						Thread.Sleep(200)
+					While cleaningThread.Status = Tasks.TaskStatus.Running
+						autoresetevent.WaitOne(200)
 					End While
 				End If
 
@@ -612,8 +609,8 @@ Public Class frmMain
 
 					StartThread(config)
 
-					While cleaningThread.IsAlive
-						Thread.Sleep(200)
+					While cleaningThread.Status = Tasks.TaskStatus.Running
+						autoresetevent.WaitOne(200)
 					End While
 				End If
 
@@ -668,17 +665,12 @@ Public Class frmMain
 			Application.Log.Add(logEntry)
 			'End If
 
-			If cleaningThread IsNot Nothing AndAlso cleaningThread.IsAlive Then
+			If cleaningThread IsNot Nothing AndAlso cleaningThread.Status = Tasks.TaskStatus.Running Then
 				Throw New ArgumentException("cleaningThread", "Thread already exists and is busy!")
 			End If
 
-			cleaningThread = New Thread(Sub() CleaningThread_Work(config)) With
-			  {
-			   .CurrentCulture = New Globalization.CultureInfo("en-US"),
-			   .CurrentUICulture = New Globalization.CultureInfo("en-US"),
-			   .Name = "CleaningThread",
-			   .IsBackground = True
-			  }
+			cleaningThread = New Tasks.Task(Sub() CleaningThread_Work(config))
+
 
 			cleaningThread.Start()
 
