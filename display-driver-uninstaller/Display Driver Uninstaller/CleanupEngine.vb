@@ -10,6 +10,7 @@ Imports System.Threading.Tasks
 
 Public Class CleanupEngine
 	Public Shared ReadOnly ListLock As Object = New Object()
+	Public Shared ReadOnly REGLOCK As Object = New Object()
 	Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 
 	'	Private win8higher As Boolean = frmMain.win8higher
@@ -20,36 +21,38 @@ Public Class CleanupEngine
 
 
 	Public Sub Deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String)
-		Dim fixregacls As Boolean = False
-		If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
-			Try
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(regkeypath, child, True)
-					'we do this simply to ensure that the permissions are set to open this registrykey.
-					'or else we will get an argument exception when trying to remove the key if permission are wrong.
-					If regkey IsNot Nothing Then
-						For Each childs As String In regkey.GetSubKeyNames
-							If IsNullOrWhitespace(childs) Then Continue For
-							Deletesubregkey(regkey, childs)
-						Next
-					End If
-				End Using
-				regkeypath.DeleteSubKeyTree(child)
-				Application.Log.AddMessage(regkeypath.ToString & "\" & child & " - " & UpdateTextMethodmessagefn(39))
-			Catch ex As UnauthorizedAccessException
-				Application.Log.AddWarningMessage("Failed to remove registry subkey " + child + " Will try to set ACLs permission and try again.")
-				fixregacls = True
-			End Try
-			'If exists, it means we need to modify it's ACls.
-			If fixregacls AndAlso (regkeypath IsNot Nothing) Then
-				ACL.Addregistrysecurity(regkeypath, child, RegistryRights.FullControl, AccessControlType.Allow)
+		SyncLock REGLOCK
+			Dim fixregacls As Boolean = False
+			If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
 				Try
+					Using regkey As RegistryKey = MyRegistry.OpenSubKey(regkeypath, child, True)
+						'we do this simply to ensure that the permissions are set to open this registrykey.
+						'or else we will get an argument exception when trying to remove the key if permission are wrong.
+						If regkey IsNot Nothing Then
+							For Each childs As String In regkey.GetSubKeyNames
+								If IsNullOrWhitespace(childs) Then Continue For
+								Deletesubregkey(regkey, childs)
+							Next
+						End If
+					End Using
 					regkeypath.DeleteSubKeyTree(child)
-				Catch ex As Exception
-					Application.Log.AddWarning(ex, " Failed or already removed with another Thread ? " & child)
+					Application.Log.AddMessage(regkeypath.ToString & "\" & child & " - " & UpdateTextMethodmessagefn(39))
+				Catch ex As UnauthorizedAccessException
+					Application.Log.AddWarningMessage("Failed to remove registry subkey " + child + " Will try to set ACLs permission and try again.")
+					fixregacls = True
 				End Try
-				Application.Log.AddMessage(child + " - " + UpdateTextMethodmessagefn(39))
+				'If exists, it means we need to modify it's ACls.
+				If fixregacls AndAlso (regkeypath IsNot Nothing) Then
+					ACL.Addregistrysecurity(regkeypath, child, RegistryRights.FullControl, AccessControlType.Allow)
+					Try
+						regkeypath.DeleteSubKeyTree(child)
+					Catch ex As Exception
+						Application.Log.AddWarning(ex, " Failed or already removed with another Thread ? " & child)
+					End Try
+					Application.Log.AddMessage(child + " - " + UpdateTextMethodmessagefn(39))
+				End If
 			End If
-		End If
+		End SyncLock
 	End Sub
 
 
