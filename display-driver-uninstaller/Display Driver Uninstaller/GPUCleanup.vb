@@ -5515,6 +5515,34 @@ Public Class GPUCleanup
 				End Try
 			End If
 
+
+			filePath = filepaths + "\AppData\Local\D3DSCache"
+			If winxp Then
+				filePath = filepaths + "\Local Settings\Application Data\D3DSCache"
+			End If
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							Delete(child)
+						End If
+					Next
+					If FileIO.CountDirectories(filePath) = 0 Then
+
+						Delete(filePath)
+
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				Catch ex As Exception
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+				End Try
+			End If
+
 		Next
 
 		filePath = Environment.GetFolderPath _
@@ -6728,6 +6756,33 @@ Public Class GPUCleanup
 								Delete(child)
 
 							End If
+						End If
+					Next
+					If FileIO.CountDirectories(filePath) = 0 Then
+
+						Delete(filePath)
+
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				Catch ex As Exception
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+				End Try
+			End If
+
+			filePath = filepaths + "\AppData\Local\D3DSCache"
+			If winxp Then
+				filePath = filepaths + "\Local Settings\Application Data\D3DSCache"
+			End If
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							Delete(child)
 						End If
 					Next
 					If FileIO.CountDirectories(filePath) = 0 Then
