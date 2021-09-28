@@ -64,6 +64,10 @@ Public Enum OSVersion As Int32
 	<ComponentModel.Description("6.4")>
 	Win10 = 64
 
+	''' <summary> [ 6.5 / 11.0 ] - Windows 10</summary>
+	<ComponentModel.Description("6.5")>
+	Win11 = 65
+
 End Enum
 
 Public Class AppSettings
@@ -84,6 +88,7 @@ Public Class AppSettings
 	Private m_winIs64 As DependencyProperty = RegDP("WinIs64", GetType(Boolean), GetType(AppSettings), False)
 	Private m_processKilled As DependencyProperty = RegDP("ProcessKilled", GetType(Boolean), GetType(AppSettings), False)
 	Private m_win10_1809 As DependencyProperty = RegDP("Win10_1809", GetType(Boolean), GetType(AppSettings), False)
+	Private m_win11 As DependencyProperty = RegDP("Win11", GetType(Boolean), GetType(AppSettings), False)
 
 	' Removals
 	Private m_remMonitors As DependencyProperty = RegDP("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
@@ -173,6 +178,15 @@ Public Class AppSettings
 		End Get
 		Set(value As Boolean)
 			SetValue(m_win10_1809, value)
+		End Set
+	End Property
+
+	Public Property Win11 As Boolean
+		Get
+			Return CBool(GetValue(m_win11))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_win11, value)
 		End Set
 	End Property
 
@@ -442,13 +456,16 @@ Public Class AppSettings
 							If Not IsNullOrWhitespace(regValue2) AndAlso regValue2 >= "17763" Then
 								Win10_1809 = True
 							End If
+							If Not IsNullOrWhitespace(regValue2) AndAlso regValue2 >= "22000" Then
+								Application.Settings.WinVersionText = "Windows 11"
+								Win11 = True
+							End If
 						End If
 					End If
 				End Using
 
 			Case OSVersion.Win10
 				Application.Settings.WinVersionText = "Windows 10"
-
 			Case Else
 				Application.Settings.WinVersionText = "Unsupported OS"
 				Application.Log.AddWarningMessage("Unsupported OS.")

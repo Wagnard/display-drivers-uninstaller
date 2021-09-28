@@ -567,13 +567,20 @@ Public Class GPUCleanup
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
 						If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
-							If d.LowerFilters IsNot Nothing AndAlso StrContainsAny(d.LowerFilters(0), True, "amdkmpfd") Then
-								Application.Log.AddMessage("Executing SetupAPI: update AMDKMPFD system device to Windows default started")
-								If win10 Then
-									SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\PCI.inf", True)
-								Else
-									SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\machine.inf", True)
-								End If
+							If d.LowerFilters IsNot Nothing AndAlso d.LowerFilters.Length > 0 Then
+								For Each LowerFilter In d.LowerFilters
+									If LowerFilter IsNot Nothing Then
+										If StrContainsAny(LowerFilter, True, "amdkmpfd") Then
+											Application.Log.AddMessage("Executing SetupAPI: update AMDKMPFD system device to Windows default started")
+											If win10 Then
+												SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\PCI.inf", True)
+											Else
+												SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\machine.inf", True)
+											End If
+											Exit For
+										End If
+									End If
+								Next
 							End If
 						End If
 					Next
@@ -589,14 +596,14 @@ Public Class GPUCleanup
 			UpdateTextMethod(UpdateTextTranslated(28))
 
 
-			'We now try to remove the service AMDPMPFD if its lowerfilter is not found
-			If config.Restart Or config.Shutdown Then
-				If Not Checkamdkmpfd() Then
-					UpdateTextMethod("Start - Check for AMDKMPFD service.")
-					CleanupEngine.Cleanserviceprocess({"amdkmpfd"}, config)
-					UpdateTextMethod("End - Check for AMDKMPFD service.")
-				End If
+			'We now try to remove the service AMDKMPFD if its lowerfilter is not found
+
+			If Not Checkamdkmpfd() Then
+				UpdateTextMethod("Start - Check for AMDKMPFD service.")
+				CleanupEngine.Cleanserviceprocess({"amdkmpfd"}, config)
+				UpdateTextMethod("End - Check for AMDKMPFD service.")
 			End If
+
 		End If
 
 
