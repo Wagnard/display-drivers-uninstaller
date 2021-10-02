@@ -1370,7 +1370,7 @@ Public Class CleanupEngine
 				For Each service As String In services
 					If IsNullOrWhitespace(service) Then Continue For
 					If (config.RemoveAudioBus = False OrElse frmMain.donotremoveamdhdaudiobusfiles) AndAlso StrContainsAny(service, True, "amdkmafd") Then Continue For
-					If config.RemoveAMDKMPFD = False AndAlso StrContainsAny(service, True, "amdkmpfd") Then Continue For
+					If (config.RemoveAMDKMPFD = False Or config.NotPresentAMDKMPFD = False) AndAlso StrContainsAny(service, True, "amdkmpfd") Then Continue For
 					Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
 						If regkey2 IsNot Nothing Then
 							If WindowsIdentity.GetCurrent().IsSystem Then

@@ -28,7 +28,6 @@ Public Class AppLaunchOptions
 	Public Property RemoveAMDDirs As Boolean = False
 	Public Property RemoveAudioBus As Boolean = False
 	Public Property RemoveAMDKMPFD As Boolean = False
-
 	Public Property RemoveNvidiaDirs As Boolean = False
 	Public Property RemovePhysX As Boolean = False
 	Public Property Remove3DTVPlay As Boolean = False

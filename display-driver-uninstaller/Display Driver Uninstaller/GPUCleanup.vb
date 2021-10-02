@@ -599,6 +599,7 @@ Public Class GPUCleanup
 			'We now try to remove the service AMDKMPFD if its lowerfilter is not found
 
 			If Not Checkamdkmpfd() Then
+				config.NotPresentAMDKMPFD = True
 				UpdateTextMethod("Start - Check for AMDKMPFD service.")
 				CleanupEngine.Cleanserviceprocess({"amdkmpfd"}, config)
 				UpdateTextMethod("End - Check for AMDKMPFD service.")
@@ -1118,7 +1119,7 @@ Public Class GPUCleanup
 
 		CleanupEngine.Pnplockdownfiles(driverfiles, config)   '// add each line as String Array.
 
-		If config.RemoveAMDKMPFD Then
+		If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD Then
 			CleanupEngine.Pnplockdownfiles(driverfilesKMPFD, config)
 		End If
 
@@ -1209,7 +1210,7 @@ Public Class GPUCleanup
 											For Each child As String In regkey.GetSubKeyNames()
 												If IsNullOrWhitespace(child) Then Continue For
 												If child.ToLower.Contains("legacy_amdkmdag") Or
-												 (child.ToLower.Contains("legacy_amdkmpfd") AndAlso config.RemoveAMDKMPFD) Or
+												 (child.ToLower.Contains("legacy_amdkmpfd") AndAlso config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD) Or
 												 child.ToLower.Contains("legacy_amdacpksd") Then
 
 													Try
@@ -1566,7 +1567,7 @@ Public Class GPUCleanup
 													If StrContainsAny(childf, True, "ati.ace", "cnext", "cim", "Performance Profile Client") Then
 														Delete(childf)
 													End If
-													If config.RemoveAMDKMPFD AndAlso StrContainsAny(childf, True, "amdkmpfd") Then
+													If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD AndAlso StrContainsAny(childf, True, "amdkmpfd") Then
 														Delete(childf)
 													End If
 												Next
@@ -1780,7 +1781,7 @@ Public Class GPUCleanup
 															Delete(childf)
 
 														End If
-														If config.RemoveAMDKMPFD AndAlso StrContainsAny(childf, True, "amdkmpfd") Then
+														If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD AndAlso StrContainsAny(childf, True, "amdkmpfd") Then
 
 															Delete(childf)
 
@@ -2333,7 +2334,7 @@ Public Class GPUCleanup
 
 		Threaddata1(Thread1Finished, driverfiles, config)
 
-		If config.RemoveAMDKMPFD Then
+		If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD Then
 			Threaddata1(Thread2Finished, driverfilesKMPFD, config)
 		Else
 			Thread2Finished = True
@@ -2891,7 +2892,7 @@ Public Class GPUCleanup
 						Delete(child)
 
 					End If
-					If config.RemoveAMDKMPFD AndAlso StrContainsAny(child, True, "amdkmpfd") Then
+					If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD AndAlso StrContainsAny(child, True, "amdkmpfd") Then
 
 						Delete(child)
 

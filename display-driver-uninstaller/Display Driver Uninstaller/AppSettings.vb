@@ -279,10 +279,9 @@ Public Class AppSettings
 			Return CBool(GetValue(m_remAMDKMPFD))
 		End Get
 		Set(value As Boolean)
-			SetValue(m_remAMDKMPFD, False)  'Temporary disabled until teted further.
+			SetValue(m_remAMDKMPFD, value)
 		End Set
 	End Property
-
 	Public Property RemoveNvidiaDirs As Boolean
 		Get
 			Return CBool(GetValue(m_remNvidiaDirs))
