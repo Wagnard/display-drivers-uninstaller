@@ -2308,12 +2308,10 @@ Public Class GPUCleanup
 	Private Sub Cleanamdfolders(ByVal config As ThreadSettings)
 		Dim filePath As String = Nothing
 		Dim removedxcache As Boolean = config.RemoveCrimsonCache
-		Dim Thread1Finished = False
-		Dim Thread2Finished = False
-		Dim Thread3Finished = False
 		Dim driverfiles = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")
 		Dim driverfilesKMPFD = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfilesKMPFD.cfg")
 		Dim driverfilesKMAFD = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfilesKMAFD.cfg")
+		Dim TaskList = New List(Of Tasks.Task)()
 
 		ImpersonateLoggedOnUser.Taketoken()
 		'Delete AMD data Folders
@@ -2332,18 +2330,20 @@ Public Class GPUCleanup
 		'Delete driver files
 		'delete OpenCL
 
-		Threaddata1(Thread1Finished, driverfiles, config)
+		Dim thread1 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfiles, config))
+
+		TaskList.Add(thread1)
+
+		Threaddata1(driverfiles, config)
 
 		If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD Then
-			Threaddata1(Thread2Finished, driverfilesKMPFD, config)
-		Else
-			Thread2Finished = True
+			Dim thread2 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfilesKMPFD, config))
+			TaskList.Add(thread2)
 		End If
 
 		If config.RemoveAudioBus AndAlso frmMain.donotremoveamdhdaudiobusfiles = False Then
-			Threaddata1(Thread3Finished, driverfilesKMAFD, config)
-		Else
-			Thread3Finished = True
+			Dim thread3 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfilesKMAFD, config))
+			TaskList.Add(thread3)
 		End If
 
 
@@ -2499,6 +2499,37 @@ Public Class GPUCleanup
 						Delete(files(i))
 					End If
 				Next
+			End If
+
+			filePath = System.Environment.SystemDirectory + "\amd"
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							If child.ToLower.Contains("acrdumps") Or
+							 (child.ToLower.Contains("amdkmpfd") AndAlso config.NotPresentAMDKMPFD) Or
+							 child.ToLower.Contains("mmddumps") Or
+							 child.ToLower.EndsWith("real") Or
+							 child.ToLower.Contains("amdkmafd") AndAlso config.RemoveAudioBus Then
+
+								Delete(child)
+
+							End If
+						End If
+					Next
+					If FileIO.CountDirectories(filePath) = 0 Then
+
+						Delete(filePath)
+
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				Catch ex As Exception
+				End Try
 			End If
 
 			filePath = Environment.GetFolderPath _
@@ -3015,9 +3046,7 @@ Public Class GPUCleanup
 			Next
 		End If
 
-		While Thread1Finished <> True Or Thread2Finished <> True Or Thread3Finished <> True
-			objAuto.WaitOne(500)
-		End While
+		Tasks.Task.WaitAll(TaskList.ToArray())
 
 		If WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.ReleaseToken()
@@ -5261,23 +5290,21 @@ Public Class GPUCleanup
 	Private Sub Cleannvidiafolders(ByVal config As ThreadSettings)
 		Dim filePath As String = Nothing
 		Dim removephysx As Boolean = config.RemovePhysX
-		Dim Thread1Finished = False
-		Dim Thread2Finished = False
 		Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")
 		Dim gfedriverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")
+		Dim TaskList = New List(Of Tasks.Task)()
 
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 		End If
 
-		Threaddata1(Thread1Finished, driverfiles, config)
+		Dim thread1 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfiles, config))
 
+		TaskList.Add(thread1)
 
 		If config.RemoveGFE Then
-			Threaddata1(Thread2Finished, gfedriverfiles, config)
-
-		Else
-			Thread2Finished = True
+			Dim thread2 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(gfedriverfiles, config))
+			TaskList.Add(thread2)
 		End If
 
 
@@ -6274,9 +6301,7 @@ Public Class GPUCleanup
 			Application.Log.AddException(ex)
 		End Try
 
-		While Thread1Finished <> True Or Thread2Finished <> True
-			objAuto.WaitOne(500)
-		End While
+		Tasks.Task.WaitAll(TaskList.ToArray())
 
 		If WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.ReleaseToken()
@@ -7246,13 +7271,12 @@ Public Class GPUCleanup
 		CleanupEngine.RemoveSharedDlls(filename)
 	End Sub
 
-	Private Sub Threaddata1(ByRef ThreadFinised As Boolean, ByVal driverfiles As String(), ByVal config As ThreadSettings)
+	Private Sub Threaddata1(ByVal driverfiles As String(), ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 		End If
 		CleanupEngine.Folderscleanup(driverfiles, config)
-		ThreadFinised = True
 	End Sub
 
 	Private Sub Deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
