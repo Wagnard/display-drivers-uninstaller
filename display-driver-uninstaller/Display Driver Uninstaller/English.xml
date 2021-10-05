@@ -311,8 +311,8 @@
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Important note for Windows 8/8.1/10 users:
-				Your Windows "PASSWORD" is required! (PIN is NOT working in Safe Mode)
+				Important note for Windows 8/8.1/10/11 users:
+				Your Windows "PASSWORD" *may* be required! (PIN is *may* NOT be working in Safe Mode)
 				Quit immediately if you lost or don't know it!
 			</Text>
 		</lblWinPasswordWarn>
