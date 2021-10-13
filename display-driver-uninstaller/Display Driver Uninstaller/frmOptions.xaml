@@ -55,7 +55,7 @@
                         <CheckBox x:Name="lblRem3DtvPlay" IsChecked="{Binding Remove3DTVPlay, Converter={StaticResource NulBoolToBool}}" Content="lblRem3DtvPlay" />
                         <CheckBox x:Name="lblRemGFE" IsChecked="{Binding RemoveGFE, Converter={StaticResource NulBoolToBool}}" Content="lblRemGFE" />
 						<CheckBox x:Name="lblRemNVCP" IsChecked="{Binding RemoveNVCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemNVCP" />
-                    </UniformGrid>
+					</UniformGrid>
                 </DockPanel>
 
                 <DockPanel Grid.Row="2" Margin="10,10,10,10" DockPanel.Dock="Top">
