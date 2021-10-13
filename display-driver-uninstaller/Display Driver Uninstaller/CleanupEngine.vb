@@ -1662,6 +1662,15 @@ Public Class CleanupEngine
 													End If
 												End Using
 
+												'specific to the NVIDIA Broadcast. Could apply to more in the future.
+												Try
+													Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}\Instance", True), child)
+												Catch exARG As ArgumentException
+													'Do nothing, can happen (Not found)
+												Catch ex As Exception
+													Application.Log.AddException(ex)
+												End Try
+
 												'here I remove the mediafoundationkeys if present
 												'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
 												Try
@@ -2005,6 +2014,15 @@ Public Class CleanupEngine
 															End If
 														End If
 													End Using
+
+													'specific to the NVIDIA Broadcast. Could apply to more in the future.
+													Try
+														Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}\Instance", True), child)
+													Catch exARG As ArgumentException
+														'Do nothing, can happen (Not found)
+													Catch ex As Exception
+														Application.Log.AddException(ex)
+													End Try
 
 													'here I remove the mediafoundationkeys if present
 													'f79eac7d-e545-4387-bdee-d647d7bde42a is the Encoder section. Same on all windows version.
