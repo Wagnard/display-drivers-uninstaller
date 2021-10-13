@@ -535,7 +535,7 @@ Public Class DebugWindow
 	End Property
 
 
-	Public lockPathList As Object = "SomeVeryHeavyLock"
+	Private lockPathList As Object = "SomeVeryHeavyLock"
 	Public Property PathList As New ObservableCollection(Of PathEntry)
 	Private pathThread As Thread = Nothing
 	Private cancelHandle As EventWaitHandle = New EventWaitHandle(False, EventResetMode.ManualReset)

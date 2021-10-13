@@ -6,7 +6,7 @@ Imports System.Text
 Public Class Languages
 	Private Shared ReadOnly sysNewLine As String = Environment.NewLine
 	Private Shared ReadOnly dateFormats As String() = New String() {"d/M/yyyy", "d.M.yyyy", "d-M-yyyy"}
-	Private Shared ReadOnly threadLock As String = "You shall not pass!" 'lock access for one thread at time
+	Private Shared threadLock As Object = New Object() 'lock access for one thread at time
 	Private Shared ReadOnly whiteSpaceChars As Char()
 	Public Const DefaultEngISO As String = "en-US"
 
@@ -43,7 +43,7 @@ Public Class Languages
 
 	''' <param name="langOption">Which language to load for use. Use 'Nothing' for defaul (English)</param>
 	Public Shared Sub Load(Optional ByVal langOption As LanguageOption = Nothing)
-		SyncLock (threadLock)
+		SyncLock threadLock
 			If langOption Is Nothing OrElse langOption.ISOLanguage.Equals(DefaultEngISO, StringComparison.OrdinalIgnoreCase) Then
 				If Not isEngLoaded Or englishDictionary Is Nothing Then
 					isEngLoaded = ReadFile(DefaultEngISO, False, englishDictionary)
@@ -73,7 +73,7 @@ Public Class Languages
 	''' <param name="type">Name of propery (Me.Text)</param>
 	''' <returns>Translated text. If language not found, return English text.</returns> 
 	Public Shared Function GetParentTranslation(ByVal parent As String, ByVal type As String, Optional ByVal forceEnglish As Boolean = False) As String
-		SyncLock (threadLock)
+		SyncLock threadLock
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
 			End If
@@ -119,7 +119,7 @@ notFound:
 	''' <param name="type">What attribute to return. Text, Tooltip etc.</param>
 	''' <returns>Translated text. If language not found, return English text</returns> 
 	Public Shared Function GetTranslation(ByVal parent As String, ByVal control As String, ByVal type As String, Optional ByVal forceEnglish As Boolean = False) As String
-		SyncLock (threadLock)
+		SyncLock threadLock
 			If IsNullOrWhitespace(parent) OrElse IsNullOrWhitespace(control) OrElse IsNullOrWhitespace(type) Then
 				Return Nothing
 			End If
@@ -167,7 +167,7 @@ notFound:
 	''' <param name="beginsWith">Begins with text. Useful for getting array of values (eg. ComboBox/ListBox)</param>
 	''' <returns>Translated text array. If language not found, return as English</returns> 
 	Public Shared Function GetTranslationList(ByVal parent As String, ByVal control As String, ByVal beginsWith As String, Optional ByVal forceEnglish As Boolean = False) As List(Of String)
-		SyncLock (threadLock)
+		SyncLock threadLock
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
 			End If
@@ -200,7 +200,7 @@ notFound:
 
 	''' <param name="window">Which window to translate (frmMain, frmLaunch etc)</param>
 	Public Shared Sub TranslateForm(ByVal window As Window, Optional ByVal translateTitle As Boolean = True)
-		SyncLock (threadLock)
+		SyncLock threadLock
 			If Not isEngLoaded And Not useTranslated Then
 				LoadDefault()
 			End If
@@ -224,7 +224,7 @@ notFound:
 	End Sub
 
 	Public Shared Function ScanFolderForLang(ByVal folder As String) As List(Of LanguageOption)
-		SyncLock (threadLock)
+		SyncLock threadLock
 			Dim tf As TranslatedFile = Nothing
 			Dim ValidLangFiles As New List(Of LanguageOption)(30)
 

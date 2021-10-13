@@ -9,8 +9,8 @@ Imports System.Security.Principal
 Imports System.Threading.Tasks
 
 Public Class CleanupEngine
-	Public Shared ReadOnly ListLock As Object = New Object()
-	Public Shared ReadOnly REGLOCK As Object = New Object()
+	Private Shared ListLock As Object = New Object()
+	Private Shared REGLOCK As Object = New Object()
 	Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 
 	'	Private win8higher As Boolean = frmMain.win8higher
@@ -2337,7 +2337,24 @@ Public Class CleanupEngine
 												Catch ex As Exception
 													Application.Log.AddException(ex)
 												End Try
+											Else
+												wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
+												If Not IsNullOrWhitespace(wantedvalue) Then
+													Try
+														Deletesubregkey(regkey, wantedvalue)
+													Catch exARG As ArgumentException
+														'Do nothing, can happen (Not found)
+													Catch ex As Exception
+														Application.Log.AddException(ex)
+													End Try
 
+													Try
+														Deletesubregkey(regkey, child)
+														Exit For
+													Catch ex As Exception
+														Application.Log.AddException(ex)
+													End Try
+												End If
 											End If
 										End If
 									End Using
@@ -2379,7 +2396,24 @@ Public Class CleanupEngine
 													Catch ex As Exception
 														Application.Log.AddException(ex)
 													End Try
+												Else
+													wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
+													If Not IsNullOrWhitespace(wantedvalue) Then
+														Try
+															Deletesubregkey(regkey, wantedvalue)
+														Catch exARG As ArgumentException
+															'Do nothing, can happen (Not found)
+														Catch ex As Exception
+															Application.Log.AddException(ex)
+														End Try
 
+														Try
+															Deletesubregkey(regkey, child)
+															Exit For
+														Catch ex As Exception
+															Application.Log.AddException(ex)
+														End Try
+													End If
 												End If
 											End If
 										End Using
