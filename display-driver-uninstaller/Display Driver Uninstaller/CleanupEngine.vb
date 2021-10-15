@@ -36,7 +36,28 @@ Public Class CleanupEngine
 						End If
 					End Using
 					regkeypath.DeleteSubKeyTree(child)
+
 					Application.Log.AddMessage(regkeypath.ToString & "\" & child & " - " & UpdateTextMethodmessagefn(39))
+
+					Select Case True
+						Case StrContainsAny(regkeypath.Name, True, "HKEY_LOCAL_MACHINE")
+							Dim path As String = StrReplace(regkeypath.Name, "HKEY_LOCAL_MACHINE", "").ToString()
+							Using PnpRegkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM" + path + "\" + child, True)
+								If PnpRegkey IsNot Nothing Then
+									Deletesubregkey(PnpRegkey, child)
+								End If
+							End Using
+
+						Case StrContainsAny(regkeypath.Name, True, "HKEY_CLASSES_ROOT")
+							Dim path As String = StrReplace(regkeypath.Name, "HKEY_CLASSES_ROOT", "").ToString()
+
+							Using PnpRegkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR" + path + "\" + child, True)
+								If PnpRegkey IsNot Nothing Then
+									Deletesubregkey(PnpRegkey, child)
+								End If
+							End Using
+
+					End Select
 				Catch ex As UnauthorizedAccessException
 					Application.Log.AddWarningMessage("Failed to remove registry subkey " + child + " Will try to set ACLs permission and try again.")
 					fixregacls = True

@@ -3672,45 +3672,43 @@ Public Class GPUCleanup
 																	Application.Log.AddException(ex)
 																End Try
 															End If
-															If StrContainsAny(wantedvalue, True, "video and display power management") Then
-																Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, childs, True)
-																	If subregkey2 IsNot Nothing Then
-																		For Each childinsubregkey2 As String In subregkey2.GetSubKeyNames()
-																			If IsNullOrWhitespace(childinsubregkey2) Then Continue For
-																			If StrContainsAny(childinsubregkey2, True, "89cc76a4-f226-4d4b-a040-6e9a1da9b882") Then
-																				'This is a key that is installed with the nvidia driver and have the same name on any computer.
-																				'There is no relatation that allow to detect it with any logic and thus I remove it directly.
-																				Try
-																					Deletesubregkey(subregkey2, childinsubregkey2)
-																					Continue For
-																				Catch ex As Exception
-																					Application.Log.AddException(ex)
-																				End Try
-																			End If
-																			Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey2, childinsubregkey2)
-																				If regkey3 IsNot Nothing Then
-																					For Each childinsubregkey2value As String In regkey3.GetValueNames()
-																						If IsNullOrWhitespace(childinsubregkey2value) Then Continue For
+															Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, childs, True)
+																If subregkey2 IsNot Nothing Then
+																	For Each childinsubregkey2 As String In subregkey2.GetSubKeyNames()
+																		If IsNullOrWhitespace(childinsubregkey2) Then Continue For
+																		If StrContainsAny(childinsubregkey2, True, "89cc76a4-f226-4d4b-a040-6e9a1da9b882") Then
+																			'This is a key that is installed with the nvidia driver and have the same name on any computer.
+																			'There is no relatation that allow to detect it with any logic and thus I remove it directly.
+																			Try
+																				Deletesubregkey(subregkey2, childinsubregkey2)
+																				Continue For
+																			Catch ex As Exception
+																				Application.Log.AddException(ex)
+																			End Try
+																		End If
+																		Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey2, childinsubregkey2)
+																			If regkey3 IsNot Nothing Then
+																				For Each childinsubregkey2value As String In regkey3.GetValueNames()
+																					If IsNullOrWhitespace(childinsubregkey2value) Then Continue For
 
-																						If childinsubregkey2value.ToString.ToLower.Contains("description") Then
-																							wantedvalue2 = regkey3.GetValue(childinsubregkey2value, String.Empty).ToString
-																							If IsNullOrWhitespace(wantedvalue2) Then Continue For
+																					If childinsubregkey2value.ToString.ToLower.Contains("description") Then
+																						wantedvalue2 = regkey3.GetValue(childinsubregkey2value, String.Empty).ToString
+																						If IsNullOrWhitespace(wantedvalue2) Then Continue For
 
-																							If wantedvalue2.ToString.ToLower.Contains("nvsvc") Then
-																								Try
-																									Deletesubregkey(subregkey2, childinsubregkey2)
-																								Catch ex As Exception
-																									Application.Log.AddException(ex)
-																								End Try
-																							End If
+																						If wantedvalue2.ToString.ToLower.Contains("nvsvc") Then
+																							Try
+																								Deletesubregkey(subregkey2, childinsubregkey2)
+																							Catch ex As Exception
+																								Application.Log.AddException(ex)
+																							End Try
 																						End If
-																					Next
-																				End If
-																			End Using
-																		Next
-																	End If
-																End Using
-															End If
+																					End If
+																				Next
+																			End If
+																		End Using
+																	Next
+																End If
+															End Using
 														End If
 													Next
 												End If
@@ -4368,7 +4366,10 @@ Public Class GPUCleanup
 
 						If StrContainsAny(child, True, "ageia technologies") Then
 							If removephysx Then
-								Deletesubregkey(regkey, child)
+								Try
+									Deletesubregkey(regkey, child)
+								Catch ex As Exception
+								End Try
 							End If
 						End If
 						If StrContainsAny(child, True, "nvidia corporation") Then
@@ -5682,6 +5683,20 @@ Public Class GPUCleanup
 			End If
 		Catch ex As Exception
 		End Try
+
+		filePath = Environment.GetFolderPath _
+		 (Environment.SpecialFolder.CommonApplicationData)
+		Try
+			For Each child As String In FileIO.GetFiles(filePath)
+				If IsNullOrWhitespace(child) = False Then
+					If StrContainsAny(child, True, "DisplaySessionContainer", "", "nvcdispcoreplugin", "NVDisplay.Container") Then
+						Delete(child)
+					End If
+				End If
+			Next
+		Catch ex As Exception
+		End Try
+
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\NVIDIA Corporation"
