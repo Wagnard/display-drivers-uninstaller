@@ -2897,12 +2897,16 @@ Public Class CleanupEngine
 			If StrContainsAny(oem.Provider, True, CurrentProvider) Then
 				'before removing the oem we try to get the original inf name (win8+)
 				If frmMain.win8higher Then
-					Try
-						catalog = MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName).GetValue("Active").ToString
-						catalog = catalog.Substring(0, catalog.IndexOf("inf_") + 3)
-					Catch ex As Exception
+					If MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName) IsNot Nothing Then
+						Try
+							catalog = MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName).GetValue("Active").ToString
+							catalog = catalog.Substring(0, catalog.IndexOf("inf_") + 3)
+						Catch ex As Exception
+							catalog = ""
+						End Try
+					Else
 						catalog = ""
-					End Try
+					End If
 				End If
 				If StrContainsAny(oem.Class, True, "display") Or StrContainsAny(oem.Class, True, "media") Or StrContainsAny(oem.Class, True, "extension") Or StrContainsAny(oem.Class, True, "softwarecomponent") Then
 					SetupAPI.RemoveInf(oem, True)

@@ -420,7 +420,7 @@ Public Class frmMain
 
 	Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
 		Try
-			If cleaningThread IsNot Nothing AndAlso cleaningThread.Status = Tasks.TaskStatus.Running Then
+			If cleaningThread IsNot Nothing AndAlso Not cleaningThread.IsCompleted Then
 				e.Cancel = True
 				Exit Sub
 			End If
@@ -556,9 +556,10 @@ Public Class frmMain
 
 					StartThread(config)
 
-					While cleaningThread.Status = Tasks.TaskStatus.Running
+					While Not cleaningThread.IsCompleted
 						autoresetevent.WaitOne(200)
 					End While
+					cleaningThread = Nothing
 				End If
 
 
@@ -570,9 +571,10 @@ Public Class frmMain
 
 					StartThread(config)
 
-					While cleaningThread.Status = Tasks.TaskStatus.Running
+					While Not cleaningThread.IsCompleted
 						autoresetevent.WaitOne(200)
 					End While
+					cleaningThread = Nothing
 				End If
 
 				If config.CleanIntel Then
@@ -583,9 +585,10 @@ Public Class frmMain
 
 					StartThread(config)
 
-					While cleaningThread.Status = Tasks.TaskStatus.Running
+					While Not cleaningThread.IsCompleted
 						autoresetevent.WaitOne(200)
 					End While
+					cleaningThread = Nothing
 				End If
 
 				If config.CleanRealtek Then
@@ -596,9 +599,10 @@ Public Class frmMain
 
 					StartThread(config)
 
-					While cleaningThread.Status = Tasks.TaskStatus.Running
+					While Not cleaningThread.IsCompleted
 						autoresetevent.WaitOne(200)
 					End While
+					cleaningThread = Nothing
 				End If
 
 				If config.CleanSoundBlaster Then
@@ -609,7 +613,7 @@ Public Class frmMain
 
 					StartThread(config)
 
-					While cleaningThread.Status = Tasks.TaskStatus.Running
+					While Not cleaningThread.IsCompleted
 						autoresetevent.WaitOne(200)
 					End While
 				End If
@@ -665,7 +669,7 @@ Public Class frmMain
 			Application.Log.Add(logEntry)
 			'End If
 
-			If cleaningThread IsNot Nothing AndAlso cleaningThread.Status = Tasks.TaskStatus.Running Then
+			If cleaningThread IsNot Nothing AndAlso Not cleaningThread.IsCompleted Then
 				Throw New ArgumentException("cleaningThread", "Thread already exists and is busy!")
 			End If
 
