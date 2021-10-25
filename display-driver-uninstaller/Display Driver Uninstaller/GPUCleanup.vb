@@ -737,11 +737,11 @@ Public Class GPUCleanup
 
 	Private Sub Cleanamd(ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
+		Dim TaskList = New List(Of Tasks.Task)()
 		Dim wantedvalue As String = Nothing
 		Dim wantedvalue2 As String = Nothing
 		Dim filePath As String = Nothing
 		Dim packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\packages.cfg")   '// add each line as String Array.
-		Dim Thread2Finished As Boolean = False
 		Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\classroot.cfg")
 		Dim reginterface As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\interface.cfg")
 		Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\clsidleftover.cfg")
@@ -961,8 +961,9 @@ Public Class GPUCleanup
 		Application.Log.AddMessage("AppID and clsidleftover cleanUP")
 		'old dcom 
 
-		CLSIDCleanThread(Thread2Finished, clsidleftover)
+		Dim thread1 As Tasks.Task = Tasks.Task.Run(Sub() CLSIDCleanThread(clsidleftover))
 
+		TaskList.Add(thread1)
 
 		Application.Log.AddMessage("Record CleanUP")
 
@@ -2305,9 +2306,8 @@ Public Class GPUCleanup
 
 		'Killing Explorer.exe to help releasing file that were open.
 
-		While Thread2Finished <> True
-			objAuto.WaitOne(500)
-		End While
+
+		Tasks.Task.WaitAll(TaskList.ToArray())
 
 		Application.Log.AddMessage("Killing Explorer.exe")
 		KillProcess("explorer")
@@ -3374,13 +3374,11 @@ Public Class GPUCleanup
 
 	Private Sub Cleannvidia(ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
+		Dim TaskList = New List(Of Tasks.Task)()
 		Dim wantedvalue As String = Nothing
 		Dim wantedvalue2 As String = Nothing
 		Dim removegfe As Boolean = config.RemoveGFE
 		Dim removephysx As Boolean = config.RemovePhysX
-
-		Dim Thread2Finished As Boolean = False
-		Dim Thread3Finished As Boolean = False
 		Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg")
 		Dim clsidleftoverGFE As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverGFE.cfg")
 		Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftover.cfg")
@@ -3426,15 +3424,15 @@ Public Class GPUCleanup
 
 		'for GFE removal only
 		If removegfe Then
-			CLSIDCleanThread(Thread2Finished, clsidleftoverGFE)
-
+			Dim thread1 As Tasks.Task = Tasks.Task.Run(Sub() CLSIDCleanThread(clsidleftoverGFE))
+			TaskList.Add(thread1)
 		Else
-			CLSIDCleanThread(Thread2Finished, clsidleftover)
-
+			Dim thread1 As Tasks.Task = Tasks.Task.Run(Sub() CLSIDCleanThread(clsidleftover))
+			TaskList.Add(thread1)
 		End If
 
-		InstallerCleanThread(Thread3Finished, packages, config)
-
+		Dim thread2 As Tasks.Task = Tasks.Task.Run(Sub() InstallerCleanThread(packages, config))
+		TaskList.Add(thread2)
 
 		'------------------------------
 		'Clean the rebootneeded message
@@ -3464,10 +3462,7 @@ Public Class GPUCleanup
 		'interface cleanup
 		'-----------------
 
-		While Thread2Finished <> True
-			objAuto.WaitOne(500)
-			Application.Log.AddMessage("Waiting for MainRegCleanThread")
-		End While
+		Tasks.Task.WaitAll(TaskList.ToArray())
 
 
 		If removegfe Then 'When removing GFE only
@@ -5286,11 +5281,6 @@ Public Class GPUCleanup
 		'                  SetServiceStartupType("Schedule", OldValue)
 		'              End If
 		'      End Select
-
-		While Thread2Finished <> True Or Thread3Finished <> True
-			objAuto.WaitOne(500)
-			Application.Log.AddMessage("Waiting for InstallerCleanThread")
-		End While
 
 		UpdateTextMethod("End of Registry Cleaning")
 
@@ -7330,26 +7320,20 @@ Public Class GPUCleanup
 		CleanupEngine.Deletevalue(value1, value2)
 	End Sub
 
-	Private Sub CLSIDCleanThread(ByRef ThreadFinished As Boolean, ByVal Clsidleftover As String())
+	Private Sub CLSIDCleanThread(ByVal Clsidleftover As String())
 		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 		End If
-
-		ThreadFinished = False
 		CleanupEngine.Clsidleftover(Clsidleftover)
-		ThreadFinished = True
 	End Sub
 
-	Private Sub InstallerCleanThread(ByRef ThreadFinised As Boolean, ByVal Packages As String(), config As ThreadSettings)
+	Private Sub InstallerCleanThread(ByVal Packages As String(), config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
 		End If
-
-		ThreadFinised = False
 		CleanupEngine.Installer(Packages, config)
-		ThreadFinised = True
 	End Sub
 
 	Private Sub ClassrootCleanThread(ByRef ThreadFinised As Boolean, ByVal Classroot As String(), config As ThreadSettings)
