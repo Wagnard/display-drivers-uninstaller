@@ -14,9 +14,6 @@ Public Class GPUCleanup
 	Dim win10_1809 As Boolean = frmMain.win10_1809
 	Dim win8higher As Boolean = frmMain.win8higher
 	Dim sysdrv As String = Application.Paths.SystemDrive
-	Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
-
-
 
 	Public Sub Start(ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
@@ -620,7 +617,6 @@ Public Class GPUCleanup
 
 		End If
 
-
 		If config.SelectedGPU = GPUVendor.AMD Then
 			Cleanamdserviceprocess(config)
 			Cleanamd(config)
@@ -686,6 +682,7 @@ Public Class GPUCleanup
 	Private Sub Cleanamdserviceprocess(ByVal config As ThreadSettings)
 		Dim CleanupEngine As New CleanupEngine
 		Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\services.cfg")
+		Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 
 		ImpersonateLoggedOnUser.Taketoken()
 
@@ -724,10 +721,7 @@ Public Class GPUCleanup
 		 "radeonsoftware")
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
 
-		While True
-			objAuto.WaitOne(10)
-			Exit While
-		End While
+		objAuto.WaitOne(10)
 
 		If WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.ReleaseToken()
@@ -3671,7 +3665,7 @@ Public Class GPUCleanup
 																If subregkey2 IsNot Nothing Then
 																	For Each childinsubregkey2 As String In subregkey2.GetSubKeyNames()
 																		If IsNullOrWhitespace(childinsubregkey2) Then Continue For
-																		If StrContainsAny(childinsubregkey2, True, "89cc76a4-f226-4d4b-a040-6e9a1da9b882") Then
+																		If StrContainsAny(childinsubregkey2, True, "89cc76a4-f226-4d4b-a040-6e9a1da9b882", "aded5e82-b909-4619-9949-f5d71dac0bcc") Then
 																			'This is a key that is installed with the nvidia driver and have the same name on any computer.
 																			'There is no relatation that allow to detect it with any logic and thus I remove it directly.
 																			Try
@@ -5219,6 +5213,22 @@ Public Class GPUCleanup
 				End Using
 			End If
 		End Using
+
+		Dim filePath As String = config.Paths.System32 + "Tasks"
+		If FileIO.ExistsDir(filePath) Then
+			If filePath IsNot Nothing Then
+				For Each child As String In FileIO.GetFiles(filePath)
+					If IsNullOrWhitespace(child) = False Then
+						If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NvBatteryBoostCheckOnLogon", "nvngx") AndAlso config.RemoveGFE Then
+
+							Delete(child)
+
+						End If
+					End If
+				Next
+			End If
+		End If
+
 
 		'      Dim OldValue As String = Nothing
 		'      Select Case System.Windows.Forms.SystemInformation.BootMode

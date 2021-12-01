@@ -15,7 +15,6 @@ Public Class FileIO
 	Private Shared ReadOnly INVALID_HANDLE As IntPtr = New IntPtr(-1)
 
 #End Region
-	Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 
 #Region "Enums"
 
@@ -401,6 +400,8 @@ Public Class FileIO
 	End Function
 
 	Private Sub DeleteInternal(ByVal fileName As String, ByVal fixedAcl As Boolean)
+		Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
+
 		If IsNullOrWhitespace(fileName) Then
 			Return
 		End If

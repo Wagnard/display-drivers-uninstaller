@@ -11,7 +11,6 @@ Imports System.Threading.Tasks
 Public Class CleanupEngine
 	Private Shared ListLock As Object = New Object()
 	Private Shared REGLOCK As Object = New Object()
-	Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 
 	'	Private win8higher As Boolean = frmMain.win8higher
 
@@ -1384,6 +1383,7 @@ Public Class CleanupEngine
 
 	Public Sub Cleanserviceprocess(ByVal services As String(), config As ThreadSettings)
 		Dim ServiceInstaller As New ServiceInstaller
+		Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 		ImpersonateLoggedOnUser.Taketoken()
 
 		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services", False)
@@ -2651,7 +2651,7 @@ Public Class CleanupEngine
 
 		'tasks.Add(Threading.Tasks.Task(Of Integer).Factory.StartNew(Sub() Threaddata1(Thread1Finished, Application.Paths.System32, driverfiles)))
 
-		Dim thread1 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(Application.Paths.System32, driverfiles))
+		Dim thread1 As Tasks.Task = Tasks.Task.Run(Sub() Threaddata1(Application.Paths.System32, driverfiles))
 
 		TaskList.Add(thread1)
 

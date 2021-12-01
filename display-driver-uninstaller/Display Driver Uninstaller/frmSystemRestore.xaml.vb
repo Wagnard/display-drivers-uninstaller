@@ -3,7 +3,6 @@ Imports Microsoft.Win32
 
 Public Class frmSystemRestore
 	Implements IDisposable
-	Dim objAuto As System.Threading.AutoResetEvent = New System.Threading.AutoResetEvent(False)
 	Private disposed As Boolean
     Private ReadOnly canClose2 As New EventWaitHandle(True, EventResetMode.ManualReset) ' Thread safe!
 
@@ -12,7 +11,7 @@ Public Class frmSystemRestore
 	End Sub
 
 	Private Sub CreateSystemRestore()
-
+		Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 		canClose2.Reset()
 
 		Try
