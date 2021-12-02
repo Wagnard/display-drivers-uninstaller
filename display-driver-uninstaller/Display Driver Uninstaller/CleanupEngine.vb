@@ -235,7 +235,9 @@ Public Class CleanupEngine
 							End While
 
 							If WasRemoved Then
-
+								If Not WindowsIdentity.GetCurrent().IsSystem Then
+									ImpersonateLoggedOnUser.Taketoken()
+								End If
 								'Win 10 (1809)
 								Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
 									If regkey IsNot Nothing Then
@@ -271,6 +273,23 @@ Public Class CleanupEngine
 										End If
 									End Using
 								Next
+								Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\AppModel\StateRepository\Cache\ApplicationUser\Index\UserAndApplicationUserModelId", True)
+									If regkey IsNot Nothing Then
+										For Each child As String In regkey.GetSubKeyNames
+											If IsNullOrWhitespace(child) Then Continue For
+											If StrContainsAny(child, True, package.Id.FamilyName) Then
+												Try
+													Deletesubregkey(regkey, child)
+												Catch ex As Exception
+													Application.Log.AddException(ex)
+												End Try
+											End If
+										Next
+									End If
+								End Using
+								If WindowsIdentity.GetCurrent().IsSystem Then
+									ImpersonateLoggedOnUser.ReleaseToken()
+								End If
 							End If
 						End If
 					End If
@@ -551,7 +570,6 @@ Public Class CleanupEngine
 								If StrContainsAny(croot, True, "GeforceExperience") AndAlso Not config.RemoveGFE Then
 									'do nothing
 								Else
-
 									If child.ToLower.StartsWith(croot.ToLower, StringComparison.OrdinalIgnoreCase) Then
 										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, child & "\CLSID")
 											If regkey2 IsNot Nothing Then

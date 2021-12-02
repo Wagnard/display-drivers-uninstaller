@@ -147,476 +147,478 @@ Public Class GPUCleanup
 
 		End Select
 
-		'------------------------------------------------------------------------------------
-		' Removing the Audio associated with the GPU + AudioEndpoint+SoftwareComponent(DCH)--
-		'------------------------------------------------------------------------------------
-		Try
-			UpdateTextMethod(UpdateTextTranslated(24))
-			Application.Log.AddMessage("Executing SetupAPI: Remove Audio controler associated to the GPU(s).")
-			Dim AudioDevices As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False, True)
-			If AudioDevices.Count > 0 Then
-				For Each AudioDevice As SetupAPI.Device In AudioDevices
-					If AudioDevice IsNot Nothing Then
-						'Removing Audio endpoints
+		If (Not Application.LaunchOptions.NoSetupAPI) Then
 
-						Dim Audioendpoints As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False, True)
-						If Audioendpoints.Count > 0 Then
-							For Each Audioendpoint As SetupAPI.Device In Audioendpoints
-								If Audioendpoint IsNot Nothing Then
-									For Each Parent As SetupAPI.Device In Audioendpoint.ParentDevices
-										If Parent IsNot Nothing Then
-											If StrContainsAny(Parent.DeviceID, True, AudioDevice.DeviceID) Then
-												SetupAPI.UninstallDevice(Audioendpoint) 'Removing the audioenpoint associated with the device we are trying to remove.
-											End If
-										End If
-									Next
-								End If
-							Next
-							Audioendpoints.Clear()
-						End If
+			'------------------------------------------------------------------------------------
+			' Removing the Audio associated with the GPU + AudioEndpoint+SoftwareComponent(DCH)--
+			'------------------------------------------------------------------------------------
+			Try
+				UpdateTextMethod(UpdateTextTranslated(24))
+				Application.Log.AddMessage("Executing SetupAPI: Remove Audio controler associated to the GPU(s).")
+				Dim AudioDevices As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False, True)
+				If AudioDevices.Count > 0 Then
+					For Each AudioDevice As SetupAPI.Device In AudioDevices
+						If AudioDevice IsNot Nothing Then
+							'Removing Audio endpoints
 
-
-						'Removing Software components (DCH stuff, win10+)
-						If win10 Then
-							Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent.")
-							Dim SoftwareComponents As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
-							If SoftwareComponents.Count > 0 Then
-								For Each SoftwareComponent As SetupAPI.Device In SoftwareComponents
-									If SoftwareComponent IsNot Nothing Then
-										For Each Parent As SetupAPI.Device In SoftwareComponent.ParentDevices
+							Dim Audioendpoints As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False, True)
+							If Audioendpoints.Count > 0 Then
+								For Each Audioendpoint As SetupAPI.Device In Audioendpoints
+									If Audioendpoint IsNot Nothing Then
+										For Each Parent As SetupAPI.Device In Audioendpoint.ParentDevices
 											If Parent IsNot Nothing Then
 												If StrContainsAny(Parent.DeviceID, True, AudioDevice.DeviceID) Then
-													SetupAPI.UninstallDevice(SoftwareComponent)
+													SetupAPI.UninstallDevice(Audioendpoint) 'Removing the audioenpoint associated with the device we are trying to remove.
 												End If
 											End If
 										Next
 									End If
 								Next
-								SoftwareComponents.Clear()
+								Audioendpoints.Clear()
 							End If
-							Application.Log.AddMessage("SetupAPI: Remove SoftwareComponent Complete.")
-						End If
-
-						SetupAPI.UninstallDevice(AudioDevice) 'Removing the audio card
-
-						If config.RemoveAudioBus Then
-							For Each Parent As SetupAPI.Device In AudioDevice.ParentDevices
-								If Parent IsNot Nothing Then 'TODO : Parent.ChildDevices.Length < 1
-									Dim audiobusList As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Parent.DeviceID, False, True, True)
-									If audiobusList.Count > 0 Then
-										For Each audiobus As SetupAPI.Device In audiobusList
-											If audiobus IsNot Nothing AndAlso (audiobus.ChildDevices Is Nothing OrElse audiobus.ChildDevices.Length < 2) Then
-												SetupAPI.UninstallDevice(audiobus) 'Removing the Audio bus.
-											End If
-										Next
-									End If
-								End If
-							Next
-						End If
-					End If
-				Next
-
-				AudioDevices.Clear()
-			End If
-			UpdateTextMethod(UpdateTextTranslated(25))
-			Application.Log.AddMessage("SetupAPI: Remove Audio controler Complete.")
-		Catch ex As Exception
-			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-			Application.Log.AddException(ex)
-		End Try
 
 
-
-		ImpersonateLoggedOnUser.Taketoken()
-		'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
-		Try
-			frmMain.donotremoveamdhdaudiobusfiles = False
-			Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
-				If subregkey IsNot Nothing Then
-					For Each child2 As String In subregkey.GetSubKeyNames()
-						If IsNullOrWhitespace(child2) Then Continue For
-
-						If StrContainsAny(child2, True, "ven_1002") Then
-							Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey, child2)
-								If regkey3 IsNot Nothing Then
-									For Each child3 As String In regkey3.GetSubKeyNames()
-										If IsNullOrWhitespace(child3) Then Continue For
-										'need to test more this code. got an error on a friend computer (Wagnard)(Possibly fixed with the trycast)
-										Array = TryCast(MyRegistry.OpenSubKey(regkey3, child3).GetValue("LowerFilters"), String())
-										If (Array IsNot Nothing) AndAlso Array.Length > 0 Then
-											For Each entry As String In Array
-												If IsNullOrWhitespace(entry) Then Continue For
-
-												If StrContainsAny(entry, True, "amdkmafd") Then
-													Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
-													frmMain.donotremoveamdhdaudiobusfiles = True
+							'Removing Software components (DCH stuff, win10+)
+							If win10 Then
+								Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent.")
+								Dim SoftwareComponents As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
+								If SoftwareComponents.Count > 0 Then
+									For Each SoftwareComponent As SetupAPI.Device In SoftwareComponents
+										If SoftwareComponent IsNot Nothing Then
+											For Each Parent As SetupAPI.Device In SoftwareComponent.ParentDevices
+												If Parent IsNot Nothing Then
+													If StrContainsAny(Parent.DeviceID, True, AudioDevice.DeviceID) Then
+														SetupAPI.UninstallDevice(SoftwareComponent)
+													End If
 												End If
 											Next
 										End If
 									Next
+									SoftwareComponents.Clear()
 								End If
-							End Using
-						End If
-					Next
-				End If
-			End Using
-		Catch ex As Exception
-			Application.Log.AddException(ex)
-			frmMain.donotremoveamdhdaudiobusfiles = True  ' A security if the code to check fail.
-		End Try
-
-		If WindowsIdentity.GetCurrent().IsSystem Then
-			ImpersonateLoggedOnUser.ReleaseToken()
-		End If
-
-		If config.SelectedGPU = GPUVendor.Nvidia Then
-			'nVidia AudioEndpoints Removal
-			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False)
-			If found.Count > 0 Then
-				For Each d As SetupAPI.Device In found
-					If d IsNot Nothing Then
-						If StrContainsAny(d.FriendlyName, True, "nvidia virtual audio device", "nvidia high definition audio") Then
-							SetupAPI.UninstallDevice(d)
-						End If
-					End If
-				Next
-				found.Clear()
-			End If
-		End If
-
-		If config.SelectedGPU = GPUVendor.AMD Then
-			' ------------------------------
-			' Removing some of AMD AudioEndpoints
-			' ------------------------------
-			Application.Log.AddMessage("Removing AMD Audio Endpoints")
-			Try
-				'AMD AudioEndpoints Removal
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint")
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						If StrContainsAny(d.FriendlyName, True, "amd high definition audio device", "digital audio (hdmi) (high definition audio device)") Then
-							SetupAPI.UninstallDevice(d)
-						End If
-					Next
-					found.Clear()
-				End If
-			Catch ex As Exception
-				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
-				Application.Log.AddException(ex)
-			End Try
-
-			' -----------------------------------
-			' Removing AMD Streaming Audio Device 
-			' -----------------------------------
-			Application.Log.AddMessage("Removing AMD Streaming Audio Device")
-			Try
-				'AMD AudioEndpoints Removal
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media")
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						If d IsNot Nothing Then
-							If StrContainsAny(d.HardwareIDs(0), True, "ROOT\AMDSAFD") Then
-								SetupAPI.UninstallDevice(d)
+								Application.Log.AddMessage("SetupAPI: Remove SoftwareComponent Complete.")
 							End If
-						End If
-					Next
-					found.Clear()
-				End If
-			Catch ex As Exception
-				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
-				Application.Log.AddException(ex)
-			End Try
 
+							SetupAPI.UninstallDevice(AudioDevice) 'Removing the audio card
 
-		End If
-
-		'-----------------------
-		'Removing NVVHCI
-		'-----------------------
-		If config.SelectedGPU = GPUVendor.Nvidia AndAlso config.RemoveGFE Then
-			Try
-				Application.Log.AddMessage("Executing SetupAPI: Remove NVVHCI.")
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
-				If found.Count > 0 Then
-
-					For Each d As SetupAPI.Device In found
-						If d IsNot Nothing Then
-							If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVVHCI") Then
-								SetupAPI.UninstallDevice(d)
-							End If
-						End If
-					Next
-
-					found.Clear()
-				End If
-				Application.Log.AddMessage("SetupAPI: Remove NVVHCI Complete.")
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			End Try
-		End If
-
-		' ----------------------
-		' Removing the videocard
-		' ----------------------
-
-		Try
-			Application.Log.AddMessage("Executing SetupAPI: Remove GPU(s).")
-			Dim GPUs As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False, False, False)
-			If GPUs.Count > 0 Then
-				For Each GPU As SetupAPI.Device In GPUs
-					If GPU IsNot Nothing Then
-						If win10 Then
-							Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent.")
-							Dim SoftwareComponents As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
-							If SoftwareComponents.Count > 0 Then
-								For Each SoftwareComponent As SetupAPI.Device In SoftwareComponents
-									If SoftwareComponent.ParentDevices IsNot Nothing AndAlso SoftwareComponent.ParentDevices.Length > 0 Then
-										For Each ParentDevice As SetupAPI.Device In SoftwareComponent.ParentDevices
-											If ParentDevice IsNot Nothing Then
-												If StrContainsAny(ParentDevice.DeviceID, True, GPU.DeviceID) Then
-													SetupAPI.UninstallDevice(SoftwareComponent)
+							If config.RemoveAudioBus Then
+								For Each Parent As SetupAPI.Device In AudioDevice.ParentDevices
+									If Parent IsNot Nothing Then 'TODO : Parent.ChildDevices.Length < 1
+										Dim audiobusList As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Parent.DeviceID, False, True, True)
+										If audiobusList.Count > 0 Then
+											For Each audiobus As SetupAPI.Device In audiobusList
+												If audiobus IsNot Nothing AndAlso (audiobus.ChildDevices Is Nothing OrElse audiobus.ChildDevices.Length < 2) Then
+													SetupAPI.UninstallDevice(audiobus) 'Removing the Audio bus.
 												End If
+											Next
+										End If
+									End If
+								Next
+							End If
+						End If
+					Next
+
+					AudioDevices.Clear()
+				End If
+				UpdateTextMethod(UpdateTextTranslated(25))
+				Application.Log.AddMessage("SetupAPI: Remove Audio controler Complete.")
+			Catch ex As Exception
+				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+				Application.Log.AddException(ex)
+			End Try
+
+
+
+			ImpersonateLoggedOnUser.Taketoken()
+			'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
+			Try
+				frmMain.donotremoveamdhdaudiobusfiles = False
+				Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
+					If subregkey IsNot Nothing Then
+						For Each child2 As String In subregkey.GetSubKeyNames()
+							If IsNullOrWhitespace(child2) Then Continue For
+
+							If StrContainsAny(child2, True, "ven_1002") Then
+								Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(subregkey, child2)
+									If regkey3 IsNot Nothing Then
+										For Each child3 As String In regkey3.GetSubKeyNames()
+											If IsNullOrWhitespace(child3) Then Continue For
+											'need to test more this code. got an error on a friend computer (Wagnard)(Possibly fixed with the trycast)
+											Array = TryCast(MyRegistry.OpenSubKey(regkey3, child3).GetValue("LowerFilters"), String())
+											If (Array IsNot Nothing) AndAlso Array.Length > 0 Then
+												For Each entry As String In Array
+													If IsNullOrWhitespace(entry) Then Continue For
+
+													If StrContainsAny(entry, True, "amdkmafd") Then
+														Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
+														frmMain.donotremoveamdhdaudiobusfiles = True
+													End If
+												Next
 											End If
 										Next
 									End If
-								Next
-
-								SoftwareComponents.Clear()
+								End Using
 							End If
-
-							'Removing Software components (DCH stuff, win10+) (no parents, because old device is removed. SafeMode behavior)
-							Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
-							If found.Count > 0 Then
-								For Each d As SetupAPI.Device In found
-									If d IsNot Nothing Then
-										If StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
-											SetupAPI.UninstallDevice(d)
-										End If
-									End If
-								Next
-								found.Clear()
-							End If
-
-							Application.Log.AddMessage("SetupAPI: Remove SoftwareComponent Complete.")
-						End If
-						'	SetupAPI.EnableDevice(GPU, False)
-						SetupAPI.UninstallDevice(GPU) 'Then we remove the GPU itself.
+						Next
 					End If
-				Next
-				GPUs.Clear()
-			End If
-			UpdateTextMethod(UpdateTextTranslated(23))
-			Application.Log.AddMessage("SetupAPI: Remove GPU(s) Complete.")
-		Catch ex As Exception
-			'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-			Application.Log.AddException(ex)
-			config.GPURemovedSuccess = False
-			Exit Sub
-		End Try
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+				frmMain.donotremoveamdhdaudiobusfiles = True  ' A security if the code to check fail.
+			End Try
 
-		'Here I remove 3dVision USB Adapter and USB type C(RTX).
-		If config.SelectedGPU = GPUVendor.Nvidia Then
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
+
+			If config.SelectedGPU = GPUVendor.Nvidia Then
+				'nVidia AudioEndpoints Removal
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False)
+				If found.Count > 0 Then
+					For Each d As SetupAPI.Device In found
+						If d IsNot Nothing Then
+							If StrContainsAny(d.FriendlyName, True, "nvidia virtual audio device", "nvidia high definition audio") Then
+								SetupAPI.UninstallDevice(d)
+							End If
+						End If
+					Next
+					found.Clear()
+				End If
+			End If
+
+			If config.SelectedGPU = GPUVendor.AMD Then
+				' ------------------------------
+				' Removing some of AMD AudioEndpoints
+				' ------------------------------
+				Application.Log.AddMessage("Removing AMD Audio Endpoints")
+				Try
+					'AMD AudioEndpoints Removal
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint")
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If StrContainsAny(d.FriendlyName, True, "amd high definition audio device", "digital audio (hdmi) (high definition audio device)") Then
+								SetupAPI.UninstallDevice(d)
+							End If
+						Next
+						found.Clear()
+					End If
+				Catch ex As Exception
+					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+					Application.Log.AddException(ex)
+				End Try
+
+				' -----------------------------------
+				' Removing AMD Streaming Audio Device 
+				' -----------------------------------
+				Application.Log.AddMessage("Removing AMD Streaming Audio Device")
+				Try
+					'AMD AudioEndpoints Removal
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media")
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If d IsNot Nothing Then
+								If StrContainsAny(d.HardwareIDs(0), True, "ROOT\AMDSAFD") Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							End If
+						Next
+						found.Clear()
+					End If
+				Catch ex As Exception
+					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+					Application.Log.AddException(ex)
+				End Try
+
+
+			End If
+
+			'-----------------------
+			'Removing NVVHCI
+			'-----------------------
+			If config.SelectedGPU = GPUVendor.Nvidia AndAlso config.RemoveGFE Then
+				Try
+					Application.Log.AddMessage("Executing SetupAPI: Remove NVVHCI.")
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
+					If found.Count > 0 Then
+
+						For Each d As SetupAPI.Device In found
+							If d IsNot Nothing Then
+								If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVVHCI") Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							End If
+						Next
+
+						found.Clear()
+					End If
+					Application.Log.AddMessage("SetupAPI: Remove NVVHCI Complete.")
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
+			End If
+
+			' ----------------------
+			' Removing the videocard
+			' ----------------------
 
 			Try
-				Dim HWID3dvision As String() =
-				 {"USB\VID_0955&PID_0007",
-				  "USB\VID_0955&PID_7001",
-				  "USB\VID_0955&PID_7002",
-				  "USB\VID_0955&PID_7003",
-				  "USB\VID_0955&PID_7004",
-				  "USB\VID_0955&PID_7008",
-				  "USB\VID_0955&PID_7009",
-				  "USB\VID_0955&PID_700A",
-				  "USB\VID_0955&PID_700C",
-				  "USB\VID_0955&PID_700D&MI_00",
-				  "USB\VID_0955&PID_700E&MI_00"}
-				Dim USBTypeC As String() =
-					{"PCI\VEN_10DE&DEV_1AD7",
-					"PCI\VEN_10DE&DEV_1AD9",
-					"PCI\VEN_10DE&DEV_1ADB",
-					"PCI\VEN_10DE&DEV_1AED"}
+				Application.Log.AddMessage("Executing SetupAPI: Remove GPU(s).")
+				Dim GPUs As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False, False, False)
+				If GPUs.Count > 0 Then
+					For Each GPU As SetupAPI.Device In GPUs
+						If GPU IsNot Nothing Then
+							If win10 Then
+								Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent.")
+								Dim SoftwareComponents As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
+								If SoftwareComponents.Count > 0 Then
+									For Each SoftwareComponent As SetupAPI.Device In SoftwareComponents
+										If SoftwareComponent.ParentDevices IsNot Nothing AndAlso SoftwareComponent.ParentDevices.Length > 0 Then
+											For Each ParentDevice As SetupAPI.Device In SoftwareComponent.ParentDevices
+												If ParentDevice IsNot Nothing Then
+													If StrContainsAny(ParentDevice.DeviceID, True, GPU.DeviceID) Then
+														SetupAPI.UninstallDevice(SoftwareComponent)
+													End If
+												End If
+											Next
+										End If
+									Next
 
-				'3dVision Removal
-				Application.Log.AddMessage("Executing SetupAPI: Remove 3dVision USB Adapter.")
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", Nothing, False)
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						If d IsNot Nothing Then
-							If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
-								SetupAPI.UninstallDevice(d)
+									SoftwareComponents.Clear()
+								End If
+
+								'Removing Software components (DCH stuff, win10+) (no parents, because old device is removed. SafeMode behavior)
+								Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
+								If found.Count > 0 Then
+									For Each d As SetupAPI.Device In found
+										If d IsNot Nothing Then
+											If StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
+												SetupAPI.UninstallDevice(d)
+											End If
+										End If
+									Next
+									found.Clear()
+								End If
+
+								Application.Log.AddMessage("SetupAPI: Remove SoftwareComponent Complete.")
 							End If
+							'	SetupAPI.EnableDevice(GPU, False)
+							SetupAPI.UninstallDevice(GPU) 'Then we remove the GPU itself.
 						End If
 					Next
-					found.Clear()
+					GPUs.Clear()
 				End If
-				Application.Log.AddMessage("SetupAPI: Remove 3dVision USB Adapter Complete.")
+				UpdateTextMethod(UpdateTextTranslated(23))
+				Application.Log.AddMessage("SetupAPI: Remove GPU(s) Complete.")
+			Catch ex As Exception
+				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+				Application.Log.AddException(ex)
+				config.GPURemovedSuccess = False
+				Exit Sub
+			End Try
 
-				'USB Type C Removal
-				Application.Log.AddMessage("Executing SetupAPI: Remove USB type C(RTX).")
-				found = SetupAPI.GetDevices("usb", Nothing, False)
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						If d IsNot Nothing Then
-							If StrContainsAny(d.HardwareIDs(0), True, USBTypeC) Then
+			'Here I remove 3dVision USB Adapter and USB type C(RTX).
+			If config.SelectedGPU = GPUVendor.Nvidia Then
+
+				Try
+					Dim HWID3dvision As String() =
+					 {"USB\VID_0955&PID_0007",
+					  "USB\VID_0955&PID_7001",
+					  "USB\VID_0955&PID_7002",
+					  "USB\VID_0955&PID_7003",
+					  "USB\VID_0955&PID_7004",
+					  "USB\VID_0955&PID_7008",
+					  "USB\VID_0955&PID_7009",
+					  "USB\VID_0955&PID_700A",
+					  "USB\VID_0955&PID_700C",
+					  "USB\VID_0955&PID_700D&MI_00",
+					  "USB\VID_0955&PID_700E&MI_00"}
+					Dim USBTypeC As String() =
+						{"PCI\VEN_10DE&DEV_1AD7",
+						"PCI\VEN_10DE&DEV_1AD9",
+						"PCI\VEN_10DE&DEV_1ADB",
+						"PCI\VEN_10DE&DEV_1AED"}
+
+					'3dVision Removal
+					Application.Log.AddMessage("Executing SetupAPI: Remove 3dVision USB Adapter.")
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", Nothing, False)
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If d IsNot Nothing Then
+								If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							End If
+						Next
+						found.Clear()
+					End If
+					Application.Log.AddMessage("SetupAPI: Remove 3dVision USB Adapter Complete.")
+
+					'USB Type C Removal
+					Application.Log.AddMessage("Executing SetupAPI: Remove USB type C(RTX).")
+					found = SetupAPI.GetDevices("usb", Nothing, False)
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If d IsNot Nothing Then
+								If StrContainsAny(d.HardwareIDs(0), True, USBTypeC) Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							End If
+						Next
+						found.Clear()
+					End If
+					Application.Log.AddMessage("SetupAPI: Remove USB type C(RTX) Complete.")
+
+					'NVIDIA SHIELD Wireless Controller Trackpad
+					Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA SHIELD Wireless Controller Trackpad.")
+					found = SetupAPI.GetDevices("mouse", Nothing, False)
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If d IsNot Nothing Then
+								If StrContainsAny(d.HardwareIDs(0), True, "hid\vid_0955&pid_7210") Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							End If
+						Next
+						found.Clear()
+					End If
+					Application.Log.AddMessage("SetupAPI: Remove NVIDIA SHIELD Wireless Controller Trackpad Complete.")
+
+					' NVIDIA Broadcast(Wave Extensible) (WDM) Removal
+					Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Broadcast Audio Device (Wave Extensible) (WDM).")
+					found = SetupAPI.GetDevices("media", Nothing, False)
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0956&PID_9001") Then
 								SetupAPI.UninstallDevice(d)
 							End If
-						End If
-					Next
-					found.Clear()
-				End If
-				Application.Log.AddMessage("SetupAPI: Remove USB type C(RTX) Complete.")
+						Next
+						found.Clear()
+					End If
+					Application.Log.AddMessage("SetupAPI: Remove NVIDIA Broadcast Audio Device (Wave Extensible) (WDM) Complete .")
 
-				'NVIDIA SHIELD Wireless Controller Trackpad
-				Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA SHIELD Wireless Controller Trackpad.")
-				found = SetupAPI.GetDevices("mouse", Nothing, False)
+					If config.RemoveGFE Then
+						' NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removal
+						Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM).")
+						found = SetupAPI.GetDevices("media", Nothing, False)
+						If found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0955&PID_9000") Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							Next
+							found.Clear()
+						End If
+						Application.Log.AddMessage("SetupAPI: Remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Complete .")
+
+						' NVIDIA NvModuleTracker Device Removal
+						Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA NvModuleTracker Device.")
+						found = SetupAPI.GetDevices("NvModuleTracker", Nothing, False)
+						If found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVMODULETRACKER") Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							Next
+							found.Clear()
+						End If
+						Application.Log.AddMessage("SetupAPI: Remove NVIDIA NvModuleTracker Device Complete .")
+					End If
+
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+				End Try
+			End If
+
+			If config.SelectedGPU = GPUVendor.Intel Then
+
+				'Removing Intel WIdI bus Enumerator
+				Application.Log.AddMessage("Executing SetupAPI: Remove Intel WIdI bus Enumerator.")
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
-						If d IsNot Nothing Then
-							If StrContainsAny(d.HardwareIDs(0), True, "hid\vid_0955&pid_7210") Then
-								SetupAPI.UninstallDevice(d)
-							End If
-						End If
-					Next
-					found.Clear()
-				End If
-				Application.Log.AddMessage("SetupAPI: Remove NVIDIA SHIELD Wireless Controller Trackpad Complete.")
-
-				' NVIDIA Broadcast(Wave Extensible) (WDM) Removal
-				Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Broadcast Audio Device (Wave Extensible) (WDM).")
-				found = SetupAPI.GetDevices("media", Nothing, False)
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0956&PID_9001") Then
+						If d.HasHardwareID AndAlso StrContainsAny(d.HardwareIDs(0), True, "root\iwdbus") Then  'Workaround for a bug report we got.
 							SetupAPI.UninstallDevice(d)
 						End If
 					Next
 					found.Clear()
 				End If
-				Application.Log.AddMessage("SetupAPI: Remove NVIDIA Broadcast Audio Device (Wave Extensible) (WDM) Complete .")
-
-				If config.RemoveGFE Then
-					' NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removal
-					Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM).")
-					found = SetupAPI.GetDevices("media", Nothing, False)
-					If found.Count > 0 Then
-						For Each d As SetupAPI.Device In found
-							If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0955&PID_9000") Then
-								SetupAPI.UninstallDevice(d)
-							End If
-						Next
-						found.Clear()
-					End If
-					Application.Log.AddMessage("SetupAPI: Remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Complete .")
-
-					' NVIDIA NvModuleTracker Device Removal
-					Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA NvModuleTracker Device.")
-					found = SetupAPI.GetDevices("NvModuleTracker", Nothing, False)
-					If found.Count > 0 Then
-						For Each d As SetupAPI.Device In found
-							If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVMODULETRACKER") Then
-								SetupAPI.UninstallDevice(d)
-							End If
-						Next
-						found.Clear()
-					End If
-					Application.Log.AddMessage("SetupAPI: Remove NVIDIA NvModuleTracker Device Complete .")
-				End If
-
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-			End Try
-		End If
-
-		If config.SelectedGPU = GPUVendor.Intel Then
-
-			'Removing Intel WIdI bus Enumerator
-			Application.Log.AddMessage("Executing SetupAPI: Remove Intel WIdI bus Enumerator.")
-			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
-			If found.Count > 0 Then
-				For Each d As SetupAPI.Device In found
-					If d.HasHardwareID AndAlso StrContainsAny(d.HardwareIDs(0), True, "root\iwdbus") Then  'Workaround for a bug report we got.
-						SetupAPI.UninstallDevice(d)
-					End If
-				Next
-				found.Clear()
+				Application.Log.AddMessage("SetupAPI: Remove Intel WIdI bus Enumerator Complete .")
 			End If
-			Application.Log.AddMessage("SetupAPI: Remove Intel WIdI bus Enumerator Complete .")
-		End If
 
-		Application.Log.AddMessage("SetupAPI: Remove Audio/HDMI Complete")
+			Application.Log.AddMessage("SetupAPI: Remove Audio/HDMI Complete")
 
-		If config.SelectedGPU <> GPUVendor.Intel Then
-			CleanupEngine.Cleandriverstore(config)
-		End If
-
-		'removing monitor and hidden monitor
-
-		If config.RemoveMonitors Then
-			Application.Log.AddMessage("Executing SetupAPI: Remove Monitor(s) started")
-			Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("monitor", Nothing, False)
-			If found.Count > 0 Then
-				For Each d As SetupAPI.Device In found
-					SetupAPI.UninstallDevice(d)
-				Next
-				found.Clear()
+			If config.SelectedGPU <> GPUVendor.Intel Then
+				CleanupEngine.Cleandriverstore(config)
 			End If
-			UpdateTextMethod(UpdateTextTranslated(27))
-			Application.Log.AddMessage("SetupAPI: Remove Monitor(s) Complete .")
-		End If
 
+			'removing monitor and hidden monitor
 
-		'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont want that
-		'espcially if we are not using an AMD GPU
-
-		If config.RemoveAMDKMPFD Then
-			Try
-				UpdateTextMethod("Start - Check for AMDKMPFD system device.")
-				Application.Log.AddMessage("Executing SetupAPI: check AMDKMPFD system device started")
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "0a0", False)
+			If config.RemoveMonitors Then
+				Application.Log.AddMessage("Executing SetupAPI: Remove Monitor(s) started")
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("monitor", Nothing, False)
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
-						If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
-							If d.LowerFilters IsNot Nothing AndAlso d.LowerFilters.Length > 0 Then
-								For Each LowerFilter In d.LowerFilters
-									If LowerFilter IsNot Nothing Then
-										If StrContainsAny(LowerFilter, True, "amdkmpfd") Then
-											Application.Log.AddMessage("Executing SetupAPI: update AMDKMPFD system device to Windows default started")
-											If win10 Then
-												SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\PCI.inf", True)
-											Else
-												SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\machine.inf", True)
-											End If
-											Exit For
-										End If
-									End If
-								Next
-							End If
-						End If
+						SetupAPI.UninstallDevice(d)
 					Next
 					found.Clear()
 				End If
-				UpdateTextMethod("End - Check for AMDKMPFD system device.")
-				Application.Log.AddMessage("SetupAPI: Check AMDKMPFD system device Complete .")
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-			End Try
-
-			UpdateTextMethod(UpdateTextTranslated(28))
-
-
-			'We now try to remove the service AMDKMPFD if its lowerfilter is not found
-
-			If Not Checkamdkmpfd() Then
-				config.NotPresentAMDKMPFD = True
-				UpdateTextMethod("Start - Check for AMDKMPFD service.")
-				CleanupEngine.Cleanserviceprocess({"amdkmpfd"}, config)
-				UpdateTextMethod("End - Check for AMDKMPFD service.")
+				UpdateTextMethod(UpdateTextTranslated(27))
+				Application.Log.AddMessage("SetupAPI: Remove Monitor(s) Complete .")
 			End If
 
-		End If
 
+			'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont want that
+			'espcially if we are not using an AMD GPU
+
+			If config.RemoveAMDKMPFD Then
+				Try
+					UpdateTextMethod("Start - Check for AMDKMPFD system device.")
+					Application.Log.AddMessage("Executing SetupAPI: check AMDKMPFD system device started")
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "0a0", False)
+					If found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
+								If d.LowerFilters IsNot Nothing AndAlso d.LowerFilters.Length > 0 Then
+									For Each LowerFilter In d.LowerFilters
+										If LowerFilter IsNot Nothing Then
+											If StrContainsAny(LowerFilter, True, "amdkmpfd") Then
+												Application.Log.AddMessage("Executing SetupAPI: update AMDKMPFD system device to Windows default started")
+												If win10 Then
+													SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\PCI.inf", True)
+												Else
+													SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\machine.inf", True)
+												End If
+												Exit For
+											End If
+										End If
+									Next
+								End If
+							End If
+						Next
+						found.Clear()
+					End If
+					UpdateTextMethod("End - Check for AMDKMPFD system device.")
+					Application.Log.AddMessage("SetupAPI: Check AMDKMPFD system device Complete .")
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+				End Try
+
+				UpdateTextMethod(UpdateTextTranslated(28))
+
+
+				'We now try to remove the service AMDKMPFD if its lowerfilter is not found
+
+				If Not Checkamdkmpfd() Then
+					config.NotPresentAMDKMPFD = True
+					UpdateTextMethod("Start - Check for AMDKMPFD service.")
+					CleanupEngine.Cleanserviceprocess({"amdkmpfd"}, config)
+					UpdateTextMethod("End - Check for AMDKMPFD service.")
+				End If
+
+			End If
+		End If
 		If config.SelectedGPU = GPUVendor.AMD Then
 			Cleanamdserviceprocess(config)
 			Cleanamd(config)
