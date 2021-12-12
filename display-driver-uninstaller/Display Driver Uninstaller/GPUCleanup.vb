@@ -2515,11 +2515,9 @@ Public Class GPUCleanup
 				Try
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
-							If child.ToLower.Contains("acrdumps") Or
+							If StrContainsAny(child, True, "acrdumps", "mmddumps", "real", "amdfendr") Or
 							 (child.ToLower.Contains("amdkmpfd") AndAlso config.NotPresentAMDKMPFD) Or
-							 child.ToLower.Contains("mmddumps") Or
-							 child.ToLower.EndsWith("real") Or
-							 child.ToLower.Contains("amdkmafd") AndAlso config.RemoveAudioBus Then
+							 (child.ToLower.Contains("amdkmafd") AndAlso config.RemoveAudioBus) Then
 
 								Delete(child)
 
