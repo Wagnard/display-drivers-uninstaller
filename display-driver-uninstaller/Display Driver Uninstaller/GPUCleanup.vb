@@ -318,7 +318,7 @@ Public Class GPUCleanup
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media")
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
-							If d IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 								If StrContainsAny(d.HardwareIDs(0), True, "ROOT\AMDSAFD") Then
 									SetupAPI.UninstallDevice(d)
 								End If
@@ -344,7 +344,7 @@ Public Class GPUCleanup
 					If found.Count > 0 Then
 
 						For Each d As SetupAPI.Device In found
-							If d IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 								If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVVHCI") Then
 									SetupAPI.UninstallDevice(d)
 								End If
@@ -391,7 +391,7 @@ Public Class GPUCleanup
 								Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
 								If found.Count > 0 Then
 									For Each d As SetupAPI.Device In found
-										If d IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+										If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 											If StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
 												SetupAPI.UninstallDevice(d)
 											End If
@@ -444,7 +444,7 @@ Public Class GPUCleanup
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
-							If d IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 								If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
 									SetupAPI.UninstallDevice(d)
 								End If
@@ -459,7 +459,7 @@ Public Class GPUCleanup
 					found = SetupAPI.GetDevices("usb", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
-							If d IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 								If StrContainsAny(d.HardwareIDs(0), True, USBTypeC) Then
 									SetupAPI.UninstallDevice(d)
 								End If
@@ -474,7 +474,7 @@ Public Class GPUCleanup
 					found = SetupAPI.GetDevices("mouse", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
-							If d IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 								If StrContainsAny(d.HardwareIDs(0), True, "hid\vid_0955&pid_7210") Then
 									SetupAPI.UninstallDevice(d)
 								End If
@@ -489,7 +489,7 @@ Public Class GPUCleanup
 					found = SetupAPI.GetDevices("media", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
-							If d IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 								If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0956&PID_9001") Then
 									SetupAPI.UninstallDevice(d)
 								End If
@@ -505,7 +505,7 @@ Public Class GPUCleanup
 						found = SetupAPI.GetDevices("media", Nothing, False)
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
-								If d IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 									If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0955&PID_9000") Then
 										SetupAPI.UninstallDevice(d)
 									End If
@@ -520,7 +520,7 @@ Public Class GPUCleanup
 						found = SetupAPI.GetDevices("NvModuleTracker", Nothing, False)
 						If found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
-								If d IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 									If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVMODULETRACKER") Then
 										SetupAPI.UninstallDevice(d)
 									End If
@@ -544,7 +544,7 @@ Public Class GPUCleanup
 				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
-						If d IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+						If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 							If d.HasHardwareID AndAlso StrContainsAny(d.HardwareIDs(0), True, "root\iwdbus") Then  'Workaround for a bug report we got.
 								SetupAPI.UninstallDevice(d)
 							End If
