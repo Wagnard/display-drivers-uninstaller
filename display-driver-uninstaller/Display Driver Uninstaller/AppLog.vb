@@ -305,7 +305,7 @@ Public Class AppLog
 										If reader.Name.Equals("Time", StringComparison.OrdinalIgnoreCase) Then
 											reader.Read()
 
-											newEntry.Time = DateTime.Parse(reader.ReadContentAsString)
+											newEntry.Time = Date.Parse(reader.ReadContentAsString)
 										End If
 
 										If reader.Name.Equals("Message", StringComparison.OrdinalIgnoreCase) Then

@@ -376,7 +376,7 @@ Public Class GPUCleanup
 									For Each SoftwareComponent As SetupAPI.Device In SoftwareComponents
 										If SoftwareComponent.ParentDevices IsNot Nothing AndAlso SoftwareComponent.ParentDevices.Length > 0 Then
 											For Each ParentDevice As SetupAPI.Device In SoftwareComponent.ParentDevices
-												If ParentDevice IsNot Nothing AndAlso Not IsNullOrWhitespace(ParentDevice.DeviceID) Then
+												If ParentDevice IsNot Nothing AndAlso ParentDevice.DeviceID IsNot Nothing AndAlso Not IsNullOrWhitespace(ParentDevice.DeviceID) Then
 													If StrContainsAny(ParentDevice.DeviceID, True, GPU.DeviceID) Then
 														SetupAPI.UninstallDevice(SoftwareComponent)
 													End If
@@ -589,11 +589,11 @@ Public Class GPUCleanup
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "0a0", False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
-							If d IsNot Nothing Then
+							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 								If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
 									If d.LowerFilters IsNot Nothing AndAlso d.LowerFilters.Length > 0 Then
 										For Each LowerFilter In d.LowerFilters
-											If LowerFilter IsNot Nothing Then
+											If LowerFilter IsNot Nothing AndAlso Not IsNullOrWhitespace(LowerFilter) Then
 												If StrContainsAny(LowerFilter, True, "amdkmpfd") Then
 													Application.Log.AddMessage("Executing SetupAPI: update AMDKMPFD system device to Windows default started")
 													If win10 Then
@@ -6389,7 +6389,7 @@ Public Class GPUCleanup
 			Else
 				CleanupEngine.RemoveAppx("IntelGraphicsControlPanel")
 				CleanupEngine.RemoveAppx("IntelGraphicsExperience")
-				CleanupEngine.RemoveAppx1809("IntelGraphicsCommandCenter")
+				CleanupEngine.RemoveAppx("IntelGraphicsCommandCenter")
 			End If
 		End If
 
