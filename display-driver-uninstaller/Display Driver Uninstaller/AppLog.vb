@@ -113,7 +113,7 @@ Public Class AppLog
 	Private Sub SaveLog()
 		SyncLock m_threadlock
 			If Application.Settings.SaveLogs Then
-				Dim time As DateTime = If(LogEntries.Count > 0, LogEntries(0).Time, DateTime.Now)
+				Dim time As Date = If(LogEntries.Count > 0, LogEntries(0).Time, Date.Now)
 
 				SaveLog(String.Format("{0}{1}_DDULog.xml", Application.Paths.Logs, time.ToString("yyyy-MM-dd__HH-mm-ss")))
 			End If
@@ -421,7 +421,7 @@ Public Class AppLog
 			Next
 		End If
 
-		logEntry.Time = DateTime.Now
+		logEntry.Time = Date.Now
 		AddEntry(logEntry)
 	End Sub
 
@@ -431,7 +431,7 @@ Public Class AppLog
 
 		logEntry.Type = type
 		logEntry.Message = message
-		logEntry.Time = DateTime.Now
+		logEntry.Time = Date.Now
 
 		If key IsNot Nothing Then
 			If value IsNot Nothing Then
