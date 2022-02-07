@@ -4,6 +4,7 @@ Imports System.IO
 Public Class Inf
 	Private ReadOnly _fileName As String = Nothing
 	Private ReadOnly _provider As String = Nothing
+	Private ReadOnly _catalog As String = Nothing
 	Private ReadOnly _class As String = Nothing
 	Private ReadOnly _fileExists As Boolean = False
 	Private ReadOnly _isValid As Boolean = False
@@ -17,6 +18,11 @@ Public Class Inf
 	Public ReadOnly Property Provider As String
 		Get
 			Return _provider
+		End Get
+	End Property
+	Public ReadOnly Property Catalog As String
+		Get
+			Return _catalog
 		End Get
 	End Property
 	Public ReadOnly Property [Class] As String
@@ -56,9 +62,10 @@ Public Class Inf
 				If infFile.Open() = 0UI Then
 					Dim lineClass As SetupAPI.InfLine = infFile.FindFirstKey("Version", "Class")
 					Dim lineProvider As SetupAPI.InfLine = infFile.FindFirstKey("Version", "Provider")
-
+					Dim lineCatalogFile As SetupAPI.InfLine = infFile.FindFirstKey("Version", "CatalogFile")
 					_class = If(lineClass IsNot Nothing, lineClass.GetString(1), String.Empty)
 					_provider = If(lineProvider IsNot Nothing, lineProvider.GetString(1), String.Empty)
+					_catalog = If(lineCatalogFile IsNot Nothing, lineCatalogFile.GetString(1), String.Empty)
 
 					If Not IsNullOrWhitespace(_provider) Or Not IsNullOrWhitespace(_class) Then
 						_isValid = True

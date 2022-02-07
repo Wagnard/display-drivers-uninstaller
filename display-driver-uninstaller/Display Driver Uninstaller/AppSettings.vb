@@ -103,6 +103,7 @@ Public Class AppSettings
 	Private m_rem3DtvPlay As DependencyProperty = RegDP("Remove3DTVPlay", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remGFE As DependencyProperty = RegDP("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remNVCP As DependencyProperty = RegDP("RemoveNVCP", GetType(Boolean), GetType(AppSettings), True)
+	Private m_remNVBROADCAST As DependencyProperty = RegDP("RemoveNVBROADCAST", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remINTELCP As DependencyProperty = RegDP("RemoveINTELCP", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remAMDCP As DependencyProperty = RegDP("RemoveAMDCP", GetType(Boolean), GetType(AppSettings), True)
 
@@ -312,6 +313,14 @@ Public Class AppSettings
 		End Get
 		Set(value As Boolean)
 			SetValue(m_remGFE, value)
+		End Set
+	End Property
+	Public Property RemoveNVBROADCAST As Boolean
+		Get
+			Return CBool(GetValue(m_remNVBROADCAST))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_remNVBROADCAST, value)
 		End Set
 	End Property
 
@@ -557,6 +566,7 @@ Public Class AppSettings
 						.WriteElementString("RemovePhysX", RemovePhysX.ToString())
 						.WriteElementString("Remove3DTVPlay", Remove3DTVPlay.ToString())
 						.WriteElementString("RemoveGFE", RemoveGFE.ToString())
+						.WriteElementString("RemoveNVBROADCAST", RemoveNVBROADCAST.ToString())
 						.WriteElementString("RemoveNVCP", RemoveNVCP.ToString())
 						.WriteElementString("RemoveINTELCP", RemoveINTELCP.ToString())
 						.WriteElementString("RemoveAMDCP", RemoveINTELCP.ToString())
@@ -699,6 +709,9 @@ Public Class AppSettings
 
 							Case "removegfe"
 								RemoveGFE = Boolean.Parse(KvP.Value)
+
+							Case "removenvbroadcast"
+								RemoveNVBROADCAST = Boolean.Parse(KvP.Value)
 
 							Case "removenvcp"
 								RemoveNVCP = Boolean.Parse(KvP.Value)

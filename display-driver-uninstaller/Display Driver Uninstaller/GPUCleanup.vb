@@ -98,6 +98,26 @@ Public Class GPUCleanup
 
 				End If
 
+				If config.RemoveNVBROADCAST Then
+					Dim nvbservices As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\nvbservice.cfg")
+					KillProcess("nvidia broadcast")
+					For Each service As String In nvbservices
+						If IsNullOrWhitespace(service) Then Continue For
+
+						If ServiceInstaller.GetServiceStatus(service, False) = Nothing Then
+							'Service is not present
+						Else
+							Try
+								ServiceInstaller.Uninstall(service)
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
+
+						End If
+					Next
+
+				End If
+
 				For Each service As String In services
 					If IsNullOrWhitespace(service) Then Continue For
 
@@ -484,18 +504,20 @@ Public Class GPUCleanup
 					End If
 					Application.Log.AddMessage("SetupAPI: Remove NVIDIA SHIELD Wireless Controller Trackpad Complete.")
 
-					' NVIDIA Broadcast(Wave Extensible) (WDM) Removal
-					Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Broadcast Audio Device (Wave Extensible) (WDM).")
-					found = SetupAPI.GetDevices("media", Nothing, False)
-					If found.Count > 0 Then
-						For Each d As SetupAPI.Device In found
-							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
-								If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0956&PID_9001") Then
-									SetupAPI.UninstallDevice(d)
+					If config.RemoveNVBROADCAST Then
+						' NVIDIA Broadcast(Wave Extensible) (WDM) Removal
+						Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Broadcast Audio Device (Wave Extensible) (WDM).")
+						found = SetupAPI.GetDevices("media", Nothing, False)
+						If found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+									If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0956&PID_9001") Then
+										SetupAPI.UninstallDevice(d)
+									End If
 								End If
-							End If
-						Next
-						found.Clear()
+							Next
+							found.Clear()
+						End If
 					End If
 					Application.Log.AddMessage("SetupAPI: Remove NVIDIA Broadcast Audio Device (Wave Extensible) (WDM) Complete .")
 
@@ -3276,6 +3298,7 @@ Public Class GPUCleanup
 		Dim CleanupEngine As New CleanupEngine
 		Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\services.cfg")
 		Dim gfeservices As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg")
+		Dim nvbservices As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\nvbservice.cfg")
 
 		If Not WindowsIdentity.GetCurrent().IsSystem Then
 			ImpersonateLoggedOnUser.Taketoken()
@@ -3288,6 +3311,7 @@ Public Class GPUCleanup
 		If config.RemoveGFE Then
 			CleanupEngine.Cleanserviceprocess(gfeservices, config)
 		End If
+
 
 		'kill process NvTmru.exe and special kill for Logitech Keyboard(Lcore.exe) 
 		'holding files in the NVIDIA folders sometimes.
@@ -3303,7 +3327,9 @@ Public Class GPUCleanup
 			 "nvspcaps64",
 			 "nvspcaps",
 			 "NVIDIA Web Helper",
-			 "NvBackend")
+			 "NvBackend",
+			 "NVIDIA Broadcast",
+			 "NVIDIA Broadcast UI")
 
 			If config.RemoveGFE Then
 				KillProcess("nvtray")
@@ -3314,6 +3340,11 @@ Public Class GPUCleanup
 				ImpersonateLoggedOnUser.ReleaseToken()
 			End If
 		End Try
+
+		If config.RemoveNVBROADCAST Then
+			CleanupEngine.Cleanserviceprocess(nvbservices, config)
+		End If
+
 		Application.Log.AddMessage("Process/Services CleanUP Complete")
 
 		If WindowsIdentity.GetCurrent().IsSystem Then
@@ -3385,6 +3416,7 @@ Public Class GPUCleanup
 		Dim wantedvalue As String = Nothing
 		Dim wantedvalue2 As String = Nothing
 		Dim removegfe As Boolean = config.RemoveGFE
+		Dim removenvbroadcast As Boolean = config.RemoveNVBROADCAST
 		Dim removephysx As Boolean = config.RemovePhysX
 		Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg")
 		Dim clsidleftoverGFE As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverGFE.cfg")
@@ -3912,8 +3944,8 @@ Public Class GPUCleanup
 											 child2.ToLower.Contains("nvidia update core") AndAlso removegfe Or
 											 child2.ToLower.Contains("nvcontrolpanel2") Or
 											 child2.ToLower.Contains("nvcontrolpanel") Or
-											 child2.ToLower.Contains("nvcamera") Or
-											 child2.ToLower.Contains("nvidia broadcast") Or
+											 child2.ToLower.Contains("nvcamera") Or  'part of nv broadcast ?
+											 child2.ToLower.Contains("nvidia broadcast") AndAlso removenvbroadcast Or
 											 child2.ToLower.Contains("nvtray") AndAlso removegfe Or
 											 child2.ToLower.Contains("ansel") AndAlso removegfe Or
 											 child2.ToLower.Contains("nvcontainer") AndAlso removegfe Or
@@ -4133,10 +4165,10 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("_nvdisplaycontainer") Or
 						 child.ToLower.Contains("_displaydriveranalyzer") Or
 						 child.ToLower.Contains("_nvdisplay.messagebus") Or
-						 child.ToLower.Contains("_broadcastvoice.driver") Or
-						 child.ToLower.Contains("_nvbroadcastcontainer") Or
-						 child.ToLower.Contains("_nvidiabroadcast") Or
-						 child.ToLower.Contains("_nvvirtualcamera") Or
+						 child.ToLower.Contains("_broadcastvoice.driver") AndAlso config.RemoveNVBROADCAST Or
+						 child.ToLower.Contains("_nvbroadcastcontainer") AndAlso config.RemoveNVBROADCAST Or
+						 child.ToLower.Contains("_nvidiabroadcast") AndAlso config.RemoveNVBROADCAST Or
+						 child.ToLower.Contains("_nvvirtualcamera") AndAlso config.RemoveNVBROADCAST Or
 						 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
 						 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso removegfe Or
 						 child.ToLower.Contains("_osc") AndAlso removegfe Or
@@ -4244,7 +4276,7 @@ Public Class GPUCleanup
 									If IsNullOrWhitespace(child2) Then Continue For
 
 									If StrContainsAny(child2, True, "global") Then
-										If removegfe Then
+										If removegfe AndAlso removenvbroadcast Then
 											Try
 												Deletesubregkey(regkey2, child2)
 											Catch ex As Exception
@@ -4257,7 +4289,8 @@ Public Class GPUCleanup
 													For Each child3 As String In regkey3.GetSubKeyNames()
 														If IsNullOrWhitespace(child3) Then Continue For
 
-														If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer", "nvUpdate", "nvcontainer") Then
+														If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer", "nvUpdate", "nvcontainer") AndAlso Not removegfe Or
+														   StrContainsAny(child3, True, "nvbroadcast") AndAlso Not removenvbroadcast Then
 															'do nothing
 														Else
 															Try
@@ -4271,8 +4304,9 @@ Public Class GPUCleanup
 											End Using
 										End If
 									End If
-									If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd", "nvidia updatus", "nvbroadcast") OrElse
-									(StrContainsAny(child2, True, "nvstream", "nvtray", "nvcontainer", "nvdisplay.container") AndAlso removegfe) Then
+									If StrContainsAny(child2, True, "installer", "logging", "nvidia update core", "nvcontrolpanel", "nvcontrolpanel2", "physx_systemsoftware", "physxupdateloader", "uxd", "nvidia updatus") OrElse
+									(StrContainsAny(child2, True, "nvstream", "nvtray", "nvcontainer", "nvdisplay.container") AndAlso removegfe) OrElse
+									(StrContainsAny(child2, True, "nvbroadcast") AndAlso removenvbroadcast) Then
 
 										Select Case Not removephysx AndAlso StrContainsAny(child2, True, "physx")
 											Case True
@@ -5620,12 +5654,52 @@ Public Class GPUCleanup
 				If IsNullOrWhitespace(child) = False Then
 					If child.ToLower.Contains("updatus") Or
 					 child.ToLower.Contains("shimgen") Or
-					 (child.ToLower.Contains("ngx") AndAlso config.RemoveGFE) Or
-					 child.ToLower.Contains("nvidiabroadcast") Or
+					 (child.ToLower.Contains("nvidiabroadcast") AndAlso config.RemoveNVBROADCAST) Or
 					 (child.ToLower.Contains("grid") AndAlso config.RemoveGFE) Then
 
 						Delete(child)
 
+					End If
+
+					If StrContainsAny(child, True, "ngx") Then
+						For Each child2 As String In FileIO.GetDirectories(child)
+							If Not IsNullOrWhitespace(child2) Then
+								For Each child3 As String In FileIO.GetDirectories(child2)
+									If IsNullOrWhitespace(child3) Then Continue For
+
+									If StrContainsAny(child3, True, "nvbroadcast") AndAlso Not config.RemoveNVBROADCAST Then
+										'do nothing
+									Else
+										Delete(child3)
+									End If
+								Next
+								Try
+									If FileIO.CountDirectories(child2) = 0 Then
+
+										Delete(child2)
+									Else
+										For Each data As String In FileIO.GetDirectories(child2)
+											If IsNullOrWhitespace(child2) Then Continue For
+											Application.Log.AddWarningMessage("Remaining folders found " + " : " + child2 + "\ --> " + data)
+										Next
+									End If
+								Catch ex As Exception
+								End Try
+
+							End If
+						Next
+						Try
+							If FileIO.CountDirectories(child) = 0 Then
+
+								Delete(child)
+							Else
+								For Each data As String In FileIO.GetDirectories(child)
+									If IsNullOrWhitespace(child) Then Continue For
+									Application.Log.AddWarningMessage("Remaining folders found " + " : " + child + "\ --> " + data)
+								Next
+							End If
+						Catch ex As Exception
+						End Try
 					End If
 				End If
 			Next
@@ -5675,7 +5749,7 @@ Public Class GPUCleanup
 					 (child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("displaydriverras") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvprofileupdaterplugin") AndAlso config.RemoveGFE) Or
-					 child.ToLower.Contains("nvidia broadcast") Or
+					 child.ToLower.Contains("nvidia broadcast") AndAlso config.RemoveNVBROADCAST Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 
 						Delete(child)
@@ -5727,7 +5801,7 @@ Public Class GPUCleanup
 			For Each child As String In FileIO.GetFiles(filePath)
 				If IsNullOrWhitespace(child) Then Continue For
 				If child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE Or
-				   child.ToLower.Contains("nvidia broadcast") Then
+				   child.ToLower.Contains("nvidia broadcast") AndAlso config.RemoveNVBROADCAST Then
 
 					Delete(child)
 
@@ -5784,7 +5858,7 @@ Public Class GPUCleanup
 					   child.ToLower.Contains("nview") Or
 					   child.ToLower.Contains("nvidia wmi provider") Or
 					   child.ToLower.Contains("gamemonitor") AndAlso config.RemoveGFE Or
-					   child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("\nvcontainer") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvidia ngx") AndAlso config.RemoveGFE Or
@@ -5794,7 +5868,8 @@ Public Class GPUCleanup
 					   child.ToLower.Contains("nvgsync") Or
 					   child.ToLower.Contains("nvupdate") Or
 					   child.ToLower.Contains("wksserviceplugin") Or
-					   child.ToLower.Contains("nvidia broadcast") Or
+					   child.ToLower.Contains("nvidia broadcast") AndAlso config.RemoveNVBROADCAST Or
+					   child.ToLower.Contains("nvbroadcast.nvcontainer") AndAlso config.RemoveNVBROADCAST Or
 					   child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
 
 						Delete(child)
@@ -5843,10 +5918,10 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvvhci") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvmoduletracker.driver") AndAlso config.RemoveGFE Or
-								   child2.ToLower.Contains("broadcastvoice.driver") Or
-								   child2.ToLower.Contains("nvbroadcastcontainer.") Or
-								   child2.ToLower.Contains("nvvirtualcamera.") Or
-								   child2.ToLower.Contains("nvidiabroadcast.") Or
+								   child2.ToLower.Contains("broadcastvoice.driver") AndAlso config.RemoveNVBROADCAST Or
+								   child2.ToLower.Contains("nvbroadcastcontainer.") AndAlso config.RemoveNVBROADCAST Or
+								   child2.ToLower.Contains("nvvirtualcamera.") AndAlso config.RemoveNVBROADCAST Or
+								   child2.ToLower.Contains("nvidiabroadcast.") AndAlso config.RemoveNVBROADCAST Or
 								   child2.ToLower.Contains("hdaudio.driver") AndAlso config.RemoveGFE Then
 
 

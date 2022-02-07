@@ -32,6 +32,7 @@ Public Class AppLaunchOptions
 	Public Property RemovePhysX As Boolean = False
 	Public Property Remove3DTVPlay As Boolean = False
 	Public Property RemoveGFE As Boolean = False
+	Public Property RemoveNVBROADCAST As Boolean = False
 	Public Property RemoveNVCP As Boolean = False
 	Public Property RemoveINTELCP As Boolean = False
 	Public Property RemoveAMDCP As Boolean = False
@@ -110,6 +111,7 @@ Public Class AppLaunchOptions
 					Case StrContainsAny(Argument, True, "-NoRestorePoint") : NoRestorePoint = True
 					Case StrContainsAny(Argument, True, "-RemovePhysx") : RemovePhysX = True
 					Case StrContainsAny(Argument, True, "-RemoveGFE") : RemoveGFE = True
+					Case StrContainsAny(Argument, True, "-RemoveNVBROADCAST") : RemoveNVBROADCAST = True
 					Case StrContainsAny(Argument, True, "-RemoveNVCP") : RemoveNVCP = True
 					Case StrContainsAny(Argument, True, "-RemoveINTELCP") : RemoveINTELCP = True
 					Case StrContainsAny(Argument, True, "-RemoveAMDCP") : RemoveAMDCP = True

@@ -261,6 +261,9 @@
 		<lblRemGFE>
 			<Text>Remove GeForce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Remove NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
 		<lblRemNVCP>
 			<Text>(DCH driver) Remove the NVIDIA Control Panel installed from the Microsoft Store</Text>
 		</lblRemNVCP>

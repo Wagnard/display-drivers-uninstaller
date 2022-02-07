@@ -258,6 +258,9 @@
 		<lblRemGFE>
 			<Text>Supprimer Geforce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Supprimer NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
 		<lblRemCrimsonCache>
 			<Text>Supprimer le répertoire du AMD Crimson Shader Cache</Text>
 			<Tooltip>
