@@ -4313,18 +4313,68 @@ Public Class GPUCleanup
 												'Do nothing
 											Case False
 
-												If StrContainsAny(child2, True, "installer2") AndAlso config.RemoveGFE Then
+												If StrContainsAny(child2, True, "installer2") Then
 													Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey2, child2, True)
 														If regkey4 IsNot Nothing Then
 															For Each subkeys In regkey4.GetSubKeyNames
 																If IsNullOrWhitespace(subkeys) Then Continue For
-																If StrContainsAny(subkeys, True, "configs", "cache", "extensions", "relationships", "stripped", "drivers") Then
+																If StrContainsAny(subkeys, True, "configs", "cache", "extensions", "relationships", "stripped") Then
 																	Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkey4, subkeys, True)
 																		If regkey5 IsNot Nothing Then
 																			For Each ValueName As String In regkey5.GetValueNames
 																				If IsNullOrWhitespace(ValueName) Then Continue For
-																				If StrContainsAny(ValueName, True, "ansel", "display", "gfexperience", "hdaudio", "nvabhub", "nvbackend", "nvcontainer", "nvnode", "nvplugin",
-																		"nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio", "oem", "msvcruntime", "NGXCore", "USBC", "nvmoduletracker.driver", "FrameViewSdk", "GpxCommon.Oss", "nvbroadcast", "broadcastvoice", "nvidiabroadcast", "nvvirtualcamera") Then
+																				If StrContainsAny(ValueName, True, "ansel", "display.gfexperience", "display.update", "display.optimus", "frameviewsdk", "gfexperience", "gpxcommon.oss", "nvbackend", "nvcontainer", "nvmoduletracker", "nvnodejs", "nvplugin.watchdog", "nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio") AndAlso config.RemoveGFE Then
+																					Try
+																						Deletevalue(regkey5, ValueName)
+																					Catch ex As Exception
+																						Application.Log.AddException(ex)
+																					End Try
+																				End If
+																				If StrContainsAny(ValueName, True, "display.driver", "hdaudio.driver", "nvabhub", "msvcruntime", "NGXCore", "USBC") Then
+																					Try
+																						Deletevalue(regkey5, ValueName)
+																					Catch ex As Exception
+																						'Application.Log.AddException(ex)
+																					End Try
+																				End If
+																				If StrContainsAny(ValueName, True, "nvbroadcast", "broadcastvoice", "nvidiabroadcast", "nvvirtualcamera") AndAlso removenvbroadcast Then
+																					Try
+																						Deletevalue(regkey5, ValueName)
+																					Catch ex As Exception
+																						'Application.Log.AddException(ex)
+																					End Try
+																				End If
+																				If StrContainsAny(ValueName, True, "Display.PhysX") AndAlso removephysx Then
+																					Try
+																						Deletevalue(regkey5, ValueName)
+																					Catch ex As Exception
+																						Application.Log.AddException(ex)
+																					End Try
+																				End If
+																			Next
+																			If regkey5.ValueCount = 0 Then
+																				Try
+																					Deletesubregkey(regkey4, subkeys)
+																				Catch ex As Exception
+																					Application.Log.AddException(ex)
+																				End Try
+																			End If
+																		End If
+																	End Using
+																End If
+																If StrContainsAny(subkeys, True, "drivers") Then
+																	Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkey4, subkeys, True)
+																		If regkey5 IsNot Nothing Then
+																			For Each ValueName As String In regkey5.GetValueNames
+																				If IsNullOrWhitespace(ValueName) AndAlso IsNullOrWhitespace(regkey5.GetValue(ValueName, String.Empty).ToString) Then Continue For
+																				If StrContainsAny(regkey5.GetValue(ValueName, String.Empty).ToString, True, "display.driver", "hdaudio.driver") Then
+																					Try
+																						Deletevalue(regkey5, ValueName)
+																					Catch ex As Exception
+																						Application.Log.AddException(ex)
+																					End Try
+																				End If
+																				If StrContainsAny(regkey5.GetValue(ValueName, String.Empty).ToString, True, "shieldwirelesscontroller") AndAlso removegfe Then
 																					Try
 																						Deletevalue(regkey5, ValueName)
 																					Catch ex As Exception
@@ -5506,7 +5556,7 @@ Public Class GPUCleanup
 			Try
 				For Each child As String In FileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
-						If StrContainsAny(child, True, "nvbackend", "nvosc", "shareconnect", "nvgs", "glcache", "gfexperience", "DXCache", "FrameViewSdk") Then
+						If StrContainsAny(child, True, "nvbackend", "gfexperience") AndAlso config.RemoveGFE Or StrContainsAny(child, True, "nvosc", "shareconnect", "nvgs", "glcache", "DXCache", "FrameViewSdk") Then
 							Delete(child)
 						End If
 					End If
