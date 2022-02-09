@@ -4367,7 +4367,7 @@ Public Class GPUCleanup
 																		If regkey5 IsNot Nothing Then
 																			For Each ValueName As String In regkey5.GetValueNames
 																				If IsNullOrWhitespace(ValueName) AndAlso IsNullOrWhitespace(regkey5.GetValue(ValueName, String.Empty).ToString) Then Continue For
-																				If StrContainsAny(regkey5.GetValue(ValueName, String.Empty).ToString, True, "display.driver", "hdaudio.driver") Then
+																				If StrContainsAny(regkey5.GetValue(ValueName, String.Empty).ToString, True, "display.driver", "hdaudio.driver", "usbc") Then
 																					Try
 																						Deletevalue(regkey5, ValueName)
 																					Catch ex As Exception
