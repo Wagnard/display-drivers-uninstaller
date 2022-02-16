@@ -6926,13 +6926,10 @@ Public Class GPUCleanup
 
 		For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
 			If IsNullOrWhitespace(filepaths) Then Continue For
-			For Each child In filepaths
-				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "intelgraphicsprofiles") Then
-
-						Delete(child)
-
-					End If
+			For Each child As String In FileIO.GetDirectories(filepaths)
+				If IsNullOrWhitespace(child) Then Continue For
+				If StrContainsAny(child, True, "intelgraphicsprofiles") Then
+					Delete(child)
 				End If
 			Next
 			filePath = filepaths + "\AppData\LocalLow\Intel"
