@@ -6926,6 +6926,15 @@ Public Class GPUCleanup
 
 		For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
 			If IsNullOrWhitespace(filepaths) Then Continue For
+			For Each child In filepaths
+				If IsNullOrWhitespace(child) = False Then
+					If StrContainsAny(child, True, "intelgraphicsprofiles") Then
+
+						Delete(child)
+
+					End If
+				End If
+			Next
 			filePath = filepaths + "\AppData\LocalLow\Intel"
 			If winxp Then
 				filePath = filepaths + "\Local Settings\Application Data\Intel"  'need check in the future.
@@ -6934,7 +6943,7 @@ Public Class GPUCleanup
 				Try
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
-							If child.ToLower.Contains("shadercache") Then
+							If StrContainsAny(child, True, "shadercache") Then
 
 								Delete(child)
 

@@ -2926,12 +2926,12 @@ Public Class CleanupEngine
 						catalog = ""
 					End If
 				End If
-				If StrContainsAny(oem.Class, True, "display") Or StrContainsAny(oem.Class, True, "media") Or StrContainsAny(oem.Class, True, "extension") Or StrContainsAny(oem.Class, True, "softwarecomponent") Then
+				If StrContainsAny(oem.Class, True, "display", "media", "extension", "softwarecomponent") Then
 					If Not ((Not config.RemoveNVBROADCAST AndAlso StrContainsAny(oem.Catalog, True, "nvrtxvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvswcfilter"))) Then
-						SetupAPI.RemoveInf(oem, True)
+						SetupAPI.RemoveInf(oem, False)
 					End If
 				Else
-						If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.
+					If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.
 						SetupAPI.RemoveInf(oem, False)
 					End If
 				End If
