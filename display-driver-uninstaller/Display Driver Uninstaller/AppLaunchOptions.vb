@@ -115,6 +115,9 @@ Public Class AppLaunchOptions
 					Case StrContainsAny(Argument, True, "-RemoveNVCP") : RemoveNVCP = True
 					Case StrContainsAny(Argument, True, "-RemoveINTELCP") : RemoveINTELCP = True
 					Case StrContainsAny(Argument, True, "-RemoveAMDCP") : RemoveAMDCP = True
+					Case StrContainsAny(Argument, True, "-RemoveAMDKMPFD") : RemoveAMDKMPFD = True
+					Case StrContainsAny(Argument, True, "-RemoveAudioBus") : RemoveAudioBus = True
+					Case StrContainsAny(Argument, True, "-RemoveVulkan") : RemoveVulkan = True
 					Case StrContainsAny(Argument, True, "-NoSetupAPI") : NoSetupAPI = True
 
 						'	TODO: Add cmdline args for those RemoveXXXX properties
