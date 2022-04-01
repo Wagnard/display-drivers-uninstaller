@@ -1110,7 +1110,7 @@ Public Class CleanupEngine
 																	If IsNullOrWhitespace(child2) Then Continue For
 
 																	Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-																   "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, False)
+																   "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, True)
 
 																		If subsuperregkey IsNot Nothing Then
 																			For Each wantedstring In subsuperregkey.GetValueNames()
@@ -1118,12 +1118,27 @@ Public Class CleanupEngine
 
 																				If wantedstring.Contains(child) Then
 																					Try
-																						Deletesubregkey(superregkey, child2)
+																						Deletevalue(subsuperregkey, wantedstring)
+																						Exit For
 																					Catch ex As Exception
 																						Application.Log.AddException(ex)
 																					End Try
 																				End If
 																			Next
+																			For Each wantedsubkey In subsuperregkey.GetSubKeyNames()
+																				If IsNullOrWhitespace(wantedsubkey) Then Continue For
+																				If wantedsubkey.Contains(child) Then
+																					Try
+																						Deletesubregkey(subsuperregkey, wantedsubkey)
+																						Exit For
+																					Catch ex As Exception
+																						Application.Log.AddException(ex)
+																					End Try
+																				End If
+																			Next
+																			If subsuperregkey.ValueCount = 0 AndAlso subsuperregkey.SubKeyCount = 0 Then
+																				Deletesubregkey(superregkey, child2)
+																			End If
 																		End If
 																	End Using
 																Next

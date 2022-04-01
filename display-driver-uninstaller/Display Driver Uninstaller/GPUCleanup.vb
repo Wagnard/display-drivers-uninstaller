@@ -6861,7 +6861,7 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "Media SDK", "Media Resource") Then
+					If StrContainsAny(child, True, "Media SDK", "Media Resource", "Intel Arc Control") Then
 						Delete(child)
 					End If
 				End If
