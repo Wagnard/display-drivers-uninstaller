@@ -1681,6 +1681,20 @@ Public Class CleanupEngine
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) Then Continue For
+
+						For Each leftover In clsidleftover
+							If IsNullOrWhitespace(leftover) Then Continue For
+							If StrContainsAny(child, True, "") Then
+								Try
+									Deletesubregkey(regkey, child)
+									childlist.Add(child)
+								Catch ex As Exception
+									Application.Log.AddException(ex)
+								End Try
+								Exit For
+							End If
+						Next
+
 						Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\" & child & "\InProcServer32", False)
 							If subregkey IsNot Nothing Then
 								wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)

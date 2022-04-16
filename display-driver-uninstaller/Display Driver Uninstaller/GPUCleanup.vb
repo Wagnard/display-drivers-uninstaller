@@ -577,6 +577,23 @@ Public Class GPUCleanup
 				Application.Log.AddMessage("SetupAPI: Remove Intel WIdI bus Enumerator Complete .")
 			End If
 
+			If config.SelectedGPU = GPUVendor.Intel Then
+				'Removing Mini CTA Driver
+				Application.Log.AddMessage("Executing SetupAPI: Remove Intel Mini CTA Driver")
+				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("CTA Driver Devices", Nothing, False)
+				If found.Count > 0 Then
+					For Each d As SetupAPI.Device In found
+						If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+							If d.HasHardwareID AndAlso StrContainsAny(d.HardwareIDs(0), True, "VEN_8086&DEV_490E", "VEN_8086&DEV_4F93", "PCI\VEN_8086&DEV_4F95") Then  'Workaround for a bug report we got.
+								SetupAPI.UninstallDevice(d)
+							End If
+						End If
+					Next
+					found.Clear()
+				End If
+				Application.Log.AddMessage("SetupAPI: Remove Intel WIdI bus Enumerator Complete .")
+			End If
+
 			Application.Log.AddMessage("SetupAPI: Remove Audio/HDMI Complete")
 
 			If config.SelectedGPU <> GPUVendor.Intel Then
