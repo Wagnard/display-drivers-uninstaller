@@ -261,14 +261,17 @@
 		<lblRemGFE>
 			<Text>Ta bort Geforce Experience (GFE)</Text>
 		</lblRemGFE>
-<lblRemNVCP>
-			<Text>(DCH-drivrutin) Ta bort NVIDIA Kontrollpanel installerat från Microsoft Store</Text>
+		<lblRemNVBROADCAST>
+			<Text>Ta bort NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
+		<lblRemNVCP>
+			<Text>(DCH-drivrutin) Ta bort NVIDIA Kontrollpanel installerad från Microsoft Store</Text>
 		</lblRemNVCP>
 		<lblRemINTELCP>
-			<Text>(DCH-drivrutin) Ta bort INTEL Kontrollpanel installerat från Microsoft Store</Text>
+			<Text>(DCH-drivrutin) Ta bort INTEL Kontrollpanel installerad från Microsoft Store</Text>
 		</lblRemINTELCP>
 		<lblRemAMDCP>
-			<Text>(DCH-drivrutin) Ta bort AMD Kontrollpanel installerat från Microsoft Store</Text>
+			<Text>(DCH-drivrutin) Ta bort AMD Kontrollpanel installerad från Microsoft Store</Text>
 		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>Ta bort AMD Crimson Skuggningscachekatalog</Text>
@@ -396,6 +399,7 @@
 				-SMiThaYe
 				-Chris Ross
 				-Fabio
+				-Matti Metsikko
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -470,7 +474,7 @@ Tack till Helge Klein (http://helgeklein.com/setacl/) : för tillståndet att an
 		<Translator>
 			<User>Hans Eriksson</User>
 			<Details>hans.ericson@bredband.net</Details>
-			<LastUpdate>23/12/2021</LastUpdate>
+			<LastUpdate>24/04/2022</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
