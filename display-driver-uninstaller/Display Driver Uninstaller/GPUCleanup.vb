@@ -379,6 +379,32 @@ Public Class GPUCleanup
 				End Try
 			End If
 
+
+			'------------------------------------------------------------
+			'Removing AMD Crash Defender and AMD Link Controler Emulation
+			'------------------------------------------------------------
+			If config.SelectedGPU = GPUVendor.AMD Then
+				Try
+					Application.Log.AddMessage("Executing SetupAPI: Remove AMD Crash Defender and AMD Link Controler Emulation.")
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
+					If found.Count > 0 Then
+
+						For Each d As SetupAPI.Device In found
+							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+								If StrContainsAny(d.HardwareIDs(0), True, "ROOT\AMDXE", "ROOT\AMDLOG") Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							End If
+						Next
+
+						found.Clear()
+					End If
+					Application.Log.AddMessage("SetupAPI: Remove AMD Crash Defender and AMD Link Controler Emulation.")
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
+			End If
+
 			' ----------------------
 			' Removing the videocard
 			' ----------------------
@@ -2384,8 +2410,27 @@ Public Class GPUCleanup
 		If config.RemoveAMDDirs Then
 			filePath = sysdrv + "AMD"
 
-			Delete(filePath)
+			If FileIO.ExistsDir(filePath) Then
 
+				For Each child As String In FileIO.GetDirectories(filePath)
+					If IsNullOrWhitespace(child) Then Continue For
+					If Not StrContainsAny(child, True, "Chipset_Software") Then
+
+						Delete(child)
+
+					End If
+				Next
+				If FileIO.CountDirectories(filePath) = 0 Then
+
+					Delete(filePath)
+
+				Else
+					For Each data As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(data) Then Continue For
+						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+					Next
+				End If
+			End If
 		End If
 
 		'Delete driver files

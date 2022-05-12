@@ -8,6 +8,7 @@ Public Class Inf
 	Private ReadOnly _class As String = Nothing
 	Private ReadOnly _fileExists As Boolean = False
 	Private ReadOnly _isValid As Boolean = False
+	Private ReadOnly _sourcedisksfiles As String() = Nothing
 	Private _installDate As DateTime
 
 	Public ReadOnly Property FileName As String
@@ -23,6 +24,11 @@ Public Class Inf
 	Public ReadOnly Property Catalog As String
 		Get
 			Return _catalog
+		End Get
+	End Property
+	Public ReadOnly Property SourceDisksFiles As String()
+		Get
+			Return _sourcedisksfiles
 		End Get
 	End Property
 	Public ReadOnly Property [Class] As String
@@ -63,10 +69,11 @@ Public Class Inf
 					Dim lineClass As SetupAPI.InfLine = infFile.FindFirstKey("Version", "Class")
 					Dim lineProvider As SetupAPI.InfLine = infFile.FindFirstKey("Version", "Provider")
 					Dim lineCatalogFile As SetupAPI.InfLine = infFile.FindFirstKey("Version", "CatalogFile")
+					'Dim linesSourceDisksFiles As SetupAPI.InfLine = CType(infFile.SetupFindLines("SourceDisksFiles", "d"), SetupAPI.InfLine)
 					_class = If(lineClass IsNot Nothing, lineClass.GetString(1), String.Empty)
 					_provider = If(lineProvider IsNot Nothing, lineProvider.GetString(1), String.Empty)
 					_catalog = If(lineCatalogFile IsNot Nothing, lineCatalogFile.GetString(1), String.Empty)
-
+					_sourcedisksfiles = infFile.SetupFindLines("SourceDisksFiles", Nothing)
 					If Not IsNullOrWhitespace(_provider) Or Not IsNullOrWhitespace(_class) Then
 						_isValid = True
 					End If

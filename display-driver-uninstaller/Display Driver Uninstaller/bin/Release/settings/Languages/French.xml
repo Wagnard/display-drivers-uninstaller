@@ -9,81 +9,74 @@
 		<btnCleanRestart>
 			<Text>
 				Nettoyer et redémarrer
-				(Hautement recommandé)
+				(Fortement recommandé)
 			</Text>
 			<Tooltip>
-				Désinstaller les pilotes actuels et antérieurs et redémarrer l'ordinateur
+				Désinstaller les pilotes actuels et anciens, puis redémarrer l'ordinateur.
 				(Fortement recommandé)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				Nettoyer et NE PAS redémarrer.
-				(Possible écran noir)
+				Nettoyer et NE PAS redémarrer
+(Risque de problèmes d'écran noir)
 			</Text>
 			<Tooltip>
-				Désinstaller les pilotes actuels et antérieurs et ne PAS redémarrer l'ordinateur.
-				(Peut causer un écran noir)
+			Désinstaller les pilotes actuels et anciens, mais ne pas redémarrer l'ordinateur.
+				(Risque de problèmes d'écran noir)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
 				Nettoyer et éteindre
-				(pour l'installation d'une nouvelle carte graphique)
+				(Pour installer une nouvelle carte graphique)
 			</Text>
 			<Tooltip>
-				Désinstaller les pilotes et arrêt de l'ordinateur sans rescan
+				Désinstaller les pilotes actuels et anciens et éteindre l'ordinateur sans rescan
 				(Pour installer une nouvelle carte graphique)
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Remove "GeForce Experience" display driver installer cache/files.
-				(Note: Drivers won't be removed)
+				Supprimer le cache et fichiers de l'installateur du pilote GeForce Experience.
+				(Note : Les pilotes ne seront pas supprimés)
 			</Text>
 			<Tooltip>
-				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+				Utilisé pour récupérer l'espace disque qui n'a pas été nettoyé par GeForce Experience à l'installation d'un pilote (Ancienne version de GFE).
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Réglez l'installation du pilote
-				Windows Update par défaut.
+				Régler les options d'installation des périphériques Windows sur Défaut
+			 (installation automatique des pilotes)
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Version de Windows détectée</Text>
+			<Text>Version de Windows détectée :</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** Vous appréciez DDU ? Pensez à faire un don, cela aide à pérenniser le développement. ***</Text>
+			<Text>*** Vous aimez DDU ? Pensez à faire un don, cela aide à poursuivre le développement ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Log</Text>
+			<Text>Journal</Text>
 		</lblLog>
 		<lblSelectedGPU>
-			<Text>Sélection du Pilote graphique</Text>
+			<Text>Sélection du pilote graphique</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
 			<Text>Langue sélectionnée</Text>
 		</lblLanguage>
 
-		<Label9>
-			<Text>Note: Tout dommage ou erreurs causés à votre PC sont sous votre responsabilité.</Text>
-		</Label9>
-		<Label10>
-			<Text>Utiliser DDU en mode sans échec est recommandé.</Text>
-		</Label10>
-
 		<lblUpdate>
-			<Text>Vérification des mises à jour ...</Text>
-			<Text2>Aucune mise à jour trouvée. DDU est à jour.</Text2>
-			<Text3>Mise à jour trouvée !</Text3>
-			<Text4>Impossible de vérifier les mises à jour.</Text4>
+<Text>Vérifier les mises à jour...</Text>
+			<Text2>Aucune mise à jour trouvée. Le programme est à jour.</Text2>
+			<Text3>Mises à jour trouvées ! Prévoir une aide limitée avec la version plus ancienne que la plus récente.</Text3>
+<Text4>Impossible de rechercher les mises à jour !</Text4>
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offres de nos partenaires</Text>
-			<Tooltip>Vous pouvez les désactiver depuis le menu des options.</Tooltip>
+			<Text>Offres de nos partenaires (Recommandé).</Text>
+			<Tooltip>Vous pouvez les désactiver dans le menu options.</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
@@ -93,113 +86,116 @@
 			<Text>Info</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Log étendu</Text>
+			<Text>Journal détaillé</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
 			<Text>Liens</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Terms of Service (ToS)</Text>
+<Text>Conditions d'utilisation</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
-			<Text>À propos</Text>
+<Text>A propos</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Traducteurs</Text>
+<Text>Traducteurs</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Mécènes</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visiter la page officielle DDU</Text>
+			<Text>Visiter le site officiel de DDU</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Visiter la page web SVN</Text>
+			<Text>Visiter le site web de SVN</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visiter le forum Guru3d NVIDIA</Text>
+<Text>Visiter le forum Guru3d NVIDIA</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
 			<Text>Visiter le forum Guru3d AMD</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Visiter le forum Geforce</Text>
+			<Text>Visiter le forum GeForce</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
-			<Text1>Mise à jour disponible! Voulez-vous accéder au site Internet DDU ?</Text1>
-			<Text2>Le support est limité sur les versions antérieures à la version actuelle. Veuillez essayer la nouvelle version avant de signaler des bugs.</Text2>
-			<Text3>Vous n'utilisez pas DDU avec des privilèges d'administrateur. DDU va maintenant quitter.</Text3>
-			<Text4>Impossible de trouver ddudr. Veuillez vous référer au log.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) modifie considérablement votre base de registre. DDU va essayer de créer automatiquement un point de restauration système (en mode normal uniquement).</Text5>
-			<Text6>Un problème est survenu dans l'un des modules, envoyez vos logs de DDU au développeur.</Text6>
-			<Text7>DDU a détecté que vous disposez d'un ordinateur portable AMD avec gestion d'alimentation (Enduro ou équivalent), DDU n'est pas encore pleinement compatible / testé avec des systèmes Enduro, utiliser à vos risques et périls.</Text7>
-			<Text8>DDU a détecté que vous n'êtes pas en mode sans échec ... Pour un nettoyage sans problèmes, il est recommandé de redémarrer en mode sans échec.</Text8>
-			<Text9>DDU a changé un paramètre qui empêche les pilotes d'être automatiquement téléchargés par Windows Update. Vous pourrez rétablir ce réglage après l'installation du nouveau pilote.</Text9>
-			<Text10>Désinstallation propre terminée ! Voulez-vous quitter maintenant ?</Text10>
-			<Text11>Les pilotes seront maintenant téléchargés automatiquement par le système.</Text11>
-			<Text12>Vous n'êtes pas en mode sans échec. Il est fortement recommandé de redémarrer en mode sans échec pour éviter des problèmes. Voulez-vous redémarrer en mode sans échec ? "</Text12>
-			<Text13>Voici les options que vous devez sélectionner à l'écran bleu du menu de récuperation" : Troubleshoot -&gt; advanced options -&gt; startup Settings.</Text13>
-			<Text14>Il y a un redémarrage en attente, veuillez redémarrer avant d'utiliser DDU.</Text14>
-			<Text15> Aucun changement n'a été effectué. Les paramètres d'installation des périphérique Windows sont déjà définis par défaut.</Text15>
-			<Text16>Une erreur critique s'est produite à partir de Windows qui empêche la suppression des pilotes. Par mesure de sécurité, DDU ne poursuivra pas la suppression des fichiers et du registre. Vous devez corriger les problèmes de votre système avant d'utiliser DDU.</Text16>
+			<Text1>Mises à jour disponibles ! Visiter le site web de DDU maintenant ?</Text1>
+			<Text2>Prévoyez un soutien limité pour les versions plus anciennes que la plus récente. Vérifiez la version la plus récente avant de signaler les bogues.</Text2>
+			<Text3>Vous n'utilisez pas DDU avec des droits Administrateur. L'application va maintenant se fermer.</Text3>
+<Text4>Impossible de trouver PAExec. Veuillez vous référer au journal.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) modifie souvent votre registre. DDU tentera de créer un point de restauration du système automatiquement (mode normal uniquement).</Text5>
+<Text6>Un problème est survenu dans l'un des modules, envoyez les journaux de DDU au développeur.</Text6>
+			<Text7>DDU a détecté que vous aviez un PC portable à switch AMD (Enduro ou équivalent), DDU n'est pas encore tout à fait compatible et testé avec les systèmes Enduro. Utilisez-le à vos risques et périls.</Text7>
+			<Text8>DDU a détecté que vous n'êtes PAS en mode sans échec... Pour un nettoyage sans erreur, il est recommandé de redémarrer en mode sans échec.</Text8>
+			<Text9>Les paramètres d'installation des composants Windows ont été modifiés pour ne PAS installer automatiquement les pilotes.</Text9>
+			<Text10>Désinstallation parfaite terminée ! Voulez-vous quitter maintenant ?</Text10>
+			<Text11>Les préférences d'installation des composants de Windows ont été modifiées pour installer automatiquement les pilotes.</Text11>
+			<Text12>Vous n'êtes pas en mode sans échec. Il est vivement recommandé de redémarrer en mode sans échec pour éviter tout problème éventuel. Redémarrer en mode sans échec maintenant ?</Text12>
+			<Text13>Voici ce que vous devez sélectionner à l'écran bleu de récupération : Dépannage -&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text14>Il y a un redémarrage en cours, veuillez redémarrer avant d'utiliser DDU.</Text14>
+			<Text15>Aucune modification n'a été effectuée. Les paramètres d'installation des composants Windows étaient déjà réglés sur Défaut.</Text15>
+			<Text16>Une erreur critique est survenue dans Windows qui empêche la suppression correcte des pilotes. Par mesure de sécurité, DDU ne poursuivra pas la suppression des fichiers et du registre. Il faut résoudre le(s) problème(s) de votre système avant d'utiliser DDU.</Text16>
 		</Messages>
 		<Options_Type>
-			<Options1>---Choisir type de péripherique---</Options1>
+			<Options1>---Choisir le type de matériel---</Options1>
 			<Options2>Audio</Options2>
 			<Options3>GPU</Options3>
 		</Options_Type>
 		<Options_GPU>
-			<Options1>---Choisir périphérique---</Options1>
+			<Options1>---Choisir le matériel---</Options1>
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
 		</Options_GPU>
 		<Options_AUDIO>
-			<Options1>---Choisir périphérique---</Options1>
+			<Options1>---Choisir le matériel---</Options1>
 			<Options2>REALTEK (WIP)</Options2>
 			<Options3>SOUNDBLASTER (WIP)</Options3>
 		</Options_AUDIO>
 		<UpdateLog>
-			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
-			<Text2>Cleaning Directory</Text2>
-			<Text3>Cleaning known Regkeys... May take a minute or two.</Text3>
-			<Text4>Cleaning UpdatusUser users account if present.</Text4>
-			<Text5>Cleaning Directory</Text5>
-			<Text6>Starting Registry CleanUP</Text6>
-			<Text7>Finished cleaning Registry</Text7>
-			<Text8>Starting the removal of nVidia Optimus UpperFilter if present.</Text8>
-			<Text9>Scanning for new device...</Text9>
-			<Text10>Clean uninstall completed!</Text10>
-			<Text11>DDU Version</Text11>
+			<Text1>Exécution du Nettoyage du stockage des pilotes (Supprimer OEM)...</Text1>
+			<Text2>Dossier de nettoyage</Text2>
+			<Text3>Nettoyage des clés-reg... Peut prendre une minute ou deux.</Text3>
+			<Text4>Nettoyer la mise à jour du compte utilisateur, si présent.</Text4>
+			<Text5>Dossier de nettoyage</Text5>
+			<Text6>Démarre le nettoyage du registre</Text6>
+			<Text7>Fin du nettoyage du registre</Text7>
+			<Text8>Lancer la suppression de NVIDIA Optimus UpperFilter si présent.</Text8>
+			<Text9>Recherche d'un nouveau matériel...</Text9>
+			<Text10>Désinstallation parfaitement terminée !</Text10>
+			<Text11>DDU Version </Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Detected</Text13>
+			<Text13>Détecté </Text13>
 			<Text14>GPU DeviceId</Text14>
-			<Text15>Detected Driver(s) Version(s)</Text15>
-			<Text16>INF</Text16>
-			<Text17>INF Section</Text17>
-			<Text18>GPU not Correctly Installed</Text18>
-			<Text19>Deleting some specials folders, it may take some times...</Text19>
-			<Text20>CleanUP started...</Text20>
-			<Text21>Uninstalling</Text21>
-			<Text22>driver</Text22>
-			<Text23>Executing ddudr Remove , Please wait(can take a few minutes)</Text23>
-			<Text24>GPU(s) Removed from Device Manager.</Text24>
-			<Text25>Executing DDUDR Remove Audio controller.</Text25>
-			<Text26>HD audio adapters Removed !</Text26>
-			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
-			<Text28>Monitors and Hidden monitors removed !</Text28>
-			<Text29>ddudr Remove complete</Text29>
-			<Text30>Starting S-1-5-xx region cleanUP</Text30>
-			<Text31>End of S-1-5-xx region cleanUP</Text31>
-			<Text32>Begin Classesroot ,installer\products cleanup</Text32>
-			<Text33>End Classesroot ,installer\products cleanup</Text33>
-			<Text34>Start localmachine ,installer\products cleanup</Text34>
-			<Text35>End localmachine ,installer\products cleanup</Text35>
-			<Text36>Start currentuser ,installer\products cleanup</Text36>
-			<Text37>End currentuser ,installer\products cleanup</Text37>
-			<Text38>Cleaning process/services...</Text38>
-			<Text39>Process/Services CleanUP Complete</Text39>
-			<Text40>Deleted.</Text40>
-			<Text41>Value removed.</Text41>
-			<Text42>File Deleted.</Text42>
+			<Text15>Version(s) du Pilote détectée(s) </Text15>
+			<Text16>INF </Text16>
+			<Text17>Section INF </Text17>
+			<Text18>Le GPU n'est pas installé correctement</Text18>
+			<Text19>Suppression de certains dossiers spéciaux, cela peut durer longtemps...</Text19>
+			<Text20>Nettoyage commencé...</Text20>
+			<Text21>Désinstallation</Text21>
+			<Text22>pilote</Text22>
+			<Text23>Exécuter la suppression de SetupAPI, veuillez patienter (cela peut durer quelques minutes)</Text23>
+			<Text24>GPU supprimé du Gestionnaire de périphériques.</Text24>
+			<Text25>L’exécution de SetupAPI supprime le contrôleur audio.</Text25>
+			<Text26>Adaptateurs audio HD retirés !</Text26>
+			<Text27>Adaptateur USB 3D Vision retiré du Gestionnaire de périphériques.</Text27>
+			<Text28>Moniteurs et moniteurs cachés supprimés !</Text28>
+			<Text29>Suppression SetupAPI terminée !</Text29>
+			<Text30>Démarrer le nettoyage de la région S-1-5-xx</Text30>
+			<Text31>Fin du nettoyage de la région S-1-5-xx</Text31>
+			<Text32>Début du nettoyage d’installation\produits Classesroot</Text32>
+			<Text33>Fin du nettoyage d’installation\produits Classesroot</Text33>
+			<Text34>Début du nettoyage d’installation\produits Localmachine</Text34>
+			<Text35>Fin du nettoyage d’installation\produits Localmachine</Text35>
+			<Text36>Début du nettoyage d’installation\produits Currentuser</Text36>
+			<Text37>Fin Début du nettoyage d’installation\produits Currentuser</Text37>
+			<Text38>Nettoyage de Processus/Services...</Text38>
+			<Text39>Fin du nettoyage de Processus/Services</Text39>
+			<Text40>Supprimer</Text40>
+			<Text41>Valeur retirée.</Text41>
+			<Text42>Fichier supprimé.</Text42>
 		</UpdateLog>
 	</frmMain>
 
@@ -211,19 +207,25 @@
 			<Text>Afficher les offres de nos partenaires</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>Options spécifiques NVIDIA</Text>
+			<Text>Options spécifiques à NVIDIA</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>Options spécifiques AMD</Text>
+			<Text>Options spécifiques à AMD</Text>
 		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>Options spécifiques à INTEL</Text>
+		</lblINTELspecific>
+		<lblAdvancedO>
+			<Text>Options avancées (changez à vos propres risques)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
-			<Text>Options générales</Text>
+			<Text>Options Générales</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Supprimer les dossiers "C:\nVidia" (NON recommandé)</Text>
+			<Text>Supprimer le dossier de pilotes "C:\NVIDIA".</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Enregistrer les fichiers journaux dans le répertoire de démarrage (recommandé)</Text>
+			<Text>Enregistrer les fichiers journaux dans le chemin de démarrage (Fortement recommandé).</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Supprimer PhysX</Text>
@@ -232,59 +234,65 @@
 			<Text>Supprimer 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
-			<Text>Créer un point de restauration système (S'il est actif)</Text>
+			<Text>Créer un point de restauration système (si autorisé)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Supprimer les moniteurs présents et cachés (recommandé)</Text>
+			<Text>Supprimer les moniteurs présents et non présents (Recommandé)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Supprimer AMD Audio Bus (Périphérique système)</Text>
+			<Text>Supprimer Bus Audio AMD</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Supprimer les dossiers "C:\AMD" (NON recommandé)</Text>
+			<Text>Supprimer le dossier de pilote "C:\AMD".</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Supprimer le pilote / filtre AMDKMPFD  (Une Sauvegarde est recommandée pour les chipsets AMD)</Text>
+			<Text>Retirer le pilote/filtre AMDKMPFD (Sauvegarde recommandée pour le chipset AMD)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Afficher le message du mode sans échec au démarrage</Text>
+			<Text>Boîte de dialogue Activer le Mode Sans Échec (Non recommandé si vous n’avez pas testé le mode sans échec manuellement)</Text>
+			<Tooltip>Non recommandé si vous n’avez jamais démarré l'ordinateur en mode sans échec pour voir si cela fonctionne. Cette option peut provoquer un démarrage en boucle, un écran noir et peut-être plus.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Sauvegarder le fichier de configuration dans le répertoire roaming</Text>
+			<Text>Stocker le fichier de configuration dans un dossier itinérant</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Vérifier automatiquement les mises à jour au démarrage (Recommandé)</Text>
+			<Text>Rechercher automatiquement les mises à jour DDU au démarrage (recommandé)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Supprimer Geforce Experience (GFE)</Text>
+			<Text>Supprimer GeForce Experience (GFE)</Text>
 		</lblRemGFE>
 		<lblRemNVBROADCAST>
 			<Text>Supprimer NVIDIA Broadcast</Text>
 		</lblRemNVBROADCAST>
+		<lblRemNVCP>
+			<Text>Supprimer NVIDIA (Pilote DCH) du Panneau de configuration du Microsoft Store</Text>
+		</lblRemNVCP>
+		<lblRemINTELCP>
+			<Text>Supprimer INTEL (Pilote DCH) du Panneau de configuration du Microsoft Store</Text>
+		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>Supprimer AMD (Pilote DCH) du Panneau de configuration du Microsoft Store</Text>
+		</lblRemAMDCP>
 		<lblRemCrimsonCache>
-			<Text>Supprimer le répertoire du AMD Crimson Shader Cache</Text>
+			<Text>Supprimer le dossier cache AMD Crimson Shader</Text>
 			<Tooltip>
-				Recommandé s’il y a des anomalies graphiques (vitesse ou corruption visuelle) causée par un cache de données de shader corrompu.
-				Aussi recommandé si vous passez à une autre marque comme nVidia.
+				Recommandé en cas d’anomalie graphique (vitesse, corruption visuelle) causée par des données du cache de shader corrompues.
+				Également recommandé si vous passez à une autre marque comme NVIDIA.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Supprimer Vulkan</Text>
-			<Tooltip>Non recommandé si vous avez 2 GPU différents compatibles avec l'API Vulkan.</Tooltip>
+			<Text>Supprimer Vulkan Runtime</Text>
+			<Tooltip>Non recommandé si vous avez 2 GPU différents capables d’utiliser l’API Vulkan.</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>Utiliser SetupAPI *Experimental*</Text>
-			<Tooltip>Utiliser SetupAPI à la place de l'outil externe DDUDR (DEVCON)</Tooltip>
-		</lblUseSetupAPI>
-		    <lblPreventWinUpdate>
-      <Text>Empêchez le téléchargement de pilotes à partir de "Windows Update" lorsque "Windows" recherche un pilote pour un périphérique.</Text>
-      <Tooltip>En termes simples, cette option empêche "Windows / Gestionnaire de périphériques" de vérifier la mise à jour du pilote sur "Windows Update".
-               Remarque: Cela n'empêche pas "Windows Update" de télécharger / installer de nouveaux pilotes.
-               Remarque2: Il est également * fortement * recommandé de décocher cette option après avoir fini d'utiliser DDU et d'avoir réinstallé le pilote du processeur graphique.</Tooltip>
+    <lblPreventWinUpdate>
+      <Text>Empêcher les téléchargements de pilotes par "Windows update" lorsque Windows recherche un pilote pour un matériel.</Text>
+      <Tooltip>En termes simples, cette option interdit au "Gestionnaire de périphériques" de vérifier la mise à jour de pilotes sur "Windows Update". 
+               Note : Cela n'empêche pas "Windows Update" de télécharger/installer de nouveaux pilotes. 
+               Note 2 : Il est également *HAUTEMENT* recommandé d'annuler ce changement après avoir terminé l'utilisation de DDU et réinstallé le pilote de votre GPU ou vous pourriez avoir des problèmes avec l'installation d'autres périphériques.</Tooltip>
      </lblPreventWinUpdate>
-	</frmOptions>
+  </frmOptions>
 
-	<frmLaunch Text="Options de démarrage">
+	<frmLaunch Text="Option de démarrage">
 		<btnAccept>
 			<Text>Exécuter</Text>
 			<Text2>
@@ -301,32 +309,32 @@
 		<lblNotSafeMode>
 			<Text>
 				Vous n'êtes pas en mode sans échec. Il est fortement recommandé de
-				redémarrer en mode sans échec pour éviter des problèmes.
+				de redémarrer en mode sans échec pour éviter tout problème.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Note importante pour les utilisateurs de Windows 8/8.1/10 :
-				MOT DE PASSE Windows obligatoire, le PIN ne marche PAS en mode sans échec.
-				Fermez immédiatement si vous l'avez perdu ou si vous ne le connaissez pas !
+				Note importante pour les utilisateurs de Windows 8/8.1/10/11 :
+Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS fonctionner en Mode Sans Échec)
+				Quittez immédiatement si vous l'avez perdu ou si vous ne le connaissez pas !
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>Normal</Item1>
-			<Item2>Mode sans échec (Recommandé)</Item2>
-			<Item3>Mode sans échec avec prise en charge du réseau</Item3>
+			<Item2>Mode Sans Échec (Recommandé)</Item2>
+			<Item3>Mode Sans Échec avec prise en charge du Réseau</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU a fermé des programmes connus pour interférer (comme MSI Afterburner et RTSS).</Text1>
+			<Text1>DDU a fermé les programmes connus pour interférer (comme MSI Afterburner et RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
 
-	<frmLog Text="Log Étendu">
+	<frmLog Text="Journal détaillé">
 		<btnClose>
 			<Text>Fermer</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Ouvrir log</Text>
+			<Text>Ouvrir le journal</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
@@ -340,13 +348,13 @@
 			<Text>Filtres</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Afficher les évènements</Text>
+			<Text>Montrer les événements</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Afficher les avertissements</Text>
+			<Text>Montrer les avertissements</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Afficher les erreurs</Text>
+			<Text>Montrer les erreurs</Text>
 		</errorsMenuItem>
 	</frmLog>
 
@@ -364,81 +372,96 @@
 			<Text>À propos</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>Terms of Service (ToS)</Text>
+			<Text>Conditions d'utilisation</Text>
 		</btnTos>
 		<btnTranslators>
 			<Text>Traducteurs</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>Mécènes</Text>
+		</btnPatron>
 		<lblTranslators>
-			<Text>Un grand merci aux traducteurs suivants et aussi à ceux qui ne sont pas listés!</Text>
+			<Text>Un grand merci aux traducteurs suivants et à ceux qui ne sont pas mentionnés !</Text>
 		</lblTranslators>
 		<lblPatron>
-			<Text>Un grand merci au Patron suivant et aussi à ceux qui ne sont pas listés!</Text>
-			
-					-honnmaguro   (Since 2018-03-16)
-					-ZaoDaDong (Since 2019-02-06)
-					-Alberto Bursi (long time donator/supporter)
-					-Kaseb (Since 2019-09-05)
-					-Frank Brown (Since 2019-10-31)
-					-Sergey Bolshakow (Since 2020-09-10)
-					-James Tiller (Since 2021-04-03)
-					-Paulo Henrique (Since 2021-04-19)				  
+			<Text>
+				Un grand merci aux mécènes suivants et à ceux qui ne sont pas mentionnés !
+
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+			</Text>
 		</lblPatron>
 	</frmAbout>
 
 	<Misc>
 		<About>
 			<Text>
-				Display Driver Uninstaller (DDU) / Utilitaire de désinstallation des pilotes graphiques. (NVIDIA / AMD)
+				Display Driver Uninstaller (DDU) / Nettoyeur conçu pour les Pilotes d'écran (GPU). (NVIDIA/AMD)
 
-				Son objectif, est de supprimer le pilote d'affichage du Gestionnaire de périphériques, en supprimant le pilote
-				actuel ainsi que tous les pilotes précédents figurant dans le magasin de pilotes Windows (y compris la
-				suppression des services NVIDIA / AMD).
-				L'effet apporté par notre utilitaire de désinstallation, sera similaire à une nouvelle installation de Windows.
+				Il supprime le pilote affichage/GPU du Gestionnaire de périphériques et supprime le pilote actuel et tous
+				les pilotes précédents du dossier des pilotes de Windows, ainsi que la suppression des services de NVIDIA/AMD.
 
-				Notre utilitaire agit de la même façon que Driver Sweeper, comme indiqué ci-dessus.
-				Si vous rencontrez des problèmes pour installer un pilote (ancien ou récent), cela signifie que « DDU » est fait
-				pour vous !
+				L'effet visible après l'utilisation de cet outil sera similaire à celui d'une "Nouvelle installation" de Windows.
 
-				Usage recommandé :
+				Cet outil agit comme "Driver Sweeper"*, et possède tous les avantages mentionnés ci-dessus.
 
-				- Cet utilitaire peut être utilisé en mode normal, mais pour des raisons de stabilité lors de l'utilisation de
-				« DDU », le mode sans échec est toujours le meilleur choix.
+				Si vous rencontrez des problèmes à installer un ancien ou nouveau pilote, essayez-le car certains rapports indiquent qu'il résout ces problèmes.
 
-				- Nous tenons à recueillir les commentaires des utilisateurs. Dites-nous si c'était un succès ou non. Par mesure
-				de sécurité, nous vous recommandons d'utiliser la partie "Sauvegarde et Restauration" de Windows
-				(normalement, il ne devrait pas y avoir de problèmes).
+				UTILISATION RECOMMANDÉE :
 
-				Gardez à l'esprit que NVIDIA / AMD n'ont rien à voir avec nous, nous ne travaillons pas avec eux, ainsi,
-				ni NVIDIA, ni AMD, ne pourront être tenus pour responsable de tout dommage causé à votre système par « DDU ».
+				- L'outil peut être utilisé en mode normal, mais pour une stabilité absolue lors de l'utilisation de DDU, le mode sans échec est toujours le meilleur.
 
+				- Nous aimerions recueillir les réactions de chacun, dites-nous si cela a été un succès ou non.
+
+				- Faites une sauvegarde ou un point de restauration du système (mais normalement cela devrait être assez sûr).
+
+				- Si vous avez ou avez eu un problème de pilote et que cet outil vous a aidé à résoudre certains problèmes que vous aviez ou avez actuellement, veuillez partager votre résultat.				
+
+				Gardez à l'esprit que NVIDIA, AMD et Microsoft ne peuvent être tenus pour responsables des dommages subis
+				par vous ou à votre ordinateur et ne sont en aucun cas affiliés à DDU, ou à ses créateurs.
 				-------------------------------
 
 				Créé par Wagnard.
 
-				Copropriétaire : Shady7557
+				Codeurs : Wagnard, Devmltk, Shady7557
 
 				Testeur : Dellon132
 
 				Logos : juanchacin
 
-				Merci à Helge Klein (http://helgeklein.com/setacl/) : pour m'avoir donné la permission d'utiliser son programme « SetACL », avec « DDU ».
+				Un grand merci à Jackalito pour le don d'un AMD 7850.
 
-				Un grand merci à Gamer1291, pour ses nombreux tests.
+				Merci à Helge Klein (http://helgeklein.com/setacl/) pour la permission d'utiliser son programme "SetAcl" avec DDU.
 
-				Merci à tous ceux qui ont mis leur système en danger (un remerciement tout particulier à Dellon132).
+				Un grand merci pour le temps qu'ils ont passé à tester : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (a pris le temps de déboguer avec moi)
+				Extraordinaire (Testé une correction de bug).
 
+				Merci à tous ceux qui ont mis leur système en danger (merci spécial à Dellon132).
+
+				*DDU, ses créateurs et ses affiliés ne sont en aucun cas affiliés à Driver Sweeper, ou à ses créateurs.
 			</Text>
 		</About>
+
 		<Tos>
 			<Text>
-				Display Driver Uninstaller («DDU») ACCORD DE L'UTILISATEUR
+				Display Driver Uninstaller ("DDU") ACCORD D'UTILISATION
 
-				Vous devenez un utilisateur de DDU («Utilisateur») en utilisant le logiciel DDU. Le présent Accord entrera en vigueur dès que vous utilisez le programme pour désinstaller un pilote.
+				Vous devenez un utilisateur de DDU ("Utilisateur") en utilisant le logiciel DDU. Le présent contrat prend effet dès que vous utilisez le programme pour désinstaller un pilote.
 
-				En utilisant DDU vous acceptez de ne pas accuser DDU ou ses créateurs et affiliés, d'endommager ou affecter négativement votre PC.
+				En utilisant DDU, vous acceptez de ne pas accuser DDU ou ses créateurs, et ses affiliés, d'endommager ou d'affecter négativement votre PC.
 
-				En utilisant DDU vous reconnaissez que NVIDIA («NVIDIA, GeForce») , Advanced Micro Devices ("AMD Radeon») et Microsoft n'ont rien à voir avec ce programme, ne peuvent etre accusés pour des dommages à vous ou votre ordinateur et en aucune façon affiliés à DDU ou ses créateurs.
+				En utilisant DDU, vous reconnaissez que NVIDIA ("NVIDIA, GeForce") et Advanced Micro Devices ("AMD, Radeon") n'ont rien à voir avec ce programme, et ne sont en aucun cas affiliés à DDU ou à ses créateurs.
 			</Text>
 		</Tos>
 	</Misc>
@@ -446,9 +469,19 @@
 	<LanguageTranslators>
 		<Translator>
 			<User>Wagnard</User>
-			<Details>wagnard28@gmail.com</Details>
-			<LastUpdate>13/05/2017</LastUpdate>
+			<Details>Propriétaire</Details>
+			<LastUpdate>03/04/2021</LastUpdate>
 		</Translator>
+
+		<Translator2>
+			<User>DevMltk</User>
+			<LastUpdate>31/05/2016</LastUpdate>
+		</Translator2>
+
+		<Translator3>
+			<User>Talex v18.0.4.9</User>
+			<LastUpdate>30/04/2022</LastUpdate>
+		</Translator3>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

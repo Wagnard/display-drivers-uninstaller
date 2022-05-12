@@ -2902,6 +2902,7 @@ Public Class CleanupEngine
 	Public Sub Cleandriverstore(ByVal config As ThreadSettings)
 		Dim FileIO As New FileIO
 		Dim catalog As String = ""
+		Dim driverfiles As String() = Nothing
 		Dim CurrentProvider As String() = Nothing
 
 		UpdateTextMethod("Executing Driver Store cleanUP(finding OEM step)...")
@@ -2915,21 +2916,28 @@ Public Class CleanupEngine
 				Select Case config.SelectedGPU
 					Case GPUVendor.Nvidia
 						CurrentProvider = {"NVIDIA"}
+						driverfiles = {"nvlddmkm.sys", "nvhda64v", "UcmCxUcsiNvppc.sys", "nvvad64v.sys", "NVSWCFilter64.sys", "nvrtxvad", "nvvad64v.sys", "nvvhci.sys", "nvrtxvad64v.sys"}
 					Case GPUVendor.AMD
 						CurrentProvider = {"Advanced Micro Devices", "atitech", "advancedmicrodevices", "ati tech", "amd"}
+						driverfiles = {"amdkmdag.sys", "amdxe.sys", "amdfendrmgr.sys", "AtihdWT6.sys", "amdsafd.sys"}
 					Case GPUVendor.Intel
 						CurrentProvider = {"Intel"}
+						driverfiles = {"igdkmd64.sys", "IntcDAud.sys", "intelaud.sys", "iwdbus.sys"}
 					Case GPUVendor.None
 						CurrentProvider = {"None"}
+						driverfiles = Nothing
 				End Select
 			Case CleanType.Audio
 				Select Case config.SelectedAUDIO
 					Case AudioVendor.Realtek
 						CurrentProvider = {"Realtek"}
+						driverfiles = {"RTKVHD64.sys"}
 					Case AudioVendor.SoundBlaster
 						CurrentProvider = {"Creative"} 'Not verified.
+						driverfiles = {"cthda.sys", "cthdb.sys"}
 					Case AudioVendor.None
 						CurrentProvider = {"None"}
+						driverfiles = Nothing
 				End Select
 			Case CleanType.None
 				CurrentProvider = {"None"}
@@ -2955,14 +2963,21 @@ Public Class CleanupEngine
 						catalog = ""
 					End If
 				End If
+
 				If StrContainsAny(oem.Class, True, "display", "media", "extension", "softwarecomponent") Then
 					If Not ((Not config.RemoveNVBROADCAST AndAlso StrContainsAny(oem.Catalog, True, "nvrtxvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvswcfilter"))) Then
-						SetupAPI.RemoveInf(oem, False)
+						For Each SourceDisksName In oem.SourceDisksFiles
+							If IsNullOrWhitespace(SourceDisksName) Then Continue For
+							If SourceDisksName IsNot Nothing AndAlso StrContainsAny(SourceDisksName, True, driverfiles) Then
+								SetupAPI.RemoveInf(oem, False)
+								Exit For
+							End If
+						Next
 					End If
-				Else
-					If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.
-						SetupAPI.RemoveInf(oem, False)
-					End If
+					'Else
+					'	If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.
+					'		SetupAPI.RemoveInf(oem, False)
+					'	End If
 				End If
 			End If
 			'check if the oem was removed to process to the pnplockdownfile if necessary

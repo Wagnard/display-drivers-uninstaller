@@ -137,6 +137,25 @@ Namespace Win32
 
 				Return retval
 			End Function
+			Public Function SetupFindLines(ByVal section As String, ByVal key As String) As String()
+				Dim retval As PrivateSection
+				Dim sectionContext As INFCONTEXT = New INFCONTEXT
+				Dim values As New List(Of String)
+				If Not SetupFindFirstLine(_handle, section, Nothing, sectionContext) Then
+					GetLastError()
+					_lastMessage = String.Format("Error finding key '{0}' in section '{1}' of file '{2}'{4}Message = ""{3}""", If(key, "<null>"), section, FilePath, LastMessage, CRLF)
+				Else
+					ResetError()
+					retval = New PrivateSection(sectionContext, section, _file)
+					values.Add(If(retval IsNot Nothing, retval.GetString(0), String.Empty))
+					While SetupFindNextMatchLine(sectionContext, key, sectionContext) = True
+						retval = New PrivateSection(sectionContext, section, _file)
+						values.Add(If(retval IsNot Nothing, retval.GetString(0), String.Empty))
+					End While
+				End If
+
+				Return values.ToArray()
+			End Function
 
 			Public Overrides Function ToString() As String
 				Return FilePath
@@ -304,8 +323,8 @@ Namespace Win32
 
 		<DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function SetupOpenInfFile(
-   <[In]()> <MarshalAs(UnmanagedType.LPWStr)> ByVal FileName As String,
-   <[In]()> <MarshalAs(UnmanagedType.LPWStr)> ByVal InfClass As String,
+   <[In]()><MarshalAs(UnmanagedType.LPWStr)> ByVal FileName As String,
+   <[In]()><MarshalAs(UnmanagedType.LPWStr)> ByVal InfClass As String,
    <[In]()> ByVal InfStyle As UInt32,
    <[In]()> ByRef ErrorLine As UInt32) As IntPtr
 		End Function
@@ -327,7 +346,7 @@ Namespace Win32
 		Private Shared Function SetupFindNextMatchLine(
    <[In]()> ByRef contextIn As INFCONTEXT,
    <[In]()> ByVal key As String, <MarshalAs(UnmanagedType.Struct)>
-   <[In](), [Out]()> ByRef contextOut As INFCONTEXT) As <MarshalAs(UnmanagedType.Bool)> Boolean
+																																																					  <[In](), [Out]()> ByRef contextOut As INFCONTEXT) As <MarshalAs(UnmanagedType.Bool)> Boolean
 		End Function
 
 	End Class
