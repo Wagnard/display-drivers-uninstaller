@@ -136,6 +136,15 @@
 			<Text14>Det finns en väntande omstart, var god och starta om innan du använder DDU</Text14>
 			<Text15>Ingen ändring gjordes. Windows Enhetsinstallationsinställningar var redan satta till standard.</Text15>
             <Text16>Ett kritiskt fel i Windows förhindrar borttagning av drivrutiner. Som en säkerhetsåtgärd, kommer DDU inte att fortsätta att ta bort i filer och registret. Du måste fixa dina systemproblem innan DDU används.</Text16>
+            <Text17>Detta verkar vara första gången du har startat DDU.
+
+					Innan du använder det, var god notera följande:
+					1: Beroende på dina problem och konfiguration, kan det hjälpa eller göra saker värre.
+					2: Du bör ha en backup.
+					3: Du bör läsa License.txt, Readme.txt, och Användarvillkor(ToS).
+					4: Vi är inte ansvariga för någon sorts skada eller dataförlust.
+					5: Vi är alltid villiga att hjälpa om det finns ett problem.
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>---Välj enhetstyp---</Options1>
@@ -400,6 +409,8 @@
 				-Chris Ross
 				-Fabio
 				-Matti Metsikko
+				-mikalonia - mika
+				
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -474,7 +485,7 @@ Tack till Helge Klein (http://helgeklein.com/setacl/) : för tillståndet att an
 		<Translator>
 			<User>Hans Eriksson</User>
 			<Details>hans.ericson@bredband.net</Details>
-			<LastUpdate>24/04/2022</LastUpdate>
+			<LastUpdate>17/05/2022</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
