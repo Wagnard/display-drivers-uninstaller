@@ -372,13 +372,7 @@ Public Class frmMain
 		End Try
 
 		If Application.Settings.FirstTimeLaunch AndAlso Not Application.LaunchOptions.Silent Then
-			Microsoft.VisualBasic.MsgBox("This seems to be the first time you launch DDU." & vbNewLine &
-				"Before using please know that by using DDU : " & vbNewLine & vbNewLine &
-			"1- Depending on your problems and configurations, it could help or make things worse." & vbNewLine &
-			"2- You should have a backup" & vbNewLine &
-			"3- You should read the license, Readme and ToS." & vbNewLine &
-			"4- We are not responsible for any damage or loss of data of any kind." & vbNewLine &
-			"5- We are always willing to help if there is a problem")
+			Microsoft.VisualBasic.MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text17"), MsgBoxStyle.Information, Application.Settings.AppName)
 			Dim frmOptions As New frmOptions
 
 			With frmOptions

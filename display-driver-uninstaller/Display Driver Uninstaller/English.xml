@@ -136,6 +136,15 @@
 			<Text14>There is a pending reboot, please reboot before using DDU</Text14>
 			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
 			<Text16>A critical error occured from Windows that is preventing the correct removal of drivers. As a security measure, DDU will not continue the files and registry removal. You must fix your system issue(s) before using DDU.</Text16>
+			<Text17>This seems to be the first time you've launched DDU.
+				
+					Before using, please know the following:
+					1: Depending on your problems and configuration, it could help or make things worse.
+					2: You should have a backup.
+					3: You should read the license, Readme, and ToS.
+					4: We are not responsible for any damage or data loss of any kind.
+					5: We are always willing to help if there's a problem.
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>---Select device type---</Options1>
