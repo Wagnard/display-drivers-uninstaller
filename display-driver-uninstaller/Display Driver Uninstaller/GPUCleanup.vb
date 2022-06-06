@@ -587,6 +587,15 @@ Public Class GPUCleanup
 
 			If config.SelectedGPU = GPUVendor.Intel Then
 
+				Dim PCIEDUPORT As String() =
+						{"PCI\VEN_8086&DEV_490F",
+						"PCI\VEN_8086&DEV_4910",
+						"PCI\VEN_8086&DEV_4FA4",
+						"PCI\VEN_8086&DEV_4FA0",
+						"PCI\VEN_8086&DEV_4FA1",
+						"CT_28bb0e51-b4b0-4509-9e51-78d48daae82b",
+						"VIDEO\INTC_HECI_2"}
+
 				'Removing Intel WIdI bus Enumerator
 				Application.Log.AddMessage("Executing SetupAPI: Remove Intel WIdI bus Enumerator.")
 				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
@@ -601,12 +610,10 @@ Public Class GPUCleanup
 					found.Clear()
 				End If
 				Application.Log.AddMessage("SetupAPI: Remove Intel WIdI bus Enumerator Complete .")
-			End If
 
-			If config.SelectedGPU = GPUVendor.Intel Then
 				'Removing Mini CTA Driver
 				Application.Log.AddMessage("Executing SetupAPI: Remove Intel Mini CTA Driver")
-				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("CTA Driver Devices", Nothing, False)
+				found = SetupAPI.GetDevices("CTA Driver Devices", Nothing, False)
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
 						If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
@@ -617,7 +624,28 @@ Public Class GPUCleanup
 					Next
 					found.Clear()
 				End If
-				Application.Log.AddMessage("SetupAPI: Remove Intel WIdI bus Enumerator Complete .")
+				Application.Log.AddMessage("SetupAPI: Remove Intel Mini CTA Driver Complete .")
+
+				'Removing Mini CTA Driver
+				Application.Log.AddMessage("Executing SetupAPI: Intel(R) Graphics System Controller Auxiliary Firmware Interface.")
+				found = SetupAPI.GetDevices("system", Nothing, False)
+				If found.Count > 0 Then
+					For Each d As SetupAPI.Device In found
+						If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+							If d.HasHardwareID Then
+								For Each hardwareid As String In d.HardwareIDs
+									If IsNullOrWhitespace(hardwareid) Then Continue For
+									If StrContainsAny(hardwareid, True, PCIEDUPORT) Then
+										SetupAPI.UninstallDevice(d)
+										Exit For
+									End If
+								Next
+							End If
+						End If
+					Next
+					found.Clear()
+				End If
+				Application.Log.AddMessage("SetupAPI: Intel(R) Graphics System Controller Auxiliary Firmware Interface Complete .")
 			End If
 
 			Application.Log.AddMessage("SetupAPI: Remove Audio/HDMI Complete")
