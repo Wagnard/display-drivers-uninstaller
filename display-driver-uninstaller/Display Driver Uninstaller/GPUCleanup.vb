@@ -150,6 +150,9 @@ Public Class GPUCleanup
 
 				Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\services.cfg")
 
+				KillProcess("arccontrolassist")
+				KillProcess("arccontrol")    'This avoid an error message when the device is removed.
+
 				For Each service As String In services
 					If IsNullOrWhitespace(service) Then Continue For
 
@@ -7013,6 +7016,20 @@ Public Class GPUCleanup
 				End If
 			End If
 		End If
+
+		filePath = Environment.GetFolderPath _
+	(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs"
+		Try
+
+			For Each child As String In FileIO.GetFiles(filePath)
+				If IsNullOrWhitespace(child) Then Continue For
+				If StrContainsAny(child, True, "Intel Arc Control") Then
+					Delete(child)
+				End If
+			Next
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
 
 		For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
 			If IsNullOrWhitespace(filepaths) Then Continue For
