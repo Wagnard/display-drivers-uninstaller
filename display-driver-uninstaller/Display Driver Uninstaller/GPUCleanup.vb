@@ -6774,6 +6774,38 @@ Public Class GPUCleanup
 
 		CleanupEngine.Installer(packages, config)
 
+		Try
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
+			"Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(child) Then Continue For
+
+						Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
+
+							If subregkey IsNot Nothing Then
+								If IsNullOrWhitespace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
+								wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
+								If IsNullOrWhitespace(wantedvalue) Then Continue For
+
+								If StrContainsAny(wantedvalue, True, packages) Then
+									Try
+										If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
+											Deletesubregkey(regkey, child)
+										End If
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+							End If
+						End Using
+					Next
+				End If
+			End Using
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+
 		If IntPtr.Size = 8 Then
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
@@ -7019,6 +7051,20 @@ Public Class GPUCleanup
 
 		filePath = Environment.GetFolderPath _
 	(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs"
+		Try
+
+			For Each child As String In FileIO.GetFiles(filePath)
+				If IsNullOrWhitespace(child) Then Continue For
+				If StrContainsAny(child, True, "Intel Arc Control") Then
+					Delete(child)
+				End If
+			Next
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+
+		filePath = Environment.GetFolderPath _
+	(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Startup"
 		Try
 
 			For Each child As String In FileIO.GetFiles(filePath)
