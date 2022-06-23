@@ -6772,6 +6772,23 @@ Public Class GPUCleanup
 			Application.Log.AddException(ex)
 		End Try
 
+		Try
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Directory\background\shell", True)
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(child) Then Continue For
+						If StrContainsAny(child, True, "Intel® Arc™ Control") Then
+
+							Deletesubregkey(regkey, child)
+
+						End If
+					Next
+				End If
+			End Using
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+
 		CleanupEngine.Installer(packages, config)
 
 		Try
