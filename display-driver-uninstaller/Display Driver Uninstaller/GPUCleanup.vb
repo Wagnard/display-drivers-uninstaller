@@ -7023,9 +7023,8 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "shadercache") Or
-					  StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Or
-						StrContainsAny(child, True, "ags") Then
+					If StrContainsAny(child, True, "shadercache", "ags", "gfxinstaller") Or
+					  StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Then
 
 						Delete(child)
 
@@ -7139,7 +7138,7 @@ Public Class GPUCleanup
 				Try
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
-							If StrContainsAny(child, True, "gcc", "games", "cuipromotions") AndAlso config.RemoveINTELCP Then
+							If StrContainsAny(child, True, "gcc", "games", "cuipromotions", "ags", "ign") AndAlso config.RemoveINTELCP Then
 
 								Delete(child)
 
