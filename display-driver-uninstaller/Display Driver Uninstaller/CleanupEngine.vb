@@ -729,6 +729,7 @@ Public Class CleanupEngine
 							End If
 						End Sub)
 					InterfaceRemovalWithValue(childlist, typelibList, False)
+					RemoveCLSIDInstance(childlist, False)
 				End If
 			End Using
 		Catch ex As Exception
@@ -875,6 +876,7 @@ Public Class CleanupEngine
 								Next
 							End Sub)
 						InterfaceRemovalWithValue(childlist, typelibList, True)
+						RemoveCLSIDInstance(childlist, True)
 					End If
 				End Using
 			Catch ex As Exception
@@ -1138,6 +1140,7 @@ Public Class CleanupEngine
 																			Next
 																			If subsuperregkey.ValueCount = 0 AndAlso subsuperregkey.SubKeyCount = 0 Then
 																				Deletesubregkey(superregkey, child2)
+																				Exit For
 																			End If
 																		End If
 																	End Using
@@ -1726,13 +1729,13 @@ Public Class CleanupEngine
 										End Using
 
 										'specific to the NVIDIA Broadcast. Could apply to more in the future.
-										Try
-											Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}\Instance", True), child)
-										Catch exARG As ArgumentException
-											'Do nothing, can happen (Not found)
-										Catch ex As Exception
-											Application.Log.AddException(ex)
-										End Try
+										'Try
+										'	Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}\Instance", True), child)
+										'Catch exARG As ArgumentException
+										'	'Do nothing, can happen (Not found)
+										'Catch ex As Exception
+										'	Application.Log.AddException(ex)
+										'End Try
 
 										'here I remove the mediafoundationkeys if present
 										'f79eac7d-e545-4387-bdee-d647d7bde42a is the Ecnoder section. Same on all windows version.
@@ -2014,6 +2017,7 @@ Public Class CleanupEngine
 						End Using
 					Next
 					InterfaceRemovalWithValue(childlist, typelibList, False)
+					RemoveCLSIDInstance(childlist, False)
 				End If
 			End Using
 		Catch ex As Exception
@@ -2064,13 +2068,13 @@ Public Class CleanupEngine
 											End Using
 
 											'specific to the NVIDIA Broadcast. Could apply to more in the future.
-											Try
-												Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}\Instance", True), child)
-											Catch exARG As ArgumentException
-												'Do nothing, can happen (Not found)
-											Catch ex As Exception
-												Application.Log.AddException(ex)
-											End Try
+											'Try
+											'	Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}\Instance", True), child)
+											'Catch exARG As ArgumentException
+											'	'Do nothing, can happen (Not found)
+											'Catch ex As Exception
+											'	Application.Log.AddException(ex)
+											'End Try
 
 											'here I remove the mediafoundationkeys if present
 											'f79eac7d-e545-4387-bdee-d647d7bde42a is the Encoder section. Same on all windows version.
@@ -2355,6 +2359,7 @@ Public Class CleanupEngine
 							End Using
 						Next
 						InterfaceRemovalWithValue(childlist, typelibList, True)
+						RemoveCLSIDInstance(childlist, True)
 					End If
 				End Using
 			Catch ex As Exception
@@ -2546,6 +2551,72 @@ Public Class CleanupEngine
 		End Try
 		Application.Log.AddMessage("End Orphan cleanUp")
 		Application.Log.AddMessage("End clsidleftover CleanUP")
+	End Sub
+
+	Private Sub RemoveCLSIDInstance(ByVal childlist As List(Of String), ByVal wow6432 As Boolean)
+		If Not wow6432 Then
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}", True)
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(child) Then Continue For
+						If StrContainsAny(child, True, "Instance") Then
+							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+								If regkey2 Is Nothing Then Continue For
+								For Each child2 As String In regkey.GetSubKeyNames()
+									If IsNullOrWhitespace(child2) Then Continue For
+									If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
+										For Each clsid As String In childlist
+											If StrContainsAny(child2, True, clsid) Then
+												Try
+													Deletesubregkey(regkey2, child2)
+												Catch ex As Exception
+													Application.Log.AddException(ex)
+												End Try
+											End If
+										Next
+									End If
+								Next
+								If regkey2.SubKeyCount = 0 Then
+									Deletesubregkey(regkey, child)
+									Exit For
+								End If
+							End Using
+						End If
+					Next
+				End If
+			End Using
+		Else
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}", True)
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetSubKeyNames()
+						If IsNullOrWhitespace(child) Then Continue For
+						If StrContainsAny(child, True, "Instance") Then
+							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+								If regkey2 Is Nothing Then Continue For
+								For Each child2 As String In regkey.GetSubKeyNames()
+									If IsNullOrWhitespace(child2) Then Continue For
+									If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
+										For Each clsid As String In childlist
+											If StrContainsAny(child2, True, clsid) Then
+												Try
+													Deletesubregkey(regkey2, child2)
+												Catch ex As Exception
+													Application.Log.AddException(ex)
+												End Try
+											End If
+										Next
+									End If
+								Next
+								If regkey2.SubKeyCount = 0 Then
+									Deletesubregkey(regkey, child)
+									Exit For
+								End If
+							End Using
+						End If
+					Next
+				End If
+			End Using
+		End If
 	End Sub
 
 	Public Sub Interfaces(ByVal interfaces As String())
