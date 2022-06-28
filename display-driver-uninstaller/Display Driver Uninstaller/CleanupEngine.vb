@@ -2520,7 +2520,9 @@ Public Class CleanupEngine
 															If StrContainsAny(value, True, clsIdle) Then
 																Try
 																	Deletesubregkey(regkey, child)
-																	typelibList.Add(child)
+																	SyncLock ListLock
+																		typelibList.Add(child)
+																	End SyncLock
 																	Application.Log.AddMessage(child + " for " + clsIdle)
 																	Exit For
 																Catch exARG As ArgumentException
@@ -2562,10 +2564,11 @@ Public Class CleanupEngine
 						If StrContainsAny(child, True, "Instance") Then
 							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 								If regkey2 Is Nothing Then Continue For
-								For Each child2 As String In regkey.GetSubKeyNames()
-									If IsNullOrWhitespace(child2) Then Continue For
-									If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
-										For Each clsid As String In childlist
+								If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
+									For Each clsid As String In childlist
+										For Each child2 As String In regkey2.GetSubKeyNames()
+											If IsNullOrWhitespace(child2) Then Continue For
+
 											If StrContainsAny(child2, True, clsid) Then
 												Try
 													Deletesubregkey(regkey2, child2)
@@ -2574,9 +2577,9 @@ Public Class CleanupEngine
 												End Try
 											End If
 										Next
-									End If
-								Next
-								If regkey2.SubKeyCount = 0 Then
+									Next
+								End If
+						If regkey2.SubKeyCount = 0 Then
 									Deletesubregkey(regkey, child)
 									Exit For
 								End If
@@ -2593,10 +2596,10 @@ Public Class CleanupEngine
 						If StrContainsAny(child, True, "Instance") Then
 							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 								If regkey2 Is Nothing Then Continue For
-								For Each child2 As String In regkey.GetSubKeyNames()
-									If IsNullOrWhitespace(child2) Then Continue For
-									If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
-										For Each clsid As String In childlist
+								If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
+									For Each clsid As String In childlist
+										For Each child2 As String In regkey2.GetSubKeyNames()
+											If IsNullOrWhitespace(child2) Then Continue For
 											If StrContainsAny(child2, True, clsid) Then
 												Try
 													Deletesubregkey(regkey2, child2)
@@ -2605,9 +2608,9 @@ Public Class CleanupEngine
 												End Try
 											End If
 										Next
-									End If
-								Next
-								If regkey2.SubKeyCount = 0 Then
+									Next
+								End If
+						If regkey2.SubKeyCount = 0 Then
 									Deletesubregkey(regkey, child)
 									Exit For
 								End If
