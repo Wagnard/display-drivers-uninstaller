@@ -2916,14 +2916,8 @@ Public Class GPUCleanup
 				Try
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
-							If child.ToLower.Contains("cn") Or
-							 child.ToLower.Contains("fuel") Or
-							  child.ToLower.Contains("dvr") Or
-							 child.ToLower.Contains("radeonsoftware") Or
-							  child.ToLower.Contains("link") Or
-							 removedxcache AndAlso child.ToLower.Contains("dxcache") Or
-							 removedxcache AndAlso child.ToLower.Contains("vkcache") Or
-							 removedxcache AndAlso child.ToLower.Contains("glcache") Then
+							If StrContainsAny(child, True, "cn", "fuel", "dvr", "radeonsoftware", "link") Or
+							 removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache") Then
 
 								Delete(child)
 
@@ -4039,6 +4033,7 @@ Public Class GPUCleanup
 											 child2.ToLower.Contains("nvcontrolpanel") Or
 											 child2.ToLower.Contains("nvcamera") Or  'part of nv broadcast ?
 											 child2.ToLower.Contains("nvidia broadcast") AndAlso removenvbroadcast Or
+											 child2.ToLower.Contains("nvidia rtx voice") AndAlso removenvbroadcast Or
 											 child2.ToLower.Contains("nvtray") AndAlso removegfe Or
 											 child2.ToLower.Contains("ansel") AndAlso removegfe Or
 											 child2.ToLower.Contains("nvcontainer") AndAlso removegfe Or
@@ -6063,6 +6058,7 @@ Public Class GPUCleanup
 								   child2.ToLower.Contains("nvmoduletracker.driver") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("broadcastvoice.driver") AndAlso config.RemoveNVBROADCAST Or
 								   child2.ToLower.Contains("nvbroadcastcontainer.") AndAlso config.RemoveNVBROADCAST Or
+								   child2.ToLower.Contains("rtx voice") AndAlso config.RemoveNVBROADCAST Or
 								   child2.ToLower.Contains("nvvirtualcamera.") AndAlso config.RemoveNVBROADCAST Or
 								   child2.ToLower.Contains("nvidiabroadcast.") AndAlso config.RemoveNVBROADCAST Or
 								   child2.ToLower.Contains("hdaudio.driver") AndAlso config.RemoveGFE Then
