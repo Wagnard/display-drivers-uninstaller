@@ -872,8 +872,10 @@ Public Class GPUCleanup
 		If win10 AndAlso config.RemoveAMDCP Then
 			If CanDeprovisionPackageForAllUsersAsync() Then
 				CleanupEngine.RemoveAppx1809("AMDRadeonSoftware")
+				CleanupEngine.RemoveAppx1809("AdvancedMicroDevicesInc-RSXCM")
 			Else
 				CleanupEngine.RemoveAppx("AMDRadeonSoftware")
+				CleanupEngine.RemoveAppx("AdvancedMicroDevicesInc-RSXCM")
 			End If
 		End If
 
