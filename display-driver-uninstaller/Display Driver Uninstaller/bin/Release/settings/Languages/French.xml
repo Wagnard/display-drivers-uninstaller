@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="fr-FR" Text="French">
+<DisplayDriverUninstaller ISO="fr-FR" Text="French" >
 	<!--
-		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
-		for quick guide
+		Voir le fichier ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		pour le guide rapide
 	-->
 
 	<frmMain Text="Display Driver Uninstaller (DDU)">
@@ -55,7 +55,7 @@
 			<Text>Version de Windows détectée :</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** Vous aimez DDU ? Pensez à faire un don, cela aide à poursuivre le développement ***</Text>
+			<Text>*** Vous aimez DDU ? Pensez à faire un don, cela aide à poursuivre le développement. ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Journal</Text>
@@ -95,7 +95,7 @@
 <Text>Conditions d'utilisation</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
-<Text>A propos</Text>
+<Text>À propos</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
 <Text>Traducteurs</Text>
@@ -124,7 +124,7 @@
 			<Text2>Prévoyez un soutien limité pour les versions plus anciennes que la plus récente. Vérifiez la version la plus récente avant de signaler les bogues.</Text2>
 			<Text3>Vous n'utilisez pas DDU avec des droits Administrateur. L'application va maintenant se fermer.</Text3>
 <Text4>Impossible de trouver PAExec. Veuillez vous référer au journal.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) modifie souvent votre registre. DDU tentera de créer un point de restauration du système automatiquement (mode normal uniquement).</Text5>
+			<Text5>Display Driver Uninstaller (DDU) modifie souvent votre registre. DDU tentera de créer un point de restauration du système automatiquement (Mode normal uniquement).</Text5>
 <Text6>Un problème est survenu dans l'un des modules, envoyez les journaux de DDU au développeur.</Text6>
 			<Text7>DDU a détecté que vous aviez un PC portable à switch AMD (Enduro ou équivalent), DDU n'est pas encore tout à fait compatible et testé avec les systèmes Enduro. Utilisez-le à vos risques et périls.</Text7>
 			<Text8>DDU a détecté que vous n'êtes PAS en mode sans échec... Pour un nettoyage sans erreur, il est recommandé de redémarrer en mode sans échec.</Text8>
@@ -136,6 +136,15 @@
 			<Text14>Il y a un redémarrage en cours, veuillez redémarrer avant d'utiliser DDU.</Text14>
 			<Text15>Aucune modification n'a été effectuée. Les paramètres d'installation des composants Windows étaient déjà réglés sur Défaut.</Text15>
 			<Text16>Une erreur critique est survenue dans Windows qui empêche la suppression correcte des pilotes. Par mesure de sécurité, DDU ne poursuivra pas la suppression des fichiers et du registre. Il faut résoudre le(s) problème(s) de votre système avant d'utiliser DDU.</Text16>
+			<Text17>Il semble que ce soit la première fois que vous lancez DDU.
+				
+					Avant de l'utiliser, vous devez lire ce qui suit :
+					1: En fonction de vos problèmes et de votre configuration, ceci peut vous aider ou aggraver les choses.
+					2: Vous devriez faire une sauvegarde.
+					3: Vous devez lire la licence, le Readme et les ToS.
+					4: Nous ne sommes pas responsables de tout dommage ou perte de données de quelque nature que ce soit.
+					5: Nous sommes toujours prêts à vous aider s'il y a un problème.
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>---Choisir le type de matériel---</Options1>
@@ -222,10 +231,10 @@
 			<Text>Options Générales</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Supprimer le dossier de pilotes "C:\NVIDIA".</Text>
+			<Text>Supprimer le dossier de pilotes "C:\NVIDIA"</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Enregistrer les fichiers journaux dans le chemin de démarrage (Fortement recommandé).</Text>
+			<Text>Enregistrer les fichiers journaux dans le chemin de démarrage (Fortement recommandé)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Supprimer PhysX</Text>
@@ -243,7 +252,7 @@
 			<Text>Supprimer Bus Audio AMD</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Supprimer le dossier de pilote "C:\AMD".</Text>
+			<Text>Supprimer le dossier de pilote "C:\AMD"</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Retirer le pilote/filtre AMDKMPFD (Sauvegarde recommandée pour le chipset AMD)</Text>
@@ -256,7 +265,7 @@
 			<Text>Stocker le fichier de configuration dans un dossier itinérant</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Rechercher automatiquement les mises à jour DDU au démarrage (recommandé)</Text>
+			<Text>Rechercher automatiquement les mises à jour DDU au démarrage (Recommandé)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Supprimer GeForce Experience (GFE)</Text>
@@ -265,18 +274,18 @@
 			<Text>Supprimer NVIDIA Broadcast</Text>
 		</lblRemNVBROADCAST>
 		<lblRemNVCP>
-			<Text>Supprimer NVIDIA (Pilote DCH) du Panneau de configuration du Microsoft Store</Text>
+			<Text>Supprimer NVIDIA (Pilote DCH) du Panneau de Configuration du Microsoft Store</Text>
 		</lblRemNVCP>
 		<lblRemINTELCP>
-			<Text>Supprimer INTEL (Pilote DCH) du Panneau de configuration du Microsoft Store</Text>
+			<Text>Supprimer INTEL (Pilote DCH) du Panneau de Configuration du Microsoft Store</Text>
 		</lblRemINTELCP>
 		<lblRemAMDCP>
-			<Text>Supprimer AMD (Pilote DCH) du Panneau de configuration du Microsoft Store</Text>
+			<Text>Supprimer AMD (Pilote DCH) du Panneau de Configuration du Microsoft Store</Text>
 		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>Supprimer le dossier cache AMD Crimson Shader</Text>
 			<Tooltip>
-				Recommandé en cas d’anomalie graphique (vitesse, corruption visuelle) causée par des données du cache de shader corrompues.
+				Recommandé en cas d’anomalie graphique (vitesse, corruption visuelle) causée par des données du cache de Shader corrompues.
 				Également recommandé si vous passez à une autre marque comme NVIDIA.
 			</Tooltip>
 		</lblRemCrimsonCache>
@@ -285,7 +294,7 @@
 			<Tooltip>Non recommandé si vous avez 2 GPU différents capables d’utiliser l’API Vulkan.</Tooltip>
 		</lblVulkan>
     <lblPreventWinUpdate>
-      <Text>Empêcher les téléchargements de pilotes par "Windows update" lorsque Windows recherche un pilote pour un matériel.</Text>
+      <Text>Empêcher les téléchargements de pilotes par "Windows update" lorsque Windows recherche un pilote pour un matériel</Text>
       <Tooltip>En termes simples, cette option interdit au "Gestionnaire de périphériques" de vérifier la mise à jour de pilotes sur "Windows Update". 
                Note : Cela n'empêche pas "Windows Update" de télécharger/installer de nouveaux pilotes. 
                Note 2 : Il est également *HAUTEMENT* recommandé d'annuler ce changement après avoir terminé l'utilisation de DDU et réinstallé le pilote de votre GPU ou vous pourriez avoir des problèmes avec l'installation d'autres périphériques.</Tooltip>
@@ -297,7 +306,7 @@
 			<Text>Exécuter</Text>
 			<Text2>
 				Redémarrer en
-				Mode sans échec
+				Mode Sans Échec
 			</Text2>
 		</btnAccept>
 		<btnClose>
@@ -400,6 +409,8 @@ Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS f
 				-Chris Ross
 				-Fabio
 				-Matti Metsikko
+				-mikalonia - mika
+				
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -434,15 +445,15 @@ Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS f
 
 				Créé par Wagnard.
 
-				Codeurs : Wagnard, Devmltk, Shady7557
+				Codeurs : Wagnard, Devmltk, Shady7557
 
 				Testeur : Dellon132
 
-				Logos : juanchacin
+				Logos : juanchacin
 
 				Un grand merci à Jackalito pour le don d'un AMD 7850.
 
-				Merci à Helge Klein (http://helgeklein.com/setacl/) pour la permission d'utiliser son programme "SetAcl" avec DDU.
+				Merci à Helge Klein (http://helgeklein.com/setacl/) pour la permission d'utiliser son Programme "SetAcl" avec DDU.
 
 				Un grand merci pour le temps qu'ils ont passé à tester : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (a pris le temps de déboguer avec moi)
 				Extraordinaire (Testé une correction de bug).
@@ -457,7 +468,7 @@ Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS f
 			<Text>
 				Display Driver Uninstaller ("DDU") ACCORD D'UTILISATION
 
-				Vous devenez un utilisateur de DDU ("Utilisateur") en utilisant le logiciel DDU. Le présent contrat prend effet dès que vous utilisez le programme pour désinstaller un pilote.
+				Vous devenez un utilisateur de DDU ("L'Utilisateur") en utilisant le logiciel DDU. Le présent contrat prend effet dès que vous utilisez le programme pour désinstaller un pilote.
 
 				En utilisant DDU, vous acceptez de ne pas accuser DDU ou ses créateurs, et ses affiliés, d'endommager ou d'affecter négativement votre PC.
 
@@ -479,8 +490,8 @@ Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS f
 		</Translator2>
 
 		<Translator3>
-			<User>Talex v18.0.4.9</User>
-			<LastUpdate>30/04/2022</LastUpdate>
+			<User>Talex v18.0.5.2</User>
+			<LastUpdate>20/07/2022</LastUpdate>
 		</Translator3>
 	</LanguageTranslators>
 
