@@ -869,23 +869,30 @@ Public Class GPUCleanup
 
 
 		'Removal of the (DCH) AMD control panel comming from the Window Store. (In progress...)
-		If win10 AndAlso config.RemoveAMDCP Then
+		If win10 Then
+			If config.RemoveAMDCP Then
+				If CanDeprovisionPackageForAllUsersAsync() Then
+					CleanupEngine.RemoveAppx1809("AMDRadeonSoftware")
+					CleanupEngine.RemoveAppx1809("AdvancedMicroDevicesInc-RSXCM")
+				Else
+					CleanupEngine.RemoveAppx("AMDRadeonSoftware")
+					CleanupEngine.RemoveAppx("AdvancedMicroDevicesInc-RSXCM")
+				End If
+			End If
 			If CanDeprovisionPackageForAllUsersAsync() Then
-				CleanupEngine.RemoveAppx1809("AMDRadeonSoftware")
-				CleanupEngine.RemoveAppx1809("AdvancedMicroDevicesInc-RSXCM")
+				CleanupEngine.RemoveAppx1809("AdvancedMicroDevicesInc-2.AMDLink")
 			Else
-				CleanupEngine.RemoveAppx("AMDRadeonSoftware")
-				CleanupEngine.RemoveAppx("AdvancedMicroDevicesInc-RSXCM")
+				CleanupEngine.RemoveAppx("AdvancedMicroDevicesInc-2.AMDLink")
 			End If
 		End If
 
-		'-----------------
-		'interface cleanup
-		'-----------------
+			'-----------------
+			'interface cleanup
+			'-----------------
 
 
 
-		CleanupEngine.Interfaces(reginterface)    '// add each line as String Array.
+			CleanupEngine.Interfaces(reginterface)    '// add each line as String Array.
 
 		Application.Log.AddMessage("Instance class cleanUP")
 		Try
@@ -1969,7 +1976,7 @@ Public Class GPUCleanup
 							For Each child As String In regkey.GetValueNames
 								If IsNullOrWhitespace(child) Then Continue For
 
-								If StrContainsAny(child, True, "HydraVisionDesktopManager", "Grid", "HydraVisionMDEngine", "AMDDVR") Then
+								If StrContainsAny(child, True, "HydraVisionDesktopManager", "Grid", "HydraVisionMDEngine", "AMDDVR", "AMDNoiseSuppression") Then
 									Deletevalue(regkey, child)
 								End If
 							Next
@@ -2061,7 +2068,7 @@ Public Class GPUCleanup
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetValueNames
 						If Not IsNullOrWhitespace(child) Then
-							If StrContainsAny(child, True, "StartCCC", "StartCN", "AMD AVT") Then
+							If StrContainsAny(child, True, "StartCCC", "StartCN", "AMD AVT", "AMDNoiseSuppression") Then
 								Deletevalue(regkey, child)
 							End If
 						End If
@@ -2072,6 +2079,23 @@ Public Class GPUCleanup
 			Application.Log.AddException(ex)
 		End Try
 
+		For Each users As String In Registry.Users.GetSubKeyNames()
+			If IsNullOrWhitespace(users) Then Continue For
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, users & "\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run", True)
+				If regkey IsNot Nothing Then
+					For Each child As String In regkey.GetValueNames()
+						If IsNullOrWhitespace(child) Then Continue For
+						If StrContainsAny(child, True, "AMDNoiseSuppression") Then
+							Try
+								Deletevalue(regkey, child)
+							Catch ex As Exception
+								Application.Log.AddException(ex)
+							End Try
+						End If
+					Next
+				End If
+			End Using
+		Next
 
 		If IntPtr.Size = 8 Then
 			Try
@@ -2080,7 +2104,7 @@ Public Class GPUCleanup
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetValueNames
 							If Not IsNullOrWhitespace(child) Then
-								If StrContainsAny(child, True, "StartCCC", "StartCN", "AMD AVT") Then
+								If StrContainsAny(child, True, "StartCCC", "StartCN", "AMD AVT", "AMDNoiseSuppression") Then
 									Deletevalue(regkey, child)
 								End If
 							End If
@@ -2645,7 +2669,7 @@ Public Class GPUCleanup
 				Try
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
-							If StrContainsAny(child, True, "acrdumps", "mmddumps", "real", "amdfendr") Or
+							If StrContainsAny(child, True, "acrdumps", "mmddumps", "real", "amdfendr", "EeuDumps", "Persistent", "ANR") Or
 							 (child.ToLower.Contains("amdkmpfd") AndAlso config.NotPresentAMDKMPFD) Or
 							 (child.ToLower.Contains("amdkmafd") AndAlso config.RemoveAudioBus) Then
 
@@ -2765,6 +2789,14 @@ Public Class GPUCleanup
 
 		filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Radeon Software"
+		If FileIO.ExistsDir(filePath) Then
+
+			Delete(filePath)
+
+		End If
+
+		filePath = Environment.GetFolderPath _
+		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Software꞉ Adrenalin Edition"
 		If FileIO.ExistsDir(filePath) Then
 
 			Delete(filePath)
@@ -2919,7 +2951,7 @@ Public Class GPUCleanup
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If StrContainsAny(child, True, "cn", "fuel", "dvr", "radeonsoftware", "link") Or
-							 removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache") Then
+							 removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache") Then
 
 								Delete(child)
 
@@ -5864,10 +5896,7 @@ Public Class GPUCleanup
 		Try
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If child.ToLower.Contains("drs") Or
-					 child.ToLower.Contains("nv_cache") Or
-					 child.ToLower.Contains("umdlogs") Or
-					 child.ToLower.Contains("nvtopps") Or
+					If StrContainsAny(child, True, "drs", "nv_cache", "umdlogs", "nvtopps", "GameSessionTelemetry") Or
 					 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvab") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or

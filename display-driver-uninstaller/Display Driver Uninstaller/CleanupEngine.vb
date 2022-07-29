@@ -1140,7 +1140,6 @@ Public Class CleanupEngine
 																			Next
 																			If subsuperregkey.ValueCount = 0 AndAlso subsuperregkey.SubKeyCount = 0 Then
 																				Deletesubregkey(superregkey, child2)
-																				Exit For
 																			End If
 																		End If
 																	End Using
