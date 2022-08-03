@@ -1086,7 +1086,7 @@ Public Class CleanupEngine
 																	If IsNullOrWhitespace(child2) Then Continue For
 
 																	Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-																   "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, False)
+																   "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, True)
 
 																		If subsuperregkey IsNot Nothing Then
 																			For Each wantedstring As String In subsuperregkey.GetValueNames()
@@ -1094,12 +1094,27 @@ Public Class CleanupEngine
 
 																				If StrContainsAny(wantedstring, True, child) Then
 																					Try
-																						Deletesubregkey(superregkey, child2)
+																						Deletevalue(subsuperregkey, wantedstring)
+																						Exit For
 																					Catch ex As Exception
 																						Application.Log.AddException(ex)
 																					End Try
 																				End If
 																			Next
+																			For Each wantedsubkey In subsuperregkey.GetSubKeyNames()
+																				If IsNullOrWhitespace(wantedsubkey) Then Continue For
+																				If wantedsubkey.Contains(child) Then
+																					Try
+																						Deletesubregkey(subsuperregkey, wantedsubkey)
+																						Exit For
+																					Catch ex As Exception
+																						Application.Log.AddException(ex)
+																					End Try
+																				End If
+																			Next
+																			If subsuperregkey.ValueCount = 0 AndAlso subsuperregkey.SubKeyCount = 0 Then
+																				Deletesubregkey(superregkey, child2)
+																			End If
 																		End If
 																	End Using
 																Next
@@ -1233,18 +1248,73 @@ Public Class CleanupEngine
 													If IsNullOrWhitespace(child2) Then Continue For
 
 													Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot,
-													  "Installer\UpgradeCodes\" & child2, False)
+													  "Installer\UpgradeCodes\" & child2, True)
 
 														If subsuperregkey IsNot Nothing Then
 															For Each wantedstring As String In subsuperregkey.GetValueNames()
 																If IsNullOrWhitespace(wantedstring) Then Continue For
 																If wantedstring.Contains(child) Then
 																	Try
-																		Deletesubregkey(superregkey, child2)
+																		Deletevalue(subsuperregkey, child)
+																		Exit For
 																	Catch ex As Exception
+																		Application.Log.AddException(ex)
 																	End Try
 																End If
 															Next
+															For Each wantedsubkey In subsuperregkey.GetSubKeyNames()
+																If IsNullOrWhitespace(wantedsubkey) Then Continue For
+																If wantedsubkey.Contains(child) Then
+																	Try
+																		Deletesubregkey(subsuperregkey, wantedsubkey)
+																		Exit For
+																	Catch ex As Exception
+																		Application.Log.AddException(ex)
+																	End Try
+																End If
+															Next
+															If subsuperregkey.ValueCount = 0 AndAlso subsuperregkey.SubKeyCount = 0 Then
+																Deletesubregkey(superregkey, child2)
+															End If
+														End If
+													End Using
+												Next
+											End If
+										End Using
+										Using superregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\Components", True)
+											If superregkey IsNot Nothing Then
+												For Each child2 As String In superregkey.GetSubKeyNames()
+													If IsNullOrWhitespace(child2) Then Continue For
+
+													Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\Components\" & child2, True)
+
+														If subsuperregkey IsNot Nothing Then
+															For Each wantedstring In subsuperregkey.GetValueNames()
+																If IsNullOrWhitespace(wantedstring) Then Continue For
+
+																If wantedstring.Contains(child) Then
+																	Try
+																		Deletevalue(subsuperregkey, wantedstring)
+																		Exit For
+																	Catch ex As Exception
+																		Application.Log.AddException(ex)
+																	End Try
+																End If
+															Next
+															For Each wantedsubkey In subsuperregkey.GetSubKeyNames()
+																If IsNullOrWhitespace(wantedsubkey) Then Continue For
+																If wantedsubkey.Contains(child) Then
+																	Try
+																		Deletesubregkey(subsuperregkey, wantedsubkey)
+																		Exit For
+																	Catch ex As Exception
+																		Application.Log.AddException(ex)
+																	End Try
+																End If
+															Next
+															If subsuperregkey.ValueCount = 0 AndAlso subsuperregkey.SubKeyCount = 0 Then
+																Deletesubregkey(superregkey, child2)
+															End If
 														End If
 													End Using
 												Next
@@ -1305,7 +1375,7 @@ Public Class CleanupEngine
 													If IsNullOrWhitespace(child2) Then Continue For
 
 													Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-													  "Software\Classes\Installer\UpgradeCodes\" & child2, False)
+													  "Software\Classes\Installer\UpgradeCodes\" & child2, True)
 
 														If subsuperregkey IsNot Nothing Then
 															For Each wantedstring As String In subsuperregkey.GetValueNames()
@@ -1382,7 +1452,7 @@ Public Class CleanupEngine
 														If IsNullOrWhitespace(child2) Then Continue For
 
 														Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users,
-														  users & "\Software\Microsoft\Installer\UpgradeCodes" & child2, False)
+														  users & "\Software\Microsoft\Installer\UpgradeCodes" & child2, True)
 
 															If subsuperregkey IsNot Nothing Then
 																For Each wantedstring As String In subsuperregkey.GetValueNames()

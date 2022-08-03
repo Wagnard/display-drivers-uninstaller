@@ -7050,7 +7050,7 @@ Public Class GPUCleanup
 		If FileIO.ExistsDir(filePath) Then
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "shadercache", "ags", "gfxinstaller") Or
+					If StrContainsAny(child, True, "shadercache", "ags", "gfxinstaller", "IGN") Or
 					  StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Then
 
 						Delete(child)
