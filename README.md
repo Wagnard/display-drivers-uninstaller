@@ -42,6 +42,13 @@ System Requirements:
 
 Windows Vista_SP2 up to 10 is supported X86/X64 (Windows 10 insider preview is at your own risk)
 
+--------------------
+DDU (V18.0.4.7 and higher)
+System Requirements:
+
+.NET framework 4.8 or higher.
+
+Windows 7 SP1 up to 11 is supported X86/X64 (Windows 1x insider preview is at your own risk)
 
 DOWNLOAD : (note: some anti-virus report false positive sometime.) 
 
