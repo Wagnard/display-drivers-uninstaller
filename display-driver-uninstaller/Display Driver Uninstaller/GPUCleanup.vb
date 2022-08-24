@@ -2951,7 +2951,7 @@ Public Class GPUCleanup
 					For Each child As String In FileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If StrContainsAny(child, True, "cn", "fuel", "dvr", "radeonsoftware", "link") Or
-							 removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache") Then
+							 removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
 
 								Delete(child)
 
@@ -2989,6 +2989,59 @@ Public Class GPUCleanup
 							End If
 						End If
 					Next
+					If FileIO.CountDirectories(filePath) = 0 Then
+
+						Delete(filePath)
+
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				Catch ex As Exception
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+				End Try
+			End If
+
+			filePath = filepaths + "\AppData\Local\AMDSoftwareInstaller"
+			If winxp Then
+				filePath = filepaths + "\Local Settings\Application Data\AMDSoftwareInstaller"
+			End If
+			If FileIO.ExistsDir(filePath) Then
+				Try
+					For Each child As String In FileIO.GetDirectories(filePath)
+						If IsNullOrWhitespace(child) = False Then
+							If StrContainsAny(child, True, "cache") Then
+
+								Delete(child)
+
+							End If
+						End If
+					Next
+					If FileIO.CountDirectories(filePath) = 0 Then
+
+						Delete(filePath)
+
+					Else
+						For Each data As String In FileIO.GetDirectories(filePath)
+							If IsNullOrWhitespace(data) Then Continue For
+							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+						Next
+
+					End If
+				Catch ex As Exception
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+				End Try
+			End If
+
+			filePath = filepaths + "\AppData\Local\AMD_Common"
+			If winxp Then
+				filePath = filepaths + "\Local Settings\Application Data\AMD_Common"
+			End If
+			If FileIO.ExistsDir(filePath) Then
+				Try
 					If FileIO.CountDirectories(filePath) = 0 Then
 
 						Delete(filePath)

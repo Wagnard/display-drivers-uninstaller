@@ -136,6 +136,15 @@
 			<Text14>Egy várakozó újraindítás van folyamatban, a DDU használata előtt kérlek indítsd újra a számítógépet</Text14>
 			<Text15>Nem következett be változás a rendszerben. A Windows eszköztelepítő beállításai, alapértékekre lett beállítva.</Text15>
 			<Text16>Egy kritikus hiba lépett fel a Windows-ban, ami megakadályozza az illesztőprogramok helyes eltávolítását. A biztonsági kockázat miatt, a DDU nem folytatja tovább a fájlok eltávolítását és a regisztrációs adatbázis módosítását. Kérlek, hárítsd el a rendszerben bekövetkezett hibá(ka)t mielőtt használnád ezt a programot!</Text16>
+			<Text17>Úgy tűnik, hogy most először használod a DDU-t ezen a PC-n.
+				
+					Mielőtt használnád a programot, mérlegeld a következőket:
+					1: A problémáidtól és a konfigurációdtól függően, a program használata ronthat, de javíthat is a helyzeten.
+					2: Készíts biztonsági másolatot!
+					3: Olvasd el a licencet, a readme-t és a felhasználási feltételeket.
+					4: Semmilyen felelősséget nem vállalunk a bármilyen bekövetkezett kárért vagy adatvesztésért.
+					5: Örömmel nyújtunk segítséget, ha bármilyen problémába ütközöl.
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>---Válaszd ki az eszköz típusát---</Options1>
@@ -182,9 +191,9 @@
 			<Text26>HD hangadapterek eltávolítva !</Text26>
 			<Text27>3D Vision USB adapter eltávolítva az Eszközkezelőből.</Text27>
 			<Text28>Kijelzők és rejtett kijelzők eltávolítva!</Text28>
-			<Text29>SetupAPI Remove complete</Text29>
-			<Text30>S-1-5-xx regió takarításának indítása</Text30>
-			<Text31>S-1-5-xx regió takarításának befejezése</Text31>
+			<Text29>SetupAPI eltávolítása befejeződött</Text29>
+			<Text30>S-1-5-xx régió takarításának indítása</Text30>
+			<Text31>S-1-5-xx régió takarításának befejezése</Text31>
 			<Text32>Classesroot indítása ,telepítő\termékek eltakarítása</Text32>
 			<Text33>Classesroot befejezése ,telepítő\termékek eltakarítása</Text33>
 			<Text34>localmachine indítása ,telepítő\termékek eltakarítása</Text34>
@@ -400,6 +409,8 @@
 				-Chris Ross
 				-Fabio
 				-Matti Metsikko
+				-mikalonia - mika
+				
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -472,15 +483,21 @@
 
 	<LanguageTranslators>
 		<Translator>
-			<User>Wagnard</User>
-			<Details>Owner</Details>
-			<LastUpdate>03/04/2021</LastUpdate>
+			<User>istvanszabo890629</User>
+			<Details>istvanszabo890629@gmail.com</Details>
+			<LastUpdate>10/08/2022</LastUpdate>
 		</Translator>
 
 		<Translator2>
+			<User>Wagnard</User>
+			<Details>Owner</Details>
+			<LastUpdate>03/04/2021</LastUpdate>
+		</Translator2>
+
+		<Translator3>
 			<User>DevMltk</User>
 			<LastUpdate>31/05/2016</LastUpdate>
-		</Translator2>
+		</Translator3>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>
