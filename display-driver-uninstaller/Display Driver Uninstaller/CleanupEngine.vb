@@ -1690,19 +1690,14 @@ Public Class CleanupEngine
 				If win8higher Then
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
 						If regkey IsNot Nothing Then
-							For i As Integer = 0 To driverfiles.Length - 1
-								If Not IsNullOrWhitespace(driverfiles(i)) Then
-									For Each child As String In regkey.GetSubKeyNames()
-										If IsNullOrWhitespace(child) = False Then
-											If StrContainsAny(child.Replace("/", "\"), True, driverfiles(i)) Then
-												Try
-													Deletesubregkey(regkey, child)
-												Catch ex As Exception
-													Application.Log.AddException(ex)
-												End Try
-											End If
-										End If
-									Next
+							For Each child As String In regkey.GetSubKeyNames()
+								If IsNullOrWhitespace(child) Then Continue For
+								If StrContainsAny(child.Replace("/", "\"), True, driverfiles) Then
+									Try
+										Deletesubregkey(regkey, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
 								End If
 							Next
 						End If
@@ -1712,19 +1707,14 @@ Public Class CleanupEngine
 
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
 						If regkey IsNot Nothing Then
-							For i As Integer = 0 To driverfiles.Length - 1
-								If Not IsNullOrWhitespace(driverfiles(i)) Then
-									For Each child As String In regkey.GetValueNames()
-										If IsNullOrWhitespace(child) = False Then
-											If StrContainsAny(child, True, driverfiles(i)) Then
-												Try
-													Deletevalue(regkey, child)
-												Catch ex As Exception
-													Application.Log.AddException(ex)
-												End Try
-											End If
-										End If
-									Next
+							For Each child As String In regkey.GetValueNames()
+								If IsNullOrWhitespace(child) Then Continue For
+								If StrContainsAny(child, True, driverfiles) Then
+									Try
+										Deletevalue(regkey, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
 								End If
 							Next
 						End If
