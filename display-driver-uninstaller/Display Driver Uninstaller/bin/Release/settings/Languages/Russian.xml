@@ -311,7 +311,7 @@
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Важное замечание для пользователей Windows 8/8.1/10:
+				Важное замечание для пользователей Windows 8/8.1/10/11:
 				После перезагрузки в безопасный режим для входа в Windows требуется
 				пароль к учётной записи! В этом режиме доступ по PIN-коду не работает!
 				Немедленно закройте программу, если вы не знаете или забыли пароль!
@@ -463,7 +463,7 @@
 
 		<Translator2>
 			<User>Danis Miryasov (miryasov.danis@yandex.ru)</User>
-			<LastUpdate>08.01.2020</LastUpdate>
+			<LastUpdate>27.09.2022</LastUpdate>
 		</Translator2>
 		<Translator3>
 			<User>Dmitry Yerokhin (erodim@mail.ru)</User>
