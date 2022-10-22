@@ -6712,10 +6712,11 @@ Public Class GPUCleanup
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) = False Then
-							If StrContainsAny(child, True, "display", "igd", "gfx", "mediasdk", "opencl", "intel wireless display", "kmd", "mdf") Then
+							If StrContainsAny(child, True, "display", "igd", "gfx", "mediasdk", "opencl", "intel wireless display", "kmd", "mdf", "Intel Arc Control") Then
 								Try
 									Deletesubregkey(regkey, child)
 								Catch ex As Exception
+									Application.Log.AddException(ex)
 								End Try
 							End If
 						End If
@@ -6724,6 +6725,7 @@ Public Class GPUCleanup
 						Try
 							Deletesubregkey(MyRegistry.OpenSubKey(Registry.LocalMachine, "Software", True), "Intel")
 						Catch ex As Exception
+							Application.Log.AddException(ex)
 						End Try
 					Else
 						For Each data As String In regkey.GetSubKeyNames()
@@ -6756,6 +6758,7 @@ Public Class GPUCleanup
 								Try
 									Deletesubregkey(MyRegistry.OpenSubKey(Registry.Users, users & "\Software", True), "Intel")
 								Catch ex As Exception
+									Application.Log.AddException(ex)
 								End Try
 							Else
 								For Each data As String In regkey.GetSubKeyNames()
