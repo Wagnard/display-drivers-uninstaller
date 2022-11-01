@@ -802,7 +802,7 @@ Public Class GPUCleanup
 		CleanupEngine.Cleanserviceprocess(services, config)    '// add each line as String Array.
 
 		Dim killpid As New ProcessStartInfo
-		killpid.FileName = "cmd.exe"
+		killpid.FileName = config.Paths.System32 & "cmd.exe"
 		killpid.Arguments = " /C" & "taskkill /f /im CLIStart.exe"
 		killpid.UseShellExecute = False
 		killpid.CreateNoWindow = True
@@ -6804,6 +6804,22 @@ Public Class GPUCleanup
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
+
+			Try
+				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run", True)
+					If regkey IsNot Nothing Then
+						If regkey.GetValue("Intel® Arc™ Control") IsNot Nothing Then
+							Try
+								Deletevalue(regkey, "Intel® Arc™ Control")
+							Catch ex As Exception
+							End Try
+						End If
+					End If
+				End Using
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
+
 		End If
 
 
@@ -6834,6 +6850,8 @@ Public Class GPUCleanup
 			Application.Log.AddException(ex)
 		End Try
 
+
+
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Directory\background\shellex\ContextMenuHandlers", True)
 				If regkey IsNot Nothing Then
@@ -6860,7 +6878,7 @@ Public Class GPUCleanup
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) Then Continue For
-						If StrContainsAny(child, True, "Intel® Arc™ Control") Then
+						If StrContainsAny(child, True, "Intel® Arc™ Control", "Intel Arc Control") Then
 
 							Deletesubregkey(regkey, child)
 
@@ -6886,12 +6904,22 @@ Public Class GPUCleanup
 							If subregkey IsNot Nothing Then
 								If IsNullOrWhitespace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
 								wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
+
+								Dim InstallSource = subregkey.GetValue("InstallSource", String.Empty).ToString.TrimEnd(CChar("\"))
+
 								If IsNullOrWhitespace(wantedvalue) Then Continue For
 
 								If StrContainsAny(wantedvalue, True, packages) Then
 									Try
 										If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
 											Deletesubregkey(regkey, child)
+											Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child)
+											If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
+												Delete(config.Paths.Roaming + "Package Cache\" + child)
+											End If
+											If ((Not IsNullOrWhitespace(InstallSource)) AndAlso Directory.Exists(InstallSource)) Then
+												Delete(InstallSource)
+											End If
 										End If
 									Catch ex As Exception
 										Application.Log.AddException(ex)
@@ -6912,26 +6940,29 @@ Public Class GPUCleanup
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) = False Then
-
 								Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 
 									If subregkey IsNot Nothing Then
-										If Not IsNullOrWhitespace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then
-											wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-											If Not IsNullOrWhitespace(wantedvalue) Then
-												For i As Integer = 0 To packages.Length - 1
-													If Not IsNullOrWhitespace(packages(i)) Then
-														If StrContainsAny(wantedvalue, True, packages(i)) Then
-															Try
-																If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
-																	Deletesubregkey(regkey, child)
-																End If
-															Catch ex As Exception
-															End Try
-														End If
+										If IsNullOrWhitespace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
+										wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
+
+										Dim InstallSource = subregkey.GetValue("InstallSource", String.Empty).ToString.TrimEnd(CChar("\"))
+										If IsNullOrWhitespace(wantedvalue) Then Continue For
+										If StrContainsAny(wantedvalue, True, packages) Then
+											Try
+												If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
+													Deletesubregkey(regkey, child)
+													Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child)
+													If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
+														Delete(config.Paths.Roaming + "Package Cache\" + child)
 													End If
-												Next
-											End If
+													If ((Not IsNullOrWhitespace(InstallSource)) AndAlso Directory.Exists(InstallSource)) Then
+														Delete(InstallSource)
+													End If
+												End If
+											Catch ex As Exception
+												Application.Log.AddException(ex)
+											End Try
 										End If
 									End If
 								End Using
@@ -6943,6 +6974,23 @@ Public Class GPUCleanup
 				Application.Log.AddException(ex)
 			End Try
 		End If
+
+
+		Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run", True)
+			If regkey IsNot Nothing Then
+				For Each child As String In regkey.GetValueNames()
+					If IsNullOrWhitespace(child) Then Continue For
+					If StrContainsAny(child, True, "Intel® Arc™ Control") Then
+						Try
+							Deletevalue(regkey, child)
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+					End If
+				Next
+			End If
+		End Using
+
 		Try
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Cpls", True)
 				If regkey IsNot Nothing Then
@@ -7161,6 +7209,25 @@ Public Class GPUCleanup
 		Catch ex As Exception
 			Application.Log.AddException(ex)
 		End Try
+
+		filePath = Environment.GetFolderPath _
+	(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Intel"
+		If FileIO.ExistsDir(filePath) Then
+			For Each child As String In FileIO.GetDirectories(filePath)
+				If IsNullOrWhitespace(child) Then Continue For
+				If StrContainsAny(child, True, "Intel Arc Control") Then
+					Delete(child)
+				End If
+			Next
+			If FileIO.CountDirectories(filePath) = 0 Then
+				Delete(filePath)
+			Else
+				For Each data As String In FileIO.GetDirectories(filePath)
+					If IsNullOrWhitespace(data) Then Continue For
+					Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+				Next
+			End If
+		End If
 
 		filePath = Environment.GetFolderPath _
 	(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Startup"

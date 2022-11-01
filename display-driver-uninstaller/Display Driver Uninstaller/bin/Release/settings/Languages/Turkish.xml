@@ -29,11 +29,11 @@
 		<btnCleanShutdown>
 			<Text>
 				Temizledikten sonra kapat
-				(Yeni bir grafik kartı yüklemek için)
+				(Yeni bir grafik kartı kullanmak için)
 			</Text>
 			<Tooltip>
 				Mevcut ve önceki sürücüleri kaldırır, bilgisayarı kapatır.
-				(Yeni grafik kartı yüklemek için)
+				(Yeni grafik kartını kullanmak için)
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
@@ -136,6 +136,15 @@
 			<Text14>Bekleyen yeniden başlatma var, DDU'yu kullanmadan önce sistemi yeniden başaltınız.</Text14>
 			<Text15>Hiçbir değişiklik yapılmadı. Windows aygıt yükleme ayarları zaten varsayılan olarak ayarlanmış.</Text15>
 			<Text16>Windows'dan, sürücülerin doğru şekilde kaldırılmasını engelleyen kritik bir hata oluştu. Güvenlik önlemi olarak DDU, dosya ve kayıt defterinin kaldırılmasına devam etmeyecektir. DDU kullanmadan önce sistem sorununuzu çözmelisiniz.</Text16>
+			<Text17>Görünüşe göre DDU'yu ilk kez başlattığın görülüyor.
+				
+					Kullanmadan önce lütfen aşağıdakileri okuyun:
+					1: Sorunlarınıza ve yapılandırmanıza göre, araç yardımcı da olabilir zararı da dokunabilir.
+					2: Yedek almayı unutmayın.
+					3: Lisans, Benioku ve ToS'u okumalısınız.
+					4: Herhangi bir hasar veya veri kaybından sorumlu değiliz.
+					5: Bir sorun olursa her zaman yardım etmeye hazırız.
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>---Cihazı Seçin---</Options1>
@@ -259,8 +268,11 @@
 			<Text>Başlangıçta otomatik olarak DDU güncellemelerini kontrol edin (Önerilen)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Geforce Experience (GFE) Kaldır</Text>
+			<Text>(GFE)Nvidia Geforce Experience Kaldır</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>NVIDIA Broadcast'i Kaldır</Text>
+		</lblRemNVBROADCAST>
 		<lblRemNVCP>
 			<Text>Microsoft Store'dan yüklenen NVIDIA Kontrol Panelini kaldır (DCH sürücü)</Text>
 		</lblRemNVCP>
@@ -293,7 +305,8 @@
 		<btnAccept>
 			<Text>Başlat</Text>
 			<Text2>
-				Güvenli modda yeniden başlatın
+				Güvenli modda 
+				yeniden başlatın
 			</Text2>
 		</btnAccept>
 		<btnClose>
@@ -383,14 +396,21 @@
 			<Text>
 				Aşağıdaki Patron ve ayrıca listelenmemiş olanlar için çok teşekkürler!
 				  
-				-honnmaguro  	(2018-03-16'dan beri) 
-				-ZaoDaDong		(2019-02-06'dan beri)
-				-Alberto Bursi	(uzun süredir bağışçı/destekçi)
-				-Kaseb			(2019-09-05'dan beri)
-				-Frank Brown	(2019-10-31'dan beri)
-				-Sergey Bolshakow (Since 2020-09-10)
-				-James Tiller (Since 2021-04-03)
-				-Paulo Henrique (Since 2021-04-19)
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
 			</Text>
 		</lblPatron>
 	</frmAbout>
