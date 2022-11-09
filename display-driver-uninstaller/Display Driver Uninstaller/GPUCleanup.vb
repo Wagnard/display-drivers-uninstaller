@@ -4211,6 +4211,7 @@ Public Class GPUCleanup
 
 		If IntPtr.Size = 8 Then
 			Try
+				Dim CanRemove As Boolean = True
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 				 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
 					If regkey IsNot Nothing Then
@@ -4234,7 +4235,7 @@ Public Class GPUCleanup
 								Application.Log.AddException(ex)
 							End Try
 							If child.ToLower.Contains("display.3dvision") Or
-							 child.ToLower.Contains("3dtv") Or
+							 child.ToLower.Contains("3dtv") AndAlso config.Remove3DTVPlay Or
 							 child.ToLower.Contains("_display.controlpanel") Or
 							 child.ToLower.Contains("_display.driver") Or
 							 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
@@ -4246,7 +4247,6 @@ Public Class GPUCleanup
 							 child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
 							 child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
 							 child.ToLower.Contains("_hdaudio.driver") Or
-							 child.ToLower.Contains("_installer") AndAlso removegfe Or
 							 child.ToLower.Contains("_network.service") AndAlso removegfe Or
 							 child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
 							 child.ToLower.Contains("_update.core") AndAlso removegfe Or
@@ -4257,18 +4257,31 @@ Public Class GPUCleanup
 							 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
 							 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso removegfe Or
 							 child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Then
-								If removephysx = False And child.ToLower.Contains("physx") Then
-									Continue For
-								End If
-								If config.Remove3DTVPlay = False And child.ToLower.Contains("3dtv") Then
-									Continue For
-								End If
 								Try
 									Deletesubregkey(regkey, child)
 								Catch ex As Exception
+									Application.Log.AddException(ex)
 								End Try
 							End If
 						Next
+						For Each child As String In regkey.GetSubKeyNames()
+							If IsNullOrWhitespace(child) Then Continue For
+							If StrContainsAny(child, True, "B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") AndAlso Not StrContainsAny(child, True, "_installer") Then
+								CanRemove = False
+							End If
+						Next
+						If CanRemove Then
+							For Each child As String In regkey.GetSubKeyNames()
+								If IsNullOrWhitespace(child) Then Continue For
+								If StrContainsAny(child, True, "_installer") Then
+									Try
+										Deletesubregkey(regkey, child)
+									Catch ex As Exception
+										Application.Log.AddException(ex)
+									End Try
+								End If
+							Next
+						End If
 					End If
 				End Using
 			Catch ex As Exception
@@ -4278,7 +4291,7 @@ Public Class GPUCleanup
 
 
 		Try
-			Dim mustnotremove As Boolean = False
+			Dim CanRemove As Boolean = True
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 			 "Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
 				If regkey IsNot Nothing Then
@@ -4303,33 +4316,33 @@ Public Class GPUCleanup
 						End Using
 
 						If child.ToLower.Contains("display.3dvision") Or
-						 child.ToLower.Contains("3dtv") Or
+						 child.ToLower.Contains("3dtv") AndAlso config.Remove3DTVPlay Or
 						 child.ToLower.Contains("_display.controlpanel") Or
 						 child.ToLower.Contains("_display.driver") Or
 						 child.ToLower.Contains("_display.optimus") Or
-						 child.ToLower.Contains("_frameviewsdk") AndAlso removegfe Or
-						 child.ToLower.Contains("_gpxcommon.oss") AndAlso removegfe Or
-						 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
+						 child.ToLower.Contains("_frameviewsdk") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_gpxcommon.oss") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_display.gfexperience") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_display.nvirusb") Or
-						 child.ToLower.Contains("_nvabhub") AndAlso removegfe Or
-						 child.ToLower.Contains("_display.physx") Or
-						 child.ToLower.Contains("_display.update") AndAlso removegfe Or
-						 child.ToLower.Contains("_osc") AndAlso removegfe Or
+						 child.ToLower.Contains("_nvabhub") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_display.physx") AndAlso config.RemovePhysX Or
+						 child.ToLower.Contains("_display.update") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_osc") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_display.nview") Or
 						 child.ToLower.Contains("_display.nvwmi") Or
-						 child.ToLower.Contains("_display.gamemonitor") AndAlso removegfe Or
-						 child.ToLower.Contains("_nvidia.update") AndAlso removegfe Or
-						 child.ToLower.Contains("_gfexperience") AndAlso removegfe Or
+						 child.ToLower.Contains("_display.gamemonitor") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_nvidia.update") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_gfexperience") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_hdaudio.driver") Or
-						 child.ToLower.Contains("_network.service") AndAlso removegfe Or
-						 child.ToLower.Contains("_shadowplay") AndAlso removegfe Or
-						 child.ToLower.Contains("_update.core") AndAlso removegfe Or
+						 child.ToLower.Contains("_network.service") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_shadowplay") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_update.core") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvidiastereo") Or
 						 child.ToLower.Contains("_usbc") Or
 						 child.ToLower.Contains("_ansel") Or
-						 child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
-						 child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
-						 child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Or
+						 child.ToLower.Contains("_shieldwireless") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("miracast.virtualaudio") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_virtualaudio.driver") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("vulkanrt1.") AndAlso config.RemoveVulkan Or
 						 child.ToLower.Contains("_nvnodejs") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvbackend") AndAlso config.RemoveGFE Or
@@ -4344,18 +4357,12 @@ Public Class GPUCleanup
 						 child.ToLower.Contains("_nvbroadcastcontainer") AndAlso config.RemoveNVBROADCAST Or
 						 child.ToLower.Contains("_nvidiabroadcast") AndAlso config.RemoveNVBROADCAST Or
 						 child.ToLower.Contains("_nvvirtualcamera") AndAlso config.RemoveNVBROADCAST Or
-						 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
-						 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso removegfe Or
-						 child.ToLower.Contains("_osc") AndAlso removegfe Or
-						 child.ToLower.Contains("_nvmoduletracker.driver") AndAlso removegfe Or
+						 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_osc") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_nvmoduletracker.driver") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_nvcontainer") AndAlso config.RemoveGFE Then
-							If removephysx = False AndAlso child.ToLower.Contains("physx") Then
-								Continue For
-							End If
 
-							If config.Remove3DTVPlay = False AndAlso child.ToLower.Contains("3dtv") Then
-								Continue For
-							End If
 							Try
 								Deletesubregkey(regkey, child)
 							Catch ex As Exception
@@ -4366,10 +4373,10 @@ Public Class GPUCleanup
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) Then Continue For
 						If StrContainsAny(child, True, "B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") AndAlso Not StrContainsAny(child, True, "_installer") Then
-							mustnotremove = True
+							CanRemove = False
 						End If
 					Next
-					If Not mustnotremove Then
+					If CanRemove Then
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) Then Continue For
 							If StrContainsAny(child, True, "_installer") Then
@@ -6899,31 +6906,47 @@ Public Class GPUCleanup
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) Then Continue For
 
+
 						Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
 
 							If subregkey IsNot Nothing Then
-								If IsNullOrWhitespace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
-								wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-
-								Dim InstallSource = subregkey.GetValue("InstallSource", String.Empty).ToString.TrimEnd(CChar("\"))
-
-								If IsNullOrWhitespace(wantedvalue) Then Continue For
-
-								If StrContainsAny(wantedvalue, True, packages) Then
-									Try
-										If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
+								If IsNullOrWhitespace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then
+									'Specific fix/workaround for failing to remove in the past the Package cache and causing the Intel installer to create an incomplete GUID regkey
+									If StrContainsAny(child, True, "{43B4715B-9FFB-47B0-AEAD-7C6D755EE010}", "{41a5e581-4a2c-406c-a1b5-ec680ffc64c8}", "{f8176a62-cc98-418f-a208-e187faebe116}") Then
+										Try
 											Deletesubregkey(regkey, child)
-											Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child)
+											Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child, False)
 											If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
 												Delete(config.Paths.Roaming + "Package Cache\" + child)
 											End If
-											If ((Not IsNullOrWhitespace(InstallSource)) AndAlso Directory.Exists(InstallSource)) Then
-												Delete(InstallSource)
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
+									Continue For
+								Else
+									wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
+
+									Dim InstallSource = subregkey.GetValue("InstallSource", String.Empty).ToString.TrimEnd(CChar("\"))
+
+									If IsNullOrWhitespace(wantedvalue) Then Continue For
+
+									If StrContainsAny(wantedvalue, True, packages) Then
+										Try
+											If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
+												Deletesubregkey(regkey, child)
+												Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child, False)
+												If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
+													Delete(config.Paths.Roaming + "Package Cache\" + child)
+												End If
+												If ((Not IsNullOrWhitespace(InstallSource)) AndAlso Directory.Exists(InstallSource)) Then
+													Delete(InstallSource)
+												End If
 											End If
-										End If
-									Catch ex As Exception
-										Application.Log.AddException(ex)
-									End Try
+										Catch ex As Exception
+											Application.Log.AddException(ex)
+										End Try
+									End If
 								End If
 							End If
 						End Using
@@ -6943,26 +6966,40 @@ Public Class GPUCleanup
 								Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 
 									If subregkey IsNot Nothing Then
-										If IsNullOrWhitespace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
-										wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-
-										Dim InstallSource = subregkey.GetValue("InstallSource", String.Empty).ToString.TrimEnd(CChar("\"))
-										If IsNullOrWhitespace(wantedvalue) Then Continue For
-										If StrContainsAny(wantedvalue, True, packages) Then
-											Try
-												If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
+										If IsNullOrWhitespace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then
+											If StrContainsAny(child, True, "{41a5e581-4a2c-406c-a1b5-ec680ffc64c8}", "{f8176a62-cc98-418f-a208-e187faebe116}", "{eec228c7-0de3-4e67-b631-359fb10e0bbe}") Then
+												Try
 													Deletesubregkey(regkey, child)
-													Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child)
+													Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child, False)
 													If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
 														Delete(config.Paths.Roaming + "Package Cache\" + child)
 													End If
-													If ((Not IsNullOrWhitespace(InstallSource)) AndAlso Directory.Exists(InstallSource)) Then
-														Delete(InstallSource)
+												Catch ex As Exception
+													Application.Log.AddException(ex)
+												End Try
+											End If
+											Continue For
+										Else
+											wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
+
+											Dim InstallSource = subregkey.GetValue("InstallSource", String.Empty).ToString.TrimEnd(CChar("\"))
+											If IsNullOrWhitespace(wantedvalue) Then Continue For
+											If StrContainsAny(wantedvalue, True, packages) Then
+												Try
+													If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
+														Deletesubregkey(regkey, child)
+														Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child, False)
+														If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
+															Delete(config.Paths.Roaming + "Package Cache\" + child)
+														End If
+														If ((Not IsNullOrWhitespace(InstallSource)) AndAlso Directory.Exists(InstallSource)) Then
+															Delete(InstallSource)
+														End If
 													End If
-												End If
-											Catch ex As Exception
-												Application.Log.AddException(ex)
-											End Try
+												Catch ex As Exception
+													Application.Log.AddException(ex)
+												End Try
+											End If
 										End If
 									End If
 								End Using
@@ -7783,9 +7820,9 @@ Public Class GPUCleanup
 		CleanupEngine.Folderscleanup(driverfiles, config)
 	End Sub
 
-	Private Sub Deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
+	Private Sub Deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String, Optional ByVal throwOnMissingSubKey As Boolean = True)
 		Dim CleanupEngine As New CleanupEngine
-		CleanupEngine.Deletesubregkey(value1, value2)
+		CleanupEngine.Deletesubregkey(value1, value2, throwOnMissingSubKey)
 	End Sub
 
 	Private Sub Deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="nl-NL" Text="Dutch">
+<DisplayDriverUninstaller ISO="nl-NL" Text="Dutch" >
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
 		for quick guide
@@ -8,54 +8,54 @@
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
 			<Text>
-				Verwijder drivers en herstart de computer.
+				Verwijderen en herstarten.
 				(Sterk aanbevolen)
 			</Text>
 			<Tooltip>
-				Verwijder de huidige en de vorige drivers en herstart de computer.
+				Verwijder huidige en vorige drivers en herstart de computer.
 				(Sterk aanbevolen)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				Verwijder drivers en start de computer NIET opnieuw op.
-				(Kan kwesties/problemen zoals een zwart scherm veroorzaken)
+				Verwijderen en computer NIET opnieuw opstarten.
+				(Kan problemen zoals een zwart scherm veroorzaken)
 			</Text>
 			<Tooltip>
-				Verwijder de huidige en de vorige drivers en start de computer niet opnieuw op.
-				(Kan kwesties/problemen zoals zwart scherm veroorzaken)
+				Verwijder huidige en vorige drivers maar start de computer niet opnieuw op.
+				(Kan problemen zoals een zwart scherm veroorzaken)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
-				Verwijder drivers en schakel de computer uit.
-				(Voor het installeren van een nieuwe grafische kaart).
+				Verwijderen en schakel de computer uit.
+				(Voor het installeren van een nieuwe grafische kaart)
 			</Text>
 			<Tooltip>
-				Verwijder de huidige en de vorige drivers en sluit af zonder dat de computer opnieuw scant.
-				(Voor het installeren van een nieuwe grafische kaart).
+				Verwijder huidige en vorige drivers en sluit af zonder dat de computer opnieuw scant.
+				(Voor het installeren van een nieuwe grafische kaart)
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Remove "GeForce Experience" display driver installer cache/files.
-				(Note: Drivers won't be removed)
+				Verwijder "GeForce Experience" driver installeer cache en bestanden.
+				(Notitie: Drivers worden niet verwijderd)
 			</Text>
 			<Tooltip>
-				This is mostly used to recover some HDD/SSD space not cleaned by GFE/Driver Installer.
+				Dit word gebruikt om schijfruimte te winnen van driver installaties die niet door GeForce Experience verwijderd worden (Oude GFE versie).
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Zet windows driver
-				installatie op standaard.
+				Windows driver installatie op standaard zetten
+				(automatisch drivers installeren)
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Gedetecteerde Windows-versie</Text>
+			<Text>Gedetecteerde Windows versie:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** Vind je DDU goed? Denk misschien eens aan een donatie, het zal de ontwikkeling enorm helpen. ***</Text>
+			<Text>*** Vind je DDU goed? Denk misschien eens aan een donatie, het zal de ontwikkeling verder helpen. ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Log</Text>
@@ -64,26 +64,19 @@
 			<Text>Selecteer grafische driver</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Selected language</Text>
+			<Text>Selecteer taal</Text>
 		</lblLanguage>
 
-		<Label9>
-			<Text>Opmerking: Eventuele schade of fouten veroorzaakt aan uw pc is uw verantwoordelijkheid.</Text>
-		</Label9>
-		<Label10>
-			<Text>Het gebruiken van DDU word in Veilige Modus aanbeloven.</Text>
-		</Label10>
-
 		<lblUpdate>
-			<Text>Controloren of er nieuwe updates zijn...</Text>
-			<Text2>Geen updates gevonden. Programma is up-to-date.</Text2>
+			<Text>Controloren of er updates zijn...</Text>
+			<Text2>Geen updates gevonden. Programma is up to date.</Text2>
 			<Text3>Updates gevonden! Verwacht beperkte ondersteuning op oudere versies dan de meest recente versie.</Text3>
-			<Text4>Kan geen updates halen!</Text4>
+			<Text4>Kan geen updates ophalen!</Text4>
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offers from our partners</Text>
-			<Tooltip>You can disable this from the option menu.</Tooltip>
+			<Text>Aanbiedingen van onze partners. (Aanbevolen)</Text>
+			<Tooltip>Je kan dit uitschakelen in het optie menu.</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
@@ -93,56 +86,84 @@
 			<Text>Info</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Extended log</Text>
+			<Text>Uitgebreide log</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
 			<Text>Links</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Algemene Voorwaarden (ToS)</Text>
+			<Text>Servicevoorwaarden (ToS)</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
-			<Text>Over DDU</Text>
+			<Text>Over</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>Translators</Text>
+			<Text>Vertalers</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Patrons</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Bezoek de officiële DDU Website</Text>
+			<Text>Bezoek de officiële DDU website</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Bezoek de SVN Website</Text>
+			<Text>Bezoek de SVN website</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Bezoek de Guru3d NVIDIA Thread</Text>
+			<Text>Bezoek de Guru3d NVIDIA thread</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Bezoek de Guru3d AMD Thread</Text>
+			<Text>Bezoek de Guru3d AMD thread</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Bezoek de Geforce Thread</Text>
+			<Text>Bezoek de GeForce thread</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
 			<Text1>Updates gevonden! Nu de DDU website bezoeken?</Text1>
 			<Text2>Verwacht beperkte ondersteuning op oudere versies dan de meest recente versie. Alstublieft alleen fouten rapporteren van de nieuwste versie van DDU.</Text2>
-			<Text3>U gebruikt DDU niet met Administrator privileges. De applicatie word nu afgesloten.</Text3>
-			<Text4>Het was niet mogelijk ddudr te vinden. Raadpleeg alstublieft de log.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) Wijzigt uw register veel. DDU zal nu proberen automatisch een systeem herstel punt te maken (Alleen normale mode).</Text5>
+			<Text3>Je gebruikt DDU niet met Administrator privileges. De applicatie word nu afgesloten.</Text3>
+			<Text4>Het was niet mogelijk PAExec te vinden. Raadpleeg alstublieft de log.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) Wijzigt je register veel. DDU zal nu proberen automatisch een systeem herstel punt te maken (Alleen normale modus).</Text5>
 			<Text6>Er is een probleem voorgekomen in een van de modules, stuur je DDU logs naar de ontwikkelaar.</Text6>
-			<Text7>DDU heeft gedecteerd dat u een AMD omschakel Laptop hebt (Enduro of gelijkwaardig), DDU is nog niet volledig compatibel / getest met Enduro systemen, Gebruik op eigen risico.</Text7>
-			<Text8>DDU heeft gedecteerd dat u NIET in Veilige Modus bent... Voor een betere schoonmaak zonder problemen, is het aanbevolen om te herstarten in veilige modus.</Text8>
-			<Text9>DDU heeft een optie veranderd die weerhoudt drivers automatisch te downloaden met Windows Update. U kunt deze terugzetten naar standaard NADAT je nieuwe driver geinstalleerd is.</Text9>
-			<Text10>Volledige verwijdering klaar! Wilt u nu afsluiten?</Text10>
-			<Text11>Klaar!</Text11>
-			<Text12>U bent niet in veilige modus. Het is zeer aanbevolen te herstarten naar veilige modus om problemen te voorkomen., Nu opnieuw opstarten in veilige modus?"</Text12>
+			<Text7>DDU heeft gedecteerd dat je een AMD omschakel Laptop hebt (Enduro of gelijkwaardig), DDU is nog niet volledig compatibel / getest met Enduro systemen, Gebruik op eigen risico.</Text7>
+			<Text8>DDU heeft gedecteerd dat je NIET in Veilige Modus bent... Voor een betere verwijdering zonder problemen, is het aanbevolen om te herstarten in veilige modus.</Text8>
+			<Text9>Windows driver installatie instellingen aangepast om NIET automatisch te installeren</Text9>
+			<Text10>Verwijderen klaar! Wil je nu afsluiten?</Text10>
+			<Text11>Windows driver installatie instellingen aangepast om automatisch te installeren</Text11>
+			<Text12>U bent niet in veilige modus. Het is zeer aanbevolen te herstarten naar veilige modus om problemen te voorkomen. Nu opnieuw opstarten in veilige modus?</Text12>
 			<Text13>Dit is wat je moet selecteren in het blauwe menu van Geavanceerde opstartopties: Problemen oplossen -&gt; Geavanceerde opties -&gt; Opstartinstellingen.</Text13>
-			<Text14>Er is een herstart in afwachting, a.u.b. opnieuw opstarten voordat u DDU gebruikt.</Text14>
-			<Text15>No change was made. Windows Device Installation Settings were already set to Default.</Text15>
+			<Text14>Er is een herstart in afwachting, a.u.b. opnieuw opstarten voordat je DDU gebruikt.</Text14>
+			<Text15>Geen wijziging. Windows driver installatie instellingen stonden al standaard.</Text15>
+			<Text16>Er is een kritische fout in Windows die correcte verwijdering van drivers voorkomt. Als beveiligingsmaatregel, Zal DDU verwijdering van bestanden en het register niet hervatten. Je moet systeem problemen oplossen voordat je DDU kunt gebruiken.</Text16>
+			<Text17>Dit lijkt de eerste keer dat je DDU opgestart hebt.
+				
+					Voor gebruik, houd a.u.b. rekening met het volgende:
+					1: Afhankelijk van je probleem en configuratie, Kan het helpen of erger worden.
+					2: Zorg dat je een backup hebt.
+					3: Zorg dat je de licensie, Leesmij en de Servicevoorwaaden gelezen hebt.
+					4: We zijn niet verantwoordelijk voor schade of data verlies van elk soort.
+					5: We zijn altijd bereid om te helpen wanneer er een probleem is.
+			</Text17>
 		</Messages>
-
+		<Options_Type>
+			<Options1>---Selecteer apparaat type---</Options1>
+			<Options2>Audio</Options2>
+			<Options3>GPU</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Selecteer apparaat---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Selecteer apparaat---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
 		<UpdateLog>
-			<Text1>Driver Winkel schoonmaak word uitgevoerd(Verwijdert OEM step)...</Text1>
+			<Text1>Driver Winkel schoonmaak word uitgevoerd(Verwijder OEM step)...</Text1>
 			<Text2>Map schoonmaken</Text2>
 			<Text3>Bekende RegSleutels schoonmaken... Kan een minuut of twee duren.</Text3>
 			<Text4>UpdatusUser gebruikers account schoonmaken indien aanwezig.</Text4>
@@ -156,31 +177,31 @@
 			<Text12>GPU #</Text12>
 			<Text13>Gedetecteerd</Text13>
 			<Text14>GPU DeviceId</Text14>
-			<Text15>Gedetecteerde Driver(s) Versie(s)</Text15>
+			<Text15>Gedetecteerde Driver Versie(s)</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF Sectie</Text17>
-			<Text18>GPU niet Correct Geinstalleerd</Text18>
+			<Text18>GPU niet correct geinstalleerd</Text18>
 			<Text19>Speciale mappen worden verwijderd, dit kan even duren...</Text19>
 			<Text20>Schoonmaak gestart...</Text20>
 			<Text21>Deïnstalleren</Text21>
 			<Text22>driver</Text22>
-			<Text23>ddudr Verwijdering Wordt Uitgevoerd , Even geduld (kan een paar minuten duren)</Text23>
-			<Text24>GPU(s) Verwijderd van ApparaatBeheer.</Text24>
-			<Text25>DDUDR Verwijdering Geluidscontroller wordt Uitgevoerd.</Text25>
-			<Text26>HD geluid adapters Verwijderd!</Text26>
-			<Text27>3D Visie USB Adapter Verwijderd van ApparaatBeheer.</Text27>
-			<Text28>Monitors en verborgen monitors verwijderd!</Text28>
-			<Text29>ddudr Verwijdering compleet</Text29>
-			<Text30>S-1-5-xx region Schoonmaak gestart</Text30>
-			<Text31>S-1-5-xx region Schoonmaak geëindigd</Text31>
-			<Text32>Begin Classesroot ,installer\products schoonmaak</Text32>
-			<Text33>Eindigt Classesroot ,installer\products schoonmaak</Text33>
-			<Text34>Start localmachine ,installer\products schoonmaak</Text34>
-			<Text35>Eindigt localmachine ,installer\products schoonmaak</Text35>
-			<Text36>Start currentuser ,installer\products schoonmaak</Text36>
-			<Text37>Eindigt currentuser ,installer\products schoonmaak</Text37>
-			<Text38>Bezig met het schoonmaken van process/services...</Text38>
-			<Text39>Process/Services Schoonmaak Klaar</Text39>
+			<Text23>Verwijdering SetupAPI uitvoeren, even geduld a.u.b. (Kan enige minuten duren)</Text23>
+			<Text24>GPU(s) verwijderd uit ApparaatBeheer.</Text24>
+			<Text25>verwijdering SetupAPI Audio controller uitvoeren.</Text25>
+			<Text26>HD audio adapters verwijderd!</Text26>
+			<Text27>3D Vision USB Adapter verwijderd van ApparaatBeheer.</Text27>
+			<Text28>Monitoren en verborgen monitoren verwijderd!</Text28>
+			<Text29>SetupAPI verwijdering uitgevoerd</Text29>
+			<Text30>S-1-5-xx regio schoonmaak gestart</Text30>
+			<Text31>S-1-5-xx regio schoonmaak geëindigd</Text31>
+			<Text32>Classesroot ,installer\products schoonmaak gestart</Text32>
+			<Text33>Classesroot ,installer\products schoonmaak geëindigd</Text33>
+			<Text34>localmachine ,installer\products schoonmaak gestart</Text34>
+			<Text35>localmachine ,installer\products schoonmaak geëindigd</Text35>
+			<Text36>currentuser ,installer\products schoonmaak gestart</Text36>
+			<Text37>currentuser ,installer\products schoonmaak geëindigd</Text37>
+			<Text38>Bezig met het schoonmaken van processen/services...</Text38>
+			<Text39>Processen/Services opgeschoont</Text39>
 			<Text40>Verwijderd.</Text40>
 			<Text41>Waarde verwijderd.</Text41>
 			<Text42>Bestand verwijderd.</Text42>
@@ -189,25 +210,31 @@
 
 	<frmOptions Text="Opties">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Sluiten</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Show Offers from our partners</Text>
+			<Text>Aanbiedingen van partners tonen</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>Specifieke NVIDIA Opties</Text>
+			<Text>NVIDIA Specifieke Opties</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>Specifieke AMD Opties</Text>
+			<Text>AMD Specifieke Opties</Text>
 		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>INTEL Specifieke Opties</Text>
+		</lblINTELspecific>
+		<lblAdvancedO>
+			<Text>Geavenceerde Opties (Veranderen op eigen risico)</Text>
+		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Algemene Opties</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Verwijder "C:\nVidia" Driver map (NIET aanbevolen)</Text>
+			<Text>Verwijder "C:\NVIDIA" driver mappen.</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Bewaar log bestanden in het opstartpad (Sterk aanbevolen)</Text>
+			<Text>Bewaar log bestand in opstart map. (Sterk aanbevolen)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Verwijder PhysX</Text>
@@ -219,134 +246,177 @@
 			<Text>Creëer een Systeem Herstel Punt (indien mogelijk)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Verwijder gedecteerde en niet gedecteerde monitors(Aanbevolen)</Text>
+			<Text>Verwijder gedecteerde en niet gedecteerde monitoren(Aanbevolen)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
 			<Text>Verwijder AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Verwijder "C:\AMD" Driver map (NIET aanbevolen)</Text>
+			<Text>Verwijder "C:\AMD" driver mappen.</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Verwijder de driver/filter AMDKMPFD (Een backup is aanbevolen voor AMD chipsets)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Toon de Veilige Modus berichten box bij het opstarten van DDU</Text>
+			<Text>Activeer Veilige Modus bericht (Niet aanbevolen tot je Veilige Modus handmatig getest hebt.)</Text>
+			<Tooltip>Niet aanbevolen wanneer je nog niet in Veilige Modus bent opgestart om te testen. Deze optie kan mogelijk een boot loop, zwart scherm en meer veroorzaken.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Bewaar de config file in de roaming map</Text>
+			<Text>Bewaar configuratie bestand in de roaming map</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automatisch controleren voor DDU updates bij het opstarten. (Aanbevolen)</Text>
+			<Text>Automatisch controleren op DDU updates bij het opstarten (Aanbevolen)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Verwijder Geforce Experience (GFE)</Text>
+			<Text>Verwijder GeForce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Verwijder NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
+		<lblRemNVCP>
+			<Text>(DCH driver) Verwijder NVIDIA Control Panel geïnstalleerd van de Microsoft Store</Text>
+		</lblRemNVCP>
+		<lblRemINTELCP>
+			<Text>(DCH driver) Verwijder INTEL Control Panel geïnstalleerd van de Microsoft Store</Text>
+		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>(DCH driver) Verwijder AMD Control Panel geïnstalleerd van de Microsoft Store</Text>
+		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>Verwijder AMD Crimson Shader Cache map</Text>
 			<Tooltip>
-				Aanbevolen als er graphische abnormaliteiten voordoen(Snelheid of visueele corruptie) veroorzaakt door een corrupte shader chache data
-				Ook aanbevolen als je wisselt van een GPU merk als nVidia.
+				Aanbevolen als er graphische abnormaliteiten voordoen(Snelheid of visueele corruptie) veroorzaakt door corrupte shader chache data
+				Ook aanbevolen als je wisselt naar een GPU merk als nVidia.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>Verwijder Vulkan Runtime</Text>
-			<Tooltip>Niet Aanbevolen Als Je 2 Verschillende GPU's Hebt Die Gebruik Van De Vulkan API Kunnen Maken.</Tooltip>
+			<Tooltip>Niet aanbevolen als je 2 verschillende GPU's hebt die gebruik van de Vulkan API maken.</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>Gebruik SetupAPI *Experimenteel*</Text>
-			<Tooltip>Gebruik SetupAPI inplaats van de externe tool DDUDR (DEVCON)</Tooltip>
-		</lblUseSetupAPI>
-	</frmOptions>
+    <lblPreventWinUpdate>
+      <Text>Voorkomt het downloaden van drivers via "Windows update" wanneer "Windows" zoekt naar een driver van een apparaat.</Text>
+      <Tooltip>In easy term, this option will denies "Windows/Device Manager" to check for driver update on "Windows Update". 
+               Note: This doesn't prevent "Windows Update" to download/install new drivers. 
+               Note2: It is also *HIGHLY* recommended to revert this change after you have finished using DDU and re-installed your GPU driver or you may have problem with other device installation.</Tooltip>
+     </lblPreventWinUpdate>
+  </frmOptions>
 
-	<frmLaunch Text="Opstart Opties">
+	<frmLaunch Text="Start opties">
 		<btnAccept>
 			<Text>Starten</Text>
 			<Text2>
-				Opnieuw Opstarten naar
+				Opnieuw opstarten naar
 				Veilige Modus
 			</Text2>
 		</btnAccept>
 		<btnClose>
-			<Text>Sluiten</Text>
+			<Text>Close</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Opstart Optie</Text>
+			<Text>Start opties</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				Je bent niet in Veilige Modus. Het is sterk aanbevolen om te
-				herstarten in Veilige Modus om problemen te voorkomen.
+				Je bent niet in Veilige Modus. Het is sterk aanbevolen om
+				op te starten in Veilige Modus om problemen te voorkomen.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Belangrijke info voor gebruikers van Windows 8/8.1/10:
-				Uw Windows "PASWOORD" is vereist! (PIN werkt NIET in Veilige Modus!)
-				Ga niet verder indien u uw pawoord bent vergeten!
+				Belangerijke notitie voor Windows 8/8.1/10/11 gebruikers:
+				Je Windows "WACHTWOORD" kan *mogelijk* nodig zijn! (PIN kan *mogelijk* niet werken in Velige Modus)
+				Stop meteen wanneer je wachtwoord kwijt of vergeten is!
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>Normaal</Item1>
 			<Item2>Veilige Modus (Aanbevolen)</Item2>
-			<Item3>Veilige Modus Met Netwerk Mogelijkheden</Item3>
+			<Item3>Veilige Modus met netwerk</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU closed programs known to interfere (like MSI Afterburner and RTSS).</Text1>
+			<Text1>Programma's afsluiten die DDU belemmeren (zoals MSI Afterburner en RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
 
 	<frmLog Text="Uitgebreide log">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Sluiten</Text>
 		</btnClose>
 		<btnOpenLog>
 			<Text>Open log</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
-			<Text>Options</Text>
+			<Text>Opties</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Copy enabled</Text>
+			<Text>Copy ingeschakeld</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
 			<Text>Filters</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Show events</Text>
+			<Text>Laat events zien</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Show warnings</Text>
+			<Text>Laat waarschuwingen zien</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Show errors</Text>
+			<Text>Laat fouten zien</Text>
 		</errorsMenuItem>
 	</frmLog>
 
-	<frmSystemRestore Text="System Restore">
+	<frmSystemRestore Text="Systeem Herstel">
 		<lblSystemRestore>
-			<Text>Trying to create a System Restore point.</Text>
+			<Text>Proberen een Systeem Herstel Punt te maken.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
-	<frmAbout Text="Over DDU">
+	<frmAbout Text="Over">
 		<btnClose>
-			<Text>Close</Text>
+			<Text>Sluiten</Text>
 		</btnClose>
 		<btnAbout>
 			<Text>Over</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>Algemene Voorwaarden (ToS)</Text>
+			<Text>Servicevoorwaarden (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>Translators</Text>
+			<Text>Vertalers</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>Patrons</Text>
+		</btnPatron>
 		<lblTranslators>
-			<Text>Big thanks to following translators and also those who aren't listed!</Text>
+			<Text>
+				Een grote dank aan de volgende vertalers maar ook hun die niet op de lijst staan!
+				
+				-MojoW
+			</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>
+				Een grote dank aan de volgende patrons maar ook hun die niet op de lijst staan!
+
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				
+			</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
@@ -365,9 +435,9 @@
 
 				AANBEVOLEN GEBRUIK:
 
-				- De tool kan gebruikt worden in de normale modus van windows maar voor absolute stabiliteit bij het gebruik, gebruik je DDU in Veilige modus.
+				- De tool kan gebruikt worden in de normale modus van windows maar voor absolute stabiliteit bij het gebruik, gebruik je DDU in Veilige Modus.
 
-				- We zouden graag feedback krijgen van jou. Vertel ons als het een succes was of niet.
+				- We zouden graag feedback krijgen van iedereen. Vertel ons als het een succes was of niet.
 
 				- Maak een Back-up of een Herstelpunt.(Dit voor de zekerheid maar het zou veilig moeten zijn.)
 
@@ -379,7 +449,7 @@
 
 				Gemaakt door Wagnard.
 
-				CO-eigenaar: Shady757
+				Coders: Wagnard, Devmltk, Shady7557
 
 				Tester: Dellon132
 
@@ -389,15 +459,17 @@
 
 				Dank aan Helge Klein (http://helgeklein.com/setacl/) : Voor de permissie om zijn Programma te mogen gebruiken in DDU "SetAcl"
 
-
 				Bedankt aan iedereen die te tijd heeft genomen om te testen : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (Hij nam de tijd om met mij te debuggen)
 				Extraordinary (Het testen van een bug fix)
 
-				en bedankt naar iedereen die zijn systeeem in gevaar heeft gebracht. (speciale dank aan Dellon132)
+				Bedankt naar iedereen die zijn systeeem in gevaar heeft gebracht. (speciale dank aan Dellon132)
+				
+				*DDU, zijn ontwikkelaar en geassocieerden zijn op geen enkele manier aangesloten met Driver Sweeper, of zijn ontwikkelaars.
 
 				Vertaler: MojoW
 			</Text>
 		</About>
+
 		<Tos>
 			<Text>
 				Display Driver Uninstaller ("DDU") GEBRUIKERSOVEREENKOMST
@@ -414,10 +486,15 @@
 
 	<LanguageTranslators>
 		<Translator>
-			<User></User>
-			<Details></Details>
-			<LastUpdate></LastUpdate>
+			<User>Wagnard</User>
+			<Details>Owner</Details>
+			<LastUpdate>03/04/2021</LastUpdate>
 		</Translator>
+
+		<Translator2>
+			<User>MojoW</User>
+			<LastUpdate>09/06/2022</LastUpdate>
+		</Translator2>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

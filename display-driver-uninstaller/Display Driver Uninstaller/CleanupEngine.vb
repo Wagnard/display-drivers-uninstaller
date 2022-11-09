@@ -19,7 +19,7 @@ Public Class CleanupEngine
 	End Function
 
 
-	Public Sub Deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String)
+	Public Sub Deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String, Optional ByVal throwOnMissingSubKey As Boolean = True)
 		SyncLock REGLOCK
 			Dim fixregacls As Boolean = False
 			If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
@@ -34,7 +34,7 @@ Public Class CleanupEngine
 							Next
 						End If
 					End Using
-					regkeypath.DeleteSubKeyTree(child)
+					regkeypath.DeleteSubKeyTree(child, throwOnMissingSubKey)
 
 					Application.Log.AddMessage(regkeypath.ToString & "\" & child & " - " & UpdateTextMethodmessagefn(39))
 
