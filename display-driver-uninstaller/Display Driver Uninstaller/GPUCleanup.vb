@@ -678,7 +678,7 @@ Public Class GPUCleanup
 			'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont want that
 			'espcially if we are not using an AMD GPU
 
-			If config.RemoveAMDKMPFD Then
+			If config.SelectedGPU = GPUVendor.AMD AndAlso config.RemoveAMDKMPFD Then
 				Try
 					UpdateTextMethod("Start - Check for AMDKMPFD system device.")
 					Application.Log.AddMessage("Executing SetupAPI: check AMDKMPFD system device started")
