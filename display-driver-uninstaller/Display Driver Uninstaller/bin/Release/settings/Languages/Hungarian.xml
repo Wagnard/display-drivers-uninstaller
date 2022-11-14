@@ -148,7 +148,7 @@
 		</Messages>
 		<Options_Type>
 			<Options1>---Válaszd ki az eszköz típusát---</Options1>
-			<Options2>Audio</Options2>
+			<Options2>Hangvezérlő</Options2>
 			<Options3>GPU</Options3>
 		</Options_Type>
 		<Options_GPU>
@@ -301,7 +301,7 @@
 	</lblPreventWinUpdate>
 	</frmOptions>
 
-	<frmLaunch Text="Indítás beállítások">
+	<frmLaunch Text="Indítás beállításai">
 		<btnAccept>
 			<Text>Indítás</Text>
 			<Text2>
@@ -338,7 +338,7 @@
 		</Messages>
 	</frmLaunch>
 
-	<frmLog Text="Kibővített napló">
+	<frmLog Text="Bővített napló">
 		<btnClose>
 			<Text>Bezár</Text>
 		</btnClose>
@@ -367,7 +367,7 @@
 		</errorsMenuItem>
 	</frmLog>
 
-	<frmSystemRestore Text="System Restore">
+	<frmSystemRestore Text="Rendszer-helyreállítás">
 		<lblSystemRestore>
 			<Text>Rendszer-visszaállítási pont létrehozása.</Text>
 		</lblSystemRestore>
@@ -410,6 +410,7 @@
 				-Fabio
 				-Matti Metsikko
 				-mikalonia - mika
+				-ChaosDMNS
 				
 			</Text>
 		</lblPatron>
@@ -485,7 +486,7 @@
 		<Translator>
 			<User>istvanszabo890629</User>
 			<Details>istvanszabo890629@gmail.com</Details>
-			<LastUpdate>10/08/2022</LastUpdate>
+			<LastUpdate>14/11/2022</LastUpdate>
 		</Translator>
 
 		<Translator2>
