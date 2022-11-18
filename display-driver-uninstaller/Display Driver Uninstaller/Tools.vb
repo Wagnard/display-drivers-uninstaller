@@ -39,6 +39,68 @@ Public Module Tools
 	Public Function IsNet45OrNewer() As Boolean
 		Return Type.[GetType]("System.Reflection.ReflectionContext", False) IsNot Nothing
 	End Function
+
+	Public Function IsNet48OrNewer() As Boolean
+		Using ndpKey As RegistryKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey("SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\")
+			Dim releaseKey As Integer = Convert.ToInt32(ndpKey.GetValue("Release"))
+
+
+			If CheckFor45DotVersion(releaseKey) = "4.8 or later" Then
+				Return True
+			End If
+
+			Return False
+		End Using
+	End Function
+
+	Private Function CheckFor45DotVersion(ByVal releaseKey As Integer) As String
+		If releaseKey >= 528040 Then
+			Return "4.8 or later"
+		End If
+
+		If releaseKey >= 461808 Then
+			Return "4.7.2 or later"
+		End If
+
+		If releaseKey >= 461308 Then
+			Return "4.7.1 or later"
+		End If
+
+		If releaseKey >= 460798 Then
+			Return "4.7 or later"
+		End If
+
+		If releaseKey >= 394802 Then
+			Return "4.6.2 or later"
+		End If
+
+		If releaseKey >= 394254 Then
+			Return "4.6.1 or later"
+		End If
+
+		If releaseKey >= 393295 Then
+			Return "4.6 or later"
+		End If
+
+		If releaseKey >= 393273 Then
+			Return "4.6 RC or later"
+		End If
+
+		If (releaseKey >= 379893) Then
+			Return "4.5.2 or later"
+		End If
+
+		If (releaseKey >= 378675) Then
+			Return "4.5.1 or later"
+		End If
+
+		If (releaseKey >= 378389) Then
+			Return "4.5 or later"
+		End If
+
+		Return "No 4.5 or later version detected"
+	End Function
+
 	Public Function CanDeprovisionPackageForAllUsersAsync() As Boolean
 		Dim packageManager As Windows.Management.Deployment.PackageManager = New Windows.Management.Deployment.PackageManager
 		Dim type As Type = packageManager.GetType

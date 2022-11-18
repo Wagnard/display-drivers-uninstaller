@@ -341,8 +341,14 @@ Class Application
 		'	IsDebug = True
 		'End If
 
+		If Not IsNet48OrNewer() Then
+			Microsoft.VisualBasic.MsgBox("Minimum requirement is Microsoft .NET Framework 4.8. Please update your current .NET Framework.")
+			Me.Shutdown()
+			Exit Sub
+		End If
+
 		If Not IsNet45OrNewer() Then
-			Microsoft.VisualBasic.MsgBox("Minimum requirement is Microsoft .NET Framework 4.5. Please update your current .NET Framework.")
+			Microsoft.VisualBasic.MsgBox("Minimum requirement is Microsoft .NET Framework 4.8. Please update your current .NET Framework.")
 			Me.Shutdown()
 			Exit Sub
 		End If
