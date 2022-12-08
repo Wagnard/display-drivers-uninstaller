@@ -600,13 +600,19 @@ Public Class GPUCleanup
 						"VIDEO\INTC_HECI_2"}
 
 				'Removing Intel WIdI bus Enumerator
-				Application.Log.AddMessage("Executing SetupAPI: Remove Intel WIdI bus Enumerator.")
+				Application.Log.AddMessage("Executing SetupAPI: Remove Intel WIdI bus Enumerator, CTA and NF I2C system driver.")
 				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
 				If found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
 						If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
-							If d.HasHardwareID AndAlso StrContainsAny(d.HardwareIDs(0), True, "root\iwdbus") Then  'Workaround for a bug report we got.
-								SetupAPI.UninstallDevice(d)
+							If d.HasHardwareID Then   'Workaround for a bug report we got.
+								For Each hardwareid As String In d.HardwareIDs
+									If IsNullOrWhitespace(hardwareid) Then Continue For
+									If StrContainsAny(hardwareid, True, "root\iwdbus", "VIDEO\INTC_CTA", "VIDEO\INTC_I2C") Then
+										SetupAPI.UninstallDevice(d)
+										Exit For
+									End If
+								Next
 							End If
 						End If
 					Next
@@ -629,7 +635,7 @@ Public Class GPUCleanup
 				End If
 				Application.Log.AddMessage("SetupAPI: Remove Intel Mini CTA Driver Complete .")
 
-				'Removing Mini CTA Driver
+				'Removing Intel(R) Graphics System Controller Auxiliary Firmware Interface.
 				Application.Log.AddMessage("Executing SetupAPI: Intel(R) Graphics System Controller Auxiliary Firmware Interface.")
 				found = SetupAPI.GetDevices("system", Nothing, False)
 				If found.Count > 0 Then
@@ -2010,6 +2016,11 @@ Public Class GPUCleanup
 										Try
 											If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
 												Deletesubregkey(regkey, child)
+												Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child, False)
+												If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
+													Delete(config.Paths.Roaming + "Package Cache\" + child)
+												End If
+												Continue For
 											End If
 										Catch ex As Exception
 											Application.Log.AddException(ex)
@@ -4305,6 +4316,10 @@ Public Class GPUCleanup
 										If IsNullOrWhitespace(regkey2.GetValue("DisplayName", String.Empty).ToString) = False Then
 											If StrContainsAny(regkey2.GetValue("DisplayName", String.Empty).ToString, True, "physx") Then
 												Deletesubregkey(regkey, child)
+												Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child, False)
+												If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
+													Delete(config.Paths.Roaming + "Package Cache\" + child)
+												End If
 												Continue For
 											End If
 										End If
@@ -4365,6 +4380,10 @@ Public Class GPUCleanup
 
 							Try
 								Deletesubregkey(regkey, child)
+								Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child, False)
+								If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
+									Delete(config.Paths.Roaming + "Package Cache\" + child)
+								End If
 							Catch ex As Exception
 								Application.Log.AddException(ex)
 							End Try
@@ -4382,6 +4401,10 @@ Public Class GPUCleanup
 							If StrContainsAny(child, True, "_installer") Then
 								Try
 									Deletesubregkey(regkey, child)
+									Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child, False)
+									If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
+										Delete(config.Paths.Roaming + "Package Cache\" + child)
+									End If
 								Catch ex As Exception
 									Application.Log.AddException(ex)
 								End Try

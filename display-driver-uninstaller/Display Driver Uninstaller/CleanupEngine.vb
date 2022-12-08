@@ -1731,6 +1731,7 @@ Public Class CleanupEngine
 	Public Sub Clsidleftover(ByVal clsidleftover As String())
 
 		Dim wantedvalue As String
+		Dim wantedvalue2 As String
 		Dim appid As String = Nothing
 		Dim typelib As String = Nothing
 		Dim childlist As New List(Of String)
@@ -1973,9 +1974,10 @@ Public Class CleanupEngine
 						Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\" & child & "\LocalServer32", False)
 							If subregkey IsNot Nothing Then
 								wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-								If Not IsNullOrWhitespace(wantedvalue) Then
+								wantedvalue2 = TryCast(subregkey.GetValue("ServerExecutable", String.Empty), String)  'Intel specific workaround "igfxext.exe"
+								If Not IsNullOrWhitespace(wantedvalue) OrElse Not IsNullOrWhitespace(wantedvalue2) Then
 
-									If StrContainsAny(wantedvalue, True, clsidleftover) Then
+									If StrContainsAny(wantedvalue, True, clsidleftover) OrElse StrContainsAny(wantedvalue2, True, clsidleftover) Then
 
 										appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
 										If Not IsNullOrWhitespace(appid) Then
@@ -3015,7 +3017,7 @@ Public Class CleanupEngine
 						driverfiles = {"amdkmdag.sys", "amdxe.sys", "amdfendrmgr.sys", "AtihdWT6.sys", "amdsafd.sys"}
 					Case GPUVendor.Intel
 						CurrentProvider = {"Intel"}
-						driverfiles = {"igdkmd64.sys", "IntcDAud.sys", "intelaud.sys", "iwdbus.sys", "GSCAuxDriverx64.sys", "TeeDriverGSCW8x64.sys"}
+						driverfiles = {"igdkmd64.sys", "IntcDAud.sys", "intelaud.sys", "iwdbus.sys", "GSCAuxDriverx64.sys", "TeeDriverGSCW8x64.sys", "MiniCtaDriver.sys", "IntcDAudD.sys", "IntelGraphicsAGS.exe", "CtaChildDriver.sys", "Intel_NF_I2C.sys"}
 					Case GPUVendor.None
 						CurrentProvider = {"None"}
 						driverfiles = Nothing
@@ -3057,21 +3059,25 @@ Public Class CleanupEngine
 					End If
 				End If
 
-				If StrContainsAny(oem.Class, True, "display", "media", "extension", "softwarecomponent") Then
+				If StrContainsAny(oem.Class, True, "display", "media", "extension", "softwarecomponent", "CTA Driver Devices", "system") Then
 					If Not ((Not config.RemoveNVBROADCAST AndAlso StrContainsAny(oem.Catalog, True, "nvrtxvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvswcfilter"))) Then
+						If StrContainsAny(oem.Class, True, "Extension") AndAlso StrContainsAny(oem.Catalog, True, "extinf.cat", "HdBusExt.cat") Then
+							SetupAPI.RemoveInf(oem, False)
+							Continue For
+						End If
 						For Each SourceDisksName In oem.SourceDisksFiles
-							If IsNullOrWhitespace(SourceDisksName) Then Continue For
-							If SourceDisksName IsNot Nothing AndAlso StrContainsAny(SourceDisksName, True, driverfiles) Then
-								SetupAPI.RemoveInf(oem, False)
-								Exit For
-							End If
-						Next
+								If IsNullOrWhitespace(SourceDisksName) Then Continue For
+								If SourceDisksName IsNot Nothing AndAlso StrContainsAny(SourceDisksName, True, driverfiles) Then
+									SetupAPI.RemoveInf(oem, False)
+									Exit For
+								End If
+							Next
+						End If
+						'Else
+						'	If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.
+						'		SetupAPI.RemoveInf(oem, False)
+						'	End If
 					End If
-					'Else
-					'	If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.
-					'		SetupAPI.RemoveInf(oem, False)
-					'	End If
-				End If
 			End If
 			'check if the oem was removed to process to the pnplockdownfile if necessary
 			If frmMain.win8higher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
