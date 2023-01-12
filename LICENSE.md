@@ -1,6 +1,6 @@
 End-User License Agreement ("Agreement")
 
-Last updated: November 20, 2016
+Last updated: January 12, 2023
 
 Please read this End-User License Agreement ("Agreement") carefully before clicking the "I Agree" button, downloading or using Display Driver Uninstaller (DDU) ("Application").
 By clicking the "I Agree" button, downloading or using the Application, you are agreeing to be bound by the terms and conditions of this Agreement.
@@ -13,6 +13,8 @@ License
 Display Driver Uninstaller (DDU) grants you a revocable, non-exclusive, non-transferable, limited license to download, install and use the Application strictly in accordance with the terms of this Agreement.
 
 Restrictions
+
+Display Driver Uninstaller (DDU) can be only distributed electronically through https://www.wagnardsoft.com . Distribution through other websites or in any other form without permission of Wagnardsoft is prohibited.
 
 You agree not to, and you will not permit others to:
 
