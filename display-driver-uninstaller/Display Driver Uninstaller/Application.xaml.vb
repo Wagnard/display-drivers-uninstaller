@@ -378,7 +378,7 @@ Class Application
 		End If
 
 		Application.Log.Add(info)
-		KillGPUStatsProcesses()
+		'KillGPUStatsProcesses()
 		Try
 			' Launch as Admin if not
 			If Not Tools.UserHasAdmin Then

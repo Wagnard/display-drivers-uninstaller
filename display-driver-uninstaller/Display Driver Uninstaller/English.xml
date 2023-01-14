@@ -309,6 +309,11 @@
 				Safe Mode
 			</Text2>
 		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Set Windows Device Installation settings to Default and Close
+			</Text>
+		</btnWuRestore>
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>

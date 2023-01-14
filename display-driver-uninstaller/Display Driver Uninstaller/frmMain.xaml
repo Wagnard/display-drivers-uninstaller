@@ -179,7 +179,7 @@
 			</Button>
 		</DockPanel>
 
-		<Button Grid.Row="4" Grid.Column="3" Margin="10,10" x:Name="btnWuRestore" MinHeight="40" MaxHeight="60">
+		<Button Grid.Row="4" Grid.Column="3" Margin="10,10" x:Name="btnWuRestore" MinHeight="40" MaxHeight="60" Visibility="{Binding Settings.PreventWinUpdate, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
 			<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
 		</Button>
 

@@ -9,8 +9,9 @@
 		<conv:ValueEqualsOrGreater x:Key="ValueEqualsOrGreater" />
 		<conv:BooleanToVisibilityConverter x:Key="BoolToVis" TrueValue="Visible" FalseValue="Collapsed" />
 		<conv:CombiningConverter x:Key="ValueToVis" Converter1="{StaticResource ValueEqualsOrGreater}" Converter2="{StaticResource BoolToVis}" />
+		<conv:NullableBooleanToBoolean x:Key="NulBoolToBool"></conv:NullableBooleanToBoolean>
 	</Window.Resources>
-	
+
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
@@ -39,15 +40,24 @@
 		</DockPanel>
 
 		<Border Grid.Row="3" BorderBrush="Black" BorderThickness="1" Margin="-1,0,-1,-1" Grid.ColumnSpan="2">
-			<DockPanel Margin="6">
-				<Button x:Name="btnAccept" HorizontalAlignment="Left" MinWidth="100" MaxWidth="200" Height="40">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Button x:Name="btnAccept" Grid.Column="0" HorizontalAlignment="Left" MinWidth="100" MaxWidth="200" Height="40" Margin="6.5,-1,0,0">
 					<Button.Content>
 						<TextBlock Text="btnAccept" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
 					</Button.Content>
 				</Button>
-
-				<Button x:Name="btnClose" Content="btnClose" HorizontalAlignment="Right" MinWidth="100" MaxWidth="200" Height="40" IsCancel="True" />
-			</DockPanel>
+				<Button x:Name="btnWuRestore" Visibility="{Binding Path=Settings.PreventWinUpdate, Mode=OneWay, Converter={StaticResource BoolToVis}, FallbackValue=Visible}" Grid.Column="1" HorizontalAlignment="Center" Width="Auto" MinWidth="100" MaxWidth="200" Height="40" >
+						<Button.Content>
+						<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
+					</Button.Content>
+				</Button>
+				<Button x:Name="btnClose" Grid.Column="2" Content="btnClose" HorizontalAlignment="Right" MinWidth="100" MaxWidth="200" Height="40" IsCancel="True" Margin="0,0,6.5,0" />
+			</Grid>
 		</Border>
 	</Grid>
 </Window>

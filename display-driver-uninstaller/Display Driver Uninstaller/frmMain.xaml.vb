@@ -23,6 +23,7 @@ Imports System.Reflection
 Imports System.Text
 Imports WinForm = System.Windows.Forms
 Imports Display_Driver_Uninstaller.Win32
+Imports Microsoft.VisualBasic.Logging
 
 Public Class frmMain
 	Friend Shared cleaningThread As Tasks.Task = Nothing
@@ -140,6 +141,8 @@ Public Class frmMain
 		config.Shutdown = False
 		config.Restart = True
 
+		KillGPUStatsProcesses()
+
 		PreCleaning(config)
 		StartThread(config)
 	End Sub
@@ -150,6 +153,8 @@ Public Class frmMain
 		config.Shutdown = False
 		config.Restart = False
 
+		KillGPUStatsProcesses()
+
 		PreCleaning(config)
 		StartThread(config)
 	End Sub
@@ -159,6 +164,8 @@ Public Class frmMain
 		Dim config As New ThreadSettings(False)
 		config.Shutdown = True
 		config.Restart = False
+
+		KillGPUStatsProcesses()
 
 		PreCleaning(config)
 		StartThread(config)
@@ -271,14 +278,47 @@ Public Class frmMain
 
 		Languages.TranslateForm(Me, False)
 	End Sub
+	Private Sub KillProcess(ByVal ParamArray processnames As String())
+		For Each processName As String In processnames
+			If String.IsNullOrEmpty(processName) Then
+				Continue For
+			End If
 
-	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
-		Me.Topmost = False
+			For Each process As Process In Process.GetProcessesByName(processName)
+				Try
+					process.Kill()
+					Application.Settings.ProcessKilled = True
+				Catch ex As Exception
+					Application.Log.AddExceptionWithValues(ex, "@KillProcess()", String.Concat("ProcessName: ", processName))
+				End Try
+			Next
+		Next
+	End Sub
+	Private Sub KillGPUStatsProcesses()
+		' Not sure for the x86 one...
+		' Shady: probably the same but without _x64, and a few sites seem to confirm this, doesn't hurt to just add it anyway
 
-		If Application.Settings.ProcessKilled AndAlso (Not Application.LaunchOptions.Silent) AndAlso (Not Application.Settings.EnableSafeModeDialog) Then
+		KillProcess(
+		 "MSIAfterburner",
+		  "PrecisionX_x64",
+		  "PrecisionXServer_x64",
+		  "PrecisionX",
+		  "PrecisionXServer",
+		  "RTSS",
+		  "RTSSHooksLoader64",
+		  "EncoderServer64",
+		  "RTSSHooksLoader",
+		  "EncoderServer",
+		  "nvidiaInspector")
+
+		If Application.Settings.ProcessKilled AndAlso (Not Application.LaunchOptions.Silent) Then
 			MessageBox.Show(Languages.GetTranslation("frmLaunch", "Messages", "Text1"), Application.Settings.AppName, Nothing, MessageBoxImage.Information)
 			Application.Settings.ProcessKilled = False
 		End If
+
+	End Sub
+	Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
+		Me.Topmost = False
 
 		Try
 			'cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
@@ -388,7 +428,7 @@ Public Class frmMain
 			frmOptions.ShowDialog()
 		End If
 
-		If Not Application.LaunchOptions.Silent Then
+		If Not Application.LaunchOptions.Silent AndAlso Not Application.Settings.EnableSafeModeDialog Then
 			Select Case System.Windows.Forms.SystemInformation.BootMode
 
 				Case Forms.BootMode.Normal
@@ -980,6 +1020,7 @@ Public Class frmMain
 				Application.Log.AddException(ex)
 			End Try
 		End If
+		Application.Settings.PreventWinUpdate = InfoDriverSearch()
 	End Sub
 
 	Public Shared Function InfoDriverSearch() As Boolean
