@@ -6729,6 +6729,57 @@ Public Class GPUCleanup
 
 		CleanupEngine.Clsidleftover(clsidleftover) '// add each line as String Array.
 
+		'--------------------------
+		'Power Settings CleanUP
+		'--------------------------
+		Application.Log.AddMessage("Power Settings Cleanup")
+		Try
+			If winxp = False Then
+				Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM", False)
+					If subregkey IsNot Nothing Then
+						For Each child2 As String In subregkey.GetSubKeyNames()
+							If IsNullOrWhitespace(child2) Then Continue For
+
+							If child2.ToLower.Contains("controlset") Then
+								Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Control\Power\PowerSettings", True)
+									If regkey IsNot Nothing Then
+										For Each childs As String In regkey.GetSubKeyNames()
+											If IsNullOrWhitespace(childs) Then Continue For
+
+											Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, childs)
+												If regkey2 IsNot Nothing Then
+													For Each child As String In regkey2.GetValueNames()
+														If IsNullOrWhitespace(child) Then Continue For
+
+														If StrContainsAny(child, True, "Description") Then
+															wantedvalue = regkey2.GetValue(child, String.Empty).ToString()
+															If IsNullOrWhitespace(wantedvalue) Then Continue For
+
+															'Usually this key : 44f3beca-a7c0-460e-9df2-bb8b99e0cba6
+															If StrContainsAny(wantedvalue, True, "Configure Intel(R) Graphics Settings") Then
+																Try
+																	Deletesubregkey(regkey, childs)
+																	Continue For
+																Catch ex As Exception
+																	Application.Log.AddException(ex)
+																End Try
+															End If
+														End If
+													Next
+												End If
+											End Using
+										Next
+									End If
+								End Using
+                            End If
+						Next
+					End If
+				End Using
+			End If
+		Catch ex As Exception
+			Application.Log.AddException(ex)
+		End Try
+
 		If config.RemoveVulkan Then
 			CleanVulkan(config)
 		End If
@@ -6776,7 +6827,7 @@ Public Class GPUCleanup
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
 								If IsNullOrWhitespace(child) = False Then
-									If child.ToLower.Contains("display") Then
+									If StrContainsAny(child, True, "display", "IGN") Then
 										Try
 											Deletesubregkey(regkey, child)
 										Catch ex As Exception
