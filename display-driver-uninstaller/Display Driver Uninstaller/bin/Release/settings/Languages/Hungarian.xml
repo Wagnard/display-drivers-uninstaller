@@ -309,6 +309,11 @@
 				Csökkentett módban
 			</Text2>
 		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Windows alapértelmezett eszköztelepítő alaphelyzetbe állítása, majd a program bezárása
+			</Text>
+		</btnWuRestore>
 		<btnClose>
 			<Text>Bezár</Text>
 		</btnClose>
@@ -486,7 +491,7 @@
 		<Translator>
 			<User>istvanszabo890629</User>
 			<Details>istvanszabo890629@gmail.com</Details>
-			<LastUpdate>14/11/2022</LastUpdate>
+			<LastUpdate>27/01/2023</LastUpdate>
 		</Translator>
 
 		<Translator2>
