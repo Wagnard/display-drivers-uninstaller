@@ -276,6 +276,13 @@
 		<lblRemNVCP>
 			<Text>(DCH driver) Remove the NVIDIA Control Panel installed from the Microsoft Store</Text>
 		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Keep NVIDIA Control Panel Global / Program Settings.</Text>
+			<Tooltip>
+				If you encountered issues that led you to use DDU for cleanup, we recommend avoiding selecting this option.
+				This option is not designed to fix problems and may not address the issue you're experiencing."
+			</Tooltip>
+		</lblKeepNVCPopt>
 		<lblRemINTELCP>
 			<Text>(DCH driver) Remove the INTEL Control Panel installed from the Microsoft Store</Text>
 		</lblRemINTELCP>

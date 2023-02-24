@@ -34,6 +34,7 @@ Public Class AppLaunchOptions
 	Public Property RemoveGFE As Boolean = False
 	Public Property RemoveNVBROADCAST As Boolean = False
 	Public Property RemoveNVCP As Boolean = False
+	Public Property KeepNVCPopt As Boolean = False
 	Public Property RemoveINTELCP As Boolean = False
 	Public Property RemoveAMDCP As Boolean = False
 	Public Property RemoveVulkan As Boolean = False
@@ -113,6 +114,7 @@ Public Class AppLaunchOptions
 					Case StrContainsAny(Argument, True, "-RemoveGFE") : RemoveGFE = True
 					Case StrContainsAny(Argument, True, "-RemoveNVBROADCAST") : RemoveNVBROADCAST = True
 					Case StrContainsAny(Argument, True, "-RemoveNVCP") : RemoveNVCP = True
+					Case StrContainsAny(Argument, True, "-KeepNVCPopt") : KeepNVCPopt = True
 					Case StrContainsAny(Argument, True, "-RemoveINTELCP") : RemoveINTELCP = True
 					Case StrContainsAny(Argument, True, "-RemoveAMDCP") : RemoveAMDCP = True
 					Case StrContainsAny(Argument, True, "-RemoveAMDKMPFD") : RemoveAMDKMPFD = True

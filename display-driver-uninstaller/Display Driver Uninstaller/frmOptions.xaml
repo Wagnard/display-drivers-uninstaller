@@ -49,13 +49,14 @@
                     <Separator DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="1" />
                     <Label DockPanel.Dock="Top" x:Name="lblNvidiaspecific" Content="lblNvidiaspecific" FontWeight="Bold" FontSize="14"/>
 
-                    <UniformGrid DockPanel.Dock="Top" Rows="6">
+                    <UniformGrid DockPanel.Dock="Top" Rows="7">
                         <CheckBox x:Name="lblRemNvidiaDirs" IsChecked="{Binding RemoveNvidiaDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemNvidiaDirs" />
                         <CheckBox x:Name="lblRemPhysX" IsChecked="{Binding RemovePhysX, Converter={StaticResource NulBoolToBool}}" Content="lblRemPhysX" />
                         <CheckBox x:Name="lblRem3DtvPlay" IsChecked="{Binding Remove3DTVPlay, Converter={StaticResource NulBoolToBool}}" Content="lblRem3DtvPlay" />
                         <CheckBox x:Name="lblRemGFE" IsChecked="{Binding RemoveGFE, Converter={StaticResource NulBoolToBool}}" Content="lblRemGFE" />
 						<CheckBox x:Name="lblRemNVBROADCAST" IsChecked="{Binding RemoveNVBROADCAST, Converter={StaticResource NulBoolToBool}}" Content="lblRemNVBROADCAST" />
 						<CheckBox x:Name="lblRemNVCP" IsChecked="{Binding RemoveNVCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemNVCP" />
+						<CheckBox x:Name="lblKeepNVCPopt" IsChecked="{Binding KeepNVCPopt, Converter={StaticResource NulBoolToBool}}" Content="lblKeepNVCPopt" />
 					</UniformGrid>
                 </DockPanel>
 

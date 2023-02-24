@@ -103,6 +103,7 @@ Public Class AppSettings
 	Private m_rem3DtvPlay As DependencyProperty = RegDP("Remove3DTVPlay", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remGFE As DependencyProperty = RegDP("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remNVCP As DependencyProperty = RegDP("RemoveNVCP", GetType(Boolean), GetType(AppSettings), True)
+	Private m_keepNVCPopt As DependencyProperty = RegDP("KeepNVCPopt", GetType(Boolean), GetType(AppSettings), False)
 	Private m_remNVBROADCAST As DependencyProperty = RegDP("RemoveNVBROADCAST", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remINTELCP As DependencyProperty = RegDP("RemoveINTELCP", GetType(Boolean), GetType(AppSettings), True)
 	Private m_remAMDCP As DependencyProperty = RegDP("RemoveAMDCP", GetType(Boolean), GetType(AppSettings), True)
@@ -330,6 +331,14 @@ Public Class AppSettings
 		End Get
 		Set(value As Boolean)
 			SetValue(m_remNVCP, value)
+		End Set
+	End Property
+	Public Property KeepNVCPopt As Boolean
+		Get
+			Return CBool(GetValue(m_keepNVCPopt))
+		End Get
+		Set(value As Boolean)
+			SetValue(m_keepNVCPopt, value)
 		End Set
 	End Property
 
@@ -579,6 +588,7 @@ Public Class AppSettings
 						.WriteElementString("EnableSafeModeDialog", EnableSafeModeDialog.ToString())
 						.WriteElementString("PreventWinUpdate", PreventWinUpdate.ToString())
 						.WriteElementString("UsedBCD", UsedBCD.ToString())
+						.WriteElementString("KeepNVCPopt", KeepNVCPopt.ToString())
 
 
 						.WriteEndElement()
@@ -715,6 +725,9 @@ Public Class AppSettings
 
 							Case "removenvcp"
 								RemoveNVCP = Boolean.Parse(KvP.Value)
+
+							Case "keepnvcpopt"
+								KeepNVCPopt = Boolean.Parse(KvP.Value)
 
 							Case "removeintelcp"
 								RemoveINTELCP = Boolean.Parse(KvP.Value)

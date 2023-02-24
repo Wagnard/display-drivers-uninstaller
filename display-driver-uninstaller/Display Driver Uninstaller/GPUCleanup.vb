@@ -784,6 +784,7 @@ Public Class GPUCleanup
 
 		KillProcess(
 		 "MSIAfterburner",
+		 "CapFrameX",
 		  "PrecisionX_x64",
 		  "PrecisionXServer_x64",
 		  "PrecisionX",
@@ -5979,7 +5980,8 @@ Public Class GPUCleanup
 		Try
 			For Each child As String In FileIO.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
-					If StrContainsAny(child, True, "drs", "nv_cache", "umdlogs", "nvtopps", "GameSessionTelemetry") Or
+					If (StrContainsAny(child, True, "drs") AndAlso Not config.KeepNVCPopt) Or
+						StrContainsAny(child, True, "nv_cache", "umdlogs", "nvtopps", "GameSessionTelemetry") Or
 					 (child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvab") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or

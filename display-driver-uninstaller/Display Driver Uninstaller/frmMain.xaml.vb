@@ -300,6 +300,7 @@ Public Class frmMain
 
 		KillProcess(
 		 "MSIAfterburner",
+		 "CapFrameX",
 		  "PrecisionX_x64",
 		  "PrecisionXServer_x64",
 		  "PrecisionX",
