@@ -136,6 +136,15 @@
 			<Text14>Ожидается перезагрузка. Выполните её перед использованием DDU.</Text14>
 			<Text15>Не было внесено никаких изменений. Параметры установки устройств Windows установлены в стандартные значения.</Text15>
 			<Text16>Произошла критическая ошибка Windows, мешающая правильному удалению драйверов. Ради безопасности DDU не будет продолжать удаление файлов и записей в реестре. Перед использованием DDU необходимо устранить системные проблемы.</Text16>
+			<Text17>Кажется, это первый раз, когда вы запустили DDU.
+		
+         Перед использованием, пожалуйста, знайте следующее:
+         1: В зависимости от ваших проблем и конфигурации это может помочь или ухудшить ситуацию.
+         2: У вас должна быть резервная копия.
+         3: Вы должны прочитать лицензию, Readme и Условия предоставления услуг.
+         4: Мы не несем ответственности за любой ущерб или потерю данных.
+         5: Мы всегда готовы помочь, если есть проблема.
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>---Выберите тип устройства---</Options1>
@@ -385,14 +394,21 @@
 			<Text>
 				Благодарим следующих меценатов и тех, кто не упомянут!</Text>
 
-				-honnmaguro (с 16 марта 2018)
-				-ZaoDaDong   (с 6 февраля 2019)
-				-Alberto Bursi (меценат долгое время)
-				-Kaseb (с 5 мая 2019)
-				-Frank Brown (с 31 октября 2019)
-				-Сергей Большаков (с 10 сентября 2020)
-				-James Tiller (Since 2021-04-03)
-				-Paulo Henrique (Since 2021-04-19)
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
 
 		</lblPatron>
 	</frmAbout>
@@ -463,7 +479,7 @@
 
 		<Translator2>
 			<User>Danis Miryasov (miryasov.danis@yandex.ru)</User>
-			<LastUpdate>27.09.2022</LastUpdate>
+			<LastUpdate>14.03.2023</LastUpdate>
 		</Translator2>
 		<Translator3>
 			<User>Dmitry Yerokhin (erodim@mail.ru)</User>
