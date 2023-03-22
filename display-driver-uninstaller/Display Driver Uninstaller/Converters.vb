@@ -1,6 +1,6 @@
 ﻿Imports Display_Driver_Uninstaller.Win32
 
-Namespace Converters
+Namespace Display_Driver_Uninstaller.Converters
 
 	Public Class NullableBooleanToBoolean
 		Implements IValueConverter

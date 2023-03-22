@@ -12,7 +12,7 @@ Imports System.Runtime.ConstrainedExecution
 Imports Microsoft.Win32
 Imports Microsoft.Win32.SafeHandles
 
-Namespace Win32
+Namespace Display_Driver_Uninstaller.Win32
 
 	<ComVisible(False)>
 	Partial Public Class SetupAPI
@@ -3130,18 +3130,18 @@ Namespace Win32
 				result = CM_Get_Parent(devInstParent, device.devInst, 0UI)
 
 				If result = CR.SUCCESS Then
-						If devInstParent <> device.devInst Then
-							parentDevices.Add(
+					If devInstParent <> device.devInst Then
+						parentDevices.Add(
 						  New Device() With {
 						   .devInst = devInstParent
 						  })
-						End If
+					End If
 
 				ElseIf result = CR.NO_SUCH_DEVINST Then
-						Return
-					Else
-						Throw New Win32Exception(GetLastWin32Error())
-					End If
+					Return
+				Else
+					Throw New Win32Exception(GetLastWin32Error())
+				End If
 
 				If parentDevices.Count > 0 Then
 					device.ParentDevices = parentDevices.ToArray()

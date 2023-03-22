@@ -5,10 +5,8 @@ Imports System.Runtime.InteropServices
 Imports System.Security
 
 Imports Display_Driver_Uninstaller.Win32.TaskScheduler
-Imports Display_Driver_Uninstaller.Win32.TaskScheduler.Version1
-Imports Display_Driver_Uninstaller.Win32.TaskScheduler.Version2
 
-Namespace Win32
+Namespace Display_Driver_Uninstaller.Win32
 
 	' Windows SDK
 	' -> OLE/COM Object Viewer -> GUID
@@ -30,7 +28,7 @@ Namespace Win32
 	Public Class TaskSchedulerControl
 		Implements IDisposable
 
-		Friend Const MaxWaits As Int32 = 500	  ' 500 * 10ms = 5sec MAX  (takes less than 1 ms usually) || process will stay running after deletion of task if not waited)
+		Friend Const MaxWaits As Int32 = 500      ' 500 * 10ms = 5sec MAX  (takes less than 1 ms usually) || process will stay running after deletion of task if not waited)
 		Private Const _rootFolder As String = "\"
 		Private ReadOnly _useV2 As Boolean = True
 		Friend Shared ReadOnly iTaskGuid As Guid = Marshal.GenerateGuidForType(GetType(Version1.ITask))
@@ -408,14 +406,14 @@ Namespace Win32
 		Public Overrides Property Enabled As Boolean
 			Get
 				If _task IsNot Nothing Then
-					Return Not HasFlag(_task.GetFlags(), TASK_FLAG.DISABLED)
+					Return Not HasFlag(_task.GetFlags(), Version1.TASK_FLAG.DISABLED)
 				End If
 
 				Return False
 			End Get
 			Set(value As Boolean)
 				If _task IsNot Nothing Then
-					_task.SetFlags(SetFlag(Of TASK_FLAG)(_task.GetFlags(), TASK_FLAG.DISABLED, Not value))
+					_task.SetFlags(SetFlag(Of Version1.TASK_FLAG)(_task.GetFlags(), Version1.TASK_FLAG.DISABLED, Not value))
 
 					SaveToFile(Name)
 				End If
@@ -464,8 +462,8 @@ Namespace Win32
 			End If
 		End Sub
 
-		Friend Shared Function ReActivate(ByVal taskScheduler As ITaskScheduler, ByVal name As String) As ITask
-			Dim newTask As ITask
+		Friend Shared Function ReActivate(ByVal taskScheduler As Version1.ITaskScheduler, ByVal name As String) As Version1.ITask
+			Dim newTask As Version1.ITask
 
 			Try
 				newTask = taskScheduler.Activate(name, TaskSchedulerControl.iTaskGuid)
@@ -514,7 +512,7 @@ Namespace Win32
 
 End Namespace
 
-Namespace Win32.TaskScheduler
+Namespace Display_Driver_Uninstaller.Win32.TaskScheduler
 	Friend Enum TASK_ACTION_TYPE As UInt32
 		EXEC = 0UI
 		COM_HANDLER = 5UI
@@ -639,7 +637,7 @@ Namespace Win32.TaskScheduler
 
 End Namespace
 
-Namespace Win32.TaskScheduler.Version1
+Namespace Display_Driver_Uninstaller.Win32.TaskScheduler.Version1
 	' GUID @ MSTask.Idl
 	'  mstask.h
 
@@ -973,7 +971,7 @@ Namespace Win32.TaskScheduler.Version1
 
 End Namespace
 
-Namespace Win32.TaskScheduler.Version2
+Namespace Display_Driver_Uninstaller.Win32.TaskScheduler.Version2
 	Friend Enum TASK_TRIGGER_TYPE As UInt32
 		[EVENT] = 0UI
 		TIME = 1UI

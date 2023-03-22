@@ -1,4 +1,4 @@
-﻿<Window x:Name="frmAbout" x:Class="frmAbout"
+﻿<Window x:Name="frmAbout" x:Class="Display_Driver_Uninstaller.frmAbout"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:local="clr-namespace:Display_Driver_Uninstaller"

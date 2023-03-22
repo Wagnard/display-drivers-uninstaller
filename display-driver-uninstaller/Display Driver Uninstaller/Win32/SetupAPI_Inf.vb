@@ -1,7 +1,7 @@
 ﻿Imports System.Text
 Imports System.Runtime.InteropServices
 
-Namespace Win32
+Namespace Display_Driver_Uninstaller.Win32
 	Partial Public Class SetupAPI
 		Friend Class InfError
 			Private Const APPLICATION_ERROR_MASK = &H20000000UI
@@ -323,8 +323,8 @@ Namespace Win32
 
 		<DllImport("setupapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
 		Private Shared Function SetupOpenInfFile(
-   <[In]()><MarshalAs(UnmanagedType.LPWStr)> ByVal FileName As String,
-   <[In]()><MarshalAs(UnmanagedType.LPWStr)> ByVal InfClass As String,
+   <[In]()> <MarshalAs(UnmanagedType.LPWStr)> ByVal FileName As String,
+   <[In]()> <MarshalAs(UnmanagedType.LPWStr)> ByVal InfClass As String,
    <[In]()> ByVal InfStyle As UInt32,
    <[In]()> ByRef ErrorLine As UInt32) As IntPtr
 		End Function

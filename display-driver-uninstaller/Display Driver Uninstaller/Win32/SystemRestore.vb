@@ -3,10 +3,10 @@ Imports System.Text
 Imports System.Runtime.InteropServices
 Imports System.ComponentModel
 
-Namespace Win32
+Namespace Display_Driver_Uninstaller.Win32
 	Friend Class SystemRestore
-		Private Const MAX_DESC As Int32 = 64		' Ansi
-		Private Const MAX_DESC_W As Int32 = 256		' Unicode
+		Private Const MAX_DESC As Int32 = 64        ' Ansi
+		Private Const MAX_DESC_W As Int32 = 256     ' Unicode
 
 #Region "P/Invoke"
 

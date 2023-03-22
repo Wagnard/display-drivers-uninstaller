@@ -1,4 +1,4 @@
-﻿<Window x:Class="DebugWindow"
+﻿<Window x:Class="Display_Driver_Uninstaller.DebugWindow"
         x:Name="frmMain"
         xmlns:local="clr-namespace:Display_Driver_Uninstaller"
         xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"

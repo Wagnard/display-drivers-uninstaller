@@ -8,7 +8,7 @@ Imports System.Security.Principal
 
 Imports Microsoft.Win32
 
-Namespace Win32
+Namespace Display_Driver_Uninstaller.Win32
 
 	Namespace ACL
 		Friend Module PInvoke
@@ -559,7 +559,7 @@ Namespace Win32
 				STANDARD_RIGHTS_REQUIRED = &HF0000UI
 				STANDARD_RIGHTS_ALL = &H1F0000UI
 
-				ACCESS_SYSTEM_SECURITY = &H1000000UI	' + SE_SECURITY_NAME => SACL
+				ACCESS_SYSTEM_SECURITY = &H1000000UI    ' + SE_SECURITY_NAME => SACL
 
 				GENERIC_ALL = &H10000000UI
 				GENERIC_EXECUTE = &H20000000UI
@@ -773,7 +773,7 @@ Namespace Win32
 
 						previousOwnerSID = Marshal.PtrToStringUni(ptrOwnerStr)
 
-						If logEvents Then		' Log current Owner
+						If logEvents Then       ' Log current Owner
 							logEntry.Add(KvP.Empty)
 							logEntry.Add("Current Owner")
 							logEntry.Add("  SID", previousOwnerSID)
@@ -1039,7 +1039,7 @@ Namespace Win32
 								Exit Function
 							End If
 						ElseIf retVal = 2UI Then
-							Return False	' Key doesn't exists
+							Return False    ' Key doesn't exists
 						Else
 							Throw New Win32Exception(GetInt32(retVal))
 						End If
@@ -1053,7 +1053,7 @@ Namespace Win32
 					previousOwner = rs.GetOwner(GetType(SecurityIdentifier))
 
 
-					If logEvents Then		' Log current Owner
+					If logEvents Then       ' Log current Owner
 						Dim ptrPreviousOwner As IntPtr = IntPtr.Zero
 
 						Try

@@ -3,7 +3,7 @@
 Imports System.ComponentModel
 Imports System.Runtime.InteropServices
 
-Namespace Win32
+Namespace Display_Driver_Uninstaller.Win32
 
 #Region "Enums"
 
@@ -93,8 +93,8 @@ Namespace Win32
 			SECTION_NOT_FOUND = APPLICATION_ERROR_MASK Or ERROR_SEVERITY_ERROR Or &H101UI
 			WRONG_INF_STYLE = APPLICATION_ERROR_MASK Or ERROR_SEVERITY_ERROR Or &H100UI
 
-			INF_NOT_OEM = &HE000023CUI		' Inf is not oem installed
-			INF_IN_USE = &HE000023DUI		' Inf is currently used by device
+			INF_NOT_OEM = &HE000023CUI      ' Inf is not oem installed
+			INF_IN_USE = &HE000023DUI       ' Inf is currently used by device
 
 
 			' FileIO Errors
@@ -102,59 +102,59 @@ Namespace Win32
 			PATH_NOT_FOUND = 3UI
 			ACCESS_DENIED = 5UI
 			INVALID_DATA = 13UI
-			SHARING_VIOLATION = 32UI			' File in use
-			INSUFFICIENT_BUFFER = 122UI			' Buffer size too small
+			SHARING_VIOLATION = 32UI            ' File in use
+			INSUFFICIENT_BUFFER = 122UI         ' Buffer size too small
 			DIR_NOT_EMPTY = 145UI
 			NO_MORE_ITEMS = 259UI
-			NOT_ALL_ASSIGNED = &H514			' AdjustToken, privilige already assigned
+			NOT_ALL_ASSIGNED = &H514            ' AdjustToken, privilige already assigned
 			CANCELLED = 1223UI
-			INVALID_USER_BUFFER = 1784UI		' Invalid buffer (size or structure doesn't match)
+			INVALID_USER_BUFFER = 1784UI        ' Invalid buffer (size or structure doesn't match)
 			INVALID_FILE_ATTRIBUTES = &HFFFFFFFFUI
 
 
 			' Task Scheluder Errors
-			SCHED_E_ACCOUNT_DBASE_CORRUPT = &H80041311UI		'Corruption was detected in the Task Scheduler security database; the database has been reset.		
-			SCHED_E_ACCOUNT_INFORMATION_NOT_SET = &H8004130FUI	'No account information could be found in the Task Scheduler security database for the task indicated.		
-			SCHED_E_ACCOUNT_NAME_NOT_FOUND = &H80041310UI		'Unable to establish existence of the account specified.		
-			SCHED_E_ALREADY_RUNNING = &H8004131FUI				'An instance of this task is already running.		
-			SCHED_E_CANNOT_OPEN_TASK = &H8004130DUI				'The task object could not be opened.		
-			SCHED_E_INVALIDVALUE = &H80041318UI					'The task XML contains a value which is incorrectly formatted or out of range.		
-			SCHED_E_INVALID_TASK = &H8004130EUI					'The object is either an invalid task object or is not a task object.		
-			SCHED_E_INVALID_TASK_HASH = &H80041321UI			'The task image is corrupt or has been tampered with.		
-			SCHED_E_MALFORMEDXML = &H8004131AUI					'The task XML is malformed.		
-			SCHED_E_MISSINGNODE = &H80041319UI					'The task XML is missing a required element or attribute.		
-			SCHED_E_NAMESPACE = &H80041317UI					'The task XML contains an element or attribute from an unexpected namespace.		
-			SCHED_E_NO_SECURITY_SERVICES = &H80041312UI			'Task Scheduler security services are available only on Windows NT.		
-			SCHED_E_PAST_END_BOUNDARY = &H8004131EUI			'The task cannot be started after the trigger end boundary.		
-			SCHED_E_SERVICE_NOT_AVAILABLE = &H80041322UI		'The Task Scheduler service is not available.		
-			SCHED_E_SERVICE_NOT_INSTALLED = &H8004130CUI		'The Task Scheduler service is not installed on this computer.		
-			SCHED_E_SERVICE_NOT_RUNNING = &H80041315UI			'The Task Scheduler Service is not running.		
-			SCHED_E_SERVICE_TOO_BUSY = &H80041323UI				'The Task Scheduler service is too busy to handle your request. Please try again later.		
-			SCHED_E_START_ON_DEMAND = &H80041328UI				'The task settings do not allow the task to start on demand.
-			SCHED_E_TASK_ATTEMPTED = &H80041324UI				'The Task Scheduler service attempted to run the task, but the task did not run due to one of the constraints in the task definition.		
-			SCHED_E_TASK_DISABLED = &H80041326UI				'The task is disabled.		
-			SCHED_E_TASK_NOT_READY = &H8004130AUI				'One or more of the properties required to run this task have not been set.		
-			SCHED_E_TASK_NOT_RUNNING = &H8004130BUI				'There is no running instance of the task.		
-			SCHED_E_TASK_NOT_V1_COMPAT = &H80041327UI			'The task has properties that are not compatible with earlier versions of Windows.		
-			SCHED_E_TOO_MANY_NODES = &H8004131DUI				'The task XML contains too many nodes of the same type.		
-			SCHED_E_TRIGGER_NOT_FOUND = &H80041309UI			'A task's trigger is not found.		
-			SCHED_E_UNEXPECTEDNODE = &H80041316UI				'The task XML contains an unexpected node.		
-			SCHED_E_UNKNOWN_OBJECT_VERSION = &H80041313UI		'The task object version is either unsupported or invalid.		
-			SCHED_E_UNSUPPORTED_ACCOUNT_OPTION = &H80041314UI	'The task has been configured with an unsupported combination of account settings and run time options.		
-			SCHED_E_USER_NOT_LOGGED_ON = &H80041320UI			'The task will not run because the user is not logged on.		
-			SCHED_S_BATCH_LOGON_PROBLEM = &H4131CUI				'The task is registered, but may fail to start. Batch logon privilege needs to be enabled for the task principal.		
-			SCHED_S_EVENT_TRIGGER = &H41308UI					'Event triggers do not have set run times.		
-			SCHED_S_SOME_TRIGGERS_FAILED = &H4131BUI			'The task is registered, but not all specified triggers will start the task.		
-			SCHED_S_TASK_DISABLED = &H41302UI					'The task will not run at the scheduled times because it has been disabled.		
-			SCHED_S_TASK_HAS_NOT_RUN = &H4130UI					'The task has not yet run.		
-			SCHED_S_TASK_NOT_SCHEDULED = &H41305UI				'One or more of the properties that are needed to run this task on a schedule have not been set.		
-			SCHED_S_TASK_NO_MORE_RUNS = &H41304UI				'There are no more runs scheduled for this task.		
-			SCHED_S_TASK_NO_VALID_TRIGGERS = &H41307UI			'Either the task has no triggers or the existing triggers are disabled or not set.		
-			SCHED_S_TASK_QUEUED = &H41325UI						'The Task Scheduler service has asked the task to run.		
-			SCHED_S_TASK_READY = &H41300UI						'The task is ready to run at its next scheduled time.		
-			SCHED_S_TASK_RUNNING = &H41301UI					'The task is currently running.		
-			SCHED_S_TASK_TERMINATED = &H41306UI					'The last run of the task was terminated by the user.		
-			SERVICE_SPECIFIC_ERROR = &H42AUI					'The service has returned a service-specific error code.
+			SCHED_E_ACCOUNT_DBASE_CORRUPT = &H80041311UI        'Corruption was detected in the Task Scheduler security database; the database has been reset.		
+			SCHED_E_ACCOUNT_INFORMATION_NOT_SET = &H8004130FUI  'No account information could be found in the Task Scheduler security database for the task indicated.		
+			SCHED_E_ACCOUNT_NAME_NOT_FOUND = &H80041310UI       'Unable to establish existence of the account specified.		
+			SCHED_E_ALREADY_RUNNING = &H8004131FUI              'An instance of this task is already running.		
+			SCHED_E_CANNOT_OPEN_TASK = &H8004130DUI             'The task object could not be opened.		
+			SCHED_E_INVALIDVALUE = &H80041318UI                 'The task XML contains a value which is incorrectly formatted or out of range.		
+			SCHED_E_INVALID_TASK = &H8004130EUI                 'The object is either an invalid task object or is not a task object.		
+			SCHED_E_INVALID_TASK_HASH = &H80041321UI            'The task image is corrupt or has been tampered with.		
+			SCHED_E_MALFORMEDXML = &H8004131AUI                 'The task XML is malformed.		
+			SCHED_E_MISSINGNODE = &H80041319UI                  'The task XML is missing a required element or attribute.		
+			SCHED_E_NAMESPACE = &H80041317UI                    'The task XML contains an element or attribute from an unexpected namespace.		
+			SCHED_E_NO_SECURITY_SERVICES = &H80041312UI         'Task Scheduler security services are available only on Windows NT.		
+			SCHED_E_PAST_END_BOUNDARY = &H8004131EUI            'The task cannot be started after the trigger end boundary.		
+			SCHED_E_SERVICE_NOT_AVAILABLE = &H80041322UI        'The Task Scheduler service is not available.		
+			SCHED_E_SERVICE_NOT_INSTALLED = &H8004130CUI        'The Task Scheduler service is not installed on this computer.		
+			SCHED_E_SERVICE_NOT_RUNNING = &H80041315UI          'The Task Scheduler Service is not running.		
+			SCHED_E_SERVICE_TOO_BUSY = &H80041323UI             'The Task Scheduler service is too busy to handle your request. Please try again later.		
+			SCHED_E_START_ON_DEMAND = &H80041328UI              'The task settings do not allow the task to start on demand.
+			SCHED_E_TASK_ATTEMPTED = &H80041324UI               'The Task Scheduler service attempted to run the task, but the task did not run due to one of the constraints in the task definition.		
+			SCHED_E_TASK_DISABLED = &H80041326UI                'The task is disabled.		
+			SCHED_E_TASK_NOT_READY = &H8004130AUI               'One or more of the properties required to run this task have not been set.		
+			SCHED_E_TASK_NOT_RUNNING = &H8004130BUI             'There is no running instance of the task.		
+			SCHED_E_TASK_NOT_V1_COMPAT = &H80041327UI           'The task has properties that are not compatible with earlier versions of Windows.		
+			SCHED_E_TOO_MANY_NODES = &H8004131DUI               'The task XML contains too many nodes of the same type.		
+			SCHED_E_TRIGGER_NOT_FOUND = &H80041309UI            'A task's trigger is not found.		
+			SCHED_E_UNEXPECTEDNODE = &H80041316UI               'The task XML contains an unexpected node.		
+			SCHED_E_UNKNOWN_OBJECT_VERSION = &H80041313UI       'The task object version is either unsupported or invalid.		
+			SCHED_E_UNSUPPORTED_ACCOUNT_OPTION = &H80041314UI   'The task has been configured with an unsupported combination of account settings and run time options.		
+			SCHED_E_USER_NOT_LOGGED_ON = &H80041320UI           'The task will not run because the user is not logged on.		
+			SCHED_S_BATCH_LOGON_PROBLEM = &H4131CUI             'The task is registered, but may fail to start. Batch logon privilege needs to be enabled for the task principal.		
+			SCHED_S_EVENT_TRIGGER = &H41308UI                   'Event triggers do not have set run times.		
+			SCHED_S_SOME_TRIGGERS_FAILED = &H4131BUI            'The task is registered, but not all specified triggers will start the task.		
+			SCHED_S_TASK_DISABLED = &H41302UI                   'The task will not run at the scheduled times because it has been disabled.		
+			SCHED_S_TASK_HAS_NOT_RUN = &H4130UI                 'The task has not yet run.		
+			SCHED_S_TASK_NOT_SCHEDULED = &H41305UI              'One or more of the properties that are needed to run this task on a schedule have not been set.		
+			SCHED_S_TASK_NO_MORE_RUNS = &H41304UI               'There are no more runs scheduled for this task.		
+			SCHED_S_TASK_NO_VALID_TRIGGERS = &H41307UI          'Either the task has no triggers or the existing triggers are disabled or not set.		
+			SCHED_S_TASK_QUEUED = &H41325UI                     'The Task Scheduler service has asked the task to run.		
+			SCHED_S_TASK_READY = &H41300UI                      'The task is ready to run at its next scheduled time.		
+			SCHED_S_TASK_RUNNING = &H41301UI                    'The task is currently running.		
+			SCHED_S_TASK_TERMINATED = &H41306UI                 'The last run of the task was terminated by the user.		
+			SERVICE_SPECIFIC_ERROR = &H42AUI                    'The service has returned a service-specific error code.
 
 			BAD_NETPATH = 53UI
 			'This error is returned in the following situations:
@@ -164,23 +164,23 @@ Namespace Win32
 			'When you are trying to connect to a Windows Vista computer, and the remote computer does not have the Remote Scheduled Tasks Management firewall 
 			'exception enabled and the File and Printer Sharing firewall exception enabled, or the Remote Registry service is not running.
 
-			NOT_SUPPORTED = 50UI								'The user, password, or domain parameters cannot be specified when connecting to a remote Windows XP or Windows Server 2003 computer from a Windows Vista computer.
-			E_ACCESS_DENIED = &H80070005UI						'Access is denied to connect to the Task Scheduler service.
+			NOT_SUPPORTED = 50UI                                'The user, password, or domain parameters cannot be specified when connecting to a remote Windows XP or Windows Server 2003 computer from a Windows Vista computer.
+			E_ACCESS_DENIED = &H80070005UI                      'Access is denied to connect to the Task Scheduler service.
 
 
 			' Generic errors
-			ONLY_IF_CONNECTED = &H800704E3UI					'This operation is supported only when you are connected to the server.
-			S_OK = &H0UI										'Operation successful
-			E_ABORT = &H80004004UI								'Operation aborted
-			E_ACCESSDENIED = &H80070005UI						'General access denied error
-			E_FAIL = &H80004005UI								'Unspecified failure
-			E_HANDLE = &H80070006UI								'Handle that is not valid
-			E_INVALIDARG = &H80070057UI							'One or more arguments are not valid
-			E_NOINTERFACE = &H80004002UI						'No such interface supported
-			E_NOTIMPL = &H80004001UI							'Not implemented
-			E_OUTOFMEMORY = &H8007000EUI						'Failed to allocate necessary memory
-			E_POINTER = &H80004003UI							'Pointer that is not valid
-			E_UNEXPECTED = &H8000FFFFUI							'Unexpected failure
+			ONLY_IF_CONNECTED = &H800704E3UI                    'This operation is supported only when you are connected to the server.
+			S_OK = &H0UI                                        'Operation successful
+			E_ABORT = &H80004004UI                              'Operation aborted
+			E_ACCESSDENIED = &H80070005UI                       'General access denied error
+			E_FAIL = &H80004005UI                               'Unspecified failure
+			E_HANDLE = &H80070006UI                             'Handle that is not valid
+			E_INVALIDARG = &H80070057UI                         'One or more arguments are not valid
+			E_NOINTERFACE = &H80004002UI                        'No such interface supported
+			E_NOTIMPL = &H80004001UI                            'Not implemented
+			E_OUTOFMEMORY = &H8007000EUI                        'Failed to allocate necessary memory
+			E_POINTER = &H80004003UI                            'Pointer that is not valid
+			E_UNEXPECTED = &H8000FFFFUI                         'Unexpected failure
 
 		End Enum
 

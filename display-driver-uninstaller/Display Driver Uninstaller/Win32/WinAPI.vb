@@ -5,13 +5,13 @@ Imports System.Security.Principal
 Imports System.Runtime.InteropServices
 Imports System.Text
 
-Namespace Win32
+Namespace Display_Driver_Uninstaller.Win32
 
 	<ComVisible(False)>
 	Friend Class WinAPI
 		Private Shared _is64 As Boolean
 		Private Shared _isAdmin As Boolean
-	
+
 		Friend Shared Property Is64 As Boolean
 			Get
 				Return _is64
