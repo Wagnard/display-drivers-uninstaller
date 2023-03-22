@@ -276,6 +276,13 @@
 		<lblRemNVCP>
 			<Text>(DCH illesztőprogram) A Microsoft Store-ból telepített NVIDIA Vezérlőpult eltávolítása</Text>
 		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Az NVIDIA Vezérlőpult globális / programbeli beállítások megtartása.</Text>
+			<Tooltip>
+				Ha olyan problémákba ütköztél, amik miatt a DDU-t használod a tisztításhoz, javasoljuk, hogy ne kapcsold be ezt a beállítást.
+				Ez a beállítás nem a problémák megoldására szolgál, és nem biztos, hogy megoldja az általad tapasztalt problémát.
+			</Tooltip>
+		</lblKeepNVCPopt>
 		<lblRemINTELCP>
 			<Text>(DCH illesztőprogram) A Microsoft Store-ból telepített INTEL Vezérlőpult eltávolítása</Text>
 		</lblRemINTELCP>
@@ -491,7 +498,7 @@
 		<Translator>
 			<User>istvanszabo890629</User>
 			<Details>istvanszabo890629@gmail.com</Details>
-			<LastUpdate>27/01/2023</LastUpdate>
+			<LastUpdate>22/03/2023</LastUpdate>
 		</Translator>
 
 		<Translator2>
