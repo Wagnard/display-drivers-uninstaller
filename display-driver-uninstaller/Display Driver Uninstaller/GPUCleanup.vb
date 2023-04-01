@@ -3608,6 +3608,7 @@ Namespace Display_Driver_Uninstaller
 			Dim removephysx As Boolean = config.RemovePhysX
 			Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\classroot.cfg")
 			Dim clsidleftoverGFE As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverGFE.cfg")
+			Dim clsidleftoverNVB As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftoverNVB.cfg")
 			Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\clsidleftover.cfg")
 			Dim packages As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\packages.cfg")
 			Dim reginterfaceGFE As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\interfaceGFE.cfg")
@@ -3660,6 +3661,11 @@ Namespace Display_Driver_Uninstaller
 
 			Dim thread2 As Tasks.Task = Tasks.Task.Run(Sub() InstallerCleanThread(packages, config))
 			TaskList.Add(thread2)
+
+			If removenvbroadcast Then
+				Dim thread3 As Tasks.Task = Tasks.Task.Run(Sub() InstallerCleanThread(clsidleftoverNVB, config))
+				TaskList.Add(thread3)
+			End If
 
 			'------------------------------
 			'Clean the rebootneeded message
@@ -4135,6 +4141,7 @@ Namespace Display_Driver_Uninstaller
 											 child2.ToLower.Contains("nvcamera") Or  'part of nv broadcast ?
 											 child2.ToLower.Contains("nvidia broadcast") AndAlso removenvbroadcast Or
 											 child2.ToLower.Contains("nvidia rtx voice") AndAlso removenvbroadcast Or
+											 child2.ToLower.Contains("nvidia audio effects sdk") AndAlso removenvbroadcast Or
 											 child2.ToLower.Contains("nvtray") AndAlso removegfe Or
 											 child2.ToLower.Contains("ansel") AndAlso removegfe Or
 											 child2.ToLower.Contains("nvcontainer") AndAlso removegfe Or
@@ -5616,6 +5623,7 @@ Namespace Display_Driver_Uninstaller
 			Dim removephysx As Boolean = config.RemovePhysX
 			Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")
 			Dim gfedriverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")
+			Dim nvbdriverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\nvbdriverfiles.cfg")
 			Dim TaskList = New List(Of Tasks.Task)()
 
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
@@ -5631,6 +5639,10 @@ Namespace Display_Driver_Uninstaller
 				TaskList.Add(thread2)
 			End If
 
+			If config.RemoveNVBROADCAST Then
+				Dim thread3 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(nvbdriverfiles, config))
+				TaskList.Add(thread3)
+			End If
 
 			'Delete NVIDIA data Folders
 			'Here we delete the Geforce experience / Nvidia update user it created. This fail sometime for no reason :/
@@ -6290,7 +6302,8 @@ Namespace Display_Driver_Uninstaller
 						 child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("update common") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("display.nvcontainer") AndAlso config.RemoveGFE Or
-						 child.ToLower.Contains("nvcontainer") AndAlso config.RemoveGFE Or
+						 child.ToLower.Equals(filePath.ToLower + "\nvcontainer") AndAlso config.RemoveGFE Or
+						 child.ToLower.Equals(filePath.ToLower + "\nvbroadcast.nvcontainer") AndAlso config.RemoveNVBROADCAST Or
 						 child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE Or

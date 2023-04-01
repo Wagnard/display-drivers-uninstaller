@@ -81,7 +81,7 @@ Namespace Display_Driver_Uninstaller.Win32
 							'access denied ,can happen, just continue checking the next process.
 							logEntry.Add(proc.ProcessName, exARG.Message)
 						Catch ex As Exception
-							Application.Log.AddMessage(proc.ProcessName + ex.Message + ex.StackTrace)
+							Application.Log.AddMessage(proc.ProcessName + " " + ex.Message + ex.StackTrace)
 						End Try
 					Next
 				Catch ex As Exception
