@@ -48,7 +48,7 @@
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Встановити типові параметри інсталяції пристроїв для Windows
+				Установити типові параметри інсталяції пристроїв для Windows
 				(автоматична інсталяція драйверів)
 			</Text>
 		</btnWuRestore>
@@ -140,6 +140,20 @@
 			<Text14>Існує відкладене перезавантаження, виконайте його, перш ніж використовувати DDU</Text14>
 			<Text15>Не було зроблено ніяких змін. Типові параметри інсталяції пристроїв для Windows вже встановлено.</Text15>
 			<Text16>Сталася критична помилка Windows, яка перешкоджає правильному видаленню драйверів. З міркувань безпеки, DDU не буде продовжувати видалення файлів та записів реєстру. Вам слід виправити системні проблеми перед використанням DDU.</Text16>
+			<Text17>Здається, ви вперше запустили DDU.
+				
+					Перед використанням зверніть увагу на таке:
+
+					1: Залежно від ваших проблем і конфігурації це може допомогти або погіршити ситуацію.
+
+					2: У вас має бути резервна копія.
+
+					3: Вам слід прочитати ліцензію (Licence.txt), Readme.txt та Угоду з користувачем.
+
+					4: Ми не несемо відповідальності за будь-які пошкодження або втрату даних будь-якого роду.
+
+					5: Ми завжди готові допомогти, якщо виникне проблема.
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>---Виберіть тип пристрою---</Options1>
@@ -176,7 +190,7 @@
 			<Text16>Файл INF</Text16>
 			<Text17>Секція INF</Text17>
 			<Text18>Графічний процесор інстальовано неправильно</Text18>
-			<Text19>Видалення деяких спеціальних папок. Це може тривати деякий час...</Text19>
+			<Text19>Видалення деяких спеціальних тек. Це може тривати деякий час...</Text19>
 			<Text20>Розпочато очищення...</Text20>
 			<Text21>Видалення</Text21>
 			<Text22>драйвер</Text22>
@@ -226,10 +240,10 @@
 			<Text>Загальні параметри</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Видалити папку драйверів "C:\NVIDIA"</Text>
+			<Text>Видалити теку драйверів "C:\NVIDIA"</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Зберігати файли журналу в папці запуску (настійно рекомендовано)</Text>
+			<Text>Зберігати файли журналу в теці запуску (настійно рекомендовано)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Видалити PhysX</Text>
@@ -247,7 +261,7 @@
 			<Text>Видалити AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Видалити папку драйверів "C:\AMD"</Text>
+			<Text>Видалити теку драйверів "C:\AMD"</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Видалити драйвер/фільтр AMDKMPFD (рекомендовано створення резервної копії для чіпсета AMD)</Text>
@@ -260,17 +274,27 @@
 			</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Зберігати файл конфігурації у переміщуваній папці</Text>
+			<Text>Зберігати файл конфігурації у переміщуваній теці</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Автоматично перевіряти наявність оновлень при запуску DDU (рекомендовано)</Text>
+			<Text>Автоматично перевіряти наявність оновлень під час запуску DDU (рекомендовано)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Видалити Geforce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Видалити розсилання повідомлень  NVIDIA</Text>
+		</lblRemNVBROADCAST>
 		<lblRemNVCP>
 			<Text>Видалити панель керування NVIDIA, інстальовану з Microsoft Store (драйвер DCH)</Text>
 		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Зберегти глобальні налаштування панелі керування NVIDIA та налаштування програми.</Text>
+			<Tooltip>
+				Якщо ви зіткнулися з проблемами, які спонукали вас використовувати DDU для очищення, радимо уникати вибору цієї опції.
+				Ця опція не призначена для вирішення проблем і може не вирішити проблему, з якою ви стикаєтеся."
+			</Tooltip>
+		</lblKeepNVCPopt>
 		<lblRemINTELCP>
 			<Text>Видалити панель керування INTEL, інстальовану з Microsoft Store (драйвер DCH)</Text>
 		</lblRemINTELCP>
@@ -278,7 +302,7 @@
 			<Text>Видалити панель керування AMD, інстальовану з Microsoft Store (драйвер DCH)</Text>
 		</lblRemAMDCP>
 		<lblRemCrimsonCache>
-			<Text>Видалити папку AMD Crimson Shader Cache</Text>
+			<Text>Видалити теку AMD Crimson Shader Cache</Text>
 			<Tooltip>
 				Рекомендовано за наявності графічних аномалій (швидкості чи візуальних спотворень) через пошкодження кешу даних шейдерів.
 				Також рекомендовано, якщо ви переходите до іншої марки, наприклад nVidia.
@@ -305,6 +329,11 @@
 				у безп. режимі
 			</Text2>
 		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Установ. типові парам. інсталяції пристроїв Windows і закрити
+			</Text>
+		</btnWuRestore>
 		<btnClose>
 			<Text>Закрити</Text>
 		</btnClose>
@@ -319,8 +348,8 @@
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Важливе зауваження для користувачів Windows 8/8.1/10:
-				Потрібен ваш "ПАРОЛЬ" до Windows! (PIN-код у безп. режимі не працює)
+				Важливе зауваження для користувачів Windows 8/8.1/10/11:
+				Ваш "ПАРОЛЬ" до Windows *може* знадобитися! (PIN *може* не працюв.)
 				Якщо ви його втратили або не знаєте - ВИЙДІТЬ НЕГАЙНО!
 			</Text>
 		</lblWinPasswordWarn>
@@ -386,19 +415,28 @@
 			<Text>Меценати</Text>
 		</btnPatron>
 		<lblTranslators>
-			<Text> Щиро дякуємо переліченим перекладачам та тим, кого не перелічено!</Text>
+			<Text> Велика подяка переліченим перекладачам, а також тим, кого немає в списку!</Text>
 		</lblTranslators>
 		<lblPatron>
 			<Text>
-				Щиро дякуємо переліченим меценатам та тим, кого не перелічено!
-	 
-				– honnmaguro  (з 16/03/2018)
-				– ZaoDaDong   (з 06/02/2019)
-				– Alberto Bursi (давній пожертвувач та прихильник)
-				– Kaseb (з 05/09/2019)
-				– Frank Brown (з 31/10/2019)
-				– Sergey Bolshakow (з 10/09/2020)
-				– James Tiller (Since 2021-04-03)
+				Велика подяка переліченим меценатам, а також тим, кого немає в списку!
+
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
+				
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -462,7 +500,7 @@
 		<Translator>
 			<User>YuriPet</User>
 			<Details>yuripet@gmail.com</Details>
-			<LastUpdate>21/04/2021</LastUpdate>
+			<LastUpdate>02/04/2023</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
