@@ -5937,7 +5937,7 @@ Namespace Display_Driver_Uninstaller
 									For Each child3 As String In FileIO.GetDirectories(child2)
 										If IsNullOrWhitespace(child3) Then Continue For
 
-										If StrContainsAny(child3, True, "nvbroadcast") AndAlso Not config.RemoveNVBROADCAST Then
+										If StrContainsAny(child3, True, "nvbroadcast", "nvbcast") AndAlso Not config.RemoveNVBROADCAST Then
 											'do nothing
 										Else
 											Delete(child3)
