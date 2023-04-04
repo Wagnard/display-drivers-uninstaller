@@ -8,29 +8,32 @@
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
 			<Text>
-				Pulisci e riavvia
+				Rimuovi il driver selezionato e riavvia il computer
 				(Raccomandato)
 			</Text>
 			<Tooltip>
-				Rimuove i driver installati e riavvia il computer.
+				Rimuove Rimuovi il driver selezionato e successivamente riavvia il computer in modalità normale.
+				(Raccomandato)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				Pulisci SENZA riavviare.
-				(Potrebbe causare problemi grafici come schermate nere)
+				Rimuovi il driver selezionato senza riavviare il computer
+				(Potrebbe causare schermate nere)
 			</Text>
 			<Tooltip>
-				Rimuove i driver installati e NON riavvia il computer.
+				Rimuove il driver selezionato senza che il computer si riavvii.
+				(Questo potrebbe causare problemi grafici temporanei come schermate nere)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
-				Pulisci e spegni il computer
-				(Utile per installare una nuova scheda video)
+				Rimuovi il driver selezionato e spegni il computer
+				(Utile per installare un nuovo componente hardware)
 			</Text>
 			<Tooltip>
-				Rimuove i driver installati e spegne il computer.
+				Rimuove il driver selezionato e spegne il computer.
+				(Utile per installare un nuovo componente hardware)
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
@@ -39,7 +42,7 @@
 				(NOTA: Nessun driver video verrà rimosso)
 			</Text>
 			<Tooltip>
-				Permette di recuperare spazio dall'hardisk.
+				Viene utilizzato principalmente per recuperare spazio su disco dalle installazioni di "GeForce Experience" quando si installa un driver (vecchia versione GFE).
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
@@ -68,7 +71,7 @@
 			<Text>Controllo degli aggiornamenti in corso...</Text>
 			<Text2>Nessun aggiornamento trovato. Il programma è aggiornato.</Text2>
 			<Text3>Aggiornamento trovato! Aggiorna adesso per ricevere il supporto completo.</Text3>
-			<Text4>Impossibile verificare la presenza gli aggiornamenti!</Text4>
+			<Text4>Impossibile verificare la disponilità degli aggiornamenti!</Text4>
 		</lblUpdate>
 
 		<lblOffer>
@@ -89,7 +92,7 @@
 			<Text>Collegamenti</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Condizioni di Utilizzo</Text>
+			<Text>Condizioni di utilizzo</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
 			<Text>Informazioni su DDU</Text>
@@ -97,6 +100,9 @@
 		<TranslatorsMenuItem>
 			<Text>Traduzioni</Text>
 		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Sostenitori</Text>
+		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visita il sito ufficiale di DDU</Text>
 		</VisitDDUHomeMenuItem>
@@ -114,21 +120,31 @@
 		</VisitGeforceMenuItem>
 
 		<Messages>
-			<Text1>Aggiornamento disponibile! Visitare adesso il sito di DDU?</Text1>
+			<Text1>Aggiornamento disponibile! Vuoi visitare adesso il sito di DDU?</Text1>
 			<Text2>Supporto limitato per le vecchie versioni del programma. Controlla se sono disponibili nuove versioni prima di segnalare bug.</Text2>
-			<Text3>Stai usando DDU senza privilegi di Amministratore. Il programma verrà terminato.</Text3>
-			<Text4>Impossibile trovare ddudr. Fare riferimento al file di log per ulteriori informazioni.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) sta modificando il registro di sistema. Verrà creato automaticamente un punto di ripristino del sistema (SOLO in Avvio Normale).</Text5>
+			<Text3>Stai usando DDU senza i privilegi di amministratore. Il programma verrà chiuso.</Text3>
+			<Text4>Impossibile trovare PAExec. Fare riferimento al file di log per ulteriori informazioni.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) sta modificando il registro di sistema. Verrà creato automaticamente un punto di ripristino del sistema (Disponibile solo in modalità normale).</Text5>
 			<Text6>Si è verificato un problema, invia il file di log agli sviluppatori per ulteriori informazioni.</Text6>
 			<Text7>DDU ha rilevato l'utilizzo di un portatile AMD con Enduro o equvalente, DDU non è pienamente compatibile con i sistemi Enduro, pertanto usa DDU a tuo rischio.</Text7>
 			<Text8>DDU ha rilevato che non sei in modalità provvisoria! Per una pulizia sicura, è raccomandato il riavvio in modalità provvisoria.</Text8>
 			<Text9>DDU ha disabilitato il download automatico dei driver tramite Windows Update. Per ripristinare l'impostazione predefinita premere il tasto "Ripristina l'installazione automatica dei driver su Windows Update".</Text9>
-			<Text10>Pulizia completata! Vuoi uscire dal programma?</Text10>
-			<Text11>Fine!</Text11>
-			<Text12>Non sei in modalità provvisoria. Si consiglia di riavviare in modalità provvisoria per evitare eventuali problemi. Riavviare adesso in modalità provvisoria?</Text12>
+			<Text10>Pulizia completata! Vuoi chiudere il programma?</Text10>
+			<Text11>Le impostazioni di installazione dei drivers tramite Windows Update sono state modificate per installare automaticamente i drivers.</Text11>
+			<Text12>Non sei in modalità provvisoria. Si raccomanda di riavviare il computer in modalità provvisoria per una pulizia. Riavviare adesso in modalità provvisoria?</Text12>
 			<Text13>Per riavviare in modalità provvisoria: Risoluzione dei problemi -&gt; opzioni avanzate -&gt; impostazioni di avvio.</Text13>
 			<Text14>DDU ha rilevato un riavvio in sospeso, riavviare prima di utilizzare il programma.</Text14>
 			<Text15>Non è effettuata alcuna modifica sulle impostazioni di installazione del dispositivo.</Text15>
+			<Text16>Si è verificato un errore critico in Windows che impedisce la corretta rimozione dei drivers. Come misura di sicurezza, DDU non continuerà con la rimozione dei file e del registro. È necessario risolvere i problemi del sistema prima di utilizzare DDU.</Text16>
+			<Text17>Questa sembra essere la prima volta che lanci DDU.
+				
+					Prima di utilizzare questo programma, leggi attentamente quanto segue:
+					1: A seconda della configurazione, l'utilizzo di DDU potrebbe aiutare o peggiorare le cose.
+					2: Crea un backup dei tuoi dati prima di utilizzare questo programma.
+					3: Leggi attentamente il contratto di licenza per l'utente, il Readme e le condizioni di utilizzo.
+					4: Non siamo responsabili per eventuali danni o perdite di dati di qualsiasi tipo.
+					5: Siamo sempre disposti ad aiutarti qualora riscontrassi un problema.
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>---Seleziona driver da rimuovere---</Options1>
@@ -147,48 +163,48 @@
 			<Options3>SOUNDBLASTER (WIP)</Options3>
 		</Options_AUDIO>
 		<UpdateLog>
-			<Text1>Executing Driver Store cleanUP(Delete OEM step)...</Text1>
-			<Text2>Cleaning Directory</Text2>
+			<Text1>Executing Driver Store cleanup (Delete OEM step)...</Text1>
+			<Text2>Cleaning directory</Text2>
 			<Text3>Cleaning known Regkeys... May take a minute or two.</Text3>
 			<Text4>Cleaning UpdatusUser users account if present.</Text4>
-			<Text5>Cleaning Directory</Text5>
-			<Text6>Starting Registry CleanUP</Text6>
+			<Text5>Cleaning directory</Text5>
+			<Text6>Starting Registry cleanup</Text6>
 			<Text7>Finished cleaning Registry</Text7>
-			<Text8>Starting the removal of nVidia Optimus UpperFilter if present.</Text8>
+			<Text8>Starting the removal of NVIDIA Optimus UpperFilter if present.</Text8>
 			<Text9>Scanning for new device...</Text9>
 			<Text10>Clean uninstall completed!</Text10>
 			<Text11>DDU Version</Text11>
 			<Text12>GPU #</Text12>
 			<Text13>Detected</Text13>
 			<Text14>GPU DeviceId</Text14>
-			<Text15>Detected Driver(s) Version(s)</Text15>
+			<Text15>Detected Driver Version(s)</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF Section</Text17>
-			<Text18>GPU not Correctly Installed</Text18>
-			<Text19>Deleting some specials folders, it may take some times...</Text19>
-			<Text20>CleanUP started...</Text20>
+			<Text18>GPU not correctly installed</Text18>
+			<Text19>Deleting some special folders, it may take some time...</Text19>
+			<Text20>Cleanup started...</Text20>
 			<Text21>Uninstalling</Text21>
 			<Text22>driver</Text22>
-			<Text23>Executing ddudr Remove , Please wait(can take a few minutes)</Text23>
-			<Text24>GPU(s) Removed from Device Manager.</Text24>
-			<Text25>Executing DDUDR Remove Audio controller.</Text25>
-			<Text26>HD audio adapters Removed !</Text26>
-			<Text27>3D Vision USB Adapter Removed from Device Manager.</Text27>
-			<Text28>Monitors and Hidden monitors removed !</Text28>
-			<Text29>ddudr Remove complete</Text29>
-			<Text30>Starting S-1-5-xx region cleanUP</Text30>
-			<Text31>End of S-1-5-xx region cleanUP</Text31>
+			<Text23>Executing SetupAPI remove, please wait (can take a few minutes)</Text23>
+			<Text24>GPU(s) removed from Device Manager.</Text24>
+			<Text25>Executing SetupAPI remove Audio controller.</Text25>
+			<Text26>HD audio adapters removed!</Text26>
+			<Text27>3D Vision USB Adapter removed from Device Manager.</Text27>
+			<Text28>Monitors and Hidden monitors removed!</Text28>
+			<Text29>SetupAPI remove complete</Text29>
+			<Text30>Starting S-1-5-xx region cleanup</Text30>
+			<Text31>End of S-1-5-xx region cleanup</Text31>
 			<Text32>Begin Classesroot ,installer\products cleanup</Text32>
 			<Text33>End Classesroot ,installer\products cleanup</Text33>
 			<Text34>Start localmachine ,installer\products cleanup</Text34>
 			<Text35>End localmachine ,installer\products cleanup</Text35>
 			<Text36>Start currentuser ,installer\products cleanup</Text36>
 			<Text37>End currentuser ,installer\products cleanup</Text37>
-			<Text38>Cleaning process/services...</Text38>
-			<Text39>Process/Services CleanUP Complete</Text39>
+			<Text38>Cleaning processes/services...</Text38>
+			<Text39>Processes/Services cleanup complete</Text39>
 			<Text40>Deleted.</Text40>
 			<Text41>Value removed.</Text41>
-			<Text42>File Deleted.</Text42>
+			<Text42>File deleted.</Text42>
 		</UpdateLog>
 	</frmMain>
 
@@ -197,7 +213,7 @@
 			<Text>Chiudi</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Visualizza offerte dei nostri partner</Text>
+			<Text>Visualizza offerte dei nostri partners</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
 			<Text>Opzioni driver NVIDIA</Text>
@@ -205,6 +221,9 @@
 		<lblAmdspecific>
 			<Text>Opzioni driver AMD</Text>
 		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>Opzioni driver INTEL</Text>
+		</lblINTELspecific>
 		<lblAdvancedO>
 			<Text>Avanzate</Text>
 		</lblAdvancedO>
@@ -212,10 +231,10 @@
 			<Text>Varie</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Rimuovi cartelle temporanee di installazione dei driver NVIDIA (Non consigliato)</Text>
+			<Text>Rimuovi cartelle temporanee di installazione dei driver NVIDIA</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Salva file di log (Consigliato)</Text>
+			<Text>Salva file di log (Raccomandato)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Rimuovi PhysX</Text>
@@ -227,59 +246,81 @@
 			<Text>Crea punto di ripristino configurazione di sistema</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Rimuovi i driver del monitor (Scelta consigliata)</Text>
+			<Text>Rimuovi i drivers del monitor (Raccomandato)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
 			<Text>Rimuovi AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Rimuovi cartelle temporanee di installazione dei driver AMD (Non consigliato)</Text>
+			<Text>Rimuovi cartelle temporanee di installazione dei driver AMD</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Abilita modalità provvisoria diretta di Windows 8 e successivi.</Text>
+			<Text>Rimuovi driver/filter AMDKMPFD (È raccomandato un backup per il chipset AMD)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
-			<Text>Mostra all'avvio avvertenze sulla modalità provvisoria</Text>
+			<Text>Mostra avvertenze sulla modalità provvisoria all'avvio del programma</Text>
+			<Tooltip>Non raccomandato se non hai mai avviato il tuo computer in modalità provvisoria. Questa opzione può causare boot loop, schermate nere e altri problemi.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Salva file di configurazione nella cartella di Roaming</Text>
+			<Text>Salva file di configurazione nella cartella Roaming</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Ricerca automaticamente aggiornamenti del programma. (Consigliato)</Text>
+			<Text>Ricerca automaticamente aggiornamenti del programma (Raccomandato)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Rimuovi GeForce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Rimuovi NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
+		<lblRemNVCP>
+			<Text>Rimuovi il pannello di controllo NVIDIA installato da Microsoft Store (DCH driver)</Text>
+		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Mantieni il pannello di controllo NVIDIA / impostazioni del programma</Text>
+			<Tooltip>
+				Se hai riscontrato problemi che ti hanno portato a utilizzare DDU per la pulizia dei drivers, ti consigliamo di evitare di selezionare questa opzione.
+				Questa opzione non è progettata per risolvere i problemi con i drivers e potrebbe non risolvere il problema riscontrato.
+			</Tooltip>
+		</lblKeepNVCPopt>
+		<lblRemINTELCP>
+			<Text>Rimuovi il pannello di controllo INTEL installato da Microsoft Store (DCH driver)</Text>
+		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>Rimuovi il pannello di controllo AMD installato da Microsoft Store (DCH driver)</Text>
+		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>Rimuovi AMD Crimson Shader Cache</Text>
 			<Tooltip>
-				Consigliato in caso di problemi grafici causati dai dati della cache dello shader danneggiati.
-				Consigliato anche in caso di cambio scheda video.
+				Raccomandato in caso di problemi grafici causati dai dati danneggiati della cache dello shader.
+				Raccomandato anche in caso di cambio scheda video.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Rimuovi Vulkan Run Time Libraries</Text>
-			<Tooltip>Non consigliato se si dispone di 2 GPU differenti che sono in grado di utilizzare l'API Vulkan.</Tooltip>
+			<Text>Rimuovi Vulkan Runtime</Text>
+			<Tooltip>Non raccomandato se si dispone di 2 GPU differenti che utilizzano l'API Vulkan.</Tooltip>
 		</lblVulkan>
-		<lblUseSetupAPI>
-			<Text>Usa SetupAPI *Sperimentale*</Text>
-			<Tooltip>Usa SetupAPI invece dello strumento esterno DDUDR (DEVCON)</Tooltip>
-		</lblUseSetupAPI>
-		<lblPreventWinUpdate>
-      <Text>Impedisci il download dei driver da "Windows Update" quando Windows cerca un driver per un dispositivo.</Text>
-      <Tooltip>Questa opzione negherà a "Windows / Gestione dispositivi" di verificare driver aggiornati su "Windows Update".
-               NOTA: Questo non impedisce a "Windows Update" di scaricare / installare nuovi driver.
-               NOTA 2: È *ALTAMENTE* raccomandato di annullare questa modifica dopo aver terminato di utilizzare DDU e aver reinstallato il driver GPU o si potrebbero avere un problemi con l'installazione dei driver di altri dispositivi.</Tooltip>
-        </lblPreventWinUpdate>
+	<lblPreventWinUpdate>
+      <Text>Impedisci il download dei drivers da "Windows Update" quando Windows cerca un driver per un dispositivo</Text>
+      <Tooltip>Abilitare questa opzione non permetterà a "Windows Update" di verificare gli aggiornamenti dei tuoi drivers.
+               NOTA: Questa opzione non impedirà a "Windows Update" di scaricare / installare nuovi driver.
+               NOTA 2: Inoltre, è *FORTEMENTE RACCOMANDATO* riattivare la verifica degli aggiornamenti dei drivers su "Windows Update" dopo aver terminato l'utilizzo di DDU e reinstallato i drivers o potresti avere problemi con l'installazione di altri dispositivi.</Tooltip>
+    </lblPreventWinUpdate>
 	</frmOptions>
 
 	<frmLaunch Text="Display Driver Uninstaller (DDU)">
 		<btnAccept>
 			<Text>Avvia</Text>
 			<Text2>
-				Riavvia in modalità provvisoria
+				Riavvia in
+				modalità provvisoria
 			</Text2>
 		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Reimposta l'installazione del dispositivo Windows su Predefinito e Chiudi
+			</Text>
+		</btnWuRestore>
 		<btnClose>
 			<Text>Chiudi</Text>
 		</btnClose>
@@ -288,16 +329,15 @@
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				Non sei in modalità provvisoria. È altamente raccomandato il
+				Non sei in modalità provvisoria. È raccomandato il
 				riavvio in modalità provvisoria per evitare possibili problemi.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				ATTENZIONE: Per gli utenti di Windows 8/8.1/10.
-				È richiesta la tua password di Windows (Il PIN non funziona in
-				modalità provvisoria). Non utilizzare la modalità provvisoria
-				se non conosci la tua password!
+				*** Per gli utenti di Windows 8/8.1/10/11***
+				È richiesta la tua password di Windows (Il PIN non funziona in modalità provvisoria).
+				Non utilizzare la modalità provvisoria se non conosci la tua password!
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
@@ -341,7 +381,7 @@
 
 	<frmSystemRestore Text="Ripristino configurazione di sistema">
 		<lblSystemRestore>
-			<Text>Creazione ripristino configurazione di sistema.</Text>
+			<Text>Tentativo di creazione di un punto di ripristino del sistema.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
@@ -353,14 +393,39 @@
 			<Text>Informazioni</Text>
 		</btnAbout>
 		<btnTos>
-			<Text>Condizioni di Utilizzo</Text>
+			<Text>Condizioni di utilizzo</Text>
 		</btnTos>
 		<btnTranslators>
 			<Text>Traduzioni</Text>
 		</btnTranslators>
+		<btnPatron>
+			<Text>Sostenitori</Text>
+		</btnPatron>
 		<lblTranslators>
 			<Text>Un grande ringraziamento a tutti i traduttori elencati e non!</Text>
 		</lblTranslators>
+		<lblPatron>
+			<Text>
+				Un grande ringraziamento a tutti i sostenitori elencati e non!
+
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
+				
+			</Text>
+		</lblPatron>
 	</frmAbout>
 
 	<Misc>
@@ -370,7 +435,7 @@
 
 				"Display Driver Uninstaller" rimuove i driver video e tutti i servizi associati ad essi delle schede video NVIDIA, AMD e INTEL.
 
-				L'effetto ottenuto sarà simile a una "nuova installazione" di Windows.
+				L'effetto ottenuto sarà simile a una "nuova installazione pulita" dei drivers.
 
 				Questo programma agisce in modo simile a Driver Sweeper oltre gli extra menzionati sopra.
 
@@ -382,14 +447,14 @@
 
 				- Si consiglia di creare un backup o un punto di ripristino come precauzione, anche se il programma è abbastanza sicuro.
 
-				- Se hai avuto problemi con un driver video e questo programma ti è stato d'aiuto, puoi condividere il risultato nella discussione ufficiale del programma: http://forums.guru3d.com/showthread.php?t=379505
+				- Se hai avuto problemi con un driver video e questo programma ti è stato d'aiuto, puoi condividere la tua esperienza con noi!
 
 				- Tieni a mente che NVIDIA, AMD, INTEL o Microsoft non hanno niente a che fare con noi. Non lavoriamo per NVIDIA, AMD, INTEL o Microsoft e non devono essere ritenuti responsabili per qualunque danno causato al tuo computer.
-
 				-------------------------------
+				
 				Creato da Wagnard.
 
-				Comproprietario: Shady7557
+				Coders: Wagnard, Devmltk, Shady7557
 
 				Tester: Dellon132
 
@@ -399,7 +464,8 @@
 
 				Grazie a Helge Klein (http://helgeklein.com/setacl/) per averci dato il permesso di utilizzare il suo programma con DDU ("SetAcl").
 
-				Huge Thanks for their time for testing: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (took time debugging with me), Extraordinary (Testing a bug fix).
+				Un grande ringraziamento per il loro tempo e per i loro test a: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (ha impiegato del tempo a eseguire il debug con me)
+				Extraordinary (Testing a bug fix)
 
 				Grazie a chiunque abbia messo a rischio il proprio sistema. (U ringraziamento speciale a Dellon132)
 
@@ -424,8 +490,8 @@
 	<LanguageTranslators>
 		<Translator>
 			<User>Juicedjuiced14</User>
-			<Details></Details>
-			<LastUpdate>04 NOV 2018</LastUpdate>
+			<Details>feat. ChefTanoMerda</Details>
+			<LastUpdate>04/04/2023</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
