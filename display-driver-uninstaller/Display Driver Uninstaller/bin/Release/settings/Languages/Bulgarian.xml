@@ -101,7 +101,7 @@
 			<Text>Преводачи</Text>
 		</TranslatorsMenuItem>
 		<PatronMenuItem>
-			<Text>Покровител</Text>
+			<Text>Благодетел</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Отваряне на официалната страница на DDU</Text>
@@ -116,7 +116,7 @@
 			<Text>Отваряне на темата за AMD в Guru3d</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Отваряне на темата за Geforce</Text>
+			<Text>Отваряне на темата за GeForce</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
@@ -299,7 +299,7 @@
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Важна забележка за потребители на Windows 8/8.1/10:
+				Важна забележка за потребители на Windows 8/8.1/10/11:
 				Ще е необходима ПАРОЛАТА Ви за Windows! (ПИН НЕ функционира в безопасен режим).
 				Затворете програмата, ако сте я забравили или не я знаете!
 			</Text>
@@ -310,7 +310,7 @@
 			<Item3>Безопасен режим с мрежа</Item3>
 		</cbBootOption>
 		<Messages>
-			<Text1>DDU затвори програми, за които е известно, че могат да създадат проблеми (като MSI Afterburner and RTSS).</Text1>
+			<Text1>DDU затвори програми, за които е известно, че могат да създадат проблеми (като MSI Afterburner и RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
 
@@ -319,7 +319,7 @@
 			<Text>Затвори</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Отвари дневника</Text>
+			<Text>Отвори дневника</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
@@ -363,14 +363,14 @@
 			<Text>Преводачи</Text>
 		</btnTranslators>
 		<btnPatron>
-			<Text>Покровител</Text>
+			<Text>Благодетел</Text>
 		</btnPatron>
 		<lblTranslators>
 			<Text>Големи благодарности на следните преводачи, както и на онези, които не са споменати!</Text>
 		</lblTranslators>
 		<lblPatron>
 			<Text>
-		Големи благодарности на следния покровител, както и на онези, които не са споменати!
+		Големи благодарности на следните благодетели, както и на онези, които не са споменати!
 				  
 		-honnmaguro   (от 16.03.2018)  
 		-ZaoDaDong (Since 2019-02-06)
@@ -395,7 +395,7 @@
 
 				Ефектът след използване на този инструмент ще е много сходен до състоянието на Windows след „прясна инсталация“.
 
-				Този инструмент действа доста като „Driver Sweeper“*, но включва и всичко споменато по-горе.
+				Този инструмент функционира подобно на „Driver Sweeper“*, но включва и всичко споменато по-горе.
 
 				Ако имате някакви проблеми с инсталиране на по-стар или по-нов драйвър, опитайте този инструмент,
 				защото може да помогне в тази насока.
@@ -452,7 +452,7 @@
 		<Translator>
 			<User>Night_Raven</User>
 			<Details>SoftVisia.com</Details>
-			<LastUpdate>23.12.2018</LastUpdate>
+			<LastUpdate>07.04.2023</LastUpdate>
 		</Translator>
 		
 		<Translator2>
