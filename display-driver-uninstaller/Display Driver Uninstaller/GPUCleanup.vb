@@ -6810,7 +6810,7 @@ Namespace Display_Driver_Uninstaller
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
 							If IsNullOrWhitespace(child) = False Then
-								If StrContainsAny(child, True, "display", "igd", "gfx", "mediasdk", "opencl", "intel wireless display", "kmd", "mdf", "Intel Arc Control") Then
+								If StrContainsAny(child, True, "display", "igd", "gfx", "mediasdk", "opencl", "intel wireless display", "kmd", "mdf", "Intel Arc Control", "xesdk") Then
 									Try
 										Deletesubregkey(regkey, child)
 									Catch ex As Exception
