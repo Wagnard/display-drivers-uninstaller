@@ -1571,7 +1571,7 @@ Namespace Display_Driver_Uninstaller
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
 								If IsNullOrWhitespace(child) Then Continue For
-								If StrContainsAny(child, True, "AIM", "CN", "DVR", "HKIDs", "MOBILE", "SCENE") Then
+								If StrContainsAny(child, True, "AIM", "CN", "DVR", "HKIDs", "MOBILE", "SCENE", "SA") Then
 									Deletesubregkey(regkey, child)
 								End If
 							Next
