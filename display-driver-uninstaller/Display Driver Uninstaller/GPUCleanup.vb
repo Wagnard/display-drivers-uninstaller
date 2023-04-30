@@ -682,10 +682,6 @@ Namespace Display_Driver_Uninstaller
 					Application.Log.AddMessage("SetupAPI: Remove Monitor(s) Complete .")
 				End If
 
-
-				'here we set back to default the changes made by the AMDKMPFD even if we are cleaning amd or intel. We dont want that
-				'espcially if we are not using an AMD GPU
-
 				If config.SelectedGPU = GPUVendor.AMD AndAlso config.RemoveAMDKMPFD Then
 					Try
 						UpdateTextMethod("Start - Check for AMDKMPFD system device.")
