@@ -177,7 +177,7 @@
 			<Text12>GPU #</Text12>
 			<Text13>Detekterad</Text13>
 			<Text14>GPU DeviceId</Text14>
-			<Text15>Detekterad(e) Drivrutin(er) Version(er)</Text15>
+			<Text15>Detekterad(e) Drivrutin(er)/Version(er)</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF Sektion</Text17>
 			<Text18>GPU är inte korrekt installerad</Text18>
@@ -231,7 +231,7 @@
 			<Text>Generella alternativ</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Ta bort "C:\NVIDIA" Drivrutinskataloger (INTE rekommenderat)</Text>
+			<Text>Ta bort "C:\NVIDIA" Drivrutinskataloger</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>Spara loggfiler i startkatalogen (rekommenderas)</Text>
@@ -252,7 +252,7 @@
 			<Text>Ta bort AMD Ljudbuss</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Ta bort "C:\AMD" Drivrutinskataloger (INTE rekommenderat)</Text>
+			<Text>Ta bort "C:\AMD" Drivrutinskataloger.</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Ta bort drivrutinen/filtret AMDKMPFD (En backup rekommenderas för AMD kretschips)</Text>
@@ -276,6 +276,13 @@
 		<lblRemNVCP>
 			<Text>(DCH-drivrutin) Ta bort NVIDIA Kontrollpanel installerad från Microsoft Store</Text>
 		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Behåll Global NVIDIA Kontrollpanel / Programinställningar.</Text>
+			<Tooltip>
+				Om du har problem som lett dig att använda DDU för rensning, rekommenderas att undvika val av denna funktion.
+				Denna funktion är inte designad att fixa problem och kan kanske inte åtgärda det problem du har."
+			</Tooltip>
+		</lblKeepNVCPopt>
 		<lblRemINTELCP>
 			<Text>(DCH-drivrutin) Ta bort INTEL Kontrollpanel installerad från Microsoft Store</Text>
 		</lblRemINTELCP>
@@ -309,6 +316,11 @@
 				Felsäkert läge
 			</Text2>
 		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Sätt Windows Enhetsinstallationsinställningar som Standard och Stäng
+			</Text>
+		</btnWuRestore>
 		<btnClose>
 			<Text>Stäng</Text>
 		</btnClose>
@@ -323,7 +335,7 @@
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Viktig notering för Windows 8/8.1/10 användare:
+				Viktig notering för Windows 8/8.1/10/11 användare:
 				Ditt Windows "LÖSENORD" behövs! (PIN fungerar INTE i Felsäkert läge)
 				Avbryt omedelbart om du har förlorat eller inte vet det!
 			</Text>
@@ -486,7 +498,7 @@ Tack till Helge Klein (http://helgeklein.com/setacl/) : för tillståndet att an
 		<Translator>
 			<User>Hans Eriksson</User>
 			<Details>hans.ericson@bredband.net</Details>
-			<LastUpdate>16/12/2022</LastUpdate>
+			<LastUpdate>03/05/2023</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
