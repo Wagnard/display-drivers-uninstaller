@@ -42,6 +42,8 @@ Namespace Display_Driver_Uninstaller
 		Public Property RemoveVulkan As Boolean = False
 		Public Property NoSetupAPI As Boolean = False
 
+
+
 		Public ReadOnly Property HasCleanArg As Boolean
 			Get
 				Return (CleanNvidia OrElse CleanAmd OrElse CleanIntel OrElse CleanRealtek OrElse CleanSoundBlaster)
@@ -123,7 +125,29 @@ Namespace Display_Driver_Uninstaller
 						Case StrContainsAny(Argument, True, "-RemoveAudioBus") : RemoveAudioBus = True
 						Case StrContainsAny(Argument, True, "-RemoveVulkan") : RemoveVulkan = True
 						Case StrContainsAny(Argument, True, "-NoSetupAPI") : NoSetupAPI = True
-
+						Case StrContainsAny(Argument, True, "-removemonitors") : RemoveMonitors = True
+						Case StrContainsAny(Argument, True, "-RemoveNvidiaDirs") : RemoveNvidiaDirs = True
+						Case StrContainsAny(Argument, True, "-RemoveAMDDirs") : RemoveAMDDirs = True
+						Case StrContainsAny(Argument, True, "-Remove3DTVPlay") : Remove3DTVPlay = True
+						Case StrContainsAny(Argument, True, "-RemoveCrimsonCache") : RemoveCrimsonCache = True
+						Case StrContainsAny(Argument, True, "-cleanallgpus")
+							RemoveVulkan = True
+							RemoveAudioBus = True
+							RemoveAMDKMPFD = True
+							RemoveAMDCP = True
+							RemoveINTELCP = True
+							RemoveNVCP = True
+							RemoveNVBROADCAST = True
+							RemoveGFE = True
+							RemovePhysX = True
+							CleanIntel = True
+							CleanAmd = True
+							CleanNvidia = True
+							RemoveNvidiaDirs = True
+							RemoveAMDDirs = True
+							RemoveMonitors = True
+							Remove3DTVPlay = True
+							RemoveCrimsonCache = True
 							'	TODO: Add cmdline args for those RemoveXXXX properties
 							'	Case StrContainsAny(Argument, True, "-RemNvidiaDirs") : RemoveNvidiaDirs = True
 
