@@ -18,17 +18,17 @@ Haz una copia de seguridad o un punto de restauración del sistema. (DDU hace mu
 Ten en cuenta que NVIDIA/AMD/INTEL no tienen nada que ver con esto, no trabajo en o para NVIDIA/AMD/INTEL y no deben ser considerados responsables de cualquier cosa que pueda ir mal con esta aplicación.
 
 ### DDU (V18.0.0.4 y anteriores)
-Requisitos del sistema:
+**Requisitos del sistema**:
 - .NET framework 3.0 o superior.
 * Compatible con Windows XP hasta 10 X86/X64 (Windows 10 insider preview bajo tu propia responsabilidad)
 
 ### DDU (V18.0.0.5 y anteriores)
-Requisitos del sistema:
+**Requisitos del sistema**:
 - .NET framework 4.6 o superior.
 * Compatible con Windows Vista_SP2 hasta 10 X86/X64 (la versión preliminar de Windows 10 corre por tu cuenta y riesgo)
 
 ### DDU (V18.0.4.7 y superior)
-Requisitos del sistema:
+**Requisitos del sistema**:
 - .NET framework 4.8 o superior.
 * Compatible con Windows 7 SP1 hasta 11 X86/X64 (la versión preliminar de Windows 1x corre por tu cuenta y riesgo)
 
