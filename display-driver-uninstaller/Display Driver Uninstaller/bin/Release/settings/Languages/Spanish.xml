@@ -38,7 +38,7 @@
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Elimina la caché y los archivos del instalador del controlador de pantalla "GeForce Experience".
+				Eliminar la caché y los archivos del instalador del controlador de pantalla "GeForce Experience".
                 (Nota: los controladores no se eliminarán).
 			</Text>
 			<Tooltip>
@@ -71,7 +71,7 @@
 			<Text>Buscando actualizaciones...</Text>
 			<Text2>No se han encontrado actualizaciones. El programa está al día.</Text2>
 			<Text3>¡Actualizaciones encontradas! Soporte limitado para versiones anteriores a la más reciente.</Text3>
-			<Text4>No se pudo buscar actualizaciones.</Text4>
+			<Text4>Error al buscar actualizaciones.</Text4>
 		</lblUpdate>
 
 		<lblOffer>
@@ -104,7 +104,7 @@
 			<Text>Patrons</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visita el sitio oficial de DDU</Text>
+			<Text>Visita el sitio de DDU</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
 			<Text>Visita el sitio de SVN</Text>
@@ -131,7 +131,7 @@
 			<Text9>Se ha cambiado la configuración de instalación de dispositivos de Windows para que NO se instalen automáticamente los controladores.</Text9>
 			<Text10>¡Desinstalación limpia completada! ¿Desea salir ahora?</Text10>
 			<Text11>Se ha modificado la configuración de instalación de dispositivos de Windows para instalar automáticamente los controladores.</Text11>
-			<Text12>No está en Modo Seguro. Es altamente recomendable que reinicie en Modo Seguro para evitar posibles problemas. ¿Reiniciar en Modo Seguro ahora?</Text12>
+			<Text12>No estás en Modo Seguro. Es altamente recomendable que reinicie en Modo Seguro para evitar posibles problemas. ¿Reiniciar en Modo Seguro ahora?</Text12>
 			<Text13>Esto es lo que debe seleccionar en la pantalla azul de recuperación: Solucionar problemas -&gt; Opciones avanzadas -&gt; Configuración de inicio.</Text13>
 			<Text14>Hay un reinicio pendiente, por favor reinicie antes de usar DDU</Text14>
 			<Text15>No se ha realizado ningún cambio. La configuración de instalación de dispositivos de Windows ya estaba establecida por defecto.</Text15>
