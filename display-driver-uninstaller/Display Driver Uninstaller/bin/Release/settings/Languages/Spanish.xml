@@ -58,7 +58,7 @@
 			<Text>*** ¿Te gusta DDU? Considera hacer una donación, ayudará a continuar con su desarrollo. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Log</Text>
+			<Text>Registro</Text>
 		</lblLog>
 		<lblSelectedGPU>
 			<Text>Controlador gráfico seleccionado</Text>
