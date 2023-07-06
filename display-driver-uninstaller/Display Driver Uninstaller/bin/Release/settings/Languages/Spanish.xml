@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<DisplayDriverUninstaller ISO="es-ES" Text="Español" >
+<DisplayDriverUninstaller ISO="es-ES" Text="Español">
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
 		for quick guide
@@ -499,7 +499,7 @@
 			<User>Jackalito</User>
 			<Details>Traductor</Details>
 			<LastUpdate>12/03/2020</LastUpdate>
-
+		</Translator>
 		<Translator2>
 			<User>Nekrodamus</User>
 			<Details>Traductor</Details>
