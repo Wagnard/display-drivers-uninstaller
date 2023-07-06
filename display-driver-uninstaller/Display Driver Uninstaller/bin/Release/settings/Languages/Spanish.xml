@@ -55,7 +55,7 @@
 			<Text>Sistema operativo detectado:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** ¿Te gusta DDU? Considera hacer una donación, ayudará a continuar con su desarrollo. ***</Text>
+			<Text>¿Te gusta DDU? Considera hacer una donación, ayudará a continuar con su desarrollo.</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Registro</Text>
