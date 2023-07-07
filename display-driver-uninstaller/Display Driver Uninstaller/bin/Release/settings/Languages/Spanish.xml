@@ -4,7 +4,6 @@
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
 		for quick guide
 	-->
-
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
 			<Text>
@@ -47,15 +46,18 @@
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Establecer la configuración de instalación de dispositivos de Windows por defecto
-				(Instala controladores automáticamente)
+				Restablecer configuración de 
+				Instalación de Dispositivos
 			</Text>
+			<Tooltip>
+				Restablece la configuración por defecto de Windows Update, permitiéndole descargar e instalar controladores automáticamente
+			</Tooltip>
 		</btnWuRestore>
 		<lblWinVersion>
 			<Text>Sistema operativo detectado:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>¿Te gusta DDU? Considera hacer una donación, ayudará a continuar con su desarrollo.</Text>
+			<Text>¿Te gusta DDU? Considera hacer una donación, ayudará a continuar con su desarrollo</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Registro</Text>
@@ -66,19 +68,16 @@
 		<lblLanguage>
 			<Text>Idioma seleccionado</Text>
 		</lblLanguage>
-
 		<lblUpdate>
 			<Text>Buscando actualizaciones...</Text>
 			<Text2>No se han encontrado actualizaciones. El programa está al día.</Text2>
 			<Text3>¡Actualizaciones encontradas! Soporte limitado para versiones anteriores a la más reciente.</Text3>
 			<Text4>Error al buscar actualizaciones.</Text4>
 		</lblUpdate>
-
 		<lblOffer>
 			<Text>Ofertas de nuestros socios. (Recomendado)</Text>
 			<Tooltip>Puedes desactivar esto en el menú de opciones.</Tooltip>
 		</lblOffer>
-
 		<OptionsMenuItem>
 			<Text>Opciones</Text>
 		</OptionsMenuItem>
@@ -101,7 +100,7 @@
 			<Text>Traductores</Text>
 		</TranslatorsMenuItem>
 		<PatronMenuItem>
-			<Text>Patrons</Text>
+			<Text>Patrocinadores</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Visita el sitio de DDU</Text>
@@ -118,7 +117,6 @@
 		<VisitGeforceMenuItem>
 			<Text>Visita el hilo de GeForce</Text>
 		</VisitGeforceMenuItem>
-
 		<Messages>
 			<Text1>¡Actualizaciones disponibles! ¿Ir al sitio web de DDU?</Text1>
 			<Text2>La compatibilidad con versiones anteriores a la más reciente es limitada. Compruebe la versión más reciente antes de informar de errores.</Text2>
@@ -175,9 +173,9 @@
 			<Text10>¡Desinstalación limpia completada!</Text10>
 			<Text11>Versión DDU</Text11>
 			<Text12>GPU #</Text12>
-			<Text13>Detectado</Text13>
-			<Text14>ID de dispositivo de GPU</Text14>
-			<Text15>Versión(es) de controlador detectada(s)</Text15>
+			<Text13>Modelo</Text13>
+			<Text14>ID de dispositivo</Text14>
+			<Text15>Versiones de controlador detectadas</Text15>
 			<Text16>INF</Text16>
 			<Text17>Sección INF</Text17>
 			<Text18>La GPU no está correctamente instalada</Text18>
@@ -185,17 +183,17 @@
 			<Text20>Limpieza iniciada...</Text20>
 			<Text21>Desinstalando</Text21>
 			<Text22>controlador</Text22>
-			<Text23>Ejecutando SetupAPI. Eliminando Controlador gráfico. Por favor, espere (puede tardar unos minutos)</Text23>
+			<Text23>Iniciando SetupAPI. Eliminando Controlador gráfico.</Text23>
 			<Text24>GPU(s) eliminada(s).</Text24>
-			<Text25>Ejecutando SetupAPI. Eliminando Controlador de audio HD.</Text25>
-			<Text26>Adaptador de audio HD eliminado.</Text26>
-			<Text27>Adaptador USB 3D Vision eliminado.</Text27>
+			<Text25>Iniciando SetupAPI. Eliminando Controlador de audio HD.</Text25>
+			<Text26>Controlador de audio HD eliminado.</Text26>
+			<Text27>Controlador USB 3D Vision eliminado.</Text27>
 			<Text28>Monitores visibles y ocultos eliminados</Text28>
 			<Text29>Eliminación SetupAPI completada</Text29>
 			<Text30>Limpieza de la región S-1-5-xx iniciada</Text30>
 			<Text31>Limpieza de la región S-1-5-xx completada</Text31>
-			<Text32>Limpieza de Classesroot, installer\products iniciada</Text32>
-			<Text33>Limpieza de Classesroot, installer\products completada</Text33>
+			<Text32>Limpieza de classesroot, installer\products iniciada</Text32>
+			<Text33>Limpieza de classesroot, installer\products completada</Text33>
 			<Text34>Limpieza de localmachine, installer\products iniciada</Text34>
 			<Text35>Limpieza de localmachine, installer\products completada</Text35>
 			<Text36>Limpieza de currentuser, installer\products iniciada</Text36>
@@ -207,7 +205,6 @@
 			<Text42>Archivo eliminado.</Text42>
 		</UpdateLog>
 	</frmMain>
-
 	<frmOptions Text="Opciones">
 		<btnClose>
 			<Text>Cerrar</Text>
@@ -234,7 +231,7 @@
 			<Text>Eliminar la carpeta de controladores "C:\NVIDIA".</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Guardar los archivos de registro en la ruta de inicio. (Altamente recomendable)</Text>
+			<Text>Guardar los archivos de registro en la ruta de inicio. (Altamente recomendado)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Eliminar PhysX</Text>
@@ -300,15 +297,14 @@
 			<Text>Eliminar el tiempo de ejecución de Vulkan</Text>
 			<Tooltip>No se recomienda si tienes dos GPU diferentes capaces de utilizar la API Vulkan.</Tooltip>
 		</lblVulkan>
-    <lblPreventWinUpdate>
-      <Text>Evitar la descarga de controladores desde "Windows update" cuando "Windows" busca un controlador para un dispositivo.</Text>
-      <Tooltip>En pocas palabras, esta opción impedirá que el "Administrador de Dispositivos" busque actualizaciones de controladores en "Windows Update". 
+		<lblPreventWinUpdate>
+			<Text>Evitar la descarga de controladores desde "Windows update" cuando "Windows" busca un controlador para un dispositivo.</Text>
+			<Tooltip>En pocas palabras, esta opción impedirá que el "Administrador de Dispositivos" busque actualizaciones de controladores en "Windows Update". 
                Nota: Esto no impide que "Windows Update" descargue/instale nuevos controladores. 
                Nota2: También es *ALTAMENTE* recomendable revertir este cambio después de haber terminado de usar DDU y reinstalado el controlador de tu GPU o podrías tener problemas con la instalación de otros dispositivos.</Tooltip>
-     </lblPreventWinUpdate>
-  </frmOptions>
-
-	<frmLaunch Text="Opciones de Inicio">
+		</lblPreventWinUpdate>
+	</frmOptions>
+	<frmLaunch Text="Opciones de arranque">
 		<btnAccept>
 			<Text>Iniciar</Text>
 			<Text2>
@@ -317,26 +313,25 @@
 			</Text2>
 		</btnAccept>
 		<btnWuRestore>
-			<Text>
-				Establecer la configuración de Instalación de Dispositivos de Windows por defecto y cerrar
-			</Text>
+			<Text>Restablecer configuración de Instalación de Dispositivos</Text>
+			<Tooltip>Restablece la configuración por defecto de Windows Update, permitiéndole descargar e instalar controladores automáticamente</Tooltip>
 		</btnWuRestore>
 		<btnClose>
 			<Text>Cerrar</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Modo de ejecución</Text>
+			<Text>Modo de arranque</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
-				No estás en Modo Seguro. Es altamente recomendable
-				reiniciar en Modo Seguro para evitar posibles problemas.
+				No estás en Modo Seguro. 
+				Es altamente recomendable reiniciar en "Modo Seguro" para evitar problemas.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
 				Nota importante para los usuarios de Windows 8/8.1/10/11:
-				¡Tu "CONTRASEÑA" de Windows *puede* ser necesaria! (El PIN *puede* NO funcionar en Modo Seguro)
+				Puede ser necesaria tu CONTRASEÑA de Windows. El PIN puede NO funcionar.
 				¡Sal inmediatamente si la has perdido o no la conoces!
 			</Text>
 		</lblWinPasswordWarn>
@@ -349,7 +344,6 @@
 			<Text1>DDU cerró programas conocidos por interferir (como MSI Afterburner y RTSS).</Text1>
 		</Messages>
 	</frmLaunch>
-
 	<frmLog Text="Registro extendido">
 		<btnClose>
 			<Text>Cerrar</Text>
@@ -357,14 +351,12 @@
 		<btnOpenLog>
 			<Text>Abrir registro</Text>
 		</btnOpenLog>
-
 		<optionsMenuItem>
 			<Text>Opciones</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
 			<Text>Copia activada</Text>
 		</copyMenuItem>
-
 		<filtersMenuItem>
 			<Text>Filtros</Text>
 		</filtersMenuItem>
@@ -378,13 +370,11 @@
 			<Text>Mostrar errores</Text>
 		</errorsMenuItem>
 	</frmLog>
-
 	<frmSystemRestore Text="Restaurar sistema">
 		<lblSystemRestore>
 			<Text>Intentando crear un punto de restauración.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
-
 	<frmAbout Text="Acerca de">
 		<btnClose>
 			<Text>Cerrar</Text>
@@ -423,11 +413,9 @@
 				-Matti Metsikko
 				-mikalonia - mika
 				-ChaosDMNS
-				
 			</Text>
 		</lblPatron>
 	</frmAbout>
-
 	<Misc>
 		<About>
 			<Text>
@@ -479,7 +467,6 @@
 				*DDU, sus creadores y afiliados no están afiliados en modo alguno a Driver Sweeper, ni a sus creadores.
 			</Text>
 		</About>
-
 		<Tos>
 			<Text>
 				ACUERDO DE USUARIO de Display Driver Uninstaller ("DDU")
@@ -493,7 +480,6 @@
 			</Text>
 		</Tos>
 	</Misc>
-
 	<LanguageTranslators>
 		<Translator>
 			<User>Jackalito</User>
@@ -503,8 +489,7 @@
 		<Translator2>
 			<User>Nekrodamus</User>
 			<Details>Traductor</Details>
-			<LastUpdate>30/06/2023</LastUpdate>
+			<LastUpdate>07/07/2023</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
-
 </DisplayDriverUninstaller>
