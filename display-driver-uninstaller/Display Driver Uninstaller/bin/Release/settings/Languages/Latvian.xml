@@ -1,0 +1,504 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="lv-LV" Text="Latvian" >
+	<!--
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
+
+	<frmMain Text="Displēja Draivera Noņēmējs (DDU)">
+		<btnCleanRestart>
+			<Text>
+				Tīrīt un restartēt
+				(Augsti ieteicams)
+			</Text>
+			<Tooltip>
+				Atinstalējiet pašreizējo un iepriekšējo draiveri, pēc tam restartējiet datoru.
+				(Augsti ieteicams)
+			</Tooltip>
+		</btnCleanRestart>
+		<btnClean>
+			<Text>
+				Notīrīt un nerestartēt
+				(Var izraisīt problēmu ka melnu ekrānu)
+			</Text>
+			<Tooltip>
+				Atinstalēt pašreizējo un iepriekšējo draiveri, bet nerestartēt datoru.
+				(Var izraisīt problēmu ka melnu ekrānu)
+			</Tooltip>
+		</btnClean>
+		<btnCleanShutdown>
+			<Text>
+				Tīrīt un izslēgt
+				(Jaunas grafikas kartes uzstādīšanai)
+			</Text>
+			<Tooltip>
+				Atinstalēt pašreizējo un iepriekšējo draiveri un izslēgt datoru bez atkārtotas skenēšanas
+				(Jaunas grafikas kartes uzstādīšanai)
+			</Tooltip>
+		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Noņemt "GeForce Experience" displēja draivera instalācijas kēšatmiņu un failus.
+				(Piezīme: Draivers nebūs noņemts)
+			</Text>
+			<Tooltip>
+				To galvenokārt izmanto, lai atgūtu daļu diska vietas, ko GeForce Experience nav iztīrījusi, instalējot draiveri (vecā GFE versija).
+			</Tooltip>
+		</btnCleanGfeDownloads>
+		<btnWuRestore>
+			<Text>
+				Iestatiet Windows ierīču instalēšanas iestatījumus uz noklusējums
+				(automātiski instalēt draiverus)
+			</Text>
+		</btnWuRestore>
+		<lblWinVersion>
+			<Text>Atklātā operētājsistēma:</Text>
+		</lblWinVersion>
+		<lblDonate>
+			<Text>*** Jums patīk DDU? Padomājiet par ziedojumu, tas palīdzēs tālākai attīstībai. ***</Text>
+		</lblDonate>
+		<lblLog>
+			<Text>Žurnāls</Text>
+		</lblLog>
+		<lblSelectedGPU>
+			<Text>Atlasītais grafikas dzinis</Text>
+		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Izvēlētā valoda</Text>
+		</lblLanguage>
+
+		<lblUpdate>
+			<Text>Pārbaudīt vai atjauninājums...</Text>
+			<Text2>Nav atjauninājumi atrasti. Programma ir atjaunināta.</Text2>
+			<Text3>Atjauninājums atrasts! Vecākai versijai var būt ierobežots atbalsts nekā jaunākaji versijai.</Text3>
+			<Text4>Nav iespējams atjaunināt!</Text4>
+		</lblUpdate>
+
+		<lblOffer>
+			<Text>Piedāvājumi no mūsu partneriem. (Ieteicams)</Text>
+			<Tooltip>Varat to atspējot opciju izvēlnē.</Tooltip>
+		</lblOffer>
+
+		<OptionsMenuItem>
+			<Text>Opcijas</Text>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Pagarināts žurnāls</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Saiti</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Pakalpojuma noteikumi (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
+			<Text>Par</Text>
+		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Tulkotājs</Text>
+		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Patrons</Text>
+		</PatronMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Apmeklējiet oficiālo DDU vietni</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Apmeklējiet SVN vietni</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Apmeklējiet Guru3d NVIDIA pavedienu</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Apmeklējiet Guru3d AMD pavedienu</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Apmeklējiet GeForce pavedienu</Text>
+		</VisitGeforceMenuItem>
+
+		<Messages>
+			<Text1>Ir pieejami atjauninājumi! Apmeklējiet DDU vietni tūlīt?</Text1>
+			<Text2>Vecākai versijai var būt ierobežots atbalsts nekā jaunākaji versijai. Pirms ziņot par kļūdām, lūdzu, pārbaudiet jaunāko versiju.</Text2>
+			<Text3>Jūs neizmantojat DDU ar administratora privilēģijām. Tagad lietojumprogramma tiks aizvērta.</Text3>
+			<Text4>Nevar atrast PAExec. Lūdzu, skatiet žurnālu.</Text4>
+			<Text5>Displeja draivera atinstalētājs (DDU) daudz pārveido jūsu reģistru. DDU mēģinās automātiski izveidot sistēmas atjaunošanas punktu (tikai parastajā režīmā).</Text5>
+			<Text6>Vienā no moduļiem radās problēma. Nosūtiet savus DDU žurnālus izstrādātājam.</Text6>
+			<Text7>DDU konstatēja, ka jums ir AMD komutācijas klēpjdators (Enduro vai līdzvērtīgs), DDU vēl nav pilnībā saderīgs un pārbaudīts ar Enduro sistēmām. Izmantojiet uz savu risku.</Text7>
+			<Text8>DDU ir atklājis, ka jūs NAV drošajā režīmā... Lai veiktu labāku tīrīšanu bez problēmām, ieteicams restartēt drošajā režīmā.</Text8>
+			<Text9>Windows ierīču instalēšanas iestatījumi ir mainīti uz NEUZTĀDĪT automātiski draiverus.</Text9>
+			<Text10>Tīra atinstalēšana ir pabeigta! Vai vēlaties iziet tagad?</Text10>
+			<Text11>Windows ierīču instalēšanas iestatījumi ir mainīti, lai automātiski instalētu draiverus.</Text11>
+			<Text12>Jūs neesat drošajā režīmā. Lai izvairītos no iespējamām problēmām, ir ļoti ieteicams pārstartēt drošajā režīmā. Vai tagad pārstartēt drošajā režīmā?</Text12>
+			<Text13>Lūk, kas jums jāatlasa zilajā atkopšanas ekrānā: Problēmu novēršana -&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text14>Tiek gaidīta restartēšana. Lūdzu, restartējiet, pirms izmantojat DDU</Text14>
+			<Text15>Nekādas izmaiņas netika veiktas. Windows ierīces instalēšanas iestatījumi jau bija iestatīti uz Noklusējums.</Text15>
+			<Text16>Sistēmā Windows radās kritiska kļūda, kas neļauj pareizi noņemt draiverus. Drošības nolūkos DDU neturpinās failu un reģistra noņemšanu. Pirms DDU izmantošanas jums ir jānovērš sistēmas problēma(-as).</Text16>
+			<Text17>Šķiet, ka šī ir pirmā reize, kad palaižat DDU.
+				
+					Pirms lietošanas, lūdzu, ievērojiet sekojošo:
+						1: atkarībā no jūsu problēmām un konfigurācijas tas var palīdzēt vai pasliktināt situāciju.
+						2: jums ir jābūt dublējumam.
+						3: jums vajadzētu izlasīt licenci, Readme un ToS.
+						4: Mēs neesam atbildīgi par jebkāda veida bojājumiem vai datu zudumiem.
+						5: Mēs vienmēr esam gatavi palīdzēt, ja rodas problēma.
+			</Text17>
+		</Messages>
+		<Options_Type>
+			<Options1>---Izvēlēties ierīces tipu---</Options1>
+			<Options2>Audio</Options2>
+			<Options3>GPU</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Izvēlēties ierīci---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Izvēlēties ierīci---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
+		<UpdateLog>
+			<Text1>Notiek draiveru veikala tīrīšana (OEM darbības dzēšana)...</Text1>
+			<Text2>Tīra direktoriju</Text2>
+			<Text3>Zināmo Regkeys tīrīšana... Var aizņemt minūti vai divas.</Text3>
+			<Text4>UpdatusUser lietotāju konta tīrīšana, ja tāds ir.</Text4>
+			<Text5>Tīra direktoriju</Text5>
+			<Text6>Tiek sākta reģistra tīrīšana</Text6>
+			<Text7>Reģistra tīrīšana ir pabeigta</Text7>
+			<Text8>Tiek sākta NVIDIA Optimus UpperFilter noņemšana, ja tāds ir.</Text8>
+			<Text9>Notiek jaunas ierīces meklēšana...</Text9>
+			<Text10>Tīra atinstalēšana ir pabeigta!</Text10>
+			<Text11>DDU Versija</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Atklāts</Text13>
+			<Text14>GPU ierīces ID</Text14>
+			<Text15>Atklātā(-s) draivera versija(-as)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF sadaļa</Text17>
+			<Text18>GPU nav pareizi instalēts</Text18>
+			<Text19>Dzēš dažas īpašas mapes, tas var aizņemt kādu laiku...</Text19>
+			<Text20>Tīrīšana sākta...</Text20>
+			<Text21>Notiek atinstalēšana</Text21>
+			<Text22>Draivers</Text22>
+			<Text23>Notiek SetupAPI noņemšana, lūdzu, uzgaidiet (var aizņemt dažas minūtes)</Text23>
+			<Text24>GPU(-i) noņemts(-i) no ierīču pārvaldnieka.</Text24>
+			<Text25>Tiek izpildīts SetupAPI noņemšanas audio kontrolleris.</Text25>
+			<Text26>HD audio adapteri noņemti!</Text26>
+			<Text27>3D Vision USB adapteris ir noņemts no ierīču pārvaldnieka.</Text27>
+			<Text28>Monitori un slēptie monitori noņemti!</Text28>
+			<Text29>SetupAPI noņemšana ir pabeigta</Text29>
+			<Text30>Tiek sākta S-1-5-x reģiona tīrīšana</Text30>
+			<Text31>S-1-5-xx reģiona tīrīšanas beigas</Text31>
+			<Text32>Sāk Classesroot, instalētāja/produktu tīrīšanu</Text32>
+			<Text33>Pabeidz Classesroot, instalētāja/produktu tīrīšanu</Text33>
+			<Text34>Sāciet localmachine, instalētāja\produktu tīrīšanu</Text34>
+			<Text35>Pabeidz localmachine ,instalētāja\produktu tīrīšanu</Text35>
+			<Text36>Sāk currentuser ,instalētāja\produktu tīrīšanu</Text36>
+			<Text37>Pabeidz currentuser ,instalētāja\produktu tīrīšanu</Text37>
+			<Text38>Tīra procesus/pakalpojumus...</Text38>
+			<Text39>Procesu/pakalpojumu tīrīšana ir pabeigta</Text39>
+			<Text40>Dzēš</Text40>
+			<Text41>Vērtības noņemtas.</Text41>
+			<Text42>Faili izdzēsti.</Text42>
+		</UpdateLog>
+	</frmMain>
+
+	<frmOptions Text="Options">
+		<btnClose>
+			<Text>Aizvērt</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Rādīt piedāvājumus no mūsu partneriem</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA specifiskās opcijas</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD specifiskās opcijas</Text>
+		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>INTEL specifiskās opcijas</Text>
+		</lblINTELspecific>
+		<lblAdvancedO>
+			<Text>Papildus opcijas (Mainiet uz savu risku)</Text>
+		</lblAdvancedO>
+		<lblGeneral>
+			<Text>Vispārīgās opcijas</Text>
+		</lblGeneral>
+		<lblRemNvidiaDirs>
+			<Text>Noņemt draivera mapes "C:\NVIDIA".</Text>
+		</lblRemNvidiaDirs>
+		<lblSaveLogs>
+			<Text>Saglabāt žurnālfailus startēšanas ceļā. (Augsti ieteicams)</Text>
+		</lblSaveLogs>
+		<lblRemPhysX>
+			<Text>Noņemt PhysX</Text>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
+			<Text>Noņemt 3DTV Play</Text>
+		</lblRem3DtvPlay>
+		<lblCreateRestorePoint>
+			<Text>Izveidot sistēmas atjaunošanas punktu (ja atļauts)</Text>
+		</lblCreateRestorePoint>
+		<lblRemMonitors>
+			<Text>Noņemt esošos un neesošos monitorus (ieteicams)</Text>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
+			<Text>Noņemt AMD Audio Bus</Text>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
+			<Text>Noņemt "C:\AMD" draivera mapes.</Text>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
+			<Text>Noņemt draivera/filtrus AMDKMPFD (AMD chipset ieteicams izveidot dublējumu)</Text>
+		</lblRemAMDKMPFD>
+		<lblShowSafeModeMsg>
+			<Text>Iespējot drošā režīma dialoglodziņu (nav ieteicams, kamēr neesat manuāli pārbaudījis drošo režīmu)</Text>
+			<Tooltip>Nav ieteicams, ja pats nekad neesat startējis datoru drošajā režīmā, lai pārbaudītu, vai tas darbojas. Šī opcija var izraisīt sāknēšanas cilpu, melnu ekrānu un, iespējams, daudz ko citu.</Tooltip>
+		</lblShowSafeModeMsg>
+		<lblUseRoamingCfg>
+			<Text>Saglabājiet konfigurācijas failu roaming mapē</Text>
+		</lblUseRoamingCfg>
+		<lblCheckUpdates>
+			<Text>Automātiski pārbaudīt DDU atjauninājumus startēšanas laikā (ieteicams)</Text>
+		</lblCheckUpdates>
+		<lblRemGFE>
+			<Text>Noņemt GeForce pieredzi (GFE)</Text>
+		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Noņemt NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
+		<lblRemNVCP>
+			<Text>(DCH draiveris) Noņemiet no Microsoft veikala instalēto NVIDIA vadības paneli</Text>
+		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Saglabājiet NVIDIA vadības paneļa vispārējos / programmas iestatījumus.</Text>
+			<Tooltip>
+				Ja radās problēmas, kuru dēļ tīrīšanai izmantojāt DDU, iesakām neatlasīt šo opciju.
+				Šī opcija nav paredzēta problēmu novēršanai, un tā var neatrisināt radušos problēmu." 
+			</Tooltip>
+		</lblKeepNVCPopt>
+		<lblRemINTELCP>
+			<Text>(DCH draiveris) Noņemt no Microsoft veikala instalēto INTEL vadības paneli</Text>
+		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>(DCH draiveris) Noņemt no Microsoft veikala instalēto AMD vadības paneli</Text>
+		</lblRemAMDCP>
+		<lblRemCrimsonCache>
+			<Text>Noņemiet mapi AMD Crimson Shader kēšatmiņu</Text>
+			<Tooltip>
+				Ieteicams, ja ir grafiska anomālija (ātrums vai vizuāli bojājumi), ko izraisa bojāti ēnotāja kešatmiņas dati.
+				Ieteicams arī tad, ja pārejat uz citu zīmolu, piemēram, NVIDIA.
+			</Tooltip>
+		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Noņemt Vulkan Runtime</Text>
+			<Tooltip>Nav ieteicams, ja jums ir divi dažādi GPU, kas spēj izmantot Vulkan API.</Tooltip>
+		</lblVulkan>
+    <lblPreventWinUpdate>
+      <Text>Novērst draiveru lejupielādi no "Windows atjauninājuma", kad "Windows" meklē ierīces draiveri.</Text>
+      <Tooltip>Vienkārši sakot, šī opcija liedz "Windows/ierīču pārvaldniekam" pārbaudīt draivera atjauninājumu vietnē "Windows Update".
+               Piezīme. Tas neliedz programmai Windows Update lejupielādēt/instalēt jaunus draiverus.
+               2. piezīme. Ir arī *ĻOTI* ieteicams atsaukt šīs izmaiņas pēc tam, kad esat pabeidzis lietot DDU un atkārtoti instalējis GPU draiveri, pretējā gadījumā var rasties problēmas ar citas ierīces instalēšanu.</Tooltip>
+     </lblPreventWinUpdate>
+  </frmOptions>
+
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Palaist</Text>
+			<Text2>
+				Restartēt uz
+				Drošo režīmu
+			</Text2>
+		</btnAccept>
+		<btnWuRestore>
+			<Text>
+			Uztādīt Windows Ierīces Instalācijas uz Noklusējumu un Aizvērt
+			</Text>
+		</btnWuRestore>
+		<btnClose>
+			<Text>Aizvērt</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Palaist opcijas</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>
+				Jūs neesat drošajā režīmā. Ir ļoti ieteicams
+				pārstartēt drošajā režīmā, lai izvairītos no iespējamām problēmām.
+			</Text>
+		</lblNotSafeMode>
+		<lblWinPasswordWarn>
+			<Text>
+				Svarīga piezīme Windows 8/8.1/10/11 lietotājiem:
+				Var būt nepieciešama jūsu Windows "PASSWORD" *! (PIN ir *var* nedarboties drošajā režīmā)
+				Nekavējoties pārtrauciet darbu, ja esat apjucis vai nesaprotat!
+			</Text>
+		</lblWinPasswordWarn>
+		<cbBootOption>
+			<Item1>Normali</Item1>
+			<Item2>Drošais režims (Ieteicams)</Item2>
+			<Item3>Drošais režīms ar tīklu</Item3>
+		</cbBootOption>
+		<Messages>
+			<Text1>DDU aizvēra programmas, par kurām zināms, ka tās traucē (piemēram, MSI Afterburner un RTSS).</Text1>
+		</Messages>
+	</frmLaunch>
+
+	<frmLog Text="Extended log">
+		<btnClose>
+			<Text>Aizvērt</Text>
+		</btnClose>
+		<btnOpenLog>
+			<Text>Atvērt Žurnālu</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Opcijas</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Kopēšana iespējota</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filtrs</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Rādīt notikumus</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Rādīt brīdinājumus</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Rādīt kļūdas</Text>
+		</errorsMenuItem>
+	</frmLog>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Mēģina izveidot sistēmas atjaunošanas punktu.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Aizvērt</Text>
+		</btnClose>
+		<btnAbout>
+			<Text>Par</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Pakalpojuma noteikumi (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Tulkotājs</Text>
+		</btnTranslators>
+		<btnPatron>
+			<Text>Patrons</Text>
+		</btnPatron>
+		<lblTranslators>
+			<Text>Liels paldies sekojošajiem tulkotājiem un arī tiem, kuri nav sarakstā!</Text>
+		</lblTranslators>
+		<lblPatron>
+			<Text>
+				Liels paldies sekojošajiem patroniem un arī tiem, kuri nav sarakstā!
+
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
+				
+			</Text>
+		</lblPatron>
+	</frmAbout>
+
+	<Misc>
+		<About>
+			<Text>
+				Displeja draivera atinstalētājs (DDU) / tīrītājs, kas paredzēts displeja (GPU) draiveriem. (NVIDIA/AMD)
+
+				Tas noņem displeja/GPU draiveri no ierīču pārvaldnieka un noņem pašreizējo un
+				visi precedentie draiveri no Windows draiveru veikala, kā arī pakalpojumu noņemšana no NVIDIA/AMD.
+
+				Pašreizējais efekts pēc šī rīka izmantošanas būs līdzīgs tam, ja Windows būtu stāvoklī "Svaiga instalācija".
+
+				Šis rīks darbojas līdzīgi kā "Driver Sweeper"*, un tam ir visas iepriekš minētās papildu iespējas.
+
+				Ja rodas problēmas ar vecāka vai jaunāka draivera instalēšanu, izmēģiniet to, jo ir daži ziņojumi, kas novērš
+				tās problēmas.
+
+				IETEICAMĀ LIETOŠANA :
+
+				- Rīku var izmantot parastajā režīmā, bet, lai nodrošinātu absolūtu stabilitāti, lietojot DDU, tas ir drošajā režīmā
+				vienmēr labākais.
+
+				- Mēs vēlētos apkopot atsauksmes no visiem, pastāstiet mums, vai tas ir izdevies vai nē.
+
+				- Izveidojiet dublējumu vai sistēmas atjaunošanas punktu. (Bet tam parasti vajadzētu būt diezgan drošam.)
+
+				Ja tev ir vai bija problēmas ar draiveri, un ši programmatura palīdzēja tev ar dažām problēmām 
+				vai ari šobrīt piedzīvo, lūdzu dalies ar rezultātiem.
+
+				Paturi prātā ne NVIDIA, AMD vai Microsoft nevar būt atbildīgi par sagātiem bojājumiem savam datoram un nav nekādā veidā saistīti ar DDU, vai tā veidotājiem.
+				-------------------------------
+
+				Izveidoja Wagnard.
+
+				Programētāji: Wagnard, Devmltk, Shady7557
+
+				Testētāji: Dellon132
+
+				Logo: juanchacin
+
+				Liels paldies Jackalito par ziedoto AMD 7850.
+
+				Paldies Helge Klein (http://helgeklein.com/setacl/) par atļaju izmantot viņa prgrammu ar DDU "SetAcl"
+
+				Milzīgs paldies par testēšanai veltīto laiku: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (prasīja laiku, lai ar mani atkļūdotu)
+				Ārkārtas (pārbauda kļūdu labojumu)
+
+				Paldies ikvienam, kurš pakļāva savu sistēmu riskam. (īpašs paldies Dellon132)
+
+				*DDU, tā veidotāji un saistītie uzņēmumi nekādā veidā nav saistīti ar Driver Sweeper vai tā veidotājiem.
+			</Text>
+		</About>
+
+		<Tos>
+			<Text>
+				Display Driver Uninstaller ("DDU") USER AGREEMENT
+
+				Jūs kļūstat par DDU lietotāju ("Lietotājs"), izmantojot DDU programmatūru. Šis Līgums stājas spēkā, tiklīdz izmantojat programmu draivera atinstalēšanai.
+
+				Izmantojot DDU, jūs piekrītat neapsūdzēt DDU vai tā veidotājus un saistītos uzņēmumus datora bojāšanā vai negatīvā ietekmēšanā.
+
+				Izmantojot DDU, jūs atzīstat, ka NVIDIA ("NVIDIA, GeForce") vai Advanced Micro Devices ("AMD, Radeon") ir
+				nav nekāda sakara ar šo programmu un nekādā veidā nav DDU vai tā veidotāju filiāles.
+			</Text>
+		</Tos>
+	</Misc>
+
+	<LanguageTranslators>
+		<Translator>
+			<User>Raivo</User>
+			<Details>raivopleika12@gmail.com</Details>
+			<LastUpdate>07/07/2023</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
+
+</DisplayDriverUninstaller>
