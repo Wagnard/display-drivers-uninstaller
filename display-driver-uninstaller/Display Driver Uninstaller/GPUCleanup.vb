@@ -152,8 +152,7 @@ Namespace Display_Driver_Uninstaller
 
 					Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\services.cfg")
 
-					KillProcess("arccontrolassist")
-					KillProcess("arccontrol")    'This avoid an error message when the device is removed.
+					KillProcess("arccontrol", "arccontrolassist", "ArcControlLauncher", "ArcControlPostProcessing")
 
 					For Each service As String In services
 						If IsNullOrWhitespace(service) Then Continue For
