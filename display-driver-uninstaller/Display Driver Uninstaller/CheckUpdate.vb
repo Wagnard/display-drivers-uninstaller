@@ -1,7 +1,6 @@
 ﻿Imports System.Threading
-Imports System.IO
 Imports Display_Driver_Uninstaller.Win32
-Imports System.Windows.Threading
+Imports System.Net.Http
 
 Namespace Display_Driver_Uninstaller
 
@@ -26,24 +25,29 @@ Namespace Display_Driver_Uninstaller
 					Application.Log.AddWarning(ex)
 				End Try
 
-				Dim response As System.Net.WebResponse = Nothing
-				Dim request As System.Net.WebRequest = System.Net.HttpWebRequest.Create("http://www.wagnardsoft.com/DDU/currentversion2.txt")
-				request.Timeout = 5000
-
-				Try
-					response = request.GetResponse()
-				Catch ex As Exception
-					status = UpdateStatus.Error
-					Application.Log.AddException(ex)
-					Return
-				End Try
-
+				Dim url As String = "https://www.wagnardsoft.com/DDU/currentversion2.txt"
 				Dim newestVersionStr As String = Nothing
-				Using sr As StreamReader = New StreamReader(response.GetResponseStream())
-					newestVersionStr = sr.ReadToEnd()
 
-					sr.Close()
+				Using client As New HttpClient()
+					' Set the timeout for the HttpClient to 5000 milliseconds (5 seconds)
+					client.Timeout = TimeSpan.FromMilliseconds(5000)
+					Try
+						Dim response As HttpResponseMessage = client.GetAsync(Url).GetAwaiter().GetResult()
+						response.EnsureSuccessStatusCode() ' Throws an exception if the request is not successful
+
+						newestVersionStr = response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+					Catch ex As Exception
+						' Handle the error appropriately
+						status = UpdateStatus.Error
+						Application.Log.AddException(ex)
+						Return
+					End Try
 				End Using
+
+				'Dim response As System.Net.WebResponse = Nothing
+				'Dim request As System.Net.WebRequest = System.Net.HttpWebRequest.Create("https://www.wagnardsoft.com/DDU/currentversion2.txt")
+				'request.Timeout = 5000
+
 
 				Dim newestVersion As Integer
 				Dim applicationversion As Integer
