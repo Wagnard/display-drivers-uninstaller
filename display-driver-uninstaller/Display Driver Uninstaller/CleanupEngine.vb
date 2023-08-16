@@ -2823,7 +2823,7 @@ Namespace Display_Driver_Uninstaller
 				TaskList.Add(thread5)
 			End If
 
-			Dim thread7 As Tasks.Task = Tasks.Task.Run(Sub() Threaddata1(Application.Paths.WinDir & "Prefetch\", driverfiles))
+			Dim thread7 As Tasks.Task = Tasks.Task.Run(Sub() Threaddata1Prefetch(Application.Paths.WinDir & "Prefetch\", driverfiles))
 			TaskList.Add(thread7)
 
 			Tasks.Task.WaitAll(TaskList.ToArray())
@@ -2835,6 +2835,25 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub Threaddata1(filepath As String, ByVal driverfiles As String())
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
+			End If
+			Dim FileIO As New FileIO
+			If filepath IsNot Nothing Then
+				If FileIO.ExistsDir(filepath) Then
+					For Each driverfile As String In driverfiles
+						If IsNullOrWhitespace(driverfile) Then Continue For
+						If FileIO.ExistsFile(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile)) Then
+							Delete(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile))
+							If Not FileIO.ExistsFile(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile)) Then
+								RemoveSharedDlls(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile))
+							End If
+						End If
+					Next
+				End If
+			End If
+		End Sub
+		Private Sub Threaddata1Prefetch(filepath As String, ByVal driverfiles As String())
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
 				ImpersonateLoggedOnUser.Taketoken()
 			End If
@@ -2858,7 +2877,6 @@ Namespace Display_Driver_Uninstaller
 						RemoveSharedDlls(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile))
 					End If
 				Next
-
 			End If
 		End Sub
 

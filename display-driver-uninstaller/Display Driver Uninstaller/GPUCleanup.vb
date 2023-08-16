@@ -5918,6 +5918,7 @@ Namespace Display_Driver_Uninstaller
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("updatus") Or
 					 child.ToLower.Contains("shimgen") Or
+					 child.ToLower.Contains("streamline") Or
 					 (child.ToLower.Contains("nvidiabroadcast") AndAlso config.RemoveNVBROADCAST) Or
 					 (child.ToLower.Contains("grid") AndAlso config.RemoveGFE) Then
 
