@@ -73,9 +73,8 @@ Namespace Display_Driver_Uninstaller.Win32
 							Return svc.Status
 						Catch ex As Exception
 							Application.Log.AddException(ex)
-							Exit For
+							Return Nothing
 						End Try
-						Exit For
 					End If
 				End Using
 			Next
@@ -88,9 +87,8 @@ Namespace Display_Driver_Uninstaller.Win32
 								Return svc.Status
 							Catch ex As Exception
 								Application.Log.AddException(ex)
-								Exit For
+								Return Nothing
 							End Try
-							Exit For
 						End If
 					End Using
 				Next
