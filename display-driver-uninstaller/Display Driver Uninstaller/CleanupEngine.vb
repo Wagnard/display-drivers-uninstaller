@@ -3034,7 +3034,7 @@ Namespace Display_Driver_Uninstaller
 							driverfiles = {"nvlddmkm.sys", "nvhda64v", "UcmCxUcsiNvppc.sys", "nvvad64v.sys", "NVSWCFilter64.sys", "nvrtxvad", "nvvad64v.sys", "nvvhci.sys", "nvrtxvad64v.sys"}
 						Case GPUVendor.AMD
 							CurrentProvider = {"Advanced Micro Devices", "atitech", "advancedmicrodevices", "ati tech", "amd"}
-							driverfiles = {"amdkmdag.sys", "amdxe.sys", "amdfendrmgr.sys", "AtihdWT6.sys", "amdsafd.sys", "amdkmpfd"}
+							driverfiles = {"amdkmdag.sys", "amdxe.sys", "amdfendrmgr", "AtihdWT6.sys", "amdsafd.sys", "amdkmpfd", "amdocl32", "amdocl64", "AMDNoiseSuppression"}
 						Case GPUVendor.Intel
 							CurrentProvider = {"Intel"}
 							driverfiles = {"igdkmd64.sys", "IntcDAud.sys", "intelaud.sys", "iwdbus.sys", "GSCAuxDriverx64.sys", "TeeDriverGSCW8x64.sys", "MiniCtaDriver.sys", "IntcDAudD.sys", "IntelGraphicsAGS.exe", "CtaChildDriver.sys", "Intel_NF_I2C.sys"}
@@ -3081,7 +3081,7 @@ Namespace Display_Driver_Uninstaller
 
 					If StrContainsAny(oem.Class, True, "display", "media", "extension", "softwarecomponent", "CTA Driver Devices", "system") Then
 						If Not ((Not config.RemoveNVBROADCAST AndAlso StrContainsAny(oem.Catalog, True, "nvrtxvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvswcfilter")) Or ((Not config.RemoveAMDKMPFD Or Not config.NotPresentAMDKMPFD) AndAlso StrContainsAny(oem.Catalog, True, "amdkmpfd"))) Then
-							If StrContainsAny(oem.Class, True, "Extension") AndAlso StrContainsAny(oem.Catalog, True, "extinf.cat", "HdBusExt.cat") Then
+							If StrContainsAny(oem.Class, True, "Extension") AndAlso StrContainsAny(oem.Catalog, True, "extinf.cat", "HdBusExt.cat", "amdpcibridgeextension.cat") Then
 								SetupAPI.RemoveInf(oem, False)
 								Continue For
 							End If

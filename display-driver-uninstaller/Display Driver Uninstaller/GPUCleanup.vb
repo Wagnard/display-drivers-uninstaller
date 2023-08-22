@@ -297,7 +297,7 @@ Namespace Display_Driver_Uninstaller
 				If config.SelectedGPU = GPUVendor.Nvidia Then
 					'nVidia AudioEndpoints Removal
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False)
-					If found.Count > 0 Then
+					If found IsNot Nothing AndAlso found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If d IsNot Nothing AndAlso Not IsNullOrWhitespace(d.FriendlyName) Then
 								If StrContainsAny(d.FriendlyName, True, "nvidia virtual audio device", "nvidia high definition audio") Then
@@ -317,7 +317,7 @@ Namespace Display_Driver_Uninstaller
 					Try
 						'AMD AudioEndpoints Removal
 						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint")
-						If found.Count > 0 Then
+						If found IsNot Nothing AndAlso found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If d IsNot Nothing AndAlso Not IsNullOrWhitespace(d.FriendlyName) Then
 									If StrContainsAny(d.FriendlyName, True, "amd high definition audio device", "digital audio (hdmi) (high definition audio device)") Then
@@ -339,7 +339,7 @@ Namespace Display_Driver_Uninstaller
 					Try
 						'AMD AudioEndpoints Removal
 						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media")
-						If found.Count > 0 Then
+						If found IsNot Nothing AndAlso found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 									If StrContainsAny(d.HardwareIDs(0), True, "ROOT\AMDSAFD") Then
@@ -364,7 +364,7 @@ Namespace Display_Driver_Uninstaller
 					Try
 						Application.Log.AddMessage("Executing SetupAPI: Remove NVVHCI.")
 						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
-						If found.Count > 0 Then
+						If found IsNot Nothing AndAlso found.Count > 0 Then
 
 							For Each d As SetupAPI.Device In found
 								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
@@ -390,7 +390,7 @@ Namespace Display_Driver_Uninstaller
 					Try
 						Application.Log.AddMessage("Executing SetupAPI: Remove AMD Crash Defender and AMD Link Controler Emulation.")
 						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
-						If found.Count > 0 Then
+						If found IsNot Nothing AndAlso found.Count > 0 Then
 
 							For Each d As SetupAPI.Device In found
 								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
@@ -415,15 +415,15 @@ Namespace Display_Driver_Uninstaller
 				Try
 					Application.Log.AddMessage("Executing SetupAPI: Remove GPU(s).")
 					Dim GPUs As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(VendCHIDGPU, False, False, False)
-					If GPUs.Count > 0 Then
+					If GPUs IsNot Nothing AndAlso GPUs.Count > 0 Then
 						For Each GPU As SetupAPI.Device In GPUs
 							If GPU IsNot Nothing Then
 								If win10 Then
 									Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent.")
 									Dim SoftwareComponents As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
-									If SoftwareComponents.Count > 0 Then
+									If SoftwareComponents IsNot Nothing AndAlso SoftwareComponents.Count > 0 Then
 										For Each SoftwareComponent As SetupAPI.Device In SoftwareComponents
-											If SoftwareComponent.ParentDevices IsNot Nothing AndAlso SoftwareComponent.ParentDevices.Length > 0 Then
+											If SoftwareComponent IsNot Nothing AndAlso SoftwareComponent.ParentDevices IsNot Nothing AndAlso SoftwareComponent.ParentDevices.Length > 0 Then
 												For Each ParentDevice As SetupAPI.Device In SoftwareComponent.ParentDevices
 													If ParentDevice IsNot Nothing AndAlso ParentDevice.DeviceID IsNot Nothing AndAlso Not IsNullOrWhitespace(ParentDevice.DeviceID) Then
 														If StrContainsAny(ParentDevice.DeviceID, True, GPU.DeviceID) Then
@@ -438,7 +438,7 @@ Namespace Display_Driver_Uninstaller
 
 									'Removing Software components (DCH stuff, win10+) (no parents, because old device is removed. SafeMode behavior)
 									Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
-									If found.Count > 0 Then
+									If found IsNot Nothing AndAlso found.Count > 0 Then
 										For Each d As SetupAPI.Device In found
 											If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 												If StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
@@ -491,7 +491,7 @@ Namespace Display_Driver_Uninstaller
 						'3dVision Removal
 						Application.Log.AddMessage("Executing SetupAPI: Remove 3dVision USB Adapter.")
 						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", Nothing, False)
-						If found.Count > 0 Then
+						If found IsNot Nothing AndAlso found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 									If StrContainsAny(d.HardwareIDs(0), True, HWID3dvision) Then
@@ -506,7 +506,7 @@ Namespace Display_Driver_Uninstaller
 						'USB Type C Removal
 						Application.Log.AddMessage("Executing SetupAPI: Remove USB type C(RTX).")
 						found = SetupAPI.GetDevices("usb", Nothing, False)
-						If found.Count > 0 Then
+						If found IsNot Nothing AndAlso found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 									If StrContainsAny(d.HardwareIDs(0), True, USBTypeC) Then
@@ -521,7 +521,7 @@ Namespace Display_Driver_Uninstaller
 						'NVIDIA SHIELD Wireless Controller Trackpad
 						Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA SHIELD Wireless Controller Trackpad.")
 						found = SetupAPI.GetDevices("mouse", Nothing, False)
-						If found.Count > 0 Then
+						If found IsNot Nothing AndAlso found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 									If StrContainsAny(d.HardwareIDs(0), True, "hid\vid_0955&pid_7210") Then
@@ -537,7 +537,7 @@ Namespace Display_Driver_Uninstaller
 							' NVIDIA Broadcast(Wave Extensible) (WDM) Removal
 							Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Broadcast Audio Device (Wave Extensible) (WDM).")
 							found = SetupAPI.GetDevices("media", Nothing, False)
-							If found.Count > 0 Then
+							If found IsNot Nothing AndAlso found.Count > 0 Then
 								For Each d As SetupAPI.Device In found
 									If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 										If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0956&PID_9001") Then
@@ -554,7 +554,7 @@ Namespace Display_Driver_Uninstaller
 							' NVIDIA Virtual Audio Device (Wave Extensible) (WDM) Removal
 							Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Virtual Audio Device (Wave Extensible) (WDM).")
 							found = SetupAPI.GetDevices("media", Nothing, False)
-							If found.Count > 0 Then
+							If found IsNot Nothing AndAlso found.Count > 0 Then
 								For Each d As SetupAPI.Device In found
 									If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 										If StrContainsAny(d.HardwareIDs(0), True, "USB\VID_0955&PID_9000") Then
@@ -569,7 +569,7 @@ Namespace Display_Driver_Uninstaller
 							' NVIDIA NvModuleTracker Device Removal
 							Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA NvModuleTracker Device.")
 							found = SetupAPI.GetDevices("NvModuleTracker", Nothing, False)
-							If found.Count > 0 Then
+							If found IsNot Nothing AndAlso found.Count > 0 Then
 								For Each d As SetupAPI.Device In found
 									If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 										If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVMODULETRACKER") Then
@@ -602,7 +602,7 @@ Namespace Display_Driver_Uninstaller
 					'Removing Intel WIdI bus Enumerator
 					Application.Log.AddMessage("Executing SetupAPI: Remove Intel WIdI bus Enumerator, CTA and NF I2C system driver.")
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
-					If found.Count > 0 Then
+					If found IsNot Nothing AndAlso found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 								If d.HasHardwareID Then   'Workaround for a bug report we got.
@@ -623,7 +623,7 @@ Namespace Display_Driver_Uninstaller
 					'Removing Mini CTA Driver
 					Application.Log.AddMessage("Executing SetupAPI: Remove Intel Mini CTA Driver")
 					found = SetupAPI.GetDevices("CTA Driver Devices", Nothing, False)
-					If found.Count > 0 Then
+					If found IsNot Nothing AndAlso found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 								If d.HasHardwareID AndAlso StrContainsAny(d.HardwareIDs(0), True, "VEN_8086&DEV_490E", "VEN_8086&DEV_4F93", "PCI\VEN_8086&DEV_4F95") Then  'Workaround for a bug report we got.
@@ -638,7 +638,7 @@ Namespace Display_Driver_Uninstaller
 					'Removing Intel(R) Graphics System Controller Auxiliary Firmware Interface.
 					Application.Log.AddMessage("Executing SetupAPI: Intel(R) Graphics System Controller Auxiliary Firmware Interface.")
 					found = SetupAPI.GetDevices("system", Nothing, False)
-					If found.Count > 0 Then
+					If found IsNot Nothing AndAlso found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 								If d.HasHardwareID Then
@@ -668,7 +668,7 @@ Namespace Display_Driver_Uninstaller
 				If config.RemoveMonitors Then
 					Application.Log.AddMessage("Executing SetupAPI: Remove Monitor(s) started")
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("monitor", Nothing, False)
-					If found.Count > 0 Then
+					If found IsNot Nothing AndAlso found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If d IsNot Nothing Then
 								SetupAPI.UninstallDevice(d)
@@ -685,22 +685,21 @@ Namespace Display_Driver_Uninstaller
 						UpdateTextMethod("Start - Check for AMDKMPFD system device.")
 						Application.Log.AddMessage("Executing SetupAPI: check AMDKMPFD system device started")
 						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", "0a0", False)
-						If found.Count > 0 Then
+						If found IsNot Nothing AndAlso found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
 								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
 									If StrContainsAny(d.HardwareIDs(0), True, "DEV_0A08", "DEV_0A03") Then
 										If d.LowerFilters IsNot Nothing AndAlso d.LowerFilters.Length > 0 Then
 											For Each LowerFilter In d.LowerFilters
-												If LowerFilter IsNot Nothing AndAlso Not IsNullOrWhitespace(LowerFilter) Then
-													If StrContainsAny(LowerFilter, True, "amdkmpfd") Then
-														Application.Log.AddMessage("Executing SetupAPI: update AMDKMPFD system device to Windows default started")
-														If win10 Then
-															SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\PCI.inf", True)
-														Else
-															SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\machine.inf", True)
-														End If
-														Exit For
+												If IsNullOrWhitespace(LowerFilter) Then Continue For
+												If StrContainsAny(LowerFilter, True, "amdkmpfd") Then
+													Application.Log.AddMessage("Executing SetupAPI: update AMDKMPFD system device to Windows default started")
+													If win10 Then
+														SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\PCI.inf", True)
+													Else
+														SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\machine.inf", True)
 													End If
+													Exit For
 												End If
 											Next
 										End If
@@ -730,6 +729,27 @@ Namespace Display_Driver_Uninstaller
 
 				End If
 			End If
+
+			If config.SelectedGPU = GPUVendor.AMD Then
+				Try
+					UpdateTextMethod("Start - Check for AMD-OpenCL / AMD-Windows")
+					Application.Log.AddMessage("Executing SetupAPI: check AMD-OpenCL / AMD-Windows SoftwareComponent started")
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
+					If found IsNot Nothing AndAlso found.Count > 0 Then
+						For Each d As SetupAPI.Device In found
+							If d IsNot Nothing AndAlso StrContainsAny(d.Description, True, "AMD-Windows Support Components", "AMD-OpenCL User Mode Driver") Then
+								SetupAPI.UninstallDevice(d)
+							End If
+						Next
+						found.Clear()
+					End If
+					UpdateTextMethod("End - Check for AMD-OpenCL system device.")
+					Application.Log.AddMessage("SetupAPI: Check AMD-OpenCL system device Complete .")
+				Catch ex As Exception
+					Application.Log.AddException(ex)
+				End Try
+			End If
+
 			If config.SelectedGPU = GPUVendor.AMD Then
 				Cleanamdserviceprocess(config)
 				Cleanamd(config)
@@ -3448,7 +3468,7 @@ Namespace Display_Driver_Uninstaller
 			Try
 				Application.Log.AddMessage("Starting the removal of nVidia Optimus UpperFilter if present.")
 				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
-				If found.Count > 0 Then
+				If found IsNot Nothing AndAlso found.Count > 0 Then
 					For Each d As SetupAPI.Device In found
 						If StrContainsAny(d.HardwareIDs(0), True, "VEN_8086") Then
 							If d.UpperFilters IsNot Nothing AndAlso d.UpperFilters.Length > 0 AndAlso StrContainsAny(String.Join(",", d.UpperFilters), True, "nvpciflt", "nvkflt") Then
