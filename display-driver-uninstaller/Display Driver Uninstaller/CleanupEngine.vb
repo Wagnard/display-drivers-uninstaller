@@ -3081,23 +3081,31 @@ Namespace Display_Driver_Uninstaller
 
 					If StrContainsAny(oem.Class, True, "display", "media", "extension", "softwarecomponent", "CTA Driver Devices", "system") Then
 						If Not ((Not config.RemoveNVBROADCAST AndAlso StrContainsAny(oem.Catalog, True, "nvrtxvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvswcfilter")) Or ((Not config.RemoveAMDKMPFD Or Not config.NotPresentAMDKMPFD) AndAlso StrContainsAny(oem.Catalog, True, "amdkmpfd"))) Then
-							If StrContainsAny(oem.Class, True, "Extension") AndAlso StrContainsAny(oem.Catalog, True, "extinf.cat", "HdBusExt.cat", "amdpcibridgeextension.cat") Then
+							If StrContainsAny(oem.Class, True, "Extension") AndAlso StrContainsAny(oem.Catalog, True, "extinf.cat", "HdBusExt.cat", "amdpcibridgeextension.cat", "igdlh.cat") Then
 								SetupAPI.RemoveInf(oem, False)
 								Continue For
 							End If
-							For Each SourceDisksName In oem.SourceDisksFiles
-								If IsNullOrWhitespace(SourceDisksName) Then Continue For
-								If SourceDisksName IsNot Nothing AndAlso StrContainsAny(SourceDisksName, True, driverfiles) Then
+
+							If config.SelectedType = CleanType.GPU AndAlso config.SelectedGPU = GPUVendor.Intel Then
+								If StrContainsAny(oem.Class, True, "softwarecomponent", "system") AndAlso StrContainsAny(oem.Catalog, True, "igdlh.cat") Then
 									SetupAPI.RemoveInf(oem, False)
-									Exit For
+									Continue For
 								End If
-							Next
+							End If
+
+							For Each SourceDisksName In oem.SourceDisksFiles
+									If IsNullOrWhitespace(SourceDisksName) Then Continue For
+									If SourceDisksName IsNot Nothing AndAlso StrContainsAny(SourceDisksName, True, driverfiles) Then
+										SetupAPI.RemoveInf(oem, False)
+										Exit For
+									End If
+								Next
+							End If
+							'Else
+							'	If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.
+							'		SetupAPI.RemoveInf(oem, False)
+							'	End If
 						End If
-						'Else
-						'	If Not StrContainsAny(oem.Class, True, "HDC") Then 'we dont want to ever remove an HDC class device or info.
-						'		SetupAPI.RemoveInf(oem, False)
-						'	End If
-					End If
 				End If
 				'check if the oem was removed to process to the pnplockdownfile if necessary
 				If frmMain.win8higher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
