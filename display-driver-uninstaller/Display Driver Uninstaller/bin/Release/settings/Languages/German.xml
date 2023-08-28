@@ -194,7 +194,7 @@
 			<Text29>SetupAPI-Entfernen abgeschlossen</Text29>
 			<Text30>Starten der Bereinigung der Region S-1-5-xx</Text30>
 			<Text31>Ende der Bereinigung der Region S-1-5-xx</Text31>
-			<Text32>Beginn der Bereinigung Classesroot ,Installer\Produkt</Text32>
+			<Text32>Beginn der Bereinigung Classesroot ,installer\products</Text32>
 			<Text33>Ende der Bereinigung Classesroot ,installer\products</Text33>
 			<Text34>Start der Bereinigung localmachine ,installer\products</Text34>
 			<Text35>Ende der Bereinigung localmachine ,installer\products</Text35>
@@ -497,7 +497,7 @@
 
 		<Translator2>
 			<User>_rk_</User>
-			<LastUpdate>09/07/2023</LastUpdate>
+			<LastUpdate>28/08/2023</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 
