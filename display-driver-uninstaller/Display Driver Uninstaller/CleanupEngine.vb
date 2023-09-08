@@ -1586,13 +1586,16 @@ Namespace Display_Driver_Uninstaller
 											Catch ex As Exception
 											End Try
 											Try
+												Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\UnitedVideo\CONTROL\VIDEO\" & child)
+											Catch ex As Exception
+											End Try
+											Try
 												'Also remove the HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\DirectX keys associated to it.
 												Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\DirectX\" & child)
 											Catch ex As Exception
 											End Try
 											Exit For
 										End If
-
 									Next
 								Else
 									'Here, if subregkey is nothing, it mean \video doesnt exist and there is no \0000, we can delete it.
@@ -1607,6 +1610,10 @@ Namespace Display_Driver_Uninstaller
 												'not found.
 											Catch ex As Exception
 												Application.Log.AddException(ex)
+											End Try
+											Try
+												Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\UnitedVideo\CONTROL\VIDEO\" & child)
+											Catch ex As Exception
 											End Try
 										End If
 									End Using
