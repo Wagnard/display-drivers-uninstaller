@@ -419,7 +419,7 @@ Namespace Display_Driver_Uninstaller
 						For Each GPU As SetupAPI.Device In GPUs
 							If GPU IsNot Nothing Then
 								If win10 Then
-									Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent.")
+									Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent connected to the GPU.")
 									Dim SoftwareComponents As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
 									If SoftwareComponents IsNot Nothing AndAlso SoftwareComponents.Count > 0 Then
 										For Each SoftwareComponent As SetupAPI.Device In SoftwareComponents
@@ -434,25 +434,49 @@ Namespace Display_Driver_Uninstaller
 											End If
 										Next
 										SoftwareComponents.Clear()
+										Application.Log.AddMessage("SetupAPI: Remove SoftwareComponent Completed connected to the GPU.")
 									End If
 
-									'Removing Software components (DCH stuff, win10+) (no parents, because old device is removed. SafeMode behavior)
-									Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
-									If found IsNot Nothing AndAlso found.Count > 0 Then
-										For Each d As SetupAPI.Device In found
-											If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
-												If StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
-													SetupAPI.UninstallDevice(d)
+									If config.RemoveMonitors Then
+										Application.Log.AddMessage("Executing SetupAPI: Remove Monitors connected to the GPU.")
+										Dim ConnectedMonitors As List(Of SetupAPI.Device) = SetupAPI.GetDevices("Monitor", Nothing, False, True)
+										If ConnectedMonitors IsNot Nothing AndAlso ConnectedMonitors.Count > 0 Then
+											For Each ConnectedMonitor As SetupAPI.Device In ConnectedMonitors
+												If ConnectedMonitor IsNot Nothing AndAlso ConnectedMonitor.ParentDevices IsNot Nothing AndAlso ConnectedMonitor.ParentDevices.Length > 0 Then
+													For Each ParentDevice As SetupAPI.Device In ConnectedMonitor.ParentDevices
+														If ParentDevice IsNot Nothing AndAlso ParentDevice.DeviceID IsNot Nothing AndAlso Not IsNullOrWhitespace(ParentDevice.DeviceID) Then
+															If StrContainsAny(ParentDevice.DeviceID, True, GPU.DeviceID) Then
+																SetupAPI.UninstallDevice(ConnectedMonitor)
+																If ConnectedMonitor.HasHardwareID AndAlso ConnectedMonitor.HardwareIDs.Length > 0 Then
+																	CleanupEngine.RemoveMonitorConfiguration(ConnectedMonitor.HardwareIDs(0).Substring(ConnectedMonitor.HardwareIDs(0).IndexOf("\") + 1))
+																End If
+															End If
+														End If
+													Next
 												End If
-											End If
-										Next
-										found.Clear()
+											Next
+											ConnectedMonitors.Clear()
+										End If
+										Application.Log.AddMessage("SetupAPI: Remove Monitors connected to the GPU Completed.")
 									End If
+									'Removing Software components (DCH stuff, win10+) (no parents, because old device is removed. SafeMode behavior)
+									Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent.")
+									Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
+										If found IsNot Nothing AndAlso found.Count > 0 Then
+											For Each d As SetupAPI.Device In found
+												If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+													If StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
+														SetupAPI.UninstallDevice(d)
+													End If
+												End If
+											Next
+											found.Clear()
+										End If
 
-									Application.Log.AddMessage("SetupAPI: Remove SoftwareComponent Complete.")
+									Application.Log.AddMessage("SetupAPI: Remove SoftwareComponent Completed.")
 								End If
-								'	SetupAPI.EnableDevice(GPU, False)
-								SetupAPI.UninstallDevice(GPU) 'Then we remove the GPU itself.
+									'	SetupAPI.EnableDevice(GPU, False)
+									SetupAPI.UninstallDevice(GPU) 'Then we remove the GPU itself.
 							End If
 						Next
 						GPUs.Clear()
@@ -672,6 +696,9 @@ Namespace Display_Driver_Uninstaller
 						For Each d As SetupAPI.Device In found
 							If d IsNot Nothing Then
 								SetupAPI.UninstallDevice(d)
+								If d.HasHardwareID AndAlso d.HardwareIDs.Length > 0 Then
+									CleanupEngine.RemoveMonitorConfiguration(d.HardwareIDs(0).Substring(d.HardwareIDs(0).IndexOf("\") + 1))
+								End If
 							End If
 						Next
 						found.Clear()

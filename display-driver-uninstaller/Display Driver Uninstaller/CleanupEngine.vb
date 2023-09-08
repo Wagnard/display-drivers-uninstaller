@@ -1635,7 +1635,23 @@ Namespace Display_Driver_Uninstaller
 				End If
 			End Try
 		End Sub
-
+		Public Sub RemoveMonitorConfiguration(ByVal hardwareID As String)
+			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Configuration", True)
+				If regkey IsNot Nothing Then
+					For Each subregkey In regkey.GetSubKeyNames()
+						If subregkey IsNot Nothing AndAlso Not IsNullOrWhitespace(hardwareID) Then
+							If StrContainsAny(subregkey, True, hardwareID) Then
+								Try
+									Deletesubregkey(regkey, subregkey)
+								Catch ex As Exception
+									Application.Log.AddException(ex)
+								End Try
+							End If
+						End If
+					Next
+				End If
+			End Using
+		End Sub
 		Public Function CheckServiceStartupType(ByVal service As String) As String
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services\" & service, False)
 				If regkey IsNot Nothing Then
