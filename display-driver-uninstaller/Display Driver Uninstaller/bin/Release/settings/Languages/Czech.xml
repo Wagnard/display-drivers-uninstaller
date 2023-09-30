@@ -8,54 +8,54 @@
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
 			<Text>
-				Odinstalovat ovladače a restartovat PC
+				Vyčistit a restartovat
 				(Vysoce doporučeno)
 			</Text>
 			<Tooltip>
-				Odinstalovat stávající a předchozí ovladače, potom restartovat PC
+				Odinstalovat aktuální a předchozí ovladače, potom restartovat PC
 				(Vysoce doporučeno)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				Odinstalovat ovladače a NERESTARTOVAT PC
-				(Může způsobit problémy jako zčernání obrazovky)
+				Vyčistit a NErestartovat PC
+				(Může způsobit problémy, jako je černá obrazovka)
 			</Text>
 			<Tooltip>
-				Odinstalovat stávající a předchozí ovladače, NERESTARTOVAT PC.
-				(Může způsobit problémy jako zčernání obrazovky)
+				Odinstalovat aktuální a předchozí ovladače, ale NErestartovat PC.
+				(Může způsobit problémy, jako je černá obrazovka)
 			</Tooltip>
 		</btnClean>
 		<btnCleanShutdown>
 			<Text>
-				Odinstalovat ovladače a vypnout PC
-				(Před instalací nové grafické karty)
+				Vyčistit a vypnout
+				(Pro instalaci nové grafické karty)
 			</Text>
 			<Tooltip>
-				Odinstalovat stávající a předchozí ovladače, potom vypnout PC bez znovuvyhledání adaptéru.
-				(Před instalací nové grafické karty)
+				Odinstalovat aktuální a předchozí ovladače, potom vypnout PC bez vyhledání změn hardwaru.
+				(Pro instalaci nové grafické karty)
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Odstranit instalační soubory/cache ovladačů vytvořené programem "GeForce Experience".
+				Odstranit cache a soubory vytvořené instalátorem grafických ovladačů "GeForce Experience".
 				(Poznámka: Ovladače nebudou odebrány)
 			</Text>
 			<Tooltip>
-				Toto je většinou používáno pro obnovení místa na disku nevyčištěného Geforce Experience po instalaci ovladače (stará verze GFE).
+				Většinou se používá k obnovení místa na disku, které nebylo vyčištěno aplikací Geforce Experience po instalaci ovladače (stará verze GFE).
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				Použít výchozí Nastavení instalace zařízení 
+				Použít výchozí nastavení instalace zařízení systému Windows
         		(instalovat ovladače automaticky)
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
-			<Text>Detekován operační systém:</Text>
+			<Text>Zjištěný operační systém:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** Líbí se vám DDU? Přemýšlejte o finančním daru, který pomůže dalšímu vývoji. ***</Text>
+			<Text>*** Líbí se vám DDU? Přemýšlejte o příspěvku, který pomůže dalšímu vývoji. ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Protokol</Text>
@@ -68,15 +68,15 @@
 		</lblLanguage>
 
 		<lblUpdate>
-			<Text>Vyhledávání aktualizací ...</Text>
-			<Text2>Aktualizace nenalezeny, program je aktuální.</Text2>
-			<Text3>Aktualizace nalezeny! Očekávejte omezenou podporu starších verzí.</Text3>
+			<Text>Kontrola aktualizací...</Text>
+			<Text2>Nebyly nalezeny žádné aktualizace. Program je aktuální.</Text2>
+			<Text3>Aktualizace nalezeny! Očekávejte omezenou podporu starších verzí oproti nejnovějším.</Text3>
 			<Text4>Aktualizace se nepodařilo vyhledat!</Text4>
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Nabídky od našich partnerů</Text>
-			<Tooltip>Můžete to vypnout v menu 'Možnosti'.</Tooltip>
+			<Text>Nabídky od našich partnerů. (Doporučeno)</Text>
+			<Tooltip>Můžete to vypnout v nabídce možností.</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
@@ -92,7 +92,7 @@
 			<Text>Odkazy</Text>
 		</LinksMenuItem>
 		<ToSMenuItem>
-			<Text>Podmínky služby</Text>
+			<Text>Podmínky používání</Text>
 		</ToSMenuItem>
 		<AboutMenuItem>
 			<Text>O programu</Text>
@@ -101,22 +101,22 @@
 			<Text>Překladatelé</Text>
 		</TranslatorsMenuItem>
     		<PatronMenuItem>
-			<Text>Patron</Text>
+			<Text>Patroni</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Navštívit oficiální web DDU</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitSVNMenuItem>
-			<Text>Navštivte web SVN</Text>
+			<Text>Navštívit web SVN</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Navštívit NVIDIA téma na Guru3d</Text>
+			<Text>Navštívit NVIDIA vlákno na Guru3d</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
-			<Text>Navštívit AMD téma na Guru3d</Text>
+			<Text>Navštívit AMD vlákno na Guru3d</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>Navštívit GeForce téma</Text>
+			<Text>Navštívit GeForce vlánko</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
@@ -124,18 +124,27 @@
 			<Text2>Starší verze mají oproti těm novým omezenou podporu. Před nahlášením chyb zkontrolujte, zda používáte nejnovější verzi.</Text2>
 			<Text3>Nepoužíváte DDU s oprávněním správce. Aplikace bude nyní ukončena.</Text3>
 			<Text4>Nepodařilo se najít PAExec. Zkontrolujte prosím protokol.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) často upravuje registr. DDU se automaticky pokusí vytvořit Bod obnovení systému (Pouze v Normal módu).</Text5>
+			<Text5>Display Driver Uninstaller (DDU) často upravuje registr. DDU se automaticky pokusí vytvořit Bod obnovení systému (pouze v normálním režimu).</Text5>
 			<Text6>V jednom modulu nastal problém, pošlete své DDU protokoly vývojáři.</Text6>
-			<Text7>DDU detekoval přepínací notebook AMD (Enduro či podobný), DDU ještě není plně kompatibilní / otestovaný s Enduro systémy, používejte na vlastní riziko.</Text7>
+			<Text7>DDU detekoval přepínací notebook AMD (Enduro či podobný), DDU ještě není plně kompatibilní a testovaný s Enduro systémy. Používáte na vlastní riziko.</Text7>
 			<Text8>DDU detekoval, že NEJSTE v Nouzovém režimu... Pro lepší vyčištění bez chyb je doporučen restart do Nouzového režimu.</Text8>
 			<Text9>Nastavení instalace zařízení systému Windows bylo změněno, aby se ovladače NEinstalovaly automaticky.</Text9>
 			<Text10>Čistá odinstalace dokončena! Chcete nyní odejít?</Text10>
 			<Text11>Nastavení instalace zařízení systému Windows bylo změněno, aby se ovladače instalovaly automaticky.</Text11>
 			<Text12>Nejste v nouzovém režimu. Je vysoce doporučeno restartovat do nouzového režimu, aby se zabránilo případným problémům. Restartovat do Nouzového režimu nyní?</Text12>
-			<Text13>Musíte vybrat následující věci na modré obrazovce obnovení: Odstranit potíže -&gt; Upřesnit možnosti -&gt; Nastavení spouštění.</Text13>
-			<Text14>Čeká se na restart systému, prosíme, restartujte systém před použitím DDU</Text14>
+			<Text13>Následující věci jsou potřeba vybrat na modré obrazovce obnovení: Odstranit potíže -&gt; Upřesnit možnosti -&gt; Nastavení spouštění.</Text13>
+			<Text14>Čeká se na restart systému. Před použitím DDU restartujte systém.</Text14>
 			<Text15>Žádná změna nebyla provedena. Nastavení instalace zařízení již byly nastaveny na výchozí hodnoty.</Text15>
       		<Text16>Kritická chyba Windows znemožňuje správné odebrání ovladačů. DDU nebude z bezpečnostních důvodů pokračovat v odstraňování souborů a záznamů registru. Před použitím DDU vyřešte problém(y) s vašim systémem.</Text16>
+			<Text17>Vypadá to, že DDU spouštíte poprvé.
+				
+					Před použitím se seznamte s následujícími informacemi:
+					1: V závislosti na vašich problémech a konfiguraci může DDU pomoci nebo naopak situaci zhoršit.
+					2: Měli byste mít zálohu.
+					3: Měli byste si přešíst licenci, soubor Readme, a podmínky používání.
+					4: Neneseme odpovědnost za jakékoli poškození či jakoukoliv ztrátu dat.
+					5: V případě problému jsme vždy ochotni pomoci.
+			</Text17>
 		</Messages>
 <Options_Type>
 			<Options1>---Vyberte druh zařízení---</Options1>
@@ -204,25 +213,28 @@
 			<Text>Zavřít</Text>
 		</btnClose>
 		<lblOffer>
-			<Text>Zobrazovat nabídky od našich partnerů</Text>
+			<Text>Zobrazovat nabídky našich partnerů</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>Specifické NVIDIA možnosti</Text>
+			<Text>Specifické možnosti NVIDIA</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
-			<Text>Specifické AMD možnosti</Text>
+			<Text>Specifické možnosti AMD</Text>
 		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>Specifické možnosti INTEL</Text>
+		</lblINTELspecific>
     		<lblAdvancedO>
-			<Text>Pokročilá nastavení (Změna na vlastní nebezpečí)</Text>
+			<Text>Pokročilá nastavení (Změna na vlastní riziko)</Text>
 		</lblAdvancedO>
 		<lblGeneral>
 			<Text>Obecné možnosti</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Odstranit složky ovladačů v "C:\NVIDIA" (NEDOPORUČENO)</Text>
+			<Text>Odstranit složky ovladačů v "C:\NVIDIA".</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Uložit soubory protokolu do složky programu (Vysoce doporučeno)</Text>
+			<Text>Uložit soubory protokolu do složky programu. (Vysoce doporučeno)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>Odstranit PhysX</Text>
@@ -234,13 +246,13 @@
 			<Text>Vytvořit bod obnovení systému (pokud je to dovoleno)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Odstranit stávající a předchozí monitory (Doporučeno)</Text>
+			<Text>Odstranit stávající a předchozí monitory (doporučeno)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
 			<Text>Odstranit AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Odstranit složky ovladačů v "C:\AMD" (NEDOPORUČENO)</Text>
+			<Text>Odstranit složky ovladačů v "C:\AMD".</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
 			<Text>Odstranit ovladač/filtr AMDKMPFD (Pro AMD chipsety je doporučena záloha)</Text>
@@ -253,11 +265,30 @@
 			<Text>Skladovat konfigurační soubor ve složce roaming</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Automaticky kontrolovat aktualizace DDU při spuštění. (Doporučeno)</Text>
+			<Text>Automaticky kontrolovat aktualizace DDU při spuštění (doporučeno)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>Odstranit Geforce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Odstranit NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
+		<lblRemNVCP>
+			<Text>(DCH ovladač) Odstranit NVIDIA Control Panel nainstalovaný z obchodu Microsoft Store</Text>
+		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Zachovat globální / programová nastavení NVIDIA Control Panel.</Text>
+			<Tooltip>
+				Pokud jste se setkali s problémy, které vás vedly k použití DDU pro vyčištění, doporučujeme se výběru této možnosti vyhnout.
+				Tato možnost není určena k odstranění problémů a nemusí řešit problém, který se u vás vyskytl.
+			</Tooltip>
+		</lblKeepNVCPopt>
+		<lblRemINTELCP>
+			<Text>(DCH ovladač) Odstranit INTEL Control Panel nainstalovaný z obchodu Microsoft Store</Text>
+		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>(DCH ovladač) Odstranit AMD Control Panel nainstalovaný z obchodu Microsoft Store</Text>
+		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>Odstranit složku AMD Crimson Shader Cache</Text>
 			<Tooltip>
@@ -267,7 +298,7 @@
 		</lblRemCrimsonCache>
 		<lblVulkan>
 			<Text>Odstranit Vulkan Runtime</Text>
-			<Tooltip>Není doporučeno v případě, že vlastníte 2 odlišné grafické karty podporující Vulkan API.</Tooltip>
+			<Tooltip>Nedoporučuje se, pokud vlastníte dvě odlišné grafické karty podporující Vulkan API.</Tooltip>
 		</lblVulkan>
 		<lblPreventWinUpdate>
       <Text>Zabránit stažení ovladačů přes službu "Windows update", když "Windows" vyhledá ovladač pro zařízení.</Text>
@@ -285,6 +316,11 @@
 				Nouzového režimu
 			</Text2>
 		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Použít výchozí nastavení instalace zařízení systému Windows a zavřít
+			</Text>
+		</btnWuRestore>
 		<btnClose>
 			<Text>Zavřít</Text>
 		</btnClose>
@@ -299,14 +335,14 @@
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Důležitá poznámka pro uživatele Windows 8/8.1/10:
-				Vaše Windows "HESLO" je vyžadováno! (PIN v nouzovém režimu NEFUNGUJE)
+				Důležité upozornění pro uživatele Windows 8/8.1/10/11:
+				Vaše Windows "HESLO" *může* být vyžadováno! (PIN v nouzovém režimu *NEMUSÍ* fungovat)
 				Pokud jste ho ztratili nebo jej neznáte, okamžitě odejděte!
 			</Text>
 		</lblWinPasswordWarn>
 		<cbBootOption>
 			<Item1>Standartní</Item1>
-			<Item2>Nouzový režim (Doporučeno)</Item2>
+			<Item2>Nouzový režim (doporučeno)</Item2>
 			<Item3>Nouzový režim se sítí</Item3>
 		</cbBootOption>
 		<Messages>
@@ -363,7 +399,7 @@
 			<Text>Překladatelé</Text>
 		</btnTranslators>
     		<btnPatron>
-			<Text>Patron</Text>
+			<Text>Patroni</Text>
 		</btnPatron>
 		<lblTranslators>
 			<Text>Velké poděkování patří následujícím překladatelům včetně těch, kteří nejsou uvedeni!</Text>
@@ -371,15 +407,23 @@
 		<lblPatron>
 			<Text>
 				Velké poděkování patří následujícím Patronům včetně těch, kteří nejsou uvedeni!
-      
-				-honnmaguro   (Od 16.03.2018) 
-				-ZaoDaDong   (Od 06.02.2019)
-				-Alberto Bursi (dlouhodobý dárce/podporovatel)
-				-Kaseb (Since 2019-09-05)
-				-Frank Brown (Since 2019-10-31)
-				-Sergey Bolshakow (Since 2020-09-10)
-				-James Tiller (Since 2021-04-03)
-				-Paulo Henrique (Since 2021-04-19)
+
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
+				
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -406,7 +450,7 @@
 
 				- Rádi bychom od Vás dostali zpětnou vazbu. Řekněte nám, jestli Vám nástroj pomohl či nikoliv.
         
-       			- Vytvořte zálohu OS nebo alespoň bod obnovy (Ale obvykle by to mělo být bezpečné.)
+       			- Vytvořte zálohu OS nebo alespoň bod obnovy (ale obvykle by to mělo být bezpečné).
 
 				- Pokud se potýkáte, nebo jste se někdy potýkali, s problémy s ovladači a tento nástroj Vám pomohl, neváhejte
 				se s námi podělit o výsledky.
@@ -428,7 +472,7 @@
 				Děkuji Helge Klein (http://helgeklein.com/setacl/) za povolení používat jeho program s DDU "SetAcl"
 
 				Velké poděkování patří následujícím lidem za jejich čas pro testování: Gamer1291 (optimus), Octopuss (Amd Enduro) ,
-				nedooo` (ladění), Extraordinary (Testování opravy)
+				nedooo` (ladění), Extraordinary (testování opravy)
 
 				Díky všem, kteří dávali svůj systém všanc (speciální poděkování patří uživateli Dellon132)
 
@@ -454,7 +498,7 @@
 		<Translator>
 			<User>Jan 'ThatJohnS' Szotkowski</User>
 			<Details>thatjohns.eu</Details>
-			<LastUpdate>29.4.2019</LastUpdate>
+			<LastUpdate>30.09.2023</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
