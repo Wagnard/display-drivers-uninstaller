@@ -178,7 +178,7 @@
 			<Text18>Karta graficzna nie została poprawnie zainstalowana</Text18>
 			<Text19>Usuwanie kilku specjalnych folderów, może to trochę potrwać...</Text19>
 			<Text20>Rozpoczęto usuwanie...</Text20>
-			<Text21>Odinstalowywanie/Text21>
+			<Text21>Odinstalowywanie</Text21>
 			<Text22>sterownika</Text22>
 			<Text23>Usuwanie danych instalatora, proszę czekać (może to zająć kilka minut)</Text23>
 			<Text24>Karta graficzna usunięta z Menedżera urządzeń.</Text24>
@@ -292,15 +292,15 @@
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Usuń Vulkan Runtime/Text>
+			<Text>Usuń Vulkan Runtime</Text>
 			<Tooltip>Nie zalecane, jeśli podłączono dwie różne karty graficzne obsługujące Vulkan API.</Tooltip>
 		</lblVulkan>
-    <lblPreventWinUpdate>
-      <Text>Wyłącz wyszukiwanie sterowników za pomocą Windows Update.</Text>
-      <Tooltip>Ta opcja uniemożliwi Menedżerowi urządzeń wyszukiwanie sterowników urządzeń w Windows Update.
+		<lblPreventWinUpdate>
+			<Text>Wyłącz wyszukiwanie sterowników za pomocą Windows Update.</Text>
+			<Tooltip>Ta opcja uniemożliwi Menedżerowi urządzeń wyszukiwanie sterowników urządzeń w Windows Update.
                Uwaga 1: Nie zapobiega to pobieraniu i instalowaniu nowych sterowników z Windows Update.
                Uwaga 2: Zalecamy przywrócić te zmianę po zakończeniu korzystania z DDU i ponownym zainstalowaniu sterownika karty graficznej, ponieważ mogą wystąpić problemy z zainstalowaniem innych urządzeń.</Tooltip>
-     </lblPreventWinUpdate>
+		</lblPreventWinUpdate>
   </frmOptions>
 
 	<frmLaunch Text="Opcja uruchamiania">
@@ -401,7 +401,7 @@
 		</lblTranslators>
 		<lblPatron>
 			<Text>
-			    Wielkie podziękowania dla następujących patronów, a także tych, którzy nie są na liście!</Text>																	 
+			    Wielkie podziękowania dla następujących patronów, a także tych, którzy nie są na liście!														 
 																		 
 				-Alberto Bursi
 				-honnmaguro
